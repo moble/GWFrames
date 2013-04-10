@@ -135,7 +135,7 @@ if __name__ == "__main__" :
         if(args['run_unstarted']) :
             Runs.extend(UnstartedExtrapolations(TopLevelOutputDir, SubdirectoriesAndDataFiles))
         if(args['rerun_new_data']) :
-            Runs.extend(NewerDataThanExtrapolation(TopLevelOutputDir, SubdirectoriesAndDataFiles))
+            Runs.extend(NewerDataThanExtrapolation(TopLevelInputDir, TopLevelOutputDir, SubdirectoriesAndDataFiles))
         if(args['rerun_unfinished']) :
             Runs.extend(StartedButUnfinishedExtrapolations(TopLevelOutputDir, SubdirectoriesAndDataFiles))
         if(args['rerun_errored']) :
