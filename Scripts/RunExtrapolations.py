@@ -150,18 +150,16 @@ if __name__ == "__main__" :
             conn.isolation_level = 'EXCLUSIVE'
             conn.execute('BEGIN EXCLUSIVE')
         except sqlite3.OperationalError as e :
-            print("Got an error")
-            print(e)
-            print(
+            import textwrap
+            print(texwrap.dedent(
                 """
-                \nERROR: The database could not be locked.
+                ERROR: The database could not be locked.
 
-                         If you are trying to create this on an
-                         NFS file system, note that NFS may be
-                         buggy with regards to locking.  Try
-                         locating the database file on a non-NFS
-                         partition.
-                """)
+                       If you are trying to create this on an NFS file
+                       system, note that NFS may be buggy with regards
+                       to locking.  Try locating the database file on
+                       a non-NFS partition.
+                """))
             conn.close()
             raise
         c = conn.cursor()
@@ -186,18 +184,16 @@ if __name__ == "__main__" :
                     conn.isolation_level = 'EXCLUSIVE'
                     conn.execute('BEGIN EXCLUSIVE')
                 except sqlite3.OperationalError as e :
-                    print("Got an error")
-                    print(e)
-                    print(
-                    """
-                    \nERROR: The database could not be locked.
-                             
-                             If you are trying to create this on an
-                             NFS file system, note that NFS may be
-                             buggy with regards to locking.  Try
-                             locating the database file on a non-NFS
-                             partition.
-                    """)
+                    import textwrap
+                    print(texwrap.dedent(
+                            """
+                            ERROR: The database could not be locked.
+                            
+                            If you are trying to create this on an NFS
+                            file system, note that NFS may be buggy
+                            with regards to locking.  Try locating the
+                            database file on a non-NFS partition.
+                            """))
                     conn.close()
                     raise
                 c = conn.cursor()
