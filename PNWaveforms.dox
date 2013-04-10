@@ -1,0 +1,40 @@
+// -*- c++ -*-
+
+/// \class GWFrames::PNWaveform
+/// \brief Fundamental object creating precessing PN waveform.
+/// 
+/// This object is a subclass of the GWFrames::Waveform object.  In
+/// addition to the data stored in a Waveform, this stores the two
+/// spins chi1 and chi2; the orbital angular-velocity vectors
+/// Omega_orb, Omega_prec, and Omega_tot; the PN angular momentum; and
+/// the orbital phase Phi_orb.  Various methods also exist for
+/// retrieving the vectors, their magnitudes, and their normalized
+/// versions.
+/// 
+/// \param history    String recording history of data
+/// \param t          Vector of time indices
+/// \param frame      Vector of quaternions.  This represents the rotation
+///           	      applied to the physical system to go from the standard
+///           	      inertial frame to the frame in which the Waveform is
+///           	      decomposed.  If this vector has length 0, the frame is
+///           	      assumed to be constant, and the standard frame.  If
+///           	      this vector has length 1, the frame is assumed to be
+///           	      constant, but given by that value.  Otherwise, this
+///           	      vector is assumed to have length NTimes(),
+///           	      corresponding to the frame at each moment.
+/// \param lm         Vector of vectors of int's, giving (ell,m) data
+/// \param data       Vector of complex numbers representing h or Psi4.
+/// \param chi1       Vector of vectors of doubles representing the spin 
+///                   of BH 1.
+/// \param chi2       Vector of vectors of doubles representing the spin 
+///                   of BH 2.
+/// \param Omega_orb  Vector of vectors of doubles representing the 
+///                   orbital angular-velocity vector.
+/// \param Omega_prec Vector of vectors of doubles representing the 
+///                   precessional angular-velocity vector.
+/// \param Omega_tot  Vector of vectors of doubles representing the 
+///                   total angular-velocity vector.
+/// \param L          Vector of vectors of doubles representing the 
+///                   angular-momentum vector.
+/// \param Phi_orb    Vector of doubles representing the orbital phase.
+/// 

@@ -1,0 +1,5 @@
+// -*- c++ -*-
+
+/// \namespace GWFrames
+/// \brief Collection of objects and functions for manipulating
+/// gravitational waves.

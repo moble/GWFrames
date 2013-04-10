@@ -11,3 +11,12 @@
 *.lai
 *.la
 *.a
+
+# Created by SWIG and python
+GWFrames.py
+GWFrames/__init__.py
+GWFrames_wrap.cpp
+build
+xml
+latex
+html

@@ -1,0 +1,47 @@
+// -*- c++ -*-
+
+/// \class GWFrames::Waveform
+/// \brief Fundamental object encapsulating waveform data, such as
+/// time, (l,m) information, and complex data.
+/// 
+/// This object provides the main user interface for this collection
+/// of code.  The various methods for this class are intended to
+/// provide all manipulations that might be necessary in the course of
+/// waveform analysis.
+/// 
+/// \param history     String recording history of data
+/// \param t           Vector of time indices
+/// \param frame       Vector of unit quaternions (rotors).  This rotation,
+///                    applied to the standard basis (x,y,z) results in
+///                    the basis (X,Y,Z), with respect to which the
+///                    waveform is decomposed.  If this vector has length
+///                    0, the frame is assumed to be constant.  If this
+///                    vector has length 1, the frame is assumed to be
+///                    constant, but given by that value.  Otherwise, this
+///                    vector is assumed to have length NTimes(),
+///                    corresponding to the frame at each moment.
+/// \param FrameType   Enum type defined as {UnknownFrameType, Inertial,
+///                    Aligned, Coorbital, Corotating}.  This is used
+///                    to check that appropriate operations are
+///                    performed, when such operations are sensitive
+///                    to the frame.
+/// \param DataType    Enum type defined as {UnknownDataType, h, hdot, 
+///                    Psi4}.  This is used to check that appropriate
+///                    operations are performed, when such operations
+///                    are sensitive to the data type (finding the
+///                    flux, for example).
+/// \param RScaledOut  Boolean stating whether or not radial dependence
+///                    has been scaled out of the data.  If true, the
+///                    data represents r*h or r*Psi4, for example.
+/// \param MScaledOut  Boolean stating whether or not the mass
+///                    dependence has been scaled out of the data.  If
+///                    true, the data represents h/M or M*Psi4, for
+///                    example, and the time represents t/M.
+/// \param lm          Vector of vectors of int's, giving (ell,m) data
+/// \param data        Vector of complex numbers representing h or Psi4.
+///                    Note that this data is stored as real and imaginary
+///                    parts.  In the corotating frame, this is probably
+///                    optimal, as decomposing into modulus and phase is no
+///                    longer useful, and can actually lead to
+///                    discontinuities in m=0 modes.
+/// 

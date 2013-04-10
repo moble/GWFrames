@@ -1,0 +1,82 @@
+// -*- c++ -*-
+
+/// \class GWFrames::FactorialFunctor
+/// \brief Storage for pre-calculated factorials
+/// 
+/// Rather than re-calculating factorial values each time they are
+/// needed, we simply cache the values, which are pre-calculated when
+/// this object is constructed.  They may then be accessed by querying
+/// this object as a functor.  E.g., 
+/// 
+///     FactorialFunctor Factorial;
+///     const double Fac17 = Factorial(17);
+/// 
+/// Note that only values up to Factorial(171) are calculated, because
+/// that is the largest value that can be stored as an `int` in
+/// standard C++.
+
+/// \class GWFrames::BinomialCoefficientFunctor
+/// \brief Storage for pre-calculated binomial values.
+/// 
+/// The object is a functor for the binomial coefficients.  E.g.,
+/// 
+///     BinomialCoefficientFunctor Binom;
+///     const double Binom_4_2 = Binom(4,2);
+/// 
+/// Note that values up to Binom(2*ellMax_Utilities, ...) are
+/// calculated, where ellMax_Utilities is set in `Utilities.hpp`.
+/// Requests for greater values are answered with an exception.
+
+/// \class GWFrames::LadderOperatorFactorFunctor
+/// \brief Storage for pre-calculated values of the ladder operator factor
+/// 
+/// The object is a functor for the coefficients of the standard
+/// angular-momentum ladder operator.  E.g.,
+/// 
+///     LadderOperatorFactorFunctor LadderCoeff;
+///     const double Ladder_4_3 = LadderCoeff(4,3);
+/// 
+/// Note that values up to LadderCoeff(ellMax_Utilities, ...) are
+/// calculated, where ellMax_Utilities is set in `Utilities.hpp`.
+/// Requests for greater values are answered with an exception.
+
+/// \class GWFrames::WignerCoefficientFunctor
+/// \brief Storage for pre-calculated values of coefficients used in
+/// calculating Wigner D matrices.
+/// 
+/// The object is a functor for certain coefficients needed when
+/// computing the Wigner D matrices.  E.g.,
+/// 
+///     WignerCoefficientFunctor WignerCoeff;
+///     const double Coeff_4_3_m2 = WignerCoeff(4,3,-2);
+/// 
+/// Note that values up to WignerCoeff(ellMax_Utilities, ...) are
+/// calculated, where ellMax_Utilities is set in `Utilities.hpp`.
+/// Requests for greater values are answered with an exception.
+
+/// \class GWFrames::WignerD
+/// \brief Calculate values of Wigner's D matrices.
+/// 
+/// This object is a functor for calculating the values of Wigner's D
+/// matrices for many values of (ell,m',m), given some rotation.
+/// E.g.,
+/// 
+///     WignerD D(R);
+///     const double D_5_2_m4 = D(5,2,-4);
+///     const double D_5_2_m3 = D(5,2,-3);
+/// 
+/// The idea is that the rotation can be set to some rotor `R`,
+/// appropriate for some instant in time (possibly using the
+/// `SetRotation` member function), which caches certain values that
+/// need to be re-computed for any `R`.  Work at that instant of time
+/// will usually require computing many values, making this an
+/// efficient method of doing so.
+
+/// \class GWFrames::SWSH
+/// \brief Calculate SWSHs directly from Wigner D matrices.
+/// 
+/// This object calculates values of SWSHs directly from the Wigner D
+/// matrices, in terms of rotors, with the conventions described in
+/// <http://arxiv.org/abs/0709.0093>.  Here, the value at some point
+/// (theta, phi) is given by evaluating this object for a rotor that
+/// takes the north pole (0,0,1) into the point (theta, phi).
