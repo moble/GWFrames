@@ -151,14 +151,16 @@ if __name__ == "__main__" :
             conn.execute('BEGIN EXCLUSIVE')
         except sqlite3.OperationalError as e :
             import textwrap
-            print(texwrap.dedent(
+            print(textwrap.dedent(
                 """
                 ERROR: The database could not be locked.
 
                        If you are trying to create this on an NFS file
                        system, note that NFS may be buggy with regards
                        to locking.  Try locating the database file on
-                       a non-NFS partition.
+                       a non-NFS partition.  (Everything else can stay
+                       where it is.)
+                       
                 """))
             conn.close()
             raise
@@ -185,7 +187,7 @@ if __name__ == "__main__" :
                     conn.execute('BEGIN EXCLUSIVE')
                 except sqlite3.OperationalError as e :
                     import textwrap
-                    print(texwrap.dedent(
+                    print(textwrap.dedent())
                             """
                             ERROR: The database could not be locked.
                             
@@ -193,6 +195,8 @@ if __name__ == "__main__" :
                             file system, note that NFS may be buggy
                             with regards to locking.  Try locating the
                             database file on a non-NFS partition.
+                            (Everything else can stay where it is.)
+                            
                             """))
                     conn.close()
                     raise
