@@ -146,8 +146,24 @@ if __name__ == "__main__" :
     # If requested, generate a database, and quit
     if(args['generate_database']) :
         conn = sqlite3.connect(args['generate_database'], timeout=60)
-        conn.isolation_level = 'EXCLUSIVE'
-        conn.execute('BEGIN EXCLUSIVE')
+        try :
+            conn.isolation_level = 'EXCLUSIVE'
+            conn.execute('BEGIN EXCLUSIVE')
+        except sqlite3.OperationalError as e :
+            print("Got an error")
+            print(e)
+            print(
+                """
+                \nERROR: The database could not be locked.
+
+                         If you are trying to create this on an
+                         NFS file system, note that NFS may be
+                         buggy with regards to locking.  Try
+                         locating the database file on a non-NFS
+                         partition.
+                """)
+            conn.close()
+            raise
         c = conn.cursor()
         try :
             c.execute("""CREATE TABLE extrapolations
@@ -170,6 +186,7 @@ if __name__ == "__main__" :
                     conn.isolation_level = 'EXCLUSIVE'
                     conn.execute('BEGIN EXCLUSIVE')
                 except sqlite3.OperationalError as e :
+                    print("Got an error")
                     print(e)
                     print(
                     """
@@ -180,9 +197,9 @@ if __name__ == "__main__" :
                              buggy with regards to locking.  Try
                              locating the database file on a non-NFS
                              partition.
-                             """)
+                    """)
                     conn.close()
-                    break
+                    raise
                 c = conn.cursor()
                 Subdirectory,DataFile,started,finished,error = [
                     r for r in c.execute("""SELECT * FROM extrapolations WHERE subdirectory='{0}' AND datafile='{1}'""".format(
