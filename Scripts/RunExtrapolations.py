@@ -48,12 +48,16 @@ except Exception as e : # Pass exceptions to shell as failures
 
 if __name__ == "__main__" :
     import os
+    import os.path
     import sys
     import argparse
     import sqlite3
     from datetime import datetime
     from GWFrames.Extrapolation import *
     from GWFrames.Extrapolation import _safe_format
+    
+    def datetimeFromString(s) :
+        return datetime(*[int(d) for d in s.replace('-',' ').replace(':',' ').replace('.',' ').split()])
     
     # Set up and run the parser
     parser = argparse.ArgumentParser(description = __doc__)
@@ -165,11 +169,31 @@ if __name__ == "__main__" :
                 conn.isolation_level = 'EXCLUSIVE'
                 conn.execute('BEGIN EXCLUSIVE')
                 c = conn.cursor()
-                record = [r for r in c.execute("""SELECT started, finished, error FROM extrapolations WHERE subdirectory='{0}' AND datafile='{1}'""".format(
-                            Subdirectory, DataFile))]
-                if(record[0][0]) :
-                    # This has already been run
-                    print("{0}/{1} has already run".format(Subdirectory, DataFile))
+                Subdirectory,DataFile,started,finished,error = [
+                    r for r in c.execute("""SELECT * FROM extrapolations WHERE subdirectory='{0}' AND datafile='{1}'""".format(
+                            Subdirectory, DataFile))][0]
+                # Decide whether or not this should be run
+                RunThis = False
+                if(args['rerun_all']) :
+                    RunThis = True
+                if(not RunThis and args['run_unstarted']) :
+                    RunThis = not bool(started)
+                if(not RunThis and args['rerun_unfinished']) :
+                    RunThis = bool(finished)
+                if(not RunThis and args['rerun_errored']) :
+                    RunThis = bool(error)
+                if(not RunThis and args['rerun_new_data']) :
+                    if(not started or not finished) :
+                        RunThis = True
+                    else :
+                        TimeFinished = datetimeFromString(finished)
+                        TimeHorizons = datetime.utcfromtimestamp(os.path.getmtime('{0}/{1}/Horizons.h5'.format(TopLevelInputDir, Subdirectory)))
+                        TimeData = datetime.utcfromtimestamp(os.path.getmtime('{0}/{1}/{2}'.format(TopLevelInputDir, Subdirectory, DataFile)))
+                        if(TimeData>TimeFinished or TimeHorizons>TimeFinished) :
+                            RunThis = True
+                # And then either run it or don't
+                if(not RunThis) :
+                    print("Not running {0}/{1}.".format(Subdirectory, DataFile))
                     conn.close()
                 else :
                     print("Extrapolating {0}/{1}".format(Subdirectory, DataFile))
