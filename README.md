@@ -1,7 +1,7 @@
 GWFrames
 ========
 
-Manipulate gravitational waveforms -- changing frames, and so on.
+Manipulate gravitational waveforms—changing frames, and so on.
 
 
 The code in this project extends code written for the paper

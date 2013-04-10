@@ -3,6 +3,13 @@
 """
 Extrapolate a bunch of waveforms.
 
+Note that this uses a sqlite3 database for batch runs.  If this
+feature is used, it will need to be able to lock the db file, so that
+multiple extrapolations don't try to run on the same data.  This means
+that the db file can't be stored on NFS (because NFS is broken when it
+comes to file locking).  Usually, there is some accessible filesystem
+that is not NFS, so the file must simply be stored there.
+
 """
 
 
@@ -132,18 +139,22 @@ if __name__ == "__main__" :
     Runs = _uniq(Runs)
     Runs = Runs[int(args['start_with']):] + Runs[:int(args['start_with'])]
     
-    # If requested, generate a database, and use that to do the runs
+    # If requested, generate a database, and quit
     if(args['generate_database']) :
         conn = sqlite3.connect(args['generate_database'], timeout=60)
         conn.isolation_level = 'EXCLUSIVE'
         conn.execute('BEGIN EXCLUSIVE')
         c = conn.cursor()
-        c.execute("""CREATE TABLE extrapolations
-             (subdirectory text, datafile text, started text, finished text, error integer)""")
+        try :
+            c.execute("""CREATE TABLE extrapolations
+             (subdirectory text, datafile text, started text, finished text, error integer, UNIQUE(subdirectory, datafile) ON CONFLICT REPLACE)""")
+        except sqlite3.OperationalError :
+            pass # table already exists
         for Subdirectory,DataFile in Runs :
             c.execute("INSERT INTO extrapolations VALUES ('{0}','{1}','','',0)".format(Subdirectory, DataFile))
         conn.commit()
         conn.close()
+    # Otherwise, just do the runs
     else :
         # Now run the extrapolation
         print("Running the following {0} runs:\n{1}".format(len(Runs),Runs))
