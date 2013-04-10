@@ -166,8 +166,23 @@ if __name__ == "__main__" :
         for Subdirectory,DataFile in Runs :
             if(args['use_database']) :
                 conn = sqlite3.connect(args['use_database'], timeout=60)
-                conn.isolation_level = 'EXCLUSIVE'
-                conn.execute('BEGIN EXCLUSIVE')
+                try :
+                    conn.isolation_level = 'EXCLUSIVE'
+                    conn.execute('BEGIN EXCLUSIVE')
+                except sqlite3.OperationalError as e :
+                    print(e)
+                    print(
+                    """
+                    \nERROR: The database could not be locked.
+                             
+                             If you are trying to create this on an
+                             NFS file system, note that NFS may be
+                             buggy with regards to locking.  Try
+                             locating the database file on a non-NFS
+                             partition.
+                             """)
+                    conn.close()
+                    break
                 c = conn.cursor()
                 Subdirectory,DataFile,started,finished,error = [
                     r for r in c.execute("""SELECT * FROM extrapolations WHERE subdirectory='{0}' AND datafile='{1}'""".format(
