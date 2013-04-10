@@ -187,7 +187,7 @@ if __name__ == "__main__" :
                     conn.execute('BEGIN EXCLUSIVE')
                 except sqlite3.OperationalError as e :
                     import textwrap
-                    print(textwrap.dedent())
+                    print(textwrap.dedent(
                             """
                             ERROR: The database could not be locked.
                             
