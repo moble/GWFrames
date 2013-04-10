@@ -5,9 +5,9 @@ Manipulate gravitational waveforms -- changing frames, and so on.
 
 
 The code in this project extends code written for the paper
-arXiv:1302.2919, giving an explicit implementation of the methods
-discussed in it.  The first commit of this project is the last commit
-of the paper's project.
+[arXiv:1302.2919](http://arxiv.org/abs/1302.2919), giving an explicit
+implementation of the methods discussed in it.  The first commit of
+this project is the last commit of the paper's project.
 
 The license for using this software is basically open (see the LICENSE
 file in this directory), though citations to the original paper are
@@ -27,7 +27,7 @@ To build just the C++ code:
 * C++ compiler
 * GNU Scientific Library <http://www.gnu.org/software/gsl/>
 
-To use the optional -- but highly recommended -- Python interface:
+To use the optional—but highly recommended—Python interface:
 * SWIG v2.0 or greater
 * Python v2.7 (v2.6 or v3.3+ should work, but are untested)
 * NumPy <http://www.numpy.org/>
@@ -48,7 +48,7 @@ more useful in the former.
 Overview
 ========
 The code is mostly in the form of C++, for speed.  All functions are
-provided in the 'GWFrames' namespace.  The interface is reasonably
+provided in the `GWFrames` namespace.  The interface is reasonably
 straightforward, and can easily be included into and compiled with
 other code.
 
@@ -74,7 +74,8 @@ Documentation.pdf contains a static PDF of the notebook.
 
 
 Alternatively, this code may be used directly through its C++
-interface.  A simple example is provided in the 'C++Example'
-directory, along with two Makefiles (one in this directory, one in
-C++Example) to build all the necessary code.  If it does not compile
-easily, make sure the various paths in the Makefiles are set properly.
+interface.  A simple example is provided in the `C++Example`
+directory, along with two `Makefile`s (one in this directory, one in
+the example directory) to build all the necessary code.  If it does
+not compile easily, make sure the various paths in _both_ `Makefile`s
+are set properly.
