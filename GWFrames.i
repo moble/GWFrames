@@ -363,26 +363,6 @@ def ArgUnwrapper(self, mode) :
     return numpy.unwrap(self.Arg(mode))
 Waveform.ArgUnwrapped = ArgUnwrapper
 
-### These functions convert to and from Waveform objects in the PyGW module
-def ConvertFromPyGWReIm(W_P) :
-    W_G = Waveform()
-    W_G.SetHistory(W_P.HistoryStr())
-    W_G.SetTime(W_P.T().tolist())
-    W_G.SetFrame([Quaternion(r[0], r[1], r[2], r[3]) for r in W_P.Frame()])
-    W_G.SetLM(W_P.LM().tolist())
-    W_G.SetData( W_P.Mag() + 1j*W_P.Arg() )
-    return W_G
-
-def ConvertFromPyGWMagArg(W_P) :
-    from numpy import exp
-    W_G = Waveform()
-    W_G.SetHistory(W_P.HistoryStr())
-    W_G.SetTime(W_P.T().tolist())
-    W_G.SetFrame([Quaternion(r[0], r[1], r[2], r[3]) for r in W_P.Frame()])
-    W_G.SetLM(W_P.LM().tolist())
-    W_G.SetData( W_P.Mag()*exp(1j*W_P.Arg()) )
-    return W_G
-
 
 def GetFileNamePrefix(W) :
     from GWFrames import UnknownDataType, h, hdot, Psi4
