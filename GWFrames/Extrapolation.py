@@ -464,13 +464,13 @@ def Extrapolate(**kwargs) :
     for i,ExtrapolationOrder in enumerate(ExtrapolationOrders) :
         # If necessary, rotate
         if(OutputFrame==Inertial or OutputFrame==Corotating) :
-            stdout.write("N={0}: Rotating into inertial frame...\n".format(ExtrapolationOrder)); stdout.flush()
+            stdout.write("N={0}: Rotating into inertial frame...".format(ExtrapolationOrder)); stdout.flush()
             ExtrapolatedWaveforms[i].TransformToInertialFrame()
             if(ExtrapolationOrder>=0) :
                 ExtrapolatedWaveforms[i+NExtrapolations].TransformToInertialFrame()
             print("☺"); stdout.flush()
         if(OutputFrame==Corotating) :
-            stdout.write("N={0}: Rotating into corotating frame...\n".format(ExtrapolationOrder)); stdout.flush()
+            stdout.write("N={0}: Rotating into corotating frame...".format(ExtrapolationOrder)); stdout.flush()
             ExtrapolatedWaveforms[i].TransformToCorotatingFrame()
             if(ExtrapolationOrder>=0) :
                 ExtrapolatedWaveforms[i+NExtrapolations].TransformUncertaintiesToCorotatingFrame(ExtrapolatedWaveforms[i].Frame())
