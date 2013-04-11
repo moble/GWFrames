@@ -79,6 +79,7 @@ namespace GWFrames {
     inline std::string FrameTypeString() const { return WaveformFrameNames[frameType]; }
     inline std::string DataTypeString() const { return WaveformDataNames[dataType]; }
     inline std::string DataTypeLaTeXString() const { return WaveformDataNamesLaTeX[dataType]; }
+    std::string DescriptorString() const;
     inline bool RIsScaledOut() const { return rIsScaledOut; }
     inline bool MIsScaledOut() const { return mIsScaledOut; }
     inline double T(const unsigned int TimeIndex) const { return t[TimeIndex]; }

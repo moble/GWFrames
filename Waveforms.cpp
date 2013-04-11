@@ -349,6 +349,23 @@ unsigned int GWFrames::Waveform::MaxNormIndex(const unsigned int SkipFraction) c
   return index;
 }
 
+// Return a descriptive string appropriate for a file name, like rhOverM_Inertial.
+std::string GWFrames::Waveform::DescriptorString() const {
+  std::string Descriptor = "";
+  if(RIsScaledOut()) Descriptor = "r";
+  if(MIsScaledOut()) {
+    if(DataType()==UnknownDataType or DataType()==h)
+      Descriptor = Descriptor + DataTypeString() + "OverM";
+    else if(DataType()==hdot)
+      Descriptor = Descriptor + DataTypeString(); // hdot is independent of M
+    else if(DataType()==Psi4)
+      Descriptor = Descriptor + "M" + DataTypeString();
+  } else {
+    Descriptor = Descriptor + DataTypeString();
+  }
+  return Descriptor + "_" + FrameTypeString();
+}
+
 /// Return vector of real parts of a given mode as function of time.
 std::vector<double> GWFrames::Waveform::Re(const unsigned int Mode) const {
   const unsigned int ntimes = NTimes();
@@ -2346,13 +2363,14 @@ GWFrames::Waveform GWFrames::Waveform::Hybridize(const GWFrames::Waveform& B, co
 
 /// Output Waveform object to data file.
 const GWFrames::Waveform& GWFrames::Waveform::Output(const std::string& FileName, const unsigned int precision) const {
+  const std::string Descriptor = DescriptorString();
   ofstream ofs(FileName.c_str(), ofstream::out);
   ofs << setprecision(precision) << flush;
   ofs << history.str() << "### this->Output(" << FileName << ", " << precision << ")" << endl;
   ofs << "# [1] = Time" << endl;
   for(unsigned int i_m=0; i_m<NModes(); ++i_m) {
-    ofs << "# [" << 2*i_m+2 << "] = Re{f(" << lm[i_m][0] << "," << lm[i_m][1] << ")}" << endl;
-    ofs << "# [" << 2*i_m+3 << "] = Im{f(" << lm[i_m][0] << "," << lm[i_m][1] << ")}" << endl;
+    ofs << "# [" << 2*i_m+2 << "] = Re{" << Descriptor << "(" << lm[i_m][0] << "," << lm[i_m][1] << ")}" << endl;
+    ofs << "# [" << 2*i_m+3 << "] = Im{" << Descriptor << "(" << lm[i_m][0] << "," << lm[i_m][1] << ")}" << endl;
   }
   for(unsigned int i_t=0; i_t<NTimes(); ++i_t) {
     ofs << T(i_t) << " ";
