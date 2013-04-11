@@ -309,7 +309,7 @@ def Extrapolate(**kwargs) :
     
     # Basic imports
     from os import makedirs
-    from os.path import exists
+    from os.path import exists, basename, dirname
     from sys import stdout, stderr
     from textwrap import dedent
     from numpy import sqrt, abs, fmod, pi, transpose, array
@@ -487,13 +487,13 @@ def Extrapolate(**kwargs) :
         if not exists(OutputDirectory) :
             makedirs(OutputDirectory)
         if(ExtrapolatedFile.endswith('.dat')) :
-            ExtrapolatedWaveforms[i].Output(ExtrapolatedFile)
+            ExtrapolatedWaveforms[i].Output(dirname(ExtrapolatedFile)+'/'+ExtrapolatedWaveforms[i].GetFileNamePrefix()+basename(ExtrapolatedFile))
         else :
             ExtrapolatedWaveforms[i].OutputToH5(ExtrapolatedFile)
         if(ExtrapolationOrder>=0) :
             ExtrapolationUncertaintyFile = OutputDirectory+ExtrapolationUncertaintyFiles.format(N=ExtrapolationOrder)
             if(ExtrapolationUncertaintyFile.endswith('.dat')) :
-                ExtrapolatedWaveforms[i+NExtrapolations].Output(ExtrapolationUncertaintyFile)
+                ExtrapolatedWaveforms[i+NExtrapolations].Output(dirname(ExtrapolationUncertaintyFile)+'/'+ExtrapolatedWaveforms[i+NExtrapolations].GetFileNamePrefix()+basename(ExtrapolationUncertaintyFile))
             else :
                 ExtrapolatedWaveforms[i+NExtrapolations].OutputToH5(ExtrapolationUncertaintyFile)
         print("☺"); stdout.flush()
@@ -516,7 +516,7 @@ def Extrapolate(**kwargs) :
                 DifferenceFile = OutputDirectory+DifferenceFiles.format(N=ExtrapolationOrder, Nm1=ExtrapolationOrders[i-1])
                 print("N={0}: Writing {1}... ".format(ExtrapolationOrder, DifferenceFile)); stdout.flush()
                 if(DifferenceFile.endswith('.dat')) :
-                    Diff.Output(DifferenceFile)
+                    Diff.Output(dirname(DifferenceFile)+'/'+Diff.GetFileNamePrefix()+basename(DifferenceFile))
                 else :
                     Diff.OutputToH5(DifferenceFile)
                 print("☺"); stdout.flush()
