@@ -53,7 +53,7 @@ if __name__ == "__main__" :
         RData_h = h.create_group(R+".dir")
         RData_Psi4 = Psi4.create_group(R+".dir")
         ArealRadius = numpy.sqrt(AreaData[:,1]/(4*numpy.pi))
-        AverageLapse = LapseData[:,1]/ArealRadius
+        AverageLapse = LapseData[:,1]/AreaData[:,1]
         RData_h.create_dataset('ArealRadius.dat', data=numpy.array([AreaData[:,0], ArealRadius]).transpose())
         RData_h.create_dataset('AverageLapse.dat', data=numpy.array([LapseData[:,0], AverageLapse]).transpose())
         RData_h.create_dataset('CoordRadius.dat', data=[[0., float(R[1:])]])
