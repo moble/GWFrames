@@ -514,7 +514,7 @@ def Extrapolate(**kwargs) :
                 Diff = ExtrapolatedWaveforms[i].Compare(ExtrapolatedWaveforms[i-1])
             if(DifferenceFiles) :
                 DifferenceFile = OutputDirectory+DifferenceFiles.format(N=ExtrapolationOrder, Nm1=ExtrapolationOrders[i-1])
-                print("N={0}: Writing {1}... ".format(ExtrapolationOrder, DifferenceFile)); stdout.flush()
+                stdout.write("N={0}: Writing {1}... ".format(ExtrapolationOrder, DifferenceFile)); stdout.flush()
                 if(DifferenceFile.endswith('.dat')) :
                     Diff.Output(dirname(DifferenceFile)+'/'+Diff.GetFileNamePrefix()+basename(DifferenceFile))
                 else :
