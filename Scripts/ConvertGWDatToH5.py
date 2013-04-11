@@ -41,6 +41,7 @@ if __name__ == "__main__" :
         Psi4Data = numpy.loadtxt(Psi4File)
         AreaData = numpy.loadtxt(AreaFile)
         R = re.search('LapseSurfaceIntegral_(.*)m.dat', LapseFile).group(1)
+        print(R)
         LMData = []
         with open(hFile, 'r') as f :
             line = f.readline()
@@ -66,7 +67,7 @@ if __name__ == "__main__" :
                 Ylm = RData_h.create_dataset("Y_l{0}_m{1}.dat".format(ell, m), data=numpy.array([hData[:,0], hData[:,i], hData[:,i+1]]).transpose())
                 Ylm.attrs['ell'] = ell
                 Ylm.attrs['m'] = m
-                Ylm = RData_Psi4.create_dataset("Y_l{0}_m{1}.dat".format(ell, m), data=numpy.array([Psi4Data[:,0], Pis4Data[:,i], Psi4Data[:,i+1]]).transpose())
+                Ylm = RData_Psi4.create_dataset("Y_l{0}_m{1}.dat".format(ell, m), data=numpy.array([Psi4Data[:,0], Psi4Data[:,i], Psi4Data[:,i+1]]).transpose())
                 Ylm.attrs['ell'] = ell
                 Ylm.attrs['m'] = m
         
