@@ -486,10 +486,16 @@ def Extrapolate(**kwargs) :
         stdout.write("N={0}: Writing {1}... ".format(ExtrapolationOrder, ExtrapolatedFile)); stdout.flush()
         if not exists(OutputDirectory) :
             makedirs(OutputDirectory)
-        ExtrapolatedWaveforms[i].OutputToH5(ExtrapolatedFile)
+        if(ExtrapolatedFile.endswith('.dat')) :
+            ExtrapolatedWaveforms[i].Output(ExtrapolatedFile)
+        else :
+            ExtrapolatedWaveforms[i].OutputToH5(ExtrapolatedFile)
         if(ExtrapolationOrder>=0) :
             ExtrapolationUncertaintyFile = OutputDirectory+ExtrapolationUncertaintyFiles.format(N=ExtrapolationOrder)
-            ExtrapolatedWaveforms[i+NExtrapolations].OutputToH5(ExtrapolationUncertaintyFile)
+            if(ExtrapolationUncertaintyFile.endswith('.dat')) :
+                ExtrapolatedWaveforms[i+NExtrapolations].Output(ExtrapolationUncertaintyFile)
+            else :
+                ExtrapolatedWaveforms[i+NExtrapolations].OutputToH5(ExtrapolationUncertaintyFile)
         print("☺"); stdout.flush()
     
     MaxNormTime = ExtrapolatedWaveforms[0].MaxNormTime()
@@ -509,7 +515,10 @@ def Extrapolate(**kwargs) :
             if(DifferenceFiles) :
                 DifferenceFile = OutputDirectory+DifferenceFiles.format(N=ExtrapolationOrder, Nm1=ExtrapolationOrders[i-1])
                 print("N={0}: Writing {1}... ".format(ExtrapolationOrder, DifferenceFile)); stdout.flush()
-                Diff.OutputToH5(DifferenceFile)
+                if(DifferenceFile.endswith('.dat')) :
+                    Diff.Output(DifferenceFile)
+                else :
+                    Diff.OutputToH5(DifferenceFile)
                 print("☺"); stdout.flush()
             if(PlotFormat) :
                 # stdout.write("Plotting... "); stdout.flush()
