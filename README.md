@@ -38,9 +38,8 @@ This is even more optional, but even more highly recommended:
 All of the above are reasonably standard, and can be installed easily
 through package managers such as apt and macports.  The notebook
 interface for IPython provides an environment much like the
-Mathematica notebook interface.  The examples are provided in both
-notebook (*.ipynb) and plain-python (*.py) formats, but are much
-more useful in the former.
+Mathematica notebook interface.  The examples are provided in a
+notebook (*.ipynb) object.
 
 
 
