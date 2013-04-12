@@ -34,84 +34,12 @@ Transform Waveform to an inertial frame.
 %feature("docstring") GWFrames::Quaternion """
 class GWFrames::Quaternion
 ==========================
-  Quaternion class implementing standard algebraic operations and several
-  related functions.
-  
-  This class implements all of the basic algebraic operations applicable to
-  Quaternions, as well as several related functions. Functions acting on
-  Quaternions or vectors of Quaternions re-implement the same functions and
-  various functions such as interpolation.
-  
   Member variables
   ----------------
     double w
     double x
     double y
     double z
-  
-"""
-
-%feature("docstring") GWFrames::Quaternions """
-
-
-  Parameters
-  ----------
-    const vector<double>& vartheta
-    const vector<double>& varphi
-  
-  Returns
-  -------
-    vector<Quaternion>
-  
-
-
-
-  Parameters
-  ----------
-    const vector<double>& alpha
-    const vector<double>& beta
-    const vector<double>& gamma
-  
-  Returns
-  -------
-    vector<Quaternion>
-  
-
-
-
-  Parameters
-  ----------
-    const vector<double>& w0
-    const vector<double>& x0
-    const vector<double>& y0
-    const vector<double>& z0
-  
-  Returns
-  -------
-    vector<Quaternion>
-  
-
-
-
-  Parameters
-  ----------
-    const vector<vector<double>>& q
-  
-  Returns
-  -------
-    vector<Quaternion>
-  
-
-
-
-  Parameters
-  ----------
-    const vector<double>& angle
-    const vector<vector<double>>& axis
-  
-  Returns
-  -------
-    vector<Quaternion>
   
 """
 
@@ -265,19 +193,6 @@ Transform Waveform to frame aligned with angular-velocity vector.
   Returns
   -------
     void
-  
-"""
-
-%feature("docstring") GWFrames::WignerCoefficientFunctor::WignerCoefficientFunctor """
-
-
-  Parameters
-  ----------
-    (none)
-  
-  Returns
-  -------
-    WignerCoefficientFunctor
   
 """
 
@@ -882,68 +797,6 @@ Rotate the physical content of the Waveform.
 %feature("docstring") GWFrames::PNWaveform """
 class GWFrames::PNWaveform
 ==========================
-  Fundamental object creating precessing PN waveform.
-  
-  This object is a subclass of the GWFrames::Waveform object. In addition to
-  the data stored in a Waveform, this stores the two spins chi1 and chi2; the
-  orbital angular-velocity vectors Omega_orb, Omega_prec, and Omega_tot; the PN
-  angular momentum; and the orbital phase Phi_orb. Various methods also exist
-  for retrieving the vectors, their magnitudes, and their normalized versions.
-  
-  history
-  
-  String recording history of data
-  
-  t
-  
-  Vector of time indices
-  
-  frame
-  
-  Vector of quaternions. This represents the rotation applied to the physical
-  system to go from the standard inertial frame to the frame in which the
-  Waveform is decomposed. If this vector has length 0, the frame is assumed to
-  be constant, and the standard frame. If this vector has length 1, the frame
-  is assumed to be constant, but given by that value. Otherwise, this vector is
-  assumed to have length NTimes(), corresponding to the frame at each moment.
-  
-  lm
-  
-  Vector of vectors of int's, giving (ell,m) data
-  
-  data
-  
-  Vector of complex numbers representing h or Psi4.
-  
-  chi1
-  
-  Vector of vectors of doubles representing the spin of BH 1.
-  
-  chi2
-  
-  Vector of vectors of doubles representing the spin of BH 2.
-  
-  Omega_orb
-  
-  Vector of vectors of doubles representing the orbital angular-velocity vector.
-  
-  Omega_prec
-  
-  Vector of vectors of doubles representing the precessional angular-velocity
-  vector.
-  
-  Omega_tot
-  
-  Vector of vectors of doubles representing the total angular-velocity vector.
-  
-  L
-  
-  Vector of vectors of doubles representing the angular-momentum vector.
-  
-  Phi_orb
-  
-  Vector of doubles representing the orbital phase.
-  
   Member variables
   ----------------
     vector<vector<double>> mchi1
@@ -955,16 +808,16 @@ class GWFrames::PNWaveform
   
 """
 
-%feature("docstring") GWFrames::Quaternion::operator= """
-Equality operator (not available from python)
-=============================================
+%feature("docstring") GWFrames::WignerCoefficientFunctor::WignerCoefficientFunctor """
+
+
   Parameters
   ----------
-    const Quaternion& Q
+    (none)
   
   Returns
   -------
-    Quaternion&
+    WignerCoefficientFunctor
   
 """
 
@@ -1097,8 +950,6 @@ Reset the rotor for this object to the given value.
 %feature("docstring") GWFrames """
 namespace GWFrames
 ==================
-  Collection of objects and functions for manipulating gravitational waves.
-  
 """
 
 %feature("docstring") GWFrames::Eigenvectors """
@@ -1139,78 +990,9 @@ Transform Waveform to O'Shaughnessy et al. frame.
 %feature("docstring") GWFrames::BinomialCoefficientFunctor """
 class GWFrames::BinomialCoefficientFunctor
 ==========================================
-  Storage for pre-calculated binomial values.
-  
-  The object is a functor for the binomial coefficients. E.g.,
-  BinomialCoefficientFunctor Binom;
-const double Binom_4_2 = Binom(4,2);
-  
-  Note that values up to Binom(2*ellMax_Utilities, ...) are calculated, where
-  ellMax_Utilities is set in Utilities.hpp. Requests for greater values are
-  answered with an exception.
-  
   Member variables
   ----------------
     const vector<double> BinomialCoefficientTable
-  
-"""
-
-%feature("docstring") GWFrames::Quaternion::operator- """
-Negation operator returns this object with opposite sign.
-=========================================================
-  Parameters
-  ----------
-    (none)
-  
-  Returns
-  -------
-    Quaternion
-  
-
-Subtract a double from scalar component.
-========================================
-  Parameters
-  ----------
-    const double t
-  
-  Returns
-  -------
-    Quaternion
-  
-
-Quaternion subtraction.
-=======================
-  Parameters
-  ----------
-    const Quaternion& Q
-  
-  Returns
-  -------
-    Quaternion
-  
-"""
-
-%feature("docstring") GWFrames::Quaternion::operator/ """
-Divide each component by double.
-================================
-  Parameters
-  ----------
-    const double t
-  
-  Returns
-  -------
-    Quaternion
-  
-
-Quaternion division.
-====================
-  Parameters
-  ----------
-    const Quaternion& Q
-  
-  Returns
-  -------
-    Quaternion
   
 """
 
@@ -1274,40 +1056,67 @@ Fix the orientation of the corotating frame.
   
 """
 
-%feature("docstring") GWFrames::Quaternion::operator+ """
-Add a double to scalar component.
-=================================
+%feature("docstring") GWFrames::Quaternions """
+
+
   Parameters
   ----------
-    const double t
+    const vector<double>& vartheta
+    const vector<double>& varphi
   
   Returns
   -------
-    Quaternion
+    vector<Quaternion>
   
 
-Quaternion addition.
-====================
-  Parameters
-  ----------
-    const Quaternion& Q
-  
-  Returns
-  -------
-    Quaternion
-  
-"""
 
-%feature("docstring") GWFrames::Quaternion::operator* """
-Multiply each component by double.
-==================================
+
   Parameters
   ----------
-    const double t
+    const vector<double>& alpha
+    const vector<double>& beta
+    const vector<double>& gamma
   
   Returns
   -------
-    Quaternion
+    vector<Quaternion>
+  
+
+
+
+  Parameters
+  ----------
+    const vector<double>& w0
+    const vector<double>& x0
+    const vector<double>& y0
+    const vector<double>& z0
+  
+  Returns
+  -------
+    vector<Quaternion>
+  
+
+
+
+  Parameters
+  ----------
+    const vector<vector<double>>& q
+  
+  Returns
+  -------
+    vector<Quaternion>
+  
+
+
+
+  Parameters
+  ----------
+    const vector<double>& angle
+    const vector<vector<double>>& axis
+  
+  Returns
+  -------
+    vector<Quaternion>
   
 """
 
@@ -1352,18 +1161,6 @@ Return the intersection of two time sequences.
 %feature("docstring") GWFrames::WignerCoefficientFunctor """
 class GWFrames::WignerCoefficientFunctor
 ========================================
-  Storage for pre-calculated values of coefficients used in calculating Wigner
-  D matrices.
-  
-  The object is a functor for certain coefficients needed when computing the
-  Wigner D matrices. E.g., WignerCoefficientFunctor WignerCoeff;
-const double
-  Coeff_4_3_m2 = WignerCoeff(4,3,-2);
-  
-  Note that values up to WignerCoeff(ellMax_Utilities, ...) are calculated,
-  where ellMax_Utilities is set in Utilities.hpp. Requests for greater values
-  are answered with an exception.
-  
   Member variables
   ----------------
     const vector<double> CoefficientTable
@@ -1394,64 +1191,6 @@ Transform Waveform to Schmidt et al. frame.
 %feature("docstring") GWFrames::Waveform """
 class GWFrames::Waveform
 ========================
-  Fundamental object encapsulating waveform data, such as time, (l,m)
-  information, and complex data.
-  
-  This object provides the main user interface for this collection of code. The
-  various methods for this class are intended to provide all manipulations that
-  might be necessary in the course of waveform analysis.
-  
-  history
-  
-  String recording history of data
-  
-  t
-  
-  Vector of time indices
-  
-  frame
-  
-  Vector of unit quaternions (rotors). This rotation, applied to the standard
-  basis (x,y,z) results in the basis (X,Y,Z), with respect to which the
-  waveform is decomposed. If this vector has length 0, the frame is assumed to
-  be constant. If this vector has length 1, the frame is assumed to be
-  constant, but given by that value. Otherwise, this vector is assumed to have
-  length NTimes(), corresponding to the frame at each moment.
-  
-  FrameType
-  
-  Enum type defined as {UnknownFrameType, Inertial, Aligned, Coorbital,
-  Corotating}. This is used to check that appropriate operations are performed,
-  when such operations are sensitive to the frame.
-  
-  DataType
-  
-  Enum type defined as {UnknownDataType, h, hdot, Psi4}. This is used to check
-  that appropriate operations are performed, when such operations are sensitive
-  to the data type (finding the flux, for example).
-  
-  RScaledOut
-  
-  Boolean stating whether or not radial dependence has been scaled out of the
-  data. If true, the data represents r*h or r*Psi4, for example.
-  
-  MScaledOut
-  
-  Boolean stating whether or not the mass dependence has been scaled out of the
-  data. If true, the data represents h/M or M*Psi4, for example, and the time
-  represents t/M.
-  
-  lm
-  
-  Vector of vectors of int's, giving (ell,m) data
-  
-  data
-  
-  Vector of complex numbers representing h or Psi4. Note that this data is
-  stored as real and imaginary parts. In the corotating frame, this is probably
-  optimal, as decomposing into modulus and phase is no longer useful, and can
-  actually lead to discontinuities in m=0 modes.
-  
   Member variables
   ----------------
     stringstream history
@@ -1497,28 +1236,42 @@ class GWFrames::Waveform
   
 """
 
-%feature("docstring") GWFrames::FrameFromAngularVelocity """
+%feature("docstring") GWFrames::Quaternion::operator+ """
 
 
   Parameters
   ----------
-    const vector<Quaternion>& Omega
-      Vector of Quaternions.
-    const vector<double>& T
-      Vector of corresponding times.
+    const double t
   
   Returns
   -------
-    vector<Quaternion>
+    Quaternion
   
-  Description
-  -----------
-    Note that each element of Omega should be a pure-vector Quaternion,
-    corresponding to the angular-velocity vector at the instant of time.
+
+
+
+  Parameters
+  ----------
+    const Quaternion& Q
+  
+  Returns
+  -------
+    Quaternion
   
 """
 
 %feature("docstring") GWFrames::Quaternion::operator* """
+
+
+  Parameters
+  ----------
+    const double t
+  
+  Returns
+  -------
+    Quaternion
+  
+
 Quaternion multiplication.
 ==========================
   Parameters
@@ -1544,16 +1297,27 @@ Quaternion multiplication.
   
 """
 
-%feature("docstring") GWFrames::Waveform::SetDataType """
+%feature("docstring") GWFrames::Quaternion::operator/ """
 
 
   Parameters
   ----------
-    const WaveformDataType Type
+    const double t
   
   Returns
   -------
-    void
+    Quaternion
+  
+
+
+
+  Parameters
+  ----------
+    const Quaternion& Q
+  
+  Returns
+  -------
+    Quaternion
   
 """
 
@@ -1579,6 +1343,41 @@ Return the data index corresponding to the time of the largest norm.
     Norm()
     
     MaxNormTime()
+  
+"""
+
+%feature("docstring") GWFrames::Quaternion::operator- """
+
+
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    Quaternion
+  
+
+
+
+  Parameters
+  ----------
+    const double t
+  
+  Returns
+  -------
+    Quaternion
+  
+
+
+
+  Parameters
+  ----------
+    const Quaternion& Q
+  
+  Returns
+  -------
+    Quaternion
   
 """
 
@@ -1647,6 +1446,27 @@ Explicit constructor from data.
   Description
   -----------
     Arguments are T, LM, Data, which consist of the explicit data.
+  
+"""
+
+%feature("docstring") GWFrames::FrameFromAngularVelocity """
+
+
+  Parameters
+  ----------
+    const vector<Quaternion>& Omega
+      Vector of Quaternions.
+    const vector<double>& T
+      Vector of corresponding times.
+  
+  Returns
+  -------
+    vector<Quaternion>
+  
+  Description
+  -----------
+    Note that each element of Omega should be a pure-vector Quaternion,
+    corresponding to the angular-velocity vector at the instant of time.
   
 """
 
@@ -1766,6 +1586,19 @@ Return time derivative of data.
   
 """
 
+%feature("docstring") GWFrames::Quaternion::operator= """
+
+
+  Parameters
+  ----------
+    const Quaternion& Q
+  
+  Returns
+  -------
+    Quaternion&
+  
+"""
+
 %feature("docstring") GWFrames::exp """
 
 
@@ -1796,6 +1629,19 @@ Return time derivative of data.
   Parameters
   ----------
     (none)
+  
+  Returns
+  -------
+    void
+  
+"""
+
+%feature("docstring") GWFrames::Waveform::SetDataType """
+
+
+  Parameters
+  ----------
+    const WaveformDataType Type
   
   Returns
   -------
@@ -1911,6 +1757,30 @@ class GWFrames::WignerDMatrix
   
 """
 
+%feature("docstring") GWFrames::Quaternion::pow """
+
+
+  Parameters
+  ----------
+    const double t
+  
+  Returns
+  -------
+    Quaternion
+  
+
+
+
+  Parameters
+  ----------
+    const Quaternion& Q
+  
+  Returns
+  -------
+    Quaternion
+  
+"""
+
 %feature("docstring") Matrix::swap """
 
 
@@ -1952,8 +1822,8 @@ Get the rotor needed to align this waveform's frame to the other's at the given 
 """
 
 %feature("docstring") GWFrames::Quaternion::abs """
-Absolute value of Quaternion.
-=============================
+
+
   Parameters
   ----------
     (none)
@@ -2596,25 +2466,6 @@ Transform Waveform to an inertial frame.
   
 """
 
-%feature("docstring") GWFrames::WignerD """
-class GWFrames::WignerD
-=======================
-  Calculate values of Wigner's D matrices.
-  
-  This object is a functor for calculating the values of Wigner's D matrices
-  for many values of (ell,m',m), given some rotation. E.g., WignerD D(R);
-const
-  double D_5_2_m4 = D(5,2,-4);
-const double D_5_2_m3 = D(5,2,-3);
-  
-  The idea is that the rotation can be set to some rotor R, appropriate for
-  some instant in time (possibly using the SetRotation member function), which
-  caches certain values that need to be re-computed for any R. Work at that
-  instant of time will usually require computing many values, making this an
-  efficient method of doing so.
-  
-"""
-
 %feature("docstring") MatrixC::resize """
 
 
@@ -2905,8 +2756,8 @@ Return vector of vector of arg of all modes as function of time.
 """
 
 %feature("docstring") GWFrames::Quaternion::sqrtOfRotor """
-Square-root of unit Quaternion.
-===============================
+
+
   Parameters
   ----------
     (none)
@@ -2914,11 +2765,6 @@ Square-root of unit Quaternion.
   Returns
   -------
     Quaternion
-  
-  Description
-  -----------
-    Note: This function simply assumes that the input has unit magnitude. This
-    function is here for speed, and is designed not to check for unit magnitude.
   
 """
 
@@ -2985,17 +2831,6 @@ Return vector of vector of real parts of all modes as function of time.
 %feature("docstring") GWFrames::LadderOperatorFactorFunctor """
 class GWFrames::LadderOperatorFactorFunctor
 ===========================================
-  Storage for pre-calculated values of the ladder operator factor.
-  
-  The object is a functor for the coefficients of the standard angular-momentum
-  ladder operator. E.g., LadderOperatorFactorFunctor LadderCoeff;
-const double
-  Ladder_4_3 = LadderCoeff(4,3);
-  
-  Note that values up to LadderCoeff(ellMax_Utilities, ...) are calculated,
-  where ellMax_Utilities is set in Utilities.hpp. Requests for greater values
-  are answered with an exception.
-  
   Member variables
   ----------------
     const vector<double> FactorTable
@@ -3225,8 +3060,8 @@ const double
 """
 
 %feature("docstring") GWFrames::Quaternion::normalized """
-Return normalized Quaternion.
-=============================
+
+
   Parameters
   ----------
     (none)
@@ -3432,8 +3267,8 @@ Calculate the $<LL>$ quantity defined in the paper.
 """
 
 %feature("docstring") GWFrames::Quaternion::inverse """
-Inverse of Quaternion.
-======================
+
+
   Parameters
   ----------
     (none)
@@ -3628,8 +3463,8 @@ Integrate vector function by simple trapezoidal rule.
 """
 
 %feature("docstring") GWFrames::Quaternion::normsquared """
-Squared norm of Quaternion.
-===========================
+
+
   Parameters
   ----------
     (none)
@@ -3643,14 +3478,6 @@ Squared norm of Quaternion.
 %feature("docstring") GWFrames::SWSH """
 class GWFrames::SWSH
 ====================
-  Calculate SWSHs directly from Wigner D matrices.
-  
-  This object calculates values of SWSHs directly from the Wigner D matrices,
-  in terms of rotors, with the conventions described in
-  http://arxiv.org/abs/0709.0093. Here, the value at some point (theta, phi) is
-  given by evaluating this object for a rotor that takes the north pole (0,0,1)
-  into the point (theta, phi).
-  
   Member variables
   ----------------
     WignerDMatrix D
@@ -3757,30 +3584,6 @@ Deduce PN-equivalent precessional angular velocity from Waveform.
   Returns
   -------
     void
-  
-"""
-
-%feature("docstring") GWFrames::Quaternion::pow """
-Raise Quaternion to (double) exponent.
-======================================
-  Parameters
-  ----------
-    const double t
-  
-  Returns
-  -------
-    Quaternion
-  
-
-Raise Quaternion to (Quaternion) exponent.
-==========================================
-  Parameters
-  ----------
-    const Quaternion& Q
-  
-  Returns
-  -------
-    Quaternion
   
 """
 
@@ -4083,8 +3886,8 @@ Output Waveform object to data file.
 """
 
 %feature("docstring") GWFrames::Quaternion::angle """
-Magnitude of logarithm of unit Quaternion.
-==========================================
+
+
   Parameters
   ----------
     (none)
@@ -4092,11 +3895,6 @@ Magnitude of logarithm of unit Quaternion.
   Returns
   -------
     double
-  
-  Description
-  -----------
-    Note: This function simply assumes that the input has unit magnitude. This
-    function is here for speed, and is designed not to check for unit magnitude.
   
 """
 
@@ -4140,8 +3938,8 @@ Rotate the basis in which this Waveform is measured.
 """
 
 %feature("docstring") GWFrames::Slerp """
-Spherical linear interpolation between two quaternions.
-=======================================================
+
+
   Parameters
   ----------
     const double tau
@@ -4846,17 +4644,6 @@ class GWFrames::MatrixC
 %feature("docstring") GWFrames::FactorialFunctor """
 class GWFrames::FactorialFunctor
 ================================
-  Storage for pre-calculated factorials.
-  
-  Rather than re-calculating factorial values each time they are needed, we
-  simply cache the values, which are pre-calculated when this object is
-  constructed. They may then be accessed by querying this object as a functor.
-  E.g., FactorialFunctor Factorial;
-const double Fac17 = Factorial(17);
-  
-  Note that only values up to Factorial(171) are calculated, because that is
-  the largest value that can be stored as an int in standard C++.
-  
   Member variables
   ----------------
     const vector<double> FactorialTable
@@ -5046,6 +4833,19 @@ class GWFrames::Waveforms
   ----------------
     vector<Waveform> Ws
     bool CommonTimeSet
+  
+"""
+
+%feature("docstring") GWFrames::Waveform::DescriptorString """
+
+
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    string
   
 """
 
@@ -5251,8 +5051,8 @@ Calculate the principal axis of the LL matrix, as prescribed by O'Shaughnessy et
 """
 
 %feature("docstring") GWFrames::Quaternion::dot """
-Dot product of two pure-vector Quaternions.
-===========================================
+
+
   Parameters
   ----------
     const Quaternion& Q
@@ -5260,10 +5060,6 @@ Dot product of two pure-vector Quaternions.
   Returns
   -------
     double
-  
-  Description
-  -----------
-    Note: This ignores any scalar components.
   
 """
 
@@ -5318,8 +5114,8 @@ Return the norm (sum of squares of modes) of the waveform.
 """
 
 %feature("docstring") GWFrames::Quaternion::sqrt """
-Square-root of general Quaternion.
-==================================
+
+
   Parameters
   ----------
     (none)
@@ -5327,10 +5123,6 @@ Square-root of general Quaternion.
   Returns
   -------
     Quaternion
-  
-  Description
-  -----------
-    sqrtOfRotor
   
 """
 
@@ -5467,8 +5259,8 @@ Integrate vector function by simple trapezoidal rule.
 """
 
 %feature("docstring") GWFrames::Quaternion::conjugate """
-Conjugate of Quaternion (vector components are negated).
-========================================================
+
+
   Parameters
   ----------
     (none)

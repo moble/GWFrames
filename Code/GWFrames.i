@@ -72,7 +72,7 @@
 //   $result = PyArray_Return(npy_arr);
 // }
 
-%include "GWFrames_Doc.i"
+%include "../Docs/GWFrames_Doc.i"
 
 ///////////////////////////////////
 //// Handle exceptions cleanly ////

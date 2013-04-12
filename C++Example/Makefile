@@ -29,11 +29,11 @@ sources :
 
 # Compile main.cpp into an executable
 main : sources main.cpp
-	$(C++) $(OPT) -I.. $(INCFLAGS) $(LIBFLAGS) $(LINK_OPENMP) -lgsl -lgslcblas ../Utilities.o ../Quaternions.o ../Waveforms.o main.cpp -o main
+	$(C++) $(OPT) -I../Code $(INCFLAGS) $(LIBFLAGS) $(LINK_OPENMP) -lgsl -lgslcblas ../Code/Utilities.o ../Code/Quaternions.o ../Code/Waveforms.o main.cpp -o main
 
 # The following are just handy targets for removing compiled stuff
 clean :
 	-/bin/rm -f main
 allclean : clean
-	@$(MAKE) -C .. clean
+	@$(MAKE) -C ../Code clean
 realclean : allclean
