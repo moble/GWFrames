@@ -387,7 +387,7 @@ def GetLaTeXDataDescription(W) :
 Waveform.GetLaTeXDataDescription = GetLaTeXDataDescription
 
 
-def OutputToNRAR(W, FileName) :
+def OutputToNRAR(W, FileName, FileWritMode='w') :
     """
     Output the Waveform in NRAR format.
     
@@ -410,7 +410,7 @@ def OutputToNRAR(W, FileName) :
         FileName = dirname(FileName) + '/' + W.DescriptorString() + '_' + basename(FileName)
     # Open the file for output
     try :
-        F = File(FileName, 'w')
+        F = File(FileName, FileWriteMode)
     except IOError : # If that did not work...
         print("OutputToH5 was unable to open the file '{0}'.\n\n".format(FileName))
         raise # re-raise the exception after the informative message above
