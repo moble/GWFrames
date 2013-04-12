@@ -1,11 +1,10 @@
 GWFrames
 ========
-
 Manipulate gravitational waveforms—changing frames, and so on.
 
-
-The code in this project extends code written for the paper
-[arXiv:1302.2919](http://arxiv.org/abs/1302.2919), giving an explicit
+The code in this project extends code written for the paper "[Angular
+velocity of gravitational radiation from precessing binaries and the
+corotating frame](http://arxiv.org/abs/1302.2919)", giving an explicit
 implementation of the methods discussed in it.  The first commit of
 this project is the last commit of the paper's project.
 
@@ -45,8 +44,8 @@ more useful in the former.
 
 
 
-Overview
-========
+Getting started
+===============
 The code is mostly in the form of C++, for speed.  All functions are
 provided in the `GWFrames` namespace.  The interface is reasonably
 straightforward, and can easily be included into and compiled with
@@ -60,22 +59,20 @@ install to the user directory.  To do this, run `make` or
     python setup.py install --user
 
 After this, you should be able to start a new python session (in any
-directory) and 'import GWFrames', which is the basic module provided
-by this code.  The primary objects are Quaternions and Waveforms, with
-various methods defined for each.  The IPython notebook
-Documentation.ipynb contains extensive examples, following the outline
+directory) and `'import GWFrames'`, which is the basic module provided
+by this code.  The primary objects are `Quaternion` and `Waveform`
+objects, with various methods defined for each.  The IPython notebook
+`Docs/Documentation.ipynb` contains extensive examples, following the outline
 of the paper.  To use it, run
 
     ipython notebook Documentation.ipynb --pylab
 
-Though IPython is a _much_ better interface, the Documentation.py file
-includes the same information in a pure python script format.  Also,
-Documentation.pdf contains a static PDF of the notebook.
-
-
 Alternatively, this code may be used directly through its C++
 interface.  A simple example is provided in the `C++Example`
-directory, along with two `Makefile`s (one in this directory, one in
-the example directory) to build all the necessary code.  If it does
-not compile easily, make sure the various paths in _both_ `Makefile`s
-are set properly.
+directory, along with the Makefiles needed to build all the necessary
+code.  If it does not compile easily, make sure the various paths in
+_both_ Makefiles are set properly.
+
+Detailed documentation of most functions may be found through python's
+`help` function, or by running `make` in the `Docs` subdirectory, and
+reading `Docs/html/index.html`.
