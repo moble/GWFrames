@@ -349,7 +349,7 @@ unsigned int GWFrames::Waveform::MaxNormIndex(const unsigned int SkipFraction) c
   return index;
 }
 
-// Return a descriptive string appropriate for a file name, like rhOverM_Inertial.
+// Return a descriptive string appropriate for a file name, like rhOverM.
 std::string GWFrames::Waveform::DescriptorString() const {
   std::string Descriptor = "";
   if(RIsScaledOut()) Descriptor = "r";
@@ -363,7 +363,7 @@ std::string GWFrames::Waveform::DescriptorString() const {
   } else {
     Descriptor = Descriptor + DataTypeString();
   }
-  return Descriptor + "_" + FrameTypeString();
+  return Descriptor;
 }
 
 /// Return vector of real parts of a given mode as function of time.
