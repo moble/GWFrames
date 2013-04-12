@@ -59,7 +59,7 @@ install to the user directory.  To do this, run `make` or
     python setup.py install --user
 
 After this, you should be able to start a new python session (in any
-directory) and `'import GWFrames'`, which is the basic module provided
+directory) and `import GWFrames`, which is the basic module provided
 by this code.  The primary objects are `Quaternion` and `Waveform`
 objects, with various methods defined for each.  The IPython notebook
 `Docs/Documentation.ipynb` contains extensive examples, following the outline
