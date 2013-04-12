@@ -365,20 +365,7 @@ Waveform.ArgUnwrapped = ArgUnwrapper
 
 
 def GetFileNamePrefix(W) :
-    from GWFrames import UnknownDataType, h, hdot, Psi4
-    FileNamePrefix = ''
-    if(W.RIsScaledOut()) :
-        FileNamePrefix = 'r'
-    if(W.MIsScaledOut()) :
-        if(W.DataType()==UnknownDataType or W.DataType()==h) :
-            FileNamePrefix = FileNamePrefix + W.DataTypeString() + 'OverM'
-        elif(W.DataType()==hdot) :
-            FileNamePrefix = FileNamePrefix + W.DataTypeString() # hdot is independent of M
-        elif(W.DataType()==Psi4) :
-            FileNamePrefix = FileNamePrefix + 'M' + W.DataTypeString()
-    else :
-        FileNamePrefix = FileNamePrefix + W.DataTypeString()
-    return FileNamePrefix + '_' + W.FrameTypeString() + '_'
+    return W.DescriptorString() + '_' + W.FrameTypeString() + '_'
 Waveform.GetFileNamePrefix = GetFileNamePrefix
 
 
@@ -398,6 +385,57 @@ def GetLaTeXDataDescription(W) :
         LaTeXDataDescription = LaTeXDataDescription + W.DataTypeLaTeXString()
     return LaTeXDataDescription
 Waveform.GetLaTeXDataDescription = GetLaTeXDataDescription
+
+
+def OutputToNRAR(W, FileName) :
+    """
+    Output the Waveform in NRAR format.
+    
+    Note that the FileName is prepended with some descriptive
+    information involving the data type and the frame type, such as
+    'rhOverM_' or 'rMPsi4_'.
+    
+    """
+    from h5py import File
+    from os.path import basename, dirname
+    from GWFrames import UnknownDataType, h, hdot, Psi4
+    Group = None
+    if('.h5' in FileName and not FileName.endswith('.h5')) :
+        FileName,Group = FileName.split('.h5')
+        FileName += '.h5'
+    # Add descriptive prefix to FileName
+    if(not dirname(FileName)) :
+        FileName = W.DescriptorString() + '_' + basename(FileName)
+    else :
+        FileName = dirname(FileName) + '/' + W.DescriptorString() + '_' + basename(FileName)
+    # Open the file for output
+    try :
+        F = File(FileName, 'w')
+    except IOError : # If that did not work...
+        print("OutputToH5 was unable to open the file '{0}'.\n\n".format(FileName))
+        raise # re-raise the exception after the informative message above
+    try :
+        # If we are writing to a group within the file, create it
+        if(Group) :
+            G = F.create_group(Group)
+        else :
+            G = F
+        # Now write all the data to various groups in the file
+        G.attrs['OutputFormatVersion'] = 'GWFrames_NRAR'
+        G.create_dataset("History", data = W.HistoryStr() + '### OutputToNRAR(W, {0})\n'.format(FileName))
+	G.attrs['FrameType'] = W.FrameType()
+	G.attrs['DataType'] = W.DataType()
+	G.attrs['RIsScaledOut'] = int(W.RIsScaledOut())
+	G.attrs['MIsScaledOut'] = int(W.MIsScaledOut())
+        for i_m in range(W.NModes()) :
+            ell,m = W.LM()[i_m]
+            Data_m = G.create_dataset("Y_l{0}_m{1}.dat".format(ell, m), data=[[t, d.real, d.imag] for t,d in zip(W.T(),W.Data(i_m))])
+            Data_m.attrs['ell'] = ell
+            Data_m.attrs['m'] = m
+    finally : # Use `finally` to make sure this happens:
+        # Close the file and we are done
+        F.close()
+Waveform.OutputToNRAR = OutputToNRAR
 
 
 def OutputToH5(W, FileName) :
@@ -467,7 +505,10 @@ def ReadFromH5(FileName) :
         # Get the time data
         W.SetTime(f['Time'])
         # Get the frame data, converting to GWFrame.Quaternion objects
-        W.SetFrame([Quaternion(r) for r in f['Frame']])
+        try :
+            W.SetFrame([Quaternion(r) for r in f['Frame']])
+        except TypeError :
+            pass # There was no frame
         # Get the descriptive items
         try :
             W.SetFrameType(int(f.attrs['FrameType']))
