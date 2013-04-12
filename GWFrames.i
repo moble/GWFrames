@@ -387,7 +387,7 @@ def GetLaTeXDataDescription(W) :
 Waveform.GetLaTeXDataDescription = GetLaTeXDataDescription
 
 
-def OutputToNRAR(W, FileName, FileWritMode='w') :
+def OutputToNRAR(W, FileName, FileWriteMode='w') :
     """
     Output the Waveform in NRAR format.
     
