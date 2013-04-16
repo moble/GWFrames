@@ -171,7 +171,13 @@ if __name__ == "__main__" :
         except sqlite3.OperationalError :
             pass # table already exists
         for Subdirectory,DataFile in Runs :
-            c.execute("INSERT INTO extrapolations VALUES ('{0}','{1}','','',0)".format(Subdirectory, DataFile))
+            # Check to see if the record exists
+            c.execute("""SELECT subdirectory FROM extrapolations WHERE subdirectory='{0}' AND datafile='{1}'""".format(
+                    Subdirectory, DataFile))
+            if c.fetchone() is None :
+                # If it does not exist, create it
+                c.execute("""INSERT INTO extrapolations VALUES ('{0}','{1}','','',0)""".format(Subdirectory, DataFile))
+            # If it does exist, do nothing
         conn.commit()
         conn.close()
     # Otherwise, just do the runs
