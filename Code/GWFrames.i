@@ -422,7 +422,7 @@ def OutputToNRAR(W, FileName, FileWriteMode='w') :
             G = F
         # Now write all the data to various groups in the file
         G.attrs['OutputFormatVersion'] = 'GWFrames_NRAR'
-        G.create_dataset("History", data = W.HistoryStr() + '### OutputToNRAR(W, {0})\n'.format(FileName))
+        G.create_dataset("History.txt", data = W.HistoryStr() + '### OutputToNRAR(W, {0})\n'.format(FileName))
 	G.attrs['FrameType'] = W.FrameType()
 	G.attrs['DataType'] = W.DataType()
 	G.attrs['RIsScaledOut'] = int(W.RIsScaledOut())

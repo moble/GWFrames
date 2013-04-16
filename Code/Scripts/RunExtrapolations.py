@@ -32,7 +32,7 @@ try :
             if(m) : ChMass += float(m.group(1))
     D['ChMass'] = ChMass
 except :
-    print("WARNING: Could not find metadata.txt in '{TopLevelInputDir}/{Subdirectory}'")
+    print("\nWARNING: Could not find metadata.txt in '{TopLevelInputDir}/{Subdirectory}'")
 
 # Now run the actual extrapolation
 import GWFrames.Extrapolation
