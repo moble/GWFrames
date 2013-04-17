@@ -225,9 +225,9 @@ if __name__ == "__main__" :
                         RunThis = True
                     else :
                         TimeFinished = datetimeFromString(finished)
-                        TimeHorizons = datetime.utcfromtimestamp(os.path.getmtime('{0}/{1}/Horizons.h5'.format(TopLevelInputDir, Subdirectory)))
+                        Timemetadata = datetime.utcfromtimestamp(os.path.getmtime('{0}/{1}/metadata.txt'.format(TopLevelInputDir, Subdirectory)))
                         TimeData = datetime.utcfromtimestamp(os.path.getmtime('{0}/{1}/{2}'.format(TopLevelInputDir, Subdirectory, DataFile)))
-                        if(TimeData>TimeFinished or TimeHorizons>TimeFinished) :
+                        if(TimeData>TimeFinished or Timemetadata>TimeFinished) :
                             RunThis = True
                 # And then either run it or don't
                 if(not RunThis) :

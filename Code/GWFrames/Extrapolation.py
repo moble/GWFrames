@@ -637,9 +637,9 @@ def NewerDataThanExtrapolation(TopLevelInputDir, TopLevelOutputDir, Subdirectori
         FinishedFile = '{0}/{1}/.finished_{2}'.format(TopLevelOutputDir, Subdirectory, DataFile)
         if(exists(FinishedFile)) :
             TimeFinished = getmtime(FinishedFile)
-            TimeHorizons = getmtime('{0}/{1}/Horizons.h5'.format(TopLevelInputDir, Subdirectory))
+            Timemetadata = getmtime('{0}/{1}/metadata.txt'.format(TopLevelInputDir, Subdirectory))
             TimeData = getmtime('{0}/{1}/{2}'.format(TopLevelInputDir, Subdirectory, DataFile))
-            if(TimeData>TimeFinished or TimeHorizons>TimeFinished) :
+            if(TimeData>TimeFinished or Timemetadata>TimeFinished) :
                 Newer.append([Subdirectory, DataFile])
     return Newer
 
@@ -685,7 +685,7 @@ def FindPossibleExtrapolationsToRun(TopLevelInputDir) :
     # Walk the input directory
     for step in walk(TopLevelInputDir) :
         if(LevPattern.search(step[0])) :
-            if('Horizons.h5' in step[2]) :
+            if('metadata.txt' in step[2]) :
                 if('rh_FiniteRadii_CodeUnits.h5' in step[2]) :
                     SubdirectoriesAndDataFiles.append([step[0].replace(TopLevelInputDir+'/',''), 'rh_FiniteRadii_CodeUnits.h5'])
                 if('rPsi4_FiniteRadii_CodeUnits.h5' in step[2]) :
