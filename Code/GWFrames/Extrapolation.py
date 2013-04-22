@@ -552,8 +552,12 @@ def Extrapolate(**kwargs) :
         except :
             pass
         figabs.savefig('{0}/{1}ExtrapConvergence_Abs.{2}'.format(OutputDirectory, FileNamePrefixString, PlotFormat))
+        if(PlotFormat!='png') :
+            figabs.savefig('{0}/{1}ExtrapConvergence_Abs.{2}'.format(OutputDirectory, FileNamePrefixString, 'png'))
         plt.gca().set_xlim(MaxNormTime-500., MaxNormTime+200.)
         figabs.savefig('{0}/{1}ExtrapConvergence_Abs_Merger.{2}'.format(OutputDirectory, FileNamePrefixString, PlotFormat))
+        if(PlotFormat!='png') :
+            figabs.savefig('{0}/{1}ExtrapConvergence_Abs_Merger.{2}'.format(OutputDirectory, FileNamePrefixString, 'png'))
         plt.close(figabs)
         plt.figure(1)
         plt.legend(borderpad=.2, labelspacing=0.1, handlelength=1.5, handletextpad=0.1, loc='lower left', prop={'size':'small'})
@@ -565,8 +569,12 @@ def Extrapolate(**kwargs) :
         except :
             pass
         figarg.savefig('{0}/{1}ExtrapConvergence_Arg.{2}'.format(OutputDirectory, FileNamePrefixString, PlotFormat))
+        if(PlotFormat!='png') :
+            figarg.savefig('{0}/{1}ExtrapConvergence_Arg.{2}'.format(OutputDirectory, FileNamePrefixString, 'png'))
         plt.gca().set_xlim(MaxNormTime-500., MaxNormTime+200.)
         figarg.savefig('{0}/{1}ExtrapConvergence_Arg_Merger.{2}'.format(OutputDirectory, FileNamePrefixString, PlotFormat))
+        if(PlotFormat!='png') :
+            figarg.savefig('{0}/{1}ExtrapConvergence_Arg_Merger.{2}'.format(OutputDirectory, FileNamePrefixString, 'png'))
         plt.close(figarg)
         plt.figure(2)
         plt.legend(borderpad=.2, labelspacing=0.1, handlelength=1.5, handletextpad=0.1, loc='lower left', prop={'size':'small'})
@@ -577,8 +585,12 @@ def Extrapolate(**kwargs) :
         except :
             pass
         fignorm.savefig('{0}/{1}ExtrapConvergence_Norm.{2}'.format(OutputDirectory, FileNamePrefixString, PlotFormat))
+        if(PlotFormat!='png') :
+            fignorm.savefig('{0}/{1}ExtrapConvergence_Norm.{2}'.format(OutputDirectory, FileNamePrefixString, 'png'))
         plt.gca().set_xlim(MaxNormTime-500., MaxNormTime+200.)
         fignorm.savefig('{0}/{1}ExtrapConvergence_Norm_Merger.{2}'.format(OutputDirectory, FileNamePrefixString, PlotFormat))
+        if(PlotFormat!='png') :
+            fignorm.savefig('{0}/{1}ExtrapConvergence_Norm_Merger.{2}'.format(OutputDirectory, FileNamePrefixString, 'png'))
         plt.close(fignorm)
         print("☺"); stdout.flush()
     

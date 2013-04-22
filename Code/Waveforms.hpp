@@ -145,6 +145,7 @@ namespace GWFrames {
     Waveform& TransformToCorotatingFrame(const std::vector<int>& Lmodes=std::vector<int>(0));
     Waveform& TransformToInertialFrame();
     
+    // Transformations for Waveforms representing uncertainty
     Waveform& TransformUncertaintiesToCorotatingFrame(const std::vector<GWFrames::Quaternion>& R_frame);
     Waveform& TransformUncertaintiesToInertialFrame();
     
