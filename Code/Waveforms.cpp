@@ -2360,6 +2360,53 @@ GWFrames::Waveform GWFrames::Waveform::Hybridize(const GWFrames::Waveform& B, co
 }
 
 
+/// Evaluate Waveform at a particular sky location
+std::vector<std::complex<double> > GWFrames::Waveform::EvaluateAtPoint(const double vartheta, const double varphi) const {
+  /// 
+  /// \param vartheta Polar angle of detector
+  /// \param varphi Azimuthal angle of detector
+  /// 
+  /// Note that the input angle parameters are measured relative to
+  /// the binary's coordinate system.  In particular, this will make
+  /// no sense if the frame type is something other than inertial, and
+  /// will fail if the `FrameType` is neither `UnknownFrameType` nor
+  /// `Inertial`.
+  /// 
+  
+  if(frameType != GWFrames::Inertial) {
+    if(frameType == GWFrames::UnknownFrameType) {
+      std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+		<< "\nWarning: Asking for a Waveform in the " << GWFrames::WaveformFrameNames[frameType] << " frame to be evaluated at a point."
+		<< "\n         This should only be applied to Waveforms in the " << GWFrames::WaveformFrameNames[GWFrames::Inertial] << " frame.\n"
+		<< std::endl;
+    } else {
+      std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+		<< "\nError: Asking for a Waveform in the " << GWFrames::WaveformFrameNames[frameType] << " frame to be evaluated at a point."
+		<< "\n       This should only be applied to Waveforms in the " << GWFrames::WaveformFrameNames[GWFrames::Inertial] << " frame.\n"
+		<< std::endl;
+      throw(GWFrames_WrongFrameType);
+    }
+  }
+  
+  const unsigned int NT = NTimes();
+  const unsigned int NM = NModes();
+  vector<complex<double> > d(NT, complex<double>(0.,0.));
+  SWSH Y;
+  Y.SetAngles(vartheta, varphi);
+  
+  for(unsigned int i_m=0; i_m<NM; ++i_m) {
+    const int ell = LM(i_m)[0];
+    const int m   = LM(i_m)[1];
+    const complex<double> Ylm = Y(ell,m);
+    #pragma omp parallel for
+    for(unsigned int i_t=0; i_t<NT; ++i_t) {
+      d[i_t] += Data(i_m, i_t) * Ylm;
+    }
+  }
+  
+  return d;
+}
+
 
 /// Output Waveform object to data file.
 const GWFrames::Waveform& GWFrames::Waveform::Output(const std::string& FileName, const unsigned int precision) const {
