@@ -18,15 +18,13 @@ Template = r"""#! /usr/bin/env python
 
 # Set up the paths
 D = {}
-D['InputDirectory'] = '{Directory}'
-D['OutputDirectory'] = '{Directory}'
 D['DataFile'] = '{DataFile}'
 
 # Find ChMass from metadata.txt
 import re
 ChMass = 0.0
 try :
-    with open('{Directory}/metadata.txt', 'r') as file :
+    with open('metadata.txt', 'r') as file :
         for line in file :
             m = re.match(r'\s*relaxed-mass[12]\s*=\s*([0-9.]*)', line)
             if(m) : ChMass += float(m.group(1))
@@ -50,6 +48,7 @@ except Exception as e : # Pass exceptions to shell as failures
 
 def SetUpDB(start_rev, db) :
     """Set up the database file of extrapolations to be run."""
+    import os.path
     
     # Update the repository (and python error on git error)
     subprocess.check_call('git pull --rebase', shell=True)
@@ -67,8 +66,9 @@ def SetUpDB(start_rev, db) :
     
     # Get the changed data files
     for ChangedFile in ChangedFiles :
-        print('Getting data:  git annex get {0}'.format(ChangedFile))
+        print('Getting data:  git annex get {0} and Horizons.h5'.format(ChangedFile))
         subprocess.check_output('git annex get {0}'.format(ChangedFile), shell=True)
+        subprocess.check_output('git annex get {0}'.format(os.path.dirname(ChangedFile)+'/Horizons.h5'), shell=True)
     
     # Write the database file
     conn = sqlite3.connect(db, timeout=60)
