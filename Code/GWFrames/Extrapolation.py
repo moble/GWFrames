@@ -695,7 +695,7 @@ def FindPossibleExtrapolationsToRun(TopLevelInputDir) :
     LevPattern = re_compile(r'/Lev[0-9]*$')
     
     # Walk the input directory
-    for step in walk(TopLevelInputDir) :
+    for step in walk(TopLevelInputDir, followlinks=True) :
         if(LevPattern.search(step[0])) :
             if('metadata.txt' in step[2]) :
                 if('rh_FiniteRadii_CodeUnits.h5' in step[2]) :

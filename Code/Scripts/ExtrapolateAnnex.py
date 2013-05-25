@@ -197,6 +197,7 @@ if __name__ == "__main__" :
                 c.execute("""DELETE FROM extrapolations WHERE datafile='{0}'""".format(datafile))
                 conn.commit()
                 conn.close()
+        sys.exit(0)
     
     
     # Get the initial git revision
