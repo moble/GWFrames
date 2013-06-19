@@ -24,19 +24,26 @@ Build requirements
 ==================
 To build just the C++ code:
 * C++ compiler
-* GNU Scientific Library <http://www.gnu.org/software/gsl/>
+* [GNU Scientific Library](http://www.gnu.org/software/gsl/)
 
 To use the optional—but highly recommended—Python interface:
-* SWIG v2.0 or greater
-* Python v2.7.4
-* HDF5 v1.8.10 or greater
-And the following, for which `pip` is very useful:
-* NumPy v1.7 or greater (`pip install numpy`)
-* Matplotlib v1.2 or greater (`pip install matplotlib`)
-* h5py v2.1 or greater (`pip install h5py`)
+* [SWIG](http://www.swig.org/) v2.0 or greater
+* [Python](http://www.python.org/getit/) v2.7.4 (not v3.*)
+And the following, for which python's automatic installation utility
+`pip` is very useful:
+* [NumPy](http://www.numpy.org/) v1.7 or greater (`pip install numpy`)
+* [Matplotlib](http://matplotlib.org/) v1.2 or greater (`pip install matplotlib`)
 
-This is even more optional, but even more highly recommended:
-* IPython with notebook interface (`pip install ipython [notebook]`)
+If you will need access to HDF5 files through the python interface,
+you should also install
+* [HDF5](http://www.hdfgroup.org/HDF5/) v1.8.10 or greater
+* [h5py](http://code.google.com/p/h5py/) v2.1 or greater (`pip install h5py`)
+
+For interactive python sessions, IPython is the way to go.  And its
+Mathematica-like [notebook
+interface](http://ipython.org/notebook.html) is superb.  This is even
+more optional than the above, but even more highly recommended:
+* [IPython](http://ipython.org/) with notebook interface (`pip install ipython [notebook]`)
 
 N.B.: These are all relatively recent versions, and must all be
 compiled with the same compiler.  In particular, modules on clusters
@@ -55,7 +62,8 @@ Getting started
 The code is mostly in the form of C++, for speed.  All functions are
 provided in the `GWFrames` namespace.  The interface is reasonably
 straightforward, and can easily be included into and compiled with
-other code.
+other code.  Look for examples of how to do this in the `C++Example`
+directory.  (See below for a few more details.)
 
 
 However, it is mostly intended to be used through the interface to
