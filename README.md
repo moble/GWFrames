@@ -28,12 +28,12 @@ To build just the C++ code:
 
 To use the optional—but highly recommended—Python interface:
 * SWIG v2.0 or greater
-* Python v2.7 (v2.6 or v3.3+ should work, but are untested)
-* HDF5 v1.8.10-patch1 or greater
+* Python v2.7.4
+* HDF5 v1.8.10 or greater
 And the following, for which `pip` is very useful:
 * NumPy v1.7 or greater (`pip install numpy`)
 * Matplotlib v1.2 or greater (`pip install matplotlib`)
-* h5py v1.2 or greater (`pip install h5py`)
+* h5py v2.1 or greater (`pip install h5py`)
 
 This is even more optional, but even more highly recommended:
 * IPython with notebook interface (`pip install ipython [notebook]`)
@@ -47,7 +47,7 @@ All of the above are reasonably standard, and can be installed easily
 through package managers such as apt and homebrew.  The notebook
 interface for IPython provides an environment much like the
 Mathematica notebook interface.  The examples are provided in a
-notebook (*.ipynb) object.
+notebook (*.ipynb) file.
 
 
 Getting started
