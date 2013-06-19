@@ -11,7 +11,7 @@
 
 namespace GWFrames {
   
-  // The class for an individual quaternion
+  /// Object representing an individual quaternion
   class Quaternion {
   private:
     double w, x, y, z;

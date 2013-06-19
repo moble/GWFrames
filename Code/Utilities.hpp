@@ -108,6 +108,7 @@ namespace GWFrames {
   
   const int ellMax_Utilities = 16;
   
+  /// Object for pre-computing and retrieving factorials
   class FactorialFunctor {
   private:
     static const std::vector<double> FactorialTable;
@@ -126,6 +127,7 @@ namespace GWFrames {
     }
   };
   
+  /// Object for pre-computing and retrieving binomials
   class BinomialCoefficientFunctor {
   private:
     static const std::vector<double> BinomialCoefficientTable;
@@ -144,6 +146,7 @@ namespace GWFrames {
     }
   };
   
+  /// Object for pre-computing and retrieving values of the ladder operators
   class LadderOperatorFactorFunctor {
   private:
     static const std::vector<double> FactorTable;
@@ -162,6 +165,7 @@ namespace GWFrames {
     }
   };
   
+  /// Object for pre-computing and retrieving coefficients for the Wigner D matrices
   class WignerCoefficientFunctor {
   private:
     static const std::vector<double> CoefficientTable;
@@ -180,6 +184,7 @@ namespace GWFrames {
     }
   };
   
+  /// Object for computing the Wigner D matrices as functions of quaternion rotors
   class WignerDMatrix {
   private:
     BinomialCoefficientFunctor BinomialCoefficient;
@@ -192,6 +197,7 @@ namespace GWFrames {
     std::complex<double> operator()(const int ell, const int mp, const int m) const;
   };
   
+  /// Object for computing values of the spin-weighted spherical harmonics
   class SWSH {
   private:
     WignerDMatrix D;

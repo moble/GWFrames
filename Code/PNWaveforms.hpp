@@ -8,6 +8,7 @@
 
 namespace GWFrames {
   
+  /// Object for calculating a post-Newtonian Waveform with (optional) precession
   class PNWaveform : public Waveform {
     
   public:  // Constructors and Destructor

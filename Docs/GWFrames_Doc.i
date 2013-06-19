@@ -34,6 +34,8 @@ Transform Waveform to an inertial frame.
 %feature("docstring") GWFrames::Quaternion """
 class GWFrames::Quaternion
 ==========================
+  Object representing an individual quaternion.
+  
   Member variables
   ----------------
     double w
@@ -797,6 +799,8 @@ Rotate the physical content of the Waveform.
 %feature("docstring") GWFrames::PNWaveform """
 class GWFrames::PNWaveform
 ==========================
+  Object for calculating a post-Newtonian Waveform with (optional) precession.
+  
   Member variables
   ----------------
     vector<vector<double>> mchi1
@@ -990,6 +994,8 @@ Transform Waveform to O'Shaughnessy et al. frame.
 %feature("docstring") GWFrames::BinomialCoefficientFunctor """
 class GWFrames::BinomialCoefficientFunctor
 ==========================================
+  Object for pre-computing and retrieving binomials.
+  
   Member variables
   ----------------
     const vector<double> BinomialCoefficientTable
@@ -1161,6 +1167,9 @@ Return the intersection of two time sequences.
 %feature("docstring") GWFrames::WignerCoefficientFunctor """
 class GWFrames::WignerCoefficientFunctor
 ========================================
+  Object for pre-computing and retrieving coefficients for the Wigner D
+  matrices.
+  
   Member variables
   ----------------
     const vector<double> CoefficientTable
@@ -1191,6 +1200,8 @@ Transform Waveform to Schmidt et al. frame.
 %feature("docstring") GWFrames::Waveform """
 class GWFrames::Waveform
 ========================
+  Object storing data and other information for a single waveform.
+  
   Member variables
   ----------------
     stringstream history
@@ -1745,6 +1756,8 @@ Class to create an object returning the factorial of an argument.
 %feature("docstring") GWFrames::WignerDMatrix """
 class GWFrames::WignerDMatrix
 =============================
+  Object for computing the Wigner D matrices as functions of quaternion rotors.
+  
   Member variables
   ----------------
     BinomialCoefficientFunctor BinomialCoefficient
@@ -2831,6 +2844,8 @@ Return vector of vector of real parts of all modes as function of time.
 %feature("docstring") GWFrames::LadderOperatorFactorFunctor """
 class GWFrames::LadderOperatorFactorFunctor
 ===========================================
+  Object for pre-computing and retrieving values of the ladder operators.
+  
   Member variables
   ----------------
     const vector<double> FactorTable
@@ -3478,6 +3493,8 @@ Integrate vector function by simple trapezoidal rule.
 %feature("docstring") GWFrames::SWSH """
 class GWFrames::SWSH
 ====================
+  Object for computing values of the spin-weighted spherical harmonics.
+  
   Member variables
   ----------------
     WignerDMatrix D
@@ -4644,6 +4661,8 @@ class GWFrames::MatrixC
 %feature("docstring") GWFrames::FactorialFunctor """
 class GWFrames::FactorialFunctor
 ================================
+  Object for pre-computing and retrieving factorials.
+  
   Member variables
   ----------------
     const vector<double> FactorialTable
@@ -4829,6 +4848,8 @@ Remove sign-ambiguity of rotors.
 %feature("docstring") GWFrames::Waveforms """
 class GWFrames::Waveforms
 =========================
+  Object storing a collection of Waveform objects to be operated on uniformly.
+  
   Member variables
   ----------------
     vector<Waveform> Ws
@@ -5332,6 +5353,29 @@ Find the appropriate rotation to fix the orientation of the corotating frame.
   Returns
   -------
     Quaternion
+  
+"""
+
+%feature("docstring") GWFrames::Waveform::EvaluateAtPoint """
+Evaluate Waveform at a particular sky location.
+===============================================
+  Parameters
+  ----------
+    const double vartheta
+      Polar angle of detector
+    const double varphi
+      Azimuthal angle of detector
+  
+  Returns
+  -------
+    vector<complex<double>>
+  
+  Description
+  -----------
+    Note that the input angle parameters are measured relative to the binary's
+    coordinate system. In particular, this will make no sense if the frame type
+    is something other than inertial, and will fail if the FrameType is neither
+    UnknownFrameType nor Inertial.
   
 """
 

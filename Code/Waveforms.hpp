@@ -31,6 +31,7 @@ namespace GWFrames {
   static const std::string WaveformDataNames[4] = { "UnknownDataType", "h", "hdot", "Psi4" };
   static const std::string WaveformDataNamesLaTeX[4] = { "\\mathrm{unknown data type}", "h", "\\dot{h}", "\\Psi_4" };
   
+  /// Object storing data and other information for a single waveform
   class Waveform {
     
   public:  // Constructors and Destructor
@@ -176,7 +177,7 @@ namespace GWFrames {
   
   
   
-  
+  /// Object storing a collection of Waveform objects to be operated on uniformly
   class Waveforms { // (plural!)
     
   private:  // Member data
