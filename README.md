@@ -29,6 +29,7 @@ To build just the C++ code:
 To use the optional—but highly recommended—Python interface:
 * [SWIG](http://www.swig.org/) v2.0 or greater
 * [Python](http://www.python.org/getit/) v2.7.4 (not v3.*)
+
 And the following, for which python's automatic installation utility
 `pip` is very useful:
 * [NumPy](http://www.numpy.org/) v1.7 or greater (`pip install numpy`)
