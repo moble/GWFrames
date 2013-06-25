@@ -17,6 +17,8 @@ Code/GWFrames.py
 Code/GWFrames/__init__.py
 Code/GWFrames_wrap.cpp
 Code/build
+Code/spinsfast/bin/
+Code/spinsfast/lib/
 Docs/xml
 Docs/latex
 Docs/html
