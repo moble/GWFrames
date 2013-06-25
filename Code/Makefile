@@ -9,7 +9,7 @@
 
 
 # By default, just call the python build process
-all :
+all : spinsfast
 	python setup.py install --user
 
 
@@ -39,8 +39,8 @@ all :
 # Library) headers and libraries.  The following paths are the most
 # common places for these to be installed.  If compilation doesn't
 # work, correct these paths.
-INCFLAGS = -I/opt/local/include -I/usr/local/include
-LIBFLAGS = -L/opt/local/lib -L/usr/local/lib
+INCFLAGS = -I/opt/local/include -I/usr/local/include -Ispinsfast/include
+LIBFLAGS = -L/opt/local/lib -L/usr/local/lib -Lspinsfast/lib
 ifdef GSL_HOME
 	INCFLAGS = -I${GSL_HOME}/include ${INCFLAGS}
 	LIBFLAGS = -L${GSL_HOME}/lib ${LIBFLAGS}
@@ -56,7 +56,7 @@ OPT = -O3 -fopenmp -Wall
 #############################################################################
 
 # Tell 'make' not to look for files with the following names
-.PHONY : all cpp clean allclean realclean swig
+.PHONY : all cpp clean allclean realclean swig spinsfast
 
 # If needed, we can also make object files to use in other C++ programs
 cpp : Utilities.o Quaternions.o Waveforms.o PNWaveforms.o
@@ -75,3 +75,7 @@ realclean : allclean
 # This just runs SWIG, which can be handy for committing pre-swigged files
 swig :
 	swig -python -globals constants -c++ -o GWFrames_wrap.cpp GWFrames.i
+
+# This attempts to build spinsfast
+spinsfast :
+	build=build/config.mk make -C spinsfast

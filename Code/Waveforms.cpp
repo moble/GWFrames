@@ -12,6 +12,7 @@
 #include <cstdlib>
 #include <cmath>
 #include <algorithm>
+#include <complex>
 #include <gsl/gsl_errno.h>
 #include <gsl/gsl_spline.h>
 #include <gsl/gsl_linalg.h>
@@ -70,7 +71,7 @@ std::string StringForm(const std::vector<int>& Lmodes) {
 
 /// Default constructor for an empty object
 GWFrames::Waveform::Waveform() :
-  history(""), t(0),frame(0), frameType(GWFrames::UnknownFrameType),
+  spin(-2), history(""), t(0),frame(0), frameType(GWFrames::UnknownFrameType),
   dataType(GWFrames::UnknownDataType), rIsScaledOut(false), mIsScaledOut(false), lm(), data()
 {
   {
@@ -93,7 +94,7 @@ GWFrames::Waveform::Waveform() :
 
 /// Copy constructor
 GWFrames::Waveform::Waveform(const GWFrames::Waveform& a) :
-  history(a.history.str()), t(a.t), frame(a.frame), frameType(a.frameType),
+  spin(a.spin), history(a.history.str()), t(a.t), frame(a.frame), frameType(a.frameType),
   dataType(a.dataType), rIsScaledOut(a.rIsScaledOut), mIsScaledOut(a.mIsScaledOut), lm(a.lm), data(a.data)
 {
   /// Simply copies all fields in the input object to the constructed
@@ -103,7 +104,7 @@ GWFrames::Waveform::Waveform(const GWFrames::Waveform& a) :
 
 /// Constructor from data file
 GWFrames::Waveform::Waveform(const std::string& FileName, const std::string& DataFormat) :
-  history(""), t(0), frame(0), frameType(GWFrames::UnknownFrameType),
+  spin(-2), history(""), t(0), frame(0), frameType(GWFrames::UnknownFrameType),
   dataType(GWFrames::UnknownDataType), rIsScaledOut(false), mIsScaledOut(false), lm(), data()
 {
   /// 
@@ -236,6 +237,7 @@ GWFrames::Waveform::Waveform(const std::string& FileName, const std::string& Dat
 
 /// Assignment operator
 GWFrames::Waveform& GWFrames::Waveform::operator=(const GWFrames::Waveform& a) {
+  spin = a.spin;
   history.str(a.history.str());
   history.clear();
   history.seekp(0, ios_base::end);
@@ -257,6 +259,7 @@ void GWFrames::Waveform::swap(GWFrames::Waveform& b) {
   
   // This call should not be recorded explicitly in the history,
   // because the histories are swapped
+  { const int NewSpin=b.spin; b.spin=spin; spin=NewSpin; }
   { const string historyb=b.history.str(); b.history.str(history.str()); history.str(historyb); }
   history.seekp(0, ios_base::end);
   b.history.seekp(0, ios_base::end);
@@ -275,7 +278,7 @@ void GWFrames::Waveform::swap(GWFrames::Waveform& b) {
 /// Explicit constructor from data
 GWFrames::Waveform::Waveform(const std::vector<double>& T, const std::vector<std::vector<int> >& LM,
 			     const std::vector<std::vector<std::complex<double> > >& Data)
-  : history(""), t(T), frame(), frameType(GWFrames::UnknownFrameType),
+  : spin(-2), history(""), t(T), frame(), frameType(GWFrames::UnknownFrameType),
     dataType(GWFrames::UnknownDataType), rIsScaledOut(false), mIsScaledOut(false), lm(LM), data(Data)
 {
   /// Arguments are T, LM, Data, which consist of the explicit data.
@@ -507,6 +510,16 @@ unsigned int GWFrames::Waveform::FindModeIndex(const int l, const int m) const {
   throw(GWFrames_WaveformMissingLMIndex);
 }
 
+unsigned int GWFrames::Waveform::FindModeIndexWithoutError(const int l, const int m) const {
+  //ORIENTATION!!! following loop
+  unsigned int i=0;
+  for(; i<NModes(); ++i) {
+    if(lm[i][0]==l && lm[i][1]==m) { return i; }
+  }
+  ++i;
+  return i;
+}
+
 /// Rotate the physical content of the Waveform by a constant rotor.
 GWFrames::Waveform& GWFrames::Waveform::RotatePhysicalSystem(const GWFrames::Quaternion& R_phys) {
   history << "### this->RotatePhysicalSystem(" << R_phys << ");" << endl;
@@ -694,7 +707,7 @@ GWFrames::Waveform& GWFrames::Waveform::TransformModesToRotatedFrame(const std::
   // Loop through each mode and do the rotation
   {
     unsigned int mode=1;
-    for(int l=2; l<int(NModes()); ++l) {
+    for(int l=std::abs(Spin()); l<int(NModes()); ++l) {
       if(NModes()<mode) { break; }
       
       // Use a vector of mode indices, in case the modes are out of
@@ -2783,4 +2796,159 @@ GWFrames::Waveforms GWFrames::Waveforms::Extrapolate(std::vector<std::vector<dou
   } // Loop over time
   
   return ExtrapolatedWaveforms;
+}
+
+
+
+/// Pointwise multiply this object by another Waveform object
+#ifdef __restrict
+#define restrict __restrict
+#endif
+extern "C" {
+  #include <stdlib.h>
+  #include <stdio.h>
+  #include <math.h>
+  #include <complex.h>
+  #include <fftw3.h>
+  #include <alm.h>
+  #include <wigner_d_halfpi.h>
+  #include <spinsfast_forward.h>
+  #include <spinsfast_backward.h>
+}
+GWFrames::Waveform GWFrames::Waveform::operator*(const GWFrames::Waveform& B) const {
+  
+  const Waveform& A = *this;
+  
+  if(A.NTimes() != B.NTimes()) {
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+	      << "\nError: Asking for the product of two Waveform objects with different time data."
+	      << "\n       A.NTimes()=" << A.NTimes() << "\tB.NTimes()=" << B.NTimes()
+	      << "\n       Interpolate to a common set of times first.\n"
+	      << std::endl;
+    throw(GWFrames_MatrixSizeMismatch);
+  }
+  
+  if(A.frameType != GWFrames::Inertial || B.frameType != GWFrames::Inertial) {
+    if(A.frameType != B.frameType) {
+      std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+		<< "\nError: Asking for the pointwise product of Waveforms in " << GWFrames::WaveformFrameNames[A.frameType]
+		<< " and " << GWFrames::WaveformFrameNames[B.frameType] << " frames."
+		<< "\n       This should only be applied to Waveforms in the same frame.\n"
+		<< std::endl;
+      throw(GWFrames_WrongFrameType);
+    } else if(A.frame.size() != B.frame.size()) {
+      std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+		<< "\nError: Asking for the pointwise product of Waveforms with " << A.frame.size() << " and " << B.frame.size() << " frame data points."
+		<< "\n       This should only be applied to Waveforms in the same frame.\n"
+		<< std::endl;
+      throw(GWFrames_WrongFrameType);
+    }
+  }
+  
+  // This will be the new object holding the multiplied data
+  GWFrames::Waveform C;
+  
+  // The new spin is the sum of the old ones
+  C.spin = A.spin + B.spin;
+  
+  // Store both old histories in C's
+  C.history << "### *this = A*B\n"
+	    << "#### A.history.str():\n" << A.history.str()
+	    << "#### B.history.str():\n" << B.history.str()
+	    << "#### End of old histories from `A*B`" << std::endl;  
+  
+  // Just copy other data from A
+  C.t = A.t;
+  C.frame = A.frame;
+  C.frameType = A.frameType;
+  C.dataType = A.dataType;
+  C.rIsScaledOut = A.rIsScaledOut;
+  C.mIsScaledOut = A.mIsScaledOut;
+  
+  // Determine the ranges of l that the output should have
+  int lMin = std::abs(C.Spin());
+  int lMax = lMin;
+  {
+    int lMaxA = lMin;
+    for(unsigned int i=0; i<A.NModes(); ++i) {
+      if(A.lm[i][0]>lMaxA) { lMaxA = A.lm[i][0]; }
+    }
+    int lMaxB = lMin;
+    for(unsigned int i=0; i<B.NModes(); ++i) {
+      if(B.lm[i][0]>lMaxB) { lMaxB = B.lm[i][0]; }
+    }
+    lMax = (lMaxA>lMaxB ? lMaxB : lMaxA); // Take the smaller
+  }
+  int Nlm = N_lm(lMax);
+  
+  // Set the output lm data
+  C.lm = std::vector<std::vector<int> >(lMax*(2+lMax)-lMin*lMin+1, std::vector<int>(2,0));
+  {
+    unsigned int i=0;
+    for(int l=lMin; l<lMax; ++l) {
+      for(int m=-l; m<=l; ++m) {
+	C.lm[i][0] = l;
+	C.lm[i][1] = m;
+	++i;
+      }
+    }
+  }
+  
+  // These numbers determine the equi-angular grid on which we will do
+  // the pointwise multiplication.  For best accuracy, have N_phi>
+  // 2*lMax and N_theta > 2*lMax; but for speed, don't make them much
+  // greater.
+  int N_phi = 2*lMax + 1;
+  int N_theta = 2*lMax + 1;
+  
+  // These will be work arrays
+  const complex<double> I(0.0,1.0);
+  const complex<double> zero(0.0,0.0);
+  std::vector<std::complex<double> > almA(Nlm);
+  std::vector<std::complex<double> > almB(Nlm);
+  std::vector<std::complex<double> > almC(Nlm);
+  std::vector<std::complex<double> > fA(N_phi*N_theta, zero);
+  std::vector<std::complex<double> > fB(N_phi*N_theta, zero);
+  std::vector<std::complex<double> > fC(N_phi*N_theta, zero);
+  
+  // Now, loop through each time step doing the work
+  C.data.resize(C.NModes(), C.NTimes());
+  for(unsigned int i_t=0; i_t<C.NTimes(); ++i_t) {
+    
+    { // Set the a_lm coefficients
+      unsigned int i=0;
+      for(int l=0; l<=lMax; ++l) {
+	for(int m=-l; m<=-l; ++m) {
+	  unsigned int iA = A.FindModeIndexWithoutError(l, m);
+	  almA[i] = (iA<A.NModes() ? A.Data(iA, i_t) : zero);
+	  unsigned int iB = B.FindModeIndexWithoutError(l, m);
+	  almB[i] = (iB<B.NModes() ? B.Data(iB, i_t) : zero);
+	  ++i;
+	}
+      }
+    }
+    
+    { // Transform each and multiply pointwise
+      spinsfast_salm2map(reinterpret_cast<fftw_complex*>(&almA[0]),
+			 reinterpret_cast<fftw_complex*>(&fA[0]),
+			 A.Spin(), N_theta, N_phi, lMax);
+      spinsfast_salm2map(reinterpret_cast<fftw_complex*>(&almB[0]),
+			 reinterpret_cast<fftw_complex*>(&fB[0]),
+			 B.Spin(), N_theta, N_phi, lMax);
+      for(unsigned int i=0; i<N_phi*N_theta; ++i) {
+	fC[i] = fA[i]*fB[i];
+      }
+    }
+    
+    // Transform back and record the new data in C
+    spinsfast_map2salm(reinterpret_cast<fftw_complex*>(&fC[0]),
+		       reinterpret_cast<fftw_complex*>(&almC[0]),
+		       C.Spin(), N_theta, N_phi, lMax);
+    for(unsigned int i_m=0; i_m<C.NModes(); ++i_m) {
+      C.SetData(i_m, i_t, fC[i_m+lMin*lMin]);
+    }
+    
+  } // Finish loop over time
+  
+  return C;
 }

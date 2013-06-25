@@ -5,7 +5,7 @@ very much appreciate if resulting works cite the original paper on
 which this software is based: <http://arxiv.org/abs/1302.2919>.  This
 software is covered under the open source MIT license, shown below,
 with the exception of the 'spinsfast' software package.  The
-'spinsfast' software is included with this software without
+'spinsfast' software (rev104) is included with this software without
 modification, and is covered separately under the GNU GPL license, as
 documented in its subdirectory.  See its home page:
 <http://www.physics.miami.edu/~huffenbe/research/spinsfast/>.

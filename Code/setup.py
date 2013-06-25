@@ -48,10 +48,10 @@ from os import devnull, environ
 
 ## See if GSL_HOME is set; if so, use it
 if "GSL_HOME" in environ :
-    IncDirs = [environ["GSL_HOME"]+'/include', '/opt/local/include']
+    IncDirs = [environ["GSL_HOME"]+'/include', '/opt/local/include', 'spinsfast/include']
     LibDirs = [environ["GSL_HOME"]+'/lib', '/opt/local/lib']
 else :
-    IncDirs = ['/opt/local/include']
+    IncDirs = ['/opt/local/include', 'spinsfast/include']
     LibDirs = ['/opt/local/lib']
 
 ## Remove a compiler flag that doesn't belong there for C++

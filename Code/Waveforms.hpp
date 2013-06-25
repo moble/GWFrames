@@ -44,6 +44,7 @@ namespace GWFrames {
     Waveform& operator=(const Waveform&);
     
   protected:  // Member data
+    int spin;
     std::stringstream history;
     std::vector<double> t;
     std::vector<Quaternion> frame;
@@ -55,6 +56,7 @@ namespace GWFrames {
     MatrixC data; // Each row (first index, nn) corresponds to a mode
     
   public: // Data alteration functions -- USE AT YOUR OWN RISK!
+    inline void SetSpin(const int NewSpin) { spin=NewSpin; }
     inline void AppendHistory(const std::string& Hist) { history << Hist; }
     inline void SetHistory(const std::string& Hist) { history.str(Hist); history.seekp(0, std::ios_base::end); }
     inline void SetT(const std::vector<double>& a) { t = a; }
@@ -73,6 +75,7 @@ namespace GWFrames {
   public:  // Data access functions
     inline unsigned int NTimes() const { return t.size(); }
     inline unsigned int NModes() const { return data.nrows(); }
+    inline int Spin() const { return spin; }
     inline std::string HistoryStr() const { return history.str(); }
     inline std::stringstream& HistoryStream() { return history; }
     inline int FrameType() const { return frameType; }
@@ -109,6 +112,7 @@ namespace GWFrames {
     std::vector<std::vector<double> > ArgUnwrapped() const;
     std::vector<std::vector<std::complex<double> > > Data() const;
     unsigned int FindModeIndex(const int L, const int M) const;
+    unsigned int FindModeIndexWithoutError(const int L, const int M) const;
     std::vector<std::complex<double> > DataDot(const unsigned int Mode) const;
     std::vector<double> Norm(const bool TakeSquareRoot=false) const;
     unsigned int MaxNormIndex(const unsigned int SkipFraction=4) const;
@@ -164,8 +168,9 @@ namespace GWFrames {
     Waveform Compare(const Waveform& B, const double MinTimeStep=0.005, const double MinTime=-3.0e300) const;
     Waveform Hybridize(const Waveform& B, const double t1, const double t2, const double tMinStep=0.005) const;
     
-    // For a particular sky location
+    // Pointwise operations
     std::vector<std::complex<double> > EvaluateAtPoint(const double vartheta, const double varphi) const;
+    Waveform operator*(const Waveform& b) const;
     
     // Output to data file
     const Waveform& Output(const std::string& FileName, const unsigned int precision=14) const;
