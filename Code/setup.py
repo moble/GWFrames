@@ -49,10 +49,10 @@ from os import devnull, environ
 ## See if GSL_HOME is set; if so, use it
 if "GSL_HOME" in environ :
     IncDirs = [environ["GSL_HOME"]+'/include', '/opt/local/include', 'spinsfast/include']
-    LibDirs = [environ["GSL_HOME"]+'/lib', '/opt/local/lib']
+    LibDirs = [environ["GSL_HOME"]+'/lib', '/opt/local/lib', 'spinsfast/lib']
 else :
     IncDirs = ['/opt/local/include', 'spinsfast/include']
-    LibDirs = ['/opt/local/lib']
+    LibDirs = ['/opt/local/lib', 'spinsfast/lib']
 
 ## Remove a compiler flag that doesn't belong there for C++
 import distutils.sysconfig as ds
@@ -111,7 +111,7 @@ setup(name="GWFrames",
                              'GWFrames_Doc.i'],
                   include_dirs=IncDirs,
                   library_dirs=LibDirs,
-                  libraries=['gsl', 'gslcblas'],
+                  libraries=['gsl', 'gslcblas', 'fftw3', 'spinsfast'],
                   define_macros = [('CodeRevision', CodeRevision)],
                   language='c++',
                   swig_opts=['-globals', 'constants', '-c++'],
