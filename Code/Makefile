@@ -79,3 +79,4 @@ swig :
 # This attempts to build spinsfast
 spinsfast :
 	build=build/config.mk make -C spinsfast
+	cp spinsfast/lib/spinsfast.so `python -m site --user-site`/

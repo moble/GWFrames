@@ -170,7 +170,11 @@ namespace GWFrames {
     
     // Pointwise operations
     std::vector<std::complex<double> > EvaluateAtPoint(const double vartheta, const double varphi) const;
-    Waveform operator*(const Waveform& b) const;
+    template <typename Op> Waveform BinaryOp(const Waveform& b) const;
+    inline Waveform operator+(const Waveform& B) const { return BinaryOp<std::plus<std::complex<double> > >(B); }
+    inline Waveform operator-(const Waveform& B) const { return BinaryOp<std::minus<std::complex<double> > >(B); }
+    inline Waveform operator*(const Waveform& B) const { return BinaryOp<std::multiplies<std::complex<double> > >(B); }
+    inline Waveform operator/(const Waveform& B) const { return BinaryOp<std::divides<std::complex<double> > >(B); }
     
     // Output to data file
     const Waveform& Output(const std::string& FileName, const unsigned int precision=14) const;
