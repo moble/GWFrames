@@ -47,7 +47,7 @@ ifdef GSL_HOME
 endif
 # Set compiler name and optimization flags here, if desired
 C++ = g++
-OPT = -O3 -fopenmp -Wall
+OPT = -O3 -fopenmp -Wall -Wno-deprecated
 ## DON'T USE -ffast-math in OPT
 
 
@@ -69,7 +69,8 @@ cpp : Utilities.o Quaternions.o Waveforms.o PNWaveforms.o
 clean :
 	-/bin/rm -f *.o
 allclean : clean
-	-/bin/rm -rf build xml html
+	-/bin/rm -rf build
+	-build=build/config.mk make -C spinsfast clean
 realclean : allclean
 
 # This just runs SWIG, which can be handy for committing pre-swigged files

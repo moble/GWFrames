@@ -1,5 +1,5 @@
 # Tell 'make' not to look for files with the following names
-.PHONY : all cpp doc
+.PHONY : all cpp doc clean
 
 # By default, just call the python build process
 all :
@@ -12,3 +12,7 @@ cpp :
 # This rebuilds the documentation, assuming doxygen is working
 doc :
 	make -C Docs
+
+# This just cleans out the builds, etc., in Code
+clean :
+	make -C Code clean
