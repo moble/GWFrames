@@ -183,6 +183,10 @@ namespace GWFrames {
     Waveform NPEdthBar() const;
     Waveform GHPEdth() const;
     Waveform GHPEdthBar() const;
+    Waveform IntegrateNPEdth() const;
+    Waveform IntegrateNPEdthBar() const;
+    Waveform IntegrateGHPEdth() const;
+    Waveform IntegrateGHPEdthBar() const;
     
     // Output to data file
     const Waveform& Output(const std::string& FileName, const unsigned int precision=14) const;

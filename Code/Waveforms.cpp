@@ -2825,6 +2825,10 @@ GWFrames::Waveform GWFrames::Waveform::NPEdth() const {
   /// \sa NPEdthBar
   /// \sa GHPEdth
   /// \sa GHPEdthBar
+  /// \sa IntegrateNPEdth
+  /// \sa IntegrateNPEdthBar
+  /// \sa IntegrateGHPEdth
+  /// \sa IntegrateGHPEdthBar
   
   const Waveform& A = *this;
   const int s = A.SpinWeight();
@@ -2864,6 +2868,10 @@ GWFrames::Waveform GWFrames::Waveform::NPEdthBar() const {
   /// \sa NPEdth
   /// \sa GHPEdth
   /// \sa GHPEdthBar
+  /// \sa IntegrateNPEdth
+  /// \sa IntegrateNPEdthBar
+  /// \sa IntegrateGHPEdth
+  /// \sa IntegrateGHPEdthBar
   
   const Waveform& A = *this;
   const int s = A.SpinWeight();
@@ -2917,6 +2925,10 @@ GWFrames::Waveform GWFrames::Waveform::GHPEdth() const {
   /// \sa NPEdth
   /// \sa NPEdthBar
   /// \sa GHPEdthBar
+  /// \sa IntegrateNPEdth
+  /// \sa IntegrateNPEdthBar
+  /// \sa IntegrateGHPEdth
+  /// \sa IntegrateGHPEdthBar
   
   const Waveform& A = *this;
   const int s = A.SpinWeight();
@@ -2970,6 +2982,10 @@ GWFrames::Waveform GWFrames::Waveform::GHPEdthBar() const {
   /// \sa NPEdth
   /// \sa NPEdthBar
   /// \sa GHPEdth
+  /// \sa IntegrateNPEdth
+  /// \sa IntegrateNPEdthBar
+  /// \sa IntegrateGHPEdth
+  /// \sa IntegrateGHPEdthBar
   
   const Waveform& A = *this;
   const int s = A.SpinWeight();
@@ -2984,8 +3000,172 @@ GWFrames::Waveform GWFrames::Waveform::GHPEdthBar() const {
     }
   }
   
-  EdthBarA.SetSpinWeight(A.SpinWeight()+1);
+  EdthBarA.SetSpinWeight(A.SpinWeight()-1);
   //EdthBarA.SetBoostWeight(A.BoostWeight()); // No change
   
   return EdthBarA;
+}
+
+
+
+
+/// Integrate the Newman-Penrose edth operator
+GWFrames::Waveform GWFrames::Waveform::IntegrateNPEdth() const {
+  /// This operator inverts the action of the Newman-Penrose edth
+  /// operator.  This is not a perfect inverse, because the l=s-1 term
+  /// is set to zero.  To be precise, if `Waveform A` has spins weight
+  /// \f$s\f$, then `A.NPEdth().IntegrateNPEdth()` has the effect of
+  /// setting the \f$\ell=s\f$ term in `A` to zero.
+  /// 
+  /// Note that the N-P edth operator does not preserve boost weights,
+  /// so the boost weight is set to the value of `WeightError`, which
+  /// is just meant to be large enough that it will give improbable
+  /// values if used.  This is not fool-proof.  See the GHP edth
+  /// operator for a weight-preserving version.
+  /// 
+  /// \sa NPEdth
+  /// \sa NPEdthBar
+  /// \sa GHPEdth
+  /// \sa GHPEdthBar
+  /// \sa IntegrateNPEdthBar
+  /// \sa IntegrateGHPEdth
+  /// \sa IntegrateGHPEdthBar
+  
+  const Waveform& A = *this;
+  const int s = A.SpinWeight()-1;
+  Waveform IntegralEdthA(A);
+  IntegralEdthA.history << "### this->IntegrateNPEdth();" << endl;
+  
+  for(unsigned int i_m=0; i_m<A.NModes(); ++i_m) {
+    const int l = A.LM(i_m)[0];
+    const double factor = std::sqrt((l-s)*(l+s+1));
+    if(factor != 0.0) {
+      for(unsigned int i_t=0; i_t<A.NTimes(); ++i_t) {
+	IntegralEdthA.SetData(i_m, i_t, IntegralEdthA.Data(i_m, i_t)/factor);
+      }
+    }
+  }
+  
+  IntegralEdthA.SetSpinWeight(A.SpinWeight()-1);
+  IntegralEdthA.SetBoostWeight(WeightError);
+  
+  return IntegralEdthA;
+}
+
+/// Integrate the Newman-Penrose edth operator conjugate
+GWFrames::Waveform GWFrames::Waveform::IntegrateNPEdthBar() const {
+  /// This operator inverts the action of the conjugated
+  /// Newman-Penrose edth operator.  This is not a perfect inverse,
+  /// because the l=s-1 term is set to zero.  To be precise, if
+  /// `Waveform A` has spins weight \f$s\f$, then
+  /// `A.NPEdthBar().IntegrateNPEdthBar()` has the effect of setting
+  /// the \f$\ell=s\f$ term in `A` to zero.
+  /// 
+  /// Note that the N-P edth operator does not preserve boost weights,
+  /// so the boost weight is set to the value of `WeightError`, which
+  /// is just meant to be large enough that it will give improbable
+  /// values if used.  This is not fool-proof.  See the GHP edth
+  /// operator for a weight-preserving version.
+  /// 
+  /// \sa NPEdth
+  /// \sa NPEdthBar
+  /// \sa GHPEdth
+  /// \sa GHPEdthBar
+  /// \sa IntegrateNPEdthBar
+  /// \sa IntegrateGHPEdth
+  /// \sa IntegrateGHPEdthBar
+  
+  const Waveform& A = *this;
+  const int s = A.SpinWeight()+1;
+  Waveform IntegralEdthBarA(A);
+  IntegralEdthBarA.history << "### this->IntegrateNPEdthBar();" << endl;
+  
+  for(unsigned int i_m=0; i_m<A.NModes(); ++i_m) {
+    const int l = A.LM(i_m)[0];
+    const double factor = -std::sqrt((l+s)*(l-s+1));
+    if(factor != 0.0) {
+      for(unsigned int i_t=0; i_t<A.NTimes(); ++i_t) {
+	IntegralEdthBarA.SetData(i_m, i_t, IntegralEdthBarA.Data(i_m, i_t)/factor);
+      }
+    }
+  }
+  
+  IntegralEdthBarA.SetSpinWeight(A.SpinWeight()+1);
+  IntegralEdthBarA.SetBoostWeight(WeightError);
+  
+  return IntegralEdthBarA;
+}
+
+/// Integrate the Geroch-Held-Penrose edth operator
+GWFrames::Waveform GWFrames::Waveform::IntegrateGHPEdth() const {
+  /// This operator inverts the action of the GHP edth operator.  This
+  /// is not a perfect inverse, because the l=s-1 term is set to zero.
+  /// To be precise, if `Waveform A` has spins weight \f$s\f$, then
+  /// `A.GHPEdth().IntegrateGHPEdth()` has the effect of setting the
+  /// \f$\ell=s\f$ term in `A` to zero.
+  /// 
+  /// \sa NPEdth
+  /// \sa NPEdthBar
+  /// \sa GHPEdth
+  /// \sa GHPEdthBar
+  /// \sa IntegrateNPEdth
+  /// \sa IntegrateNPEdthBar
+  /// \sa IntegrateGHPEdthBar
+  
+  const Waveform& A = *this;
+  const int s = A.SpinWeight()-1;
+  Waveform IntegralEdthA(A);
+  IntegralEdthA.history << "### this->IntegrateGHPEdth();" << endl;
+  
+  for(unsigned int i_m=0; i_m<A.NModes(); ++i_m) {
+    const int l = A.LM(i_m)[0];
+    const double factor = std::sqrt((l-s)*(l+s+1.)/2.);
+    if(factor != 0.0) {
+      for(unsigned int i_t=0; i_t<A.NTimes(); ++i_t) {
+	IntegralEdthA.SetData(i_m, i_t, IntegralEdthA.Data(i_m, i_t)/factor);
+      }
+    }
+  }
+  
+  IntegralEdthA.SetSpinWeight(A.SpinWeight()-1);
+  //IntegralEdthA.SetBoostWeight(A.BoostWeight()); // No change
+  
+  return IntegralEdthA;
+}
+
+/// Integrate the Geroch-Held-Penrose edth operator conjugate
+GWFrames::Waveform GWFrames::Waveform::IntegrateGHPEdthBar() const {
+  /// This operator inverts the action of the GHP edth operator.  This
+  /// is not a perfect inverse, because the l=s-1 term is set to zero.
+  /// To be precise, if `Waveform A` has spins weight \f$s\f$, then
+  /// `A.GHPEdth().IntegrateGHPEdth()` has the effect of setting the
+  /// \f$\ell=s\f$ term in `A` to zero.
+  /// 
+  /// \sa NPEdth
+  /// \sa NPEdthBar
+  /// \sa GHPEdth
+  /// \sa GHPEdthBar
+  /// \sa IntegrateNPEdth
+  /// \sa IntegrateNPEdthBar
+  /// \sa IntegrateGHPEdth
+  
+  const Waveform& A = *this;
+  const int s = A.SpinWeight()+1;
+  Waveform IntegralEdthBarA(A);
+  IntegralEdthBarA.history << "### this->GHPEdthBar();" << endl;
+  
+  for(unsigned int i_m=0; i_m<A.NModes(); ++i_m) {
+    const int l = A.LM(i_m)[0];
+    const double factor = -std::sqrt((l+s)*(l-s+1.)/2.);
+    if(factor != 0.0) {
+      for(unsigned int i_t=0; i_t<A.NTimes(); ++i_t) {
+	IntegralEdthBarA.SetData(i_m, i_t, IntegralEdthBarA.Data(i_m, i_t)/factor);
+      }
+    }
+  }
+  
+  IntegralEdthBarA.SetSpinWeight(A.SpinWeight()+1);
+  //IntegralEdthBarA.SetBoostWeight(A.BoostWeight()); // No change
+  
+  return IntegralEdthBarA;
 }
