@@ -117,7 +117,7 @@ setup(name="GWFrames",
                   swig_opts=['-globals', 'constants', '-c++'],
                   extra_link_args=['-lgomp', '-fPIC'],
                   # extra_link_args=['-fPIC'], # Shouldn't be necessary...
-                  extra_compile_args=['-fopenmp']
+                  extra_compile_args=['-fopenmp', '-Wno-deprecated']
                   # extra_compile_args=['-ffast-math'] # DON'T USE fast-math!!!  It makes it impossible to detect NANs
                   )
         ],

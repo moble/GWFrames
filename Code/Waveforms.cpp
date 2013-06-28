@@ -701,16 +701,19 @@ GWFrames::Waveform& GWFrames::Waveform::TransformModesToRotatedFrame(const std::
   /// functions.
   /// 
   
-  if(R_frame.size()!=NTimes() && R_frame.size()!=1) {
-    cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": R_frame.size()=" << R_frame.size() << "; NTimes()=" << NTimes() << endl;
+  const int NModes = this->NModes();
+  const int NTimes = this->NTimes();
+  
+  if(int(R_frame.size())!=NTimes && R_frame.size()!=1) {
+    cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": R_frame.size()=" << R_frame.size() << "; NTimes()=" << NTimes << endl;
     throw(GWFrames_VectorSizeMismatch);
   }
   
   // Loop through each mode and do the rotation
   {
-    unsigned int mode=1;
-    for(int l=std::abs(SpinWeight()); l<int(NModes()); ++l) {
-      if(NModes()<mode) { break; }
+    int mode=1;
+    for(int l=std::abs(SpinWeight()); l<NModes; ++l) {
+      if(NModes<mode) { break; }
       
       // Use a vector of mode indices, in case the modes are out of
       // order.  This still assumes that we have each l from l=2 up to
@@ -743,7 +746,7 @@ GWFrames::Waveform& GWFrames::Waveform::TransformModesToRotatedFrame(const std::
 	  }
 	  // Loop through each time step
 	  #pragma omp for
-	  for(unsigned int t=0; t<NTimes(); ++t) {
+	  for(int t=0; t<NTimes; ++t) {
 	    // Store the data for all m' modes at this time step
 	    for(int mp=-l, i=0; mp<=l; ++mp, ++i) {
 	      Data[mp+l] = this->operator()(ModeIndices[i], t);
@@ -759,7 +762,7 @@ GWFrames::Waveform& GWFrames::Waveform::TransformModesToRotatedFrame(const std::
 	} else {
 	  // Loop through each time step
 	  #pragma omp for
-	  for(unsigned int t=0; t<NTimes(); ++t) {
+	  for(int t=0; t<NTimes; ++t) {
 	    // Get the Wigner D matrix data at this time step
 	    D.SetRotation(R_frame[t]);
 	    for(int m=-l; m<=l; ++m) {
@@ -802,16 +805,19 @@ GWFrames::Waveform& GWFrames::Waveform::TransformUncertaintiesToRotatedFrame(con
   /// \sa TransformModesToRotatedFrame
   /// 
   
-  if(R_frame.size()!=NTimes() && R_frame.size()!=1) {
-    cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": R_frame.size()=" << R_frame.size() << "; NTimes()=" << NTimes() << endl;
+  const int NModes = this->NModes();
+  const int NTimes = this->NTimes();
+  
+  if(int(R_frame.size())!=NTimes && R_frame.size()!=1) {
+    cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": R_frame.size()=" << R_frame.size() << "; NTimes()=" << NTimes << endl;
     throw(GWFrames_VectorSizeMismatch);
   }
   
   // Loop through each mode and do the rotation
   {
-    unsigned int mode=1;
-    for(int l=2; l<int(NModes()); ++l) {
-      if(NModes()<mode) { break; }
+    int mode=1;
+    for(int l=2; l<NModes; ++l) {
+      if(NModes<mode) { break; }
       
       // Use a vector of mode indices, in case the modes are out of
       // order.  This still assumes that we have each l from l=2 up to
@@ -844,7 +850,7 @@ GWFrames::Waveform& GWFrames::Waveform::TransformUncertaintiesToRotatedFrame(con
 	  }
 	  // Loop through each time step
 	  #pragma omp for
-	  for(unsigned int t=0; t<NTimes(); ++t) {
+	  for(int t=0; t<NTimes; ++t) {
 	    // Store the data for all m' modes at this time step
 	    for(int mp=-l, i=0; mp<=l; ++mp, ++i) {
 	      Data[mp+l] = this->operator()(ModeIndices[i], t);
@@ -867,7 +873,7 @@ GWFrames::Waveform& GWFrames::Waveform::TransformUncertaintiesToRotatedFrame(con
 	} else {
 	  // Loop through each time step
 	  #pragma omp for
-	  for(unsigned int t=0; t<NTimes(); ++t) {
+	  for(int t=0; t<NTimes; ++t) {
 	    // Get the Wigner D matrix data at this time step
 	    D.SetRotation(R_frame[t]);
 	    for(int m=-l; m<=l; ++m) {
@@ -2403,18 +2409,18 @@ std::vector<std::complex<double> > GWFrames::Waveform::EvaluateAtPoint(const dou
     }
   }
   
-  const unsigned int NT = NTimes();
-  const unsigned int NM = NModes();
+  const int NT = NTimes();
+  const int NM = NModes();
   vector<complex<double> > d(NT, complex<double>(0.,0.));
   SWSH Y;
   Y.SetAngles(vartheta, varphi);
   
-  for(unsigned int i_m=0; i_m<NM; ++i_m) {
+  for(int i_m=0; i_m<NM; ++i_m) {
     const int ell = LM(i_m)[0];
     const int m   = LM(i_m)[1];
     const complex<double> Ylm = Y(ell,m);
     #pragma omp parallel for
-    for(unsigned int i_t=0; i_t<NT; ++i_t) {
+    for(int i_t=0; i_t<NT; ++i_t) {
       d[i_t] += Data(i_m, i_t) * Ylm;
     }
   }
@@ -2518,15 +2524,24 @@ GWFrames::Waveform GWFrames::Waveform::NPEdth() const {
   /// \sa IntegrateGHPEdthBar
   
   const Waveform& A = *this;
+  const int NModes = A.NModes();
+  const int NTimes = A.NTimes();
   const int s = A.SpinWeight();
+  const int lMin = std::abs(s+1);
   Waveform EdthA(A);
   EdthA.history << "### this->NPEdth();" << endl;
   
-  for(unsigned int i_m=0; i_m<A.NModes(); ++i_m) {
+  for(int i_m=0; i_m<NModes; ++i_m) {
     const int l = A.LM(i_m)[0];
-    const double factor = std::sqrt((l-s)*(l+s+1));
-    for(unsigned int i_t=0; i_t<A.NTimes(); ++i_t) {
-      EdthA.SetData(i_m, i_t, EdthA.Data(i_m, i_t)*factor);
+    if(l<lMin) {
+      for(int i_t=0; i_t<NTimes; ++i_t) {
+	EdthA.SetData(i_m, i_t, 0.0);
+      }
+    } else {
+      const double factor = std::sqrt((l-s)*(l+s+1));
+      for(int i_t=0; i_t<NTimes; ++i_t) {
+	EdthA.SetData(i_m, i_t, EdthA.Data(i_m, i_t)*factor);
+      }
     }
   }
   
@@ -2561,15 +2576,24 @@ GWFrames::Waveform GWFrames::Waveform::NPEdthBar() const {
   /// \sa IntegrateGHPEdthBar
   
   const Waveform& A = *this;
+  const int NModes = A.NModes();
+  const int NTimes = A.NTimes();
   const int s = A.SpinWeight();
+  const int lMin = std::abs(s-1);
   Waveform EdthBarA(A);
   EdthBarA.history << "### this->NPEdthBar();" << endl;
   
-  for(unsigned int i_m=0; i_m<A.NModes(); ++i_m) {
+  for(int i_m=0; i_m<NModes; ++i_m) {
     const int l = A.LM(i_m)[0];
-    const double factor = -std::sqrt((l+s)*(l-s+1));
-    for(unsigned int i_t=0; i_t<A.NTimes(); ++i_t) {
-      EdthBarA.SetData(i_m, i_t, EdthBarA.Data(i_m, i_t)*factor);
+    if(l<lMin) {
+      for(int i_t=0; i_t<NTimes; ++i_t) {
+	EdthBarA.SetData(i_m, i_t, 0.0);
+      }
+    } else {
+      const double factor = -std::sqrt((l+s)*(l-s+1));
+      for(int i_t=0; i_t<NTimes; ++i_t) {
+	EdthBarA.SetData(i_m, i_t, EdthBarA.Data(i_m, i_t)*factor);
+      }
     }
   }
   
@@ -2618,15 +2642,24 @@ GWFrames::Waveform GWFrames::Waveform::GHPEdth() const {
   /// \sa IntegrateGHPEdthBar
   
   const Waveform& A = *this;
+  const int NModes = A.NModes();
+  const int NTimes = A.NTimes();
   const int s = A.SpinWeight();
+  const int lMin = std::abs(s+1);
   Waveform EdthA(A);
   EdthA.history << "### this->GHPEdth();" << endl;
   
-  for(unsigned int i_m=0; i_m<A.NModes(); ++i_m) {
+  for(int i_m=0; i_m<NModes; ++i_m) {
     const int l = A.LM(i_m)[0];
-    const double factor = std::sqrt((l-s)*(l+s+1.)/2.);
-    for(unsigned int i_t=0; i_t<A.NTimes(); ++i_t) {
-      EdthA.SetData(i_m, i_t, EdthA.Data(i_m, i_t)*factor);
+    if(l<lMin) {
+      for(int i_t=0; i_t<NTimes; ++i_t) {
+	EdthA.SetData(i_m, i_t, 0.0);
+      }
+    } else {
+      const double factor = std::sqrt((l-s)*(l+s+1.)/2.);
+      for(int i_t=0; i_t<NTimes; ++i_t) {
+	EdthA.SetData(i_m, i_t, EdthA.Data(i_m, i_t)*factor);
+      }
     }
   }
   
@@ -2675,15 +2708,24 @@ GWFrames::Waveform GWFrames::Waveform::GHPEdthBar() const {
   /// \sa IntegrateGHPEdthBar
   
   const Waveform& A = *this;
+  const int NModes = A.NModes();
+  const int NTimes = A.NTimes();
   const int s = A.SpinWeight();
+  const int lMin = std::abs(s-1);
   Waveform EdthBarA(A);
   EdthBarA.history << "### this->GHPEdthBar();" << endl;
   
-  for(unsigned int i_m=0; i_m<A.NModes(); ++i_m) {
+  for(int i_m=0; i_m<NModes; ++i_m) {
     const int l = A.LM(i_m)[0];
-    const double factor = -std::sqrt((l+s)*(l-s+1.)/2.);
-    for(unsigned int i_t=0; i_t<A.NTimes(); ++i_t) {
-      EdthBarA.SetData(i_m, i_t, EdthBarA.Data(i_m, i_t)*factor);
+    if(l<lMin) {
+      for(int i_t=0; i_t<NTimes; ++i_t) {
+	EdthBarA.SetData(i_m, i_t, 0.0);
+      }
+    } else {
+      const double factor = -std::sqrt((l+s)*(l-s+1.)/2.);
+      for(int i_t=0; i_t<NTimes; ++i_t) {
+	EdthBarA.SetData(i_m, i_t, EdthBarA.Data(i_m, i_t)*factor);
+      }
     }
   }
   
@@ -2719,15 +2761,22 @@ GWFrames::Waveform GWFrames::Waveform::IntegrateNPEdth() const {
   /// \sa IntegrateGHPEdthBar
   
   const Waveform& A = *this;
+  const int NModes = A.NModes();
+  const int NTimes = A.NTimes();
   const int s = A.SpinWeight()-1;
+  const int lMin = std::abs(s);
   Waveform IntegralEdthA(A);
   IntegralEdthA.history << "### this->IntegrateNPEdth();" << endl;
   
-  for(unsigned int i_m=0; i_m<A.NModes(); ++i_m) {
+  for(int i_m=0; i_m<NModes; ++i_m) {
     const int l = A.LM(i_m)[0];
     const double factor = std::sqrt((l-s)*(l+s+1));
-    if(factor != 0.0) {
-      for(unsigned int i_t=0; i_t<A.NTimes(); ++i_t) {
+    if(l<=lMin || factor == 0.0) {
+      for(int i_t=0; i_t<NTimes; ++i_t) {
+	IntegralEdthA.SetData(i_m, i_t, 0.0);
+      }
+    } else {
+      for(int i_t=0; i_t<NTimes; ++i_t) {
 	IntegralEdthA.SetData(i_m, i_t, IntegralEdthA.Data(i_m, i_t)/factor);
       }
     }
@@ -2763,15 +2812,22 @@ GWFrames::Waveform GWFrames::Waveform::IntegrateNPEdthBar() const {
   /// \sa IntegrateGHPEdthBar
   
   const Waveform& A = *this;
+  const int NModes = A.NModes();
+  const int NTimes = A.NTimes();
   const int s = A.SpinWeight()+1;
+  const int lMin = std::abs(s);
   Waveform IntegralEdthBarA(A);
   IntegralEdthBarA.history << "### this->IntegrateNPEdthBar();" << endl;
   
-  for(unsigned int i_m=0; i_m<A.NModes(); ++i_m) {
+  for(int i_m=0; i_m<NModes; ++i_m) {
     const int l = A.LM(i_m)[0];
     const double factor = -std::sqrt((l+s)*(l-s+1));
-    if(factor != 0.0) {
-      for(unsigned int i_t=0; i_t<A.NTimes(); ++i_t) {
+    if(l<=lMin || factor == 0.0) {
+      for(int i_t=0; i_t<NTimes; ++i_t) {
+	IntegralEdthBarA.SetData(i_m, i_t, 0.0);
+      }
+    } else {
+      for(int i_t=0; i_t<NTimes; ++i_t) {
 	IntegralEdthBarA.SetData(i_m, i_t, IntegralEdthBarA.Data(i_m, i_t)/factor);
       }
     }
@@ -2800,15 +2856,22 @@ GWFrames::Waveform GWFrames::Waveform::IntegrateGHPEdth() const {
   /// \sa IntegrateGHPEdthBar
   
   const Waveform& A = *this;
+  const int NModes = A.NModes();
+  const int NTimes = A.NTimes();
   const int s = A.SpinWeight()-1;
+  const int lMin = std::abs(s);
   Waveform IntegralEdthA(A);
   IntegralEdthA.history << "### this->IntegrateGHPEdth();" << endl;
   
-  for(unsigned int i_m=0; i_m<A.NModes(); ++i_m) {
+  for(int i_m=0; i_m<NModes; ++i_m) {
     const int l = A.LM(i_m)[0];
     const double factor = std::sqrt((l-s)*(l+s+1.)/2.);
-    if(factor != 0.0) {
-      for(unsigned int i_t=0; i_t<A.NTimes(); ++i_t) {
+    if(l<=lMin || factor == 0.0) {
+      for(int i_t=0; i_t<NTimes; ++i_t) {
+	IntegralEdthA.SetData(i_m, i_t, 0.0);
+      }
+    } else {
+      for(int i_t=0; i_t<NTimes; ++i_t) {
 	IntegralEdthA.SetData(i_m, i_t, IntegralEdthA.Data(i_m, i_t)/factor);
       }
     }
@@ -2837,15 +2900,22 @@ GWFrames::Waveform GWFrames::Waveform::IntegrateGHPEdthBar() const {
   /// \sa IntegrateGHPEdth
   
   const Waveform& A = *this;
+  const int NModes = A.NModes();
+  const int NTimes = A.NTimes();
   const int s = A.SpinWeight()+1;
+  const int lMin = std::abs(s);
   Waveform IntegralEdthBarA(A);
   IntegralEdthBarA.history << "### this->GHPEdthBar();" << endl;
   
-  for(unsigned int i_m=0; i_m<A.NModes(); ++i_m) {
+  for(int i_m=0; i_m<NModes; ++i_m) {
     const int l = A.LM(i_m)[0];
     const double factor = -std::sqrt((l+s)*(l-s+1.)/2.);
-    if(factor != 0.0) {
-      for(unsigned int i_t=0; i_t<A.NTimes(); ++i_t) {
+    if(l<lMin || factor == 0.0) {
+      for(int i_t=0; i_t<NTimes; ++i_t) {
+	IntegralEdthBarA.SetData(i_m, i_t, 0.0);
+      }
+    } else {
+      for(int i_t=0; i_t<NTimes; ++i_t) {
 	IntegralEdthBarA.SetData(i_m, i_t, IntegralEdthBarA.Data(i_m, i_t)/factor);
       }
     }
@@ -2954,7 +3024,7 @@ GWFrames::Waveforms GWFrames::Waveforms::Extrapolate(std::vector<std::vector<dou
   const int MaxN = *std::max_element(ExtrapolationOrders.begin(), ExtrapolationOrders.end());
   const int MinN = *std::min_element(ExtrapolationOrders.begin(), ExtrapolationOrders.end());
   const bool UseOmegas = (Omegas.size()!=0);
-  const unsigned int NTimes = FiniteRadiusWaveforms[0].NTimes();
+  const int NTimes = FiniteRadiusWaveforms[0].NTimes();
   const unsigned int NModes = FiniteRadiusWaveforms[0].NModes();
   const unsigned int NFiniteRadii = FiniteRadiusWaveforms.size();
   const unsigned int NExtrapolations = ExtrapolationOrders.size();
@@ -2983,7 +3053,7 @@ GWFrames::Waveforms GWFrames::Waveforms::Extrapolate(std::vector<std::vector<dou
 	   << "\n\n" << endl;
       throw(GWFrames_VectorSizeMismatch);
   }
-  if(UseOmegas && Omegas.size()!=NTimes) {
+  if(UseOmegas && int(Omegas.size())!=NTimes) {
       cerr << "\n\n" << __FILE__ << ":" << __LINE__
   	   << "\nERROR: NTimes mismatch in data to be extrapolated."
   	   << "\n       FiniteRadiusWaveforms[0].NTimes()=" << NTimes
@@ -2992,7 +3062,7 @@ GWFrames::Waveforms GWFrames::Waveforms::Extrapolate(std::vector<std::vector<dou
       throw(GWFrames_VectorSizeMismatch);
   }
   for(unsigned int i_W=1; i_W<NFiniteRadii; ++i_W) {
-    if(FiniteRadiusWaveforms[i_W].NTimes() != NTimes) {
+    if(int(FiniteRadiusWaveforms[i_W].NTimes()) != NTimes) {
       cerr << "\n\n" << __FILE__ << ":" << __LINE__
 	   << "\nERROR: NTimes mismatch in data to be extrapolated."
 	   << "\n       FiniteRadiusWaveforms[0].NTimes()=" << NTimes
@@ -3008,7 +3078,7 @@ GWFrames::Waveforms GWFrames::Waveforms::Extrapolate(std::vector<std::vector<dou
 	   << "\n\n" << endl;
       throw(GWFrames_VectorSizeMismatch);
     }
-    if(Radii[i_W].size() != NTimes) {
+    if(int(Radii[i_W].size()) != NTimes) {
       cerr << "\n\n" << __FILE__ << ":" << __LINE__
 	   << "\nERROR: NTimes mismatch in data to be extrapolated."
 	   << "\n       FiniteRadiusWaveforms[0].NTimes()=" << NTimes
@@ -3074,7 +3144,7 @@ GWFrames::Waveforms GWFrames::Waveforms::Extrapolate(std::vector<std::vector<dou
   
   // Loop over time
   #pragma omp parallel for
-  for(unsigned int i_t=0; i_t<NTimes; ++i_t) {
+  for(int i_t=0; i_t<NTimes; ++i_t) {
     
     // Set up the gsl storage variables
     size_t EffectiveRank;
