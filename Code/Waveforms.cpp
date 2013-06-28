@@ -2487,324 +2487,11 @@ GWFrames::Waveform& GWFrames::Waveform::HackSpECSignError() {
 }
 
 
-
-
-
-
-//////////////////////////
-/// Waveforms (plural!) //
-//////////////////////////
-
-
-// Constructors
-
-/// Empty constructor of N empty objects.
-GWFrames::Waveforms::Waveforms(const int N) : Ws(N), CommonTimeSet(false) { }
-
-/// Basic copy constructor.
-GWFrames::Waveforms::Waveforms(const Waveforms& In) : Ws(In.Ws), CommonTimeSet(In.CommonTimeSet) { }
-
-/// Basic copy constructor.
-GWFrames::Waveforms::Waveforms(const std::vector<Waveform>& In) : Ws(In), CommonTimeSet(false) { }
-
-/// Interpolate to a common set of times.
-void GWFrames::Waveforms::SetCommonTime(std::vector<std::vector<double> >& Radii,
-							const double MinTimeStep, const double EarliestTime, const double LatestTime) {
-  const unsigned int NWaveforms = Radii.size();
-  vector<double> TLimits(2);
-  TLimits[0] = EarliestTime;
-  TLimits[1] = LatestTime;
-  vector<double> T = GWFrames::Intersection(TLimits, Ws[0].T(), MinTimeStep, EarliestTime, LatestTime);
-  for(unsigned int i_W=1; i_W<Ws.size(); ++i_W) {
-    T = GWFrames::Intersection(T, Ws[i_W].T());
-  }
-  // Interpolate radii
-  gsl_interp_accel* acc = gsl_interp_accel_alloc();
-  gsl_spline* spline = gsl_spline_alloc(gsl_interp_cspline, Ws[0].NTimes());
-  for(unsigned int i_W=0; i_W<NWaveforms; ++i_W) {
-    vector<double> OriginalTime = Ws[i_W].T();
-    vector<double> NewRadii(T.size());
-    gsl_spline_init(spline, &OriginalTime[0], &Radii[i_W][0], Radii[i_W].size());
-    for(unsigned int i_t=0; i_t<NewRadii.size(); ++i_t) {
-      NewRadii[i_t] = gsl_spline_eval(spline, T[i_t], acc);
-    }
-    Radii[i_W] = NewRadii;
-  }
-  gsl_interp_accel_free(acc);
-  gsl_spline_free(spline);
-  // Interpolate Waveforms
-  for(unsigned int i_W=0; i_W<NWaveforms; ++i_W) {
-    Ws[i_W] = Ws[i_W].Interpolate(T);
-  }
-  CommonTimeSet = true;
-  return;
-}
-
-template <typename T>
-string NumberToString ( T Number ) {
-  std::ostringstream ss;
-  ss << Number;
-  return ss.str();
-}
-
-/// Main extrapolation routine.
-GWFrames::Waveforms GWFrames::Waveforms::Extrapolate(std::vector<std::vector<double> >& Radii,
-						     const std::vector<int>& ExtrapolationOrders,
-						     const std::vector<double>& Omegas)
-{
-  /// 
-  /// \param Radii Array of radii for each Waveform (first index) and each time (second index)
-  /// \param ExtrapolationOrders List of integers denote extrapolation orders
-  /// \param Omegas Optional list of angular frequencies for scaling extrapolation polynomial
-  /// 
-  /// The input FiniteRadiusWaveforms are assumed to be properly
-  /// scaled and time-retarded, and interpolated to a uniform set of
-  /// retarded times.  This function simply steps through the indices,
-  /// fitting those data to polynomials in 1/radius, and evaluating at
-  /// 0 (for infinity).
-  /// 
-  /// The extrapolation orders can be negative.  In this case, the
-  /// scaled, time-retarded waveform at finite radius is given, where
-  /// N=-1 is the outermost Waveform, N=-2 is the second to outermost,
-  /// etc.
-  /// 
-  /// Note that the fitting uses gsl_multifit_linear_usvd, which is
-  /// GSL's fitting function that does NOT use column scaling
-  /// (specified by the 'u' in front of 'svd' in the function name).
-  /// The basic GSL fitting function uses column scaling "to improve
-  /// the accuracy of the singular values".  However, for convergent
-  /// series, this scaling can make all the coefficients roughly equal
-  /// (just as the `Omegas` option does), which defeats the SVD.
-  /// 
-  
-  Waveforms& FiniteRadiusWaveforms = *this;
-  if(! FiniteRadiusWaveforms.CommonTimeSet) { FiniteRadiusWaveforms.SetCommonTime(Radii); }
-  
-  // Get the various dimensions, etc.
-  const int MaxN = *std::max_element(ExtrapolationOrders.begin(), ExtrapolationOrders.end());
-  const int MinN = *std::min_element(ExtrapolationOrders.begin(), ExtrapolationOrders.end());
-  const bool UseOmegas = (Omegas.size()!=0);
-  const unsigned int NTimes = FiniteRadiusWaveforms[0].NTimes();
-  const unsigned int NModes = FiniteRadiusWaveforms[0].NModes();
-  const unsigned int NFiniteRadii = FiniteRadiusWaveforms.size();
-  const unsigned int NExtrapolations = ExtrapolationOrders.size();
-  const double SVDTol = 1.e-12; // Same as Numerical Recipes default in fitsvd.h
-  
-  // Make sure everyone is playing with a full deck
-  if((unsigned int)(std::abs(MinN))>NFiniteRadii) {
-      cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	   << "\nERROR: Asking for finite-radius waveform " << MinN << ", but only got " << NFiniteRadii << " finite-radius Waveform objects."
-	   << "\n       Need at least as " << std::abs(MinN) << " finite-radius waveforms."
-	   << "\n\n" << endl;
-      throw(GWFrames_IndexOutOfBounds);
-  }
-  if(MaxN>0 && (unsigned int)(MaxN+1)>=NFiniteRadii) {
-      cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	   << "\nERROR: Asking for extrapolation up to order " << MaxN << ", but only got " << NFiniteRadii << " finite-radius Waveform objects."
-	   << "\n       Need at least " << MaxN+1 << " waveforms."
-	   << "\n\n" << endl;
-      throw(GWFrames_IndexOutOfBounds);
-  }
-  if(Radii.size()!=NFiniteRadii) {
-      cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	   << "\nERROR: Mismatch in data to be extrapolated; there are different numbers of waveforms and radius vectors."
-	   << "\n       FiniteRadiusWaveforms.size()=" << NFiniteRadii
-	   << "\n       Radii.size()=" << Radii.size()
-	   << "\n\n" << endl;
-      throw(GWFrames_VectorSizeMismatch);
-  }
-  if(UseOmegas && Omegas.size()!=NTimes) {
-      cerr << "\n\n" << __FILE__ << ":" << __LINE__
-  	   << "\nERROR: NTimes mismatch in data to be extrapolated."
-  	   << "\n       FiniteRadiusWaveforms[0].NTimes()=" << NTimes
-  	   << "\n       Omegas.size()=" << Omegas.size()
-  	   << "\n\n" << endl;
-      throw(GWFrames_VectorSizeMismatch);
-  }
-  for(unsigned int i_W=1; i_W<NFiniteRadii; ++i_W) {
-    if(FiniteRadiusWaveforms[i_W].NTimes() != NTimes) {
-      cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	   << "\nERROR: NTimes mismatch in data to be extrapolated."
-	   << "\n       FiniteRadiusWaveforms[0].NTimes()=" << NTimes
-	   << "\n       FiniteRadiusWaveforms[" << i_W << "].NTimes()=" << FiniteRadiusWaveforms[i_W].NTimes()
-	   << "\n\n" << endl;
-      throw(GWFrames_VectorSizeMismatch);
-    }
-    if(FiniteRadiusWaveforms[i_W].NModes() != NModes) {
-      cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	   << "\nERROR: NModes mismatch in data to be extrapolated."
-	   << "\n       FiniteRadiusWaveforms[0].NModes()=" << NModes
-	   << "\n       FiniteRadiusWaveforms[" << i_W << "].NModes()=" << FiniteRadiusWaveforms[i_W].NModes()
-	   << "\n\n" << endl;
-      throw(GWFrames_VectorSizeMismatch);
-    }
-    if(Radii[i_W].size() != NTimes) {
-      cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	   << "\nERROR: NTimes mismatch in data to be extrapolated."
-	   << "\n       FiniteRadiusWaveforms[0].NTimes()=" << NTimes
-	   << "\n       Radii[" << i_W << "].size()=" << Radii[i_W].size()
-	   << "\n\n" << endl;
-      throw(GWFrames_VectorSizeMismatch);
-    }
-  }
-  
-  // Set up the output data, recording everything but the mode data
-  GWFrames::Waveforms ExtrapolatedWaveforms(2*NExtrapolations);
-  for(unsigned int i_N=0; i_N<NExtrapolations; ++i_N) {
-    const int N = ExtrapolationOrders[i_N];
-    if(N<0) {
-      ExtrapolatedWaveforms[i_N] = FiniteRadiusWaveforms[NFiniteRadii+N];
-    } else {
-      // Do everything but set the data
-      ExtrapolatedWaveforms[i_N].HistoryStream() << "### Extrapolating with N=" << N << "\n";
-      ExtrapolatedWaveforms[i_N].AppendHistory("######## Begin old history ########\n");
-      ExtrapolatedWaveforms[i_N].AppendHistory(FiniteRadiusWaveforms[NFiniteRadii-1].HistoryStr());
-      ExtrapolatedWaveforms[i_N].AppendHistory("######## End old history ########\n");
-      ExtrapolatedWaveforms[i_N].SetT(FiniteRadiusWaveforms[NFiniteRadii-1].T());
-      ExtrapolatedWaveforms[i_N].SetFrame(FiniteRadiusWaveforms[NFiniteRadii-1].Frame());
-      ExtrapolatedWaveforms[i_N].SetFrameType(WaveformFrameType(FiniteRadiusWaveforms[NFiniteRadii-1].FrameType()));
-      ExtrapolatedWaveforms[i_N].SetDataType(WaveformDataType(FiniteRadiusWaveforms[NFiniteRadii-1].DataType()));
-      ExtrapolatedWaveforms[i_N].SetRIsScaledOut(FiniteRadiusWaveforms[NFiniteRadii-1].RIsScaledOut());
-      ExtrapolatedWaveforms[i_N].SetMIsScaledOut(FiniteRadiusWaveforms[NFiniteRadii-1].MIsScaledOut());
-      ExtrapolatedWaveforms[i_N].SetLM(FiniteRadiusWaveforms[NFiniteRadii-1].LM());
-      ExtrapolatedWaveforms[i_N].ResizeData(NModes, NTimes);
-      // Set up the waveforms for sigma
-      ExtrapolatedWaveforms[i_N+NExtrapolations].HistoryStream() << "### Extrapolating with N=" << N << "\n";
-      ExtrapolatedWaveforms[i_N+NExtrapolations].AppendHistory("######## Begin old history ########\n");
-      ExtrapolatedWaveforms[i_N+NExtrapolations].AppendHistory(FiniteRadiusWaveforms[NFiniteRadii-1].HistoryStr());
-      ExtrapolatedWaveforms[i_N+NExtrapolations].AppendHistory("######## End old history ########\n");
-      ExtrapolatedWaveforms[i_N+NExtrapolations].AppendHistory("### # This Waveform stores the uncertainty estimate for this extrapolation.\n");
-      ExtrapolatedWaveforms[i_N+NExtrapolations].SetT(FiniteRadiusWaveforms[NFiniteRadii-1].T());
-      ExtrapolatedWaveforms[i_N+NExtrapolations].SetFrame(FiniteRadiusWaveforms[NFiniteRadii-1].Frame());
-      ExtrapolatedWaveforms[i_N+NExtrapolations].SetFrameType(WaveformFrameType(FiniteRadiusWaveforms[NFiniteRadii-1].FrameType()));
-      ExtrapolatedWaveforms[i_N+NExtrapolations].SetDataType(WaveformDataType(FiniteRadiusWaveforms[NFiniteRadii-1].DataType()));
-      ExtrapolatedWaveforms[i_N+NExtrapolations].SetRIsScaledOut(FiniteRadiusWaveforms[NFiniteRadii-1].RIsScaledOut());
-      ExtrapolatedWaveforms[i_N+NExtrapolations].SetMIsScaledOut(FiniteRadiusWaveforms[NFiniteRadii-1].MIsScaledOut());
-      ExtrapolatedWaveforms[i_N+NExtrapolations].SetLM(FiniteRadiusWaveforms[NFiniteRadii-1].LM());
-      ExtrapolatedWaveforms[i_N+NExtrapolations].ResizeData(NModes, NTimes);
-    }
-  }
-  
-  if(MaxN<0) { return ExtrapolatedWaveforms; }
-  const unsigned int MaxCoefficients = (unsigned int)(MaxN+1);
-  
-  // // Clear the extrapolation-coefficient files and write the headers
-  // for(unsigned int i_N=0; i_N<NExtrapolations; ++i_N) {
-  //   const int N = ExtrapolationOrders[i_N];
-  //   if(N<0) { continue; }
-  //   const string FileName = "Extrapolation_N"+NumberToString<int>(N)+"_re_l2_m2.dat";
-  //   FILE* ofp = fopen(FileName.c_str(), "w");
-  //   fprintf(ofp, "# [1] = t\n");
-  //   for(int i_c=0; i_c<N+1; ++i_c) {
-  //     fprintf(ofp, "# [%d] = i%d\n", 2*i_c+2, i_c);
-  //     fprintf(ofp, "# [%d] = sigma%d\n", 2*i_c+3, i_c);
-  //   }
-  //   fclose(ofp);
-  // }
-  
-  // Loop over time
-  #pragma omp parallel for
-  for(unsigned int i_t=0; i_t<NTimes; ++i_t) {
-    
-    // Set up the gsl storage variables
-    size_t EffectiveRank;
-    double ChiSquared;
-    gsl_matrix *OneOverRadii, *Covariance;
-    gsl_vector *Re, *Im, *FitCoefficients;
-    OneOverRadii = gsl_matrix_alloc(NFiniteRadii, MaxCoefficients);
-    Covariance = gsl_matrix_alloc(MaxCoefficients, MaxCoefficients);
-    Re = gsl_vector_alloc(NFiniteRadii);
-    Im = gsl_vector_alloc(NFiniteRadii);
-    FitCoefficients = gsl_vector_alloc(MaxCoefficients);
-    
-    // Set up the radius data (if we're not using Omega)
-    if(! UseOmegas) {
-      for(unsigned int i_W=0; i_W<NFiniteRadii; ++i_W) {
-	const double OneOverRadius = 1.0/Radii[i_W][i_t];
-	gsl_matrix_set(OneOverRadii, i_W, 0, 1.0);
-	for(unsigned int i_N=1; i_N<MaxCoefficients; ++i_N) {
-	  gsl_matrix_set(OneOverRadii, i_W, i_N, OneOverRadius*gsl_matrix_get(OneOverRadii, i_W, i_N-1));
-	}
-      }
-    }
-    
-    // Loop over modes
-    for(unsigned int i_m=0; i_m<NModes; ++i_m) {
-      
-      // Set up the radius data (if we are using Omega)
-      const int M = FiniteRadiusWaveforms[0].LM(i_m)[1];
-      if(UseOmegas) {
-	for(unsigned int i_W=0; i_W<NFiniteRadii; ++i_W) {
-	  const double OneOverRadius = (M!=0 ? 1.0/(Radii[i_W][i_t]*M*Omegas[i_t]) : 1.0/(Radii[i_W][i_t]));
-	  gsl_matrix_set(OneOverRadii, i_W, 0, 1.0);
-	  for(unsigned int i_N=1; i_N<MaxCoefficients; ++i_N) {
-	    gsl_matrix_set(OneOverRadii, i_W, i_N, OneOverRadius*gsl_matrix_get(OneOverRadii, i_W, i_N-1));
-	  }
-	}
-      }
-      
-      // Set up the mode data
-      for(unsigned int i_W=0; i_W<NFiniteRadii; ++i_W) {
-	gsl_vector_set(Re, i_W, FiniteRadiusWaveforms[i_W].Re(i_m,i_t));
-	gsl_vector_set(Im, i_W, FiniteRadiusWaveforms[i_W].Im(i_m,i_t));
-      }
-      
-      // Loop over extrapolation orders
-      for(unsigned int i_N=0; i_N<NExtrapolations; ++i_N) {
-	const int N = ExtrapolationOrders[i_N];
-	
-	// If non-extrapolating, skip to the next one (the copying was
-	// done when ExtrapolatedWaveforms[i_N] was constructed)
-	if(N<0) {
-	  continue;
-	}
-	
-	// Do the extrapolations
-	gsl_multifit_linear_workspace* Workspace = gsl_multifit_linear_alloc(NFiniteRadii, N+1);
-	gsl_matrix_view OneOverRadii_N = gsl_matrix_submatrix(OneOverRadii, 0, 0, NFiniteRadii, N+1);
-	gsl_matrix_view Covariance_N = gsl_matrix_submatrix(Covariance, 0, 0, N+1, N+1);
-	gsl_vector_view FitCoefficients_N = gsl_vector_subvector(FitCoefficients, 0, N+1);
-	gsl_multifit_linear_usvd(&OneOverRadii_N.matrix, Re, SVDTol, &EffectiveRank, &FitCoefficients_N.vector, &Covariance_N.matrix, &ChiSquared, Workspace);
-	const double re = gsl_vector_get(&FitCoefficients_N.vector, 0);
-	const double re_err = std::sqrt(2*M_PI*(NFiniteRadii-EffectiveRank)*gsl_matrix_get(&Covariance_N.matrix, 0, 0));
-	// #pragma omp critical
-	// if(i_m==0) {
-	//   const string FileName = "Extrapolation_N"+NumberToString<int>(N)+"_re_l2_m2.dat";
-	//   FILE* ofp = fopen(FileName.c_str(), "a");
-	//   fprintf(ofp, "%g ", FiniteRadiusWaveforms[0].T(i_t));
-	//   for(int i_c=0; i_c<N+1; ++i_c) {
-	//     fprintf(ofp, "%g %g ", gsl_vector_get(&FitCoefficients_N.vector, i_c), std::sqrt(gsl_matrix_get(&Covariance_N.matrix, i_c, i_c)));
-	//   }
-	//   fprintf(ofp, "\n");
-	//   fclose(ofp);
-	// }
-	gsl_multifit_linear_usvd(&OneOverRadii_N.matrix, Im, SVDTol, &EffectiveRank, &FitCoefficients_N.vector, &Covariance_N.matrix, &ChiSquared, Workspace);
-	const double im = gsl_vector_get(&FitCoefficients_N.vector, 0);
-	const double im_err = std::sqrt(2*M_PI*(NFiniteRadii-EffectiveRank)*gsl_matrix_get(&Covariance_N.matrix, 0, 0));
-	gsl_multifit_linear_free(Workspace);
-	ExtrapolatedWaveforms[i_N].SetData(i_m, i_t, std::complex<double>(re,im));
-	ExtrapolatedWaveforms[i_N+NExtrapolations].SetData(i_m, i_t, std::complex<double>(re_err,im_err));
-	
-      } // Loop over extrapolation orders
-      
-    } // Loop over modes
-    
-    gsl_vector_free(FitCoefficients);
-    gsl_vector_free(Im);
-    gsl_vector_free(Re);
-    gsl_matrix_free(Covariance);
-    gsl_matrix_free(OneOverRadii);
-    
-  } // Loop over time
-  
-  return ExtrapolatedWaveforms;
-}
-
-
 GWFrames::Waveform GWFrames::Waveform::operator+(const GWFrames::Waveform& B) const { return BinaryOp<std::plus<std::complex<double> > >(B); }
 GWFrames::Waveform GWFrames::Waveform::operator-(const GWFrames::Waveform& B) const { return BinaryOp<std::minus<std::complex<double> > >(B); }
 GWFrames::Waveform GWFrames::Waveform::operator*(const GWFrames::Waveform& B) const { return BinaryOp<std::multiplies<std::complex<double> > >(B); }
 GWFrames::Waveform GWFrames::Waveform::operator/(const GWFrames::Waveform& B) const { return BinaryOp<std::divides<std::complex<double> > >(B); }
+
 
 /// Newman-Penrose edth operator
 GWFrames::Waveform GWFrames::Waveform::NPEdth() const {
@@ -3168,4 +2855,317 @@ GWFrames::Waveform GWFrames::Waveform::IntegrateGHPEdthBar() const {
   //IntegralEdthBarA.SetBoostWeight(A.BoostWeight()); // No change
   
   return IntegralEdthBarA;
+}
+
+
+
+
+
+//////////////////////////
+/// Waveforms (plural!) //
+//////////////////////////
+
+
+// Constructors
+
+/// Empty constructor of N empty objects.
+GWFrames::Waveforms::Waveforms(const int N) : Ws(N), CommonTimeSet(false) { }
+
+/// Basic copy constructor.
+GWFrames::Waveforms::Waveforms(const Waveforms& In) : Ws(In.Ws), CommonTimeSet(In.CommonTimeSet) { }
+
+/// Basic copy constructor.
+GWFrames::Waveforms::Waveforms(const std::vector<Waveform>& In) : Ws(In), CommonTimeSet(false) { }
+
+/// Interpolate to a common set of times.
+void GWFrames::Waveforms::SetCommonTime(std::vector<std::vector<double> >& Radii,
+							const double MinTimeStep, const double EarliestTime, const double LatestTime) {
+  const unsigned int NWaveforms = Radii.size();
+  vector<double> TLimits(2);
+  TLimits[0] = EarliestTime;
+  TLimits[1] = LatestTime;
+  vector<double> T = GWFrames::Intersection(TLimits, Ws[0].T(), MinTimeStep, EarliestTime, LatestTime);
+  for(unsigned int i_W=1; i_W<Ws.size(); ++i_W) {
+    T = GWFrames::Intersection(T, Ws[i_W].T());
+  }
+  // Interpolate radii
+  gsl_interp_accel* acc = gsl_interp_accel_alloc();
+  gsl_spline* spline = gsl_spline_alloc(gsl_interp_cspline, Ws[0].NTimes());
+  for(unsigned int i_W=0; i_W<NWaveforms; ++i_W) {
+    vector<double> OriginalTime = Ws[i_W].T();
+    vector<double> NewRadii(T.size());
+    gsl_spline_init(spline, &OriginalTime[0], &Radii[i_W][0], Radii[i_W].size());
+    for(unsigned int i_t=0; i_t<NewRadii.size(); ++i_t) {
+      NewRadii[i_t] = gsl_spline_eval(spline, T[i_t], acc);
+    }
+    Radii[i_W] = NewRadii;
+  }
+  gsl_interp_accel_free(acc);
+  gsl_spline_free(spline);
+  // Interpolate Waveforms
+  for(unsigned int i_W=0; i_W<NWaveforms; ++i_W) {
+    Ws[i_W] = Ws[i_W].Interpolate(T);
+  }
+  CommonTimeSet = true;
+  return;
+}
+
+template <typename T>
+string NumberToString ( T Number ) {
+  std::ostringstream ss;
+  ss << Number;
+  return ss.str();
+}
+
+/// Main extrapolation routine.
+GWFrames::Waveforms GWFrames::Waveforms::Extrapolate(std::vector<std::vector<double> >& Radii,
+						     const std::vector<int>& ExtrapolationOrders,
+						     const std::vector<double>& Omegas)
+{
+  /// 
+  /// \param Radii Array of radii for each Waveform (first index) and each time (second index)
+  /// \param ExtrapolationOrders List of integers denote extrapolation orders
+  /// \param Omegas Optional list of angular frequencies for scaling extrapolation polynomial
+  /// 
+  /// The input FiniteRadiusWaveforms are assumed to be properly
+  /// scaled and time-retarded, and interpolated to a uniform set of
+  /// retarded times.  This function simply steps through the indices,
+  /// fitting those data to polynomials in 1/radius, and evaluating at
+  /// 0 (for infinity).
+  /// 
+  /// The extrapolation orders can be negative.  In this case, the
+  /// scaled, time-retarded waveform at finite radius is given, where
+  /// N=-1 is the outermost Waveform, N=-2 is the second to outermost,
+  /// etc.
+  /// 
+  /// Note that the fitting uses gsl_multifit_linear_usvd, which is
+  /// GSL's fitting function that does NOT use column scaling
+  /// (specified by the 'u' in front of 'svd' in the function name).
+  /// The basic GSL fitting function uses column scaling "to improve
+  /// the accuracy of the singular values".  However, for convergent
+  /// series, this scaling can make all the coefficients roughly equal
+  /// (just as the `Omegas` option does), which defeats the SVD.
+  /// 
+  
+  Waveforms& FiniteRadiusWaveforms = *this;
+  if(! FiniteRadiusWaveforms.CommonTimeSet) { FiniteRadiusWaveforms.SetCommonTime(Radii); }
+  
+  // Get the various dimensions, etc.
+  const int MaxN = *std::max_element(ExtrapolationOrders.begin(), ExtrapolationOrders.end());
+  const int MinN = *std::min_element(ExtrapolationOrders.begin(), ExtrapolationOrders.end());
+  const bool UseOmegas = (Omegas.size()!=0);
+  const unsigned int NTimes = FiniteRadiusWaveforms[0].NTimes();
+  const unsigned int NModes = FiniteRadiusWaveforms[0].NModes();
+  const unsigned int NFiniteRadii = FiniteRadiusWaveforms.size();
+  const unsigned int NExtrapolations = ExtrapolationOrders.size();
+  const double SVDTol = 1.e-12; // Same as Numerical Recipes default in fitsvd.h
+  
+  // Make sure everyone is playing with a full deck
+  if((unsigned int)(std::abs(MinN))>NFiniteRadii) {
+      cerr << "\n\n" << __FILE__ << ":" << __LINE__
+	   << "\nERROR: Asking for finite-radius waveform " << MinN << ", but only got " << NFiniteRadii << " finite-radius Waveform objects."
+	   << "\n       Need at least as " << std::abs(MinN) << " finite-radius waveforms."
+	   << "\n\n" << endl;
+      throw(GWFrames_IndexOutOfBounds);
+  }
+  if(MaxN>0 && (unsigned int)(MaxN+1)>=NFiniteRadii) {
+      cerr << "\n\n" << __FILE__ << ":" << __LINE__
+	   << "\nERROR: Asking for extrapolation up to order " << MaxN << ", but only got " << NFiniteRadii << " finite-radius Waveform objects."
+	   << "\n       Need at least " << MaxN+1 << " waveforms."
+	   << "\n\n" << endl;
+      throw(GWFrames_IndexOutOfBounds);
+  }
+  if(Radii.size()!=NFiniteRadii) {
+      cerr << "\n\n" << __FILE__ << ":" << __LINE__
+	   << "\nERROR: Mismatch in data to be extrapolated; there are different numbers of waveforms and radius vectors."
+	   << "\n       FiniteRadiusWaveforms.size()=" << NFiniteRadii
+	   << "\n       Radii.size()=" << Radii.size()
+	   << "\n\n" << endl;
+      throw(GWFrames_VectorSizeMismatch);
+  }
+  if(UseOmegas && Omegas.size()!=NTimes) {
+      cerr << "\n\n" << __FILE__ << ":" << __LINE__
+  	   << "\nERROR: NTimes mismatch in data to be extrapolated."
+  	   << "\n       FiniteRadiusWaveforms[0].NTimes()=" << NTimes
+  	   << "\n       Omegas.size()=" << Omegas.size()
+  	   << "\n\n" << endl;
+      throw(GWFrames_VectorSizeMismatch);
+  }
+  for(unsigned int i_W=1; i_W<NFiniteRadii; ++i_W) {
+    if(FiniteRadiusWaveforms[i_W].NTimes() != NTimes) {
+      cerr << "\n\n" << __FILE__ << ":" << __LINE__
+	   << "\nERROR: NTimes mismatch in data to be extrapolated."
+	   << "\n       FiniteRadiusWaveforms[0].NTimes()=" << NTimes
+	   << "\n       FiniteRadiusWaveforms[" << i_W << "].NTimes()=" << FiniteRadiusWaveforms[i_W].NTimes()
+	   << "\n\n" << endl;
+      throw(GWFrames_VectorSizeMismatch);
+    }
+    if(FiniteRadiusWaveforms[i_W].NModes() != NModes) {
+      cerr << "\n\n" << __FILE__ << ":" << __LINE__
+	   << "\nERROR: NModes mismatch in data to be extrapolated."
+	   << "\n       FiniteRadiusWaveforms[0].NModes()=" << NModes
+	   << "\n       FiniteRadiusWaveforms[" << i_W << "].NModes()=" << FiniteRadiusWaveforms[i_W].NModes()
+	   << "\n\n" << endl;
+      throw(GWFrames_VectorSizeMismatch);
+    }
+    if(Radii[i_W].size() != NTimes) {
+      cerr << "\n\n" << __FILE__ << ":" << __LINE__
+	   << "\nERROR: NTimes mismatch in data to be extrapolated."
+	   << "\n       FiniteRadiusWaveforms[0].NTimes()=" << NTimes
+	   << "\n       Radii[" << i_W << "].size()=" << Radii[i_W].size()
+	   << "\n\n" << endl;
+      throw(GWFrames_VectorSizeMismatch);
+    }
+  }
+  
+  // Set up the output data, recording everything but the mode data
+  GWFrames::Waveforms ExtrapolatedWaveforms(2*NExtrapolations);
+  for(unsigned int i_N=0; i_N<NExtrapolations; ++i_N) {
+    const int N = ExtrapolationOrders[i_N];
+    if(N<0) {
+      ExtrapolatedWaveforms[i_N] = FiniteRadiusWaveforms[NFiniteRadii+N];
+    } else {
+      // Do everything but set the data
+      ExtrapolatedWaveforms[i_N].HistoryStream() << "### Extrapolating with N=" << N << "\n";
+      ExtrapolatedWaveforms[i_N].AppendHistory("######## Begin old history ########\n");
+      ExtrapolatedWaveforms[i_N].AppendHistory(FiniteRadiusWaveforms[NFiniteRadii-1].HistoryStr());
+      ExtrapolatedWaveforms[i_N].AppendHistory("######## End old history ########\n");
+      ExtrapolatedWaveforms[i_N].SetT(FiniteRadiusWaveforms[NFiniteRadii-1].T());
+      ExtrapolatedWaveforms[i_N].SetFrame(FiniteRadiusWaveforms[NFiniteRadii-1].Frame());
+      ExtrapolatedWaveforms[i_N].SetFrameType(WaveformFrameType(FiniteRadiusWaveforms[NFiniteRadii-1].FrameType()));
+      ExtrapolatedWaveforms[i_N].SetDataType(WaveformDataType(FiniteRadiusWaveforms[NFiniteRadii-1].DataType()));
+      ExtrapolatedWaveforms[i_N].SetRIsScaledOut(FiniteRadiusWaveforms[NFiniteRadii-1].RIsScaledOut());
+      ExtrapolatedWaveforms[i_N].SetMIsScaledOut(FiniteRadiusWaveforms[NFiniteRadii-1].MIsScaledOut());
+      ExtrapolatedWaveforms[i_N].SetLM(FiniteRadiusWaveforms[NFiniteRadii-1].LM());
+      ExtrapolatedWaveforms[i_N].ResizeData(NModes, NTimes);
+      // Set up the waveforms for sigma
+      ExtrapolatedWaveforms[i_N+NExtrapolations].HistoryStream() << "### Extrapolating with N=" << N << "\n";
+      ExtrapolatedWaveforms[i_N+NExtrapolations].AppendHistory("######## Begin old history ########\n");
+      ExtrapolatedWaveforms[i_N+NExtrapolations].AppendHistory(FiniteRadiusWaveforms[NFiniteRadii-1].HistoryStr());
+      ExtrapolatedWaveforms[i_N+NExtrapolations].AppendHistory("######## End old history ########\n");
+      ExtrapolatedWaveforms[i_N+NExtrapolations].AppendHistory("### # This Waveform stores the uncertainty estimate for this extrapolation.\n");
+      ExtrapolatedWaveforms[i_N+NExtrapolations].SetT(FiniteRadiusWaveforms[NFiniteRadii-1].T());
+      ExtrapolatedWaveforms[i_N+NExtrapolations].SetFrame(FiniteRadiusWaveforms[NFiniteRadii-1].Frame());
+      ExtrapolatedWaveforms[i_N+NExtrapolations].SetFrameType(WaveformFrameType(FiniteRadiusWaveforms[NFiniteRadii-1].FrameType()));
+      ExtrapolatedWaveforms[i_N+NExtrapolations].SetDataType(WaveformDataType(FiniteRadiusWaveforms[NFiniteRadii-1].DataType()));
+      ExtrapolatedWaveforms[i_N+NExtrapolations].SetRIsScaledOut(FiniteRadiusWaveforms[NFiniteRadii-1].RIsScaledOut());
+      ExtrapolatedWaveforms[i_N+NExtrapolations].SetMIsScaledOut(FiniteRadiusWaveforms[NFiniteRadii-1].MIsScaledOut());
+      ExtrapolatedWaveforms[i_N+NExtrapolations].SetLM(FiniteRadiusWaveforms[NFiniteRadii-1].LM());
+      ExtrapolatedWaveforms[i_N+NExtrapolations].ResizeData(NModes, NTimes);
+    }
+  }
+  
+  if(MaxN<0) { return ExtrapolatedWaveforms; }
+  const unsigned int MaxCoefficients = (unsigned int)(MaxN+1);
+  
+  // // Clear the extrapolation-coefficient files and write the headers
+  // for(unsigned int i_N=0; i_N<NExtrapolations; ++i_N) {
+  //   const int N = ExtrapolationOrders[i_N];
+  //   if(N<0) { continue; }
+  //   const string FileName = "Extrapolation_N"+NumberToString<int>(N)+"_re_l2_m2.dat";
+  //   FILE* ofp = fopen(FileName.c_str(), "w");
+  //   fprintf(ofp, "# [1] = t\n");
+  //   for(int i_c=0; i_c<N+1; ++i_c) {
+  //     fprintf(ofp, "# [%d] = i%d\n", 2*i_c+2, i_c);
+  //     fprintf(ofp, "# [%d] = sigma%d\n", 2*i_c+3, i_c);
+  //   }
+  //   fclose(ofp);
+  // }
+  
+  // Loop over time
+  #pragma omp parallel for
+  for(unsigned int i_t=0; i_t<NTimes; ++i_t) {
+    
+    // Set up the gsl storage variables
+    size_t EffectiveRank;
+    double ChiSquared;
+    gsl_matrix *OneOverRadii, *Covariance;
+    gsl_vector *Re, *Im, *FitCoefficients;
+    OneOverRadii = gsl_matrix_alloc(NFiniteRadii, MaxCoefficients);
+    Covariance = gsl_matrix_alloc(MaxCoefficients, MaxCoefficients);
+    Re = gsl_vector_alloc(NFiniteRadii);
+    Im = gsl_vector_alloc(NFiniteRadii);
+    FitCoefficients = gsl_vector_alloc(MaxCoefficients);
+    
+    // Set up the radius data (if we're not using Omega)
+    if(! UseOmegas) {
+      for(unsigned int i_W=0; i_W<NFiniteRadii; ++i_W) {
+	const double OneOverRadius = 1.0/Radii[i_W][i_t];
+	gsl_matrix_set(OneOverRadii, i_W, 0, 1.0);
+	for(unsigned int i_N=1; i_N<MaxCoefficients; ++i_N) {
+	  gsl_matrix_set(OneOverRadii, i_W, i_N, OneOverRadius*gsl_matrix_get(OneOverRadii, i_W, i_N-1));
+	}
+      }
+    }
+    
+    // Loop over modes
+    for(unsigned int i_m=0; i_m<NModes; ++i_m) {
+      
+      // Set up the radius data (if we are using Omega)
+      const int M = FiniteRadiusWaveforms[0].LM(i_m)[1];
+      if(UseOmegas) {
+	for(unsigned int i_W=0; i_W<NFiniteRadii; ++i_W) {
+	  const double OneOverRadius = (M!=0 ? 1.0/(Radii[i_W][i_t]*M*Omegas[i_t]) : 1.0/(Radii[i_W][i_t]));
+	  gsl_matrix_set(OneOverRadii, i_W, 0, 1.0);
+	  for(unsigned int i_N=1; i_N<MaxCoefficients; ++i_N) {
+	    gsl_matrix_set(OneOverRadii, i_W, i_N, OneOverRadius*gsl_matrix_get(OneOverRadii, i_W, i_N-1));
+	  }
+	}
+      }
+      
+      // Set up the mode data
+      for(unsigned int i_W=0; i_W<NFiniteRadii; ++i_W) {
+	gsl_vector_set(Re, i_W, FiniteRadiusWaveforms[i_W].Re(i_m,i_t));
+	gsl_vector_set(Im, i_W, FiniteRadiusWaveforms[i_W].Im(i_m,i_t));
+      }
+      
+      // Loop over extrapolation orders
+      for(unsigned int i_N=0; i_N<NExtrapolations; ++i_N) {
+	const int N = ExtrapolationOrders[i_N];
+	
+	// If non-extrapolating, skip to the next one (the copying was
+	// done when ExtrapolatedWaveforms[i_N] was constructed)
+	if(N<0) {
+	  continue;
+	}
+	
+	// Do the extrapolations
+	gsl_multifit_linear_workspace* Workspace = gsl_multifit_linear_alloc(NFiniteRadii, N+1);
+	gsl_matrix_view OneOverRadii_N = gsl_matrix_submatrix(OneOverRadii, 0, 0, NFiniteRadii, N+1);
+	gsl_matrix_view Covariance_N = gsl_matrix_submatrix(Covariance, 0, 0, N+1, N+1);
+	gsl_vector_view FitCoefficients_N = gsl_vector_subvector(FitCoefficients, 0, N+1);
+	gsl_multifit_linear_usvd(&OneOverRadii_N.matrix, Re, SVDTol, &EffectiveRank, &FitCoefficients_N.vector, &Covariance_N.matrix, &ChiSquared, Workspace);
+	const double re = gsl_vector_get(&FitCoefficients_N.vector, 0);
+	const double re_err = std::sqrt(2*M_PI*(NFiniteRadii-EffectiveRank)*gsl_matrix_get(&Covariance_N.matrix, 0, 0));
+	// #pragma omp critical
+	// if(i_m==0) {
+	//   const string FileName = "Extrapolation_N"+NumberToString<int>(N)+"_re_l2_m2.dat";
+	//   FILE* ofp = fopen(FileName.c_str(), "a");
+	//   fprintf(ofp, "%g ", FiniteRadiusWaveforms[0].T(i_t));
+	//   for(int i_c=0; i_c<N+1; ++i_c) {
+	//     fprintf(ofp, "%g %g ", gsl_vector_get(&FitCoefficients_N.vector, i_c), std::sqrt(gsl_matrix_get(&Covariance_N.matrix, i_c, i_c)));
+	//   }
+	//   fprintf(ofp, "\n");
+	//   fclose(ofp);
+	// }
+	gsl_multifit_linear_usvd(&OneOverRadii_N.matrix, Im, SVDTol, &EffectiveRank, &FitCoefficients_N.vector, &Covariance_N.matrix, &ChiSquared, Workspace);
+	const double im = gsl_vector_get(&FitCoefficients_N.vector, 0);
+	const double im_err = std::sqrt(2*M_PI*(NFiniteRadii-EffectiveRank)*gsl_matrix_get(&Covariance_N.matrix, 0, 0));
+	gsl_multifit_linear_free(Workspace);
+	ExtrapolatedWaveforms[i_N].SetData(i_m, i_t, std::complex<double>(re,im));
+	ExtrapolatedWaveforms[i_N+NExtrapolations].SetData(i_m, i_t, std::complex<double>(re_err,im_err));
+	
+      } // Loop over extrapolation orders
+      
+    } // Loop over modes
+    
+    gsl_vector_free(FitCoefficients);
+    gsl_vector_free(Im);
+    gsl_vector_free(Re);
+    gsl_matrix_free(Covariance);
+    gsl_matrix_free(OneOverRadii);
+    
+  } // Loop over time
+  
+  return ExtrapolatedWaveforms;
 }
