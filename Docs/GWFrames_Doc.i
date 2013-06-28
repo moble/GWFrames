@@ -45,6 +45,22 @@ class GWFrames::Quaternion
   
 """
 
+%feature("docstring") func """
+
+
+  Parameters
+  ----------
+    double t
+    const double y
+    double dydt
+    void * params
+  
+  Returns
+  -------
+    int
+  
+"""
+
 %feature("docstring") GWFrames::FrameFromPrescribedRotation """
 Construct minimal-rotation frame from Z basis vector of that frame.
 ===================================================================
@@ -195,6 +211,19 @@ Transform Waveform to frame aligned with angular-velocity vector.
   Returns
   -------
     void
+  
+"""
+
+%feature("docstring") GWFrames::Waveform::SpinWeight """
+
+
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    int
   
 """
 
@@ -938,6 +967,50 @@ Local utility function.
   
 """
 
+%feature("docstring") GWFrames::Waveform::GHPEdthBar """
+Geroch-Held-Penrose edth operator conjugate.
+============================================
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    Waveform
+  
+  Description
+  -----------
+    This operator is the one defined by Geroch et al. (1973). It raises the
+    spin weight of any field on the sphere by 1, while leaving the boost weight
+    unchanged.
+    
+    This operator is very similar to the basic Newman-Penrose edth operator,
+    except that it preserves boost weights. In certain cases, it reduces to the
+    NP edth (up to a factor of $\\sqrt{2}$), but not generally. In those
+    certain cases, we have NPEdthBar() = sqrt(2)*GHPEdthBar().
+    
+    The complex shear $\\sigma$ has spin weight +2 and boost weight +1. The
+    radial coordinate $r$ has boost weight -1, and the derivative with respect
+    to time $d/du$ has boost weight -1. The asymptotic metric shear $r\\, h$
+    has spin weight -2 and boost weight -1. In particular, it seems that $r\\,
+    h = r^2\\, \\bar{\\sigma}$.
+    
+    The Newman-Penrose scalars $\\Psi_i$ have spin weight and boost weight
+    equal to $2-i$. (E.g., $\\Psi_4$ has $s = b = -2$.) However, when these are
+    multiplied by the appropriate factors of $r$ to find the leading-order
+    terms, they acquire boost weights. In particular, we need to multiply
+    $\\Psi_i$ by $r^{5-i}$ to get nonzero values at scri, which adds $i-5$ to
+    the boost weight, so that the asymptotic NP scalars all have boost weight
+    -3.
+    
+    NPEdth
+    
+    NPEdthBar
+    
+    GHPEdth
+  
+"""
+
 %feature("docstring") WignerDMatrix::SetRotation """
 Reset the rotor for this object to the given value.
 ===================================================
@@ -951,9 +1024,34 @@ Reset the rotor for this object to the given value.
   
 """
 
-%feature("docstring") GWFrames """
-namespace GWFrames
-==================
+%feature("docstring") GWFrames::Waveform::NPEdth """
+Newman-Penrose edth operator.
+=============================
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    Waveform
+  
+  Description
+  -----------
+    This operator is the one defined by Newman and Penrose (1966) and further
+    described by Goldberg et al. (1967). It raises the spin weight of any field
+    on the sphere by 1. Note that this operator does not preserve boost weights
+    in any nice way  except in special cases. The GHP version does.
+    
+    Note that the boost weight is set to the value of WeightError, which is
+    just meant to be large enough that it will give improbable values if used.
+    This is not fool-proof.
+    
+    NPEdthBar
+    
+    GHPEdth
+    
+    GHPEdthBar
+  
 """
 
 %feature("docstring") GWFrames::Eigenvectors """
@@ -1204,6 +1302,8 @@ class GWFrames::Waveform
   
   Member variables
   ----------------
+    int spinweight
+    int boostweight
     stringstream history
     vector<double> t
     vector<Quaternion> frame
@@ -1634,6 +1734,20 @@ Return time derivative of data.
   
 """
 
+%feature("docstring") GWFrames::Waveform::BinaryOp """
+
+
+  Parameters
+  ----------
+    typename Op 
+    const Waveform& b
+  
+  Returns
+  -------
+    typename Op
+  
+"""
+
 %feature("docstring") GWFrames::Waveforms::clear """
 
 
@@ -2011,6 +2125,20 @@ Return vector of vector of arg of all modes as function of time.
   
 """
 
+%feature("docstring") dotproduct """
+
+
+  Parameters
+  ----------
+    const double * a
+    const double * b
+  
+  Returns
+  -------
+    double
+  
+"""
+
 %feature("docstring") GWFrames::Waveform::GetAlignmentOfTimeAndFrame """
 Get time and frame offset for alignment over extended region.
 =============================================================
@@ -2250,6 +2378,19 @@ Change this Waveform by aligning to the other at the given time.
   
 """
 
+%feature("docstring") GWFrames::Waveform::BoostWeight """
+
+
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    int
+  
+"""
+
 %feature("docstring") GWFrames::Eigensystem """
 
 
@@ -2379,17 +2520,16 @@ Align time and frame over extended region.
   
 """
 
-%feature("docstring") dotproduct """
+%feature("docstring") GWFrames::Waveform::operator- """
 
 
   Parameters
   ----------
-    const double * a
-    const double * b
+    const Waveform& B
   
   Returns
   -------
-    double
+    Waveform
   
 """
 
@@ -2422,27 +2562,29 @@ Align time and frame over extended region.
   
 """
 
-%feature("docstring") GWFrames::normalized """
+%feature("docstring") GWFrames::Waveform::operator/ """
 
 
   Parameters
   ----------
-    const Quaternion& Q
+    const Waveform& B
   
   Returns
   -------
-    Quaternion
+    Waveform
   
+"""
 
+%feature("docstring") GWFrames::Waveform::operator* """
 
 
   Parameters
   ----------
-    const vector<Quaternion>& Q
+    const Waveform& B
   
   Returns
   -------
-    vector<Quaternion>
+    Waveform
   
 """
 
@@ -2817,6 +2959,152 @@ Return vector of vector of real parts of all modes as function of time.
   
 """
 
+%feature("docstring") GWFrames::operator+ """
+
+
+  Parameters
+  ----------
+    const double a
+    const Quaternion& Q
+  
+  Returns
+  -------
+    Quaternion
+  
+
+
+
+  Parameters
+  ----------
+    const double a
+    const vector<Quaternion>& Q
+  
+  Returns
+  -------
+    vector<Quaternion>
+  
+
+
+
+  Parameters
+  ----------
+    const vector<double>& a
+    const Quaternion& Q
+  
+  Returns
+  -------
+    vector<Quaternion>
+  
+
+
+
+  Parameters
+  ----------
+    const vector<double>& a
+    const vector<Quaternion>& Q
+  
+  Returns
+  -------
+    vector<Quaternion>
+  
+
+
+
+  Parameters
+  ----------
+    const Quaternion& a
+    const vector<Quaternion>& Q
+  
+  Returns
+  -------
+    vector<Quaternion>
+  
+
+
+
+  Parameters
+  ----------
+    const vector<Quaternion>& Q
+    const Quaternion& a
+  
+  Returns
+  -------
+    vector<Quaternion>
+  
+
+
+
+  Parameters
+  ----------
+    const vector<Quaternion>& Q
+    const double a
+  
+  Returns
+  -------
+    vector<Quaternion>
+  
+
+
+
+  Parameters
+  ----------
+    const Quaternion& Q
+    const vector<double>& a
+  
+  Returns
+  -------
+    vector<Quaternion>
+  
+
+
+
+  Parameters
+  ----------
+    const vector<Quaternion>& Q
+    const vector<double>& a
+  
+  Returns
+  -------
+    vector<Quaternion>
+  
+
+
+
+  Parameters
+  ----------
+    const vector<Quaternion>& P
+    const vector<Quaternion>& Q
+  
+  Returns
+  -------
+    vector<Quaternion>
+  
+
+
+
+  Parameters
+  ----------
+    const vector<double>& a
+    const vector<double>& b
+  
+  Returns
+  -------
+    vector<double>
+  
+
+
+
+  Parameters
+  ----------
+    const vector<double>& a
+    const double b
+  
+  Returns
+  -------
+    vector<double>
+  
+"""
+
 %feature("docstring") GWFrames::Waveform::T """
 
 
@@ -3050,6 +3338,19 @@ class GWFrames::LadderOperatorFactorFunctor
   
 """
 
+%feature("docstring") GWFrames::Waveform::operator+ """
+
+
+  Parameters
+  ----------
+    const Waveform& B
+  
+  Returns
+  -------
+    Waveform
+  
+"""
+
 %feature("docstring") GWFrames::PNWaveform::Omega_orb """
 
 
@@ -3246,16 +3547,27 @@ Find the time offset aligning this waveform to the other at the fiducial time.
   
 """
 
-%feature("docstring") GWFrames::Component2 """
-
-
+%feature("docstring") GWFrames::Squad """
+Squad interpolation of Quaternion time series.
+==============================================
   Parameters
   ----------
-    const vector<Quaternion>& Q
+    const vector<Quaternion>& RIn
+      Vector of rotors
+    const vector<double>& tIn
+      Vector of corresponding times
+    const vector<double>& tOut
+      Vector of times to which RIn will be interpolated
   
   Returns
   -------
-    vector<double>
+    vector<Quaternion>
+  
+  Description
+  -----------
+    This function implements a version of cubic-spline interpolation designed
+    for unit quaternions, which delivers more accurate, smooth, and physical
+    rotations than other forms of interpolation.
   
 """
 
@@ -3307,27 +3619,27 @@ Calculate the $<LL>$ quantity defined in the paper.
   
 """
 
-%feature("docstring") GWFrames::Squad """
-Squad interpolation of Quaternion time series.
-==============================================
+%feature("docstring") GWFrames::normalized """
+
+
   Parameters
   ----------
-    const vector<Quaternion>& RIn
-      Vector of rotors
-    const vector<double>& tIn
-      Vector of corresponding times
-    const vector<double>& tOut
-      Vector of times to which RIn will be interpolated
+    const Quaternion& Q
+  
+  Returns
+  -------
+    Quaternion
+  
+
+
+
+  Parameters
+  ----------
+    const vector<Quaternion>& Q
   
   Returns
   -------
     vector<Quaternion>
-  
-  Description
-  -----------
-    This function implements a version of cubic-spline interpolation designed
-    for unit quaternions, which delivers more accurate, smooth, and physical
-    rotations than other forms of interpolation.
   
 """
 
@@ -3419,17 +3731,33 @@ Change this Waveform by aligning the frame to the other's at the given time.
   
 """
 
-%feature("docstring") GWFrames::dot """
-
-
+%feature("docstring") GWFrames::Waveform::NPEdthBar """
+Newman-Penrose edth operator conjugate.
+=======================================
   Parameters
   ----------
-    const Quaternion& Q
-    const Quaternion& P
+    (none)
   
   Returns
   -------
-    double
+    Waveform
+  
+  Description
+  -----------
+    This operator is the one defined by Newman and Penrose (1966) and further
+    described by Goldberg et al. (1967). It lowers the spin weight of any field
+    on the sphere by 1. Note that this operator does not preserve boost weights
+    in any nice way  except in special cases. The GHP version does.
+    
+    Note that the boost weight is set to the value of WeightError, which is
+    just meant to be large enough that it will give improbable values if used.
+    This is not fool-proof.
+    
+    NPEdth
+    
+    GHPEdth
+    
+    GHPEdthBar
   
 """
 
@@ -3459,6 +3787,20 @@ Integrate vector function by simple trapezoidal rule.
   Returns
   -------
     vector<double>
+  
+"""
+
+%feature("docstring") GWFrames::dot """
+
+
+  Parameters
+  ----------
+    const Quaternion& Q
+    const Quaternion& P
+  
+  Returns
+  -------
+    double
   
 """
 
@@ -3624,19 +3966,47 @@ Three-point finite-differencing of vector of scalars.
   
 """
 
-%feature("docstring") func """
-
-
+%feature("docstring") GWFrames::Waveform::GHPEdth """
+Geroch-Held-Penrose edth operator.
+==================================
   Parameters
   ----------
-    double t
-    const double y
-    double dydt
-    void * params
+    (none)
   
   Returns
   -------
-    int
+    Waveform
+  
+  Description
+  -----------
+    This operator is the one defined by Geroch et al. (1973). It raises the
+    spin weight of any field on the sphere by 1, while leaving the boost weight
+    unchanged.
+    
+    This operator is very similar to the basic Newman-Penrose edth operator,
+    except that it preserves boost weights. In certain cases, it reduces to the
+    NP edth (up to a factor of $\\sqrt{2}$), but not generally. In those
+    certain cases, we have NPEdth() = sqrt(2)*GHPEdth().
+    
+    The complex shear $\\sigma$ has spin weight +2 and boost weight +1. The
+    radial coordinate $r$ has boost weight -1, and the derivative with respect
+    to time $d/du$ has boost weight -1. The asymptotic metric shear $r\\, h$
+    has spin weight -2 and boost weight -1. In particular, it seems that $r\\,
+    h = r^2\\, \\bar{\\sigma}$.
+    
+    The Newman-Penrose scalars $\\Psi_i$ have spin weight and boost weight
+    equal to $2-i$. (E.g., $\\Psi_4$ has $s = b = -2$.) However, when these are
+    multiplied by the appropriate factors of $r$ to find the leading-order
+    terms, they acquire boost weights. In particular, we need to multiply
+    $\\Psi_i$ by $r^{5-i}$ to get nonzero values at scri, which adds $i-5$ to
+    the boost weight, so that the asymptotic NP scalars all have boost weight
+    -3.
+    
+    NPEdth
+    
+    NPEdthBar
+    
+    GHPEdthBar
   
 """
 
@@ -3969,6 +4339,19 @@ Rotate the basis in which this Waveform is measured.
   
 """
 
+%feature("docstring") GWFrames::Waveform::SetBoostWeight """
+
+
+  Parameters
+  ----------
+    const int NewBoostWeight
+  
+  Returns
+  -------
+    void
+  
+"""
+
 %feature("docstring") GWFrames::Waveform::RotateDecompositionBasisOfUncertainties """
 Rotate the basis in which this Waveform's uncertainties are measured.
 =====================================================================
@@ -4023,149 +4406,17 @@ Rotate the basis in which this Waveform's uncertainties are measured.
   
 """
 
-%feature("docstring") GWFrames::operator+ """
+%feature("docstring") GWFrames::Waveform::FindModeIndexWithoutError """
 
 
   Parameters
   ----------
-    const double a
-    const Quaternion& Q
+    const int L
+    const int M
   
   Returns
   -------
-    Quaternion
-  
-
-
-
-  Parameters
-  ----------
-    const double a
-    const vector<Quaternion>& Q
-  
-  Returns
-  -------
-    vector<Quaternion>
-  
-
-
-
-  Parameters
-  ----------
-    const vector<double>& a
-    const Quaternion& Q
-  
-  Returns
-  -------
-    vector<Quaternion>
-  
-
-
-
-  Parameters
-  ----------
-    const vector<double>& a
-    const vector<Quaternion>& Q
-  
-  Returns
-  -------
-    vector<Quaternion>
-  
-
-
-
-  Parameters
-  ----------
-    const Quaternion& a
-    const vector<Quaternion>& Q
-  
-  Returns
-  -------
-    vector<Quaternion>
-  
-
-
-
-  Parameters
-  ----------
-    const vector<Quaternion>& Q
-    const Quaternion& a
-  
-  Returns
-  -------
-    vector<Quaternion>
-  
-
-
-
-  Parameters
-  ----------
-    const vector<Quaternion>& Q
-    const double a
-  
-  Returns
-  -------
-    vector<Quaternion>
-  
-
-
-
-  Parameters
-  ----------
-    const Quaternion& Q
-    const vector<double>& a
-  
-  Returns
-  -------
-    vector<Quaternion>
-  
-
-
-
-  Parameters
-  ----------
-    const vector<Quaternion>& Q
-    const vector<double>& a
-  
-  Returns
-  -------
-    vector<Quaternion>
-  
-
-
-
-  Parameters
-  ----------
-    const vector<Quaternion>& P
-    const vector<Quaternion>& Q
-  
-  Returns
-  -------
-    vector<Quaternion>
-  
-
-
-
-  Parameters
-  ----------
-    const vector<double>& a
-    const vector<double>& b
-  
-  Returns
-  -------
-    vector<double>
-  
-
-
-
-  Parameters
-  ----------
-    const vector<double>& a
-    const double b
-  
-  Returns
-  -------
-    vector<double>
+    unsigned int
   
 """
 
@@ -4682,6 +4933,19 @@ Unwrap phase so that it is (roughly) continuous.
   
 """
 
+%feature("docstring") GWFrames::Component2 """
+
+
+  Parameters
+  ----------
+    const vector<Quaternion>& Q
+  
+  Returns
+  -------
+    vector<double>
+  
+"""
+
 %feature("docstring") GWFrames::sqrtOfRotor """
 
 
@@ -4867,6 +5131,20 @@ class GWFrames::Waveforms
   Returns
   -------
     string
+  
+"""
+
+%feature("docstring") GWFrames::Waveform::BinaryOp """
+Pointwise multiply this object by another Waveform object.
+==========================================================
+  Parameters
+  ----------
+    typename Op 
+    const Waveform& B
+  
+  Returns
+  -------
+    typename Op
   
 """
 
@@ -5084,6 +5362,11 @@ Calculate the principal axis of the LL matrix, as prescribed by O'Shaughnessy et
   
 """
 
+%feature("docstring") GWFrames """
+namespace GWFrames
+==================
+"""
+
 %feature("docstring") GWFrames::PNWaveform::LHat """
 
 
@@ -5209,6 +5492,19 @@ Return the norm (sum of squares of modes) of the waveform.
   Returns
   -------
     vector<double>
+  
+"""
+
+%feature("docstring") GWFrames::Waveform::SetSpinWeight """
+
+
+  Parameters
+  ----------
+    const int NewSpinWeight
+  
+  Returns
+  -------
+    void
   
 """
 

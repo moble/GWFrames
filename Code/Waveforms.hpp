@@ -30,6 +30,7 @@ namespace GWFrames {
   enum WaveformDataType { UnknownDataType, h, hdot, Psi4 };
   static const std::string WaveformDataNames[4] = { "UnknownDataType", "h", "hdot", "Psi4" };
   static const std::string WaveformDataNamesLaTeX[4] = { "\\mathrm{unknown data type}", "h", "\\dot{h}", "\\Psi_4" };
+  const int WeightError = 1000;
   
   /// Object storing data and other information for a single waveform
   class Waveform {
@@ -44,7 +45,8 @@ namespace GWFrames {
     Waveform& operator=(const Waveform&);
     
   protected:  // Member data
-    int spin;
+    int spinweight;
+    int boostweight;
     std::stringstream history;
     std::vector<double> t;
     std::vector<Quaternion> frame;
@@ -56,7 +58,8 @@ namespace GWFrames {
     MatrixC data; // Each row (first index, nn) corresponds to a mode
     
   public: // Data alteration functions -- USE AT YOUR OWN RISK!
-    inline void SetSpin(const int NewSpin) { spin=NewSpin; }
+    inline void SetSpinWeight(const int NewSpinWeight) { spinweight=NewSpinWeight; }
+    inline void SetBoostWeight(const int NewBoostWeight) { boostweight=NewBoostWeight; }
     inline void AppendHistory(const std::string& Hist) { history << Hist; }
     inline void SetHistory(const std::string& Hist) { history.str(Hist); history.seekp(0, std::ios_base::end); }
     inline void SetT(const std::vector<double>& a) { t = a; }
@@ -75,7 +78,8 @@ namespace GWFrames {
   public:  // Data access functions
     inline unsigned int NTimes() const { return t.size(); }
     inline unsigned int NModes() const { return data.nrows(); }
-    inline int Spin() const { return spin; }
+    inline int SpinWeight() const { return spinweight; }
+    inline int BoostWeight() const { return boostweight; }
     inline std::string HistoryStr() const { return history.str(); }
     inline std::stringstream& HistoryStream() { return history; }
     inline int FrameType() const { return frameType; }
@@ -168,17 +172,17 @@ namespace GWFrames {
     Waveform Compare(const Waveform& B, const double MinTimeStep=0.005, const double MinTime=-3.0e300) const;
     Waveform Hybridize(const Waveform& B, const double t1, const double t2, const double tMinStep=0.005) const;
     
-    // Pointwise operations
+    // Pointwise operations and spin-weight operators
     std::vector<std::complex<double> > EvaluateAtPoint(const double vartheta, const double varphi) const;
     template <typename Op> Waveform BinaryOp(const Waveform& b) const;
-    // Waveform operator+(const Waveform& B) const { return BinaryOp<std::plus<std::complex<double> > >(B); }
-    // Waveform operator-(const Waveform& B) const { return BinaryOp<std::minus<std::complex<double> > >(B); }
-    // Waveform operator*(const Waveform& B) const { return BinaryOp<std::multiplies<std::complex<double> > >(B); }
-    // Waveform operator/(const Waveform& B) const { return BinaryOp<std::divides<std::complex<double> > >(B); }
     Waveform operator+(const Waveform& B) const;
     Waveform operator-(const Waveform& B) const;
     Waveform operator*(const Waveform& B) const;
     Waveform operator/(const Waveform& B) const;
+    Waveform NPEdth() const;
+    Waveform NPEdthBar() const;
+    Waveform GHPEdth() const;
+    Waveform GHPEdthBar() const;
     
     // Output to data file
     const Waveform& Output(const std::string& FileName, const unsigned int precision=14) const;
