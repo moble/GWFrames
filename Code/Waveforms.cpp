@@ -10,6 +10,7 @@
 #include <iostream>
 #include <iomanip>
 #include <cstdlib>
+#include <climits>
 #include <cmath>
 #include <functional>
 #include <algorithm>
@@ -72,7 +73,7 @@ std::string StringForm(const std::vector<int>& Lmodes) {
 
 /// Default constructor for an empty object
 GWFrames::Waveform::Waveform() :
-  spin(-2), history(""), t(0),frame(0), frameType(GWFrames::UnknownFrameType),
+  spinweight(-2), history(""), t(0),frame(0), frameType(GWFrames::UnknownFrameType),
   dataType(GWFrames::UnknownDataType), rIsScaledOut(false), mIsScaledOut(false), lm(), data()
 {
   {
@@ -95,7 +96,7 @@ GWFrames::Waveform::Waveform() :
 
 /// Copy constructor
 GWFrames::Waveform::Waveform(const GWFrames::Waveform& a) :
-  spin(a.spin), history(a.history.str()), t(a.t), frame(a.frame), frameType(a.frameType),
+  spinweight(a.spinweight), history(a.history.str()), t(a.t), frame(a.frame), frameType(a.frameType),
   dataType(a.dataType), rIsScaledOut(a.rIsScaledOut), mIsScaledOut(a.mIsScaledOut), lm(a.lm), data(a.data)
 {
   /// Simply copies all fields in the input object to the constructed
@@ -105,7 +106,7 @@ GWFrames::Waveform::Waveform(const GWFrames::Waveform& a) :
 
 /// Constructor from data file
 GWFrames::Waveform::Waveform(const std::string& FileName, const std::string& DataFormat) :
-  spin(-2), history(""), t(0), frame(0), frameType(GWFrames::UnknownFrameType),
+  spinweight(-2), history(""), t(0), frame(0), frameType(GWFrames::UnknownFrameType),
   dataType(GWFrames::UnknownDataType), rIsScaledOut(false), mIsScaledOut(false), lm(), data()
 {
   /// 
@@ -238,7 +239,7 @@ GWFrames::Waveform::Waveform(const std::string& FileName, const std::string& Dat
 
 /// Assignment operator
 GWFrames::Waveform& GWFrames::Waveform::operator=(const GWFrames::Waveform& a) {
-  spin = a.spin;
+  spinweight = a.spinweight;
   history.str(a.history.str());
   history.clear();
   history.seekp(0, ios_base::end);
@@ -260,7 +261,7 @@ void GWFrames::Waveform::swap(GWFrames::Waveform& b) {
   
   // This call should not be recorded explicitly in the history,
   // because the histories are swapped
-  { const int NewSpin=b.spin; b.spin=spin; spin=NewSpin; }
+  { const int NewSpinWeight=b.spinweight; b.spinweight=spinweight; spinweight=NewSpinWeight; }
   { const string historyb=b.history.str(); b.history.str(history.str()); history.str(historyb); }
   history.seekp(0, ios_base::end);
   b.history.seekp(0, ios_base::end);
@@ -279,7 +280,7 @@ void GWFrames::Waveform::swap(GWFrames::Waveform& b) {
 /// Explicit constructor from data
 GWFrames::Waveform::Waveform(const std::vector<double>& T, const std::vector<std::vector<int> >& LM,
 			     const std::vector<std::vector<std::complex<double> > >& Data)
-  : spin(-2), history(""), t(T), frame(), frameType(GWFrames::UnknownFrameType),
+  : spinweight(-2), history(""), t(T), frame(), frameType(GWFrames::UnknownFrameType),
     dataType(GWFrames::UnknownDataType), rIsScaledOut(false), mIsScaledOut(false), lm(LM), data(Data)
 {
   /// Arguments are T, LM, Data, which consist of the explicit data.
@@ -708,7 +709,7 @@ GWFrames::Waveform& GWFrames::Waveform::TransformModesToRotatedFrame(const std::
   // Loop through each mode and do the rotation
   {
     unsigned int mode=1;
-    for(int l=std::abs(Spin()); l<int(NModes()); ++l) {
+    for(int l=std::abs(SpinWeight()); l<int(NModes()); ++l) {
       if(NModes()<mode) { break; }
       
       // Use a vector of mode indices, in case the modes are out of
@@ -2800,8 +2801,191 @@ GWFrames::Waveforms GWFrames::Waveforms::Extrapolate(std::vector<std::vector<dou
 }
 
 
- GWFrames::Waveform GWFrames::Waveform::operator+(const GWFrames::Waveform& B) const { return BinaryOp<std::plus<std::complex<double> > >(B); }
- GWFrames::Waveform GWFrames::Waveform::operator-(const GWFrames::Waveform& B) const { return BinaryOp<std::minus<std::complex<double> > >(B); }
- GWFrames::Waveform GWFrames::Waveform::operator*(const GWFrames::Waveform& B) const { return BinaryOp<std::multiplies<std::complex<double> > >(B); }
- GWFrames::Waveform GWFrames::Waveform::operator/(const GWFrames::Waveform& B) const { return BinaryOp<std::divides<std::complex<double> > >(B); }
- 
+GWFrames::Waveform GWFrames::Waveform::operator+(const GWFrames::Waveform& B) const { return BinaryOp<std::plus<std::complex<double> > >(B); }
+GWFrames::Waveform GWFrames::Waveform::operator-(const GWFrames::Waveform& B) const { return BinaryOp<std::minus<std::complex<double> > >(B); }
+GWFrames::Waveform GWFrames::Waveform::operator*(const GWFrames::Waveform& B) const { return BinaryOp<std::multiplies<std::complex<double> > >(B); }
+GWFrames::Waveform GWFrames::Waveform::operator/(const GWFrames::Waveform& B) const { return BinaryOp<std::divides<std::complex<double> > >(B); }
+
+/// Newman-Penrose edth operator
+GWFrames::Waveform GWFrames::Waveform::NPEdth() const {
+  /// This operator is the one defined by Newman and Penrose (1966)
+  /// and further described by Goldberg et al. (1967).  It raises the
+  /// spin weight of any field on the sphere by 1.  Note that this
+  /// operator does not preserve boost weights in any nice way --
+  /// except in special cases.  The GHP version does.  Note that, in
+  /// this implementation, the only difference between the NP and GHP
+  /// versions is the factor of \f$\sqrt{2}\f$.  The additional GHP
+  /// term that keeps the boost weight meaningful is zero in any given
+  /// frame -- though it transforms nontrivially.
+  /// 
+  /// Note that the boost weight is set to the value of `WeightError`,
+  /// which is just meant to be large enough that it will give
+  /// improbable values if used.  This is not fool-proof.
+  /// 
+  /// \sa NPEdthBar
+  /// \sa GHPEdth
+  /// \sa GHPEdthBar
+  
+  const Waveform& A = *this;
+  const int s = A.SpinWeight();
+  Waveform EdthA(A);
+  EdthA.history << "### this->NPEdth();" << endl;
+  
+  for(unsigned int i_m=0; i_m<A.NModes(); ++i_m) {
+    const int l = A.LM(i_m)[0];
+    const double factor = std::sqrt((l-s)*(l+s+1));
+    for(unsigned int i_t=0; i_t<A.NTimes(); ++i_t) {
+      EdthA.SetData(i_m, i_t, EdthA.Data(i_m, i_t)*factor);
+    }
+  }
+  
+  EdthA.SetSpinWeight(A.SpinWeight()+1);
+  EdthA.SetBoostWeight(WeightError);
+  
+  return EdthA;
+}
+
+/// Newman-Penrose edth operator conjugate
+GWFrames::Waveform GWFrames::Waveform::NPEdthBar() const {
+  /// This operator is the one defined by Newman and Penrose (1966)
+  /// and further described by Goldberg et al. (1967).  It lowers the
+  /// spin weight of any field on the sphere by 1.  Note that this
+  /// operator does not preserve boost weights in any nice way --
+  /// except in special cases.  The GHP version does.  Note that, in
+  /// this implementation, the only difference between the NP and GHP
+  /// versions is the factor of \f$\sqrt{2}\f$.  The additional GHP
+  /// term that keeps the boost weight meaningful is zero in any given
+  /// frame -- though it transforms nontrivially.
+  /// 
+  /// Note that the boost weight is set to the value of `WeightError`,
+  /// which is just meant to be large enough that it will give
+  /// improbable values if used.  This is not fool-proof.
+  /// 
+  /// \sa NPEdth
+  /// \sa GHPEdth
+  /// \sa GHPEdthBar
+  
+  const Waveform& A = *this;
+  const int s = A.SpinWeight();
+  Waveform EdthBarA(A);
+  EdthBarA.history << "### this->NPEdthBar();" << endl;
+  
+  for(unsigned int i_m=0; i_m<A.NModes(); ++i_m) {
+    const int l = A.LM(i_m)[0];
+    const double factor = -std::sqrt((l+s)*(l-s+1));
+    for(unsigned int i_t=0; i_t<A.NTimes(); ++i_t) {
+      EdthBarA.SetData(i_m, i_t, EdthBarA.Data(i_m, i_t)*factor);
+    }
+  }
+  
+  EdthBarA.SetSpinWeight(A.SpinWeight()-1);
+  EdthBarA.SetBoostWeight(WeightError);
+  
+  return EdthBarA;
+}
+
+/// Geroch-Held-Penrose edth operator
+GWFrames::Waveform GWFrames::Waveform::GHPEdth() const {
+  /// This operator is the one defined by Geroch et al. (1973).  It
+  /// raises the spin weight of any field on the sphere by 1, while
+  /// leaving the boost weight unchanged.
+  /// 
+  /// This operator is very similar to the basic Newman-Penrose edth
+  /// operator, except that it preserves boost weights.  Its effect in
+  /// this implementation is identical (up to a factor of
+  /// \f$\sqrt{2}\f$) to the NP edth.  There is an additional term in
+  /// the definition of the GHP operator, but its value is zero.  (It
+  /// transforms nontrivially, though.)  In this context, we have
+  /// `NPEdth() = sqrt(2)*GHPEdth()`.
+  /// 
+  /// The complex shear \f$\sigma\f$ has spin weight +2 and boost
+  /// weight +1.  The radial coordinate \f$r\f$ has boost weight -1,
+  /// and the derivative with respect to time \f$d/du\f$ has boost
+  /// weight -1.  The asymptotic metric shear \f$r\, h\f$ has spin
+  /// weight -2 and boost weight -1.  In particular, it seems that
+  /// \f$r\, h = r^2\, \bar{\sigma}\f$.
+  /// 
+  /// The Newman-Penrose scalars \f$\Psi_i\f$ have spin weight and
+  /// boost weight equal to \f$2-i\f$.  (E.g., \f$\Psi_4\f$ has \f$s =
+  /// b = -2\f$.)  However, when these are multiplied by the
+  /// appropriate factors of \f$r\f$ to find the leading-order terms,
+  /// they acquire boost weights.  In particular, we need to multiply
+  /// \f$\Psi_i\f$ by \f$r^{5-i}\f$ to get nonzero values at scri,
+  /// which adds \f$i-5\f$ to the boost weight, so that the asymptotic
+  /// NP scalars all have boost weight -3.
+  /// 
+  /// \sa NPEdth
+  /// \sa NPEdthBar
+  /// \sa GHPEdthBar
+  
+  const Waveform& A = *this;
+  const int s = A.SpinWeight();
+  Waveform EdthA(A);
+  EdthA.history << "### this->GHPEdth();" << endl;
+  
+  for(unsigned int i_m=0; i_m<A.NModes(); ++i_m) {
+    const int l = A.LM(i_m)[0];
+    const double factor = std::sqrt((l-s)*(l+s+1.)/2.);
+    for(unsigned int i_t=0; i_t<A.NTimes(); ++i_t) {
+      EdthA.SetData(i_m, i_t, EdthA.Data(i_m, i_t)*factor);
+    }
+  }
+  
+  EdthA.SetSpinWeight(A.SpinWeight()+1);
+  //EdthA.SetBoostWeight(A.BoostWeight()); // No change
+  
+  return EdthA;
+}
+
+/// Geroch-Held-Penrose edth operator conjugate
+GWFrames::Waveform GWFrames::Waveform::GHPEdthBar() const {
+  /// This operator is the one defined by Geroch et al. (1973).  It
+  /// raises the spin weight of any field on the sphere by 1, while
+  /// leaving the boost weight unchanged.
+  /// 
+  /// This operator is very similar to the basic Newman-Penrose edth
+  /// operator, except that it preserves boost weights.  Its effect in
+  /// this implementation is identical (up to a factor of
+  /// \f$\sqrt{2}\f$) to the NP edth.  There is an additional term in
+  /// the definition of the GHP operator, but its value is zero.  (It
+  /// transforms nontrivially, though.)  In this context, we have
+  /// `NPEdthBar() = sqrt(2)*GHPEdthBar()`.
+  /// 
+  /// The complex shear \f$\sigma\f$ has spin weight +2 and boost
+  /// weight +1.  The radial coordinate \f$r\f$ has boost weight -1,
+  /// and the derivative with respect to time \f$d/du\f$ has boost
+  /// weight -1.  The asymptotic metric shear \f$r\, h\f$ has spin
+  /// weight -2 and boost weight -1.  In particular, it seems that
+  /// \f$r\, h = r^2\, \bar{\sigma}\f$.
+  /// 
+  /// The Newman-Penrose scalars \f$\Psi_i\f$ have spin weight and
+  /// boost weight equal to \f$2-i\f$.  (E.g., \f$\Psi_4\f$ has \f$s =
+  /// b = -2\f$.)  However, when these are multiplied by the
+  /// appropriate factors of \f$r\f$ to find the leading-order terms,
+  /// they acquire boost weights.  In particular, we need to multiply
+  /// \f$\Psi_i\f$ by \f$r^{5-i}\f$ to get nonzero values at scri,
+  /// which adds \f$i-5\f$ to the boost weight, so that the asymptotic
+  /// NP scalars all have boost weight -3.
+  /// 
+  /// \sa NPEdth
+  /// \sa NPEdthBar
+  /// \sa GHPEdth
+  
+  const Waveform& A = *this;
+  const int s = A.SpinWeight();
+  Waveform EdthBarA(A);
+  EdthBarA.history << "### this->GHPEdthBar();" << endl;
+  
+  for(unsigned int i_m=0; i_m<A.NModes(); ++i_m) {
+    const int l = A.LM(i_m)[0];
+    const double factor = -std::sqrt((l+s)*(l-s+1.)/2.);
+    for(unsigned int i_t=0; i_t<A.NTimes(); ++i_t) {
+      EdthBarA.SetData(i_m, i_t, EdthBarA.Data(i_m, i_t)*factor);
+    }
+  }
+  
+  EdthBarA.SetSpinWeight(A.SpinWeight()+1);
+  //EdthBarA.SetBoostWeight(A.BoostWeight()); // No change
+  
+  return EdthBarA;
+}
