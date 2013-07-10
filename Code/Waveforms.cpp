@@ -3197,10 +3197,12 @@ GWFrames::Waveform GWFrames::Waveform::ApplySupertranslation(std::vector<std::co
   // Find largest and smallest time excursions
   double MinDeltaT = 0.0;
   double MaxDeltaT = 0.0;
-  for(unsigned int i_t=0; i_t<ntimes; ++i_t) {
+  for(unsigned int i_t=0; i_t<N_tot; ++i_t) {
+    // cerr << "DeltaT[" << i_t << "] = " << DeltaT[i_t] << endl;
     if(DeltaT[i_t] < MinDeltaT) { MinDeltaT = DeltaT[i_t]; }
     if(DeltaT[i_t] > MaxDeltaT) { MaxDeltaT = DeltaT[i_t]; }
   }
+  // cerr << "Min/MaxDeltaT: " << MinDeltaT << " " << MaxDeltaT << endl;
   
   // Set up new time slices, beginning with an offset of MinDeltaT
   // and ending with an offset of -MaxDeltaT (so that the
@@ -3209,18 +3211,21 @@ GWFrames::Waveform GWFrames::Waveform::ApplySupertranslation(std::vector<std::co
   const double LastT = t.back()-MaxDeltaT;
   unsigned int i_Min, i_Max;
   for(i_Min=0; i_Min<ntimes; ++i_Min) {
-    if(t[i_Min]>FirstT) {
+    if(t[i_Min]>=FirstT) {
       break;
     }
   }
   for(i_Max=ntimes-1; i_Max>0; --i_Max) {
-    if(t[i_Max]<LastT) {
+    if(t[i_Max]<=LastT) {
       break;
     }
   }
-  B.t = std::vector<double>(t.begin()+i_Min, t.begin()+i_Max);
+  B.t = std::vector<double>(t.begin()+i_Min, t.begin()+i_Max+1);
   const unsigned int ntimesB = B.NTimes();
-  B.data.resize(nmodes, ntimesB);
+  B.ResizeData(nmodes, ntimesB);
+  // cerr << "First/LastT: " << FirstT << " " << LastT << endl;
+  // cerr << "i_Min/Max: " << i_Min << " " << i_Max << endl;
+  // cerr << "Times: " << B.t[0] << " " << B.t.back() << endl;
   
   // Storage arrays
   std::vector<std::complex<double> > alm(Nlm); // Work array
@@ -3253,16 +3258,23 @@ GWFrames::Waveform GWFrames::Waveform::ApplySupertranslation(std::vector<std::co
   gsl_spline* splineIm = gsl_spline_alloc(gsl_interp_cspline, ntimes);
   
   // Loop over all points doing interpolation
+  // cerr << "Begin\n=====" << endl;
   for(unsigned int i_p=0; i_p<N_tot; ++i_p) {
+    const double t_p = DeltaT[i_p];
+    // cerr << i_p << ", " << t_p << endl;
     // Initialize interpolators for this point
     gsl_spline_init(splineRe, &(A.t)[0], &fARe[i_p][0], ntimes);
     gsl_spline_init(splineIm, &(A.t)[0], &fAIm[i_p][0], ntimes);
     // Loop over all times at a given point
     for(unsigned int i_t=0; i_t<ntimesB; ++i_t) {
+      // cerr << "\t" << B.t[i_t] << flush;
       // Interpolate data onto new time slices
-      fB[i_t][i_p] = complex<double>( gsl_spline_eval(splineRe, B.t[i_t], accRe), gsl_spline_eval(splineIm, B.t[i_t], accIm) );
+      fB[i_t][i_p] = complex<double>( gsl_spline_eval(splineRe, B.t[i_t]+t_p, accRe), gsl_spline_eval(splineIm, B.t[i_t]+t_p, accIm) );
+      // cerr << "+" << endl;
     }
+    // cerr << "+" << endl;
   }
+  // cerr << "End\n===" << endl;
   
   // Free the data and interpolators
   fARe.clear();
@@ -3273,7 +3285,7 @@ GWFrames::Waveform GWFrames::Waveform::ApplySupertranslation(std::vector<std::co
   gsl_spline_free(splineIm);
   
   // Transform back to spectral space (after interpolation)
-  for(unsigned int i_t=0; i_t<ntimes; ++i_t) {
+  for(unsigned int i_t=0; i_t<ntimesB; ++i_t) {
     // Transform
     spinsfast_map2salm(reinterpret_cast<fftw_complex*>(&fB[i_t][0]),
 		       reinterpret_cast<fftw_complex*>(&alm[0]),
