@@ -191,7 +191,7 @@ namespace GWFrames {
     Waveform IntegrateNPEdthBar() const;
     Waveform IntegrateGHPEdth() const;
     Waveform IntegrateGHPEdthBar() const;
-    Waveform ApplySupertranslation(const std::vector<std::complex<double> >& gamma) const;
+    Waveform ApplySupertranslation(std::vector<std::complex<double> >& gamma) const;
     
     // Output to data file
     const Waveform& Output(const std::string& FileName, const unsigned int precision=14) const;
