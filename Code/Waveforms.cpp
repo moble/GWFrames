@@ -3088,6 +3088,160 @@ GWFrames::Waveform GWFrames::Waveform::IntegrateGHPEdthBar() const {
 }
 
 
+#ifndef DOXYGEN
+#ifdef __restrict
+#define restrict __restrict
+#endif
+extern "C" {
+  #include <stdlib.h>
+  #include <stdio.h>
+  #include <math.h>
+  #include <complex.h>
+  #include "fftw3.h"
+  #include "alm.h"
+  #include "wigner_d_halfpi.h"
+  #include "spinsfast_forward.h"
+  #include "spinsfast_backward.h"
+}
+#endif // DOXYGEN
+
+/// Re-interpolate data to new time slices given by this supertranslation
+GWFrames::Waveform GWFrames::Waveform::ApplySupertranslation(const std::vector<std::complex<double> >& gamma) const {
+  /// This function takes the current data decomposed as spherical
+  /// harmonics on a given slicing, transforms to physical space,
+  /// re-interpolates the data at each point to a new set of time
+  /// slices, and transforms back to spherical-harmonic coefficients.
+  /// 
+  /// By assumption, the supertranslation data `gamma` is a vector of
+  /// complex numbers representing the (scalar) spherical-harmonic
+  /// components of the supertranslation, stored in the order (0,0),
+  /// (1,-1), (1,0), (1,1), (2,-2), ...  The overall time translation
+  /// is given by the first component; the spatial translation is
+  /// given by the second through fourth componentes; higher
+  /// components give the proper supertranslations.  In particular, a
+  /// proper supertranslation will have its first four coefficients
+  /// equal to 0.0.
+  /// 
+  /// Note that, for general spin-weighted spherical-harmonic
+  /// components \f${}_{s}a_{l,m}\f$, a real function results when
+  /// \f${}_{-s}a_{l,-m} = {}_{s}a_{l,m}^\ast\f$.  In particular, the
+  /// input `gamma` data are assumed to satisfy this formula with
+  /// \f$s=0\f$.
+  
+  unsigned int lMax=0;
+  for(; lMax<=ellMax_Utilities; ++lMax) {
+    if(N_lm(lMax)==gamma.size()) {
+      break;
+    }
+  }
+  
+  if(lMax>=ellMax_Utilities) {
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+	      << "\nError: Input supertranslation data has length " << gamma.size() << "."
+	      << "\n       This is not a recognized length for spherical-harmonic data.\n"
+	      << std::endl;
+    throw(GWFrames_VectorSizeMismatch);
+  }
+  
+  if(frameType != GWFrames::Inertial) {
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+	      << "\nError: Asking to supertranslate a Waveform in the " << GWFrames::WaveformFrameNames[frameType] << " frame."
+	      << "\n       This only makes sense with Waveforms in the " << GWFrames::WaveformFrameNames[GWFrames::Inertial] << " frame.\n"
+	      << std::endl;
+    throw(GWFrames_WrongFrameType);
+  }
+  
+  const Waveform& A = *this;
+  const unsigned int ntimes = A.NTimes();
+  const complex<double> zero(0.0,0.0);
+  const complex<double> I(0.0,1.0);
+  
+  // These numbers determine the equi-angular grid on which we will do
+  // the interpolation.  For best accuracy, have N_phi > 2*lMax and
+  // N_theta > 2*lMax; but for speed, don't make them much greater.
+  int N_phi = 2*lMax + 1;
+  int N_theta = 2*lMax + 1;
+  
+  // Transform times to physical space
+  vector<complex<double> > DeltaT_complex(N_phi*N_theta, zero);
+  spinsfast_salm2map(reinterpret_cast<fftw_complex*>(&gamma[0]),
+		     reinterpret_cast<fftw_complex*>(&DeltaT_complex[0]),
+		     0, N_theta, N_phi, lMax);
+  vector<double> DeltaT(DeltaT_complex.size());
+  for(unsigned int i=0; i<DeltaT.size(); ++i) {
+    DeltaT[i] = real(DeltaT_complex[i]);
+  }
+  
+  // Find largest and smallest time excursions
+  double MinDeltaT = 0.0;
+  double MaxDeltaT = 0.0;
+  for(unsigned int i_th=0; i_th<Ntheta; ++i_th) {
+    for(unsigned int i_ph=0; i_ph<Nphi; ++i_ph) {
+      if(DeltaT[i_th][i_ph] < MinDeltaT) { MinDeltaT = DeltaT[i_th][i_ph]; }
+      if(DeltaT[i_th][i_ph] > MaxDeltaT) { MaxDeltaT = DeltaT[i_th][i_ph]; }
+    }
+  }
+  
+  // Set up new time slices, beginning with an offset of MinDeltaT
+  // and ending with an offset of -MaxDeltaT (so that the
+  // interpolation does not need to extrapolate)
+  const double FirstT = t[0]-MinDeltaT;
+  const double LastT = t.back()-MaxDeltaT;
+  unsigned int i_Min, i_Max;
+  for(i_Min=0; i_Min<ntimes; ++i_Min) {
+    if(t[i_Min]>FirstT) {
+      break;
+    }
+  }
+  for(i_Max=ntimes-1; i_Max>0; --i_Max) {
+    if(t[i_Max]<LastT) {
+      break;
+    }
+  }
+  const vector<double> NewTimes(t.begin()+i_Min, t.begin()+i_Max);
+  
+  // These will be work arrays
+  std::vector<std::complex<double> > almA(Nlm);
+  std::vector<std::complex<double> > almB(Nlm);
+  
+  // Set up storage for physical-space data before and after
+  // interpolation
+  
+  
+  // Transform to physical space (before interpolation)
+  
+  
+  // Loop over all points
+  // Loop over all times at a given point
+  // Set up interpolator
+  // Interpolate data onto new time slices
+  
+  
+  // Transform back to spectral space (after interpolation)
+  
+  
+  throw(GWFrames_NotYetImplemented);
+  
+  return B;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
