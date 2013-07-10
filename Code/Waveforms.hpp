@@ -179,6 +179,10 @@ namespace GWFrames {
     Waveform operator-(const Waveform& B) const;
     Waveform operator*(const Waveform& B) const;
     Waveform operator/(const Waveform& B) const;
+    // Waveform operator+(const double b) const;
+    // Waveform operator-(const double b) const;
+    Waveform operator*(const double b) const;
+    Waveform operator/(const double b) const;
     Waveform NPEdth() const;
     Waveform NPEdthBar() const;
     Waveform GHPEdth() const;
@@ -195,7 +199,8 @@ namespace GWFrames {
     Waveform& HackSpECSignError();
     
   }; // class Waveform
-  
+  inline Waveform operator*(const double b, const Waveform& A) { return A*b; }
+  inline Waveform operator/(const double b, const Waveform& A) { return A/b; }
   #include "Waveforms_BinaryOp.ipp"
   
   

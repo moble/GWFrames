@@ -985,9 +985,11 @@ Geroch-Held-Penrose edth operator conjugate.
     unchanged.
     
     This operator is very similar to the basic Newman-Penrose edth operator,
-    except that it preserves boost weights. In certain cases, it reduces to the
-    NP edth (up to a factor of $\\sqrt{2}$), but not generally. In those
-    certain cases, we have NPEdthBar() = sqrt(2)*GHPEdthBar().
+    except that it preserves boost weights. Its effect in this implementation
+    is identical (up to a factor of $\\sqrt{2}$) to the NP edth. There is an
+    additional term in the definition of the GHP operator, but its value is
+    zero. (It transforms nontrivially, though.) In this context, we have
+    NPEdthBar() = sqrt(2)*GHPEdthBar().
     
     The complex shear $\\sigma$ has spin weight +2 and boost weight +1. The
     radial coordinate $r$ has boost weight -1, and the derivative with respect
@@ -1008,6 +1010,14 @@ Geroch-Held-Penrose edth operator conjugate.
     NPEdthBar
     
     GHPEdth
+    
+    IntegrateNPEdth
+    
+    IntegrateNPEdthBar
+    
+    IntegrateGHPEdth
+    
+    IntegrateGHPEdthBar
   
 """
 
@@ -1040,7 +1050,11 @@ Newman-Penrose edth operator.
     This operator is the one defined by Newman and Penrose (1966) and further
     described by Goldberg et al. (1967). It raises the spin weight of any field
     on the sphere by 1. Note that this operator does not preserve boost weights
-    in any nice way  except in special cases. The GHP version does.
+    in any nice way  except in special cases. The GHP version does. Note that,
+    in this implementation, the only difference between the NP and GHP versions
+    is the factor of $\\sqrt{2}$. The additional GHP term that keeps the boost
+    weight meaningful is zero in any given frame  though it transforms
+    nontrivially.
     
     Note that the boost weight is set to the value of WeightError, which is
     just meant to be large enough that it will give improbable values if used.
@@ -1051,6 +1065,14 @@ Newman-Penrose edth operator.
     GHPEdth
     
     GHPEdthBar
+    
+    IntegrateNPEdth
+    
+    IntegrateNPEdthBar
+    
+    IntegrateGHPEdth
+    
+    IntegrateGHPEdthBar
   
 """
 
@@ -1221,6 +1243,19 @@ Fix the orientation of the corotating frame.
   Returns
   -------
     vector<Quaternion>
+  
+"""
+
+%feature("docstring") GWFrames::Determinant """
+
+
+  Parameters
+  ----------
+    Matrix& M
+  
+  Returns
+  -------
+    double
   
 """
 
@@ -2453,6 +2488,40 @@ Return vector of vector of absolute value of all modes as function of time.
   
 """
 
+%feature("docstring") GWFrames::Waveform::IntegrateGHPEdth """
+Integrate the Geroch-Held-Penrose edth operator.
+================================================
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    Waveform
+  
+  Description
+  -----------
+    This operator inverts the action of the GHP edth operator. This is not a
+    perfect inverse, because the l=s-1 term is set to zero. To be precise, if
+    Waveform A has spins weight $s$, then A.GHPEdth().IntegrateGHPEdth() has
+    the effect of setting the $\\ell=s$ term in A to zero.
+    
+    NPEdth
+    
+    NPEdthBar
+    
+    GHPEdth
+    
+    GHPEdthBar
+    
+    IntegrateNPEdth
+    
+    IntegrateNPEdthBar
+    
+    IntegrateGHPEdthBar
+  
+"""
+
 %feature("docstring") GWFrames::Waveform::AlignTimeAndFrame """
 Align time and frame over extended region.
 ==========================================
@@ -3375,6 +3444,46 @@ class GWFrames::LadderOperatorFactorFunctor
   
 """
 
+%feature("docstring") GWFrames::Waveform::IntegrateNPEdthBar """
+Integrate the Newman-Penrose edth operator conjugate.
+=====================================================
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    Waveform
+  
+  Description
+  -----------
+    This operator inverts the action of the conjugated Newman-Penrose edth
+    operator. This is not a perfect inverse, because the l=s-1 term is set to
+    zero. To be precise, if Waveform A has spins weight $s$, then
+    A.NPEdthBar().IntegrateNPEdthBar() has the effect of setting the $\\ell=s$
+    term in A to zero.
+    
+    Note that the N-P edth operator does not preserve boost weights, so the
+    boost weight is set to the value of WeightError, which is just meant to be
+    large enough that it will give improbable values if used. This is not
+    fool-proof. See the GHP edth operator for a weight-preserving version.
+    
+    NPEdth
+    
+    NPEdthBar
+    
+    GHPEdth
+    
+    GHPEdthBar
+    
+    IntegrateNPEdthBar
+    
+    IntegrateGHPEdth
+    
+    IntegrateGHPEdthBar
+  
+"""
+
 %feature("docstring") GWFrames::Quaternion::normalized """
 
 
@@ -3747,7 +3856,11 @@ Newman-Penrose edth operator conjugate.
     This operator is the one defined by Newman and Penrose (1966) and further
     described by Goldberg et al. (1967). It lowers the spin weight of any field
     on the sphere by 1. Note that this operator does not preserve boost weights
-    in any nice way  except in special cases. The GHP version does.
+    in any nice way  except in special cases. The GHP version does. Note that,
+    in this implementation, the only difference between the NP and GHP versions
+    is the factor of $\\sqrt{2}$. The additional GHP term that keeps the boost
+    weight meaningful is zero in any given frame  though it transforms
+    nontrivially.
     
     Note that the boost weight is set to the value of WeightError, which is
     just meant to be large enough that it will give improbable values if used.
@@ -3758,6 +3871,14 @@ Newman-Penrose edth operator conjugate.
     GHPEdth
     
     GHPEdthBar
+    
+    IntegrateNPEdth
+    
+    IntegrateNPEdthBar
+    
+    IntegrateGHPEdth
+    
+    IntegrateGHPEdthBar
   
 """
 
@@ -3984,9 +4105,11 @@ Geroch-Held-Penrose edth operator.
     unchanged.
     
     This operator is very similar to the basic Newman-Penrose edth operator,
-    except that it preserves boost weights. In certain cases, it reduces to the
-    NP edth (up to a factor of $\\sqrt{2}$), but not generally. In those
-    certain cases, we have NPEdth() = sqrt(2)*GHPEdth().
+    except that it preserves boost weights. Its effect in this implementation
+    is identical (up to a factor of $\\sqrt{2}$) to the NP edth. There is an
+    additional term in the definition of the GHP operator, but its value is
+    zero. (It transforms nontrivially, though.) In this context, we have
+    NPEdth() = sqrt(2)*GHPEdth().
     
     The complex shear $\\sigma$ has spin weight +2 and boost weight +1. The
     radial coordinate $r$ has boost weight -1, and the derivative with respect
@@ -4007,6 +4130,14 @@ Geroch-Held-Penrose edth operator.
     NPEdthBar
     
     GHPEdthBar
+    
+    IntegrateNPEdth
+    
+    IntegrateNPEdthBar
+    
+    IntegrateGHPEdth
+    
+    IntegrateGHPEdthBar
   
 """
 
@@ -4177,16 +4308,37 @@ Construct minimal-rotation frame from Z basis vector of that frame.
   
 """
 
-%feature("docstring") GWFrames::Determinant """
-
-
+%feature("docstring") GWFrames::Waveform::IntegrateGHPEdthBar """
+Integrate the Geroch-Held-Penrose edth operator conjugate.
+==========================================================
   Parameters
   ----------
-    Matrix& M
+    (none)
   
   Returns
   -------
-    double
+    Waveform
+  
+  Description
+  -----------
+    This operator inverts the action of the GHP edth operator. This is not a
+    perfect inverse, because the l=s-1 term is set to zero. To be precise, if
+    Waveform A has spins weight $s$, then A.GHPEdth().IntegrateGHPEdth() has
+    the effect of setting the $\\ell=s$ term in A to zero.
+    
+    NPEdth
+    
+    NPEdthBar
+    
+    GHPEdth
+    
+    GHPEdthBar
+    
+    IntegrateNPEdth
+    
+    IntegrateNPEdthBar
+    
+    IntegrateGHPEdth
   
 """
 
@@ -4812,6 +4964,46 @@ Input frame with prescribed rate of rotation about Z axis.
   Returns
   -------
     vector<Quaternion>
+  
+"""
+
+%feature("docstring") GWFrames::Waveform::IntegrateNPEdth """
+Integrate the Newman-Penrose edth operator.
+===========================================
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    Waveform
+  
+  Description
+  -----------
+    This operator inverts the action of the Newman-Penrose edth operator. This
+    is not a perfect inverse, because the l=s-1 term is set to zero. To be
+    precise, if Waveform A has spins weight $s$, then
+    A.NPEdth().IntegrateNPEdth() has the effect of setting the $\\ell=s$ term
+    in A to zero.
+    
+    Note that the N-P edth operator does not preserve boost weights, so the
+    boost weight is set to the value of WeightError, which is just meant to be
+    large enough that it will give improbable values if used. This is not
+    fool-proof. See the GHP edth operator for a weight-preserving version.
+    
+    NPEdth
+    
+    NPEdthBar
+    
+    GHPEdth
+    
+    GHPEdthBar
+    
+    IntegrateNPEdthBar
+    
+    IntegrateGHPEdth
+    
+    IntegrateGHPEdthBar
   
 """
 
