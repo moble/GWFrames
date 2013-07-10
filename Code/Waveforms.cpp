@@ -3088,25 +3088,26 @@ GWFrames::Waveform GWFrames::Waveform::IntegrateGHPEdthBar() const {
 }
 
 
-#ifndef DOXYGEN
-#ifdef __restrict
-#define restrict __restrict
-#endif
-extern "C" {
-  #include <stdlib.h>
-  #include <stdio.h>
-  #include <math.h>
-  #include <complex.h>
-  #include "fftw3.h"
-  #include "alm.h"
-  #include "wigner_d_halfpi.h"
-  #include "spinsfast_forward.h"
-  #include "spinsfast_backward.h"
-}
-#endif // DOXYGEN
+// #ifndef DOXYGEN
+// #ifdef __restrict
+// #define restrict __restrict
+// #endif
+// using namespace std;
+// extern "C" {
+//   #include <stdlib.h>
+//   #include <stdio.h>
+//   #include <math.h>
+//   #include <complex.h>
+//   #include "fftw3.h"
+//   #include "alm.h"
+//   #include "wigner_d_halfpi.h"
+//   #include "spinsfast_forward.h"
+//   #include "spinsfast_backward.h"
+// }
+// #endif // DOXYGEN
 
 /// Re-interpolate data to new time slices given by this supertranslation
-GWFrames::Waveform GWFrames::Waveform::ApplySupertranslation(const std::vector<std::complex<double> >& gamma) const {
+GWFrames::Waveform GWFrames::Waveform::ApplySupertranslation(std::vector<std::complex<double> >& gamma) const {
   /// This function takes the current data decomposed as spherical
   /// harmonics on a given slicing, transforms to physical space,
   /// re-interpolates the data at each point to a new set of time
@@ -3128,9 +3129,9 @@ GWFrames::Waveform GWFrames::Waveform::ApplySupertranslation(const std::vector<s
   /// input `gamma` data are assumed to satisfy this formula with
   /// \f$s=0\f$.
   
-  unsigned int lMax=0;
+  int lMax=0;
   for(; lMax<=ellMax_Utilities; ++lMax) {
-    if(N_lm(lMax)==gamma.size()) {
+    if(N_lm(lMax)==int(gamma.size())) {
       break;
     }
   }
@@ -3142,6 +3143,7 @@ GWFrames::Waveform GWFrames::Waveform::ApplySupertranslation(const std::vector<s
 	      << std::endl;
     throw(GWFrames_VectorSizeMismatch);
   }
+  const unsigned int Nlm = N_lm(lMax);
   
   if(frameType != GWFrames::Inertial) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
@@ -3153,17 +3155,37 @@ GWFrames::Waveform GWFrames::Waveform::ApplySupertranslation(const std::vector<s
   
   const Waveform& A = *this;
   const unsigned int ntimes = A.NTimes();
+  const unsigned int nmodes = A.NModes();
   const complex<double> zero(0.0,0.0);
   const complex<double> I(0.0,1.0);
+  
+  // Copy infrastructure to new Waveform
+  Waveform B;
+  B.spinweight = A.spinweight;
+  B.history.str(A.history.str());
+  B.history.clear();
+  B.history.seekp(0, ios_base::end);
+  B.history << "### *this = B.ApplySupertranslation([" << gamma[0];
+  for(unsigned int i=1; i<gamma.size(); ++i) {
+    B.history << ", " << gamma[i];
+  }
+  B. history << "]);"<< std::endl;
+  B.frame = A.frame;
+  B.frameType = A.frameType;
+  B.dataType = A.dataType;
+  B.rIsScaledOut = A.rIsScaledOut;
+  B.mIsScaledOut = A.mIsScaledOut;
+  B.lm = A.lm;
   
   // These numbers determine the equi-angular grid on which we will do
   // the interpolation.  For best accuracy, have N_phi > 2*lMax and
   // N_theta > 2*lMax; but for speed, don't make them much greater.
-  int N_phi = 2*lMax + 1;
-  int N_theta = 2*lMax + 1;
+  const unsigned int N_phi = 2*lMax + 1;
+  const unsigned int N_theta = 2*lMax + 1;
+  const unsigned int N_tot = N_phi*N_theta;
   
   // Transform times to physical space
-  vector<complex<double> > DeltaT_complex(N_phi*N_theta, zero);
+  vector<complex<double> > DeltaT_complex(N_tot, zero);
   spinsfast_salm2map(reinterpret_cast<fftw_complex*>(&gamma[0]),
 		     reinterpret_cast<fftw_complex*>(&DeltaT_complex[0]),
 		     0, N_theta, N_phi, lMax);
@@ -3175,11 +3197,9 @@ GWFrames::Waveform GWFrames::Waveform::ApplySupertranslation(const std::vector<s
   // Find largest and smallest time excursions
   double MinDeltaT = 0.0;
   double MaxDeltaT = 0.0;
-  for(unsigned int i_th=0; i_th<Ntheta; ++i_th) {
-    for(unsigned int i_ph=0; i_ph<Nphi; ++i_ph) {
-      if(DeltaT[i_th][i_ph] < MinDeltaT) { MinDeltaT = DeltaT[i_th][i_ph]; }
-      if(DeltaT[i_th][i_ph] > MaxDeltaT) { MaxDeltaT = DeltaT[i_th][i_ph]; }
-    }
+  for(unsigned int i_t=0; i_t<ntimes; ++i_t) {
+    if(DeltaT[i_t] < MinDeltaT) { MinDeltaT = DeltaT[i_t]; }
+    if(DeltaT[i_t] > MaxDeltaT) { MaxDeltaT = DeltaT[i_t]; }
   }
   
   // Set up new time slices, beginning with an offset of MinDeltaT
@@ -3198,29 +3218,71 @@ GWFrames::Waveform GWFrames::Waveform::ApplySupertranslation(const std::vector<s
       break;
     }
   }
-  const vector<double> NewTimes(t.begin()+i_Min, t.begin()+i_Max);
+  B.t = std::vector<double>(t.begin()+i_Min, t.begin()+i_Max);
+  const unsigned int ntimesB = B.NTimes();
+  B.data.resize(nmodes, ntimesB);
   
-  // These will be work arrays
-  std::vector<std::complex<double> > almA(Nlm);
-  std::vector<std::complex<double> > almB(Nlm);
-  
-  // Set up storage for physical-space data before and after
-  // interpolation
-  
+  // Storage arrays
+  std::vector<std::complex<double> > alm(Nlm); // Work array
+  std::vector<std::complex<double> > mapA(N_tot); // Work array
+  std::vector<std::vector<double> > fARe(N_tot, std::vector<double>(ntimes));
+  std::vector<std::vector<double> > fAIm(N_tot, std::vector<double>(ntimes));
+  std::vector<std::vector<std::complex<double> > > fB(ntimesB, std::vector<std::complex<double> >(N_tot));
   
   // Transform to physical space (before interpolation)
+  for(unsigned int i_t=0; i_t<ntimes; ++i_t) {
+    // Get alm data at this time
+    for(unsigned int i_m=0; i_m<nmodes; ++i_m) {
+      alm[i_m] = A.Data(i_m,i_t);
+    }
+    // Transform
+    spinsfast_salm2map(reinterpret_cast<fftw_complex*>(&alm[0]),
+		       reinterpret_cast<fftw_complex*>(&mapA[0]),
+		       0, N_theta, N_phi, lMax);
+    // Save to main storage arrays
+    for(unsigned int i_p=0; i_p<N_tot; ++i_p) {
+      fARe[i_p][i_t] = real(mapA[i_p]);
+      fAIm[i_p][i_t] = imag(mapA[i_p]);
+    }
+  }
   
+  // Declare the GSL interpolators for the data
+  gsl_interp_accel* accRe = gsl_interp_accel_alloc();
+  gsl_interp_accel* accIm = gsl_interp_accel_alloc();
+  gsl_spline* splineRe = gsl_spline_alloc(gsl_interp_cspline, ntimes);
+  gsl_spline* splineIm = gsl_spline_alloc(gsl_interp_cspline, ntimes);
   
-  // Loop over all points
-  // Loop over all times at a given point
-  // Set up interpolator
-  // Interpolate data onto new time slices
+  // Loop over all points doing interpolation
+  for(unsigned int i_p=0; i_p<N_tot; ++i_p) {
+    // Initialize interpolators for this point
+    gsl_spline_init(splineRe, &(A.t)[0], &fARe[i_p][0], ntimes);
+    gsl_spline_init(splineIm, &(A.t)[0], &fAIm[i_p][0], ntimes);
+    // Loop over all times at a given point
+    for(unsigned int i_t=0; i_t<ntimesB; ++i_t) {
+      // Interpolate data onto new time slices
+      fB[i_t][i_p] = complex<double>( gsl_spline_eval(splineRe, B.t[i_t], accRe), gsl_spline_eval(splineIm, B.t[i_t], accIm) );
+    }
+  }
   
+  // Free the data and interpolators
+  fARe.clear();
+  fAIm.clear();
+  gsl_interp_accel_free(accRe);
+  gsl_interp_accel_free(accIm);
+  gsl_spline_free(splineRe);
+  gsl_spline_free(splineIm);
   
   // Transform back to spectral space (after interpolation)
-  
-  
-  throw(GWFrames_NotYetImplemented);
+  for(unsigned int i_t=0; i_t<ntimes; ++i_t) {
+    // Transform
+    spinsfast_map2salm(reinterpret_cast<fftw_complex*>(&fB[i_t][0]),
+		       reinterpret_cast<fftw_complex*>(&alm[0]),
+		       0, N_theta, N_phi, lMax);
+    // Save to main storage arrays
+    for(unsigned int i_m=0; i_m<Nlm; ++i_m) {
+      B.data[i_m][i_t] = alm[i_m];
+    }
+  }
   
   return B;
 }
