@@ -39,6 +39,24 @@ namespace GWFrames {
 				   const double MinStep=0.005, const double MinTime=-1e300, const double MaxTime=1e300);
   std::vector<double> Union(const std::vector<double>& t1, const std::vector<double>& t2, const double MinStep=0.005);
   
+  // Boosts, etc.
+  double Rapidity(const std::vector<double>& v);
+  class StereographicCoordinate {
+  public:
+    std::complex<double> z;
+    bool inv;
+  public:
+    // Constructors
+    StereographicCoordinate(const std::complex<double>& Z, const bool Inverse=false);
+    StereographicCoordinate(std::vector<double> x);
+    // Interpretations
+    inline double X() const { return 2*z.real()/(std::norm(z)+1); }
+    inline double Y() const { if(inv) { return -2*z.imag()/(std::norm(z)+1); } else { return 2*z.imag()/(std::norm(z)+1); } }
+    inline double Z() const { if(inv) { return (1-std::norm(z))/(1+std::norm(z)); } else { return (std::norm(z)-1)/(std::norm(z)+1); } }
+  };
+  StereographicCoordinate StereographicCoordinateFromAngles(const double& vartheta, const double& varphi);
+  StereographicCoordinate Boost(const StereographicCoordinate& z0, const std::vector<double>& v);
+  
   /// 3x3 object wrapping GSL matrix; probably not needed directly
   class Matrix {
   private:
