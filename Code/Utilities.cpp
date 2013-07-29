@@ -18,6 +18,7 @@ using GWFrames::BinomialCoefficientFunctor;
 using GWFrames::LadderOperatorFactorFunctor;
 using GWFrames::WignerCoefficientFunctor;
 using GWFrames::WignerDMatrix;
+using GWFrames::StereographicCoordinate;
 using std::vector;
 using std::complex;
 using std::cerr;
@@ -25,6 +26,8 @@ using std::endl;
 
 
 #define Utilities_Epsilon 1.0e-14
+
+const std::complex<double> ComplexI(0.0, 1.0);
 
 
 double GWFrames::abs(const std::vector<double>& v) {
@@ -398,6 +401,115 @@ std::vector<double> GWFrames::Union(const std::vector<double>& t1, const std::ve
   return t;
 }
 
+// So that we can use acosh below (not included in cmath)
+#include <math.h>
+
+/// Returns the rapidity of a Lorentz boost with velocity three-vector v
+double GWFrames::Rapidity(const std::vector<double>& v) {
+  /// The vector v is expected to be the velocity three-vector of the
+  /// new frame relative to the current frame, in units where c=1.
+  const double magv = std::sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
+  return acosh(1.0/std::sqrt(1.0-magv*magv));
+}
+
+/// Create a StereographicCoordinate object explicitly
+StereographicCoordinate::StereographicCoordinate(const std::complex<double>& Z, const bool Inverse)
+  : z(Z), inv(Inverse)
+{ }
+
+/// Create a StereographicCoordinate object from spherical coordinates
+StereographicCoordinate GWFrames::StereographicCoordinateFromAngles(const double& vartheta, const double& varphi) {
+  if(std::abs(vartheta)<1.0e-15) { return StereographicCoordinate(0.0, true); }
+  if(std::abs(vartheta-M_PI)<1.0e-15) { return StereographicCoordinate(0.0, false); }
+  if(vartheta>M_PI/2.0) {
+    return StereographicCoordinate((1.0/std::tan(vartheta/2.0))*std::exp( ComplexI*varphi), false);
+  } else {
+    return StereographicCoordinate(std::tan(vartheta/2.0)*std::exp(-ComplexI*varphi), true);
+  }
+}
+
+/// Create a StereographicCoordinate in the direction of the given vector
+StereographicCoordinate::StereographicCoordinate(std::vector<double> x)
+  : z(0.0), inv(x[2]>0)
+{
+  const double magx = std::sqrt(x[0]*x[0]+x[1]*x[1]+x[2]*x[2]);
+  if(magx>1.e-15) {
+    x[0] = x[0]/magx;
+    x[1] = x[1]/magx;
+    x[2] = x[2]/magx;
+    if(inv) {
+      const std::complex<double> XPlusIY = (x[0] + ComplexI*x[1]);
+      if(std::abs(XPlusIY)<1.0e-14) {
+	z = 0.0;
+      } else {
+	z = (1.0-x[2]) / XPlusIY;
+      }
+    } else {
+      const double OneMinusZ = (1.0-x[2]);
+      if(std::abs(OneMinusZ)<1.0e-14) {
+	z = 0.0;
+      } else {
+	z = (x[0] + ComplexI*x[1]) / OneMinusZ;
+      }
+    }
+  }
+}
+
+/// Apply a boost of v to the input stereographic coordinate
+GWFrames::StereographicCoordinate GWFrames::Boost(const GWFrames::StereographicCoordinate& z0, const std::vector<double>& v) {
+  const double eToMinusPhi = std::exp(-Rapidity(v));
+  const StereographicCoordinate zb(v);
+  if(z0.inv) {
+    if(zb.inv) {
+      const std::complex<double> Numerator = (eToMinusPhi*std::norm(zb.z)+1) + (1-eToMinusPhi)*std::conj(zb.z)*z0.z; // 1/zb -> zb; 1/z0 -> z0; 
+      const std::complex<double> Denominator = (eToMinusPhi + std::norm(zb.z))*z0.z + (1-eToMinusPhi)*zb.z; // 1/zb -> zb; 1/z0 -> z0;
+      if(std::abs(Denominator)<1.e-14) {
+	return StereographicCoordinate(0.0, true);
+      }
+      if(std::norm(Numerator)>std::norm(Denominator)) {
+	return StereographicCoordinate(Denominator/Numerator, true);
+      } else {
+	return StereographicCoordinate(Numerator/Denominator, false);
+      }
+    } else {
+      const std::complex<double> Numerator = (eToMinusPhi + std::norm(zb.z)) + (1-eToMinusPhi)*zb.z*z0.z; // 1/z0 -> z0; 
+      const std::complex<double> Denominator = (1 + eToMinusPhi*std::norm(zb.z))*z0.z + (1-eToMinusPhi)*std::conj(zb.z); // 1/z0 -> z0; 
+      if(std::abs(Denominator)<1.e-14) {
+	return StereographicCoordinate(0.0, true);
+      }
+      if(std::norm(Numerator)>std::norm(Denominator)) {
+	return StereographicCoordinate(Denominator/Numerator, true);
+      } else {
+	return StereographicCoordinate(Numerator/Denominator, false);
+      }
+    }
+  } else {
+    if(zb.inv) {
+      const std::complex<double> Numerator = (eToMinusPhi*std::norm(zb.z)+1)*z0.z + (1-eToMinusPhi)*std::conj(zb.z); // 1/zb -> zb
+      const std::complex<double> Denominator = (eToMinusPhi + std::norm(zb.z)) + (1-eToMinusPhi)*zb.z*z0.z; // 1/zb -> zb
+      if(std::abs(Denominator)<1.e-14) {
+	return StereographicCoordinate(0.0, true);
+      }
+      if(std::norm(Numerator)>std::norm(Denominator)) {
+	return StereographicCoordinate(Denominator/Numerator, true);
+      } else {
+	return StereographicCoordinate(Numerator/Denominator, false);
+      }
+    } else {
+      const std::complex<double> Numerator = (eToMinusPhi + std::norm(zb.z))*z0.z + (1-eToMinusPhi)*zb.z;
+      const std::complex<double> Denominator = (1 + eToMinusPhi*std::norm(zb.z)) + (1-eToMinusPhi)*std::conj(zb.z)*z0.z;
+      if(std::abs(Denominator)<1.e-14) {
+	return StereographicCoordinate(0.0, true);
+      }
+      if(std::norm(Numerator)>std::norm(Denominator)) {
+	return StereographicCoordinate(Denominator/Numerator, true);
+      } else {
+	return StereographicCoordinate(Numerator/Denominator, false);
+      }
+    }
+  }
+  return StereographicCoordinate(0.0, false);
+}
 
 
 Matrix::Matrix()
