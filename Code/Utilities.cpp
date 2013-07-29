@@ -457,7 +457,24 @@ StereographicCoordinate::StereographicCoordinate(std::vector<double> x)
 
 /// Apply a boost of v to the input stereographic coordinate
 GWFrames::StereographicCoordinate GWFrames::Boost(const GWFrames::StereographicCoordinate& z0, const std::vector<double>& v) {
-  const double eToMinusPhi = std::exp(-Rapidity(v));
+  /// This takes a coordinate \f$z_0\f$ in frame 0, and returns the
+  /// coordinate of the same point, as seen in a frame that is boosted
+  /// with respect to frame 0 by the three-velocity vector \f$v\f$.
+  /// 
+  /// An important application of this function is to find the
+  /// appropriate equi-angular grid for a boosted frame, as seen in
+  /// the present frame.  In that case, it would be appropriate to
+  /// enter the velocity as \f$-v\f$ to find the coordinates in the
+  /// present frame that will become an equi-angular grid after being
+  /// boosted.
+  /// 
+  /// Note that this is the effect of the boost on the FUTURE light
+  /// cone, rather than the past (which is the more standard one
+  /// involved in aberration of light).  These formulas are obtained
+  /// from Stuart (MNRAS 400, 1366; 2009) with reversion of the
+  /// rapidity.
+  const double magv = std::sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
+  const double eToMinusPhi = std::exp(Rapidity(v));
   const StereographicCoordinate zb(v);
   if(z0.inv) {
     if(zb.inv) {

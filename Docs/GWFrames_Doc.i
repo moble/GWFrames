@@ -61,6 +61,19 @@ class GWFrames::Quaternion
   
 """
 
+%feature("docstring") GWFrames::Determinant """
+
+
+  Parameters
+  ----------
+    Matrix& M
+  
+  Returns
+  -------
+    double
+  
+"""
+
 %feature("docstring") GWFrames::FrameFromPrescribedRotation """
 Construct minimal-rotation frame from Z basis vector of that frame.
 ===================================================================
@@ -162,16 +175,28 @@ Construct minimal-rotation frame from Z basis vector of that frame.
   
 """
 
-%feature("docstring") GWFrames::Waveform::FrameTypeString """
-
-
+%feature("docstring") StereographicCoordinate::StereographicCoordinate """
+Create a StereographicCoordinate object explicitly.
+===================================================
   Parameters
   ----------
-    (none)
+    const complex<double>& Z
+    const bool Inverse = false
   
   Returns
   -------
-    string
+    StereographicCoordinate
+  
+
+Create a StereographicCoordinate in the direction of the given vector.
+======================================================================
+  Parameters
+  ----------
+    vector<double> x
+  
+  Returns
+  -------
+    StereographicCoordinate
   
 """
 
@@ -409,6 +434,37 @@ Vector of magnitudes of Omega_prec at each instant of time.
   Returns
   -------
     unsigned int
+  
+"""
+
+%feature("docstring") GWFrames::Boost """
+Apply a boost of v to the input stereographic coordinate.
+=========================================================
+  Parameters
+  ----------
+    const StereographicCoordinate& z0
+    const vector<double>& v
+  
+  Returns
+  -------
+    StereographicCoordinate
+  
+  Description
+  -----------
+    This takes a coordinate $z_0$ in frame 0, and returns the coordinate of the
+    same point, as seen in a frame that is boosted with respect to frame 0 by
+    the three-velocity vector $v$.
+    
+    An important application of this function is to find the appropriate
+    equi-angular grid for a boosted frame, as seen in the present frame. In
+    that case, it would be appropriate to enter the velocity as $-v$ to find
+    the coordinates in the present frame that will become an equi-angular grid
+    after being boosted.
+    
+    Note that this is the effect of the boost on the FUTURE light cone, rather
+    than the past (which is the more standard one involved in aberration of
+    light). These formulas are obtained from Stuart (MNRAS 400, 1366; 2009)
+    with reversion of the rapidity.
   
 """
 
@@ -913,6 +969,18 @@ Calculate the angular velocity of the Waveform.
   
 """
 
+%feature("docstring") GWFrames::WignerCoefficientFunctor """
+class GWFrames::WignerCoefficientFunctor
+========================================
+  Object for pre-computing and retrieving coefficients for the Wigner D
+  matrices.
+  
+  Member variables
+  ----------------
+    const vector<double> CoefficientTable
+  
+"""
+
 %feature("docstring") SQR """
 
 
@@ -1021,16 +1089,41 @@ Geroch-Held-Penrose edth operator conjugate.
   
 """
 
-%feature("docstring") WignerDMatrix::SetRotation """
-Reset the rotor for this object to the given value.
-===================================================
+%feature("docstring") GWFrames::Waveforms::Extrapolate """
+Main extrapolation routine.
+===========================
   Parameters
   ----------
-    const Quaternion& iR
+    vector<vector<double>>& Radii
+      Array of radii for each Waveform (first index) and each time (second
+      index)
+    const vector<int>& ExtrapolationOrders
+      List of integers denote extrapolation orders
+    const vector<double>& Omegas = vector<double>(0)
+      Optional list of angular frequencies for scaling extrapolation polynomial
   
   Returns
   -------
-    WignerDMatrix&
+    Waveforms
+  
+  Description
+  -----------
+    The input FiniteRadiusWaveforms are assumed to be properly scaled and
+    time-retarded, and interpolated to a uniform set of retarded times. This
+    function simply steps through the indices, fitting those data to
+    polynomials in 1/radius, and evaluating at 0 (for infinity).
+    
+    The extrapolation orders can be negative. In this case, the scaled,
+    time-retarded waveform at finite radius is given, where N=-1 is the
+    outermost Waveform, N=-2 is the second to outermost, etc.
+    
+    Note that the fitting uses gsl_multifit_linear_usvd, which is GSL's fitting
+    function that does NOT use column scaling (specified by the 'u' in front of
+    'svd' in the function name). The basic GSL fitting function uses column
+    scaling 'to improve
+the accuracy of the singular values'. However, for
+    convergent series, this scaling can make all the coefficients roughly equal
+    (just as the Omegas option does), which defeats the SVD.
   
 """
 
@@ -1246,16 +1339,38 @@ Fix the orientation of the corotating frame.
   
 """
 
-%feature("docstring") GWFrames::Determinant """
+%feature("docstring") GWFrames::Waveform::Boost """
+Apply a boost to a boost-weighted function.
+===========================================
+  Parameters
+  ----------
+    const vector<double>& v
+  
+  Returns
+  -------
+    Waveform
+  
+  Description
+  -----------
+    This function does three things. First, it evaluates the Waveform on what
+    will become an equi-angular grid after transformation by the boost. Second,
+    it multiplies each of those points by the appropriate conformal factor
+    $K^b(\\vartheta, \\varphi)$, where $b$ is the boost weight stored with the
+    Waveform. Finally, it transforms back to Fourier space using that new
+    equi-angular grid.
+  
+"""
+
+%feature("docstring") GWFrames::Waveforms::~Waveforms """
 
 
   Parameters
   ----------
-    Matrix& M
+    (none)
   
   Returns
   -------
-    double
+    ~Waveforms
   
 """
 
@@ -1297,15 +1412,16 @@ Return the intersection of two time sequences.
   
 """
 
-%feature("docstring") GWFrames::WignerCoefficientFunctor """
-class GWFrames::WignerCoefficientFunctor
-========================================
-  Object for pre-computing and retrieving coefficients for the Wigner D
-  matrices.
+%feature("docstring") GWFrames::Waveform::FrameTypeString """
+
+
+  Parameters
+  ----------
+    (none)
   
-  Member variables
-  ----------------
-    const vector<double> CoefficientTable
+  Returns
+  -------
+    string
   
 """
 
@@ -1664,32 +1780,16 @@ Total angular velocity of PN binary at each instant of time.
   
 """
 
-%feature("docstring") GWFrames::Waveform::Hybridize """
-Hybridize this Waveform with another.
-=====================================
+%feature("docstring") GWFrames::StereographicCoordinate::Z """
+
+
   Parameters
   ----------
-    const Waveform& B
-      Second Waveform to hybridize with
-    const double t1
-      Beginning of time over which to transition
-    const double t2
-      End of time over which to transition
-    const double tMinStep = 0.005
-      Lower limit on time step appearing in the output
+    (none)
   
   Returns
   -------
-    Waveform
-  
-  Description
-  -----------
-    This function simply takes two Waveforms and blends them together. In
-    particular, it does not align the Waveforms; that is assumed to have been
-    done already. The transition function is a smooth
-    
-    Note that this function does NOT operate in place; a new Waveform object is
-    constructed and returned.
+    double
   
 """
 
@@ -1706,29 +1806,43 @@ Hybridize this Waveform with another.
   
 """
 
-%feature("docstring") GWFrames::Waveform::DataDot """
-Return time derivative of data.
-===============================
+%feature("docstring") GWFrames::StereographicCoordinate::X """
+
+
   Parameters
   ----------
-    const unsigned int Mode
+    (none)
   
   Returns
   -------
-    vector<complex<double>>
+    double
   
 """
 
-%feature("docstring") VectorStringForm """
+%feature("docstring") GWFrames::StereographicCoordinate::Y """
 
 
   Parameters
   ----------
-    const vector<double>& V
+    (none)
   
   Returns
   -------
-    string
+    double
+  
+"""
+
+%feature("docstring") GWFrames::StereographicCoordinateFromAngles """
+Create a StereographicCoordinate object from spherical coordinates.
+===================================================================
+  Parameters
+  ----------
+    const double& vartheta
+    const double& varphi
+  
+  Returns
+  -------
+    StereographicCoordinate
   
 """
 
@@ -1769,6 +1883,16 @@ Return time derivative of data.
   
 """
 
+%feature("docstring") GWFrames::StereographicCoordinate """
+class GWFrames::StereographicCoordinate
+=======================================
+  Member variables
+  ----------------
+    complex<double> z
+    bool inv
+  
+"""
+
 %feature("docstring") GWFrames::Waveform::BinaryOp """
 
 
@@ -1780,6 +1904,19 @@ Return time derivative of data.
   Returns
   -------
     typename Op
+  
+"""
+
+%feature("docstring") VectorStringForm """
+
+
+  Parameters
+  ----------
+    const vector<double>& V
+  
+  Returns
+  -------
+    string
   
 """
 
@@ -2269,54 +2406,45 @@ Interpolate to a common set of times.
   
 """
 
-%feature("docstring") GWFrames::Waveforms::Extrapolate """
-Main extrapolation routine.
-===========================
+%feature("docstring") GWFrames::Waveform::DataDot """
+Return time derivative of data.
+===============================
   Parameters
   ----------
-    vector<vector<double>>& Radii
-      Array of radii for each Waveform (first index) and each time (second
-      index)
-    const vector<int>& ExtrapolationOrders
-      List of integers denote extrapolation orders
-    const vector<double>& Omegas = vector<double>(0)
-      Optional list of angular frequencies for scaling extrapolation polynomial
+    const unsigned int Mode
   
   Returns
   -------
-    Waveforms
-  
-  Description
-  -----------
-    The input FiniteRadiusWaveforms are assumed to be properly scaled and
-    time-retarded, and interpolated to a uniform set of retarded times. This
-    function simply steps through the indices, fitting those data to
-    polynomials in 1/radius, and evaluating at 0 (for infinity).
-    
-    The extrapolation orders can be negative. In this case, the scaled,
-    time-retarded waveform at finite radius is given, where N=-1 is the
-    outermost Waveform, N=-2 is the second to outermost, etc.
-    
-    Note that the fitting uses gsl_multifit_linear_usvd, which is GSL's fitting
-    function that does NOT use column scaling (specified by the 'u' in front of
-    'svd' in the function name). The basic GSL fitting function uses column
-    scaling 'to improve
-the accuracy of the singular values'. However, for
-    convergent series, this scaling can make all the coefficients roughly equal
-    (just as the Omegas option does), which defeats the SVD.
+    vector<complex<double>>
   
 """
 
-%feature("docstring") GWFrames::Waveforms::~Waveforms """
-
-
+%feature("docstring") GWFrames::Waveform::Hybridize """
+Hybridize this Waveform with another.
+=====================================
   Parameters
   ----------
-    (none)
+    const Waveform& B
+      Second Waveform to hybridize with
+    const double t1
+      Beginning of time over which to transition
+    const double t2
+      End of time over which to transition
+    const double tMinStep = 0.005
+      Lower limit on time step appearing in the output
   
   Returns
   -------
-    ~Waveforms
+    Waveform
+  
+  Description
+  -----------
+    This function simply takes two Waveforms and blends them together. In
+    particular, it does not align the Waveforms; that is assumed to have been
+    done already. The transition function is a smooth
+    
+    Note that this function does NOT operate in place; a new Waveform object is
+    constructed and returned.
   
 """
 
@@ -2642,6 +2770,17 @@ Align time and frame over extended region.
   -------
     Waveform
   
+
+
+
+  Parameters
+  ----------
+    const double b
+  
+  Returns
+  -------
+    Waveform
+  
 """
 
 %feature("docstring") GWFrames::Waveform::operator* """
@@ -2650,6 +2789,17 @@ Align time and frame over extended region.
   Parameters
   ----------
     const Waveform& B
+  
+  Returns
+  -------
+    Waveform
+  
+
+
+
+  Parameters
+  ----------
+    const double b
   
   Returns
   -------
@@ -3405,6 +3555,41 @@ class GWFrames::LadderOperatorFactorFunctor
   -------
     Quaternion
   
+
+
+
+  Parameters
+  ----------
+    const double b
+    const Waveform& A
+  
+  Returns
+  -------
+    Waveform
+  
+"""
+
+%feature("docstring") GWFrames::Union """
+Return the union of two time sequences.
+=======================================
+  Parameters
+  ----------
+    const vector<double>& t1
+    const vector<double>& t2
+    const double MinStep = 0.005
+  
+  Returns
+  -------
+    vector<double>
+  
+  Description
+  -----------
+    On the overlap between the two sequences, the time is built up by taking
+    the smaller time step in either of the two sequences, or MinStep if that
+    step is smaller.
+    
+    The input to this function is assumed to be strictly monotonic.
+  
 """
 
 %feature("docstring") GWFrames::Waveform::operator+ """
@@ -3523,26 +3708,16 @@ Integrate the Newman-Penrose edth operator conjugate.
   
 """
 
-%feature("docstring") GWFrames::Union """
-Return the union of two time sequences.
-=======================================
+%feature("docstring") WignerDMatrix::SetRotation """
+Reset the rotor for this object to the given value.
+===================================================
   Parameters
   ----------
-    const vector<double>& t1
-    const vector<double>& t2
-    const double MinStep = 0.005
+    const Quaternion& iR
   
   Returns
   -------
-    vector<double>
-  
-  Description
-  -----------
-    On the overlap between the two sequences, the time is built up by taking
-    the smaller time step in either of the two sequences, or MinStep if that
-    step is smaller.
-    
-    The input to this function is assumed to be strictly monotonic.
+    WignerDMatrix&
   
 """
 
@@ -4754,6 +4929,18 @@ Rotate the basis in which this Waveform's uncertainties are measured.
   -------
     vector<vector<double>>
   
+
+
+
+  Parameters
+  ----------
+    const double b
+    const Waveform& A
+  
+  Returns
+  -------
+    Waveform
+  
 """
 
 %feature("docstring") GWFrames::PrescribedRotation """
@@ -5028,6 +5215,24 @@ Vector of magnitudes of Omega_tot at each instant of time.
   Returns
   -------
     vector<double>
+  
+"""
+
+%feature("docstring") GWFrames::Rapidity """
+Returns the rapidity of a Lorentz boost with velocity three-vector v.
+=====================================================================
+  Parameters
+  ----------
+    const vector<double>& v
+  
+  Returns
+  -------
+    double
+  
+  Description
+  -----------
+    The vector v is expected to be the velocity three-vector of the new frame
+    relative to the current frame, in units where c=1.
   
 """
 
@@ -5622,6 +5827,39 @@ Return the norm (sum of squares of modes) of the waveform.
   
 """
 
+%feature("docstring") GWFrames::Waveform::ApplySupertranslation """
+Re-interpolate data to new time slices given by this supertranslation.
+======================================================================
+  Parameters
+  ----------
+    vector<complex<double>>& gamma
+  
+  Returns
+  -------
+    Waveform
+  
+  Description
+  -----------
+    This function takes the current data decomposed as spherical harmonics on a
+    given slicing, transforms to physical space, re-interpolates the data at
+    each point to a new set of time slices, and transforms back to
+    spherical-harmonic coefficients.
+    
+    By assumption, the supertranslation data gamma is a vector of complex
+    numbers representing the (scalar) spherical-harmonic components of the
+    supertranslation, stored in the order (0,0), (1,-1), (1,0), (1,1), (2,-2),
+    ... The overall time translation is given by the first component; the
+    spatial translation is given by the second through fourth componentes;
+    higher components give the proper supertranslations. In particular, a
+    proper supertranslation will have its first four coefficients equal to 0.0.
+    
+    Note that, for general spin-weighted spherical-harmonic components
+    ${}_{s}a_{l,m}$, a real function results when ${}_{-s}a_{l,-m} =
+    {}_{s}a_{l,m}^\\ast$. In particular, the input gamma data are assumed to
+    satisfy this formula with $s=0$.
+  
+"""
+
 %feature("docstring") GWFrames::Waveform::MIsScaledOut """
 
 
@@ -5901,6 +6139,20 @@ Evaluate Waveform at a particular sky location.
   Returns
   -------
     const vector<vector<double>>&
+  
+"""
+
+%feature("docstring") ComplexI """
+
+
+  Parameters
+  ----------
+    0. 0
+    1. 0
+  
+  Returns
+  -------
+    const complex<double>
   
 """
 
