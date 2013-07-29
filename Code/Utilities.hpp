@@ -39,7 +39,7 @@ namespace GWFrames {
 				   const double MinStep=0.005, const double MinTime=-1e300, const double MaxTime=1e300);
   std::vector<double> Union(const std::vector<double>& t1, const std::vector<double>& t2, const double MinStep=0.005);
   
-  // Boosts, etc.
+  // Stereographic representation of spherical coordinates and boosts of scri
   double Rapidity(const std::vector<double>& v);
   class StereographicCoordinate {
   public:
