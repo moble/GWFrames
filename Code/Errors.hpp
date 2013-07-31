@@ -22,5 +22,6 @@
 #define GWFrames_WrongFrameType 13
 #define GWFrames_FailedGSLCall 14
 #define GWFrames_BadWaveformInformation 15
+#define GWFrames_BadSwitches 16
 
 #endif // ERRORS_HPP

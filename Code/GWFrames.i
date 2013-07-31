@@ -111,6 +111,10 @@
       PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
     } else if(i==14) {
       PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
+    } else if(i==15) {
+      PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
+    } else if(i==16) {
+      PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
     } else  {
       PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
     }
