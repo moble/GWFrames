@@ -479,7 +479,7 @@ std::vector<std::complex<double> > GWFrames::MobiusComponentsOfBoost(const std::
   return abcd;
 }
 
-/// 
+/// Given Mobius components, calculate the boost
 GWFrames::StereographicCoordinate GWFrames::Boost(const GWFrames::StereographicCoordinate& z0, const std::vector<std::complex<double> >& abcd) {
   if(z0.inv) { // |z_0| > 1
     const std::complex<double> Numerator = abcd[0] + abcd[1]*z0.z;
@@ -525,59 +525,12 @@ GWFrames::StereographicCoordinate GWFrames::Boost(const GWFrames::StereographicC
   /// involved in aberration of light).  These formulas are obtained
   /// from Stuart (MNRAS 400, 1366; 2009) with reversion of the
   /// rapidity.
-  const double expphi = std::exp(Rapidity(v));
-  const StereographicCoordinate zb(v);
-  if(z0.inv) {
-    if(zb.inv) {
-      const std::complex<double> Numerator = (expphi*std::norm(zb.z)+1) + (1-expphi)*std::conj(zb.z)*z0.z; // 1/zb -> zb; 1/z0 -> z0; 
-      const std::complex<double> Denominator = (expphi + std::norm(zb.z))*z0.z + (1-expphi)*zb.z; // 1/zb -> zb; 1/z0 -> z0;
-      if(std::abs(Denominator)<1.e-14) {
-	return StereographicCoordinate(0.0, true);
-      }
-      if(std::norm(Numerator)>std::norm(Denominator)) {
-	return StereographicCoordinate(Denominator/Numerator, true);
-      } else {
-	return StereographicCoordinate(Numerator/Denominator, false);
-      }
-    } else {
-      const std::complex<double> Numerator = (expphi + std::norm(zb.z)) + (1-expphi)*zb.z*z0.z; // 1/z0 -> z0; 
-      const std::complex<double> Denominator = (1 + expphi*std::norm(zb.z))*z0.z + (1-expphi)*std::conj(zb.z); // 1/z0 -> z0; 
-      if(std::abs(Denominator)<1.e-14) {
-	return StereographicCoordinate(0.0, true);
-      }
-      if(std::norm(Numerator)>std::norm(Denominator)) {
-	return StereographicCoordinate(Denominator/Numerator, true);
-      } else {
-	return StereographicCoordinate(Numerator/Denominator, false);
-      }
-    }
-  } else {
-    if(zb.inv) {
-      const std::complex<double> Numerator = (expphi*std::norm(zb.z)+1)*z0.z + (1-expphi)*std::conj(zb.z); // 1/zb -> zb
-      const std::complex<double> Denominator = (expphi + std::norm(zb.z)) + (1-expphi)*zb.z*z0.z; // 1/zb -> zb
-      if(std::abs(Denominator)<1.e-14) {
-	return StereographicCoordinate(0.0, true);
-      }
-      if(std::norm(Numerator)>std::norm(Denominator)) {
-	return StereographicCoordinate(Denominator/Numerator, true);
-      } else {
-	return StereographicCoordinate(Numerator/Denominator, false);
-      }
-    } else {
-      const std::complex<double> Numerator = (expphi + std::norm(zb.z))*z0.z + (1-expphi)*zb.z;
-      const std::complex<double> Denominator = (1 + expphi*std::norm(zb.z)) + (1-expphi)*std::conj(zb.z)*z0.z;
-      if(std::abs(Denominator)<1.e-14) {
-	return StereographicCoordinate(0.0, true);
-      }
-      if(std::norm(Numerator)>std::norm(Denominator)) {
-	return StereographicCoordinate(Denominator/Numerator, true);
-      } else {
-	return StereographicCoordinate(Numerator/Denominator, false);
-      }
-    }
-  }
-  throw(GWFrames_BadSwitches); // We should never get here
+  /// 
+  /// \sa MobiusComponentsOfBoost
+  return GWFrames::Boost(z0, GWFrames::MobiusComponentsOfBoost(v));
 }
+
+
 
 
 Matrix::Matrix()
