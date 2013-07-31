@@ -58,6 +58,8 @@ namespace GWFrames {
   std::vector<std::complex<double> > MobiusComponentsOfBoost(const std::vector<double>& v);
   StereographicCoordinate Boost(const StereographicCoordinate& z0, const std::vector<std::complex<double> >& abcd);
   StereographicCoordinate Boost(const StereographicCoordinate& z0, const std::vector<double>& v);
+  double BoostConformalFactor(const StereographicCoordinate& z0, const std::vector<std::complex<double> >& abcd);
+  double BoostConformalFactor(const StereographicCoordinate& z0, const std::vector<double>& v);
   
   /// 3x3 object wrapping GSL matrix; probably not needed directly
   class Matrix {
