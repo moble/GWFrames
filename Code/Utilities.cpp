@@ -455,6 +455,58 @@ StereographicCoordinate::StereographicCoordinate(std::vector<double> x)
   }
 }
 
+/// Return components (a,b,c,d) of the Mobius transformation for the given boost v
+std::vector<std::complex<double> > GWFrames::MobiusComponentsOfBoost(const std::vector<double>& v) {
+  /// Note that this describess the effect of the boost on the FUTURE
+  /// light cone, rather than the past (which is the more standard one
+  /// involved in aberration of light).  These formulas are obtained
+  /// from Stuart (MNRAS 400, 1366; 2009) with reversion of the
+  /// rapidity.
+  const double expphi = std::exp(Rapidity(v));
+  const StereographicCoordinate zb(v);
+  std::vector<std::complex<double> > abcd(4);
+  if(zb.inv) { // |z_b| > 1
+    abcd[0] = (expphi*std::norm(zb.z) + 1);
+    abcd[1] = (1-expphi)*std::conj(zb.z);
+    abcd[2] = (1-expphi)*zb.z;
+    abcd[3] = (expphi + 1.*std::norm(zb.z));
+  } else { // |z_b| <= 1
+    abcd[0] = (expphi + std::norm(zb.z));
+    abcd[1] = (1-expphi)*zb.z;
+    abcd[2] = (1-expphi)*std::conj(zb.z);
+    abcd[3] = (1 + expphi*std::norm(zb.z));
+  }
+  return abcd;
+}
+
+/// 
+GWFrames::StereographicCoordinate GWFrames::Boost(const GWFrames::StereographicCoordinate& z0, const std::vector<std::complex<double> >& abcd) {
+  if(z0.inv) { // |z_0| > 1
+    const std::complex<double> Numerator = abcd[0] + abcd[1]*z0.z;
+    const std::complex<double> Denominator = abcd[2] + abcd[3]*z0.z;
+    if(std::abs(Denominator)<1.e-14) {
+      return StereographicCoordinate(0.0, true);
+    }
+    if(std::norm(Numerator)>std::norm(Denominator)) {
+      return StereographicCoordinate(Denominator/Numerator, true);
+    } else {
+      return StereographicCoordinate(Numerator/Denominator, false);
+    }
+  } else { // |z_0| <= 1
+    const std::complex<double> Numerator = abcd[0]*z0.z + abcd[1];
+    const std::complex<double> Denominator = abcd[2]*z0.z + abcd[3];
+    if(std::abs(Denominator)<1.e-14) {
+      return StereographicCoordinate(0.0, true);
+    }
+    if(std::norm(Numerator)>std::norm(Denominator)) {
+      return StereographicCoordinate(Denominator/Numerator, true);
+    } else {
+      return StereographicCoordinate(Numerator/Denominator, false);
+    }
+  }
+  throw(GWFrames_BadSwitches); // We should never get here
+}
+
 /// Apply a boost of v to the input stereographic coordinate
 GWFrames::StereographicCoordinate GWFrames::Boost(const GWFrames::StereographicCoordinate& z0, const std::vector<double>& v) {
   /// This takes a coordinate \f$z_0\f$ in frame 0, and returns the
@@ -473,13 +525,12 @@ GWFrames::StereographicCoordinate GWFrames::Boost(const GWFrames::StereographicC
   /// involved in aberration of light).  These formulas are obtained
   /// from Stuart (MNRAS 400, 1366; 2009) with reversion of the
   /// rapidity.
-  const double magv = std::sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
-  const double eToMinusPhi = std::exp(Rapidity(v));
+  const double expphi = std::exp(Rapidity(v));
   const StereographicCoordinate zb(v);
   if(z0.inv) {
     if(zb.inv) {
-      const std::complex<double> Numerator = (eToMinusPhi*std::norm(zb.z)+1) + (1-eToMinusPhi)*std::conj(zb.z)*z0.z; // 1/zb -> zb; 1/z0 -> z0; 
-      const std::complex<double> Denominator = (eToMinusPhi + std::norm(zb.z))*z0.z + (1-eToMinusPhi)*zb.z; // 1/zb -> zb; 1/z0 -> z0;
+      const std::complex<double> Numerator = (expphi*std::norm(zb.z)+1) + (1-expphi)*std::conj(zb.z)*z0.z; // 1/zb -> zb; 1/z0 -> z0; 
+      const std::complex<double> Denominator = (expphi + std::norm(zb.z))*z0.z + (1-expphi)*zb.z; // 1/zb -> zb; 1/z0 -> z0;
       if(std::abs(Denominator)<1.e-14) {
 	return StereographicCoordinate(0.0, true);
       }
@@ -489,8 +540,8 @@ GWFrames::StereographicCoordinate GWFrames::Boost(const GWFrames::StereographicC
 	return StereographicCoordinate(Numerator/Denominator, false);
       }
     } else {
-      const std::complex<double> Numerator = (eToMinusPhi + std::norm(zb.z)) + (1-eToMinusPhi)*zb.z*z0.z; // 1/z0 -> z0; 
-      const std::complex<double> Denominator = (1 + eToMinusPhi*std::norm(zb.z))*z0.z + (1-eToMinusPhi)*std::conj(zb.z); // 1/z0 -> z0; 
+      const std::complex<double> Numerator = (expphi + std::norm(zb.z)) + (1-expphi)*zb.z*z0.z; // 1/z0 -> z0; 
+      const std::complex<double> Denominator = (1 + expphi*std::norm(zb.z))*z0.z + (1-expphi)*std::conj(zb.z); // 1/z0 -> z0; 
       if(std::abs(Denominator)<1.e-14) {
 	return StereographicCoordinate(0.0, true);
       }
@@ -502,8 +553,8 @@ GWFrames::StereographicCoordinate GWFrames::Boost(const GWFrames::StereographicC
     }
   } else {
     if(zb.inv) {
-      const std::complex<double> Numerator = (eToMinusPhi*std::norm(zb.z)+1)*z0.z + (1-eToMinusPhi)*std::conj(zb.z); // 1/zb -> zb
-      const std::complex<double> Denominator = (eToMinusPhi + std::norm(zb.z)) + (1-eToMinusPhi)*zb.z*z0.z; // 1/zb -> zb
+      const std::complex<double> Numerator = (expphi*std::norm(zb.z)+1)*z0.z + (1-expphi)*std::conj(zb.z); // 1/zb -> zb
+      const std::complex<double> Denominator = (expphi + std::norm(zb.z)) + (1-expphi)*zb.z*z0.z; // 1/zb -> zb
       if(std::abs(Denominator)<1.e-14) {
 	return StereographicCoordinate(0.0, true);
       }
@@ -513,8 +564,8 @@ GWFrames::StereographicCoordinate GWFrames::Boost(const GWFrames::StereographicC
 	return StereographicCoordinate(Numerator/Denominator, false);
       }
     } else {
-      const std::complex<double> Numerator = (eToMinusPhi + std::norm(zb.z))*z0.z + (1-eToMinusPhi)*zb.z;
-      const std::complex<double> Denominator = (1 + eToMinusPhi*std::norm(zb.z)) + (1-eToMinusPhi)*std::conj(zb.z)*z0.z;
+      const std::complex<double> Numerator = (expphi + std::norm(zb.z))*z0.z + (1-expphi)*zb.z;
+      const std::complex<double> Denominator = (1 + expphi*std::norm(zb.z)) + (1-expphi)*std::conj(zb.z)*z0.z;
       if(std::abs(Denominator)<1.e-14) {
 	return StereographicCoordinate(0.0, true);
       }
@@ -525,7 +576,7 @@ GWFrames::StereographicCoordinate GWFrames::Boost(const GWFrames::StereographicC
       }
     }
   }
-  return StereographicCoordinate(0.0, false);
+  throw(GWFrames_BadSwitches); // We should never get here
 }
 
 
