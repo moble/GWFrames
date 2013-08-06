@@ -462,6 +462,8 @@ std::vector<std::complex<double> > GWFrames::MobiusComponentsOfBoost(const std::
   /// involved in aberration of light).  These formulas are obtained
   /// from Stuart (MNRAS 400, 1366; 2009) with reversion of the
   /// rapidity.
+  /// 
+  /// \sa Boost
   const double expphi = std::exp(Rapidity(v));
   const StereographicCoordinate zb(v);
   std::vector<std::complex<double> > abcd(4);
@@ -481,6 +483,14 @@ std::vector<std::complex<double> > GWFrames::MobiusComponentsOfBoost(const std::
 
 /// Given Mobius components, calculate the boost
 GWFrames::StereographicCoordinate GWFrames::Boost(const GWFrames::StereographicCoordinate& z0, const std::vector<std::complex<double> >& abcd) {
+  /// This takes a coordinate \f$z_0\f$ in frame 0, and returns the
+  /// coordinate of the same point, as seen in a frame that is boosted
+  /// with respect to frame 0 by the given Mobius transformation.
+  /// Really, this function is appropriate for any Mobius
+  /// transformation -- not just a boost -- but is only used presently
+  /// for boosts.  Hence the name.
+  /// 
+  /// \sa MobiusComponentsOfBoost
   if(z0.inv) { // |z_0| > 1 ; division by z0.z appears here as multiplication by z0.z
     const std::complex<double> Numerator = abcd[0] + abcd[1]*z0.z;
     const std::complex<double> Denominator = abcd[2] + abcd[3]*z0.z;
@@ -530,15 +540,21 @@ GWFrames::StereographicCoordinate GWFrames::Boost(const GWFrames::StereographicC
   return GWFrames::Boost(z0, GWFrames::MobiusComponentsOfBoost(v));
 }
 
+/// Find the conformal factor at the given point for the given Mobius transformation
 double GWFrames::BoostConformalFactor(const StereographicCoordinate& z0, const std::vector<std::complex<double> >& abcd) {
+  /// The conformal factor \f$K\f$ satisfies \f$ds'^2 = K^2 ds^2\f$,
+  /// where the prime indicates the boosted frame.
   if(z0.inv) { // |z_0| > 1 ; division by z0.z appears here as multiplication by z0.z
-    return ((std::norm(z0.z)+1)*std::real(abcd[0]*abcd[3]-abcd[1]*abcd[2])) / (std::norm(abcd[2]+abcd[3]*z0.z) + std::norm(abcd[0]+abcd[1]*z0.z));
+    return ((std::norm(z0.z)+1)*std::abs(abcd[0]*abcd[3]-abcd[1]*abcd[2])) / (std::norm(abcd[2]+abcd[3]*z0.z) + std::norm(abcd[0]+abcd[1]*z0.z));
   } else { // |z_0| <= 1
-    return ((1+std::norm(z0.z))*std::real(abcd[0]*abcd[3]-abcd[1]*abcd[2])) / (std::norm(abcd[2]*z0.z+abcd[3]) + std::norm(abcd[0]*z0.z+abcd[1]));
+    return ((1+std::norm(z0.z))*std::abs(abcd[0]*abcd[3]-abcd[1]*abcd[2])) / (std::norm(abcd[2]*z0.z+abcd[3]) + std::norm(abcd[0]*z0.z+abcd[1]));
   }
 }
 
+/// Find the conformal factor at the given point for the given boost
 double GWFrames::BoostConformalFactor(const StereographicCoordinate& z0, const std::vector<double>& v) {
+  /// The conformal factor \f$K\f$ satisfies \f$ds'^2 = K^2 ds^2\f$,
+  /// where the prime indicates the boosted frame.
   return GWFrames::BoostConformalFactor(z0, GWFrames::MobiusComponentsOfBoost(v));
 }
 
