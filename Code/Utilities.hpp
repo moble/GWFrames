@@ -14,6 +14,11 @@
 
 namespace GWFrames {
   
+  // Typedefs
+  typedef std::vector<double> ThreeVector; // Can be assumed to have three components
+  typedef std::vector<double> FourVector; // Can be assumed to have four components
+  typedef std::vector<std::complex<double> > MobiusTransform; // Four complex components representing a,b,c,d
+  
   // Useful operations on vectors
   double abs(const std::vector<double>& v);
   std::vector<double> abs(const std::vector<std::vector<double> >& v);
@@ -25,7 +30,6 @@ namespace GWFrames {
   std::vector<std::vector<double> > operator/(const std::vector<std::vector<double> > & a, const std::vector<double>& b);
   std::vector<double> Unwrap(const std::vector<double>& In);
 
-  
   // Integrals and derivatives
   std::vector<double> ScalarIntegral(const std::vector<double>& fdot, const std::vector<double>& t);
   double CumulativeScalarIntegral(const std::vector<double>& fdot, const std::vector<double>& t);
@@ -55,10 +59,10 @@ namespace GWFrames {
     inline double Z() const { if(inv) { return (1-std::norm(z))/(1+std::norm(z)); } else { return (std::norm(z)-1)/(std::norm(z)+1); } }
   };
   StereographicCoordinate StereographicCoordinateFromAngles(const double& vartheta, const double& varphi);
-  std::vector<std::complex<double> > MobiusComponentsOfBoost(const std::vector<double>& v);
-  StereographicCoordinate Boost(const StereographicCoordinate& z0, const std::vector<std::complex<double> >& abcd);
+  MobiusTransform MobiusComponentsOfBoost(const std::vector<double>& v);
+  StereographicCoordinate Boost(const StereographicCoordinate& z0, const MobiusTransform& abcd);
   StereographicCoordinate Boost(const StereographicCoordinate& z0, const std::vector<double>& v);
-  double BoostConformalFactor(const StereographicCoordinate& z0, const std::vector<std::complex<double> >& abcd);
+  double BoostConformalFactor(const StereographicCoordinate& z0, const MobiusTransform& abcd);
   double BoostConformalFactor(const StereographicCoordinate& z0, const std::vector<double>& v);
   
   /// 3x3 object wrapping GSL matrix; probably not needed directly

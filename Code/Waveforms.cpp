@@ -2832,7 +2832,7 @@ GWFrames::Waveform GWFrames::Waveform::GHPEdth() const {
 /// Geroch-Held-Penrose edth operator conjugate
 GWFrames::Waveform GWFrames::Waveform::GHPEdthBar() const {
   /// This operator is the one defined by Geroch et al. (1973).  It
-  /// raises the spin weight of any field on the sphere by 1, while
+  /// lowers the spin weight of any field on the sphere by 1, while
   /// leaving the boost weight unchanged.
   /// 
   /// This operator is very similar to the basic Newman-Penrose edth
@@ -2902,7 +2902,7 @@ GWFrames::Waveform GWFrames::Waveform::GHPEdthBar() const {
 GWFrames::Waveform GWFrames::Waveform::IntegrateNPEdth() const {
   /// This operator inverts the action of the Newman-Penrose edth
   /// operator.  This is not a perfect inverse, because the l=s-1 term
-  /// is set to zero.  To be precise, if `Waveform A` has spins weight
+  /// is set to zero.  To be precise, if `Waveform A` has spin weight
   /// \f$s\f$, then `A.NPEdth().IntegrateNPEdth()` has the effect of
   /// setting the \f$\ell=s\f$ term in `A` to zero.
   /// 
@@ -2953,7 +2953,7 @@ GWFrames::Waveform GWFrames::Waveform::IntegrateNPEdthBar() const {
   /// This operator inverts the action of the conjugated
   /// Newman-Penrose edth operator.  This is not a perfect inverse,
   /// because the l=s-1 term is set to zero.  To be precise, if
-  /// `Waveform A` has spins weight \f$s\f$, then
+  /// `Waveform A` has spin weight \f$s\f$, then
   /// `A.NPEdthBar().IntegrateNPEdthBar()` has the effect of setting
   /// the \f$\ell=s\f$ term in `A` to zero.
   /// 
@@ -3113,7 +3113,7 @@ GWFrames::Waveform GWFrames::Waveform::ApplySupertranslation(std::vector<std::co
   /// re-interpolates the data at each point to a new set of time
   /// slices, and transforms back to spherical-harmonic coefficients.
   /// 
-  /// By assumption, the supertranslation data `gamma` is a vector of
+  /// The supertranslation data input `gamma` is a vector of
   /// complex numbers representing the (scalar) spherical-harmonic
   /// components of the supertranslation, stored in the order (0,0),
   /// (1,-1), (1,0), (1,1), (2,-2), ...  The overall time translation
@@ -3129,6 +3129,7 @@ GWFrames::Waveform GWFrames::Waveform::ApplySupertranslation(std::vector<std::co
   /// input `gamma` data are assumed to satisfy this formula with
   /// \f$s=0\f$.
   
+  // Find the max ell present in the input gamma data
   int lMax=0;
   for(; lMax<=ellMax_Utilities; ++lMax) {
     if(N_lm(lMax)==int(gamma.size())) {
@@ -3136,6 +3137,7 @@ GWFrames::Waveform GWFrames::Waveform::ApplySupertranslation(std::vector<std::co
     }
   }
   
+  // Make sure gamma doesn't have more ell modes than ellMax_Utilities
   if(lMax>=ellMax_Utilities) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
 	      << "\nError: Input supertranslation data has length " << gamma.size() << "."
@@ -3145,6 +3147,7 @@ GWFrames::Waveform GWFrames::Waveform::ApplySupertranslation(std::vector<std::co
   }
   const unsigned int Nlm = N_lm(lMax);
   
+  // Make sure the Waveform is in the inertial frame
   if(frameType != GWFrames::Inertial) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
 	      << "\nError: Asking to supertranslate a Waveform in the " << GWFrames::WaveformFrameNames[frameType] << " frame."
@@ -3153,6 +3156,7 @@ GWFrames::Waveform GWFrames::Waveform::ApplySupertranslation(std::vector<std::co
     throw(GWFrames_WrongFrameType);
   }
   
+  // Set up some constants
   const Waveform& A = *this;
   const unsigned int ntimes = A.NTimes();
   const unsigned int nmodes = A.NModes();
@@ -3300,6 +3304,23 @@ GWFrames::Waveform GWFrames::Waveform::ApplySupertranslation(std::vector<std::co
 }
 
 
+/// Apply a boost to a boost-weighted function
+GWFrames::Waveform GWFrames::Waveform::Boost(const std::vector<double>& v) const {
+  /// This function does three things.  First, it evaluates the
+  /// Waveform on what will become an equi-angular grid after
+  /// transformation by the boost.  Second, it multiplies each of
+  /// those points by the appropriate conformal factor
+  /// \f$K^b(\vartheta, \varphi)\f$, where \f$b\f$ is the boost weight
+  /// stored with the Waveform.  Finally, it transforms back to
+  /// Fourier space using that new equi-angular grid.
+  
+  
+  std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Not properly implemented yet." << std::endl;
+  throw(GWFrames_NotYetImplemented);
+  
+  return Waveform();
+  // return B;
+}
 
 
 
