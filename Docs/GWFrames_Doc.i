@@ -18,19 +18,6 @@ Transform Waveform to an inertial frame.
   
 """
 
-%feature("docstring") GWFrames::SWSH::spin """
-
-
-  Parameters
-  ----------
-    s 
-  
-  Returns
-  -------
-    spin
-  
-"""
-
 %feature("docstring") GWFrames::Quaternion """
 class GWFrames::Quaternion
 ==========================
@@ -45,19 +32,67 @@ class GWFrames::Quaternion
   
 """
 
-%feature("docstring") func """
+%feature("docstring") GWFrames::Quaternions """
 
 
   Parameters
   ----------
-    double t
-    const double y
-    double dydt
-    void * params
+    const vector<double>& vartheta
+    const vector<double>& varphi
   
   Returns
   -------
-    int
+    vector<Quaternion>
+  
+
+
+
+  Parameters
+  ----------
+    const vector<double>& alpha
+    const vector<double>& beta
+    const vector<double>& gamma
+  
+  Returns
+  -------
+    vector<Quaternion>
+  
+
+
+
+  Parameters
+  ----------
+    const vector<double>& w0
+    const vector<double>& x0
+    const vector<double>& y0
+    const vector<double>& z0
+  
+  Returns
+  -------
+    vector<Quaternion>
+  
+
+
+
+  Parameters
+  ----------
+    const vector<vector<double>>& q
+  
+  Returns
+  -------
+    vector<Quaternion>
+  
+
+
+
+  Parameters
+  ----------
+    const vector<double>& angle
+    const vector<vector<double>>& axis
+  
+  Returns
+  -------
+    vector<Quaternion>
   
 """
 
@@ -192,7 +227,7 @@ Create a StereographicCoordinate in the direction of the given vector.
 ======================================================================
   Parameters
   ----------
-    vector<double> x
+    ThreeVector x
   
   Returns
   -------
@@ -221,6 +256,24 @@ Transform Waveform to frame aligned with angular-velocity vector.
     
     If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
     or [2,3,4], for example, restricts the range of the sum.
+  
+"""
+
+%feature("docstring") StereographicCoordinate::SphericalCoordinates """
+Find spherical coordinates from the stereographic coordinate.
+=============================================================
+  Parameters
+  ----------
+    double& vartheta
+    double& varphi
+  
+  Returns
+  -------
+    void
+  
+  Description
+  -----------
+    This function alters the arguments by reference.
   
 """
 
@@ -438,6 +491,28 @@ Vector of magnitudes of Omega_prec at each instant of time.
 """
 
 %feature("docstring") GWFrames::Boost """
+Given Mobius components, calculate the boost.
+=============================================
+  Parameters
+  ----------
+    const StereographicCoordinate& z0
+    const MobiusTransform& abcd
+  
+  Returns
+  -------
+    StereographicCoordinate
+  
+  Description
+  -----------
+    This takes a coordinate $z_0$ in frame 0, and returns the coordinate of the
+    same point, as seen in a frame that is boosted with respect to frame 0 by
+    the given Mobius transformation. Really, this function is appropriate for
+    any Mobius transformation  not just a boost  but is only used presently for
+    boosts. Hence the name.
+    
+    MobiusComponentsOfBoost
+  
+
 Apply a boost of v to the input stereographic coordinate.
 =========================================================
   Parameters
@@ -465,6 +540,8 @@ Apply a boost of v to the input stereographic coordinate.
     than the past (which is the more standard one involved in aberration of
     light). These formulas are obtained from Stuart (MNRAS 400, 1366; 2009)
     with reversion of the rapidity.
+    
+    MobiusComponentsOfBoost
   
 """
 
@@ -630,6 +707,41 @@ Deduce PN-equivalent orbital angular velocity from Waveform.
   
 """
 
+%feature("docstring") GWFrames::Modes::Spin """
+
+
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    int
+  
+"""
+
+%feature("docstring") GWFrames::MobiusComponentsOfBoost """
+Return components (a,b,c,d) of the Mobius transformation for the given boost v.
+===============================================================================
+  Parameters
+  ----------
+    const vector<double>& v
+  
+  Returns
+  -------
+    MobiusTransform
+  
+  Description
+  -----------
+    Note that this describess the effect of the boost on the FUTURE light cone,
+    rather than the past (which is the more standard one involved in aberration
+    of light). These formulas are obtained from Stuart (MNRAS 400, 1366; 2009)
+    with reversion of the rapidity.
+    
+    Boost
+  
+"""
+
 %feature("docstring") Matrix::Matrix """
 
 
@@ -788,23 +900,27 @@ Vector of magnitudes of Omega_orb at each instant of time.
   
 """
 
-%feature("docstring") GWFrames::ComplexDerivative """
-Three-point finite-differencing of vector of complex<double>.
-=============================================================
+%feature("docstring") GWFrames::normsquared """
+
+
   Parameters
   ----------
-    const vector<complex<double>>& f
-      Vector of complex<double>.
-    const vector<double>& t
-      Vector of corresponding time steps.
+    const Quaternion& Q
   
   Returns
   -------
-    vector<complex<double>>
+    double
   
-  Description
-  -----------
-    Sundquist and Veronis, Tellus XXII (1970), 1
+
+
+
+  Parameters
+  ----------
+    const vector<Quaternion>& Q
+  
+  Returns
+  -------
+    vector<double>
   
 """
 
@@ -981,38 +1097,58 @@ class GWFrames::WignerCoefficientFunctor
   
 """
 
-%feature("docstring") SQR """
+%feature("docstring") GWFrames::Modes """
+class GWFrames::Modes
+=====================
+  Member variables
+  ----------------
+    int s
+
+            This object holds complex spin-weighted data on the sphere in a
+      spin-weighted spherical-harmonic mode representation. All modes are
+      present, even for $\\ell<|s|$. The modes are also assumed to be stored in
+      order, as $(\\ell,m) = (0,0), (1,-1), (1,0), (1,1), (2,-2), \\ldots$.    int ellMax
+    vector<complex<double>> data
+  
+"""
+
+%feature("docstring") Modes::edth """
 
 
   Parameters
   ----------
-    const double& x
+    (none)
   
   Returns
   -------
-    double
+    Modes
   
-
-
-
-  Parameters
-  ----------
-    const double a
-  
-  Returns
-  -------
-    double
-  
-
-
-
-  Parameters
-  ----------
-    const double a
-  
-  Returns
-  -------
-    double
+  Description
+  -----------
+    This operator is the one defined by Geroch et al. (1973). It raises the
+    spin weight of any field on the sphere by 1, while leaving the boost weight
+    unchanged.
+    
+    This operator is very similar to the basic Newman-Penrose edth operator,
+    except that it preserves boost weights. Its effect in this implementation
+    is identical (up to a factor of $\\sqrt{2}$) to the NP edth. There is an
+    additional term in the definition of the GHP operator, but its value is
+    zero. (It transforms nontrivially, though.) In this context, we have
+    NPEdth() = sqrt(2)*GHPEdth().
+    
+    The complex shear $\\sigma$ has spin weight +2 and boost weight +1. The
+    radial coordinate $r$ has boost weight -1, and the derivative with respect
+    to time $d/du$ has boost weight -1. The asymptotic metric shear $r\\, h$
+    has spin weight -2 and boost weight -1. In particular, it seems that $r\\,
+    h = r^2\\, \\bar{\\sigma}$.
+    
+    The Newman-Penrose scalars $\\Psi_i$ have spin weight and boost weight
+    equal to $2-i$. (E.g., $\\Psi_4$ has $s = b = -2$.) However, when these are
+    multiplied by the appropriate factors of $r$ to find the leading-order
+    terms, they acquire boost weights. In particular, we need to multiply
+    $\\Psi_i$ by $r^{5-i}$ to get nonzero values at scri, which adds $i-5$ to
+    the boost weight, so that the asymptotic NP scalars all have boost weight
+    -3.
   
 """
 
@@ -1048,7 +1184,7 @@ Geroch-Held-Penrose edth operator conjugate.
   
   Description
   -----------
-    This operator is the one defined by Geroch et al. (1973). It raises the
+    This operator is the one defined by Geroch et al. (1973). It lowers the
     spin weight of any field on the sphere by 1, while leaving the boost weight
     unchanged.
     
@@ -1246,105 +1382,38 @@ Efficiently swap data between two Waveform objects.
   
 """
 
-%feature("docstring") GWFrames::Waveform::AlignDecompositionFrameToModes """
-Fix the orientation of the corotating frame.
-============================================
+%feature("docstring") Modes::operator* """
+
+
   Parameters
   ----------
-    const double t_fid
-      Fiducial time at which the alignment should happen
-    const vector<int>& Lmodes = vector<int>(0)
-      Lmodes to use in computing $<LL>$
+    const Modes& M
   
   Returns
   -------
-    Waveform&
-  
-  Description
-  -----------
-    The corotating frame is only defined up to some constant rotor R_c; if
-    R_corot is corotating, then so is R_corot*R_c. This function uses that
-    freedom to ensure that the frame is aligned with the Waveform modes at the
-    fiducial time. In particular, it ensures that the Z axis of the frame in
-    which the decomposition is done is along the dominant eigenvector of $<LL>$
-    (suggested by O'Shaughnessy et al.), and the phase of the (2,2) mode is
-    zero.
-    
-    If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
-    or [2,3,4], for example, restricts the range of the sum.
+    Modes
   
 """
 
-%feature("docstring") GWFrames::Quaternions """
+%feature("docstring") Modes::operator+ """
 
 
   Parameters
   ----------
-    const vector<double>& vartheta
-    const vector<double>& varphi
+    const Modes& M
   
   Returns
   -------
-    vector<Quaternion>
-  
-
-
-
-  Parameters
-  ----------
-    const vector<double>& alpha
-    const vector<double>& beta
-    const vector<double>& gamma
-  
-  Returns
-  -------
-    vector<Quaternion>
-  
-
-
-
-  Parameters
-  ----------
-    const vector<double>& w0
-    const vector<double>& x0
-    const vector<double>& y0
-    const vector<double>& z0
-  
-  Returns
-  -------
-    vector<Quaternion>
-  
-
-
-
-  Parameters
-  ----------
-    const vector<vector<double>>& q
-  
-  Returns
-  -------
-    vector<Quaternion>
-  
-
-
-
-  Parameters
-  ----------
-    const vector<double>& angle
-    const vector<vector<double>>& axis
-  
-  Returns
-  -------
-    vector<Quaternion>
+    Modes
   
 """
 
-%feature("docstring") GWFrames::Waveform::Boost """
-Apply a boost to a boost-weighted function.
-===========================================
+%feature("docstring") GWFrames::Waveform::IntegrateGHPEdthBar """
+Integrate the Geroch-Held-Penrose edth operator conjugate.
+==========================================================
   Parameters
   ----------
-    const vector<double>& v
+    (none)
   
   Returns
   -------
@@ -1352,25 +1421,24 @@ Apply a boost to a boost-weighted function.
   
   Description
   -----------
-    This function does three things. First, it evaluates the Waveform on what
-    will become an equi-angular grid after transformation by the boost. Second,
-    it multiplies each of those points by the appropriate conformal factor
-    $K^b(\\vartheta, \\varphi)$, where $b$ is the boost weight stored with the
-    Waveform. Finally, it transforms back to Fourier space using that new
-    equi-angular grid.
-  
-"""
-
-%feature("docstring") GWFrames::Waveforms::~Waveforms """
-
-
-  Parameters
-  ----------
-    (none)
-  
-  Returns
-  -------
-    ~Waveforms
+    This operator inverts the action of the GHP edth operator. This is not a
+    perfect inverse, because the l=s-1 term is set to zero. To be precise, if
+    Waveform A has spins weight $s$, then A.GHPEdth().IntegrateGHPEdth() has
+    the effect of setting the $\\ell=s$ term in A to zero.
+    
+    NPEdth
+    
+    NPEdthBar
+    
+    GHPEdth
+    
+    GHPEdthBar
+    
+    IntegrateNPEdth
+    
+    IntegrateNPEdthBar
+    
+    IntegrateGHPEdth
   
 """
 
@@ -1756,27 +1824,16 @@ Explicit constructor from data.
   
 """
 
-%feature("docstring") GWFrames::PNWaveform::Omega_tot """
-Total angular velocity of PN binary at an instant of time.
-==========================================================
-  Parameters
-  ----------
-    const unsigned int iTime
-  
-  Returns
-  -------
-    vector<double>
-  
+%feature("docstring") GWFrames::Quaternion::normalized """
 
-Total angular velocity of PN binary at each instant of time.
-============================================================
+
   Parameters
   ----------
     (none)
   
   Returns
   -------
-    vector<vector<double>>
+    Quaternion
   
 """
 
@@ -1819,16 +1876,44 @@ Total angular velocity of PN binary at each instant of time.
   
 """
 
-%feature("docstring") GWFrames::StereographicCoordinate::Y """
-
-
+%feature("docstring") Scri::BMSTransformation """
+Apply a (constant) BMS transformation to data on null infinity.
+===============================================================
   Parameters
   ----------
-    (none)
+    const double& uPrime
+      New retarded time at which to give the data
+    const MobiusTransform& abcd
+      Mobius representation of the conformal transformation
+    Modes& gamma
+      Spherical-harmonic modes of the supertranslation
   
   Returns
   -------
-    double
+    SliceOfScri
+  
+  Description
+  -----------
+    A general BMS transformation is expressed as a conformal transformation of
+    the sphere (which encompasses rotations and boosts) and a supertranslation
+    (which affects only the time coordinate on null infinity). Here, the
+    conformal transformation of the sphere is expressed in terms of the
+    parameters of the Mobius transformation of the sphere's stereographic
+    coordinates. The supertranslation is decomposed into (scalar) spherical
+    harmonics.
+    
+    The work to be done by this function includes (1) evaluating the data on
+    the appropriate equi-angular grid of the final frame; (2) interpolating
+    those data to the appropriate values of retarded time of the final frame;
+    (3) transforming the data at each point by the appropriate spin factor,
+    boost factor, and mixing; and (4) transforming back to spectral space to
+    store the data in their usual representation.
+    
+    The relation between the new and old time coordinates is $u' =
+    K(u-\\gamma)$, where $K$ is the conformal factor (which is a function of
+    angle). So we need to interpolate at each point to the original time
+    coordinate $u = u'/K + \\gamma$, which again depends on angle. That is, we
+    have to interpolate to a different time for each grid point.
   
 """
 
@@ -1846,6 +1931,20 @@ Create a StereographicCoordinate object from spherical coordinates.
   
 """
 
+%feature("docstring") complexi """
+
+
+  Parameters
+  ----------
+    0. 0
+    1. 0
+  
+  Returns
+  -------
+    const complex<double>
+  
+"""
+
 %feature("docstring") GWFrames::Quaternion::operator= """
 
 
@@ -1856,6 +1955,53 @@ Create a StereographicCoordinate object from spherical coordinates.
   Returns
   -------
     Quaternion&
+  
+"""
+
+%feature("docstring") Modes::Modes """
+
+
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    Modes
+  
+
+
+
+  Parameters
+  ----------
+    const Modes& A
+  
+  Returns
+  -------
+    Modes
+  
+
+
+
+  Parameters
+  ----------
+    const int spin
+    const vector<complex<double>>& Data
+  
+  Returns
+  -------
+    Modes
+  
+
+
+
+  Parameters
+  ----------
+    DataGrid D
+  
+  Returns
+  -------
+    Modes
   
 """
 
@@ -1933,16 +2079,16 @@ class GWFrames::StereographicCoordinate
   
 """
 
-%feature("docstring") GWFrames::Waveform::SetDataType """
+%feature("docstring") Modes::bar """
 
 
   Parameters
   ----------
-    const WaveformDataType Type
+    (none)
   
   Returns
   -------
-    void
+    Modes
   
 """
 
@@ -1980,6 +2126,56 @@ Construct frame given the X and Y basis vectors of that frame.
   Returns
   -------
     vector<double>
+  
+"""
+
+%feature("docstring") GWFrames::BoostConformalFactor """
+Find the conformal factor at the given point for the given Mobius transformation.
+=================================================================================
+  Parameters
+  ----------
+    const StereographicCoordinate& z0
+    const MobiusTransform& abcd
+  
+  Returns
+  -------
+    double
+  
+  Description
+  -----------
+    The conformal factor $K$ satisfies $ds'^2 = K^2 ds^2$, where the prime
+    indicates the boosted frame.
+  
+
+Find the conformal factor at the given point for the given boost.
+=================================================================
+  Parameters
+  ----------
+    const StereographicCoordinate& z0
+    const vector<double>& v
+  
+  Returns
+  -------
+    double
+  
+  Description
+  -----------
+    The conformal factor $K$ satisfies $ds'^2 = K^2 ds^2$, where the prime
+    indicates the boosted frame.
+  
+"""
+
+%feature("docstring") zero """
+
+
+  Parameters
+  ----------
+    0. 0
+    0. 0
+  
+  Returns
+  -------
+    const complex<double>
   
 """
 
@@ -2342,27 +2538,34 @@ Get time and frame offset for alignment over extended region.
   
 """
 
-%feature("docstring") GWFrames::normsquared """
-
-
+%feature("docstring") SliceOfScri::SliceOfScri """
+Empty constructor.
+==================
   Parameters
   ----------
-    const Quaternion& Q
+    (none)
   
   Returns
   -------
-    double
+    SliceOfScri
   
 
-
-
+Constructor from data.
+======================
   Parameters
   ----------
-    const vector<Quaternion>& Q
+    const double& U
+    const Modes& Psi0
+    const Modes& Psi1
+    const Modes& Psi2
+    const Modes& Psi3
+    const Modes& Psi4
+    const Modes& Sigma
+    const Modes& SigmaDot
   
   Returns
   -------
-    vector<double>
+    SliceOfScri
   
 """
 
@@ -2472,6 +2675,22 @@ Hybridize this Waveform with another.
   Returns
   -------
     BinomialCoefficientFunctor
+  
+"""
+
+%feature("docstring") func """
+
+
+  Parameters
+  ----------
+    double t
+    const double y
+    double dydt
+    void * params
+  
+  Returns
+  -------
+    int
   
 """
 
@@ -2616,6 +2835,23 @@ Return vector of vector of absolute value of all modes as function of time.
   
 """
 
+%feature("docstring") GWFrames::Scri """
+class GWFrames::Scri
+====================
+  Member variables
+  ----------------
+    vector<double> t
+
+            A Scri object contains all the information needed to express the
+      asymptotic geometry of null infinity, and symmetry transformations
+      thereof. This geometry is encoded in the NewmanPenrose curvature scalars
+      $\\psi_0, \\ldots, \\psi_4$ and the complex shear $\\sigma$ of outgoing
+      null rays (strain in gravitational-wave detectors). The general symmetry
+      transformation is an element of the BondiMetznerSachs (BMS) group, which
+      transforms the data contained by Scri among itself.    vector<SliceOfScri> slices
+  
+"""
+
 %feature("docstring") GWFrames::Waveform::IntegrateGHPEdth """
 Integrate the Geroch-Held-Penrose edth operator.
 ================================================
@@ -2744,15 +2980,15 @@ Align time and frame over extended region.
   Description
   -----------
     We need (2*ell+1)*(2*ell+1) coefficients for each value of ell from 0 (for
-    completenes) up to ellMax_Utilities (hard coded in the header file). That's
+    completenes) up to ellMax_GWFrames (hard coded in the header file). That's
     a total of from sympy import summation, symbols, simplify from
-    sympy.polys.polyfuncs import horner ell, ellMax_Utilities, m, mp =
-    symbols('ell ellMax_Utilities m mp', integer=True)
-    horner(simplify(summation((2*ell+1)**2, (ell, 0, ellMax_Utilities))))
+    sympy.polys.polyfuncs import horner ell, ellMax_GWFrames, m, mp =
+    symbols('ell ellMax_GWFrames m mp', integer=True)
+    horner(simplify(summation((2*ell+1)**2, (ell, 0, ellMax_GWFrames))))
     
-    ellMax_Utilities*(ellMax_Utilities*(4*ellMax_Utilities/3 + 4) + 11/3) + 1
-    With a similar calculation, we can see that the associated access operator
-    needs element horner(summation((2*ell+1)**2, (ell, 0, ell-1)) +
+    ellMax_GWFrames*(ellMax_GWFrames*(4*ellMax_GWFrames/3 + 4) + 11/3) + 1 With
+    a similar calculation, we can see that the associated access operator needs
+    element horner(summation((2*ell+1)**2, (ell, 0, ell-1)) +
     (2*ell+1)*(ell+mp) + ell + m)
     
     ell*(ell*(4*ell/3 + 2) + 5/3) + mp*(2*ell + 1) + m of the array.
@@ -2840,17 +3076,43 @@ Transform Waveform to an inertial frame.
   
 """
 
-%feature("docstring") MatrixC::resize """
+%feature("docstring") Modes::edthbar """
 
 
   Parameters
   ----------
-    int newn
-    int newm
+    (none)
   
   Returns
   -------
-    void
+    Modes
+  
+  Description
+  -----------
+    This operator is the one defined by Geroch et al. (1973). It lowers the
+    spin weight of any field on the sphere by 1, while leaving the boost weight
+    unchanged.
+    
+    This operator is very similar to the basic Newman-Penrose edth operator,
+    except that it preserves boost weights. Its effect in this implementation
+    is identical (up to a factor of $\\sqrt{2}$) to the NP edth. There is an
+    additional term in the definition of the GHP operator, but its value is
+    zero. (It transforms nontrivially, though.) In this context, we have
+    NPEdthBar() = sqrt(2)*GHPEdthBar().
+    
+    The complex shear $\\sigma$ has spin weight +2 and boost weight +1. The
+    radial coordinate $r$ has boost weight -1, and the derivative with respect
+    to time $d/du$ has boost weight -1. The asymptotic metric shear $r\\, h$
+    has spin weight -2 and boost weight -1. In particular, it seems that $r\\,
+    h = r^2\\, \\bar{\\sigma}$.
+    
+    The Newman-Penrose scalars $\\Psi_i$ have spin weight and boost weight
+    equal to $2-i$. (E.g., $\\Psi_4$ has $s = b = -2$.) However, when these are
+    multiplied by the appropriate factors of $r$ to find the leading-order
+    terms, they acquire boost weights. In particular, we need to multiply
+    $\\Psi_i$ by $r^{5-i}$ to get nonzero values at scri, which adds $i-5$ to
+    the boost weight, so that the asymptotic NP scalars all have boost weight
+    -3.
   
 """
 
@@ -2914,6 +3176,48 @@ Transform Waveform to an inertial frame.
   Returns
   -------
     vector<vector<double>>
+  
+"""
+
+%feature("docstring") GWFrames::Waveform::Boost """
+Apply a boost to a boost-weighted function.
+===========================================
+  Parameters
+  ----------
+    const vector<double>& v
+  
+  Returns
+  -------
+    Waveform
+  
+  Description
+  -----------
+    This function does three things. First, it evaluates the Waveform on what
+    will become an equi-angular grid after transformation by the boost. Second,
+    it multiplies each of those points by the appropriate conformal factor
+    $K^b(\\vartheta, \\varphi)$, where $b$ is the boost weight stored with the
+    Waveform. Finally, it transforms back to Fourier space using that new
+    equi-angular grid.
+  
+"""
+
+%feature("docstring") GWFrames::ComplexDerivative """
+Three-point finite-differencing of vector of complex<double>.
+=============================================================
+  Parameters
+  ----------
+    const vector<complex<double>>& f
+      Vector of complex<double>.
+    const vector<double>& t
+      Vector of corresponding time steps.
+  
+  Returns
+  -------
+    vector<complex<double>>
+  
+  Description
+  -----------
+    Sundquist and Veronis, Tellus XXII (1970), 1
   
 """
 
@@ -3548,18 +3852,6 @@ class GWFrames::LadderOperatorFactorFunctor
 
   Parameters
   ----------
-    const Quaternion& a
-    const Matrix& b
-  
-  Returns
-  -------
-    Quaternion
-  
-
-
-
-  Parameters
-  ----------
     const double b
     const Waveform& A
   
@@ -3644,7 +3936,7 @@ Integrate the Newman-Penrose edth operator conjugate.
   -----------
     This operator inverts the action of the conjugated Newman-Penrose edth
     operator. This is not a perfect inverse, because the l=s-1 term is set to
-    zero. To be precise, if Waveform A has spins weight $s$, then
+    zero. To be precise, if Waveform A has spin weight $s$, then
     A.NPEdthBar().IntegrateNPEdthBar() has the effect of setting the $\\ell=s$
     term in A to zero.
     
@@ -3669,7 +3961,7 @@ Integrate the Newman-Penrose edth operator conjugate.
   
 """
 
-%feature("docstring") GWFrames::Quaternion::normalized """
+%feature("docstring") GWFrames::Quaternion::inverse """
 
 
   Parameters
@@ -3679,6 +3971,43 @@ Integrate the Newman-Penrose edth operator conjugate.
   Returns
   -------
     Quaternion
+  
+"""
+
+%feature("docstring") GWFrames::Waveform::SetDataType """
+
+
+  Parameters
+  ----------
+    const WaveformDataType Type
+  
+  Returns
+  -------
+    void
+  
+"""
+
+%feature("docstring") GWFrames::PNWaveform::Omega_tot """
+Total angular velocity of PN binary at an instant of time.
+==========================================================
+  Parameters
+  ----------
+    const unsigned int iTime
+  
+  Returns
+  -------
+    vector<double>
+  
+
+Total angular velocity of PN binary at each instant of time.
+============================================================
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    vector<vector<double>>
   
 """
 
@@ -3855,29 +4184,7 @@ Squad interpolation of Quaternion time series.
   
 """
 
-%feature("docstring") GWFrames::Waveform::LLMatrix """
-Calculate the $<LL>$ quantity defined in the paper.
-===================================================
-  Parameters
-  ----------
-    vector<int> Lmodes = vector<int>(0)
-      L modes to evaluate
-  
-  Returns
-  -------
-    vector<Matrix>
-  
-  Description
-  -----------
-    If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
-    or [2,3,4], for example, restricts the range of the sum.
-    
-    $<LL>^{ab} = \\sum_{\\ell,m,m'} [\\bar{f}^{\\ell,m'} <\\ell,m' | L_a L_b |
-    \\ell,m> f^{\\ell,m} ]$
-  
-"""
-
-%feature("docstring") GWFrames::Quaternion::inverse """
+%feature("docstring") GWFrames::DataGrid::N_phi """
 
 
   Parameters
@@ -3886,7 +4193,20 @@ Calculate the $<LL>$ quantity defined in the paper.
   
   Returns
   -------
-    Quaternion
+    int
+  
+"""
+
+%feature("docstring") DataGrid::operator* """
+
+
+  Parameters
+  ----------
+    const DataGrid& 
+  
+  Returns
+  -------
+    DataGrid
   
 """
 
@@ -4070,19 +4390,21 @@ Newman-Penrose edth operator conjugate.
   
 """
 
-%feature("docstring") GWFrames::CumulativeVectorIntegral """
-Integrate vector function by simple trapezoidal rule.
-=====================================================
+%feature("docstring") Scri::Scri """
+
+
   Parameters
   ----------
-    const vector<vector<double>>& fdot
-      Vector of vectors (first index time).
-    const vector<double>& t
-      Vector of corresponding time steps.
+    const Waveform& psi0
+    const Waveform& psi1
+    const Waveform& psi2
+    const Waveform& psi3
+    const Waveform& psi4
+    const Waveform& sigma
   
   Returns
   -------
-    vector<double>
+    Scri
   
 """
 
@@ -4115,6 +4437,22 @@ Integrate vector function by simple trapezoidal rule.
   
 """
 
+%feature("docstring") GWFrames::VectorIntegral """
+Integrate vector function by simple trapezoidal rule.
+=====================================================
+  Parameters
+  ----------
+    const vector<vector<double>>& fdot
+      Vector of vectors (first index time).
+    const vector<double>& t
+      Vector of corresponding time steps.
+  
+  Returns
+  -------
+    vector<vector<double>>
+  
+"""
+
 %feature("docstring") GWFrames::Quaternion::normsquared """
 
 
@@ -4138,7 +4476,6 @@ class GWFrames::SWSH
     WignerDMatrix D
     int spin
     double sign
-     __pad0__
   
 """
 
@@ -4152,6 +4489,24 @@ class GWFrames::SWSH
   Returns
   -------
     Quaternion
+  
+"""
+
+%feature("docstring") GWFrames::Rapidity """
+Returns the rapidity of a Lorentz boost with velocity three-vector v.
+=====================================================================
+  Parameters
+  ----------
+    const vector<double>& v
+  
+  Returns
+  -------
+    double
+  
+  Description
+  -----------
+    The vector v is expected to be the velocity three-vector of the new frame
+    relative to the current frame, in units where c=1.
   
 """
 
@@ -4242,23 +4597,51 @@ Deduce PN-equivalent precessional angular velocity from Waveform.
   
 """
 
-%feature("docstring") GWFrames::ScalarDerivative """
-Three-point finite-differencing of vector of scalars.
-=====================================================
+%feature("docstring") GWFrames::DataGrid::Data """
+
+
   Parameters
   ----------
-    const vector<double>& f
-      Vector of scalars.
-    const vector<double>& t
-      Vector of corresponding time steps.
+    const unsigned int i
   
   Returns
   -------
-    vector<double>
+    complex<double>
   
-  Description
-  -----------
-    Sundquist and Veronis, Tellus XXII (1970), 1
+
+
+
+  Parameters
+  ----------
+    const unsigned int i
+  
+  Returns
+  -------
+    complex<double>&
+  
+
+
+
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    vector<complex<double>>
+  
+"""
+
+%feature("docstring") SliceOfScri::Mass """
+Calculate the mass of the system from the four-momentum.
+========================================================
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    double
   
 """
 
@@ -4353,6 +4736,28 @@ Calculate the derivative of a rotor by the logarithm formula.
   
 """
 
+%feature("docstring") GWFrames::Waveform::LLMatrix """
+Calculate the $<LL>$ quantity defined in the paper.
+===================================================
+  Parameters
+  ----------
+    vector<int> Lmodes = vector<int>(0)
+      L modes to evaluate
+  
+  Returns
+  -------
+    vector<Matrix>
+  
+  Description
+  -----------
+    If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
+    or [2,3,4], for example, restricts the range of the sum.
+    
+    $<LL>^{ab} = \\sum_{\\ell,m,m'} [\\bar{f}^{\\ell,m'} <\\ell,m' | L_a L_b |
+    \\ell,m> f^{\\ell,m} ]$
+  
+"""
+
 %feature("docstring") MatrixC::swap """
 
 
@@ -4394,16 +4799,29 @@ Calculate the derivative of a rotor by the logarithm formula.
   Description
   -----------
     We need (2*ell+1) coefficients for each value of ell from 0 (for
-    completeness) up to ellMax_Utilities (hard coded in the header file).
-    That's a total of from sympy import summation, symbols ell,
-    ellMax_Utilities, m, mp = symbols('ell ellMax_Utilities m mp',
-    integer=True) summation(2*ell+1, (ell, 0, ellMax_Utilities))
+    completeness) up to ellMax_GWFrames (hard coded in the header file). That's
+    a total of from sympy import summation, symbols ell, ellMax_GWFrames, m, mp
+    = symbols('ell ellMax_GWFrames m mp', integer=True) summation(2*ell+1,
+    (ell, 0, ellMax_GWFrames))
     
-    ellMax_Utilities**2 + 2*ellMax_Utilities + 1 With a similar calculation, we
+    ellMax_GWFrames**2 + 2*ellMax_GWFrames + 1 With a similar calculation, we
     can see that the associated access operator needs element
     summation(2*ell+1, (ell, 0, ell-1)) + ell + m
     
     ell**2 + ell + m
+  
+"""
+
+%feature("docstring") GWFrames::Modes::EllMax """
+
+
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    int
   
 """
 
@@ -4483,52 +4901,45 @@ Construct minimal-rotation frame from Z basis vector of that frame.
   
 """
 
-%feature("docstring") GWFrames::Waveform::IntegrateGHPEdthBar """
-Integrate the Geroch-Held-Penrose edth operator conjugate.
-==========================================================
+%feature("docstring") GWFrames::DataGrid::N_theta """
+
+
   Parameters
   ----------
     (none)
   
   Returns
   -------
-    Waveform
-  
-  Description
-  -----------
-    This operator inverts the action of the GHP edth operator. This is not a
-    perfect inverse, because the l=s-1 term is set to zero. To be precise, if
-    Waveform A has spins weight $s$, then A.GHPEdth().IntegrateGHPEdth() has
-    the effect of setting the $\\ell=s$ term in A to zero.
-    
-    NPEdth
-    
-    NPEdthBar
-    
-    GHPEdth
-    
-    GHPEdthBar
-    
-    IntegrateNPEdth
-    
-    IntegrateNPEdthBar
-    
-    IntegrateGHPEdth
+    int
   
 """
 
-%feature("docstring") Matrix::resize """
-
-
+%feature("docstring") GWFrames::Waveform::AlignDecompositionFrameToModes """
+Fix the orientation of the corotating frame.
+============================================
   Parameters
   ----------
-    unsigned int newNRows
-    unsigned int newNCols
-    const double  = 0.0
+    const double t_fid
+      Fiducial time at which the alignment should happen
+    const vector<int>& Lmodes = vector<int>(0)
+      Lmodes to use in computing $<LL>$
   
   Returns
   -------
-    void
+    Waveform&
+  
+  Description
+  -----------
+    The corotating frame is only defined up to some constant rotor R_c; if
+    R_corot is corotating, then so is R_corot*R_c. This function uses that
+    freedom to ensure that the frame is aligned with the Waveform modes at the
+    fiducial time. In particular, it ensures that the Z axis of the frame in
+    which the decomposition is done is along the dominant eigenvector of $<LL>$
+    (suggested by O'Shaughnessy et al.), and the phase of the (2,2) mode is
+    zero.
+    
+    If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
+    or [2,3,4], for example, restricts the range of the sum.
   
 """
 
@@ -4586,16 +4997,21 @@ Output Waveform object to data file.
   
 """
 
-%feature("docstring") GWFrames::SWSH::sign """
+%feature("docstring") GWFrames::SliceOfScri """
+class GWFrames::SliceOfScri
+===========================
+  Member variables
+  ----------------
+    double u
 
-
-  Parameters
-  ----------
-    s% 2 = =0?1.0:-1.0
-  
-  Returns
-  -------
-    sign
+            This class holds all the necessary Modes objects needed to understand the
+      geometry of a given slice of null infinity.    Modes psi0
+    Modes psi1
+    Modes psi2
+    Modes psi3
+    Modes psi4
+    Modes sigma
+    Modes sigmadot
   
 """
 
@@ -5169,7 +5585,7 @@ Integrate the Newman-Penrose edth operator.
   -----------
     This operator inverts the action of the Newman-Penrose edth operator. This
     is not a perfect inverse, because the l=s-1 term is set to zero. To be
-    precise, if Waveform A has spins weight $s$, then
+    precise, if Waveform A has spin weight $s$, then
     A.NPEdth().IntegrateNPEdth() has the effect of setting the $\\ell=s$ term
     in A to zero.
     
@@ -5218,21 +5634,16 @@ Vector of magnitudes of Omega_tot at each instant of time.
   
 """
 
-%feature("docstring") GWFrames::Rapidity """
-Returns the rapidity of a Lorentz boost with velocity three-vector v.
-=====================================================================
+%feature("docstring") GWFrames::DataGrid::Spin """
+
+
   Parameters
   ----------
-    const vector<double>& v
+    (none)
   
   Returns
   -------
-    double
-  
-  Description
-  -----------
-    The vector v is expected to be the velocity three-vector of the new frame
-    relative to the current frame, in units where c=1.
+    int
   
 """
 
@@ -5290,6 +5701,28 @@ class GWFrames::MatrixC
     int nn
     int mm
     complex<double> ** v
+  
+"""
+
+%feature("docstring") GWFrames::Boost """
+Return a rotor taking n into its boosted version.
+=================================================
+  Parameters
+  ----------
+    ThreeVector v
+      Three-vector velocity of the new frame WRT this frame
+    ThreeVector n
+      Three-vector direction to be boosted by the rotor
+  
+  Returns
+  -------
+    Quaternion
+  
+  Description
+  -----------
+    This function returns a rotor $R_b$ that takes the vector $\\hat{n}$ (which
+    will be normalized) on the future null sphere into its boosted version.
+    Note that this rotor is a function of the vector being boosted.
   
 """
 
@@ -5395,6 +5828,78 @@ Print the quaternion nicely to stream.
   
 """
 
+%feature("docstring") DataGrid::DataGrid """
+
+
+  Parameters
+  ----------
+    const DataGrid& A
+  
+  Returns
+  -------
+    DataGrid
+  
+
+
+
+  Parameters
+  ----------
+    const int Spin
+    const int N_theta
+    const int N_phi
+    const vector<complex<double>>& D
+  
+  Returns
+  -------
+    DataGrid
+  
+
+
+
+  Parameters
+  ----------
+    Modes M
+    const int N_theta = 0
+    const int N_phi = 0
+  
+  Returns
+  -------
+    DataGrid
+  
+
+
+
+  Parameters
+  ----------
+    const Modes& M
+    const MobiusTransform& abcd
+    const int N_theta = 0
+    const int N_phi = 0
+  
+  Returns
+  -------
+    DataGrid
+  
+"""
+
+%feature("docstring") SliceOfScri::FourMomentum """
+Calculate the four-momentum of the system from the supermomentum.
+=================================================================
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    FourVector
+  
+  Description
+  -----------
+    The (Bondi) four-momentum is given by the ell=0 and ell=1 modes of the
+    supermomentum.
+  
+"""
+
 %feature("docstring") GWFrames::Quaternion::operator[] """
 Get component of Quaternion.
 ============================
@@ -5425,6 +5930,19 @@ Get reference to component of Quaternion.
   Description
   -----------
     Note: This is unavailable from python.
+  
+"""
+
+%feature("docstring") GWFrames::Waveforms::~Waveforms """
+
+
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    ~Waveforms
   
 """
 
@@ -5618,14 +6136,14 @@ class GWFrames::Matrix
   Description
   -----------
     We need (n+1) coefficients for each value of n from 0 (for completeness) up
-    to 2*ellMax_Utilities (hard coded in the header file). That's a total of
-    from sympy import summation, symbols ellMax_Utilities, n, k =
-    symbols('ellMax_Utilities n k', integer=True) summation(n+1, (n, 0,
-    2*ellMax_Utilities))
+    to 2*ellMax_GWFrames (hard coded in the header file). That's a total of
+    from sympy import summation, symbols ellMax_GWFrames, n, k =
+    symbols('ellMax_GWFrames n k', integer=True) summation(n+1, (n, 0,
+    2*ellMax_GWFrames))
     
-    2*ellMax_Utilities**2 + 3*ellMax_Utilities + 1 With a similar calculation,
-    we can see that the associated access operator needs element (n*(n+1)/2 +
-    k) of the array.
+    2*ellMax_GWFrames**2 + 3*ellMax_GWFrames + 1 With a similar calculation, we
+    can see that the associated access operator needs element (n*(n+1)/2 + k)
+    of the array.
   
 """
 
@@ -5698,6 +6216,34 @@ Return exponent of Quaternion.
   Returns
   -------
     Quaternion
+  
+"""
+
+%feature("docstring") Modes::EvaluateAtPoint """
+Evaluate Waveform at a particular sky location.
+===============================================
+  Parameters
+  ----------
+    const double vartheta
+      Polar angle of detector
+    const double varphi
+      Azimuthal angle of detector
+  
+  Returns
+  -------
+    complex<double>
+  
+
+Evaluate Waveform at a particular sky location.
+===============================================
+  Parameters
+  ----------
+    const StereographicCoordinate& z
+      Stereographic coordinate at which to evaluate
+  
+  Returns
+  -------
+    complex<double>
   
 """
 
@@ -5845,8 +6391,8 @@ Re-interpolate data to new time slices given by this supertranslation.
     each point to a new set of time slices, and transforms back to
     spherical-harmonic coefficients.
     
-    By assumption, the supertranslation data gamma is a vector of complex
-    numbers representing the (scalar) spherical-harmonic components of the
+    The supertranslation data input gamma is a vector of complex numbers
+    representing the (scalar) spherical-harmonic components of the
     supertranslation, stored in the order (0,0), (1,-1), (1,0), (1,1), (2,-2),
     ... The overall time translation is given by the first component; the
     spatial translation is given by the second through fourth componentes;
@@ -5965,19 +6511,38 @@ Transform Waveform uncertainties to corotating frame.
   
 """
 
-%feature("docstring") GWFrames::VectorIntegral """
-Integrate vector function by simple trapezoidal rule.
-=====================================================
+%feature("docstring") GWFrames::Modes::Data """
+
+
   Parameters
   ----------
-    const vector<vector<double>>& fdot
-      Vector of vectors (first index time).
-    const vector<double>& t
-      Vector of corresponding time steps.
+    const unsigned int i
   
   Returns
   -------
-    vector<vector<double>>
+    complex<double>
+  
+
+
+
+  Parameters
+  ----------
+    const unsigned int i
+  
+  Returns
+  -------
+    complex<double>&
+  
+
+
+
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    vector<complex<double>>
   
 """
 
@@ -6005,6 +6570,41 @@ Integrate vector function by simple trapezoidal rule.
   
 """
 
+%feature("docstring") SQR """
+
+
+  Parameters
+  ----------
+    const double& x
+  
+  Returns
+  -------
+    double
+  
+
+
+
+  Parameters
+  ----------
+    const double a
+  
+  Returns
+  -------
+    double
+  
+
+
+
+  Parameters
+  ----------
+    const double a
+  
+  Returns
+  -------
+    double
+  
+"""
+
 %feature("docstring") GWFrames::Quaternion::conjugate """
 
 
@@ -6015,6 +6615,22 @@ Integrate vector function by simple trapezoidal rule.
   Returns
   -------
     Quaternion
+  
+"""
+
+%feature("docstring") GWFrames::CumulativeVectorIntegral """
+Integrate vector function by simple trapezoidal rule.
+=====================================================
+  Parameters
+  ----------
+    const vector<vector<double>>& fdot
+      Vector of vectors (first index time).
+    const vector<double>& t
+      Vector of corresponding time steps.
+  
+  Returns
+  -------
+    vector<double>
   
 """
 
@@ -6069,16 +6685,18 @@ Find the appropriate rotation to fix the orientation of the corotating frame.
   -------
     vector<double>
   
+"""
 
+%feature("docstring") GWFrames::StereographicCoordinate::Y """
 
 
   Parameters
   ----------
-    const Quaternion& b
+    (none)
   
   Returns
   -------
-    Quaternion
+    double
   
 """
 
@@ -6169,6 +6787,38 @@ Evaluate Waveform at a particular sky location.
   
 """
 
+%feature("docstring") SliceOfScri::SuperMomentum """
+
+
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    Modes
+  
+"""
+
+%feature("docstring") GWFrames::DataGrid """
+class GWFrames::DataGrid
+========================
+  Member variables
+  ----------------
+    int s
+
+            This object holds complex spin-weighted data on the sphere in an
+      equi-angular representation. That is, given integers n_theta and n_phi,
+      the data are recorded on a 'rectangular' grid with n_theta*n_phi points,
+      including n_phi points at each of the poles. The purpose of these objects
+      is primarily to serve as a computational tool for pointwise
+      multiplication. Otherwise, Modes is expected to be the preferable
+      representation.    int n_theta
+    int n_phi
+    vector<complex<double>> data
+  
+"""
+
 %feature("docstring") GWFrames::Quaternion::log """
 Return logarithm of Quaternion.
 ===============================
@@ -6249,8 +6899,8 @@ Extract a segment of a Waveform.
 """
 
 %feature("docstring") GWFrames::Waveforms::Waveforms """
-Empty constructor of N empty objects.
-=====================================
+Waveforms (plural!) //.
+=======================
   Parameters
   ----------
     const int N = 0
@@ -6261,7 +6911,7 @@ Empty constructor of N empty objects.
   
   Description
   -----------
-    Waveforms (plural!) //
+    Empty constructor of N empty objects.
   
 
 Basic copy constructor.
@@ -6346,6 +6996,26 @@ Integrate scalar function by simple trapezoidal rule.
   Returns
   -------
     Matrix&
+  
+"""
+
+%feature("docstring") GWFrames::ScalarDerivative """
+Three-point finite-differencing of vector of scalars.
+=====================================================
+  Parameters
+  ----------
+    const vector<double>& f
+      Vector of scalars.
+    const vector<double>& t
+      Vector of corresponding time steps.
+  
+  Returns
+  -------
+    vector<double>
+  
+  Description
+  -----------
+    Sundquist and Veronis, Tellus XXII (1970), 1
   
 """
 

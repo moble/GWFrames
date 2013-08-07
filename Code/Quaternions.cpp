@@ -18,6 +18,7 @@
 #include "Errors.hpp"
 using GWFrames::Quaternion;
 using GWFrames::Quaternions;
+using GWFrames::ThreeVector;
 
 // Note: Don't do 'using namespace std' because we don't want to
 // confuse which log, exp, etc., is being used in any instance.
@@ -35,6 +36,58 @@ inline double SQR(const double& x) { return x*x; }
 
 
 #define Quaternion_Epsilon 1.0e-14
+
+
+/// Return a rotor taking n into its boosted version
+Quaternion GWFrames::Boost(ThreeVector v, ThreeVector n) {
+  /// 
+  /// \param v Three-vector velocity of the new frame WRT this frame
+  /// \param n Three-vector direction to be boosted by the rotor
+  /// 
+  /// This function returns a rotor \f$R_b\f$ that takes the vector
+  /// \f$\hat{n}\f$ (which will be normalized) on the future null
+  /// sphere into its boosted version.  Note that this rotor is a
+  /// function of the vector being boosted.
+  /// 
+  
+  const double alpha = GWFrames::Rapidity(v);
+  
+  // If v is too small to make much difference, just return the identity
+  const double absv = std::sqrt(v[0]*v[0]+v[1]*v[1]+v[2]*v[2]);
+  if(absv<1.0e-14 || std::abs(1-std::exp(alpha))<1.0e-14) {
+    return Quaternion(1.0, 0.0, 0.0, 0.0);
+  }
+  
+  // Otherwise, just normalize
+  v[0] = v[0]/absv;
+  v[1] = v[1]/absv;
+  v[2] = v[2]/absv;
+  
+  // Normalize n if possible
+  const double absn = std::sqrt(n[0]*n[0]+n[1]*n[1]+n[2]*n[2]);
+  if(absn==0.) {
+    cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": |n|=" << absn << " is too small." << endl;
+    throw(GWFrames_ValueError);
+  }
+  n[0] = n[0]/absn;
+  n[1] = n[1]/absn;
+  n[2] = n[2]/absn;
+  
+  // Evaluate the angle between n and v
+  const double Theta = std::acos(n[0]*v[0]+n[1]*v[1]+n[2]*v[2]);
+  
+  // Calculate the new angle between nPrime and v
+  const double ThetaPrime = 2 * std::atan( std::exp(alpha) * std::tan(0.5*Theta) );
+  
+  // Evaluate the cross product; if it is too small, just return the identity
+  Quaternion vn = Quaternion(v).cross(Quaternion(n));
+  const double absvn = vn.abs();
+  if(absvn<1.0e-14) {
+    return Quaternion(1.0, 0.0, 0.0, 0.0);
+  }
+  
+  return GWFrames::exp( 0.5*(ThetaPrime-Theta) * vn.normalized() );
+}
 
 
 ////////////////////////////////////

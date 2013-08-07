@@ -9,9 +9,6 @@
 #include <iostream>
 #include <gsl/gsl_matrix.h>
 
-#include "Quaternions.hpp"
-#include "Errors.hpp"
-
 namespace GWFrames {
   
   // Typedefs
@@ -29,7 +26,7 @@ namespace GWFrames {
   std::vector<double> operator/(const std::vector<double>& a, const double b);
   std::vector<std::vector<double> > operator/(const std::vector<std::vector<double> > & a, const std::vector<double>& b);
   std::vector<double> Unwrap(const std::vector<double>& In);
-
+  
   // Integrals and derivatives
   std::vector<double> ScalarIntegral(const std::vector<double>& fdot, const std::vector<double>& t);
   double CumulativeScalarIntegral(const std::vector<double>& fdot, const std::vector<double>& t);
@@ -52,11 +49,12 @@ namespace GWFrames {
   public:
     // Constructors
     StereographicCoordinate(const std::complex<double>& Z, const bool Inverse=false);
-    StereographicCoordinate(std::vector<double> x);
+    StereographicCoordinate(ThreeVector x);
     // Interpretations
     inline double X() const { return 2*z.real()/(std::norm(z)+1); }
     inline double Y() const { if(inv) { return -2*z.imag()/(std::norm(z)+1); } else { return 2*z.imag()/(std::norm(z)+1); } }
     inline double Z() const { if(inv) { return (1-std::norm(z))/(1+std::norm(z)); } else { return (std::norm(z)-1)/(std::norm(z)+1); } }
+    void SphericalCoordinates(double& vartheta, double& varphi) const;
   };
   StereographicCoordinate StereographicCoordinateFromAngles(const double& vartheta, const double& varphi);
   MobiusTransform MobiusComponentsOfBoost(const std::vector<double>& v);
@@ -91,13 +89,13 @@ namespace GWFrames {
     ~Matrix() { if(m) { gsl_matrix_free(m); } }
     
     std::vector<double> operator*(const std::vector<double>& b) const;
-    Quaternion operator*(const Quaternion& b) const;
+    // Quaternion operator*(const Quaternion& b) const;
     
     inline gsl_matrix* gslobj() { return m; }
     inline const gsl_matrix* gslobj() const { return m; }
   };
   std::vector<double> operator*(const std::vector<double>& a, const Matrix& b);
-  Quaternion operator*(const Quaternion& a, const Matrix& b);
+  // Quaternion operator*(const Quaternion& a, const Matrix& b);
   std::vector<double> DominantPrincipalAxis(Matrix& M);
   std::vector<double> Eigenvalues(Matrix& M);
   std::vector<double> Eigenvectors(Matrix& M);
@@ -131,116 +129,6 @@ namespace GWFrames {
   };
   // std::vector<std::complex<double> > operator*(const std::vector<std::complex<double> >& b) const;
   // std::vector<std::complex<double> > operator*(const std::vector<std::complex<double> >& a, const MatrixC& b);
-  
-  const int ellMax_Utilities = 16;
-  
-  /// Object for pre-computing and retrieving factorials
-  class FactorialFunctor {
-  private:
-    static const std::vector<double> FactorialTable;
-  public:
-    FactorialFunctor() { };
-    inline double operator()(const unsigned int i) const {
-      #ifdef DEBUG
-      if(i>171) {
-  	std::cerr << "\n\ni = " << i << "\tiMax = 171"
-  		  << "\nFactorialFunctor is only implemented up to 171!; larger values overflow."
-  		  << std::endl;
-  	throw(GWFrames_IndexOutOfBounds);
-      }
-      #endif
-      return FactorialTable[i];
-    }
-  };
-  
-  /// Object for pre-computing and retrieving binomials
-  class BinomialCoefficientFunctor {
-  private:
-    static const std::vector<double> BinomialCoefficientTable;
-  public:
-    BinomialCoefficientFunctor() { };
-    inline double operator()(const unsigned int n, const unsigned int k) const {
-      #ifdef DEBUG
-      if(n>2*ellMax_Utilities || k>n) {
-  	std::cerr << "\n\n(n, k) = (" << n << ", " << k << ")\t2*ellMax_Utilities = " << 2*ellMax_Utilities
-  		  << "\nBinomialCoefficientFunctor is only implemented up to n=2*ellMax_Utilities=" << 2*ellMax_Utilities
-  		  << ".\nTo increase this bound, edit 'ellMax_Utilities' in " << __FILE__ << " and recompile." << std::endl;
-  	throw(GWFrames_IndexOutOfBounds);
-      }
-      #endif
-      return BinomialCoefficientTable[(n*(n+1))/2+k];
-    }
-  };
-  
-  /// Object for pre-computing and retrieving values of the ladder operators
-  class LadderOperatorFactorFunctor {
-  private:
-    static const std::vector<double> FactorTable;
-  public:
-    LadderOperatorFactorFunctor() { };
-    inline double operator()(const int ell, const int m) const {
-      #ifdef DEBUG
-      if(ell>ellMax_Utilities || std::abs(m)>ell) {
-  	std::cerr << "\n\n(ell, m) = (" << ell << ", " << m << ")\tellMax_Utilities = " << ellMax_Utilities
-  		  << "\nLadderOperatorFactorFunctor is only implemented up to ell=" << ellMax_Utilities
-  		  << ".\nTo increase this bound, edit 'ellMax_Utilities' in " << __FILE__ << " and recompile." << std::endl;
-  	throw(GWFrames_IndexOutOfBounds);
-      }
-      #endif
-      return FactorTable[ell*ell+ell+m];
-    }
-  };
-  
-  /// Object for pre-computing and retrieving coefficients for the Wigner D matrices
-  class WignerCoefficientFunctor {
-  private:
-    static const std::vector<double> CoefficientTable;
-  public:
-    WignerCoefficientFunctor() { };
-    inline double operator()(const int ell, const int mp, const int m) const {
-      #ifdef DEBUG
-      if(ell>ellMax_Utilities || std::abs(mp)>ell || std::abs(m)>ell) {
-  	std::cerr << "\n\n(ell, mp, m) = (" << ell << ", " << mp << ", " << m << ")\tellMax_Utilities = " << ellMax_Utilities
-  		  << "\nWignerCoefficientFunctor is only implemented up to ell=" << ellMax_Utilities
-  		  << ".\nTo increase this bound, edit 'ellMax_Utilities' in " << __FILE__ << " and recompile." << std::endl;
-  	throw(GWFrames_IndexOutOfBounds);
-      }
-      #endif
-      return CoefficientTable[int(ell*(ell*(1.3333333333333333*ell + 2) + 1.6666666666666667) + mp*(2*ell + 1) + m + 0.5)];
-    }
-  };
-  
-  /// Object for computing the Wigner D matrices as functions of quaternion rotors
-  class WignerDMatrix {
-  private:
-    BinomialCoefficientFunctor BinomialCoefficient;
-    WignerCoefficientFunctor WignerCoefficient;
-    std::complex<double> Ra, Rb;
-    double absRa, absRb, absRRatioSquared;
-  public:
-    WignerDMatrix(const Quaternion& iR=Quaternion(1,0,0,0));
-    WignerDMatrix& SetRotation(const Quaternion& iR);
-    std::complex<double> operator()(const int ell, const int mp, const int m) const;
-  };
-  
-  /// Object for computing values of the spin-weighted spherical harmonics
-  class SWSH {
-  private:
-    WignerDMatrix D;
-    int spin;
-    double sign;
-  public:
-    // / \@cond
-    SWSH(const int s=-2, const Quaternion& iR=Quaternion(1,0,0,0))
-      : D(iR), spin(s), sign(s%2==0 ? 1.0 : -1.0)
-    { }
-    // / \@endcond
-    inline SWSH& SetRotation(const Quaternion& iR) { D.SetRotation(iR); return *this; }
-    inline SWSH& SetAngles(const double vartheta, const double varphi) { D.SetRotation(Quaternion(vartheta, varphi)); return *this; }
-    inline std::complex<double> operator()(const int ell, const int m) const {
-      return sign * std::sqrt((2*ell+1)/(4*M_PI)) * D(ell, m, -spin);
-    }
-  };
   
   
 } // namespace GWFrames

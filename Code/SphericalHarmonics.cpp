@@ -130,10 +130,10 @@ WignerDMatrix& WignerDMatrix::SetRotation(const Quaternion& R) {
 /// Evaluate the D matrix element for the given (ell, mp, m) indices.
 std::complex<double> WignerDMatrix::operator()(const int ell, const int mp, const int m) const {
   if(absRa < SphericalHarmonics_Epsilon) {
-    return (mp!=-m ? 0.0 : ((ell+mp)%2==0 ? 1.0 : -1.0) * std::pow(Rb, 2*mp) );
+    return (mp!=-m ? 0.0 : ((ell+mp)%2==0 ? 1.0 : -1.0) * std::pow(Rb, 2*m) );
   }
   if(absRb < SphericalHarmonics_Epsilon) {
-    return (mp!=m ? 0.0 : std::pow(Ra, 2*mp) );
+    return (mp!=m ? 0.0 : std::pow(Ra, 2*m) );
   }
   if(absRa < 1.e-3) { // Deal with NANs in certain cases
     const std::complex<double> Prefactor =

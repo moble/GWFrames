@@ -115,6 +115,8 @@
       PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
     } else if(i==16) {
       PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
+    } else if(i==17) {
+      PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
     } else  {
       PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
     }
@@ -131,8 +133,10 @@
   #include <sstream>
   #include <iomanip>
   #include <complex>
-  #include "Quaternions.hpp"
   #include "Utilities.hpp"
+  #include "Quaternions.hpp"
+  #include "Scri.hpp"
+  #include "SphericalHarmonics.hpp"
   #include "Waveforms.hpp"
   #include "PNWaveforms.hpp"
 %}
@@ -209,6 +213,18 @@ namespace std {
         return self.inverse()*t
   };
  };
+
+
+////////////////////////////////////////////////////////////
+//// Import the various functions for spherical harmonics //
+////////////////////////////////////////////////////////////
+%include "SphericalHarmonics.hpp"
+
+
+///////////////////////////////////////
+//// Import the quantities on scri ////
+///////////////////////////////////////
+%include "Scri.hpp"
 
 
 
