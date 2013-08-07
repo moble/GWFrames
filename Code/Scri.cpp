@@ -331,6 +331,12 @@ std::complex<double> Modes::EvaluateAtPoint(const GWFrames::Quaternion& R) const
   /// 
   /// \param R Quaternion giving point by rotation of \f$\hat{z}\f$
   /// 
+  /// Note that the argument `R` might typically be thought of as the
+  /// rotor taking the unit \f$z\f$ vector into a point \f$(\vartheta,
+  /// \varphi)\f$.  However, more general arguments are possible; this
+  /// feature is used to greatly simplify the process of constructing
+  /// a `DataGrid` object from a `Modes` object with a boost.
+  /// 
   
   complex<double> d(0.0, 0.0);
   GWFrames::SWSH Y(s, R);

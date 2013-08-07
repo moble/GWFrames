@@ -100,8 +100,15 @@ namespace GWFrames {
     std::complex<double> operator()(const int ell, const int mp, const int m) const;
   };
   
-  /// Object for computing values of the spin-weighted spherical harmonics
+  /// Object for computing values of the spin-weighted spherical harmonics (SWSHs)
   class SWSH {
+    /// Note that this object is a functor taking a quaternion
+    /// argument.  Ordinarily, we think of this quaternion as being
+    /// the rotor taking the unit $z$ vector into a point
+    /// \f$(\vartheta, \varphi)\f$, which gives us the usual form of
+    /// SWSHs.  However, more general arguments are possible; no
+    /// checking is done to ensure that the argument has the simple
+    /// form of a minimal rotation to the spherical coordinate.
   private:
     WignerDMatrix D;
     int spin;
