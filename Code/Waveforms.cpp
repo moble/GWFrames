@@ -21,8 +21,9 @@
 #include <gsl/gsl_multimin.h>
 #include <gsl/gsl_multifit.h>
 #include "Waveforms.hpp"
-#include "Quaternions.hpp"
 #include "Utilities.hpp"
+#include "Quaternions.hpp"
+#include "SphericalHarmonics.hpp"
 #include "Errors.hpp"
 
 using GWFrames::Quaternions;
@@ -2412,7 +2413,7 @@ std::vector<std::complex<double> > GWFrames::Waveform::EvaluateAtPoint(const dou
   const int NT = NTimes();
   const int NM = NModes();
   vector<complex<double> > d(NT, complex<double>(0.,0.));
-  SWSH Y;
+  SWSH Y(SpinWeight());
   Y.SetAngles(vartheta, varphi);
   
   for(int i_m=0; i_m<NM; ++i_m) {
@@ -3131,14 +3132,14 @@ GWFrames::Waveform GWFrames::Waveform::ApplySupertranslation(std::vector<std::co
   
   // Find the max ell present in the input gamma data
   int lMax=0;
-  for(; lMax<=ellMax_Utilities; ++lMax) {
+  for(; lMax<=ellMax_GWFrames; ++lMax) {
     if(N_lm(lMax)==int(gamma.size())) {
       break;
     }
   }
   
-  // Make sure gamma doesn't have more ell modes than ellMax_Utilities
-  if(lMax>=ellMax_Utilities) {
+  // Make sure gamma doesn't have more ell modes than ellMax_GWFrames
+  if(lMax>=ellMax_GWFrames) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
 	      << "\nError: Input supertranslation data has length " << gamma.size() << "."
 	      << "\n       This is not a recognized length for spherical-harmonic data.\n"

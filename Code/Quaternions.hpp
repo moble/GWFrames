@@ -9,7 +9,12 @@
 #include <complex>
 #include <iostream>
 
+#include "Utilities.hpp"
+
 namespace GWFrames {
+  
+  class Quaternion; // Forward-declaration for the following interesting functions
+  Quaternion Boost(GWFrames::ThreeVector v, GWFrames::ThreeVector n);
   
   /// Object representing an individual quaternion
   class Quaternion {

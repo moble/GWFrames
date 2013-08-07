@@ -100,6 +100,8 @@ setup(name="GWFrames",
                                 'Utilities.cpp',
                                 'Waveforms.cpp',
                                 'PNWaveforms.cpp',
+                                'Scri.cpp',
+                                'SphericalHarmonics.cpp',
                                 'GWFrames.i'],
                   depends = ['Quaternions.hpp',
                              'Utilities.hpp',
@@ -107,6 +109,8 @@ setup(name="GWFrames",
                              'PNWaveforms.hpp',
                              'PNWaveforms_TaylorT1Spin.ipp',
                              'PNWaveforms_PolarizationModes.ipp',
+                             'Scri.hpp',
+                             'SphericalHarmonics.hpp',
                              'Errors.hpp',
                              'GWFrames_Doc.i'],
                   include_dirs=IncDirs,
@@ -116,7 +120,7 @@ setup(name="GWFrames",
                   language='c++',
                   swig_opts=['-globals', 'constants', '-c++'],
                   extra_link_args=['-lgomp', '-fPIC'],
-                  # extra_link_args=['-fPIC'], # Shouldn't be necessary...
+                  # extra_link_args=['-lgomp', '-fPIC', '-Wl,-undefined,error'], # `-undefined,error` tells the linker to fail on undefined symbols
                   extra_compile_args=['-fopenmp', '-Wno-deprecated']
                   # extra_compile_args=['-ffast-math'] # DON'T USE fast-math!!!  It makes it impossible to detect NANs
                   )
@@ -132,5 +136,5 @@ setup(name="GWFrames",
       # cmdclass = ,
       cmdclass={'build_ext': build_ext},
       # data_files = ,
-      # package_dir = 
+      # package_dir =
       )

@@ -23,8 +23,8 @@
 ///     BinomialCoefficientFunctor Binom;
 ///     const double Binom_4_2 = Binom(4,2);
 /// 
-/// Note that values up to Binom(2*ellMax_Utilities, ...) are
-/// calculated, where ellMax_Utilities is set in `Utilities.hpp`.
+/// Note that values up to Binom(2*ellMax_GWFrames, ...) are
+/// calculated, where ellMax_GWFrames is set in `Utilities.hpp`.
 /// Requests for greater values are answered with an exception.
 
 /// \class GWFrames::LadderOperatorFactorFunctor
@@ -36,8 +36,8 @@
 ///     LadderOperatorFactorFunctor LadderCoeff;
 ///     const double Ladder_4_3 = LadderCoeff(4,3);
 /// 
-/// Note that values up to LadderCoeff(ellMax_Utilities, ...) are
-/// calculated, where ellMax_Utilities is set in `Utilities.hpp`.
+/// Note that values up to LadderCoeff(ellMax_GWFrames, ...) are
+/// calculated, where ellMax_GWFrames is set in `Utilities.hpp`.
 /// Requests for greater values are answered with an exception.
 
 /// \class GWFrames::WignerCoefficientFunctor
@@ -50,8 +50,8 @@
 ///     WignerCoefficientFunctor WignerCoeff;
 ///     const double Coeff_4_3_m2 = WignerCoeff(4,3,-2);
 /// 
-/// Note that values up to WignerCoeff(ellMax_Utilities, ...) are
-/// calculated, where ellMax_Utilities is set in `Utilities.hpp`.
+/// Note that values up to WignerCoeff(ellMax_GWFrames, ...) are
+/// calculated, where ellMax_GWFrames is set in `Utilities.hpp`.
 /// Requests for greater values are answered with an exception.
 
 /// \class GWFrames::WignerD

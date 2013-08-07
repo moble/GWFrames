@@ -30,16 +30,21 @@ namespace GWFrames {
 };
 #endif // DOXYGEN
 
-#include "Waveforms.hpp"
 #include "Utilities.hpp"
+#include "Quaternions.hpp"
+#include "SphericalHarmonics.hpp"
+#include "Waveforms.hpp"
 #include "Errors.hpp"
 
-using GWFrames::DataGrid;
-using GWFrames::SliceOfScri;
-using GWFrames::Scri;
-using GWFrames::Modes;
+using GWFrames::Quaternion;
+using GWFrames::StereographicCoordinate;
 using GWFrames::MobiusTransform;
 using GWFrames::FourVector;
+using GWFrames::DataGrid;
+using GWFrames::Modes;
+using GWFrames::SliceOfScri;
+using GWFrames::Scri;
+
 using std::string;
 using std::vector;
 using std::cout;
@@ -50,7 +55,9 @@ using std::complex;
 
 
 
+const std::complex<double> complexi(0.0,1.0);
 const std::complex<double> zero(0.0,0.0);
+const Quaternion zHat(0,0,0,1);
 
 
 //////////////
@@ -75,11 +82,27 @@ DataGrid::DataGrid(const int Spin, const int N_theta, const int N_phi, const std
 }
 
 DataGrid::DataGrid(Modes M, const int N_theta, const int N_phi)
-  : s(M.s), n_theta(std::max(N_theta, 2*M.ellMax+1)), n_phi(std::max(N_phi, 2*M.ellMax+1)), data(n_phi*n_theta, zero)
+  : s(M.Spin()), n_theta(std::max(N_theta, 2*M.EllMax()+1)), n_phi(std::max(N_phi, 2*M.EllMax()+1)), data(n_phi*n_theta, zero)
 {
-  spinsfast_salm2map(reinterpret_cast<fftw_complex*>(&M.data[0]),
+  spinsfast_salm2map(reinterpret_cast<fftw_complex*>(&M.Data(0)),
 		     reinterpret_cast<fftw_complex*>(&data[0]),
-		     M.s, n_theta, n_phi, M.ellMax);
+		     M.Spin(), n_theta, n_phi, M.EllMax());
+}
+
+DataGrid::DataGrid(const Modes& M, const ThreeVector& v, const int N_theta, const int N_phi)
+  : s(M.Spin()), n_theta(std::max(N_theta, 2*M.EllMax()+1)), n_phi(std::max(N_phi, 2*M.EllMax()+1)), data(n_phi*n_theta, zero)
+{
+  const double dtheta = M_PI/double(n_theta-1); // theta should return to M_PI
+  const double dphi = 2*M_PI/double(n_phi); // phi should not return to 2*M_PI
+  int i=0;
+  for(int i_theta=0; i_theta<n_theta; ++i_theta) {
+    for(int i_phi=0; i_phi<n_phi; ++i_phi) {
+      const Quaternion R(dtheta*i_theta, dphi*i_phi);
+      const Quaternion Rb = GWFrames::Boost(v, (R*zHat*R.conjugate()).vec());
+      data[i] = M.EvaluateAtPoint(Rb*R);
+      ++i;
+    }
+  }
 }
 
 DataGrid DataGrid::operator*(const DataGrid& A) const {
@@ -127,14 +150,14 @@ Modes::Modes(const int spin, const std::vector<std::complex<double> >& Data)
   : s(spin), ellMax(0), data(Data)
 {
   // Find the appropriate ellMax for this data length
-  for(; ellMax<=ellMax_Utilities; ++ellMax) {
+  for(; ellMax<=ellMax_GWFrames; ++ellMax) {
     if(N_lm(ellMax)==int(Data.size())) {
       break;
     }
   }
   
-  // Make sure gamma doesn't have more ell modes than ellMax_Utilities
-  if(ellMax>=ellMax_Utilities) {
+  // Make sure gamma doesn't have more ell modes than ellMax_GWFrames
+  if(ellMax>=ellMax_GWFrames) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
 	      << "\nError: Input data has length " << Data.size() << "."
 	      << "\n       This is not a recognized length for spherical-harmonic data.\n"
@@ -144,11 +167,11 @@ Modes::Modes(const int spin, const std::vector<std::complex<double> >& Data)
 }
 
 Modes::Modes(DataGrid D)
-  : s(D.s), ellMax(std::min((D.n_theta-1)/2, (D.n_phi-1)/2)), data(N_lm(ellMax))
+  : s(D.Spin()), ellMax(std::min((D.N_theta()-1)/2, (D.N_phi()-1)/2)), data(N_lm(ellMax))
 {
-  spinsfast_map2salm(reinterpret_cast<fftw_complex*>(&D.data[0]),
+  spinsfast_map2salm(reinterpret_cast<fftw_complex*>(&D.Data(0)),
 		     reinterpret_cast<fftw_complex*>(&data[0]),
-		     s, D.n_theta, D.n_phi, ellMax);
+		     s, D.N_theta(), D.N_phi(), ellMax);
 }
 
 Modes Modes::bar() const {
@@ -157,11 +180,13 @@ Modes Modes::bar() const {
   for(unsigned int i=0; i<data.size(); ++i) {
     B.data[i] = std::conj(A.data[i]);
   }
+  B.s = -A.s;
   return B;
 }
 
 Modes Modes::operator*(const Modes& M) const {
-  Modes A = Modes(DataGrid(*this) * DataGrid(M));
+  const int L = std::max(EllMax(), M.EllMax());
+  Modes A = Modes(DataGrid(*this,2*L+1,2*L+1) * DataGrid(M,2*L+1,2*L+1));
   A.s = s + M.s;
   return A;
 }
@@ -190,7 +215,7 @@ Modes Modes::operator+(const Modes& M) const {
   return C;
 }
 
-Modes Modes::edth(const int s) const {
+Modes Modes::edth() const {
   /// This operator is the one defined by Geroch et al. (1973).  It
   /// raises the spin weight of any field on the sphere by 1, while
   /// leaving the boost weight unchanged.
@@ -235,7 +260,7 @@ Modes Modes::edth(const int s) const {
   return B;
 }
 
-Modes Modes::edthbar(const int s) const {
+Modes Modes::edthbar() const {
   /// This operator is the one defined by Geroch et al. (1973).  It
   /// lowers the spin weight of any field on the sphere by 1, while
   /// leaving the boost weight unchanged.
@@ -281,6 +306,46 @@ Modes Modes::edthbar(const int s) const {
 }
 
 
+/// Evaluate Waveform at a particular sky location
+std::complex<double> Modes::EvaluateAtPoint(const double vartheta, const double varphi) const {
+  /// 
+  /// \param vartheta Polar angle of detector
+  /// \param varphi Azimuthal angle of detector
+  /// 
+  
+  complex<double> d(0.0, 0.0);
+  GWFrames::SWSH Y(s);
+  Y.SetAngles(vartheta, varphi);
+  int i=0;
+  for(int ell=0; ell<=ellMax; ++ell) {
+    for(int m=-ell; m<=ell; ++m) {
+      d += data[i]*Y(ell,m);
+      ++i;
+    }
+  }
+  return d;
+}
+
+/// Evaluate Waveform at a particular sky location
+std::complex<double> Modes::EvaluateAtPoint(const GWFrames::Quaternion& R) const {
+  /// 
+  /// \param R Quaternion giving point by rotation of \f$\hat{z}\f$
+  /// 
+  
+  complex<double> d(0.0, 0.0);
+  GWFrames::SWSH Y(s, R);
+  int i=0;
+  for(int ell=0; ell<=ellMax; ++ell) {
+    for(int m=-ell; m<=ell; ++m) {
+      d += data[i]*Y(ell,m);
+      ++i;
+    }
+  }
+  return d;
+}
+
+
+
 
 /////////////////
 // SliceOfScri //
@@ -293,40 +358,51 @@ SliceOfScri::SliceOfScri()
 
 /// Constructor from data
 SliceOfScri::SliceOfScri(const double& U,
-			 const GWFrames::Modes& Psi0, const GWFrames::Modes& Psi1, const GWFrames::Modes& Psi2,
-			 const GWFrames::Modes& Psi3, const GWFrames::Modes& Psi4, const GWFrames::Modes& Sigma, const GWFrames::Modes& SigmaDot)
+			 const Modes& Psi0, const Modes& Psi1, const Modes& Psi2,
+			 const Modes& Psi3, const Modes& Psi4, const Modes& Sigma, const Modes& SigmaDot)
   : u(U), psi0(Psi0), psi1(Psi1), psi2(Psi2), psi3(Psi3), psi4(Psi4), sigma(Sigma), sigmadot(SigmaDot)
 { }
 
-/// Apply a conformal transformation to the data on the sphere
-SliceOfScri SliceOfScri::ConformalTransformation(const GWFrames::MobiusTransform& abcd) const {
-  throw(GWFrames_NotYetImplemented);
-  return SliceOfScri();
-}
+// /// Apply a conformal transformation to the data on the sphere
+// SliceOfScri SliceOfScri::ConformalTransformation(const GWFrames::MobiusTransform& abcd) const {
+//   throw(GWFrames_NotYetImplemented);
+//   return SliceOfScri();
+// }
 
 /// Calculate the mass of the system from the four-momentum
 double SliceOfScri::Mass() const {
-  throw(GWFrames_NotYetImplemented);
-  return 0.0;
+  const FourVector p = FourMomentum();
+  return std::sqrt(p[0]*p[0]-p[1]*p[1]-p[2]*p[2]-p[3]*p[3]);
 }
 
 /// Calculate the four-momentum of the system from the supermomentum
 GWFrames::FourVector SliceOfScri::FourMomentum() const {
-  /// The four-momentum is given by the ell=0 and ell=1 modes of the
-  /// supermomentum.
-  throw(GWFrames_NotYetImplemented);
-  return FourVector();
+  /// The (Bondi) four-momentum is given by the ell=0 and ell=1 modes
+  /// of the supermomentum.
+  const Modes Psi = SuperMomentum();
+  const double sqrt3 = std::sqrt(3);
+  const double sqrt6 = std::sqrt(6);
+  FourVector p;
+  p[0] = std::real(Psi.Data(0));
+  p[1] = std::real((Psi.Data(1)-Psi.Data(3))/sqrt6);
+  p[2] = std::real(complexi*(Psi.Data(1)+Psi.Data(3))/sqrt6);
+  p[3] = std::real(Psi.Data(2)/sqrt3);
+  return p;
 }
 
-GWFrames::Modes SliceOfScri::SuperMomentum() const {
-  throw(GWFrames_NotYetImplemented);
-  return Modes();
+Modes SliceOfScri::SuperMomentum() const {
+  return psi2 + sigma*sigmadot.bar() + sigma.bar().edth().edth();
 }
 
 
 
-
-
+Scri::Scri(const GWFrames::Waveform& psi0, const GWFrames::Waveform& psi1,
+	   const GWFrames::Waveform& psi2, const GWFrames::Waveform& psi3,
+	   const GWFrames::Waveform& psi4, const GWFrames::Waveform& sigma)
+  : t(psi0.T()), slices(t.size())
+{
+  throw(GWFrames_NotYetImplemented);
+}
 
 /// Apply a (constant) BMS transformation to data on null infinity
 SliceOfScri Scri::BMSTransformation(const double& uPrime, const GWFrames::MobiusTransform& abcd, GWFrames::Modes& gamma) const {
@@ -341,16 +417,33 @@ SliceOfScri Scri::BMSTransformation(const double& uPrime, const GWFrames::Mobius
   /// transformation of the sphere is expressed in terms of the
   /// parameters of the Mobius transformation of the sphere's
   /// stereographic coordinates.  The supertranslation is decomposed
-  /// into
+  /// into (scalar) spherical harmonics.
   /// 
   /// The work to be done by this function includes (1) evaluating the
   /// data on the appropriate equi-angular grid of the final frame;
   /// (2) interpolating those data to the appropriate values of
   /// retarded time of the final frame; (3) transforming the data at
   /// each point by the appropriate spin factor, boost factor, and
-  /// mixing; and (4) transforming back to Fourier space to store the
+  /// mixing; and (4) transforming back to spectral space to store the
   /// data in their usual representation.
+  /// 
+  /// The relation between the new and old time coordinates is \f$u' =
+  /// K(u-\gamma)\f$, where \f$K\f$ is the conformal factor (which is
+  /// a function of angle).  So we need to interpolate at each point
+  /// to the original time coordinate \f$u = u'/K + \gamma\f$, which
+  /// again depends on angle.  That is, we have to interpolate to a
+  /// different time for each grid point.
   
   throw(GWFrames_NotYetImplemented);
+  
+  // (1) Evaluate data on equi-angular grids of the final frame
+
+  // (2) Interpolate to new retarded time
+  
+  // (3) Transform data at each point
+  
+  // (4) Transform back to spectral space
+  
+  
   return SliceOfScri();
 }

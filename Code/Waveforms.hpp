@@ -9,6 +9,7 @@
 #include <complex>
 #include "Quaternions.hpp"
 #include "Utilities.hpp"
+#include "Errors.hpp"
 
 namespace GWFrames {
   
