@@ -84,7 +84,7 @@ DataGrid::DataGrid(const int Spin, const int N_theta, const int N_phi, const std
 DataGrid::DataGrid(Modes M, const int N_theta, const int N_phi)
   : s(M.Spin()), n_theta(std::max(N_theta, 2*M.EllMax()+1)), n_phi(std::max(N_phi, 2*M.EllMax()+1)), data(n_phi*n_theta, zero)
 {
-  spinsfast_salm2map(reinterpret_cast<fftw_complex*>(&M.Data(0)),
+  spinsfast_salm2map(reinterpret_cast<fftw_complex*>(&M[0]),
 		     reinterpret_cast<fftw_complex*>(&data[0]),
 		     M.Spin(), n_theta, n_phi, M.EllMax());
 }
@@ -217,7 +217,7 @@ DataGrid DataGrid::pow(const int p) const {
   DataGrid c(*this);
   const int N = c.N_theta()*c.N_phi();
   for(int i=0; i<N; ++i) {
-    c.Data(i) = std::pow(c.Data(i), p);
+    c[i] = std::pow(c[i], p);
   }
   return c;
 }
@@ -226,7 +226,16 @@ DataGrid GWFrames::operator*(const double& a, const DataGrid& b) {
   DataGrid c(b);
   const int N = b.N_theta()*b.N_phi();
   for(int i=0; i<N; ++i) {
-    c.Data(i) *= a;
+    c[i] *= a;
+  }
+  return c;
+}
+
+DataGrid GWFrames::operator/(const double& a, const DataGrid& b) {
+  DataGrid c(b);
+  const int N = b.N_theta()*b.N_phi();
+  for(int i=0; i<N; ++i) {
+    c[i] = a/c[i];
   }
   return c;
 }
@@ -235,7 +244,7 @@ DataGrid GWFrames::operator-(const double& a, const DataGrid& b) {
   DataGrid c(b);
   const int N = b.N_theta()*b.N_phi();
   for(int i=0; i<N; ++i) {
-    c.Data(i) = a-c.Data(i);
+    c[i] = a-c[i];
   }
   return c;
 }
@@ -300,7 +309,7 @@ Modes::Modes(const int spin, const std::vector<std::complex<double> >& Data)
 Modes::Modes(DataGrid D)
   : s(D.Spin()), ellMax(std::min((D.N_theta()-1)/2, (D.N_phi()-1)/2)), data(N_lm(ellMax))
 {
-  spinsfast_map2salm(reinterpret_cast<fftw_complex*>(&D.Data(0)),
+  spinsfast_map2salm(reinterpret_cast<fftw_complex*>(&D[0]),
 		     reinterpret_cast<fftw_complex*>(&data[0]),
 		     s, D.N_theta(), D.N_phi(), ellMax);
 }
@@ -536,10 +545,10 @@ GWFrames::FourVector SliceOfScri::FourMomentum() const {
   const double sqrt3 = std::sqrt(3);
   const double sqrt6 = std::sqrt(6);
   FourVector p;
-  p[0] = std::real(Psi.Data(0));
-  p[1] = std::real((Psi.Data(1)-Psi.Data(3))/sqrt6);
-  p[2] = std::real(complexi*(Psi.Data(1)+Psi.Data(3))/sqrt6);
-  p[3] = std::real(Psi.Data(2)/sqrt3);
+  p[0] = std::real(Psi[0]);
+  p[1] = std::real((Psi[1]-Psi[3])/sqrt6);
+  p[2] = std::real(complexi*(Psi[1]+Psi[3])/sqrt6);
+  p[3] = std::real(Psi[2]/sqrt3);
   return p;
 }
 
@@ -636,6 +645,31 @@ SliceOfScri Scri::BMSTransformation(const double& uPrime, const GWFrames::Mobius
   /// to the original time coordinate \f$u = u'/K + \gamma\f$, which
   /// again depends on angle.  That is, we have to interpolate to a
   /// different time for each grid point.
+  
+  const int n_theta = 2*slices[0].EllMax()+1;
+  const int n_phi = n_theta;
+  
+  // (0) Find current time slices on which we need data to interpolate
+  // to the new time slice
+  const DataGrid u = uPrime/GWFrames::ConformalFactorGrid(abcd, n_theta, n_phi) + DataGrid(gamma, n_theta, n_phi);
+  double uMax = std::real(u[0]);
+  double uMin = std::real(u[0]);
+  for(int i=1; i<n_theta*n_phi; ++i) {
+    const double u_i = std::real(u[i]);
+    if(u_i>uMax) { uMax = u_i; }
+    if(u_i<uMin) { uMin = u_i; }
+  }
+  if(uMin<t[0] || uMax>t.back()) {
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+	      << "\nError: (uMin=" << uMin << ") < (t[0]=" << t[0] << ") or (uMax=" << uMax << ") > (t[-1]=" << t.back() ")"
+	      << "\n       Cannot extrapolate data.\n"
+	      << std::endl;
+    throw(GWFrames_ValueError);
+  }
+  int iMax = t.size()-1;
+  while(t[iMax]>uMax && iMax>0) { --iMax; }
+  int iMin = 0;
+  while(t[iMin]<uMin && iMin<t.size()-1) { ++iMin; }
   
   throw(GWFrames_NotYetImplemented);
   

@@ -38,8 +38,8 @@ namespace GWFrames {
     inline int Spin() const { return s; }
     inline int N_theta() const { return n_theta; }
     inline int N_phi() const { return n_phi; }
-    inline std::complex<double> Data(const unsigned int i) const { return data[i]; }
-    inline std::complex<double>& Data(const unsigned int i) { return data[i]; }
+    inline std::complex<double> operator[](const unsigned int i) const { return data[i]; }
+    inline std::complex<double>& operator[](const unsigned int i) { return data[i]; }
     inline std::vector<std::complex<double> > Data() const { return data; }
     DataGrid operator*(const DataGrid&) const;
     DataGrid operator/(const DataGrid&) const;
@@ -48,6 +48,7 @@ namespace GWFrames {
     DataGrid pow(const int p) const;
   }; // class DataGrid
   DataGrid operator*(const double& a, const DataGrid& b);
+  DataGrid operator/(const double& a, const DataGrid& b);
   DataGrid operator-(const double& a, const DataGrid& b);
   DataGrid ConformalFactorGrid(const MobiusTransform& abcd, const int n_theta, const int n_phi);
   DataGrid ConformalFactorGrid(const ThreeVector& v, const int n_theta, const int n_phi);
@@ -71,8 +72,8 @@ namespace GWFrames {
   public: // Access
     inline int Spin() const { return s; }
     inline int EllMax() const { return ellMax; }
-    inline std::complex<double> Data(const unsigned int i) const { return data[i]; }
-    inline std::complex<double>& Data(const unsigned int i) { return data[i]; }
+    inline std::complex<double> operator[](const unsigned int i) const { return data[i]; }
+    inline std::complex<double>& operator[](const unsigned int i) { return data[i]; }
     inline std::vector<std::complex<double> > Data() const { return data; }
   public: // Operations
     Modes bar() const;
@@ -131,6 +132,8 @@ namespace GWFrames {
   public: // Member functions
     // Transformations
     SliceOfScri BMSTransformation(const double& uPrime, const GWFrames::MobiusTransform& abcd, GWFrames::Modes& gamma) const;
+    // SliceOfScri BMSTransformation(const DataGrid& u, const GWFrames::MobiusTransform& abcd, GWFrames::Modes& gamma, const int iMin, const iMax) const;
+    // Scri BMSTransformation(const GWFrames::MobiusTransform& abcd, GWFrames::Modes& gamma) const;
   }; // class Scri
   
   
