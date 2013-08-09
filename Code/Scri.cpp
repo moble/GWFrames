@@ -132,6 +132,137 @@ DataGrid DataGrid::operator*(const DataGrid& A) const {
   return C;
 }
 
+DataGrid DataGrid::operator/(const DataGrid& A) const {
+  const DataGrid& B=*this;
+  
+  // Check that we have the same amounts of data
+  if(A.n_theta != B.n_theta) {
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+	      << "\nError: (A.n_theta=" << A.n_theta << ") != (B.n_theta=" << B.n_theta << ")"
+	      << "\n       Cannot divide data of different sizes\n"
+	      << std::endl;
+    throw(GWFrames_VectorSizeMismatch);
+  }
+  if(A.n_phi != B.n_phi) {
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+	      << "\nError: (A.n_phi=" << A.n_phi << ") != (B.n_phi=" << B.n_phi << ")"
+	      << "\n       Cannot divide data of different sizes\n"
+	      << std::endl;
+    throw(GWFrames_VectorSizeMismatch);
+  }
+  
+  // Do the work
+  DataGrid C(B);
+  for(unsigned int i=0; i<data.size(); ++i) {
+    C.data[i] = A.data[i] / B.data[i];
+  }
+  return C;
+}
+
+DataGrid DataGrid::operator+(const DataGrid& A) const {
+  const DataGrid& B=*this;
+  
+  // Check that we have the same amounts of data
+  if(A.n_theta != B.n_theta) {
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+	      << "\nError: (A.n_theta=" << A.n_theta << ") != (B.n_theta=" << B.n_theta << ")"
+	      << "\n       Cannot add data of different sizes\n"
+	      << std::endl;
+    throw(GWFrames_VectorSizeMismatch);
+  }
+  if(A.n_phi != B.n_phi) {
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+	      << "\nError: (A.n_phi=" << A.n_phi << ") != (B.n_phi=" << B.n_phi << ")"
+	      << "\n       Cannot add data of different sizes\n"
+	      << std::endl;
+    throw(GWFrames_VectorSizeMismatch);
+  }
+  
+  // Do the work
+  DataGrid C(B);
+  for(unsigned int i=0; i<data.size(); ++i) {
+    C.data[i] = A.data[i] + B.data[i];
+  }
+  return C;
+}
+
+DataGrid DataGrid::operator-(const DataGrid& A) const {
+  const DataGrid& B=*this;
+  
+  // Check that we have the same amounts of data
+  if(A.n_theta != B.n_theta) {
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+	      << "\nError: (A.n_theta=" << A.n_theta << ") != (B.n_theta=" << B.n_theta << ")"
+	      << "\n       Cannot subtract data of different sizes\n"
+	      << std::endl;
+    throw(GWFrames_VectorSizeMismatch);
+  }
+  if(A.n_phi != B.n_phi) {
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+	      << "\nError: (A.n_phi=" << A.n_phi << ") != (B.n_phi=" << B.n_phi << ")"
+	      << "\n       Cannot subtract data of different sizes\n"
+	      << std::endl;
+    throw(GWFrames_VectorSizeMismatch);
+  }
+  
+  // Do the work
+  DataGrid C(B);
+  for(unsigned int i=0; i<data.size(); ++i) {
+    C.data[i] = A.data[i] - B.data[i];
+  }
+  return C;
+}
+
+DataGrid DataGrid::pow(const int p) const {
+  DataGrid c(*this);
+  const int N = c.N_theta()*c.N_phi();
+  for(int i=0; i<N; ++i) {
+    c.Data(i) = std::pow(c.Data(i), p);
+  }
+  return c;
+}
+
+DataGrid GWFrames::operator*(const double& a, const DataGrid& b) {
+  DataGrid c(b);
+  const int N = b.N_theta()*b.N_phi();
+  for(int i=0; i<N; ++i) {
+    c.Data(i) *= a;
+  }
+  return c;
+}
+
+DataGrid GWFrames::operator-(const double& a, const DataGrid& b) {
+  DataGrid c(b);
+  const int N = b.N_theta()*b.N_phi();
+  for(int i=0; i<N; ++i) {
+    c.Data(i) = a-c.Data(i);
+  }
+  return c;
+}
+
+
+
+/// Construct a grid with the conformal factor at each point
+DataGrid GWFrames::ConformalFactorGrid(const MobiusTransform& abcd, const int n_theta, const int n_phi) {
+  std::vector<std::complex<double> > D(n_theta*n_phi);
+  const double dtheta = M_PI/double(n_theta-1); // theta should return to M_PI
+  const double dphi = 2*M_PI/double(n_phi); // phi should not return to 2*M_PI
+  int i=0;
+  for(int i_theta=0; i_theta<n_theta; ++i_theta) {
+    for(int i_phi=0; i_phi<n_phi; ++i_phi) {
+      D[i] = BoostConformalFactor(StereographicCoordinateFromAngles(dtheta*i_theta, dphi*i_phi), abcd);
+      ++i;
+    }
+  }
+  return DataGrid(0, n_theta, n_phi, D);
+}
+
+/// Construct a grid with the conformal factor at each point
+DataGrid GWFrames::ConformalFactorGrid(const ThreeVector& v, const int n_theta, const int n_phi) {
+  return GWFrames::ConformalFactorGrid(MobiusComponentsOfBoost(v), n_theta, n_phi);
+}
+
+
 
 
 ///////////
@@ -188,6 +319,13 @@ Modes Modes::operator*(const Modes& M) const {
   const int L = std::max(EllMax(), M.EllMax());
   Modes A = Modes(DataGrid(*this,2*L+1,2*L+1) * DataGrid(M,2*L+1,2*L+1));
   A.s = s + M.s;
+  return A;
+}
+
+Modes Modes::operator/(const Modes& M) const {
+  const int L = std::max(EllMax(), M.EllMax());
+  Modes A = Modes(DataGrid(*this,2*L+1,2*L+1) / DataGrid(M,2*L+1,2*L+1));
+  A.s = s - M.s;
   return A;
 }
 
@@ -369,11 +507,20 @@ SliceOfScri::SliceOfScri(const double& U,
   : u(U), psi0(Psi0), psi1(Psi1), psi2(Psi2), psi3(Psi3), psi4(Psi4), sigma(Sigma), sigmadot(SigmaDot)
 { }
 
-// /// Apply a conformal transformation to the data on the sphere
-// SliceOfScri SliceOfScri::ConformalTransformation(const GWFrames::MobiusTransform& abcd) const {
-//   throw(GWFrames_NotYetImplemented);
-//   return SliceOfScri();
-// }
+/// Find largest ell value in the data on this slice
+int SliceOfScri::EllMax() const {
+  return std::max(psi0.EllMax(),
+		  std::max(psi1.EllMax(),
+			   std::max(psi2.EllMax(),
+				    std::max(psi3.EllMax(),
+					     std::max(psi4.EllMax(),
+						      std::max(sigma.EllMax(), sigmadot.EllMax())
+						      )
+					     )
+				    )
+			   )
+		  );
+}
 
 /// Calculate the mass of the system from the four-momentum
 double SliceOfScri::Mass() const {
@@ -396,8 +543,58 @@ GWFrames::FourVector SliceOfScri::FourMomentum() const {
   return p;
 }
 
+/// Find the Moreschi supermomentum
 Modes SliceOfScri::SuperMomentum() const {
+  /// \f$\psi = \psi_2 + \sigma \dot{\bar{\sigma}} + \eth^2 \bar{\sigma}\f$
   return psi2 + sigma*sigmadot.bar() + sigma.bar().edth().edth();
+}
+
+/// Exeucte a BMS transformation except for the supertranslation of points
+GWFrames::SliceOfScriGrids SliceOfScri::BMSTransformationOnSlice(const ThreeVector& v, const Modes& gamma) const {
+  /// A full BMS transformation is only possible using information
+  /// from multiple slices due to the supertranslation moving points
+  /// "between slices".  This function simply transforms the data
+  /// within the slice by accounting for the change of grid at each
+  /// point, and the change of grid points themselves.  The returned
+  /// object is a `DataGrid` object, each point of which can then be
+  /// used to interpolate to the supertranslated time.
+  
+  const int n_theta = 2*EllMax()+1;
+  const int n_phi = n_theta;
+  
+  // Evaluate the functions we need on the appropriate grids
+  const DataGrid kappa_g = GWFrames::ConformalFactorGrid(v, n_theta, n_phi);
+  const DataGrid oneoverkappacubed_g = kappa_g.pow(-3);
+  const DataGrid ethethgamma_g(gamma.edth().edth(), n_theta, n_phi);
+  const DataGrid ethuprimeoverkappa_g = DataGrid(Modes(kappa_g*(u-DataGrid(gamma,n_theta,n_phi))).edth(), n_theta, n_phi)/kappa_g;
+  const DataGrid psi0_g(psi0, n_theta, n_phi);
+  const DataGrid psi1_g(psi1, n_theta, n_phi);
+  const DataGrid psi2_g(psi2, n_theta, n_phi);
+  const DataGrid psi3_g(psi3, n_theta, n_phi);
+  const DataGrid psi4_g(psi4, n_theta, n_phi);
+  const DataGrid sigma_g(sigma, n_theta, n_phi);
+  const DataGrid sigmadot_g(sigmadot, n_theta, n_phi);
+  
+  // Construct new data accounting for changes of tetrad
+  const Modes psi4factor( oneoverkappacubed_g*(psi4_g) );
+  const Modes psi3factor( oneoverkappacubed_g*(psi3_g - ethuprimeoverkappa_g*psi4_g) );
+  const Modes psi2factor( oneoverkappacubed_g*(psi2_g - ethuprimeoverkappa_g*(2*psi3_g - ethuprimeoverkappa_g*psi4_g)) );
+  const Modes psi1factor( oneoverkappacubed_g*(psi1_g - ethuprimeoverkappa_g*(3*psi2_g - ethuprimeoverkappa_g*(3*psi3_g - ethuprimeoverkappa_g*psi4_g))) );
+  const Modes psi0factor( oneoverkappacubed_g*(psi0_g - ethuprimeoverkappa_g*(4*psi1_g - ethuprimeoverkappa_g*(6*psi2_g - ethuprimeoverkappa_g*(4*psi3_g - ethuprimeoverkappa_g*psi4_g)))) );
+  const Modes sigmafactor( (sigma_g - ethethgamma_g)/kappa_g );
+  const Modes sigmadotfactor( sigmadot_g/kappa_g.pow(2) );
+  
+  // Evaluate the primed quantities on the boosted grids
+  SliceOfScriGrids Grids(7);
+  Grids[0] = DataGrid(psi0factor, v, n_theta, n_phi);
+  Grids[1] = DataGrid(psi1factor, v, n_theta, n_phi);
+  Grids[2] = DataGrid(psi2factor, v, n_theta, n_phi);
+  Grids[3] = DataGrid(psi3factor, v, n_theta, n_phi);
+  Grids[4] = DataGrid(psi4factor, v, n_theta, n_phi);
+  Grids[5] = DataGrid(sigmafactor, v, n_theta, n_phi);
+  Grids[6] = DataGrid(sigmadotfactor, v, n_theta, n_phi);
+  
+  return Grids;
 }
 
 

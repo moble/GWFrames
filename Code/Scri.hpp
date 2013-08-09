@@ -29,6 +29,7 @@ namespace GWFrames {
     int n_phi;
     std::vector<std::complex<double> > data;
   public: // Constructors
+    DataGrid() : s(0), n_theta(0), n_phi(0), data(0) { }
     DataGrid(const DataGrid& A);
     DataGrid(const int Spin, const int N_theta, const int N_phi, const std::vector<std::complex<double> >& D);
     explicit DataGrid(Modes M, const int N_theta=0, const int N_phi=0); // Can't be const& because of spinsfast design
@@ -41,7 +42,15 @@ namespace GWFrames {
     inline std::complex<double>& Data(const unsigned int i) { return data[i]; }
     inline std::vector<std::complex<double> > Data() const { return data; }
     DataGrid operator*(const DataGrid&) const;
+    DataGrid operator/(const DataGrid&) const;
+    DataGrid operator+(const DataGrid&) const;
+    DataGrid operator-(const DataGrid&) const;
+    DataGrid pow(const int p) const;
   }; // class DataGrid
+  DataGrid operator*(const double& a, const DataGrid& b);
+  DataGrid operator-(const double& a, const DataGrid& b);
+  DataGrid ConformalFactorGrid(const MobiusTransform& abcd, const int n_theta, const int n_phi);
+  DataGrid ConformalFactorGrid(const ThreeVector& v, const int n_theta, const int n_phi);
   
   
   class Modes {
@@ -68,12 +77,16 @@ namespace GWFrames {
   public: // Operations
     Modes bar() const;
     Modes operator*(const Modes& M) const;
+    Modes operator/(const Modes& M) const;
     Modes operator+(const Modes& M) const;
     Modes edth() const;
     Modes edthbar() const;
     std::complex<double> EvaluateAtPoint(const double vartheta, const double varphi) const;
     std::complex<double> EvaluateAtPoint(const GWFrames::Quaternion& R) const;
   }; // class Modes
+  
+  
+  typedef std::vector<DataGrid> SliceOfScriGrids;
   
   
   class SliceOfScri {
@@ -88,12 +101,13 @@ namespace GWFrames {
     SliceOfScri(const double& U,
   		const Modes& Psi0, const Modes& Psi1, const Modes& Psi2,
   		const Modes& Psi3, const Modes& Psi4, const Modes& Sigma, const Modes& SigmaDot);
-    // Transformations
-    // SliceOfScri ConformalTransformation(const GWFrames::MobiusTransform& abcd) const;
     // Useful quantities
+    int EllMax() const;
     double Mass() const;
     GWFrames::FourVector FourMomentum() const;
     Modes SuperMomentum() const;
+    // Transformations
+    GWFrames::SliceOfScriGrids BMSTransformationOnSlice(const ThreeVector& v, const Modes& gamma) const;
   }; // class SliceOfScri
   
   
