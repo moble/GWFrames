@@ -12,6 +12,11 @@
 
 namespace GWFrames {
   
+  // This header defines the basic objects `Modes` and `DataGrid`.
+  // `SliceOfScri<D>` contains a set of either `Modes` or `DataGrid` objects.
+  // `SliceModes` and `SliceGrid` are specific instances of this template; `SliceModes` has some extras
+  // 
+  
   class Modes; // Forward declaration for DataGrid constructor
   
   class DataGrid {
@@ -38,7 +43,7 @@ namespace GWFrames {
     inline int Spin() const { return s; }
     inline int N_theta() const { return n_theta; }
     inline int N_phi() const { return n_phi; }
-    inline std::complex<double> operator[](const unsigned int i) const { return data[i]; }
+    inline const std::complex<double>& operator[](const unsigned int i) const { return data[i]; }
     inline std::complex<double>& operator[](const unsigned int i) { return data[i]; }
     inline std::vector<std::complex<double> > Data() const { return data; }
     DataGrid operator*(const DataGrid&) const;
@@ -87,29 +92,58 @@ namespace GWFrames {
   }; // class Modes
   
   
-  typedef std::vector<DataGrid> SliceOfScriGrids;
-  
-  
+  template <class D>
   class SliceOfScri {
-    /// This class holds all the necessary `Modes` objects needed to
+    /// This class holds all the necessary objects needed to
     /// understand the geometry of a given slice of null infinity.
-  private:
+  public: // Data
     double u; // retarded time of this slice
-    Modes psi0, psi1, psi2, psi3, psi4, sigma, sigmadot; // complex mode data for these objects on this slice
-  public:
-    // Constructors
+    D psi0, psi1, psi2, psi3, psi4, sigma, sigmadot; // complex mode data for these objects on this slice
+  public: // Constructors
     SliceOfScri();
     SliceOfScri(const double& U,
-  		const Modes& Psi0, const Modes& Psi1, const Modes& Psi2,
-  		const Modes& Psi3, const Modes& Psi4, const Modes& Sigma, const Modes& SigmaDot);
+  		const D& Psi0, const D& Psi1, const D& Psi2,
+  		const D& Psi3, const D& Psi4, const D& Sigma, const D& SigmaDot);
+  public: //Access
+    inline const D& operator[](const unsigned int i) const {
+      if(i==0) { return psi0; }
+      else if(i==1) { return psi1; }
+      else if(i==2) { return psi2; }
+      else if(i==3) { return psi3; }
+      else if(i==4) { return psi4; }
+      else if(i==5) { return sigma; }
+      else if(i==6) { return sigmadot; }
+      else { std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << "\nError: (i=" << i << ")>6\n" << std::endl; throw(GWFrames_IndexOutOfBounds); }
+    }
+    inline D& operator[](const unsigned int i) {
+      if(i==0) { return psi0; }
+      else if(i==1) { return psi1; }
+      else if(i==2) { return psi2; }
+      else if(i==3) { return psi3; }
+      else if(i==4) { return psi4; }
+      else if(i==5) { return sigma; }
+      else if(i==6) { return sigmadot; }
+      else { std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << "\nError: (i=" << i << ")>6\n" << std::endl; throw(GWFrames_IndexOutOfBounds); }
+    }
+  }; // class SliceOfScri
+  
+  
+  typedef SliceOfScri<DataGrid> SliceGrid;
+  
+  
+  class SliceModes : public SliceOfScri<Modes> {
+  public:
     // Useful quantities
     int EllMax() const;
     double Mass() const;
     GWFrames::FourVector FourMomentum() const;
     Modes SuperMomentum() const;
     // Transformations
-    GWFrames::SliceOfScriGrids BMSTransformationOnSlice(const ThreeVector& v, const Modes& gamma) const;
-  }; // class SliceOfScri
+    SliceGrid BMSTransformationOnSlice(const ThreeVector& v, const Modes& gamma) const;
+  }; // class SliceModes
+  
+  
+  typedef std::vector<DataGrid> SliceOfScriGrids;
   
   
   class Scri {
@@ -124,14 +158,14 @@ namespace GWFrames {
     /// contained by `Scri` among itself.
   private: // Member data
     std::vector<double> t;
-    std::vector<SliceOfScri> slices;
+    std::vector<SliceModes> slices;
   public: // Constructor
     Scri(const GWFrames::Waveform& psi0, const GWFrames::Waveform& psi1,
   	 const GWFrames::Waveform& psi2, const GWFrames::Waveform& psi3,
   	 const GWFrames::Waveform& psi4, const GWFrames::Waveform& sigma);
   public: // Member functions
     // Transformations
-    SliceOfScri BMSTransformation(const double& uPrime, const GWFrames::MobiusTransform& abcd, GWFrames::Modes& gamma) const;
+    SliceModes BMSTransformation(const double& uPrime, const ThreeVector& v, GWFrames::Modes& gamma) const;
     // SliceOfScri BMSTransformation(const DataGrid& u, const GWFrames::MobiusTransform& abcd, GWFrames::Modes& gamma, const int iMin, const iMax) const;
     // Scri BMSTransformation(const GWFrames::MobiusTransform& abcd, GWFrames::Modes& gamma) const;
   }; // class Scri
