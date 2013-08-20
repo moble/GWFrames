@@ -13,6 +13,7 @@
 *.a
 
 # Created by SWIG and python
+.ipynb_checkpoints
 Code/GWFrames.py
 Code/GWFrames/__init__.py
 Code/GWFrames_wrap.cpp
