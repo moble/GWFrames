@@ -224,17 +224,26 @@ namespace std {
 ///////////////////////////////////////
 //// Import the quantities on scri ////
 ///////////////////////////////////////
+%rename(__getitem__) GWFrames::DataGrid::operator [](unsigned int const) const;
+%rename(__setitem__) GWFrames::DataGrid::operator [](unsigned int const);
+%rename(__getitem__) GWFrames::Modes::operator [](unsigned int const) const;
+%rename(__setitem__) GWFrames::Modes::operator [](unsigned int const);
+%rename(__getitem__) GWFrames::SliceOfScri::operator [](unsigned int const) const;
+%rename(__setitem__) GWFrames::SliceOfScri::operator [](unsigned int const);
+%rename(__getitem__) GWFrames::Scri::operator [](unsigned int const) const;
+%rename(__setitem__) GWFrames::Scri::operator [](unsigned int const);
 %include "Scri.hpp"
 
 
-
+//////////////////////////
+//// Import utilities ////
+//////////////////////////
 %ignore GWFrames::Matrix::operator=;
 %ignore GWFrames::Matrix::operator[];
 %include "Utilities.hpp"
 namespace std {
   %template(vectorM) vector<GWFrames::Matrix>;
 };
-
 %extend GWFrames::Matrix {
   // Print the Matrix nicely at the prompt
   %pythoncode{
