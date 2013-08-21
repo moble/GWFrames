@@ -1,3 +1,20 @@
+%feature("docstring") SliceModes::SuperMomentum """
+Find the Moreschi supermomentum.
+================================
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    Modes
+  
+  Description
+  -----------
+    $\\psi = \\psi_2 + \\sigma \\dot{\\bar{\\sigma}} + \\eth^2 \\bar{\\sigma}$
+  
+"""
+
 %feature("docstring") GWFrames::Waveform::TransformUncertaintiesToInertialFrame """
 Transform Waveform to an inertial frame.
 ========================================
@@ -15,6 +32,19 @@ Transform Waveform to an inertial frame.
     rotating frame the waveform is currently in, to a stationary, inertial
     frame. This is the usual frame of scri^+, and is the frame in which GW
     observations should be made.
+  
+"""
+
+%feature("docstring") GWFrames::Waveform::SetLM """
+
+
+  Parameters
+  ----------
+    const vector<vector<int>>& a
+  
+  Returns
+  -------
+    void
   
 """
 
@@ -235,28 +265,43 @@ Create a StereographicCoordinate in the direction of the given vector.
   
 """
 
-%feature("docstring") GWFrames::Waveform::TransformToAngularVelocityFrame """
-Transform Waveform to frame aligned with angular-velocity vector.
-=================================================================
+%feature("docstring") GWFrames::Waveform::BoostWeight """
+
+
   Parameters
   ----------
-    const vector<int>& Lmodes = vector<int>(0)
-      L modes to evaluate
+    (none)
   
   Returns
   -------
-    Waveform&
+    int
   
-  Description
-  -----------
-    This function combines the steps required to obtain the Waveform in the
-    frame aligned with the angular-velocity vector. Note that this frame is not
-    the corotating frame; this frame has its z axis aligned with the
-    angular-velocity vector.
-    
-    If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
-    or [2,3,4], for example, restricts the range of the sum.
+"""
+
+%feature("docstring") GWFrames::Waveform """
+class GWFrames::Waveform
+========================
+  Object storing data and other information for a single waveform.
   
+  Member variables
+  ----------------
+    int spinweight
+    int boostweight
+    stringstream history
+    vector<double> t
+    vector<Quaternion> frame
+    WaveformFrameType frameType
+    WaveformDataType dataType
+    bool rIsScaledOut
+    bool mIsScaledOut
+    vector<vector<int>> lm
+    MatrixC data
+  
+  Non-public member functions
+  ---------------------------
+    Waveform& TransformModesToRotatedFrame
+      Rotate modes of the Waveform object.    Waveform& TransformUncertaintiesToRotatedFrame
+      Rotate modes of the uncertainty of a Waveform object.  
 """
 
 %feature("docstring") StereographicCoordinate::SphericalCoordinates """
@@ -1062,6 +1107,30 @@ Return vector of vector of complex data of all modes as function of time.
   
 """
 
+%feature("docstring") GWFrames::angle """
+
+
+  Parameters
+  ----------
+    const Quaternion& Q
+  
+  Returns
+  -------
+    double
+  
+
+
+
+  Parameters
+  ----------
+    const vector<Quaternion>& Q
+  
+  Returns
+  -------
+    vector<double>
+  
+"""
+
 %feature("docstring") GWFrames::Waveform::AngularVelocityVector """
 Calculate the angular velocity of the Waveform.
 ===============================================
@@ -1085,15 +1154,16 @@ Calculate the angular velocity of the Waveform.
   
 """
 
-%feature("docstring") GWFrames::WignerCoefficientFunctor """
-class GWFrames::WignerCoefficientFunctor
-========================================
-  Object for pre-computing and retrieving coefficients for the Wigner D
-  matrices.
+%feature("docstring") SliceModes::Mass """
+Calculate the mass of the system from the four-momentum.
+========================================================
+  Parameters
+  ----------
+    (none)
   
-  Member variables
-  ----------------
-    const vector<double> CoefficientTable
+  Returns
+  -------
+    double
   
 """
 
@@ -1351,16 +1421,44 @@ class GWFrames::BinomialCoefficientFunctor
   
 """
 
-%feature("docstring") GWFrames::Waveform::SetLM """
+%feature("docstring") GWFrames::ConformalFactorGrid """
+Construct a grid with the conformal factor at each point.
+=========================================================
+  Parameters
+  ----------
+    const MobiusTransform& abcd
+    const int n_theta
+    const int n_phi
+  
+  Returns
+  -------
+    DataGrid
+  
+
+Construct a grid with the conformal factor at each point.
+=========================================================
+  Parameters
+  ----------
+    const ThreeVector& v
+    const int n_theta
+    const int n_phi
+  
+  Returns
+  -------
+    DataGrid
+  
+"""
+
+%feature("docstring") Modes::operator/ """
 
 
   Parameters
   ----------
-    const vector<vector<int>>& a
+    const Modes& M
   
   Returns
   -------
-    void
+    Modes
   
 """
 
@@ -1379,6 +1477,35 @@ Efficiently swap data between two Waveform objects.
   -----------
     This function uses the std::vector method 'swap' which simply swaps
     pointers to data, for efficiency.
+  
+"""
+
+%feature("docstring") GWFrames::Waveform::AlignDecompositionFrameToModes """
+Fix the orientation of the corotating frame.
+============================================
+  Parameters
+  ----------
+    const double t_fid
+      Fiducial time at which the alignment should happen
+    const vector<int>& Lmodes = vector<int>(0)
+      Lmodes to use in computing $<LL>$
+  
+  Returns
+  -------
+    Waveform&
+  
+  Description
+  -----------
+    The corotating frame is only defined up to some constant rotor R_c; if
+    R_corot is corotating, then so is R_corot*R_c. This function uses that
+    freedom to ensure that the frame is aligned with the Waveform modes at the
+    fiducial time. In particular, it ensures that the Z axis of the frame in
+    which the decomposition is done is along the dominant eigenvector of $<LL>$
+    (suggested by O'Shaughnessy et al.), and the phase of the (2,2) mode is
+    zero.
+    
+    If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
+    or [2,3,4], for example, restricts the range of the sum.
   
 """
 
@@ -1467,6 +1594,46 @@ Return the intersection of two time sequences.
   
 """
 
+%feature("docstring") GWFrames::exp """
+
+
+  Parameters
+  ----------
+    const Quaternion& Q
+  
+  Returns
+  -------
+    Quaternion
+  
+
+
+
+  Parameters
+  ----------
+    const vector<Quaternion>& Q
+  
+  Returns
+  -------
+    vector<Quaternion>
+  
+"""
+
+%feature("docstring") SchmidtEtAl_fdf """
+
+
+  Parameters
+  ----------
+    const gsl_vector * v
+    void * params
+    double * f
+    gsl_vector * df
+  
+  Returns
+  -------
+    void
+  
+"""
+
 %feature("docstring") GWFrames::Eigenvalues """
 
 
@@ -1477,6 +1644,18 @@ Return the intersection of two time sequences.
   Returns
   -------
     vector<double>
+  
+"""
+
+%feature("docstring") GWFrames::WignerCoefficientFunctor """
+class GWFrames::WignerCoefficientFunctor
+========================================
+  Object for pre-computing and retrieving coefficients for the Wigner D
+  matrices.
+  
+  Member variables
+  ----------------
+    const vector<double> CoefficientTable
   
 """
 
@@ -1514,30 +1693,15 @@ Transform Waveform to Schmidt et al. frame.
   
 """
 
-%feature("docstring") GWFrames::Waveform """
-class GWFrames::Waveform
-========================
-  Object storing data and other information for a single waveform.
+%feature("docstring") GWFrames::Matrix """
+class GWFrames::Matrix
+======================
+  3x3 object wrapping GSL matrix; probably not needed directly
   
   Member variables
   ----------------
-    int spinweight
-    int boostweight
-    stringstream history
-    vector<double> t
-    vector<Quaternion> frame
-    WaveformFrameType frameType
-    WaveformDataType dataType
-    bool rIsScaledOut
-    bool mIsScaledOut
-    vector<vector<int>> lm
-    MatrixC data
+    gsl_matrix * m
   
-  Non-public member functions
-  ---------------------------
-    Waveform& TransformModesToRotatedFrame
-      Rotate modes of the Waveform object.    Waveform& TransformUncertaintiesToRotatedFrame
-      Rotate modes of the uncertainty of a Waveform object.  
 """
 
 %feature("docstring") GWFrames::PNWaveform::chi2Mag """
@@ -1883,14 +2047,14 @@ Apply a (constant) BMS transformation to data on null infinity.
   ----------
     const double& uPrime
       New retarded time at which to give the data
-    const MobiusTransform& abcd
-      Mobius representation of the conformal transformation
+    const ThreeVector& v
+      Three-vector of the boost relative to the current frame
     Modes& gamma
       Spherical-harmonic modes of the supertranslation
   
   Returns
   -------
-    SliceOfScri
+    SliceModes
   
   Description
   -----------
@@ -1903,11 +2067,11 @@ Apply a (constant) BMS transformation to data on null infinity.
     harmonics.
     
     The work to be done by this function includes (1) evaluating the data on
-    the appropriate equi-angular grid of the final frame; (2) interpolating
-    those data to the appropriate values of retarded time of the final frame;
-    (3) transforming the data at each point by the appropriate spin factor,
-    boost factor, and mixing; and (4) transforming back to spectral space to
-    store the data in their usual representation.
+    the appropriate equi-angular grid of the final frame, while simultaneously
+    transforming the data at each point by the appropriate spin factor, boost
+    factor, and mixing; (2) interpolating those data to the appropriate values
+    of retarded time of the final frame; and (3) transforming back to spectral
+    space to store the data in their usual representation.
     
     The relation between the new and old time coordinates is $u' =
     K(u-\\gamma)$, where $K$ is the conformal factor (which is a function of
@@ -1963,28 +2127,6 @@ Create a StereographicCoordinate object from spherical coordinates.
 
   Parameters
   ----------
-    (none)
-  
-  Returns
-  -------
-    Modes
-  
-
-
-
-  Parameters
-  ----------
-    const Modes& A
-  
-  Returns
-  -------
-    Modes
-  
-
-
-
-  Parameters
-  ----------
     const int spin
     const vector<complex<double>>& Data
   
@@ -2005,27 +2147,27 @@ Create a StereographicCoordinate object from spherical coordinates.
   
 """
 
-%feature("docstring") GWFrames::exp """
-
-
+%feature("docstring") GWFrames::SliceModes::BMSTransformationOnSlice """
+Exeucte a BMS transformation except for the supertranslation of points.
+=======================================================================
   Parameters
   ----------
-    const Quaternion& Q
+    const double u
+    const ThreeVector& v
+    const Modes& gamma
   
   Returns
   -------
-    Quaternion
+    SliceGrid
   
-
-
-
-  Parameters
-  ----------
-    const vector<Quaternion>& Q
-  
-  Returns
-  -------
-    vector<Quaternion>
+  Description
+  -----------
+    A full BMS transformation is only possible using information from multiple
+    slices due to the supertranslation moving points 'between slices'. This
+    function simply transforms the data within the slice by accounting for the
+    change of grid at each point, and the change of grid points themselves. The
+    returned object is a DataGrid object, each point of which can then be used
+    to interpolate to the supertranslated time.
   
 """
 
@@ -2165,17 +2307,65 @@ Find the conformal factor at the given point for the given boost.
   
 """
 
-%feature("docstring") zero """
+%feature("docstring") GWFrames::FrameFromZ """
+Construct minimal-rotation frame from Z basis vector of that frame.
+===================================================================
+  Parameters
+  ----------
+    const vector<Quaternion>& Z
+      Vector of Quaternions
+    const vector<double>& T
+      Vector of corresponding times
+    const unsigned int NIterations = 5
+      Number of refinements [default: 5]
+  
+  Returns
+  -------
+    vector<Quaternion>
+  
+  Description
+  -----------
+    The input vector of Quaternions, assumed to be pure unit vectors, represent
+    the Z basis vectors of the frame at each instant of time. The returned
+    vector of rotors will rotate the stationary frame's (x,y,z) vectors into
+    the new frame's (X,Y,Z) vectors. The X and Y vectors are deduced by
+    imposing the minimal-rotation condition. Note that this leaves an unfixed
+    initial rotation about z.
+  
+"""
+
+%feature("docstring") GWFrames::Modes::Modes """
 
 
   Parameters
   ----------
-    0. 0
-    0. 0
+    (none)
   
   Returns
   -------
-    const complex<double>
+    Modes
+  
+
+
+
+  Parameters
+  ----------
+    const int size
+  
+  Returns
+  -------
+    Modes
+  
+
+
+
+  Parameters
+  ----------
+    const Modes& A
+  
+  Returns
+  -------
+    Modes
   
 """
 
@@ -2493,17 +2683,16 @@ Return vector of vector of arg of all modes as function of time.
   
 """
 
-%feature("docstring") dotproduct """
-
-
+%feature("docstring") SliceModes::EllMax """
+Find largest ell value in the data on this slice.
+=================================================
   Parameters
   ----------
-    const double * a
-    const double * b
+    (none)
   
   Returns
   -------
-    double
+    int
   
 """
 
@@ -2550,18 +2739,28 @@ Empty constructor.
     SliceOfScri
   
 
+Empty constructor with reserved storage.
+========================================
+  Parameters
+  ----------
+    const int size
+  
+  Returns
+  -------
+    SliceOfScri
+  
+
 Constructor from data.
 ======================
   Parameters
   ----------
-    const double& U
-    const Modes& Psi0
-    const Modes& Psi1
-    const Modes& Psi2
-    const Modes& Psi3
-    const Modes& Psi4
-    const Modes& Sigma
-    const Modes& SigmaDot
+    const D& Psi0
+    const D& Psi1
+    const D& Psi2
+    const D& Psi3
+    const D& Psi4
+    const D& Sigma
+    const D& SigmaDot
   
   Returns
   -------
@@ -2731,6 +2930,19 @@ Assignment operator.
   
 """
 
+%feature("docstring") ellmax """
+
+
+  Parameters
+  ----------
+    const int maxindex
+  
+  Returns
+  -------
+    int
+  
+"""
+
 %feature("docstring") GWFrames::Waveform::AlignTime """
 Change this Waveform by aligning to the other at the given time.
 ================================================================
@@ -2760,17 +2972,9 @@ Change this Waveform by aligning to the other at the given time.
   
 """
 
-%feature("docstring") GWFrames::Waveform::BoostWeight """
-
-
-  Parameters
-  ----------
-    (none)
-  
-  Returns
-  -------
-    int
-  
+%feature("docstring") GWFrames::SliceModes """
+class GWFrames::SliceModes
+==========================
 """
 
 %feature("docstring") GWFrames::Eigensystem """
@@ -2848,7 +3052,7 @@ class GWFrames::Scri
       $\\psi_0, \\ldots, \\psi_4$ and the complex shear $\\sigma$ of outgoing
       null rays (strain in gravitational-wave detectors). The general symmetry
       transformation is an element of the BondiMetznerSachs (BMS) group, which
-      transforms the data contained by Scri among itself.    vector<SliceOfScri> slices
+      transforms the data contained by Scri among itself.    vector<SliceModes> slices
   
 """
 
@@ -3116,6 +3320,20 @@ Transform Waveform to an inertial frame.
   
 """
 
+%feature("docstring") dotproduct """
+
+
+  Parameters
+  ----------
+    const double * a
+    const double * b
+  
+  Returns
+  -------
+    double
+  
+"""
+
 %feature("docstring") GWFrames::Waveform::SetHistory """
 
 
@@ -3358,6 +3576,30 @@ Find index of mode with given (l,m) data.
   Returns
   -------
     const gsl_matrix *
+  
+"""
+
+%feature("docstring") GWFrames::Waveform::TransformToAngularVelocityFrame """
+Transform Waveform to frame aligned with angular-velocity vector.
+=================================================================
+  Parameters
+  ----------
+    const vector<int>& Lmodes = vector<int>(0)
+      L modes to evaluate
+  
+  Returns
+  -------
+    Waveform&
+  
+  Description
+  -----------
+    This function combines the steps required to obtain the Waveform in the
+    frame aligned with the angular-velocity vector. Note that this frame is not
+    the corotating frame; this frame has its z axis aligned with the
+    angular-velocity vector.
+    
+    If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
+    or [2,3,4], for example, restricts the range of the sum.
   
 """
 
@@ -3691,27 +3933,27 @@ class GWFrames::LadderOperatorFactorFunctor
   
 """
 
-%feature("docstring") GWFrames::angle """
+%feature("docstring") GWFrames::SliceOfScri<D>::operator[] """
 
 
   Parameters
   ----------
-    const Quaternion& Q
+    const unsigned int i
   
   Returns
   -------
-    double
+    const D&
   
 
 
 
   Parameters
   ----------
-    const vector<Quaternion>& Q
+    const unsigned int i
   
   Returns
   -------
-    vector<double>
+    D&
   
 """
 
@@ -3834,6 +4076,18 @@ class GWFrames::LadderOperatorFactorFunctor
   Returns
   -------
     vector<Quaternion>
+  
+
+
+
+  Parameters
+  ----------
+    const double& a
+    const DataGrid& b
+  
+  Returns
+  -------
+    DataGrid
   
 
 
@@ -4184,6 +4438,32 @@ Squad interpolation of Quaternion time series.
   
 """
 
+%feature("docstring") DataGrid::operator/ """
+
+
+  Parameters
+  ----------
+    const DataGrid& 
+  
+  Returns
+  -------
+    DataGrid
+  
+"""
+
+%feature("docstring") DataGrid::operator- """
+
+
+  Parameters
+  ----------
+    const DataGrid& 
+  
+  Returns
+  -------
+    DataGrid
+  
+"""
+
 %feature("docstring") GWFrames::DataGrid::N_phi """
 
 
@@ -4194,6 +4474,19 @@ Squad interpolation of Quaternion time series.
   Returns
   -------
     int
+  
+"""
+
+%feature("docstring") DataGrid::operator+ """
+
+
+  Parameters
+  ----------
+    const DataGrid& 
+  
+  Returns
+  -------
+    DataGrid
   
 """
 
@@ -4469,13 +4762,43 @@ Integrate vector function by simple trapezoidal rule.
 %feature("docstring") GWFrames::SWSH """
 class GWFrames::SWSH
 ====================
-  Object for computing values of the spin-weighted spherical harmonics.
+  Object for computing values of the spin-weighted spherical harmonics (SWSHs)
   
   Member variables
   ----------------
     WignerDMatrix D
-    int spin
+
+            Note that this object is a functor taking a quaternion argument.
+      Ordinarily, we think of this quaternion as being the rotor taking the
+      unit $z$ vector into a point $(\\vartheta, \\varphi)$, which gives us the
+      usual form of SWSHs. However, more general arguments are possible; no
+      checking is done to ensure that the argument has the simple form of a
+      minimal rotation to the spherical coordinate.    int spin
     double sign
+  
+"""
+
+%feature("docstring") GWFrames::DataGrid::operator[] """
+
+
+  Parameters
+  ----------
+    const unsigned int i
+  
+  Returns
+  -------
+    const complex<double>&
+  
+
+
+
+  Parameters
+  ----------
+    const unsigned int i
+  
+  Returns
+  -------
+    complex<double>&
   
 """
 
@@ -4581,45 +4904,21 @@ Deduce PN-equivalent precessional angular velocity from Waveform.
   
 """
 
-%feature("docstring") SchmidtEtAl_fdf """
+%feature("docstring") zero """
 
 
   Parameters
   ----------
-    const gsl_vector * v
-    void * params
-    double * f
-    gsl_vector * df
+    0. 0
+    0. 0
   
   Returns
   -------
-    void
+    const complex<double>
   
 """
 
 %feature("docstring") GWFrames::DataGrid::Data """
-
-
-  Parameters
-  ----------
-    const unsigned int i
-  
-  Returns
-  -------
-    complex<double>
-  
-
-
-
-  Parameters
-  ----------
-    const unsigned int i
-  
-  Returns
-  -------
-    complex<double>&
-  
-
 
 
   Parameters
@@ -4632,16 +4931,23 @@ Deduce PN-equivalent precessional angular velocity from Waveform.
   
 """
 
-%feature("docstring") SliceOfScri::Mass """
-Calculate the mass of the system from the four-momentum.
-========================================================
+%feature("docstring") GWFrames::ScalarDerivative """
+Three-point finite-differencing of vector of scalars.
+=====================================================
   Parameters
   ----------
-    (none)
+    const vector<double>& f
+      Vector of scalars.
+    const vector<double>& t
+      Vector of corresponding time steps.
   
   Returns
   -------
-    double
+    vector<double>
+  
+  Description
+  -----------
+    Sundquist and Veronis, Tellus XXII (1970), 1
   
 """
 
@@ -4861,6 +5167,19 @@ Return vector of vector of imaginary parts of all modes as function of time.
   
 """
 
+%feature("docstring") GWFrames::SliceModes::SliceModes """
+
+
+  Parameters
+  ----------
+    const int size = 0
+  
+  Returns
+  -------
+    SliceModes
+  
+"""
+
 %feature("docstring") GWFrames::DominantPrincipalAxis """
 
 
@@ -4874,30 +5193,40 @@ Return vector of vector of imaginary parts of all modes as function of time.
   
 """
 
-%feature("docstring") GWFrames::FrameFromZ """
-Construct minimal-rotation frame from Z basis vector of that frame.
-===================================================================
+%feature("docstring") GWFrames::sqrt """
+
+
   Parameters
   ----------
-    const vector<Quaternion>& Z
-      Vector of Quaternions
-    const vector<double>& T
-      Vector of corresponding times
-    const unsigned int NIterations = 5
-      Number of refinements [default: 5]
+    const Quaternion& Q
+  
+  Returns
+  -------
+    Quaternion
+  
+
+
+
+  Parameters
+  ----------
+    const vector<Quaternion>& Q
   
   Returns
   -------
     vector<Quaternion>
   
-  Description
-  -----------
-    The input vector of Quaternions, assumed to be pure unit vectors, represent
-    the Z basis vectors of the frame at each instant of time. The returned
-    vector of rotors will rotate the stationary frame's (x,y,z) vectors into
-    the new frame's (X,Y,Z) vectors. The X and Y vectors are deduced by
-    imposing the minimal-rotation condition. Note that this leaves an unfixed
-    initial rotation about z.
+"""
+
+%feature("docstring") DataGrid::pow """
+
+
+  Parameters
+  ----------
+    const int p
+  
+  Returns
+  -------
+    DataGrid
   
 """
 
@@ -4914,32 +5243,27 @@ Construct minimal-rotation frame from Z basis vector of that frame.
   
 """
 
-%feature("docstring") GWFrames::Waveform::AlignDecompositionFrameToModes """
-Fix the orientation of the corotating frame.
-============================================
+%feature("docstring") GWFrames::Scri::operator[] """
+
+
   Parameters
   ----------
-    const double t_fid
-      Fiducial time at which the alignment should happen
-    const vector<int>& Lmodes = vector<int>(0)
-      Lmodes to use in computing $<LL>$
+    const unsigned int i
   
   Returns
   -------
-    Waveform&
+    const SliceModes&
   
-  Description
-  -----------
-    The corotating frame is only defined up to some constant rotor R_c; if
-    R_corot is corotating, then so is R_corot*R_c. This function uses that
-    freedom to ensure that the frame is aligned with the Waveform modes at the
-    fiducial time. In particular, it ensures that the Z axis of the frame in
-    which the decomposition is done is along the dominant eigenvector of $<LL>$
-    (suggested by O'Shaughnessy et al.), and the phase of the (2,2) mode is
-    zero.
-    
-    If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
-    or [2,3,4], for example, restricts the range of the sum.
+
+
+
+  Parameters
+  ----------
+    const unsigned int i
+  
+  Returns
+  -------
+    SliceModes&
   
 """
 
@@ -5002,16 +5326,15 @@ class GWFrames::SliceOfScri
 ===========================
   Member variables
   ----------------
-    double u
+    D psi0
 
-            This class holds all the necessary Modes objects needed to understand the
-      geometry of a given slice of null infinity.    Modes psi0
-    Modes psi1
-    Modes psi2
-    Modes psi3
-    Modes psi4
-    Modes sigma
-    Modes sigmadot
+            This class holds all the necessary objects needed to understand the
+      geometry of a given slice of null infinity.    D psi1
+    D psi2
+    D psi3
+    D psi4
+    D sigma
+    D sigmadot
   
 """
 
@@ -5150,8 +5473,8 @@ Rotate the basis in which this Waveform's uncertainties are measured.
 """
 
 %feature("docstring") GWFrames::Waveform::FindModeIndexWithoutError """
-
-
+Find index of mode with given (l,m) data without the chance of throwing an exception.
+=====================================================================================
   Parameters
   ----------
     const int L
@@ -5160,6 +5483,11 @@ Rotate the basis in which this Waveform's uncertainties are measured.
   Returns
   -------
     unsigned int
+  
+  Description
+  -----------
+    If the requested mode is not present, the returned index is 1 beyond the
+    end of the mode vector.
   
 """
 
@@ -5320,6 +5648,18 @@ Rotate the basis in which this Waveform's uncertainties are measured.
   Returns
   -------
     vector<Quaternion>
+  
+
+
+
+  Parameters
+  ----------
+    const double& a
+    const DataGrid& b
+  
+  Returns
+  -------
+    DataGrid
   
 
 
@@ -5511,6 +5851,18 @@ Input frame with prescribed rate of rotation about Z axis.
 
   Parameters
   ----------
+    const double& a
+    const DataGrid& b
+  
+  Returns
+  -------
+    DataGrid
+  
+
+
+
+  Parameters
+  ----------
     const vector<double>& a
     const vector<double>& b
   
@@ -5546,27 +5898,26 @@ Input frame with prescribed rate of rotation about Z axis.
   
 """
 
-%feature("docstring") GWFrames::sqrt """
-
-
+%feature("docstring") GWFrames::Waveform::EvaluateAtPoint """
+Evaluate Waveform at a particular sky location.
+===============================================
   Parameters
   ----------
-    const Quaternion& Q
+    const double vartheta
+      Polar angle of detector
+    const double varphi
+      Azimuthal angle of detector
   
   Returns
   -------
-    Quaternion
+    vector<complex<double>>
   
-
-
-
-  Parameters
-  ----------
-    const vector<Quaternion>& Q
-  
-  Returns
-  -------
-    vector<Quaternion>
+  Description
+  -----------
+    Note that the input angle parameters are measured relative to the binary's
+    coordinate system. In particular, this will make no sense if the frame type
+    is something other than inertial, and will fail if the FrameType is neither
+    UnknownFrameType nor Inertial.
   
 """
 
@@ -5828,18 +6179,20 @@ Print the quaternion nicely to stream.
   
 """
 
-%feature("docstring") DataGrid::DataGrid """
-
-
+%feature("docstring") GWFrames::Waveform::EllMax """
+Return greatest ell value present in the data.
+==============================================
   Parameters
   ----------
-    const DataGrid& A
+    (none)
   
   Returns
   -------
-    DataGrid
+    int
   
+"""
 
+%feature("docstring") DataGrid::DataGrid """
 
 
   Parameters
@@ -5872,31 +6225,13 @@ Print the quaternion nicely to stream.
   Parameters
   ----------
     const Modes& M
-    const MobiusTransform& abcd
+    const ThreeVector& v
     const int N_theta = 0
     const int N_phi = 0
   
   Returns
   -------
     DataGrid
-  
-"""
-
-%feature("docstring") SliceOfScri::FourMomentum """
-Calculate the four-momentum of the system from the supermomentum.
-=================================================================
-  Parameters
-  ----------
-    (none)
-  
-  Returns
-  -------
-    FourVector
-  
-  Description
-  -----------
-    The (Bondi) four-momentum is given by the ell=0 and ell=1 modes of the
-    supermomentum.
   
 """
 
@@ -6111,14 +6446,27 @@ Pointwise multiply this object by another Waveform object.
   
 """
 
-%feature("docstring") GWFrames::Matrix """
-class GWFrames::Matrix
-======================
-  3x3 object wrapping GSL matrix; probably not needed directly
+%feature("docstring") GWFrames::Modes::operator[] """
+
+
+  Parameters
+  ----------
+    const unsigned int i
   
-  Member variables
-  ----------------
-    gsl_matrix * m
+  Returns
+  -------
+    complex<double>
+  
+
+
+
+  Parameters
+  ----------
+    const unsigned int i
+  
+  Returns
+  -------
+    complex<double>&
   
 """
 
@@ -6238,12 +6586,20 @@ Evaluate Waveform at a particular sky location.
 ===============================================
   Parameters
   ----------
-    const StereographicCoordinate& z
-      Stereographic coordinate at which to evaluate
+    const Quaternion& R
+      Quaternion giving point by rotation of $\\hat{z}$
   
   Returns
   -------
     complex<double>
+  
+  Description
+  -----------
+    Note that the argument R might typically be thought of as the rotor taking
+    the unit $z$ vector into a point $(\\vartheta, \\varphi)$. However, more
+    general arguments are possible; this feature is used to greatly simplify
+    the process of constructing a DataGrid object from a Modes object with a
+    boost.
   
 """
 
@@ -6406,6 +6762,41 @@ Re-interpolate data to new time slices given by this supertranslation.
   
 """
 
+%feature("docstring") GWFrames::DataGrid::DataGrid """
+
+
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    DataGrid
+  
+
+
+
+  Parameters
+  ----------
+    const int size
+  
+  Returns
+  -------
+    DataGrid
+  
+
+
+
+  Parameters
+  ----------
+    const DataGrid& A
+  
+  Returns
+  -------
+    DataGrid
+  
+"""
+
 %feature("docstring") GWFrames::Waveform::MIsScaledOut """
 
 
@@ -6512,28 +6903,6 @@ Transform Waveform uncertainties to corotating frame.
 """
 
 %feature("docstring") GWFrames::Modes::Data """
-
-
-  Parameters
-  ----------
-    const unsigned int i
-  
-  Returns
-  -------
-    complex<double>
-  
-
-
-
-  Parameters
-  ----------
-    const unsigned int i
-  
-  Returns
-  -------
-    complex<double>&
-  
-
 
 
   Parameters
@@ -6700,26 +7069,21 @@ Find the appropriate rotation to fix the orientation of the corotating frame.
   
 """
 
-%feature("docstring") GWFrames::Waveform::EvaluateAtPoint """
-Evaluate Waveform at a particular sky location.
-===============================================
+%feature("docstring") SliceModes::FourMomentum """
+Calculate the four-momentum of the system from the supermomentum.
+=================================================================
   Parameters
   ----------
-    const double vartheta
-      Polar angle of detector
-    const double varphi
-      Azimuthal angle of detector
+    (none)
   
   Returns
   -------
-    vector<complex<double>>
+    FourVector
   
   Description
   -----------
-    Note that the input angle parameters are measured relative to the binary's
-    coordinate system. In particular, this will make no sense if the frame type
-    is something other than inertial, and will fail if the FrameType is neither
-    UnknownFrameType nor Inertial.
+    The (Bondi) four-momentum is given by the ell=0 and ell=1 modes of the
+    supermomentum.
   
 """
 
@@ -6784,19 +7148,6 @@ Evaluate Waveform at a particular sky location.
   Returns
   -------
     double
-  
-"""
-
-%feature("docstring") SliceOfScri::SuperMomentum """
-
-
-  Parameters
-  ----------
-    (none)
-  
-  Returns
-  -------
-    Modes
   
 """
 
@@ -6996,26 +7347,6 @@ Integrate scalar function by simple trapezoidal rule.
   Returns
   -------
     Matrix&
-  
-"""
-
-%feature("docstring") GWFrames::ScalarDerivative """
-Three-point finite-differencing of vector of scalars.
-=====================================================
-  Parameters
-  ----------
-    const vector<double>& f
-      Vector of scalars.
-    const vector<double>& t
-      Vector of corresponding time steps.
-  
-  Returns
-  -------
-    vector<double>
-  
-  Description
-  -----------
-    Sundquist and Veronis, Tellus XXII (1970), 1
   
 """
 
