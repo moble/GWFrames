@@ -374,151 +374,29 @@ Find spherical coordinates from the stereographic coordinate.
   
 """
 
-%feature("docstring") GWFrames::Quaternion::Quaternion """
-Empty constructor  initialized to 0s.
-=====================================
-  Parameters
-  ----------
-    (none)
-  
-  Returns
-  -------
-    Quaternion
-  
+%feature("docstring") GWFrames::Modes::SetSpin """
 
-Copy constructor.
-=================
-  Parameters
-  ----------
-    const Quaternion& Q
-  
-  Returns
-  -------
-    Quaternion
-  
 
-Constructor from spherical coordinates.
-=======================================
   Parameters
   ----------
-    const double vartheta
-      Float representing the polar angle
-    const double varphi
-      Float representing the azimuthal angle
+    const int ess
   
   Returns
   -------
-    Quaternion
-  
-  Description
-  -----------
-    The unit Quaternion constructed in this way rotates the z axis onto the
-    point given by the coordinates (vartheta, varphi).
-  
-
-Constructor from Euler angles.
-==============================
-  Parameters
-  ----------
-    const double alpha
-      First Euler angle
-    const double beta
-      Second Euler angle
-    const double gamma
-      Third Euler angle
-  
-  Returns
-  -------
-    Quaternion
-  
-  Description
-  -----------
-    The unit Quaternion constructed in this way corresponds to a rotation by
-    the given Euler angles. The convention used here is the z-y-z convention.
-    That is, the rotations occur about the fixed axes: first a rotation by
-    gamma about the z axis, then a rotation by beta about the y axis, and
-    finally a rotation by alpha about the z axis.
-  
-
-Constructor by components.
-==========================
-  Parameters
-  ----------
-    const double w0
-      Scalar component of Quaternion
-    const double x0
-      First vector component of Quaternion
-    const double y0
-      Second vector component of Quaternion
-    const double z0
-      Third vector component of Quaternion
-  
-  Returns
-  -------
-    Quaternion
-  
-
-Constructor from vector.
-========================
-  Parameters
-  ----------
-    const vector<double>& q
-      Vector containing three or four components
-  
-  Returns
-  -------
-    Quaternion
-  
-  Description
-  -----------
-    If the input vector has three components, they are assumed to represent the
-    vector components of the Quaternion, and the scalar component is set to
-    zero. If the input vector has four components, they are assumed to
-    represent the four components of the Quaternion, with the 0 component being
-    the scalar part.
-  
-
-Constructor from axis-angle.
-============================
-  Parameters
-  ----------
-    const double angle
-      Single number giving the rotation angle
-    const vector<double>& axis
-      Three-component vector (assumed to be normalized) giving the axis
-  
-  Returns
-  -------
-    Quaternion
-  
-  Description
-  -----------
-    This constructs a rotor (assuming 'axis' is normalized) corresponding to
-    rotation about the given axis through the given angle.
+    Modes&
   
 """
 
-%feature("docstring") GWFrames::PNWaveform::Omega_precMag """
+%feature("docstring") MatrixC::operator= """
 
 
   Parameters
   ----------
-    const unsigned int iTime
+    const MatrixC& rhs
   
   Returns
   -------
-    double
-  
-
-Vector of magnitudes of Omega_prec at each instant of time.
-===========================================================
-  Parameters
-  ----------
-    (none)
-  
-  Returns
-  -------
-    vector<double>
+    MatrixC&
   
 """
 
@@ -1295,41 +1173,16 @@ Geroch-Held-Penrose edth operator conjugate.
   
 """
 
-%feature("docstring") GWFrames::Waveforms::Extrapolate """
-Main extrapolation routine.
-===========================
+%feature("docstring") GWFrames::Waveform::operator() """
+
+
   Parameters
   ----------
-    vector<vector<double>>& Radii
-      Array of radii for each Waveform (first index) and each time (second
-      index)
-    const vector<int>& ExtrapolationOrders
-      List of integers denote extrapolation orders
-    const vector<double>& Omegas = vector<double>(0)
-      Optional list of angular frequencies for scaling extrapolation polynomial
+    const unsigned int Mode
   
   Returns
   -------
-    Waveforms
-  
-  Description
-  -----------
-    The input FiniteRadiusWaveforms are assumed to be properly scaled and
-    time-retarded, and interpolated to a uniform set of retarded times. This
-    function simply steps through the indices, fitting those data to
-    polynomials in 1/radius, and evaluating at 0 (for infinity).
-    
-    The extrapolation orders can be negative. In this case, the scaled,
-    time-retarded waveform at finite radius is given, where N=-1 is the
-    outermost Waveform, N=-2 is the second to outermost, etc.
-    
-    Note that the fitting uses gsl_multifit_linear_usvd, which is GSL's fitting
-    function that does NOT use column scaling (specified by the 'u' in front of
-    'svd' in the function name). The basic GSL fitting function uses column
-    scaling 'to improve
-the accuracy of the singular values'. However, for
-    convergent series, this scaling can make all the coefficients roughly equal
-    (just as the Omegas option does), which defeats the SVD.
+    const complex<double> *
   
 """
 
@@ -2339,18 +2192,7 @@ Construct minimal-rotation frame from Z basis vector of that frame.
 
   Parameters
   ----------
-    (none)
-  
-  Returns
-  -------
-    Modes
-  
-
-
-
-  Parameters
-  ----------
-    const int size
+    const int size = 0
   
   Returns
   -------
@@ -2587,16 +2429,127 @@ Constructor of PN waveform from parameters.
   
 """
 
-%feature("docstring") GWFrames::Waveform::operator() """
-
-
+%feature("docstring") GWFrames::Quaternion::Quaternion """
+Empty constructor  initialized to 0s.
+=====================================
   Parameters
   ----------
-    const unsigned int Mode
+    (none)
   
   Returns
   -------
-    const complex<double> *
+    Quaternion
+  
+
+Copy constructor.
+=================
+  Parameters
+  ----------
+    const Quaternion& Q
+  
+  Returns
+  -------
+    Quaternion
+  
+
+Constructor from spherical coordinates.
+=======================================
+  Parameters
+  ----------
+    const double vartheta
+      Float representing the polar angle
+    const double varphi
+      Float representing the azimuthal angle
+  
+  Returns
+  -------
+    Quaternion
+  
+  Description
+  -----------
+    The unit Quaternion constructed in this way rotates the z axis onto the
+    point given by the coordinates (vartheta, varphi).
+  
+
+Constructor from Euler angles.
+==============================
+  Parameters
+  ----------
+    const double alpha
+      First Euler angle
+    const double beta
+      Second Euler angle
+    const double gamma
+      Third Euler angle
+  
+  Returns
+  -------
+    Quaternion
+  
+  Description
+  -----------
+    The unit Quaternion constructed in this way corresponds to a rotation by
+    the given Euler angles. The convention used here is the z-y-z convention.
+    That is, the rotations occur about the fixed axes: first a rotation by
+    gamma about the z axis, then a rotation by beta about the y axis, and
+    finally a rotation by alpha about the z axis.
+  
+
+Constructor by components.
+==========================
+  Parameters
+  ----------
+    const double w0
+      Scalar component of Quaternion
+    const double x0
+      First vector component of Quaternion
+    const double y0
+      Second vector component of Quaternion
+    const double z0
+      Third vector component of Quaternion
+  
+  Returns
+  -------
+    Quaternion
+  
+
+Constructor from vector.
+========================
+  Parameters
+  ----------
+    const vector<double>& q
+      Vector containing three or four components
+  
+  Returns
+  -------
+    Quaternion
+  
+  Description
+  -----------
+    If the input vector has three components, they are assumed to represent the
+    vector components of the Quaternion, and the scalar component is set to
+    zero. If the input vector has four components, they are assumed to
+    represent the four components of the Quaternion, with the 0 component being
+    the scalar part.
+  
+
+Constructor from axis-angle.
+============================
+  Parameters
+  ----------
+    const double angle
+      Single number giving the rotation angle
+    const vector<double>& axis
+      Three-component vector (assumed to be normalized) giving the axis
+  
+  Returns
+  -------
+    Quaternion
+  
+  Description
+  -----------
+    This constructs a rotor (assuming 'axis' is normalized) corresponding to
+    rotation about the given axis through the given angle.
   
 """
 
@@ -2670,16 +2623,27 @@ Return vector of vector of arg of all modes as function of time.
   
 """
 
-%feature("docstring") MatrixC::operator= """
+%feature("docstring") GWFrames::PNWaveform::Omega_precMag """
 
 
   Parameters
   ----------
-    const MatrixC& rhs
+    const unsigned int iTime
   
   Returns
   -------
-    MatrixC&
+    double
+  
+
+Vector of magnitudes of Omega_prec at each instant of time.
+===========================================================
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    vector<double>
   
 """
 
@@ -3453,24 +3417,16 @@ Three-point finite-differencing of vector of complex<double>.
   
 """
 
-%feature("docstring") GWFrames::Waveform::CorotatingFrame """
-Frame in which the rotation is minimal.
-=======================================
+%feature("docstring") GWFrames::Modes::SetEllMax """
+
+
   Parameters
   ----------
-    const vector<int>& Lmodes = vector<int>(0)
-      L modes to evaluate
+    const int ell
   
   Returns
   -------
-    vector<Quaternion>
-  
-  Description
-  -----------
-    This function combines the steps required to obtain the corotating frame.
-    
-    If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
-    or [2,3,4], for example, restricts the range of the sum.
+    Modes&
   
 """
 
@@ -3524,6 +3480,52 @@ Construct the D matrix object given the (optional) rotor.
   
 """
 
+%feature("docstring") GWFrames::abs """
+
+
+  Parameters
+  ----------
+    const Quaternion& Q
+  
+  Returns
+  -------
+    double
+  
+
+
+
+  Parameters
+  ----------
+    const vector<Quaternion>& Q
+  
+  Returns
+  -------
+    vector<double>
+  
+
+
+
+  Parameters
+  ----------
+    const vector<double>& v
+  
+  Returns
+  -------
+    double
+  
+
+
+
+  Parameters
+  ----------
+    const vector<vector<double>>& v
+  
+  Returns
+  -------
+    vector<double>
+  
+"""
+
 %feature("docstring") GWFrames::Waveform::FindModeIndex """
 Find index of mode with given (l,m) data.
 =========================================
@@ -3553,16 +3555,29 @@ Find index of mode with given (l,m) data.
   
 """
 
-%feature("docstring") GWFrames::Waveform::~Waveform """
+%feature("docstring") GWFrames::DataGrid::SetNPhi """
 
 
   Parameters
   ----------
-    (none)
+    const int N_phi
   
   Returns
   -------
-    ~Waveform
+    DataGrid&
+  
+"""
+
+%feature("docstring") SliceModes::SliceModes """
+Constructor from ellMax.
+========================
+  Parameters
+  ----------
+    const int ellMax = 0
+  
+  Returns
+  -------
+    SliceModes
   
 """
 
@@ -4730,19 +4745,27 @@ Newman-Penrose edth operator conjugate.
   
 """
 
-%feature("docstring") GWFrames::VectorIntegral """
-Integrate vector function by simple trapezoidal rule.
-=====================================================
+%feature("docstring") GWFrames::PNWaveform::Omega_totMag """
+
+
   Parameters
   ----------
-    const vector<vector<double>>& fdot
-      Vector of vectors (first index time).
-    const vector<double>& t
-      Vector of corresponding time steps.
+    const unsigned int iTime
   
   Returns
   -------
-    vector<vector<double>>
+    double
+  
+
+Vector of magnitudes of Omega_tot at each instant of time.
+==========================================================
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    vector<double>
   
 """
 
@@ -5167,19 +5190,6 @@ Return vector of vector of imaginary parts of all modes as function of time.
   
 """
 
-%feature("docstring") GWFrames::SliceModes::SliceModes """
-
-
-  Parameters
-  ----------
-    const int size = 0
-  
-  Returns
-  -------
-    SliceModes
-  
-"""
-
 %feature("docstring") GWFrames::DominantPrincipalAxis """
 
 
@@ -5526,6 +5536,27 @@ Find index of mode with given (l,m) data without the chance of throwing an excep
   Returns
   -------
     double
+  
+"""
+
+%feature("docstring") GWFrames::Waveform::CorotatingFrame """
+Frame in which the rotation is minimal.
+=======================================
+  Parameters
+  ----------
+    const vector<int>& Lmodes = vector<int>(0)
+      L modes to evaluate
+  
+  Returns
+  -------
+    vector<Quaternion>
+  
+  Description
+  -----------
+    This function combines the steps required to obtain the corotating frame.
+    
+    If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
+    or [2,3,4], for example, restricts the range of the sum.
   
 """
 
@@ -5961,27 +5992,16 @@ Integrate the Newman-Penrose edth operator.
   
 """
 
-%feature("docstring") GWFrames::PNWaveform::Omega_totMag """
+%feature("docstring") GWFrames::DataGrid::SetSpin """
 
 
   Parameters
   ----------
-    const unsigned int iTime
+    const int ess
   
   Returns
   -------
-    double
-  
-
-Vector of magnitudes of Omega_tot at each instant of time.
-==========================================================
-  Parameters
-  ----------
-    (none)
-  
-  Returns
-  -------
-    vector<double>
+    DataGrid&
   
 """
 
@@ -6148,6 +6168,19 @@ Unwrap phase so that it is (roughly) continuous.
   Returns
   -------
     vector<Quaternion>
+  
+"""
+
+%feature("docstring") GWFrames::DataGrid::SetNTheta """
+
+
+  Parameters
+  ----------
+    const int N_theta
+  
+  Returns
+  -------
+    DataGrid&
   
 """
 
@@ -6495,6 +6528,44 @@ Pointwise multiply this object by another Waveform object.
   
 """
 
+%feature("docstring") GWFrames::Waveforms::Extrapolate """
+Main extrapolation routine.
+===========================
+  Parameters
+  ----------
+    vector<vector<double>>& Radii
+      Array of radii for each Waveform (first index) and each time (second
+      index)
+    const vector<int>& ExtrapolationOrders
+      List of integers denote extrapolation orders
+    const vector<double>& Omegas = vector<double>(0)
+      Optional list of angular frequencies for scaling extrapolation polynomial
+  
+  Returns
+  -------
+    Waveforms
+  
+  Description
+  -----------
+    The input FiniteRadiusWaveforms are assumed to be properly scaled and
+    time-retarded, and interpolated to a uniform set of retarded times. This
+    function simply steps through the indices, fitting those data to
+    polynomials in 1/radius, and evaluating at 0 (for infinity).
+    
+    The extrapolation orders can be negative. In this case, the scaled,
+    time-retarded waveform at finite radius is given, where N=-1 is the
+    outermost Waveform, N=-2 is the second to outermost, etc.
+    
+    Note that the fitting uses gsl_multifit_linear_usvd, which is GSL's fitting
+    function that does NOT use column scaling (specified by the 'u' in front of
+    'svd' in the function name). The basic GSL fitting function uses column
+    scaling 'to improve
+the accuracy of the singular values'. However, for
+    convergent series, this scaling can make all the coefficients roughly equal
+    (just as the Omegas option does), which defeats the SVD.
+  
+"""
+
 %feature("docstring") GWFrames::Waveforms::size """
 
 
@@ -6508,49 +6579,16 @@ Pointwise multiply this object by another Waveform object.
   
 """
 
-%feature("docstring") GWFrames::abs """
+%feature("docstring") GWFrames::Waveform::~Waveform """
 
 
   Parameters
   ----------
-    const Quaternion& Q
+    (none)
   
   Returns
   -------
-    double
-  
-
-
-
-  Parameters
-  ----------
-    const vector<Quaternion>& Q
-  
-  Returns
-  -------
-    vector<double>
-  
-
-
-
-  Parameters
-  ----------
-    const vector<double>& v
-  
-  Returns
-  -------
-    double
-  
-
-
-
-  Parameters
-  ----------
-    const vector<vector<double>>& v
-  
-  Returns
-  -------
-    vector<double>
+    ~Waveform
   
 """
 
@@ -6632,6 +6670,22 @@ Calculate the principal axis of the LL matrix, as prescribed by O'Shaughnessy et
   Returns
   -------
     string
+  
+"""
+
+%feature("docstring") GWFrames::VectorIntegral """
+Integrate vector function by simple trapezoidal rule.
+=====================================================
+  Parameters
+  ----------
+    const vector<vector<double>>& fdot
+      Vector of vectors (first index time).
+    const vector<double>& t
+      Vector of corresponding time steps.
+  
+  Returns
+  -------
+    vector<vector<double>>
   
 """
 
@@ -6767,18 +6821,7 @@ Re-interpolate data to new time slices given by this supertranslation.
 
   Parameters
   ----------
-    (none)
-  
-  Returns
-  -------
-    DataGrid
-  
-
-
-
-  Parameters
-  ----------
-    const int size
+    const int size = 0
   
   Returns
   -------
