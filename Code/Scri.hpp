@@ -34,8 +34,8 @@ namespace GWFrames {
     int n_phi;
     std::vector<std::complex<double> > data;
   public: // Constructors
-    DataGrid() : s(0), n_theta(0), n_phi(0), data(0) { }
-    DataGrid(const DataGrid& A);
+    DataGrid(const int size=0) : s(0), n_theta(std::sqrt(size)), n_phi(std::sqrt(size)), data(size) { }
+    DataGrid(const DataGrid& A) : s(A.s), n_theta(A.n_theta), n_phi(A.n_phi), data(A.data) { }
     DataGrid(const int Spin, const int N_theta, const int N_phi, const std::vector<std::complex<double> >& D);
     explicit DataGrid(Modes M, const int N_theta=0, const int N_phi=0); // Can't be const& because of spinsfast design
     DataGrid(const Modes& M, const GWFrames::ThreeVector& v, const int N_theta=0, const int N_phi=0);
@@ -55,8 +55,8 @@ namespace GWFrames {
   DataGrid operator*(const double& a, const DataGrid& b);
   DataGrid operator/(const double& a, const DataGrid& b);
   DataGrid operator-(const double& a, const DataGrid& b);
-  DataGrid ConformalFactorGrid(const MobiusTransform& abcd, const int n_theta, const int n_phi);
-  DataGrid ConformalFactorGrid(const ThreeVector& v, const int n_theta, const int n_phi);
+  DataGrid ConformalFactorGrid(const GWFrames::MobiusTransform& abcd, const int n_theta, const int n_phi);
+  DataGrid ConformalFactorGrid(const GWFrames::ThreeVector& v, const int n_theta, const int n_phi);
   
   
   class Modes {
@@ -70,8 +70,8 @@ namespace GWFrames {
     int ellMax;
     std::vector<std::complex<double> > data;
   public: // Constructors
-    Modes();
-    Modes(const Modes& A);
+    Modes(const int size=0): s(0), ellMax(0), data(size) { }
+    Modes(const Modes& A) : s(A.s), ellMax(A.ellMax), data(A.data) { }
     Modes(const int spin, const std::vector<std::complex<double> >& Data);
     explicit Modes(DataGrid D); // Can't be const& because of spinsfast design
   public: // Access
@@ -97,12 +97,11 @@ namespace GWFrames {
     /// This class holds all the necessary objects needed to
     /// understand the geometry of a given slice of null infinity.
   public: // Data
-    double u; // retarded time of this slice
     D psi0, psi1, psi2, psi3, psi4, sigma, sigmadot; // complex mode data for these objects on this slice
   public: // Constructors
     SliceOfScri();
-    SliceOfScri(const double& U,
-  		const D& Psi0, const D& Psi1, const D& Psi2,
+    SliceOfScri(const int size);
+    SliceOfScri(const D& Psi0, const D& Psi1, const D& Psi2,
   		const D& Psi3, const D& Psi4, const D& Sigma, const D& SigmaDot);
   public: //Access
     inline const D& operator[](const unsigned int i) const {
@@ -133,13 +132,15 @@ namespace GWFrames {
   
   class SliceModes : public SliceOfScri<Modes> {
   public:
+    // Constructors
+    SliceModes(const int size=0) : SliceOfScri<Modes>(size) { }
     // Useful quantities
     int EllMax() const;
     double Mass() const;
     GWFrames::FourVector FourMomentum() const;
     Modes SuperMomentum() const;
     // Transformations
-    SliceGrid BMSTransformationOnSlice(const ThreeVector& v, const Modes& gamma) const;
+    SliceGrid BMSTransformationOnSlice(const double u, const GWFrames::ThreeVector& v, const GWFrames::Modes& gamma) const;
   }; // class SliceModes
   
   
@@ -165,9 +166,11 @@ namespace GWFrames {
   	 const GWFrames::Waveform& psi4, const GWFrames::Waveform& sigma);
   public: // Member functions
     // Transformations
-    SliceModes BMSTransformation(const double& uPrime, const ThreeVector& v, GWFrames::Modes& gamma) const;
-    // SliceOfScri BMSTransformation(const DataGrid& u, const GWFrames::MobiusTransform& abcd, GWFrames::Modes& gamma, const int iMin, const iMax) const;
+    SliceModes BMSTransformation(const double& uPrime, const GWFrames::ThreeVector& v, GWFrames::Modes& gamma) const;
     // Scri BMSTransformation(const GWFrames::MobiusTransform& abcd, GWFrames::Modes& gamma) const;
+    // Access
+    inline const SliceModes& operator[](const unsigned int i) const { return slices[i]; }
+    inline SliceModes& operator[](const unsigned int i) { return slices[i]; }
   }; // class Scri
   
   
