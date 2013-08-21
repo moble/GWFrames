@@ -306,7 +306,6 @@ Modes::Modes(const int spin, const std::vector<std::complex<double> >& Data)
 Modes::Modes(DataGrid D)
   : s(D.Spin()), ellMax(std::min((D.N_theta()-1)/2, (D.N_phi()-1)/2)), data(N_lm(ellMax))
 {
-  std::cerr << "Modes(DataGrid D): ellMax=" << ellMax << std::endl;
   spinsfast_map2salm(reinterpret_cast<fftw_complex*>(&D[0]),
 		     reinterpret_cast<fftw_complex*>(&data[0]),
 		     s, D.N_theta(), D.N_phi(), ellMax);
@@ -402,6 +401,7 @@ Modes Modes::edth() const {
     }
   }
   
+  B.SetSpin(A.Spin()+1);
   return B;
 }
 
@@ -447,6 +447,7 @@ Modes Modes::edthbar() const {
     }
   }
   
+  B.SetSpin(A.Spin()-1);
   return B;
 }
 
@@ -502,24 +503,47 @@ std::complex<double> Modes::EvaluateAtPoint(const GWFrames::Quaternion& R) const
 // SliceOfScri //
 /////////////////
 
-/// Empty constructor
-template <class D>
-SliceOfScri<D>::SliceOfScri()
-  : psi0(), psi1(), psi2(), psi3(), psi4(), sigma(), sigmadot()
-{ }
-
 /// Empty constructor with reserved storage
 template <class D>
 SliceOfScri<D>::SliceOfScri(const int size)
   : psi0(size), psi1(size), psi2(size), psi3(size), psi4(size), sigma(size), sigmadot(size)
-{ }
+{
+  psi0.SetSpin(2);
+  psi1.SetSpin(1);
+  psi2.SetSpin(0);
+  psi3.SetSpin(-1);
+  psi4.SetSpin(-2);
+  sigma.SetSpin(2);
+  sigmadot.SetSpin(2);
+}
 
-/// Constructor from data
-template <class D>
-SliceOfScri<D>::SliceOfScri(const D& Psi0, const D& Psi1, const D& Psi2,
-			    const D& Psi3, const D& Psi4, const D& Sigma, const D& SigmaDot)
-  : psi0(Psi0), psi1(Psi1), psi2(Psi2), psi3(Psi3), psi4(Psi4), sigma(Sigma), sigmadot(SigmaDot)
-{ }
+// /// Constructor from data
+// template <class D>
+// SliceOfScri<D>::SliceOfScri(const D& Psi0, const D& Psi1, const D& Psi2,
+// 			    const D& Psi3, const D& Psi4, const D& Sigma, const D& SigmaDot)
+//   : psi0(Psi0), psi1(Psi1), psi2(Psi2), psi3(Psi3), psi4(Psi4), sigma(Sigma), sigmadot(SigmaDot)
+// { // The following may be redundant, but it will never be wrong, and 
+//   psi0.SetSpin(2);
+//   psi1.SetSpin(1);
+//   psi2.SetSpin(0);
+//   psi3.SetSpin(-1);
+//   psi4.SetSpin(-2);
+//   sigma.SetSpin(2);
+//   sigmadot.SetSpin(2);
+// }
+
+/// Constructor from ellMax
+SliceModes::SliceModes(const int ellMax)
+  : SliceOfScri<Modes>(GWFrames::lm_ind(ellMax, ellMax, ellMax)+1)
+{
+  psi0.SetEllMax(ellMax);
+  psi1.SetEllMax(ellMax);
+  psi2.SetEllMax(ellMax);
+  psi3.SetEllMax(ellMax);
+  psi4.SetEllMax(ellMax);
+  sigma.SetEllMax(ellMax);
+  sigmadot.SetEllMax(ellMax);
+}
 
 /// Find largest ell value in the data on this slice
 int SliceModes::EllMax() const {
@@ -549,7 +573,7 @@ GWFrames::FourVector SliceModes::FourMomentum() const {
   const Modes Psi = SuperMomentum();
   const double sqrt3 = std::sqrt(3);
   const double sqrt6 = std::sqrt(6);
-  FourVector p;
+  FourVector p(4);
   p[0] = std::real(Psi[0]);
   p[1] = std::real((Psi[1]-Psi[3])/sqrt6);
   p[2] = std::real(complexi*(Psi[1]+Psi[3])/sqrt6);
@@ -575,14 +599,13 @@ GWFrames::SliceGrid SliceModes::BMSTransformationOnSlice(const double u, const T
   
   const int n_theta = 2*EllMax()+1;
   const int n_phi = n_theta;
-  std::cerr << "BMSTransformationOnSlice: (n_theta, n_phi)=(" << n_theta << ", " << n_phi << ")" << std::endl;
   
   // Evaluate the functions we need on the appropriate grids
   const DataGrid kappa_g = GWFrames::ConformalFactorGrid(v, n_theta, n_phi);
   const DataGrid oneoverkappacubed_g = kappa_g.pow(-3);
   const DataGrid gamma_g(gamma, n_theta, n_phi);
   const DataGrid ethethgamma_g(gamma.edth().edth(), n_theta, n_phi);
-  const DataGrid ethupok_g = DataGrid(Modes(kappa_g*(u-DataGrid(gamma,n_theta,n_phi))).edth(), n_theta, n_phi)/kappa_g;
+  const DataGrid ethupok_g = DataGrid(Modes(kappa_g*(u-gamma_g)).edth(), n_theta, n_phi)/kappa_g; // (\eth u') / K
   const DataGrid psi0_g(psi0, n_theta, n_phi);
   const DataGrid psi1_g(psi1, n_theta, n_phi);
   const DataGrid psi2_g(psi2, n_theta, n_phi);
@@ -610,15 +633,21 @@ GWFrames::SliceGrid SliceModes::BMSTransformationOnSlice(const double u, const T
   Grids.sigma = DataGrid(sigmafactor, v, n_theta, n_phi);
   Grids.sigmadot = DataGrid(sigmadotfactor, v, n_theta, n_phi);
   
-  std::cerr << "BMSTransformationOnSlice: Finished" << std::endl;
   return Grids;
 }
 
+// Explicit instantiations
+template class SliceOfScri<DataGrid>;
+template class SliceOfScri<Modes>;
 
+
+//////////
+// Scri //
+//////////
 Scri::Scri(const GWFrames::Waveform& psi0, const GWFrames::Waveform& psi1,
 	   const GWFrames::Waveform& psi2, const GWFrames::Waveform& psi3,
 	   const GWFrames::Waveform& psi4, const GWFrames::Waveform& sigma)
-  : t(psi0.T()), slices(t.size(), SliceModes(GWFrames::N_lm(psi0.EllMax())))
+  : t(psi0.T()), slices(t.size(), SliceModes(psi0.EllMax()))
 {
   // Check that everyone has the same NTimes().  This is a poor man's
   // way of making sure we have all the same times, and is of course
@@ -705,13 +734,10 @@ SliceModes Scri::BMSTransformation(const double& uPrime, const ThreeVector& v, G
   
   const int n_theta = 2*slices[0].EllMax()+1;
   const int n_phi = n_theta;
-  std::cerr << "BMSTransformation: (n_theta, n_phi)=(" << n_theta << ", " << n_phi << ")" << std::endl;
   
   // (0) Find current time slices on which we need data to interpolate
   // to the new time slice
-  std::cerr << 1 << std::endl;
   const DataGrid u = uPrime/GWFrames::ConformalFactorGrid(v, n_theta, n_phi) + DataGrid(gamma, n_theta, n_phi);
-  std::cerr << 2 << std::endl;
   double uMax = std::real(u[0]);
   double uMin = std::real(u[0]);
   for(int i=1; i<n_theta*n_phi; ++i) {
@@ -737,24 +763,20 @@ SliceModes Scri::BMSTransformation(const double& uPrime, const ThreeVector& v, G
   const unsigned int Nslices = iMax-iMin+1;
   vector<SliceGrid> transformedslices(Nslices);
   vector<double> uData(Nslices);
-  std::cerr << 3 << std::endl;
   for(int i=iMin; i<=iMax; ++i) {
     uData[i-iMin] = t[i];
-    std::cerr << "\t" << i << std::endl;
     transformedslices[i-iMin] = slices[i].BMSTransformationOnSlice(t[i], v, gamma);
   }
-  std::cerr << 4 << std::endl;
   
   // (2) Interpolate to new retarded time
   // Create new object to hold the data
-  SliceGrid BMStransformedGrid(Nslices);
+  SliceGrid BMStransformedGrid(n_theta*n_phi);
   // Initialize the GSL interpolators for the data
   gsl_interp_accel* accRe = gsl_interp_accel_alloc();
   gsl_interp_accel* accIm = gsl_interp_accel_alloc();
   gsl_spline* splineRe = gsl_spline_alloc(gsl_interp_cspline, Nslices);
   gsl_spline* splineIm = gsl_spline_alloc(gsl_interp_cspline, Nslices);
   // Loop through, doing the work
-  std::cerr << 5 << std::endl;
   { int i_g=0;
     for(int i_t=0; i_t<n_theta; ++i_t) { // Loop over theta points
       for(int i_p=0; i_p<n_phi; ++i_p, ++i_g) { // Loop over phi points
@@ -771,9 +793,7 @@ SliceModes Scri::BMSTransformation(const double& uPrime, const ThreeVector& v, G
 	  gsl_spline_init(splineRe, &(uData)[0], &re[0], Nslices);
 	  gsl_spline_init(splineIm, &(uData)[0], &im[0], Nslices);
 	  // Extrapolate real and imaginary parts and store data
-	  std::cerr << "\t" << i_g << std::endl;
 	  BMStransformedGrid[i_D][i_g] = complex<double>( gsl_spline_eval(splineRe, u_i, accRe), gsl_spline_eval(splineIm, u_i, accIm) );
-	  std::cerr << "\t" << i_g << std::endl;
 	}
       }
     }
@@ -785,12 +805,10 @@ SliceModes Scri::BMSTransformation(const double& uPrime, const ThreeVector& v, G
   gsl_spline_free(splineIm);
   
   // (3) Transform back to spectral space
-  SliceModes BMStransformed;
-  std::cerr << 6 << std::endl;
+  SliceModes BMStransformed(slices[0].EllMax());
   for(int i_D=0; i_D<7; ++i_D) { // Loop over data types
     BMStransformed[i_D] = Modes(BMStransformedGrid[i_D]);
   }
-  std::cerr << 7 << std::endl;
   
   return BMStransformed;
 }

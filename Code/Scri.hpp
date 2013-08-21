@@ -39,6 +39,10 @@ namespace GWFrames {
     DataGrid(const int Spin, const int N_theta, const int N_phi, const std::vector<std::complex<double> >& D);
     explicit DataGrid(Modes M, const int N_theta=0, const int N_phi=0); // Can't be const& because of spinsfast design
     DataGrid(const Modes& M, const GWFrames::ThreeVector& v, const int N_theta=0, const int N_phi=0);
+  public: // Modification
+    inline DataGrid& SetSpin(const int ess) { s=ess; return *this; }
+    inline DataGrid& SetNTheta(const int N_theta) { n_theta=N_theta; return *this; }
+    inline DataGrid& SetNPhi(const int N_phi) { n_phi=N_phi; return *this; }
   public: // Access and operators
     inline int Spin() const { return s; }
     inline int N_theta() const { return n_theta; }
@@ -74,6 +78,9 @@ namespace GWFrames {
     Modes(const Modes& A) : s(A.s), ellMax(A.ellMax), data(A.data) { }
     Modes(const int spin, const std::vector<std::complex<double> >& Data);
     explicit Modes(DataGrid D); // Can't be const& because of spinsfast design
+  public: // Modification
+    inline Modes& SetSpin(const int ess) { s=ess; return *this; }
+    inline Modes& SetEllMax(const int ell) { ellMax=ell; return *this; }
   public: // Access
     inline int Spin() const { return s; }
     inline int EllMax() const { return ellMax; }
@@ -99,10 +106,9 @@ namespace GWFrames {
   public: // Data
     D psi0, psi1, psi2, psi3, psi4, sigma, sigmadot; // complex mode data for these objects on this slice
   public: // Constructors
-    SliceOfScri();
-    SliceOfScri(const int size);
-    SliceOfScri(const D& Psi0, const D& Psi1, const D& Psi2,
-  		const D& Psi3, const D& Psi4, const D& Sigma, const D& SigmaDot);
+    SliceOfScri(const int size=0);
+    // SliceOfScri(const D& Psi0, const D& Psi1, const D& Psi2,
+    // 		const D& Psi3, const D& Psi4, const D& Sigma, const D& SigmaDot);
   public: //Access
     inline const D& operator[](const unsigned int i) const {
       if(i==0) { return psi0; }
@@ -126,14 +132,13 @@ namespace GWFrames {
     }
   }; // class SliceOfScri
   
-  
   typedef SliceOfScri<DataGrid> SliceGrid;
   
   
   class SliceModes : public SliceOfScri<Modes> {
   public:
     // Constructors
-    SliceModes(const int size=0) : SliceOfScri<Modes>(size) { }
+    SliceModes(const int ellMax=0);
     // Useful quantities
     int EllMax() const;
     double Mass() const;

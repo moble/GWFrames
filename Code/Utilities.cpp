@@ -634,6 +634,7 @@ Matrix Matrix::operator-(const Matrix& rhs) {
   return M;
 }
 
+// / \@cond
 void Matrix::resize(unsigned int newNRows, unsigned int newNCols, const double a) {
   if(m) { gsl_matrix_free(m); }
   if(a!=0.0) {
@@ -644,6 +645,7 @@ void Matrix::resize(unsigned int newNRows, unsigned int newNCols, const double a
   }
   return;
 }
+// / \@endcond
 
 void Matrix::clear() {
   if(m) { gsl_matrix_free(m); }
@@ -910,6 +912,7 @@ void MatrixC::swap(MatrixC& b) {
   return;
 }
 
+// / \@cond
 void MatrixC::resize(int newn, int newm) {
   if (newn != nn || newm != mm) {
     if (v != NULL) {
@@ -926,6 +929,7 @@ void MatrixC::resize(int newn, int newm) {
     }
   }
 }
+// / \@endcond
 
 void MatrixC::assign(int newn, int newm, const std::complex<double>& a) {
   if (newn != nn || newm != mm) {
