@@ -503,6 +503,15 @@ std::vector<std::vector<std::complex<double> > > GWFrames::Waveform::Data() cons
 }
 
 
+/// Return greatest ell value present in the data.
+int GWFrames::Waveform::EllMax() const {
+  int ell = lm[0][0];
+  for(unsigned int i=1; i<NModes(); ++i) {
+    if(lm[i][0]>ell) { ell = lm[i][0]; }
+  }
+  return ell;
+}
+
 /// Find index of mode with given (l,m) data.
 unsigned int GWFrames::Waveform::FindModeIndex(const int l, const int m) const {
   //ORIENTATION!!! following loop
@@ -513,8 +522,12 @@ unsigned int GWFrames::Waveform::FindModeIndex(const int l, const int m) const {
   throw(GWFrames_WaveformMissingLMIndex);
 }
 
+/// Find index of mode with given (l,m) data without the chance of throwing an exception.
 unsigned int GWFrames::Waveform::FindModeIndexWithoutError(const int l, const int m) const {
-  //ORIENTATION!!! following loop
+  /// If the requested mode is not present, the returned index is 1
+  /// beyond the end of the mode vector.
+  
+  // ORIENTATION!!! following loop
   unsigned int i=0;
   for(; i<NModes(); ++i) {
     if(lm[i][0]==l && lm[i][1]==m) { return i; }

@@ -116,6 +116,7 @@ namespace GWFrames {
     std::vector<std::vector<double> > Arg() const;
     std::vector<std::vector<double> > ArgUnwrapped() const;
     std::vector<std::vector<std::complex<double> > > Data() const;
+    int EllMax() const;
     unsigned int FindModeIndex(const int L, const int M) const;
     unsigned int FindModeIndexWithoutError(const int L, const int M) const;
     std::vector<std::complex<double> > DataDot(const unsigned int Mode) const;
