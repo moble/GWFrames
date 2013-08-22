@@ -145,7 +145,7 @@ namespace GWFrames {
     GWFrames::FourVector FourMomentum() const;
     Modes SuperMomentum() const;
     // Transformations
-    SliceGrid BMSTransformationOnSlice(const double u, const GWFrames::ThreeVector& v, const GWFrames::Modes& gamma) const;
+    SliceGrid BMSTransformationOnSlice(const double u, const GWFrames::ThreeVector& v, const GWFrames::Modes& delta) const;
   }; // class SliceModes
   
   
@@ -171,8 +171,8 @@ namespace GWFrames {
   	 const GWFrames::Waveform& psi4, const GWFrames::Waveform& sigma);
   public: // Member functions
     // Transformations
-    SliceModes BMSTransformation(const double& uPrime, const GWFrames::ThreeVector& v, GWFrames::Modes& gamma) const;
-    // Scri BMSTransformation(const GWFrames::MobiusTransform& abcd, GWFrames::Modes& gamma) const;
+    SliceModes BMSTransformation(const double& uPrime, const GWFrames::ThreeVector& v, GWFrames::Modes& delta) const;
+    // Scri BMSTransformation(const GWFrames::MobiusTransform& abcd, GWFrames::Modes& delta) const;
     // Access
     inline const SliceModes& operator[](const unsigned int i) const { return slices[i]; }
     inline SliceModes& operator[](const unsigned int i) { return slices[i]; }

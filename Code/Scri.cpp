@@ -132,8 +132,10 @@ DataGrid DataGrid::operator*(const DataGrid& A) const {
   // Do the work
   DataGrid C(B);
   for(unsigned int i=0; i<data.size(); ++i) {
-    C.data[i] = A.data[i] * B.data[i];
+    C.data[i] *= A.data[i];
   }
+  C.s = s + A.s;
+  
   return C;
 }
 
@@ -159,8 +161,10 @@ DataGrid DataGrid::operator/(const DataGrid& A) const {
   // Do the work
   DataGrid C(B);
   for(unsigned int i=0; i<data.size(); ++i) {
-    C.data[i] = B.data[i] / A.data[i];
+    C.data[i] /= A.data[i];
   }
+  C.s = s - A.s;
+  
   return C;
 }
 
@@ -186,8 +190,9 @@ DataGrid DataGrid::operator+(const DataGrid& A) const {
   // Do the work
   DataGrid C(B);
   for(unsigned int i=0; i<data.size(); ++i) {
-    C.data[i] = A.data[i] + B.data[i];
+    C.data[i] += A.data[i];
   }
+  
   return C;
 }
 
@@ -213,8 +218,9 @@ DataGrid DataGrid::operator-(const DataGrid& A) const {
   // Do the work
   DataGrid C(B);
   for(unsigned int i=0; i<data.size(); ++i) {
-    C.data[i] = B.data[i] - A.data[i];
+    C.data[i] -= A.data[i];
   }
+  
   return C;
 }
 
@@ -293,7 +299,7 @@ Modes::Modes(const int spin, const std::vector<std::complex<double> >& Data)
     }
   }
   
-  // Make sure gamma doesn't have more ell modes than ellMax_GWFrames
+  // Make sure Data doesn't have more ell modes than ellMax_GWFrames
   if(ellMax>=ellMax_GWFrames) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
 	      << "\nError: Input data has length " << Data.size() << "."
@@ -571,13 +577,14 @@ GWFrames::FourVector SliceModes::FourMomentum() const {
   /// The (Bondi) four-momentum is given by the ell=0 and ell=1 modes
   /// of the supermomentum.
   const Modes Psi = SuperMomentum();
+  const double sqrt4pi = std::sqrt(4*M_PI);
   const double sqrt3 = std::sqrt(3);
   const double sqrt6 = std::sqrt(6);
   FourVector p(4);
-  p[0] = std::real(Psi[0]);
-  p[1] = std::real((Psi[1]-Psi[3])/sqrt6);
-  p[2] = std::real(complexi*(Psi[1]+Psi[3])/sqrt6);
-  p[3] = std::real(Psi[2]/sqrt3);
+  p[0] = std::real(Psi[0])/sqrt4pi;
+  p[1] = std::real((Psi[1]-Psi[3]))/(sqrt4pi*sqrt6);
+  p[2] = std::real(complexi*(Psi[1]+Psi[3]))/(sqrt4pi*sqrt6);
+  p[3] = std::real(Psi[2])/(sqrt4pi*sqrt3);
   return p;
 }
 
@@ -588,7 +595,7 @@ Modes SliceModes::SuperMomentum() const {
 }
 
 /// Exeucte a BMS transformation except for the supertranslation of points
-GWFrames::SliceGrid SliceModes::BMSTransformationOnSlice(const double u, const ThreeVector& v, const Modes& gamma) const {
+GWFrames::SliceGrid SliceModes::BMSTransformationOnSlice(const double u, const ThreeVector& v, const Modes& delta) const {
   /// A full BMS transformation is only possible using information
   /// from multiple slices due to the supertranslation moving points
   /// "between slices".  This function simply transforms the data
@@ -601,11 +608,11 @@ GWFrames::SliceGrid SliceModes::BMSTransformationOnSlice(const double u, const T
   const int n_phi = n_theta;
   
   // Evaluate the functions we need on the appropriate grids
-  const DataGrid kappa_g = GWFrames::ConformalFactorGrid(v, n_theta, n_phi);
-  const DataGrid oneoverkappacubed_g = kappa_g.pow(-3);
-  const DataGrid gamma_g(gamma, n_theta, n_phi);
-  const DataGrid ethethgamma_g(gamma.edth().edth(), n_theta, n_phi);
-  const DataGrid ethupok_g = DataGrid(Modes(kappa_g*(u-gamma_g)).edth(), n_theta, n_phi)/kappa_g; // (\eth u') / K
+  const DataGrid K_g = GWFrames::ConformalFactorGrid(v, n_theta, n_phi);
+  const DataGrid oneoverKcubed_g = K_g.pow(-3);
+  const DataGrid delta_g(delta, n_theta, n_phi);
+  const DataGrid ethethdelta_g(delta.edth().edth(), n_theta, n_phi);
+  const DataGrid ethupok_g = DataGrid(Modes(K_g*(u-delta_g)).edth(), n_theta, n_phi)/K_g; // (\eth u') / K
   const DataGrid psi0_g(psi0, n_theta, n_phi);
   const DataGrid psi1_g(psi1, n_theta, n_phi);
   const DataGrid psi2_g(psi2, n_theta, n_phi);
@@ -615,13 +622,13 @@ GWFrames::SliceGrid SliceModes::BMSTransformationOnSlice(const double u, const T
   const DataGrid sigmadot_g(sigmadot, n_theta, n_phi);
   
   // Construct new data accounting for changes of tetrad
-  const Modes psi4factor( oneoverkappacubed_g*(psi4_g) );
-  const Modes psi3factor( oneoverkappacubed_g*(psi3_g - ethupok_g*psi4_g) );
-  const Modes psi2factor( oneoverkappacubed_g*(psi2_g - ethupok_g*(2*psi3_g - ethupok_g*psi4_g)) );
-  const Modes psi1factor( oneoverkappacubed_g*(psi1_g - ethupok_g*(3*psi2_g - ethupok_g*(3*psi3_g - ethupok_g*psi4_g))) );
-  const Modes psi0factor( oneoverkappacubed_g*(psi0_g - ethupok_g*(4*psi1_g - ethupok_g*(6*psi2_g - ethupok_g*(4*psi3_g - ethupok_g*psi4_g)))) );
-  const Modes sigmafactor( (sigma_g - ethethgamma_g)/kappa_g );
-  const Modes sigmadotfactor( sigmadot_g/kappa_g.pow(2) );
+  const Modes psi4factor( oneoverKcubed_g*(psi4_g) );
+  const Modes psi3factor( oneoverKcubed_g*(psi3_g - ethupok_g*psi4_g) );
+  const Modes psi2factor( oneoverKcubed_g*(psi2_g - ethupok_g*(2*psi3_g - ethupok_g*psi4_g)) );
+  const Modes psi1factor( oneoverKcubed_g*(psi1_g - ethupok_g*(3*psi2_g - ethupok_g*(3*psi3_g - ethupok_g*psi4_g))) );
+  const Modes psi0factor( oneoverKcubed_g*(psi0_g - ethupok_g*(4*psi1_g - ethupok_g*(6*psi2_g - ethupok_g*(4*psi3_g - ethupok_g*psi4_g)))) );
+  const Modes sigmafactor( (sigma_g - ethethdelta_g)/K_g );
+  const Modes sigmadotfactor( sigmadot_g/K_g.pow(2) );
   
   // Evaluate the primed quantities on the boosted grids
   SliceGrid Grids;
@@ -703,10 +710,10 @@ Scri::Scri(const GWFrames::Waveform& psi0, const GWFrames::Waveform& psi1,
 }
 
 /// Apply a (constant) BMS transformation to data on null infinity
-SliceModes Scri::BMSTransformation(const double& uPrime, const ThreeVector& v, GWFrames::Modes& gamma) const {
+SliceModes Scri::BMSTransformation(const double& uPrime, const ThreeVector& v, GWFrames::Modes& delta) const {
   /// \param uPrime New retarded time at which to give the data
   /// \param v Three-vector of the boost relative to the current frame
-  /// \param gamma Spherical-harmonic modes of the supertranslation
+  /// \param delta Spherical-harmonic modes of the supertranslation
   /// 
   /// A general BMS transformation is expressed as a conformal
   /// transformation of the sphere (which encompasses rotations and
@@ -726,9 +733,9 @@ SliceModes Scri::BMSTransformation(const double& uPrime, const ThreeVector& v, G
   /// space to store the data in their usual representation.
   /// 
   /// The relation between the new and old time coordinates is \f$u' =
-  /// K(u-\gamma)\f$, where \f$K\f$ is the conformal factor (which is
+  /// K(u-\delta)\f$, where \f$K\f$ is the conformal factor (which is
   /// a function of angle).  So we need to interpolate at each point
-  /// to the original time coordinate \f$u = u'/K + \gamma\f$, which
+  /// to the original time coordinate \f$u = u'/K + \delta\f$, which
   /// again depends on angle.  That is, we have to interpolate to a
   /// different time for each grid point.
   
@@ -737,7 +744,7 @@ SliceModes Scri::BMSTransformation(const double& uPrime, const ThreeVector& v, G
   
   // (0) Find current time slices on which we need data to interpolate
   // to the new time slice
-  const DataGrid u = uPrime/GWFrames::ConformalFactorGrid(v, n_theta, n_phi) + DataGrid(gamma, n_theta, n_phi);
+  const DataGrid u = uPrime/GWFrames::ConformalFactorGrid(v, n_theta, n_phi) + DataGrid(delta, n_theta, n_phi);
   double uMax = std::real(u[0]);
   double uMin = std::real(u[0]);
   for(int i=1; i<n_theta*n_phi; ++i) {
@@ -762,10 +769,10 @@ SliceModes Scri::BMSTransformation(const double& uPrime, const ThreeVector& v, G
   // (1) Evaluate BMS-transformed data on equi-angular grids of the final frame at a series of times
   const unsigned int Nslices = iMax-iMin+1;
   vector<SliceGrid> transformedslices(Nslices);
-  vector<double> uData(Nslices);
+  vector<double> u_original(Nslices);
   for(int i=iMin; i<=iMax; ++i) {
-    uData[i-iMin] = t[i];
-    transformedslices[i-iMin] = slices[i].BMSTransformationOnSlice(t[i], v, gamma);
+    u_original[i-iMin] = t[i];
+    transformedslices[i-iMin] = slices[i].BMSTransformationOnSlice(t[i], v, delta);
   }
   
   // (2) Interpolate to new retarded time
@@ -790,8 +797,8 @@ SliceModes Scri::BMSTransformation(const double& uPrime, const ThreeVector& v, G
 	    im[i_s] = std::imag(transformedslices[i_s][i_D][i_g]);
 	  }
 	  // Initialize the interpolators for this data set
-	  gsl_spline_init(splineRe, &(uData)[0], &re[0], Nslices);
-	  gsl_spline_init(splineIm, &(uData)[0], &im[0], Nslices);
+	  gsl_spline_init(splineRe, &(u_original)[0], &re[0], Nslices);
+	  gsl_spline_init(splineIm, &(u_original)[0], &im[0], Nslices);
 	  // Extrapolate real and imaginary parts and store data
 	  BMStransformedGrid[i_D][i_g] = complex<double>( gsl_spline_eval(splineRe, u_i, accRe), gsl_spline_eval(splineIm, u_i, accIm) );
 	}
