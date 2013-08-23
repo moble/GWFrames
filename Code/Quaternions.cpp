@@ -38,19 +38,30 @@ inline double SQR(const double& x) { return x*x; }
 #define Quaternion_Epsilon 1.0e-14
 
 
+// So that we can use acosh below (not included in cmath)
+#include <math.h>
+
+/// Returns the rapidity of a Lorentz boost with velocity three-vector v
+double Rapidity(const std::vector<double>& v) {
+  /// The vector v is expected to be the velocity three-vector of the
+  /// new frame relative to the current frame, in units where c=1.
+  const double magv = std::sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
+  return acosh(1.0/std::sqrt(1.0-magv*magv));
+}
+
 /// Return a rotor taking n into its boosted version
 Quaternion GWFrames::Boost(ThreeVector v, ThreeVector n) {
   /// 
   /// \param v Three-vector velocity of the new frame WRT this frame
   /// \param n Three-vector direction to be boosted by the rotor
   /// 
-  /// This function returns a rotor \f$R_b\f$ that takes the vector
-  /// \f$\hat{n}\f$ (which will be normalized) on the future null
-  /// sphere into its boosted version.  Note that this rotor is a
-  /// function of the vector being boosted.
+  /// This function returns a rotor \f$R_b\f$ that takes the input
+  /// vector \f$\hat{n}\f$ (which will be normalized) on the future
+  /// null sphere into its boosted version.  Note that this rotor is a
+  /// function of both the vector being boosted and the boost itself.
   /// 
   
-  const double alpha = GWFrames::Rapidity(v);
+  const double alpha = Rapidity(v);
   
   // If v is too small to make much difference, just return the identity
   const double absv = std::sqrt(v[0]*v[0]+v[1]*v[1]+v[2]*v[2]);

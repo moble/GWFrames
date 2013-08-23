@@ -39,6 +39,8 @@ namespace GWFrames {
     DataGrid(const int Spin, const int N_theta, const int N_phi, const std::vector<std::complex<double> >& D);
     explicit DataGrid(Modes M, const int N_theta=0, const int N_phi=0); // Can't be const& because of spinsfast design
     DataGrid(const Modes& M, const GWFrames::ThreeVector& v, const int N_theta=0, const int N_phi=0);
+    template <class FunctorOfQuaternion>
+    DataGrid(const int Spin, const int N_theta, const int N_phi, const GWFrames::ThreeVector& v, FunctorOfQuaternion f);
   public: // Modification
     inline DataGrid& SetSpin(const int ess) { s=ess; return *this; }
     inline DataGrid& SetNTheta(const int N_theta) { n_theta=N_theta; return *this; }
@@ -59,8 +61,8 @@ namespace GWFrames {
   DataGrid operator*(const double& a, const DataGrid& b);
   DataGrid operator/(const double& a, const DataGrid& b);
   DataGrid operator-(const double& a, const DataGrid& b);
-  DataGrid ConformalFactorGrid(const GWFrames::MobiusTransform& abcd, const int n_theta, const int n_phi);
   DataGrid ConformalFactorGrid(const GWFrames::ThreeVector& v, const int n_theta, const int n_phi);
+  DataGrid InverseConformalFactorGrid(const GWFrames::ThreeVector& v, const int n_theta, const int n_phi);
   
   
   class Modes {
@@ -172,7 +174,6 @@ namespace GWFrames {
   public: // Member functions
     // Transformations
     SliceModes BMSTransformation(const double& uPrime, const GWFrames::ThreeVector& v, GWFrames::Modes& delta) const;
-    // Scri BMSTransformation(const GWFrames::MobiusTransform& abcd, GWFrames::Modes& delta) const;
     // Access
     inline const SliceModes& operator[](const unsigned int i) const { return slices[i]; }
     inline SliceModes& operator[](const unsigned int i) { return slices[i]; }
