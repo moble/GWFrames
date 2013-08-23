@@ -40,8 +40,8 @@ namespace GWFrames {
 #include "Errors.hpp"
 
 using GWFrames::Quaternion;
-using GWFrames::StereographicCoordinate;
-using GWFrames::MobiusTransform;
+// using GWFrames::StereographicCoordinate;
+// using GWFrames::MobiusTransform;
 using GWFrames::FourVector;
 using GWFrames::DataGrid;
 using GWFrames::Modes;
@@ -95,17 +95,48 @@ DataGrid::DataGrid(Modes M, const int N_theta, const int N_phi)
 }
 
 DataGrid::DataGrid(const Modes& M, const GWFrames::ThreeVector& v, const int N_theta, const int N_phi)
-  : s(M.Spin()), n_theta(std::max(N_theta, 2*M.EllMax()+1)), n_phi(std::max(N_phi, 2*M.EllMax()+1)), data(n_phi*n_theta, zero)
+  : s(M.Spin()), n_theta(std::max(N_theta, 2*M.EllMax()+1)), n_phi(std::max(N_phi, 2*M.EllMax()+1)), data(n_phi*n_theta)
 {
   const double dtheta = M_PI/double(n_theta-1); // theta should return to M_PI
   const double dphi = 2*M_PI/double(n_phi); // phi should not return to 2*M_PI
-  int i=0;
-  for(int i_theta=0; i_theta<n_theta; ++i_theta) {
-    for(int i_phi=0; i_phi<n_phi; ++i_phi) {
-      const Quaternion R(dtheta*i_theta, dphi*i_phi);
-      const Quaternion Rb = GWFrames::Boost(v, (R*zHat*R.conjugate()).vec());
-      data[i] = M.EvaluateAtPoint(Rb*R);
-      ++i;
+  { int i=0;
+    for(int i_theta=0; i_theta<n_theta; ++i_theta) {
+      for(int i_phi=0; i_phi<n_phi; ++i_phi, ++i) {
+	const Quaternion Rp(dtheta*i_theta, dphi*i_phi);
+	const Quaternion R_b = GWFrames::Boost(-v, (Rp*zHat*Rp.conjugate()).vec());
+	data[i] = M.EvaluateAtPoint(R_b*Rp);
+      }
+    }
+  }
+}
+
+/// Constructor on boosted grid by means of functor
+template <class FunctorOfQuaternion>
+DataGrid::DataGrid(const int Spin, const int N_theta, const int N_phi, const GWFrames::ThreeVector& v, FunctorOfQuaternion f)
+  : s(Spin), n_theta(N_theta), n_phi(N_phi), data(n_phi*n_theta)
+{
+  /// \param Spin Integer spin weight
+  /// \param N_theta Number of points in output grid in theta
+  /// \param N_phi Number of points in output grid in phi
+  /// \param v Three-vector velocity of boosted frame relative to current frame
+  /// \param f Functor operating on a Quaternion object
+  /// 
+  /// The functor takes a Quaternion argument, which describes the
+  /// location and orientation of the point to be evaluated.  In
+  /// particular, the rotor takes the \f$\hat{z}\f$ vector into the
+  /// point at which the field is to be measured, and takes \f$\hat{x}
+  /// + i \hat{y}\f$ into the \f$m\f$ vector (within normalization)
+  /// needed for spin-weighted fields.
+  
+  const double dtheta = M_PI/double(n_theta-1); // theta should return to M_PI
+  const double dphi = 2*M_PI/double(n_phi); // phi should not return to 2*M_PI
+  { int i=0;
+    for(int i_theta=0; i_theta<n_theta; ++i_theta) {
+      for(int i_phi=0; i_phi<n_phi; ++i_phi, ++i) {
+	const Quaternion Rp(dtheta*i_theta, dphi*i_phi);
+	const Quaternion R_b = GWFrames::Boost(-v, (Rp*zHat*Rp.conjugate()).vec());
+	data[i] = f(R_b*Rp);
+      }
     }
   }
 }
@@ -262,24 +293,66 @@ DataGrid GWFrames::operator-(const double& a, const DataGrid& b) {
 
 
 
+// /// Construct a grid with the conformal factor at each point
+// DataGrid GWFrames::ConformalFactorGrid(const GWFrames::MobiusTransform& abcd, const int n_theta, const int n_phi) {
+//   std::vector<std::complex<double> > D(n_theta*n_phi);
+//   const double dtheta = M_PI/double(n_theta-1); // theta should return to M_PI
+//   const double dphi = 2*M_PI/double(n_phi); // phi should not return to 2*M_PI
+//   int i=0;
+//   for(int i_theta=0; i_theta<n_theta; ++i_theta) {
+//     for(int i_phi=0; i_phi<n_phi; ++i_phi) {
+//       D[i] = BoostConformalFactor(StereographicCoordinateFromAngles(dtheta*i_theta, dphi*i_phi), abcd);
+//       ++i;
+//     }
+//   }
+//   return DataGrid(0, n_theta, n_phi, D);
+// }
+
+// /// Construct a grid with the conformal factor at each point
+// DataGrid GWFrames::ConformalFactorGrid(const GWFrames::ThreeVector& v, const int n_theta, const int n_phi) {
+//   return GWFrames::ConformalFactorGrid(MobiusComponentsOfBoost(v), n_theta, n_phi);
+// }
+
 /// Construct a grid with the conformal factor at each point
-DataGrid GWFrames::ConformalFactorGrid(const GWFrames::MobiusTransform& abcd, const int n_theta, const int n_phi) {
+DataGrid GWFrames::ConformalFactorGrid(const GWFrames::ThreeVector& v, const int n_theta, const int n_phi) {
   std::vector<std::complex<double> > D(n_theta*n_phi);
   const double dtheta = M_PI/double(n_theta-1); // theta should return to M_PI
   const double dphi = 2*M_PI/double(n_phi); // phi should not return to 2*M_PI
-  int i=0;
-  for(int i_theta=0; i_theta<n_theta; ++i_theta) {
-    for(int i_phi=0; i_phi<n_phi; ++i_phi) {
-      D[i] = BoostConformalFactor(StereographicCoordinateFromAngles(dtheta*i_theta, dphi*i_phi), abcd);
-      ++i;
+  const double gamma = 1.0/std::sqrt(1-v[0]*v[0]-v[1]*v[1]-v[2]*v[2]);
+  { int i=0;
+    for(int i_theta=0; i_theta<n_theta; ++i_theta) {
+      for(int i_phi=0; i_phi<n_phi; ++i_phi, ++i) {
+	const double theta = dtheta*i_theta;
+	const double phi = dphi*i_phi;
+	D[i] = 1.0/(gamma*(1
+			   -v[0]*std::cos(phi)*std::sin(theta)
+			   -v[1]*std::sin(phi)*std::sin(theta)
+			   -v[2]*std::cos(theta)));
+      }
     }
   }
   return DataGrid(0, n_theta, n_phi, D);
 }
 
 /// Construct a grid with the conformal factor at each point
-DataGrid GWFrames::ConformalFactorGrid(const GWFrames::ThreeVector& v, const int n_theta, const int n_phi) {
-  return GWFrames::ConformalFactorGrid(MobiusComponentsOfBoost(v), n_theta, n_phi);
+DataGrid GWFrames::InverseConformalFactorGrid(const GWFrames::ThreeVector& v, const int n_theta, const int n_phi) {
+  std::vector<std::complex<double> > D(n_theta*n_phi);
+  const double dtheta = M_PI/double(n_theta-1); // theta should return to M_PI
+  const double dphi = 2*M_PI/double(n_phi); // phi should not return to 2*M_PI
+  const double gamma = 1.0/std::sqrt(1-v[0]*v[0]-v[1]*v[1]-v[2]*v[2]);
+  { int i=0;
+    for(int i_theta=0; i_theta<n_theta; ++i_theta) {
+      for(int i_phi=0; i_phi<n_phi; ++i_phi, ++i) {
+	const double theta = dtheta*i_theta;
+	const double phi = dphi*i_phi;
+	D[i] = gamma*(1
+		      -v[0]*std::cos(phi)*std::sin(theta)
+		      -v[1]*std::sin(phi)*std::sin(theta)
+		      -v[2]*std::cos(theta));
+      }
+    }
+  }
+  return DataGrid(0, n_theta, n_phi, D);
 }
 
 
@@ -594,7 +667,56 @@ Modes SliceModes::SuperMomentum() const {
   return psi2 + sigma*sigmadot.bar() + sigma.bar().edth().edth();
 }
 
-/// Exeucte a BMS transformation except for the supertranslation of points
+// /// Execute a BMS transformation except for the supertranslation of points
+// GWFrames::SliceGrid SliceModes::BMSTransformationOnSlice(const double u, const ThreeVector& v, const Modes& delta) const {
+//   /// A full BMS transformation is only possible using information
+//   /// from multiple slices due to the supertranslation moving points
+//   /// "between slices".  This function simply transforms the data
+//   /// within the slice by accounting for the change of grid at each
+//   /// point, and the change of grid points themselves.  The returned
+//   /// object is a `DataGrid` object, each point of which can then be
+//   /// used to interpolate to the supertranslated time.
+  
+//   const int n_theta = 2*EllMax()+1;
+//   const int n_phi = n_theta;
+  
+//   // Evaluate the functions we need on the appropriate grids
+//   const DataGrid oneoverK_g = GWFrames::InverseConformalFactorGrid(v, n_theta, n_phi);
+//   const DataGrid oneoverKcubed_g = oneoverK_g.pow(3);
+//   const DataGrid delta_g(delta, n_theta, n_phi);
+//   const DataGrid ethethdelta_g(delta.edth().edth(), n_theta, n_phi);
+//   const DataGrid ethupok_g = DataGrid(Modes((u-delta_g)/oneoverK_g).edth(), n_theta, n_phi)*oneoverK_g; // (\eth u') / K
+//   const DataGrid psi0_g(psi0, n_theta, n_phi);
+//   const DataGrid psi1_g(psi1, n_theta, n_phi);
+//   const DataGrid psi2_g(psi2, n_theta, n_phi);
+//   const DataGrid psi3_g(psi3, n_theta, n_phi);
+//   const DataGrid psi4_g(psi4, n_theta, n_phi);
+//   const DataGrid sigma_g(sigma, n_theta, n_phi);
+//   const DataGrid sigmadot_g(sigmadot, n_theta, n_phi);
+  
+//   // Construct new data accounting for changes of tetrad
+//   const Modes psi4factor( oneoverKcubed_g*(psi4_g) );
+//   const Modes psi3factor( oneoverKcubed_g*(psi3_g - ethupok_g*psi4_g) );
+//   const Modes psi2factor( oneoverKcubed_g*(psi2_g - ethupok_g*(2*psi3_g - ethupok_g*psi4_g)) );
+//   const Modes psi1factor( oneoverKcubed_g*(psi1_g - ethupok_g*(3*psi2_g - ethupok_g*(3*psi3_g - ethupok_g*psi4_g))) );
+//   const Modes psi0factor( oneoverKcubed_g*(psi0_g - ethupok_g*(4*psi1_g - ethupok_g*(6*psi2_g - ethupok_g*(4*psi3_g - ethupok_g*psi4_g)))) );
+//   const Modes sigmafactor( (sigma_g - ethethdelta_g)*oneoverK_g );
+//   const Modes sigmadotfactor( sigmadot_g*(oneoverK_g.pow(2)) );
+  
+//   // Evaluate the primed quantities on the boosted grids
+//   SliceGrid Grids;
+//   Grids.psi0 = DataGrid(psi0factor, v, n_theta, n_phi);
+//   Grids.psi1 = DataGrid(psi1factor, v, n_theta, n_phi);
+//   Grids.psi2 = DataGrid(psi2factor, v, n_theta, n_phi);
+//   Grids.psi3 = DataGrid(psi3factor, v, n_theta, n_phi);
+//   Grids.psi4 = DataGrid(psi4factor, v, n_theta, n_phi);
+//   Grids.sigma = DataGrid(sigmafactor, v, n_theta, n_phi);
+//   Grids.sigmadot = DataGrid(sigmadotfactor, v, n_theta, n_phi);
+  
+//   return Grids;
+// }
+
+/// Execute a BMS transformation except for the supertranslation of points
 GWFrames::SliceGrid SliceModes::BMSTransformationOnSlice(const double u, const ThreeVector& v, const Modes& delta) const {
   /// A full BMS transformation is only possible using information
   /// from multiple slices due to the supertranslation moving points
@@ -607,38 +729,31 @@ GWFrames::SliceGrid SliceModes::BMSTransformationOnSlice(const double u, const T
   const int n_theta = 2*EllMax()+1;
   const int n_phi = n_theta;
   
-  // Evaluate the functions we need on the appropriate grids
-  const DataGrid K_g = GWFrames::ConformalFactorGrid(v, n_theta, n_phi);
-  const DataGrid oneoverKcubed_g = K_g.pow(-3);
+  // Evaluate the functions we need on the boosted (and appropriately spin-transformed) grid
+throw(GWFrames_NotYetImplemented);
+  const DataGrid oneoverK_g = GWFrames::InverseConformalFactorGrid(v, n_theta, n_phi);
+  const DataGrid oneoverKcubed_g = oneoverK_g.pow(3);
   const DataGrid delta_g(delta, n_theta, n_phi);
   const DataGrid ethethdelta_g(delta.edth().edth(), n_theta, n_phi);
-  const DataGrid ethupok_g = DataGrid(Modes(K_g*(u-delta_g)).edth(), n_theta, n_phi)/K_g; // (\eth u') / K
-  const DataGrid psi0_g(psi0, n_theta, n_phi);
-  const DataGrid psi1_g(psi1, n_theta, n_phi);
-  const DataGrid psi2_g(psi2, n_theta, n_phi);
-  const DataGrid psi3_g(psi3, n_theta, n_phi);
-  const DataGrid psi4_g(psi4, n_theta, n_phi);
-  const DataGrid sigma_g(sigma, n_theta, n_phi);
-  const DataGrid sigmadot_g(sigmadot, n_theta, n_phi);
+  const DataGrid ethupok_g = DataGrid(Modes((u-delta_g)/oneoverK_g).edth(), n_theta, n_phi)*oneoverK_g; // (\eth u') / K
+throw(GWFrames_NotYetImplemented);
+  const DataGrid psi0_g(psi0, v, n_theta, n_phi);
+  const DataGrid psi1_g(psi1, v, n_theta, n_phi);
+  const DataGrid psi2_g(psi2, v, n_theta, n_phi);
+  const DataGrid psi3_g(psi3, v, n_theta, n_phi);
+  const DataGrid psi4_g(psi4, v, n_theta, n_phi);
+  const DataGrid sigma_g(sigma, v, n_theta, n_phi);
+  const DataGrid sigmadot_g(sigmadot, v, n_theta, n_phi);
   
   // Construct new data accounting for changes of tetrad
-  const Modes psi4factor( oneoverKcubed_g*(psi4_g) );
-  const Modes psi3factor( oneoverKcubed_g*(psi3_g - ethupok_g*psi4_g) );
-  const Modes psi2factor( oneoverKcubed_g*(psi2_g - ethupok_g*(2*psi3_g - ethupok_g*psi4_g)) );
-  const Modes psi1factor( oneoverKcubed_g*(psi1_g - ethupok_g*(3*psi2_g - ethupok_g*(3*psi3_g - ethupok_g*psi4_g))) );
-  const Modes psi0factor( oneoverKcubed_g*(psi0_g - ethupok_g*(4*psi1_g - ethupok_g*(6*psi2_g - ethupok_g*(4*psi3_g - ethupok_g*psi4_g)))) );
-  const Modes sigmafactor( (sigma_g - ethethdelta_g)/K_g );
-  const Modes sigmadotfactor( sigmadot_g/K_g.pow(2) );
-  
-  // Evaluate the primed quantities on the boosted grids
   SliceGrid Grids;
-  Grids.psi0 = DataGrid(psi0factor, v, n_theta, n_phi);
-  Grids.psi1 = DataGrid(psi1factor, v, n_theta, n_phi);
-  Grids.psi2 = DataGrid(psi2factor, v, n_theta, n_phi);
-  Grids.psi3 = DataGrid(psi3factor, v, n_theta, n_phi);
-  Grids.psi4 = DataGrid(psi4factor, v, n_theta, n_phi);
-  Grids.sigma = DataGrid(sigmafactor, v, n_theta, n_phi);
-  Grids.sigmadot = DataGrid(sigmadotfactor, v, n_theta, n_phi);
+  Grids.psi4 = oneoverKcubed_g*(psi4_g);
+  Grids.psi3 = oneoverKcubed_g*(psi3_g - ethupok_g*psi4_g);
+  Grids.psi2 = oneoverKcubed_g*(psi2_g - ethupok_g*(2*psi3_g - ethupok_g*psi4_g));
+  Grids.psi1 = oneoverKcubed_g*(psi1_g - ethupok_g*(3*psi2_g - ethupok_g*(3*psi3_g - ethupok_g*psi4_g)));
+  Grids.psi0 = oneoverKcubed_g*(psi0_g - ethupok_g*(4*psi1_g - ethupok_g*(6*psi2_g - ethupok_g*(4*psi3_g - ethupok_g*psi4_g))));
+  Grids.sigma = (sigma_g - ethethdelta_g)*oneoverK_g;
+  Grids.sigmadot = sigmadot_g*(oneoverK_g.pow(2));
   
   return Grids;
 }
@@ -719,10 +834,11 @@ SliceModes Scri::BMSTransformation(const double& uPrime, const ThreeVector& v, G
   /// transformation of the sphere (which encompasses rotations and
   /// boosts) and a supertranslation (which affects only the time
   /// coordinate on null infinity).  Here, the conformal
-  /// transformation of the sphere is expressed in terms of the
-  /// parameters of the Mobius transformation of the sphere's
-  /// stereographic coordinates.  The supertranslation is decomposed
-  /// into (scalar) spherical harmonics.
+  /// transformation of the sphere is assumed to be a simple boost,
+  /// described by the velocity vector `v`.  (The other freedom in the
+  /// conformal group is a simple rotation, which we assume is zero.)
+  /// The supertranslation is decomposed into (scalar) spherical
+  /// harmonics.
   /// 
   /// The work to be done by this function includes (1) evaluating the
   /// data on the appropriate equi-angular grid of the final frame,
