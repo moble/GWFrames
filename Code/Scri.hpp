@@ -110,8 +110,6 @@ namespace GWFrames {
     D psi0, psi1, psi2, psi3, psi4, sigma, sigmadot; // complex mode data for these objects on this slice
   public: // Constructors
     SliceOfScri(const int size=0);
-    // SliceOfScri(const D& Psi0, const D& Psi1, const D& Psi2,
-    // 		const D& Psi3, const D& Psi4, const D& Sigma, const D& SigmaDot);
   public: //Access
     inline const D& operator[](const unsigned int i) const {
       if(i==0) { return psi0; }

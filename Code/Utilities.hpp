@@ -14,7 +14,6 @@ namespace GWFrames {
   // Typedefs
   typedef std::vector<double> ThreeVector; // Can be assumed to have three components
   typedef std::vector<double> FourVector; // Can be assumed to have four components
-  // typedef std::vector<std::complex<double> > MobiusTransform; // Four complex components representing a,b,c,d
   
   // Useful operations on vectors
   double abs(const std::vector<double>& v);
@@ -40,29 +39,6 @@ namespace GWFrames {
   std::vector<double> Intersection(const std::vector<double>& t1, const std::vector<double>& t2,
 				   const double MinStep=0.005, const double MinTime=-1e300, const double MaxTime=1e300);
   std::vector<double> Union(const std::vector<double>& t1, const std::vector<double>& t2, const double MinStep=0.005);
-  
-  // // Stereographic representation of spherical coordinates and boosts of scri
-  // double Rapidity(const std::vector<double>& v);
-  // class StereographicCoordinate {
-  // public:
-  //   std::complex<double> z;
-  //   bool inv;
-  // public:
-  //   // Constructors
-  //   StereographicCoordinate(const std::complex<double>& Z, const bool Inverse=false);
-  //   StereographicCoordinate(ThreeVector x);
-  //   // Interpretations
-  //   inline double X() const { return 2*z.real()/(std::norm(z)+1); }
-  //   inline double Y() const { if(inv) { return -2*z.imag()/(std::norm(z)+1); } else { return 2*z.imag()/(std::norm(z)+1); } }
-  //   inline double Z() const { if(inv) { return (1-std::norm(z))/(1+std::norm(z)); } else { return (std::norm(z)-1)/(std::norm(z)+1); } }
-  //   void SphericalCoordinates(double& vartheta, double& varphi) const;
-  // };
-  // StereographicCoordinate StereographicCoordinateFromAngles(const double& vartheta, const double& varphi);
-  // MobiusTransform MobiusComponentsOfBoost(const std::vector<double>& v);
-  // StereographicCoordinate Boost(const StereographicCoordinate& z0, const MobiusTransform& abcd);
-  // StereographicCoordinate Boost(const StereographicCoordinate& z0, const std::vector<double>& v);
-  // double BoostConformalFactor(const StereographicCoordinate& z0, const MobiusTransform& abcd);
-  // double BoostConformalFactor(const StereographicCoordinate& z0, const std::vector<double>& v);
   
   /// 3x3 object wrapping GSL matrix; probably not needed directly
   class Matrix {
@@ -128,8 +104,6 @@ namespace GWFrames {
     void assign(int newn, int newm, const std::complex<double> &a); // resize and assign a constant value
     ~MatrixC();
   };
-  // std::vector<std::complex<double> > operator*(const std::vector<std::complex<double> >& b) const;
-  // std::vector<std::complex<double> > operator*(const std::vector<std::complex<double> >& a, const MatrixC& b);
   
   
 } // namespace GWFrames
