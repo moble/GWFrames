@@ -18,6 +18,7 @@ namespace GWFrames {
   // 
   
   class Modes; // Forward declaration for DataGrid constructor
+  class ScriFunctor { public: virtual double operator()(const GWFrames::Quaternion&) const { return 0.0; } };
   
   class DataGrid {
     /// This object holds complex spin-weighted data on the sphere in
@@ -39,8 +40,7 @@ namespace GWFrames {
     DataGrid(const int Spin, const int N_theta, const int N_phi, const std::vector<std::complex<double> >& D);
     explicit DataGrid(Modes M, const int N_theta=0, const int N_phi=0); // Can't be const& because of spinsfast design
     DataGrid(const Modes& M, const GWFrames::ThreeVector& v, const int N_theta=0, const int N_phi=0);
-    template <class FunctorOfQuaternion>
-    DataGrid(const int Spin, const int N_theta, const int N_phi, const GWFrames::ThreeVector& v, FunctorOfQuaternion f);
+    DataGrid(const int Spin, const int N_theta, const int N_phi, const GWFrames::ThreeVector& v, const ScriFunctor& f);
   public: // Modification
     inline DataGrid& SetSpin(const int ess) { s=ess; return *this; }
     inline DataGrid& SetNTheta(const int N_theta) { n_theta=N_theta; return *this; }
@@ -63,6 +63,7 @@ namespace GWFrames {
   DataGrid operator-(const double& a, const DataGrid& b);
   DataGrid ConformalFactorGrid(const GWFrames::ThreeVector& v, const int n_theta, const int n_phi);
   DataGrid InverseConformalFactorGrid(const GWFrames::ThreeVector& v, const int n_theta, const int n_phi);
+  DataGrid InverseConformalFactorBoostedGrid(const GWFrames::ThreeVector& v, const int n_theta, const int n_phi);
   
   
   class Modes {
