@@ -111,8 +111,7 @@ DataGrid::DataGrid(const Modes& M, const GWFrames::ThreeVector& v, const int N_t
 }
 
 /// Constructor on boosted grid by means of functor
-template <class FunctorOfQuaternion>
-DataGrid::DataGrid(const int Spin, const int N_theta, const int N_phi, const GWFrames::ThreeVector& v, FunctorOfQuaternion f)
+DataGrid::DataGrid(const int Spin, const int N_theta, const int N_phi, const GWFrames::ThreeVector& v, const ScriFunctor& f)
   : s(Spin), n_theta(N_theta), n_phi(N_phi), data(n_phi*n_theta)
 {
   /// \param Spin Integer spin weight
@@ -353,6 +352,24 @@ DataGrid GWFrames::InverseConformalFactorGrid(const GWFrames::ThreeVector& v, co
     }
   }
   return DataGrid(0, n_theta, n_phi, D);
+}
+
+class InverseConformalFactorFunctor : public GWFrames::ScriFunctor {
+private:
+  double gamma;
+  Quaternion v;
+public:
+  InverseConformalFactorFunctor(const GWFrames::ThreeVector& vi)
+    : gamma(1.0/std::sqrt(1-vi[0]*vi[0]-vi[1]*vi[1]-vi[2]*vi[2])),
+      v(0., vi[0], vi[1], vi[2]) { }
+  virtual double operator()(const GWFrames::Quaternion& R) const {
+    return gamma*( 1 - v.dot(R*zHat*R.conjugate()) );
+  }
+};
+/// Construct a boosted grid with the conformal factor at each point
+DataGrid GWFrames::InverseConformalFactorBoostedGrid(const GWFrames::ThreeVector& v, const int n_theta, const int n_phi) {
+  const InverseConformalFactorFunctor K(v);
+  return DataGrid(0, n_theta, n_phi, v, K);
 }
 
 
@@ -730,13 +747,11 @@ GWFrames::SliceGrid SliceModes::BMSTransformationOnSlice(const double u, const T
   const int n_phi = n_theta;
   
   // Evaluate the functions we need on the boosted (and appropriately spin-transformed) grid
-throw(GWFrames_NotYetImplemented);
-  const DataGrid oneoverK_g = GWFrames::InverseConformalFactorGrid(v, n_theta, n_phi);
+  const DataGrid oneoverK_g = GWFrames::InverseConformalFactorBoostedGrid(v, n_theta, n_phi);
   const DataGrid oneoverKcubed_g = oneoverK_g.pow(3);
-  const DataGrid delta_g(delta, n_theta, n_phi);
-  const DataGrid ethethdelta_g(delta.edth().edth(), n_theta, n_phi);
-  const DataGrid ethupok_g = DataGrid(Modes((u-delta_g)/oneoverK_g).edth(), n_theta, n_phi)*oneoverK_g; // (\eth u') / K
-throw(GWFrames_NotYetImplemented);
+  const DataGrid ethethdelta_g(delta.edth().edth(), v, n_theta, n_phi);
+  const DataGrid ethupok_g = DataGrid(Modes((u-DataGrid(delta,n_theta,n_phi))/GWFrames::InverseConformalFactorGrid(v, n_theta, n_phi)).edth(),
+				      v, n_theta, n_phi)*oneoverK_g; // (\eth u') / K
   const DataGrid psi0_g(psi0, v, n_theta, n_phi);
   const DataGrid psi1_g(psi1, v, n_theta, n_phi);
   const DataGrid psi2_g(psi2, v, n_theta, n_phi);
