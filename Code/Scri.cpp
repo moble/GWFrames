@@ -633,13 +633,13 @@ GWFrames::FourVector SliceModes::FourMomentum() const {
   /// of the supermomentum.
   const Modes Psi = SuperMomentum();
   const double sqrt4pi = std::sqrt(4*M_PI);
-  const double sqrt3 = std::sqrt(3);
-  const double sqrt6 = std::sqrt(6);
+  const double sqrt8pi = std::sqrt(8*M_PI);
+  const double sqrt3 = std::sqrt(3.0);
   FourVector p(4);
   p[0] = std::real(Psi[0])/sqrt4pi;
-  p[1] = std::real((Psi[1]-Psi[3]))/(sqrt4pi*sqrt6);
-  p[2] = std::real(complexi*(Psi[1]+Psi[3]))/(sqrt4pi*sqrt6);
-  p[3] = std::real(Psi[2])/(sqrt4pi*sqrt3);
+  p[1] = std::real((Psi[1]-Psi[3]))/(sqrt3*sqrt8pi);
+  p[2] = -std::real(complexi*(Psi[1]+Psi[3]))/(sqrt3*sqrt8pi);
+  p[3] = std::real(Psi[2])/(sqrt3*sqrt4pi);
   return p;
 }
 
