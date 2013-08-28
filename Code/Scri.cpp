@@ -1,8 +1,6 @@
 // Copyright (c) 2013, Michael Boyle
 // See LICENSE file for details
 
-bool Debug=false;
-
 #include "Scri.hpp"
 
 #include <omp.h>
@@ -42,8 +40,6 @@ namespace GWFrames {
 #include "Errors.hpp"
 
 using GWFrames::Quaternion;
-// using GWFrames::StereographicCoordinate;
-// using GWFrames::MobiusTransform;
 using GWFrames::FourVector;
 using GWFrames::DataGrid;
 using GWFrames::Modes;
@@ -408,23 +404,9 @@ Modes::Modes(const int spin, const std::vector<std::complex<double> >& Data)
 Modes::Modes(DataGrid D, const int L)
   : s(D.Spin()), ellMax(std::max(std::min((D.N_theta()-1)/2, (D.N_phi()-1)/2), L)), data(N_lm(ellMax))
 {
-  // if(Debug) {
-  //   std::cerr << __FILE__ << ":" << __LINE__ << ": s=" << s << "  ellMax=" << ellMax << "\nD = [";
-  //   for(unsigned int i=0; i<D.size(); ++i) {
-  //     std::cerr << D[i] << ", ";
-  //   }
-  //   std::cerr << "]" << std::endl;
-  // }
   spinsfast_map2salm(reinterpret_cast<fftw_complex*>(&D[0]),
 		     reinterpret_cast<fftw_complex*>(&data[0]),
 		     s, D.N_theta(), D.N_phi(), ellMax);
-  // if(Debug) {
-  //   std::cerr << "data = [";
-  //   for(unsigned int i=0; i<data.size(); ++i) {
-  //     std::cerr << data[i] << ", ";
-  //   }
-  //   std::cerr << "]\n\n" << std::endl;
-  // }
 }
 
 GWFrames::Modes& GWFrames::Modes::operator=(const Modes& B) {
@@ -662,20 +644,6 @@ std::complex<double> Modes::EvaluateAtPoint(const GWFrames::Quaternion& R) const
       }
     }
   }
-  // if(Debug && (d!=d || std::abs(d)>1.0e100)) {
-  //   complex<double> d(0.0, 0.0);
-  //   { int i=0;
-  //     for(int ell=0; ell<=ellMax; ++ell) {
-  // 	for(int m=-ell; m<=ell; ++m, ++i) {
-  // 	  d += data[i]*Y(ell,m);
-  // 	  std::cerr << "\tdata[" << i << "]=" << data[i]
-  // 		    << "Y[" << ell << ", " << m << "]=" << Y(ell,m)
-  // 		    << "\tdata*Y=" << data[i]*Y(ell,m)
-  // 		    << "\td=" << d << std::endl;
-  // 	}
-  //     }
-  //   }
-  // }
   return d;
 }
 
@@ -683,9 +651,9 @@ std::complex<double> Modes::EvaluateAtPoint(const GWFrames::Quaternion& R) const
 GWFrames::ThreeVector GWFrames::vFromOneOverK(const GWFrames::Modes& OneOverK) {
   GWFrames::ThreeVector v(3);
   const double gamma = std::real(OneOverK[0]/sqrt4pi);
-  v[0] = -std::real((OneOverK[1]-OneOverK[3])*sqrt3/sqrt8pi)/gamma;
-  v[1] = -std::real(-complexi*(OneOverK[1]+OneOverK[3])*sqrt3/sqrt8pi)/gamma;
-  v[2] = -std::real(OneOverK[2]*sqrt3/sqrt4pi)/gamma;
+  v[0] = -std::real((OneOverK[1]-OneOverK[3])/(sqrt3*sqrt8pi))/gamma;
+  v[1] = -std::real(-complexi*(OneOverK[1]+OneOverK[3])/(sqrt3*sqrt8pi))/gamma;
+  v[2] = -std::real(OneOverK[2]/(sqrt3*sqrt4pi))/gamma;
   return v;
 }
 
@@ -973,10 +941,12 @@ SliceModes Scri::BMSTransformation(const double& u0, const ThreeVector& v, const
     u_original[i-iMin] = t[i];
     transformedslices[i-iMin] = slices[i].BMSTransformationOnSlice(t[i], v, delta);
   }
+  const int n_theta2 = transformedslices[0][0].N_theta();
+  const int n_phi2 = transformedslices[0][0].N_phi();
   
   // (2) Interpolate to new retarded time
   // Create new object to hold the data
-  SliceGrid BMStransformedGrid(n_theta*n_phi);
+  SliceGrid BMStransformedGrid(n_theta2*n_phi2);
   // Initialize the GSL interpolators for the data
   gsl_interp_accel* accRe = gsl_interp_accel_alloc();
   gsl_interp_accel* accIm = gsl_interp_accel_alloc();
@@ -984,8 +954,8 @@ SliceModes Scri::BMSTransformation(const double& u0, const ThreeVector& v, const
   gsl_spline* splineIm = gsl_spline_alloc(gsl_interp_cspline, Nslices);
   // Loop through, doing the work
   { int i_g=0;
-    for(int i_t=0; i_t<n_theta; ++i_t) { // Loop over theta points
-      for(int i_p=0; i_p<n_phi; ++i_p, ++i_g) { // Loop over phi points
+    for(int i_t=0; i_t<n_theta2; ++i_t) { // Loop over theta points
+      for(int i_p=0; i_p<n_phi2; ++i_p, ++i_g) { // Loop over phi points
 	const double u_i = std::real(u[i_g]); // Interpolate the data at this point to u_i (measured in the current frame)
 	for(int i_D=0; i_D<7; ++i_D) { // Loop over data types
 	  // Fill the storage vectors for extrapolation
@@ -1061,10 +1031,6 @@ GWFrames::Modes GWFrames::SuperMomenta::BMSTransform(const GWFrames::Modes& OneO
   while(t[iMin]<uMin && iMin<int(t.size())-1) { ++iMin; } // t[iMin] is now strictly greater than uMin
   iMin = std::max(0, iMin-3);
   iMax = std::min(int(t.size())-1, std::max(iMin+7, iMax+3));
-  // std::cerr << __FILE__ << ": " << __LINE__ << ":\n"
-  // 	    << "uMax=" << uMax << "\tuMin=" << uMin << std::endl
-  // 	    << "iMax=" << iMax << "\tiMin=" << iMin << std::endl
-  // 	    << "t[iMax]=" << t[iMax] << "\tt[iMin]=" << t[iMin] << std::endl;
   
   // (1) Evaluate BMS-transformed data on equi-angular grids of the final frame at a series of times
   //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1072,26 +1038,8 @@ GWFrames::Modes GWFrames::SuperMomenta::BMSTransform(const GWFrames::Modes& OneO
   vector<DataGrid> transformedslices(Nslices);
   vector<double> u_original(Nslices);
   for(int i=iMin; i<=iMax; ++i) {
-    // std::cerr << __FILE__ << ": " << __LINE__ << ": Psi[i].EllMax()=" << Psi[i].EllMax() << "" << std::endl;
     u_original[i-iMin] = t[i];
-    // transformedslices[i-iMin] = DataGrid(Psi[i], v, n_theta, n_phi); // passed
-    // transformedslices[i-iMin] = DataGrid((Psi[i] - delta.edth2edthbar2()), v, n_theta, n_phi); // passed
-    // transformedslices[i-iMin] = DataGrid((Psi[i])*OneOverK.pow(3), v, n_theta, n_phi); // failed
-    // transformedslices[i-iMin] = DataGrid((Psi[i])*OneOverK, v, n_theta, n_phi); // failed
     transformedslices[i-iMin] = DataGrid((Psi[i] - delta.edth2edthbar2())*OneOverK.pow(3), v, n_theta, n_phi);
-    {
-      const Modes Psi_i(transformedslices[i-iMin]);
-      // const Modes& Psi_i = Psi[i];
-      FourVector p(4);
-      p[0] = std::real(Psi_i[0])/sqrt4pi;
-      p[1] = std::real((Psi_i[1]-Psi_i[3]))/(sqrt3*sqrt8pi);
-      p[2] = -std::real(complexi*(Psi_i[1]+Psi_i[3]))/(sqrt3*sqrt8pi);
-      p[3] = std::real(Psi_i[2])/(sqrt3*sqrt4pi);
-      const double M = std::sqrt(p[0]*p[0]-p[1]*p[1]-p[2]*p[2]-p[3]*p[3]);
-      
-      std::cerr << __FILE__ << ": " << __LINE__ << ": i=" << i << "\tM=" << M << "\n\tp=["
-		<< p[0] << ", " << p[1] << ", " << p[2] << ", " << p[3] << "]\n" << std::endl;
-    }
   }
   const int n_theta2 = transformedslices[0].N_theta();
   const int n_phi2 = transformedslices[0].N_phi();
@@ -1133,19 +1081,6 @@ GWFrames::Modes GWFrames::SuperMomenta::BMSTransform(const GWFrames::Modes& OneO
   
   // (3) Transform back to spectral space
   ///////////////////////////////////////
-  {
-    const Modes Psi_i(BMStransformedGrid);
-    FourVector p(4);
-    p[0] = std::real(Psi_i[0])/sqrt4pi;
-    p[1] = std::real((Psi_i[1]-Psi_i[3]))/(sqrt3*sqrt8pi);
-    p[2] = -std::real(complexi*(Psi_i[1]+Psi_i[3]))/(sqrt3*sqrt8pi);
-    p[3] = std::real(Psi_i[2])/(sqrt3*sqrt4pi);
-    const double M = std::sqrt(p[0]*p[0]-p[1]*p[1]-p[2]*p[2]-p[3]*p[3]);
-    
-    std::cerr << __FILE__ << ": " << __LINE__ << ": M=" << M << "\n\tp=["
-	      << p[0] << ", " << p[1] << ", " << p[2] << ", " << p[3] << "]" << std::endl;
-    return Psi_i;
-  }
   return Modes(BMStransformedGrid);
 }
 
@@ -1159,33 +1094,6 @@ void GWFrames::SuperMomenta::MoreschiIteration(GWFrames::Modes& OneOverK, GWFram
   /// then replaces the values of that BMS transformation with the
   /// next step in the Moreschi algorithm.
   
-  // for(unsigned int i=0; i<Psi.size(); ++i) {
-  //   std::cerr << "\n\ni=" << i << "\n===================";
-  //   const Modes Psi_i = Psi[i];
-  //   FourVector p(4);
-  //   p[0] = std::real(Psi_i[0])/sqrt4pi;
-  //   p[1] = std::real((Psi_i[1]-Psi_i[3]))/(sqrt3*sqrt8pi);
-  //   p[2] = -std::real(complexi*(Psi_i[1]+Psi_i[3]))/(sqrt3*sqrt8pi);
-  //   p[3] = std::real(Psi_i[2])/(sqrt3*sqrt4pi);
-  //   const double M = std::sqrt(p[0]*p[0]-p[1]*p[1]-p[2]*p[2]-p[3]*p[3]);
-    
-  //   std::cerr << "\n" << __FILE__ << ": " << __LINE__ << ": M=" << M << "\n\tp=["
-  // 	      << p[0] << ", " << p[1] << ", " << p[2] << ", " << p[3] << "]\n"
-  // 	      << "OneOverK_g=[";
-  //   const DataGrid OneOverK_g(OneOverK);
-  //   const unsigned int OneOverK_gsize = OneOverK_g.N_theta()*OneOverK_g.N_phi();
-  //   for(unsigned int i=0; i<OneOverK_gsize; ++i) {
-  //     std::cerr << OneOverK_g[i] << ", ";
-  //   }
-  //   std::cerr << "]\ndelta_g=[";
-  //   const DataGrid delta_g(delta);
-  //   const unsigned int delta_gsize = delta_g.N_theta()*delta_g.N_phi();
-  //   for(unsigned int i=0; i<delta_gsize; ++i) {
-  //     std::cerr << delta_g[i] << ", ";
-  //   }
-  //   std::cerr << "]\n" << std::endl;
-  // }
-  
   // Record the values of the supermomentum, four-momentum, and mass on this slice
   const Modes Psi_i = BMSTransform(OneOverK, delta);
   FourVector p(4);
@@ -1195,17 +1103,10 @@ void GWFrames::SuperMomenta::MoreschiIteration(GWFrames::Modes& OneOverK, GWFram
   p[3] = std::real(Psi_i[2])/(sqrt3*sqrt4pi);
   const double M = std::sqrt(p[0]*p[0]-p[1]*p[1]-p[2]*p[2]-p[3]*p[3]);
   
-  // std::cerr << __FILE__ << ": " << __LINE__ << ": M=" << M << "\n\tp=["
-  // 	    << p[0] << ", " << p[1] << ", " << p[2] << ", " << p[3] << "]" << std::endl;
-  
   // Increment the values of delta to the next step
   const int ellMax = delta.EllMax();
   const Modes deltaderiv = Psi_i + Modes(M/DataGrid(OneOverK, 7, 7).pow(3));
   { int i_m=4;
-    // delta[i_m++] = u0; // (ell,m) = (0,0)
-    // delta[i_m++] = 0.0; // (ell,m) = (1,-1)
-    // delta[i_m++] = 0.0; // (ell,m) = (1, 0)
-    // delta[i_m++] = 0.0; // (ell,m) = (1,+1)
     for(int ell=2; ell<=ellMax; ++ell) {
       const double factor = 4.0/((ell-1)*(ell)*(ell+1)*(ell+2));
       for(int m=-ell; m<=ell; ++m, ++i_m) {
