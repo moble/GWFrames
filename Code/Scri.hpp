@@ -46,6 +46,7 @@ namespace GWFrames {
     inline DataGrid& SetNTheta(const int N_theta) { n_theta=N_theta; return *this; }
     inline DataGrid& SetNPhi(const int N_phi) { n_phi=N_phi; return *this; }
   public: // Access and operators
+    inline unsigned int size() const { return data.size(); }
     inline int Spin() const { return s; }
     inline int N_theta() const { return n_theta; }
     inline int N_phi() const { return n_phi; }
@@ -60,6 +61,7 @@ namespace GWFrames {
   }; // class DataGrid
   DataGrid operator*(const double& a, const DataGrid& b);
   DataGrid operator/(const double& a, const DataGrid& b);
+  DataGrid operator+(const double& a, const DataGrid& b);
   DataGrid operator-(const double& a, const DataGrid& b);
   DataGrid ConformalFactorGrid(const GWFrames::ThreeVector& v, const int n_theta, const int n_phi);
   DataGrid InverseConformalFactorGrid(const GWFrames::ThreeVector& v, const int n_theta, const int n_phi);
@@ -80,26 +82,32 @@ namespace GWFrames {
     Modes(const int size=0): s(0), ellMax(0), data(size) { }
     Modes(const Modes& A) : s(A.s), ellMax(A.ellMax), data(A.data) { }
     Modes(const int spin, const std::vector<std::complex<double> >& Data);
-    explicit Modes(DataGrid D); // Can't be const& because of spinsfast design
+    explicit Modes(DataGrid D, const int L=-1); // Can't be const& because of spinsfast design
+    Modes& operator=(const Modes& B);
   public: // Modification
     inline Modes& SetSpin(const int ess) { s=ess; return *this; }
     inline Modes& SetEllMax(const int ell) { ellMax=ell; return *this; }
   public: // Access
+    inline unsigned int size() const { return data.size(); }
     inline int Spin() const { return s; }
     inline int EllMax() const { return ellMax; }
     inline std::complex<double> operator[](const unsigned int i) const { return data[i]; }
     inline std::complex<double>& operator[](const unsigned int i) { return data[i]; }
     inline std::vector<std::complex<double> > Data() const { return data; }
   public: // Operations
+    Modes pow(const int p) const { return Modes(DataGrid(*this, 2*EllMax()*p+1, 2*EllMax()*p+1).pow(p)); }
     Modes bar() const;
     Modes operator*(const Modes& M) const;
     Modes operator/(const Modes& M) const;
     Modes operator+(const Modes& M) const;
+    Modes operator-(const Modes& M) const;
     Modes edth() const;
     Modes edthbar() const;
+    Modes edth2edthbar2() const;
     std::complex<double> EvaluateAtPoint(const double vartheta, const double varphi) const;
     std::complex<double> EvaluateAtPoint(const GWFrames::Quaternion& R) const;
   }; // class Modes
+  GWFrames::ThreeVector vFromOneOverK(const GWFrames::Modes& OneOverK);
   
   
   template <class D>
@@ -110,6 +118,7 @@ namespace GWFrames {
     D psi0, psi1, psi2, psi3, psi4, sigma, sigmadot; // complex mode data for these objects on this slice
   public: // Constructors
     SliceOfScri(const int size=0);
+    SliceOfScri(const SliceOfScri& S) : psi0(S.psi0), psi1(S.psi1), psi2(S.psi2), psi3(S.psi3), psi4(S.psi4), sigma(S.sigma), sigmadot(S.sigmadot) { }
   public: //Access
     inline const D& operator[](const unsigned int i) const {
       if(i==0) { return psi0; }
@@ -140,6 +149,7 @@ namespace GWFrames {
   public:
     // Constructors
     SliceModes(const int ellMax=0);
+    SliceModes(const SliceModes& S) : SliceOfScri<Modes>(S) { }
     // Useful quantities
     int EllMax() const;
     double Mass() const;
@@ -147,6 +157,8 @@ namespace GWFrames {
     Modes SuperMomentum() const;
     // Transformations
     SliceGrid BMSTransformationOnSlice(const double u, const GWFrames::ThreeVector& v, const GWFrames::Modes& delta) const;
+    // Moreschi algorithm
+    void MoreschiIteration(GWFrames::Modes& OneOverK_ip1, GWFrames::Modes& delta_ip1) const;
   }; // class SliceModes
   
   
@@ -170,13 +182,37 @@ namespace GWFrames {
     Scri(const GWFrames::Waveform& psi0, const GWFrames::Waveform& psi1,
   	 const GWFrames::Waveform& psi2, const GWFrames::Waveform& psi3,
   	 const GWFrames::Waveform& psi4, const GWFrames::Waveform& sigma);
+    Scri(const Scri& S) : t(S.t), slices(S.slices) { }
   public: // Member functions
     // Transformations
-    SliceModes BMSTransformation(const double& uPrime, const GWFrames::ThreeVector& v, GWFrames::Modes& delta) const;
+    SliceModes BMSTransformation(const double& u0, const GWFrames::ThreeVector& v, const GWFrames::Modes& delta) const;
     // Access
-    inline const SliceModes& operator[](const unsigned int i) const { return slices[i]; }
+    inline int NTimes() const { return t.size(); }
+    inline const std::vector<double> T() const { return t; }
+    inline const SliceModes operator[](const unsigned int i) const { return slices[i]; }
     inline SliceModes& operator[](const unsigned int i) { return slices[i]; }
   }; // class Scri
+  
+  
+  class SuperMomenta {
+  private:
+    std::vector<double> t;
+    std::vector<Modes> Psi;
+  public:
+    // Constructors
+    SuperMomenta(const unsigned int size) : t(size), Psi(size) { }
+    SuperMomenta(const SuperMomenta& S) : t(S.t), Psi(S.Psi) { }
+    SuperMomenta(const std::vector<double>& T, const std::vector<Modes>& psi) : t(T), Psi(psi) { }
+    SuperMomenta(const Scri& scri);
+    // Access
+    inline int NTimes() const { return t.size(); }
+    inline const std::vector<double> T() const { return t; }
+    inline const Modes operator[](const unsigned int i) const { return Psi[i]; }
+    inline Modes& operator[](const unsigned int i) { return Psi[i]; }
+    // Transformations
+    Modes BMSTransform(const GWFrames::Modes& OneOverK, const GWFrames::Modes& delta) const;
+    void MoreschiIteration(GWFrames::Modes& OneOverK, GWFrames::Modes& delta) const;
+  }; // class SuperMomenta
   
   
 } // namespace GWFrames

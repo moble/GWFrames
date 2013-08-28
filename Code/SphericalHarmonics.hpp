@@ -9,7 +9,7 @@
 
 namespace GWFrames {
   
-  const int ellMax_GWFrames = 16;
+  const int ellMax_GWFrames = 32; //16;
   
   /// Object for pre-computing and retrieving factorials
   class FactorialFunctor {
