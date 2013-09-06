@@ -68,6 +68,9 @@ const Quaternion zHat(0,0,0,1);
 const double sqrt4pi = std::sqrt(4*M_PI);
 const double sqrt8pi = std::sqrt(8*M_PI);
 const double sqrt3 = std::sqrt(3.0);
+const double sqrt3over2 = std::sqrt(1.5);
+
+
 
 //////////////
 // DataGrid //
@@ -99,26 +102,11 @@ DataGrid::DataGrid(const Modes& M, const GWFrames::ThreeVector& v, const int N_t
 {
   const double dtheta = M_PI/double(n_theta-1); // theta should return to M_PI
   const double dphi = 2*M_PI/double(n_phi); // phi should not return to 2*M_PI
-  { int i=0;
-    for(int i_theta=0; i_theta<n_theta; ++i_theta) {
-      for(int i_phi=0; i_phi<n_phi; ++i_phi, ++i) {
-	const Quaternion Rp(dtheta*i_theta, dphi*i_phi);
-	const Quaternion R_b = GWFrames::Boost(-v, (Rp*zHat*Rp.conjugate()).vec());
-	data[i] = M.EvaluateAtPoint(R_b*Rp);
-	if(Debug && (data[i]!=data[i] || std::abs(data[i])>1.0e100)) {
-	  std::cerr << __FILE__ << ":" << __LINE__ << ":\t"
-		    << "\tRp = " << Rp
-		    << "\tR_b = " << R_b
-		    << "\tdata[" << i << "] = " << data[i]
-		    // << "\nM.data = [";
-	  // for(unsigned int j=0; j<M.size(); ++j) {
-	  //   std::cerr << M[j] << ", ";
-	  // }
-	  // std::cerr << "]" << std::endl;
-		    << std::endl;
-	  Debug = false;
-	}
-      }
+  for(int i_g=0, i_theta=0; i_theta<n_theta; ++i_theta) {
+    for(int i_phi=0; i_phi<n_phi; ++i_phi, ++i_g) {
+      const Quaternion Rp(dtheta*i_theta, dphi*i_phi);
+      const Quaternion R_b = GWFrames::Boost(-v, (Rp*zHat*Rp.conjugate()).vec());
+      data[i_g] = M.EvaluateAtPoint(R_b*Rp);
     }
   }
 }
@@ -142,13 +130,11 @@ DataGrid::DataGrid(const int Spin, const int N_theta, const int N_phi, const GWF
   
   const double dtheta = M_PI/double(n_theta-1); // theta should return to M_PI
   const double dphi = 2*M_PI/double(n_phi); // phi should not return to 2*M_PI
-  { int i=0;
-    for(int i_theta=0; i_theta<n_theta; ++i_theta) {
-      for(int i_phi=0; i_phi<n_phi; ++i_phi, ++i) {
-	const Quaternion Rp(dtheta*i_theta, dphi*i_phi);
-	const Quaternion R_b = GWFrames::Boost(-v, (Rp*zHat*Rp.conjugate()).vec());
-	data[i] = f(R_b*Rp);
-      }
+  for(int i_g=0, i_theta=0; i_theta<n_theta; ++i_theta) {
+    for(int i_phi=0; i_phi<n_phi; ++i_phi, ++i_g) {
+      const Quaternion Rp(dtheta*i_theta, dphi*i_phi);
+      const Quaternion R_b = GWFrames::Boost(-v, (Rp*zHat*Rp.conjugate()).vec());
+      data[i_g] = f(R_b*Rp);
     }
   }
 }
@@ -320,16 +306,14 @@ DataGrid GWFrames::ConformalFactorGrid(const GWFrames::ThreeVector& v, const int
   const double dtheta = M_PI/double(n_theta-1); // theta should return to M_PI
   const double dphi = 2*M_PI/double(n_phi); // phi should not return to 2*M_PI
   const double gamma = 1.0/std::sqrt(1-v[0]*v[0]-v[1]*v[1]-v[2]*v[2]);
-  { int i=0;
-    for(int i_theta=0; i_theta<n_theta; ++i_theta) {
-      for(int i_phi=0; i_phi<n_phi; ++i_phi, ++i) {
-	const double theta = dtheta*i_theta;
-	const double phi = dphi*i_phi;
-	D[i] = 1.0/(gamma*(1
-			   -v[0]*std::cos(phi)*std::sin(theta)
-			   -v[1]*std::sin(phi)*std::sin(theta)
-			   -v[2]*std::cos(theta)));
-      }
+  for(int i_g=0, i_theta=0; i_theta<n_theta; ++i_theta) {
+    for(int i_phi=0; i_phi<n_phi; ++i_phi, ++i_g) {
+      const double theta = dtheta*i_theta;
+      const double phi = dphi*i_phi;
+      D[i_g] = 1.0/(gamma*(1
+			 -v[0]*std::cos(phi)*std::sin(theta)
+			 -v[1]*std::sin(phi)*std::sin(theta)
+			 -v[2]*std::cos(theta)));
     }
   }
   return DataGrid(0, n_theta, n_phi, D);
@@ -341,16 +325,14 @@ DataGrid GWFrames::InverseConformalFactorGrid(const GWFrames::ThreeVector& v, co
   const double dtheta = M_PI/double(n_theta-1); // theta should return to M_PI
   const double dphi = 2*M_PI/double(n_phi); // phi should not return to 2*M_PI
   const double gamma = 1.0/std::sqrt(1-v[0]*v[0]-v[1]*v[1]-v[2]*v[2]);
-  { int i=0;
-    for(int i_theta=0; i_theta<n_theta; ++i_theta) {
-      for(int i_phi=0; i_phi<n_phi; ++i_phi, ++i) {
-	const double theta = dtheta*i_theta;
-	const double phi = dphi*i_phi;
-	D[i] = gamma*(1
+  for(int i_g=0, i_theta=0; i_theta<n_theta; ++i_theta) {
+    for(int i_phi=0; i_phi<n_phi; ++i_phi, ++i_g) {
+      const double theta = dtheta*i_theta;
+      const double phi = dphi*i_phi;
+      D[i_g] = gamma*(1
 		      -v[0]*std::cos(phi)*std::sin(theta)
 		      -v[1]*std::sin(phi)*std::sin(theta)
 		      -v[2]*std::cos(theta));
-      }
     }
   }
   return DataGrid(0, n_theta, n_phi, D);
@@ -527,12 +509,10 @@ Modes Modes::edth() const {
   Modes B(A);
   const int ellMin = std::abs(s+1);
   
-  { int i=0;
-    for(int ell=0; ell<=ellMax; ++ell) {
-      const double factor = (ell<ellMin ? 0.0 : std::sqrt((ell-s)*(ell+s+1.)/2.));
-      for(int m=-ell; m<=ell; ++m, ++i) {
-	B.data[i] *= factor;
-      }
+  for(int i_m=0, ell=0; ell<=ellMax; ++ell) {
+    const double factor = (ell<ellMin ? 0.0 : std::sqrt((ell-s)*(ell+s+1.)/2.));
+    for(int m=-ell; m<=ell; ++m, ++i_m) {
+      B.data[i_m] *= factor;
     }
   }
   
@@ -573,12 +553,10 @@ Modes Modes::edthbar() const {
   Modes B(A);
   const int ellMin = std::abs(s-1);
   
-  { int i=0;
-    for(int ell=0; ell<=ellMax; ++ell) {
-      const double factor = (ell<ellMin ? 0.0 : -std::sqrt((ell+s)*(ell-s+1.)/2.));
-      for(int m=-ell; m<=ell; ++m, ++i) {
-	B.data[i] *= factor;
-      }
+  for(int i_m=0, ell=0; ell<=ellMax; ++ell) {
+    const double factor = (ell<ellMin ? 0.0 : -std::sqrt((ell+s)*(ell-s+1.)/2.));
+    for(int m=-ell; m<=ell; ++m, ++i_m) {
+      B.data[i_m] *= factor;
     }
   }
   
@@ -590,12 +568,10 @@ Modes Modes::edthbar() const {
 Modes Modes::edth2edthbar2() const {
   Modes B(*this);
   
-  { int i=0;
-    for(int ell=0; ell<=ellMax; ++ell) {
-      const double factor = (ell-1)*(ell)*(ell+1)*(ell+2);
-      for(int m=-ell; m<=ell; ++m, ++i) {
-	B.data[i] *= factor;
-      }
+  for(int i_m=0, ell=0; ell<=ellMax; ++ell) {
+    const double factor = (ell-1)*(ell)*(ell+1)*(ell+2);
+    for(int m=-ell; m<=ell; ++m, ++i_m) {
+      B.data[i_m] *= factor;
     }
   }
   
@@ -637,11 +613,9 @@ std::complex<double> Modes::EvaluateAtPoint(const GWFrames::Quaternion& R) const
   
   complex<double> d(0.0, 0.0);
   GWFrames::SWSH Y(s, R);
-  { int i=0;
-    for(int ell=0; ell<=ellMax; ++ell) {
-      for(int m=-ell; m<=ell; ++m, ++i) {
-	d += data[i]*Y(ell,m);
-      }
+  for(int i_m=0, ell=0; ell<=ellMax; ++ell) {
+    for(int m=-ell; m<=ell; ++m, ++i_m) {
+      d += data[i_m]*Y(ell,m);
     }
   }
   return d;
@@ -650,11 +624,15 @@ std::complex<double> Modes::EvaluateAtPoint(const GWFrames::Quaternion& R) const
 /// Derive three-velocity from the inverse conformal metric
 GWFrames::ThreeVector GWFrames::vFromOneOverK(const GWFrames::Modes& OneOverK) {
   GWFrames::ThreeVector v(3);
-  const double gamma = std::real(OneOverK[0]/sqrt4pi);
-  v[0] = -std::real((OneOverK[1]-OneOverK[3])/(sqrt3*sqrt8pi))/gamma;
-  v[1] = -std::real(-complexi*(OneOverK[1]+OneOverK[3])/(sqrt3*sqrt8pi))/gamma;
-  v[2] = -std::real(OneOverK[2]/(sqrt3*sqrt4pi))/gamma;
+  v[0] = std::real( sqrt3over2 * (OneOverK[3]-OneOverK[1]) / OneOverK[0] );
+  v[1] = std::real( complexi * sqrt3over2 * (OneOverK[3]+OneOverK[1]) / OneOverK[0] );
+  v[2] = std::real( -sqrt3 * OneOverK[2] / OneOverK[0] );
   return v;
+  // const double gamma = std::real(OneOverK[0]/sqrt4pi);
+  // v[0] = -std::real((OneOverK[1]-OneOverK[3])/(sqrt3*sqrt8pi))/gamma;
+  // v[1] = -std::real(-complexi*(OneOverK[1]+OneOverK[3])/(sqrt3*sqrt8pi))/gamma;
+  // v[2] = -std::real(OneOverK[2]/(sqrt3*sqrt4pi))/gamma;
+  // return v;
 }
 
 
@@ -718,10 +696,10 @@ GWFrames::FourVector SliceModes::FourMomentum() const {
   const Modes Psi = SuperMomentum();
   FourVector p(4);
   p[0] = std::real(Psi[0])/sqrt4pi;
-  // I don't understand why, but the following are divided by 3
-  // relative to what I naively expected from writing things as the
-  // unit direction vector dotted into the unit z vector, etc.  Maybe
-  // it's some weirdness of the spinsfast normalizations...
+  // The following are divided by 3 relative to what I would naively
+  // expect.  I don't understand why, but this is written into the
+  // definition of the vector l^a, so it must be incorporated each
+  // time that vector appears.
   p[1] = std::real((Psi[1]-Psi[3]))/(sqrt3*sqrt8pi);
   p[2] = -std::real(complexi*(Psi[1]+Psi[3]))/(sqrt3*sqrt8pi);
   p[3] = std::real(Psi[2])/(sqrt3*sqrt4pi);
@@ -857,13 +835,11 @@ Scri::Scri(const GWFrames::Waveform& psi0, const GWFrames::Waveform& psi1,
       }
     }
   }
-  { int i_ellm=0;
-    for(int ell=0; ell<=ellMax; ++ell) {
-      for(int m=-ell; m<=ell; ++m, ++i_ellm) {
-	const std::vector<std::complex<double> > sigmadot = sigma.DataDot(sigma.FindModeIndex(ell,m));
-	for(unsigned int i_t=0; i_t<ntimes; ++i_t) { // Fill sigmadot
-	  slices[i_t][6][i_ellm] = sigmadot[i_t];
-	}
+  for(int i_ellm=0, ell=0; ell<=ellMax; ++ell) {
+    for(int m=-ell; m<=ell; ++m, ++i_ellm) {
+      const std::vector<std::complex<double> > sigmadot = sigma.DataDot(sigma.FindModeIndex(ell,m));
+      for(unsigned int i_t=0; i_t<ntimes; ++i_t) { // Fill sigmadot
+	slices[i_t][6][i_ellm] = sigmadot[i_t];
       }
     }
   }
@@ -953,27 +929,25 @@ SliceModes Scri::BMSTransformation(const double& u0, const ThreeVector& v, const
   gsl_spline* splineRe = gsl_spline_alloc(gsl_interp_cspline, Nslices);
   gsl_spline* splineIm = gsl_spline_alloc(gsl_interp_cspline, Nslices);
   // Loop through, doing the work
-  { int i_g=0;
-    for(int i_t=0; i_t<n_theta2; ++i_t) { // Loop over theta points
-      for(int i_p=0; i_p<n_phi2; ++i_p, ++i_g) { // Loop over phi points
-	const double u_i = std::real(u[i_g]); // Interpolate the data at this point to u_i (measured in the current frame)
-	for(int i_D=0; i_D<7; ++i_D) { // Loop over data types
-	  // Fill the storage vectors for extrapolation
-	  vector<double> re(Nslices);
-	  vector<double> im(Nslices);
-	  for(unsigned int i_s=0; i_s<Nslices; ++i_s) {
-	    re[i_s] = std::real(transformedslices[i_s][i_D][i_g]);
-	    im[i_s] = std::imag(transformedslices[i_s][i_D][i_g]);
-	  }
-	  // Initialize the interpolators for this data set
-	  gsl_spline_init(splineRe, &(u_original)[0], &re[0], Nslices);
-	  gsl_spline_init(splineIm, &(u_original)[0], &im[0], Nslices);
-	  // Extrapolate real and imaginary parts and store data
-	  BMStransformedGrid[i_D][i_g] = complex<double>( gsl_spline_eval(splineRe, u_i, accRe), gsl_spline_eval(splineIm, u_i, accIm) );
+  for(int i_g=0, i_t=0; i_t<n_theta2; ++i_t) { // Loop over theta points
+    for(int i_p=0; i_p<n_phi2; ++i_p, ++i_g) { // Loop over phi points
+      const double u_i = std::real(u[i_g]); // Interpolate the data at this point to u_i (measured in the current frame)
+      for(int i_D=0; i_D<7; ++i_D) { // Loop over data types
+	// Fill the storage vectors for extrapolation
+	vector<double> re(Nslices);
+	vector<double> im(Nslices);
+	for(unsigned int i_s=0; i_s<Nslices; ++i_s) {
+	  re[i_s] = std::real(transformedslices[i_s][i_D][i_g]);
+	  im[i_s] = std::imag(transformedslices[i_s][i_D][i_g]);
 	}
+	// Initialize the interpolators for this data set
+	gsl_spline_init(splineRe, &(u_original)[0], &re[0], Nslices);
+	gsl_spline_init(splineIm, &(u_original)[0], &im[0], Nslices);
+	// Extrapolate real and imaginary parts and store data
+	BMStransformedGrid[i_D][i_g] = complex<double>( gsl_spline_eval(splineRe, u_i, accRe), gsl_spline_eval(splineIm, u_i, accIm) );
       }
     }
-  } // scope to kill i_g
+  }
   // Free the interpolators
   gsl_interp_accel_free(accRe);
   gsl_interp_accel_free(accIm);
@@ -1054,25 +1028,23 @@ GWFrames::Modes GWFrames::SuperMomenta::BMSTransform(const GWFrames::Modes& OneO
   gsl_spline* splineRe = gsl_spline_alloc(gsl_interp_cspline, Nslices);
   gsl_spline* splineIm = gsl_spline_alloc(gsl_interp_cspline, Nslices);
   // Loop through, doing the work
-  { int i_g=0;
-    for(int i_t=0; i_t<n_theta2; ++i_t) { // Loop over theta points
-      for(int i_p=0; i_p<n_phi2; ++i_p, ++i_g) { // Loop over phi points
-	const double u_i = std::real(u[i_g]); // Interpolate the data at this point to u_i (measured in the current frame)
-	// Fill the storage vectors for extrapolation
-	vector<double> re(Nslices);
-	vector<double> im(Nslices);
-	for(unsigned int i_s=0; i_s<Nslices; ++i_s) {
-	  re[i_s] = std::real(transformedslices[i_s][i_g]);
-	  im[i_s] = std::imag(transformedslices[i_s][i_g]);
-	}
-	// Initialize the interpolators for this data set
-	gsl_spline_init(splineRe, &(u_original)[0], &re[0], Nslices);
-	gsl_spline_init(splineIm, &(u_original)[0], &im[0], Nslices);
-	// Extrapolate real and imaginary parts and store data
-	BMStransformedGrid[i_g] = complex<double>( gsl_spline_eval(splineRe, u_i, accRe), gsl_spline_eval(splineIm, u_i, accIm) );
+  for(int i_g=0, i_t=0; i_t<n_theta2; ++i_t) { // Loop over theta points
+    for(int i_p=0; i_p<n_phi2; ++i_p, ++i_g) { // Loop over phi points
+      const double u_i = std::real(u[i_g]); // Interpolate the data at this point to u_i (measured in the current frame)
+      // Fill the storage vectors for extrapolation
+      vector<double> re(Nslices);
+      vector<double> im(Nslices);
+      for(unsigned int i_s=0; i_s<Nslices; ++i_s) {
+	re[i_s] = std::real(transformedslices[i_s][i_g]);
+	im[i_s] = std::imag(transformedslices[i_s][i_g]);
       }
+      // Initialize the interpolators for this data set
+      gsl_spline_init(splineRe, &(u_original)[0], &re[0], Nslices);
+      gsl_spline_init(splineIm, &(u_original)[0], &im[0], Nslices);
+      // Extrapolate real and imaginary parts and store data
+      BMStransformedGrid[i_g] = complex<double>( gsl_spline_eval(splineRe, u_i, accRe), gsl_spline_eval(splineIm, u_i, accIm) );
     }
-  } // scope to kill i_g
+  }
   // Free the interpolators
   gsl_interp_accel_free(accRe);
   gsl_interp_accel_free(accIm);
@@ -1098,6 +1070,10 @@ void GWFrames::SuperMomenta::MoreschiIteration(GWFrames::Modes& OneOverK, GWFram
   const Modes Psi_i = BMSTransform(OneOverK, delta);
   FourVector p(4);
   p[0] = std::real(Psi_i[0])/sqrt4pi;
+  // The following are divided by 3 relative to what I would naively
+  // expect.  I don't understand why, but this is written into the
+  // definition of the vector l^a, so it must be incorporated each
+  // time that vector appears.
   p[1] = std::real((Psi_i[1]-Psi_i[3]))/(sqrt3*sqrt8pi);
   p[2] = -std::real(complexi*(Psi_i[1]+Psi_i[3]))/(sqrt3*sqrt8pi);
   p[3] = std::real(Psi_i[2])/(sqrt3*sqrt4pi);
@@ -1106,20 +1082,25 @@ void GWFrames::SuperMomenta::MoreschiIteration(GWFrames::Modes& OneOverK, GWFram
   // Increment the values of delta to the next step
   const int ellMax = delta.EllMax();
   const Modes deltaderiv = Psi_i + Modes(M/DataGrid(OneOverK, 7, 7).pow(3));
-  { int i_m=4;
-    for(int ell=2; ell<=ellMax; ++ell) {
-      const double factor = 4.0/((ell-1)*(ell)*(ell+1)*(ell+2));
-      for(int m=-ell; m<=ell; ++m, ++i_m) {
-	delta[i_m] = factor*deltaderiv[i_m];
-      }
+  for(int i_m=4, ell=2; ell<=ellMax; ++ell) {
+    const double factor = 4.0/((ell-1.0)*(ell)*(ell+1.0)*(ell+2.0));
+    for(int m=-ell; m<=ell; ++m, ++i_m) {
+      delta[i_m] = factor*deltaderiv[i_m];
     }
   }
   
   // Increment the values of OneOverK to the next step
   OneOverK[0] = Psi_i[0]/M;
-  OneOverK[1] = Psi_i[1]/M;
-  OneOverK[2] = Psi_i[2]/M;
-  OneOverK[3] = Psi_i[3]/M;
+  // The following are divided by 3 relative to what I would naively
+  // expect.  I don't understand why, but this is written into the
+  // definition of the vector l^a, so it must be incorporated each
+  // time that vector appears.
+  //
+  // Also note that I reverse the signs of the following, so that the
+  // boost will be cancelled out next time, rather than just reported.
+  OneOverK[1] = -Psi_i[1]/(3*M);
+  OneOverK[2] = -Psi_i[2]/(3*M);
+  OneOverK[3] = -Psi_i[3]/(3*M);
   
   return;
 }
