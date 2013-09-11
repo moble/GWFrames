@@ -358,10 +358,10 @@ namespace std {
 %insert("python") %{
 
 ### This adds a new method to Waveform objects, returning unwrapped phase.
-def ArgUnwrapper(self, mode) :
-    import numpy
-    return numpy.unwrap(self.Arg(mode))
-Waveform.ArgUnwrapped = ArgUnwrapper
+// def ArgUnwrapper(self, mode) :
+//     import numpy
+//     return numpy.unwrap(self.Arg(mode))
+// Waveform.ArgUnwrapped = ArgUnwrapper
 
 
 def GetFileNamePrefix(W) :
