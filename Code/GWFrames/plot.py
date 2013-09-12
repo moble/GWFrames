@@ -4,20 +4,20 @@ as methods with Waveform objects.
 
 """
 
-def plotWaveform(this, WaveformPart='Abs', Modes=(), *pyplot_args, **pyplot_kwargs) :
+def plotWaveform(this, WaveformPart='Abs', Modes=(), t_fid=None, *pyplot_args, **pyplot_kwargs) :
     """
     This function should be called as a method of the Waveform class,
     e.g., as
-    
+
     >>> W.plot('Abs', Modes=[[2,2], [2,-2]], c='r')
-    
+
     where W is a Waveform object.  The first parameter should be a
     string --- one of ['Abs', 'LogAbs', 'LogLogAbs', 'Arg',
     'ArgUnwrapped', 'Re', Im'].  The second (optional) parameter is a
     list (using square brackets), where each element is some [l,m].
     Only modes included in this list will be plotted, unless the list
     is empty (the default), in which case all modes are plotted.
-    
+
     All following arguments are passed to the usual pyplot.plot (or
     semilogx, semilogy, or loglog) function; in the example above, the
     "c='r'" argument is passed, making the line color red.  The only
@@ -25,9 +25,9 @@ def plotWaveform(this, WaveformPart='Abs', Modes=(), *pyplot_args, **pyplot_kwar
     internally when there is just one line.  Otherwise, the legend
     labels are set automatically to contain the [l,m] mode (though the
     legend is not shown by default).
-    
+
     """
-    
+
     from matplotlib.pyplot import plot, semilogx, semilogy, loglog, xlabel, ylabel, setp, isinteractive, ioff, ion, draw, show, gcf
     try : # If this matplotlib is too old, just ignore this
         from matplotlib.pyplot import tight_layout
@@ -39,20 +39,39 @@ def plotWaveform(this, WaveformPart='Abs', Modes=(), *pyplot_args, **pyplot_kwar
     except KeyError :
         matplotlib.axes.set_default_color_cycle(['#000000', '#cc79a7', '#d55e00', '#0072b2', '#f0e442', '#56b4e9', '#e69f00', '#2b9f78'])
     from warnings import warn
-    from numpy import array, empty, transpose, sin, cos
-    
+    from numpy import array, empty, transpose, sin, cos, modf, pi
+
     def NotAbs(Anything) :
         return Anything
-    
+
+    def _ArgUnwrapped(Mode=None) :
+        if (t_fid) :
+            i_fid = int(array(range(this.NTimes()))[this.T()>t_fid][0])
+            if (Mode is None) :
+                Arg = this.ArgUnwrapped()
+                x = numpy.modf(Arg[:,i_fid]/(2*pi))
+                x[1][x[0]<0.0] -= 1.0
+                return (Arg.transpose() - x[1]*2*pi).transpose()
+            else :
+                Arg = this.ArgUnwrapped(Mode)
+                w,x = numpy.modf(Arg[i_fid]/(2*pi))
+                if (w<0.0) : x -= 1.0
+                return Arg - x*2*pi
+        else :
+            if (Mode is None) :
+                return this.ArgUnwrapped()
+            else :
+                return this.ArgUnwrapped(Mode)
+
     XLabel = r'$(t-r_\ast)/M$'
     YLabel = ''
-    
+
     Labels = []
     Lines = []
-    
+
     WasInteractive = isinteractive()
     ioff()
-    
+
     ## This decides which quantity to plot, what type of plot, and what the labels should be
     if (WaveformPart.lower()=='abs') :
         YLabel =r'$\mathrm{abs} \left( '+this.GetLaTeXDataDescription()+r' \right) $'
@@ -77,7 +96,7 @@ def plotWaveform(this, WaveformPart='Abs', Modes=(), *pyplot_args, **pyplot_kwar
     elif (WaveformPart.lower()=='argunwrapped' or WaveformPart.lower()=='uarg' or WaveformPart.lower()=='argu') :
         YLabel =r'$\mathrm{uarg} \left( '+this.GetLaTeXDataDescription()+r' \right) $'
         styledplot = plot
-        quantity = this.ArgUnwrapped
+        quantity = _ArgUnwrapped
         AbsOrNot = NotAbs
     elif (WaveformPart.lower()=='real' or WaveformPart.lower()=='re') :
         YLabel =r'$\mathrm{Re} \left( '+this.GetLaTeXDataDescription()+r' \right) $'
@@ -92,7 +111,7 @@ def plotWaveform(this, WaveformPart='Abs', Modes=(), *pyplot_args, **pyplot_kwar
     else :
         print("Unsupported plot type '{0}'".format(WaveformPart))
         return []
-    
+
     ## This does the actual work of plotting, depending on what Modes are needed
     if (type(Modes)==int) : # The requested mode is plotted
         Lines = styledplot(this.T(), AbsOrNot(quantity(Modes)), *pyplot_args, **pyplot_kwargs)
@@ -123,24 +142,24 @@ def plotWaveform(this, WaveformPart='Abs', Modes=(), *pyplot_args, **pyplot_kwar
             ModeIndex = this.FindModeIndex(int(Modes[i][0]), int(Modes[i][1]))
             Labels.append(str(tuple(Modes[i])))
             Lines.append(styledplot(this.T(), AbsOrNot(quantity(ModeIndex)).transpose(), *pyplot_args, **pyplot_kwargs))
-    
+
     xlabel(XLabel)
     ylabel(YLabel)
-    
+
     draw()
-    
+
     if(WasInteractive) :
         ion()
         gcf().show()
-    
+
     try :
         tight_layout(pad=0.1)
     except :
         pass
-    
+
     for i in range(len(Lines)) :
         setp(Lines[i], label=Labels[i])
-    
+
     return Lines
 
 
