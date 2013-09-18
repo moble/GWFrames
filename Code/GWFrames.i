@@ -421,10 +421,10 @@ namespace std {
 %insert("python") %{
 
 ### This adds a new method to Waveform objects, returning unwrapped phase.
-def ArgUnwrapper(self, mode) :
-    import numpy
-    return numpy.unwrap(self.Arg(mode))
-Waveform.ArgUnwrapped = ArgUnwrapper
+// def ArgUnwrapper(self, mode) :
+//     import numpy
+//     return numpy.unwrap(self.Arg(mode))
+// Waveform.ArgUnwrapped = ArgUnwrapper
 
 
 def GetFileNamePrefix(W) :
@@ -601,6 +601,123 @@ def ReadFromH5(FileName) :
         raise # Re-raise the exception after adding our information
     finally : # Use `finally` to make sure this happens:
         f.close()
+    return W
+
+
+def MonotonicIndices(T, MinTimeStep=1.e-5) :
+    """
+    Given an array of times, return the indices that make the array strictly monotonic.
+    """
+    import numpy
+    Ind = range(len(T))
+    Size = len(Ind)
+    i=1
+    while(i<Size) :
+        if(T[Ind[i]]<=T[Ind[i-1]]+MinTimeStep) :
+            j=0
+            while(T[Ind[j]]+MinTimeStep<T[Ind[i]]) :
+                j += 1
+            # erase data from j (inclusive) to i (exclusive)
+            Ind = numpy.delete(Ind, range(j,i))
+            Size = len(Ind)
+            i = j-1
+        i += 1
+    return Ind
+
+
+def ReadFromNRAR(FileName) :
+    """
+    Read data from an H5 file in NRAR format.
+    """
+    import re
+    import h5py
+    from GWFrames import Waveform, Quaternion
+    import numpy
+    YlmRegex = re.compile(r"""Y_l(?P<L>[0-9]+)_m(?P<M>[-+0-9]+)\.dat""")
+    # Initialize the Waveform object
+    W = Waveform()
+    # Record the filename being read in
+    W.AppendHistory("### *this = GWFrames.ReadFromNRAR(FileName='{0}')\n".format(FileName))
+    try :
+        FileName, RootGroup = FileName.rsplit('.h5', 1)
+        FileName += '.h5'
+    except ValueError :
+        RootGroup = '' # FileName is just a file, not a group in a file
+    try :
+        f_h5 = h5py.File(FileName, 'r')
+    except IOError :
+        print("ReadFromNRAR could not open the file '{0}'\n\n".format(FileName))
+        raise
+    if(RootGroup) :
+        f = f_h5[RootGroup]
+    else :
+        f = f_h5
+    try :
+        try :
+            # Add the old history to the new history, if found
+            OldHistory = f['History.txt'][()]
+            W.AppendHistory("##### Begin Previous History\n#" + OldHistory.replace('\n','\n#') + "#### End Previous History\n")
+        except KeyError :
+            pass # Did not find a history
+        # Get the frame data, converting to GWFrame.Quaternion objects
+        try :
+            W.SetFrame([Quaternion(r) for r in f['Frame']])
+        except KeyError :
+            pass # There was no frame data
+        # Get the descriptive items
+        try :
+            W.SetFrameType(int(f.attrs['FrameType']))
+            W.SetDataType(int(f.attrs['DataType']))
+            W.SetRIsScaledOut(bool(f.attrs['RIsScaledOut']))
+            W.SetMIsScaledOut(bool(f.attrs['MIsScaledOut']))
+        except KeyError :
+            print("\nWarning: FrameType, DataType, RIsScaledOut, and/or MIsScaledOut were not found in '{0}'.\n".format(FileName)+
+                  "Using defaults.  You may want to re-set them manually.\n\n")
+            W.SetFrameType(1)
+            W.SetRIsScaledOut(True)
+            W.SetMIsScaledOut(True)
+            if('psi4' in FileName.lower()) :
+                W.SetDataType(GWFrames.WaveformDataType[3])
+            elif('hdot' in FileName.lower()) :
+                W.SetDataType(GWFrames.WaveformDataType[2])
+            elif('h' in FileName.lower()) :
+                W.SetDataType(GWFrames.WaveformDataType[1])
+        # Get the names of all the datasets in the h5 file, and check for matches
+        YLMdata = [DataSet for DataSet in list(f) for m in [YlmRegex.search(DataSet)] if m]
+        if(len(YLMdata)==0) :
+            raise ValueError("Couldn't understand dataset names in '{0}'.".format(FileName))
+        # Sort the dataset names by increasing ell, then increasing m
+        YLMdata = sorted(YLMdata, key=lambda DataSet : [int(YlmRegex.search(DataSet).group('L')), int(YlmRegex.search(DataSet).group('M'))])
+        # List just the ell and m numbers
+        LM = sorted([[int(m.group('L')), int(m.group('M'))] for DataSet in YLMdata for m in [YlmRegex.search(DataSet)] if m])
+        NModes = len(LM)
+        # Get the time data (assuming all are equal)
+        Wdata = f[YLMdata[0]]
+        NTimes = Wdata.shape[0]
+        T = Wdata[:,0]
+        # Set up storage
+        Re = numpy.empty((NModes, NTimes))
+        Im = numpy.empty((NModes, NTimes))
+        m = 0
+        # Loop through, getting each mode
+        for DataSet in YLMdata :
+            if( not (f[DataSet].shape[0]==NTimes) ) :
+                raise ValueError("The number of time steps in this dataset should be {0}; ".format(NTimes) +
+                                 "it is {0} in '{1}'.".format(f[DataSet].shape[0], DataSet))
+            Re[m,:] = f[DataSet][:,1]
+            Im[m,:] = f[DataSet][:,2]
+            m += 1
+        # Make sure time is monotonic and set the data
+        Indices = MonotonicIndices(T)
+        BadIndices = numpy.setdiff1d(range(len(T)), Indices)
+        W.SetTime(T[Indices])
+        W.SetLM(LM)
+        W.SetData(numpy.delete(Re, BadIndices, 1)+1j*numpy.delete(Im, BadIndices, 1))
+    except KeyError :
+        print("This H5 file appears to have not stored all the required information.\n\n")
+        raise # Re-raise the exception after adding our information
+    finally : # Use `finally` to make sure this happens:
+        f_h5.close()
     return W
 
 
