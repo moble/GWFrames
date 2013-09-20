@@ -1,3 +1,4 @@
+import uk.ac.ed.ph.snuggletex.SnugglePackage;
 import uk.ac.ed.ph.snuggletex.SnuggleInput;
 import uk.ac.ed.ph.snuggletex.SnuggleEngine;
 import uk.ac.ed.ph.snuggletex.SnuggleSession;
@@ -7,97 +8,72 @@ import uk.ac.ed.ph.snuggletex.upconversion.UpConvertingPostProcessor;
 import uk.ac.ed.ph.snuggletex.upconversion.internal.UpConversionPackageDefinitions;
 import uk.ac.ed.ph.snuggletex.utilities.MathMLUtilities;
 
+import static uk.ac.ed.ph.snuggletex.definitions.Globals.MATH_MODE_ONLY;
+import static uk.ac.ed.ph.snuggletex.definitions.Globals.PARA_MODE_ONLY;
+import static uk.ac.ed.ph.snuggletex.definitions.Globals.TEXT_MODE_ONLY;
+import static uk.ac.ed.ph.snuggletex.definitions.LaTeXMode.LR;
+import static uk.ac.ed.ph.snuggletex.definitions.LaTeXMode.MATH;
+import static uk.ac.ed.ph.snuggletex.definitions.LaTeXMode.PARAGRAPH;
+import static uk.ac.ed.ph.snuggletex.definitions.LaTeXMode.VERBATIM;
+import static uk.ac.ed.ph.snuggletex.definitions.TextFlowContext.ALLOW_INLINE;
+import static uk.ac.ed.ph.snuggletex.definitions.TextFlowContext.IGNORE;
+import static uk.ac.ed.ph.snuggletex.definitions.TextFlowContext.START_NEW_XHTML_BLOCK;
+import uk.ac.ed.ph.snuggletex.dombuilding.MathEnvironmentHandler;
+
+
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Element;
 
 import java.io.IOException;
-
-//// These are needed for the Java 6 version of readFile
 import java.io.File;
-import java.io.FileInputStream;
-import java.nio.channels.FileChannel;
-import java.nio.MappedByteBuffer;
-import java.nio.charset.Charset;
-
-//// These are needed for the Java 7 version of readFile
-// import java.nio.charset.Charset;
-// import java.nio.ByteBuffer;
-// import java.nio.file.Paths;
-
-// // These are for testing
-// import org.w3c.dom.Node;
-// import org.w3c.dom.traversal.DocumentTraversal;
-// import org.w3c.dom.traversal.NodeFilter;
-// import org.w3c.dom.traversal.NodeIterator;
 
 public class TeX2Maxima {
     
-    // This is works in Java 6 and greater, which allows support for Mac OS X 10.6
-    private static String readFile(String path) throws IOException {
-	FileInputStream stream = new FileInputStream(new File(path));
-	try {
-	    FileChannel fc = stream.getChannel();
-	    MappedByteBuffer bb = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
-	    /* Instead of using default, pass in a decoder. */
-	    return Charset.defaultCharset().decode(bb).toString();
-	}
-	finally {
-	    stream.close();
-	}
-    }
-    
-    //// This only works with Java 7, which is not available on Mac OS X 10.6
-    // static String readFile(String path, Charset encoding) throws IOException {
-    // 	byte[] encoded = Files.readAllBytes(Paths.get(path));
-    // 	return encoding.decode(ByteBuffer.wrap(encoded)).toString();
-    // }
-    
     public static void main(String[] args) throws IOException {
-        /* Create vanilla SnuggleEngine and new SnuggleSession */
-        SnuggleEngine engine = new SnuggleEngine();
+	// Basic object
+	SnuggleEngine engine = new SnuggleEngine();
+	
+	// Add ability to convert to Maxima
 	engine.addPackage(UpConversionPackageDefinitions.getPackage());
-        SnuggleSession session = engine.createSession();
-        
-        /* Parse some very basic Math Mode input */
-	// String inputString = new String(readFile("Test.tex"));
-	// System.out.println("inputString = \"\"\"" + inputString + "\"\"\"");
-        // SnuggleInput input = new SnuggleInput(inputString);
-	File file = new File("Test2.tex");
-        SnuggleInput input = new SnuggleInput(file);
-        session.parseInput(input);
-	UpConvertingPostProcessor upConverter = new UpConvertingPostProcessor();
 	
-        XMLStringOutputOptions xmlStringOutputOptions = new XMLStringOutputOptions();
-        xmlStringOutputOptions.addDOMPostProcessors(upConverter);
-        xmlStringOutputOptions.setIndenting(true);
-        xmlStringOutputOptions.setUsingNamedEntities(true);
-        
-	NodeList entries = session.buildDOMSubtree(xmlStringOutputOptions);
-	int length = entries.getLength();
-	for(int i = 0; i < length; i = i+1) {
-	    try {
-		System.out.print("(Element) entry " + i + " : " + ((Element) entries.item(i)) + "\n" );
-		System.out.println("'" + MathMLUtilities.extractAnnotationString((Element) entries.item(i), "Maxima") + "'");
-	    } catch (ClassCastException e) {
-		System.out.print("ClassCastException: entry " + i + " : " + entries.item(i) + "\n" );
-	    } catch (IllegalArgumentException e) {
-		System.out.print("IllegalArgumentException: entry " + i + " : " + entries.item(i) + "\n" );
+	// Inexplicably, snuggletex does not handle equation
+	// environments, say we need to add it explicitly.  I found
+	// the exemplar for the following code in
+	// CorePackageDefinitions.java.
+	SnugglePackage localPackage = new SnugglePackage("localPackage");
+	localPackage.addEnvironment("equation", TEXT_MODE_ONLY, MATH, null, new MathEnvironmentHandler(), ALLOW_INLINE);
+	localPackage.addEnvironment("equation*", TEXT_MODE_ONLY, MATH, null, new MathEnvironmentHandler(), ALLOW_INLINE);
+	engine.addPackage(localPackage);
+	
+	// Loop over all files on the command line
+	for(int i_arg=0; i_arg<args.length; ++i_arg) {
+	    SnuggleSession session = engine.createSession();
+	    System.out.println("\nProcessing "+args[i_arg]+"\n=====================");
+	    File file = new File(args[i_arg]);
+	    SnuggleInput input = new SnuggleInput(file);
+	    session.parseInput(input);
+	    
+	    // Make sure we use the Maxima converter
+	    WebPageOutputOptions webPageOutputOptions = new WebPageOutputOptions();
+	    UpConvertingPostProcessor upConverter = new UpConvertingPostProcessor();
+	    webPageOutputOptions.addDOMPostProcessors(upConverter);
+	    webPageOutputOptions.setIndenting(true);
+	    webPageOutputOptions.setUsingNamedEntities(true);
+	    
+	    // Create the DOM document and search for <math> elements
+	    Document doc = session.createWebPage(webPageOutputOptions);
+	    NodeList mathElements = doc.getElementsByTagName("math");
+	    int length = mathElements.getLength();
+	    for(int i = 0; i < length; ++i) {
+		String result = MathMLUtilities.extractAnnotationString((Element) mathElements.item(i), "Maxima");
+		if(result!=null) {
+		    System.out.println("'" + result + "'");
+		} else {
+		    System.out.println("Failed to parse '" + mathElements.item(i) + "'");
+		}
 	    }
+	    System.out.println("\n");
 	}
-	
-        WebPageOutputOptions webPageOutputOptions = new WebPageOutputOptions();
-        webPageOutputOptions.addDOMPostProcessors(upConverter);
-        webPageOutputOptions.setIndenting(true);
-        webPageOutputOptions.setUsingNamedEntities(true);
-	Document doc = session.createWebPage(webPageOutputOptions);
-	NodeList mathElements = doc.getElementsByTagName("math");
-	length = mathElements.getLength();
-	System.out.print("And now...\n\n");
-	for(int i = 0; i < length; i = i+1) {
-	    System.out.print("(Element) entry " + i + " : " + ((Element) mathElements.item(i)) + "\n" );
-	    System.out.println("'" + MathMLUtilities.extractAnnotationString((Element) mathElements.item(i), "Maxima") + "'");
-	}
-        
     }
 }
