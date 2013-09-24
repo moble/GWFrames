@@ -1,0 +1,64 @@
+\pageId{classpath}
+
+As summarised in the \href[sofware requirements]{docs://requirements}, some
+optional SnuggleTeX features make use of additional third-party JARs, which is bundled
+in the full distribution of SnuggleTeX. The table below tells you which distribution
+of SnuggleTeX will be most appropriate to your needs and shows how you should set up
+your ClassPath.
+
+{\bf Note:} All of the JARs bundled in the full SnuggleTeX distribution
+will have version numbers in their names. We have omitted these in
+the table below for brevity!
+
+\begin{tabular}{|c|c|l|l|}
+\hline
+Your Goal &
+Suggested Distribution &
+Required at Compile Time &
+Required at Run Time \\
+\hline
+Convert LaTeX to XHTML + MathML, using most available features &
+\href[\verb|snuggletex-1.2.n-basic.zip|]{http://sourceforge.net/project/showfiles.php?group_id=221375} &
+\verb|snuggletex-core.jar| &
+\verb|snuggletex-core.jar| (*) \\
+\hline
+Convert LaTeX to XHTML + MathML, using all available features &
+\href[\verb|snuggletex-1.2.n-full.zip|]{http://sourceforge.net/project/showfiles.php?group_id=221375} &
+\verb|snuggletex-core.jar| &
+\verb|snuggletex-core.jar|\newline
+\verb|saxon9.jar|\newline
+\verb|saxon9-dom.jar| \\
+\hline
+Generate legacy XHTML+images web pages &
+\href[\verb|snuggletex-1.2.n-full.zip|]{http://sourceforge.net/project/showfiles.php?group_id=221375} &
+\verb|snuggletex-core.jar|\newline
+\verb|snuggletex-jeuclid.jar| &
+\verb|snuggletex-core.jar|\newline
+\verb|snuggletex-jeuclid.jar|\newline
+\verb|jeuclid-core.jar|\newline
+\verb|batik-dom.jar|\newline
+\verb|batik-ext.jar|\newline
+\verb|batik-util.jar|\newline
+\verb|batik-xml.jar|\newline
+\verb|commons-io.jar|\newline
+\verb|commons-logging.jar|\newline
+\verb|xml-apis.jar| (*)\newline
+\verb|xml-apis-ext.jar|\newline
+\verb|xmlgraphics-commons.jar| \\
+\hline
+Experimentally generate Content MathML and/or Maxima input\newline
+from LaTeX, or convert the output from ASCIIMathML to Content MathML &
+\href[\verb|snuggletex-1.2.n-full.zip|]{http://sourceforge.net/project/showfiles.php?group_id=221375} &
+\verb|snuggletex-core.jar|\newline
+\verb|snuggletex-upconversion.jar| &
+\verb|snuggletex-core.jar|\newline
+\verb|snuggletex-upconversion.jar|\newline
+\verb|saxon9.jar|\newline
+\verb|saxon9-dom.jar| \\
+\hline
+\end{tabular}
+
+\subsubsection*{Notes}
+\begin{itemize}
+  \item (*) Not required for Java 6 and above.
+\end{itemize}

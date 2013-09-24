@@ -1,0 +1,76 @@
+\pageId{verbatimMode}
+
+\newenvironment{ndemotable}
+{\begin{center}
+ \begin{tabular}{|l|l|l|}
+ \hline \\
+ Input & Result & Notes \\
+ \hline \\
+}{\hline
+ \end{tabular}
+ \end{center}
+}
+
+\subsection*{Entering verbatim Mode}
+
+SnuggleTeX supports the \verb|\verb| and \verb|\verb*| commands and the
+\texttt{verbatim} environments in the normal way. These allow you to
+enter ``verbatim'' text without having to escape it (see above), normally
+displaying the results in a teletype font (though this is done via CSS
+so you can override this if you want).
+
+\begin{ndemotable}
+\verb|\begin{verbatim}Hello There\end{verbatim}| &
+\begin{verbatim}Hello There\end{verbatim} &
+Content can span multiple lines \\
+\hline
+\verb!\verb|Hello There|! &
+\verb|Hello There| &
+You use a non-whitespace character to delimit the content,
+which must end on the same line; whitespace within
+the content is converted to a non-breaking space. \\
+\hline
+\verb!\verb*|Hello There|! &
+\verb*|Hello There| &
+Same as \verb|\verb| except that spaces are converted
+to open boxes. \\
+\hline
+\verb|\literal{He said ?!@%#}| &
+\literal{He said ?!@%#} &
+This is specific to SnuggleTeX; it lets you enter
+text without escaping but displays it as normal. \\
+\end{ndemotable}
+
+\subsection*{Creating Verbatim Mode Commands and Environments}
+
+SnuggleTeX deviates from LaTeX in the way it allows Commands
+and Environments to be defined that support verbatim mode.
+
+Commands and Environments created using \verb|\newcommand|,
+\verb|\newenvironment| and friends support verbatim mode insofar
+as you can do things like:
+
+\begin{verbatim}
+\newcommand{\test}[1]{\verb|#1| is output as #1}
+\test{$x$}
+\end{verbatim}
+
+This generates the output:
+
+\begin{verbatim}
+$x$ is output as x
+\end{verbatim}
+
+This is quite convenient --- especially when generating pages like these ---
+but doesn't work the same way in LaTeX.
+
+On other other hand, there is no way to indicate that certain arguments
+of user-defined commands and environments should be themselves parsed in
+verbatim mode, which makes it difficult to define macros out of existing
+ones that do, such as the \verb|\href| command.
+
+If you need this type of functionality, you can use the SnuggleTeX API to
+define your own built-in commands or environment as these allow you to specify
+which mode each argument (and environment content, if appropriate) should be
+parsed in. The \verb|\literal| command is one very simple example of this
+type of idea.

@@ -1,0 +1,487 @@
+# Defines single-line tests of the up-conversion process, verifying the Maxima
+# results obtained.
+#
+# Input format is:
+#
+# LaTeX (interpreted inside $...$)
+# EITHER Expected Maxima form OR !ErrorCode
+# ==== (divider)
+#
+# Lines starting with '#' are documentation and are stripped out when running tests
+#
+##
+1
+1
+====
+-1
+-1
+====
+x
+x
+====
+## Demonstrates mapping of non-alphanumeric identifiers using "identifier dictionary"
+\alpha
+%alpha
+====
+## Note that \pi is always treated as the constant pi by Maxima, as is \gamma
+\pi
+%pi
+====
+## Demonstrates flattening subscripted identifiers for Maxima
+x_1
+x[1]
+====
+1_x
+!UMFG04
+====
+x_{1,2}
+x[1,2]
+====
+## @ is currently treated as an identfier, which has no Maxima form
+@
+!UMFG03
+====
+## Binary equals
+x=y
+x = y
+====
+## nary equals
+x=y=z
+(x = y) and (y = z)
+====
+## Unapplied equals
+=
+operator("=")
+====
++x
++x
+====
+x+y
+x + y
+====
+x+y+z
+x + y + z
+====
++
+operator("+")
+====
+-x
+-x
+====
+x-y
+x - y
+====
+-
+operator("-")
+====
+2x
+2 * x
+====
+2\times x
+2 * x
+====
+2*x
+2 * x
+====
+*
+operator("*")
+====
+a/b
+a / b
+====
+\frac{a}{b}
+a / b
+====
+/
+operator("/")
+====
+x^2
+x^2
+====
+!
+operator("!")
+====
+x!
+x!
+====
+x!!
+(x!)!
+====
+2x!
+2 * (x!)
+====
+1+x
+1 + x
+====
+a+(b-c)d
+a + ((b - c) * d)
+====
+x+1 = 1+x
+(x + 1) = (1 + x)
+====
+a-b-c
+(a - b) - c
+====
+a/b/c
+(a / b) / c
+====
+(1-a)/(2-b)
+(1 - a) / (2 - b)
+====
+## Unapplied elementary function
+\sin
+sin
+====
+## Unapplied inverse elementary function
+\sin^{-1}
+asin
+====
+\sin x
+sin(x)
+====
+-\cos x
+-cos(x)
+====
+\sin^2 x
+sin(x)^2
+====
+\sin^{-1} x
+asin(x)
+====
+\sin (x+a)
+sin((x + a))
+====
+\cos x
+cos(x)
+====
+\sqrt x
+sqrt(x)
+====
+\sqrt[3]{x}
+(x)^(1/3)
+====
+x^{1/2}
+x^(1 / 2)
+====
+\sin x\,y
+sin(x) * y
+====
+\sin\cos x
+sin(cos(x))
+====
+\frac{-b+\sqrt{b^2-4ac}}{2a}
+((-b) + sqrt(((b^2) - (4 * a * c)))) / (2 * a)
+====
+x\,y
+x * y
+====
+\emptyset
+{}
+====
+\infty
+inf
+====
+i
+i
+====
+e
+e
+====
+e^x
+e^x
+====
+\ln y
+log(y)
+====
+## Still need to decide what to do with these!
+\log x
+!UMFG01
+====
+\log_a x
+!UMFG01
+====
+\log
+!UMFG00
+====
+(1,2)
+[1, 2]
+====
+[1,2]
+[1, 2]
+====
+\{a,b\}
+{a, b}
+====
+[[a,b], c]
+[[a, b], c]
+====
+\lnot A
+not(A)
+====
+\lnot \lnot A
+not(not(A))
+====
+\lnot
+operator("not")
+====
+A \land B
+A and B
+====
+A \land B \lor C
+(A and B) or C
+====
+\neg (A \vee B)
+not((A or B))
+====
+A \land \lnot B
+A and not(B)
+====
+\land
+operator("and")
+====
+\lor
+operator("or")
+====
+<
+operator("<")
+====
+x<y
+x < y
+====
+1 < x < 2
+(1 < x) and (x < 2)
+====
+1 < x \leq 2
+(1 < x) and (x <= 2)
+====
+1 = x > y
+(1 = x) and (x > y)
+====
+1 \not= 2
+1 # 2
+====
+1 \not< 2
+not((1 < 2))
+====
+1 \not> 2
+not((1 > 2))
+====
+1 \not\leq 2
+not((1 <= 2))
+====
+1 \not\geq 2
+not((1 >= 2))
+====
+a \not= b \not= c
+(a # b) and (b # c)
+====
+## Special units handling
+\units{kg}
+units("kg")
+====
+## Regression: This was broken up to SnuggleTeX 1.2.1
+2\units{kg}
+2 * units("kg")
+====
+#####################################
+## Infix as Prefix
+1++x
+1 + (+x)
+====
+1+++x
+1 + (+(+x))
+====
+1--x
+1 - (-x)
+====
+1+-+-x
+1 + (-(+(-x)))
+====
+1+*x
+!UCFOP0
+====
+## Other relations
+\not =
+operator("#")
+====
+<
+operator("<")
+====
+>
+operator(">")
+====
+\leq
+operator("<=")
+====
+\geq
+operator(">=")
+====
+1 \not= 2
+1 # 2
+====
+a < b \leq c \geq d > f
+(a < b) and (b <= c) and (c >= d) and (d > f)
+====
+a \not< b \not\leq c \not\geq d \not> f
+not((a < b)) and not((b <= c)) and not((c >= d)) and not((d > f))
+====
+\not<
+operator("not<")
+====
+## These aren't supported currently
+a \equiv b
+!UMFG01
+====
+a \approx b
+!UMFG01
+====
+\equiv
+!UMFG00
+====
+## Set theory stuff
+\cup
+operator("union")
+====
+\cap
+operator("intersection")
+====
+\setminus
+operator("setdifference")
+====
+A \cup B
+union(A, B)
+====
+A \cup x+A
+union(A, (x + A))
+====
+A \cup B \cap C
+union(A, intersection(B, C))
+====
+A \cup B \setminus C
+union(A, setdifference(B, C))
+====
+## Comma operator
+## (This is maybe not the best output form...)
+a,b
+[a, b]
+====
+## Other functions
+\Re x
+realpart(x)
+====
+\Re x \Im y
+realpart(x) * imagpart(y)
+====
+\det A
+determinant(A)
+====
+\gcd
+gcd
+====
+\gcd(x,y)
+gcd(x, y)
+====
+\gcd(x)
+!UMFFX0
+====
+\lcm(x,y)
+lcm(x, y)
+====
+\min(x,y)
+min(x, y)
+====
+\max(x,y)
+max(x, y)
+====
+#####################################
+### Corner Cases
+\sin{}
+sin
+====
+\sin^{-1}{}
+asin
+====
+## This one is very pathological, but I'll accept for the time being
+{}+{}
+operator("+")
+====
+## 2 multiplied by nothing
+2{}
+!UMFOP0
+====
+## This is not be best error here, but will do for the time being
+^2
+!UMFOP0
+====
+## Likewise. (This is currently the only way of obtaining operator("^"))
+{}^{}
+operator("^")
+====
+## Likewise
+\frac{}{}
+operator("/")
+====
+\hbar
+!UMFG03
+====
+## Regression bug fix
+\hbar+1
+!UMFG03
+====
+###########################################################
+# Assumption tests
+f
+f
+====
+\assumeSymbol{f}{function} $f$
+f
+====
+f(x)
+f * x
+====
+\assumeSymbol{f}{function} $f(x)$
+f(x)
+====
+\assumeSymbol{f_n}{function} $f_n(x)$
+f[n](x)
+====
+\assumeSymbol{f_{n_k}}{function} $f_{n_k}(x)$
+f[n[k]](x)
+====
+\assumeSymbol{f}{function} $f^{-1}$
+inverse[f]
+====
+\assumeSymbol{f}{function} $f^{-1}(x)$
+inverse[f](x)
+====
+\assumeSymbol{f}{function} $f^2(x)$
+f(x)^2
+====
+\assumeSymbol{f}{function} $f^2$
+lambda([x], f(x)^2)
+====
+\assumeSymbol{i}{imaginaryNumber} $i$
+%i
+====
+\assumeSymbol{e}{exponentialNumber} $e$
+%e
+====
+\assumeSymbol{\pi}{constantPi} $\pi$
+%pi
+====
+\assumeSymbol{\gamma}{eulerGamma} $\gamma$
+%gamma
+====
+\assumeSymbol{e}{exponentialNumber} $e^x$
+exp(x)
+====
+# Corner case
+\assumeSymbol{e}{exponentialNumber} $e^{}$
+exp
+====
+\setUpConversionOption{maximaOperatorFunction}{hello} $+$
+hello("+")
+====
+\setUpConversionOption{maximaUnitsFunction}{wendy} $\units{kg}$
+wendy("kg")
+====

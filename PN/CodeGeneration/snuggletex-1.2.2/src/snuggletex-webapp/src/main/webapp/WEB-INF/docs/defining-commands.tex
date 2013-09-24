@@ -1,0 +1,74 @@
+\pageId{commands}
+
+\subsection*{\verb|\newcommand| and friends}
+
+SnuggleTeX allows new commands and environments to be defined using the
+familiar LaTeX \verb|\newcommand|, \verb|\renewcommand|, \verb|\newenvironment|
+and \verb|\renewenvironment| commands. (Note that it does not support the TeX
+\verb|\def| command.) These work pretty much the same way as they do in LaTeX.
+
+SnuggleTeX tries to be helpful when reporting error messages that might arise
+once these types of commands or environments have been ``evaluated'' (which
+essentially amounts to performing text substitutions and then parsing the
+results).
+
+\subsubsection*{Examples}
+
+\begin{verbatim}
+\newcommand{\mat}[4]{
+  \left( 
+    \begin{array}{cc}
+      #1 & #2 \\
+      #3 & #4
+    \end{array} 
+  \right)
+}
+\[ A = \mat{\alpha}{\beta}{\gamma}{\delta}\]
+\end{verbatim}
+
+creates a handy command for constructing $2\times 2$ matrices
+and then outputs one, giving:
+
+\newcommand{\mat}[4]{
+  \left( 
+    \begin{array}{cc}
+      #1 & #2 \\
+      #3 & #4
+    \end{array} 
+  \right)
+}
+\[ A = \mat{\alpha}{\beta}{\gamma}{\delta}\]
+
+As an example of error reporting, if you paste the above example into the
+\href[Try Out]{../tryout.xml} page and add the following line:
+
+\begin{verbatim}
+\[ A = \mat{\mat{\silly}{2}{3}{4}}{2}{3}{4} \]
+\end{verbatim}
+
+then you would see the following error message:
+
+\begin{verbatim}
+Undefined command \silly
+At character 39 after "\mat{\silly}{2}{3}{4..." was substituted with "   \left(      \begi..."
+At character 39 after "\mat{\mat{\silly}{2}..." was substituted with "   \left(      \begi..."
+At line 10, column 8 of input Form Input
+\end{verbatim}
+
+\subsection*{Defining Built-in Commands and Environments}
+
+SnuggleTeX also supports defining new Commands and Environments via its Java API.
+
+To do this, you create a \verb|SnugglePackage|, which has a number of methods for
+defining new Commands and Environments, along with custom errors codes of your choosing.
+This can then be registered to a \verb|SnuggleEngine| using the
+\verb|addPackage()| method, making them available to any \verb|SnuggleSession|s
+created by the engine.
+
+The most complicated part of this process is specifying how each Command and
+Environment should build its branch in the resulting DOM tree. This is done
+by you implementing the \verb|CommandHandler| and \verb|EnvironmentHandler| interfaces
+as required and using the \verb|DOMBuilder| Object that gets passed
+to you to build XHTML, MathML and other XML structures. There are already a lot
+of handler classes in the \verb|snuggletex.dombuilding| package that you can
+inspect, copy and build on to help here.

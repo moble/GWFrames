@@ -1,0 +1,57 @@
+\pageId{webOutput}
+
+SnuggleTeX tries to make it easy to create web pages suitable for use
+on various browser platforms, creating XHTML+MathML web pages by default.
+It can also generate \href[Legacy Web Pages]{docs://legacyWebPages} via
+the optional JEuclid extension.
+
+\subsection*{Usage Recipe}
+
+\begin{enumerate}
+
+\item
+  You must first decide what kind of web page you would like to generate.
+  These are listed in the \href[XHTML+MathML Web Page Types]{docs://webPageTypes}
+  page. (You might prefer to create a \href[Legacy Web Page]{docs://legacyWebPages}.)
+
+\item
+  Pass your selected \verb|WebPageType| to
+  \verb|WebPageOutputOptionsTemplate.createWebPageOptions()|. This will
+  create a \verb|WebPageOutputOptions| Object configured with suitable defaults
+  for the type of web page you want to create.
+
+\item
+  You can now tweak your newly-created \verb|WebPageOutputOptions| Object to control
+  the following aspects of the output:
+  \begin{itemize}
+    \item Set a language, encoding and title for the resulting page;
+    \item Specify client-side XSLT stylesheets to include via \verb|<?xml-stylesheet?>|;
+    \item Specify client-side CSS stylesheets to attach via \verb|<link/>|;
+    \item Whether to inline the SnuggleTeX's CSS styles as a \verb|<style/>| section
+      or leave you to link to it yourself.
+    \item Whether to add an automatic title heading element to the web page body;
+    \item Whether to indent the output;
+    \item Whether to apply your own XSLT Stylesheets (passed as JAXP \verb|Transformer| Objects)
+      to the resulting page before it is serialized. (This is useful if you want to add
+      in custom headers and footers or otherwise soup up the outputs you get.)
+    \item \ldots plus the same options as for generating \href[XML/DOM Outputs]{docs://domOutput}.
+  \end{itemize}
+
+\item
+  Finally, you pass your \verb|WebPageOutputOptions| Object to either
+  \verb|snuggleSession.createWebPage()| or \verb|snuggleSession.writePageWeb()|
+  methods to generate one of the following outputs:
+  \begin{itemize}
+    \item The \verb|snuggleSession.createWebPage()| methods return a DOM \verb|Document|
+      representing a web page rendition of your input. You can then serialize this or
+      perform further transforms/manipulations as required.
+
+    \item The \verb|snuggleSession.writeWebPage()| methods create and write out a web page
+      rendition of your input to the given \verb|OutputStream|.
+  \end{itemize}
+\end{enumerate}
+
+\subsection*{Example Code}
+
+Have a look at \href[\verb|WebPageExample.java|]{maven://xref/uk/ac/ed/ph/snuggletex/samples/WebPageExample.html}
+for a simple self-contained example.

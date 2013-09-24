@@ -1,0 +1,25 @@
+\pageId{inputs}
+
+A \verb|SnuggleInput| Object acts as a placeholder for a source of LaTeX
+input. This has a number of different constructors that let you pull in LaTeX
+Strings from various types of Java I/O Objects --- currently \verb|String|, \verb|File|,
+\verb|InputStream| and \verb|Reader|.
+
+\textbf{NOTE:} SnuggleTeX behaves like ``traditional'' LaTeX in that it expects all input
+characters to live in the ASCII subset of Unicode.  Characters outside this
+range will be replaced with (useless) alternatives and reported as a
+\href[\verb|TTEG02|]{error-codes.html#TTEG02} error.
+
+Given a \verb|SnuggleSession| called \verb|snuggleSession| and a \verb|SnuggleInput|
+called \verb|snuggleInput|, you can instruct SnuggleTeX to parse it with:
+\begin{verbatim}snuggleSession.parseInput(snuggleInput);\end{verbatim}
+You can parse as many \verb|SnuggleInput|s as you like; they will be treated like one
+big continuous sequential input. However, each \verb|SnuggleInput| should be
+balanced in the sense that any open environments or braces must be closed
+within the same input, otherwise errors will be reported.
+
+The \verb|parseInput()| method returns \verb|false| if parsing was terminated because
+a LaTeX input error was encountered and your \verb|SnuggleSession| was configured to
+stop on the first LaTeX error; otherwise it returns \verb|true|.
+See \href[Error Reporting]{docs://errors} for more information on
+managing errors and configuring how they are reported.

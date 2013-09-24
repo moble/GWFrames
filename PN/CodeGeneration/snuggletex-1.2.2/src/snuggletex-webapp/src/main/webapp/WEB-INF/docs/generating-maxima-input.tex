@@ -1,0 +1,139 @@
+\pageId{maxima}
+
+\newcommand{\ue}[1]{\upConversionExample{#1}}
+
+SnuggleTeX can also attempt to convert input LaTeX to
+\href[Maxima]{http://maxima.sourceforge.net/} input syntax.
+This is implemented by first \href[converting to Content MathML]{docs://cmathml}.
+However, not all inputs that can be successfully converted to
+Content MathML can be further converted into Maxima input form. Additional
+restrictions on supported inputs are detailed below.
+
+\subsection*{Supported Pre-defined Functions}
+
+All functions supported by the Content MathML up-conversion are supported
+here, with the exception of \verb|\log| as Maxima only supports natural
+logarithms.
+
+\subsection*{Supported Operators}
+
+All of the operators supported by the Content MathML process are
+supported, with the \textbf{exception} of the following relations:
+
+\begin{itemize}
+  \item \verb|\equiv|
+  \item \verb|\not\equiv|
+  \item \verb|\approx|
+  \item \verb|\not\approx|
+  \item \verb.|.
+  \item \verb.\not|.
+  \item \verb|\in|
+  \item \verb|\not\in|
+\end{itemize}
+
+Maxima does not support ``unapplied'' operators symbols, so a LaTeX input
+of the form \verb|+| generates a result of the form \verb|operator("+")|
+as a rather ad hoc representation of this idea. Similarly, \verb|\not<| results
+in \verb|operator("not<")| for want of anything better.
+The name of the resulting ``function'' can be specified with
+\verb|\setUpConversionOption{maximaOperatorFunction}{name}|.
+
+\ue{\verb|+|}
+\ue{\verb|\not=|}
+\ue{\verb|\not<|}
+\ue{\verb|\setUpConversionOption{maximaOperatorFunction}{silly} $+$|}
+
+\subsection*{Supported Identifiers}
+
+MathML generally allows arbitrary Unicode characters to be used as identifier
+names whereas Maxima only safely supports ASCII characters. In terms of LaTeX
+input, this means that identifiers input as ``\verb|\something|'' are only supported
+if we have discovered a means to convert these into an appropriate Maxima input form.
+
+The identifiers supported so far are:
+
+\begin{tabular}{|c|c|c|}
+\hline
+LaTeX input & Maxima form & Live Example \\
+\hline
+\verb|\alpha| & \verb|%alpha| & \ue{\verb|\alpha|} \\
+\verb|\beta| & \verb|%beta| & \ue{\verb|\beta|} \\
+\verb|\gamma| & \verb|%gamma| & \ue{\verb|\gamma|} \\
+\verb|\delta| & \verb|%delta| & \ue{\verb|\delta|} \\
+\verb|\epsilon| & \verb|%epsilon| & \ue{\verb|\epsilon|} \\
+\verb|\zeta| & \verb|%zeta| & \ue{\verb|\zeta|} \\
+\verb|\eta| & \verb|%eta| & \ue{\verb|\eta|} \\
+\verb|\theta| & \verb|%theta| & \ue{\verb|\theta|} \\
+\verb|\iota| & \verb|%iota| & \ue{\verb|\iota|} \\
+\verb|\kappa| & \verb|%kappa| & \ue{\verb|\kappa|} \\
+\verb|\lambda| & \verb|%lambda| & \ue{\verb|\lambda|} \\
+\verb|\mu| & \verb|%mu| & \ue{\verb|\mu|} \\
+\verb|\nu| & \verb|%nu| & \ue{\verb|\nu|} \\
+\verb|\xi| & \verb|%xi| & \ue{\verb|\xi|} \\
+\verb|\pi| & \verb|%pi| & \ue{\verb|\pi|} \\
+\verb|\rho| & \verb|%rho| & \ue{\verb|\rho|} \\
+\verb|\sigma| & \verb|%sigma| & \ue{\verb|\sigma|} \\
+\verb|\tau| & \verb|%tau| & \ue{\verb|\tau|} \\
+\verb|\upsilon| & \verb|%upsilon| & \ue{\verb|\upsilon|} \\
+\verb|\phi| & \verb|%phi| & \ue{\verb|\phi|} \\
+\verb|\chi| & \verb|%chi| & \ue{\verb|\chi|} \\
+\verb|\psi| & \verb|%psi| & \ue{\verb|\psi|} \\
+\verb|\omega| & \verb|%omega| & \ue{\verb|\omega|} \\
+\verb|\Gamma| & \verb|%Gamma| & \ue{\verb|\Gamma|} \\
+\verb|\Delta| & \verb|%Delta| & \ue{\verb|\Delta|} \\
+\verb|\Theta| & \verb|%Theta| & \ue{\verb|\Theta|} \\
+\verb|\Lambda| & \verb|%Lambda| & \ue{\verb|\Lambda|} \\
+\verb|\Xi| & \verb|%Xi| & \ue{\verb|\Xi|} \\
+\verb|\Pi| & \verb|%Pi| & \ue{\verb|\Pi|} \\
+\verb|\Sigma| & \verb|%Sigma| & \ue{\verb|\Sigma|} \\
+\verb|\Upsilon| & \verb|%Upsilon| & \ue{\verb|\Upsilon|} \\
+\verb|\Phi| & \verb|%Phi| & \ue{\verb|\Phi|} \\
+\verb|\Psi| & \verb|%Psi| & \ue{\verb|\Psi|} \\
+\verb|\Omega| & \verb|%Omega| & \ue{\verb|\Omega|} \\
+\hline
+\hline
+\end{tabular}
+
+\subsection*{Configurable Symbols}
+
+If you have used \verb|\assumeSymbol| to assign meanings to certain inputs symbols,
+then they will be mapped into corresponding Maxima forms:
+
+\begin{tabular}{|c|c|c|}
+\hline
+LaTeX input & Maxima form & Live example \\
+\hline
+\verb|\assumeSymbol{e}{exponentialNumber} $e$| & \verb|%e| & \ue{\verb|\assumeSymbol{e}{exponentialNumber} $e$|} \\
+\verb|\assumeSymbol{i}{imaginaryNumber} $i$| & \verb|%i| & \ue{\verb|\assumeSymbol{i}{imaginaryNumber} $i$|} \\
+\verb|\assumeSymbol{\pi}{constantPi} $\pi$| & \verb|%pi| & \ue{\verb|\assumeSymbol{\pi}{constantPi} $\pi$|} \\
+\verb|\assumeSymbol{\gamma}{eulerGamma} $\gammai$| & \verb|%gamma| & \ue{\verb|\assumeSymbol{\gamma}{eulerGamma} $\pi$|} \\
+\verb|\assumeSymbol{f}{function} $f(x)$| & \verb|f(x)| & \ue{\verb|\assumeSymbol{f}{function} $f(x)$|} \\
+\verb|\assumeSymbol{f}{function} $f^2(x)$| & \verb|f(x)^2| & \ue{\verb|\assumeSymbol{f}{function} $f^2(x)$|} \\
+\verb|\assumeSymbol{f}{function} $f^{-1}(x)$| & \verb|inverse[f](x)| & \ue{\verb|\assumeSymbol{f}{function} $f^{-1}(x)$|} \\
+\hline
+\end{tabular}
+
+Note that Maxima does not actually have a notation for inverse functions, hence
+the fictitional \verb|inverse[f]| construct above. You can change the name of
+this ``function'' using
+\verb|\setUpConversionOption{maximaInverseFunction}{name}|.
+
+\subsection*{Other Supported Constructs}
+
+\begin{itemize}
+\item
+  Units entered using the special SnuggleTeX \verb|\units| macro, such as
+  \verb|\units{kg}| generate a Maxima form like \verb|units("kg")|, which
+  is similar to how we handle unapplied operators. The name of the
+  resulting function can be specified with
+  \verb|\setUpConversionOption{maximaUnitsFunction}{name}|.
+
+\item
+  Subscripted identifiers are converted to a suitable Maxima form if
+  deemed possible.
+
+  \ue{\verb|A_{i,j}x_j|}
+  \ue{\verb|x_{i,j_{n,m_2}}|}
+
+\end{itemize}
+

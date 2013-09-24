@@ -1,0 +1,13 @@
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>f</mi>
+  <mfenced open='(' close=')'>
+    <mn>1</mn>
+  </mfenced>
+  <mo>-</mo>
+  <mi>e</mi>
+  <mo>+</mo>
+  <mn>2</mn>
+  <mi>x</mi>
+  <mo>+</mo>
+  <mn>5</mn>
+</math>

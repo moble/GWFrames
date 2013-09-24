@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<!--
+
+$Id: pom.xml 583 2010-05-24 10:28:13Z davemckain $
+
+Copyright (c) 2010, The University of Edinburgh
+All Rights Reserved
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <name>SnuggleTeX Upconversion Extensions</name>
+  <artifactId>snuggletex-upconversion</artifactId>
+  <packaging>jar</packaging>
+  <parent>
+    <groupId>uk.ac.ed.ph.snuggletex</groupId>
+    <artifactId>snuggletex</artifactId>
+    <version>1.2.2</version>
+  </parent>
+  <dependencies>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>snuggletex-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>net.sf.saxon</groupId>
+      <artifactId>saxon9</artifactId>
+      <version>${saxon9.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>net.sf.saxon</groupId>
+      <artifactId>saxon9-dom</artifactId>
+      <version>${saxon9.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.easymock</groupId>
+      <artifactId>easymock</artifactId>
+      <version>${easymock.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- (Pull in test classes from core module, which contain some useful base classes) -->
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>snuggletex-core</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+      <classifier>tests</classifier>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <includes>
+            <include>**/*Test.java</include>
+            <include>**/*Tests.java</include>
+          </includes>
+        </configuration>
+      </plugin>
+      <!--
+      Plugin for running the examples.
+      Example usage:
+
+      $ mvn exec:exec -Dexample.class=uk.ac.ed.ph.snuggletex.upconversion.samples.AssumptionExample
+
+      -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <configuration>
+          <executable>java</executable>
+          <classpathScope>runtime</classpathScope>
+          <arguments>
+            <argument>-classpath</argument>
+            <classpath/>
+            <argument>${example.class}</argument>
+          </arguments>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

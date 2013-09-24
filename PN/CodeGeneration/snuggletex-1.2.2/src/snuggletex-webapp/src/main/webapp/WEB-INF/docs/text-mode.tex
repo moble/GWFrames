@@ -1,0 +1,176 @@
+\pageId{textMode}
+
+% Simple input/result table environment
+\newenvironment{demotable}
+{\begin{center}
+ \begin{tabular}{|l|l|}
+ \hline \\
+ Input & Result \\
+ \hline \\
+}{\hline
+ \end{tabular}
+ \end{center}
+}
+
+\newenvironment{ndemotable}
+{\begin{center}
+ \begin{tabular}{|l|l|l|}
+ \hline \\
+ Input & Result & Notes \\
+ \hline \\
+}{\hline
+ \end{tabular}
+ \end{center}
+}
+
+% Text-mode demo line
+\newcommand{\note}[1]{\small #1}
+\newcommand{\demo}[1]{\verb|#1| & #1 \\}
+\newcommand{\ndemo}[2]{\verb|#1| & #1 & \note{#2} \\}
+\newcommand{\bigdemo}[1]{\begin{verbatim}#1\end{verbatim} & #1 \\}
+
+\subsection*{Text Escapes}
+
+SnuggleTeX supports the usual commands for escaping characters that are normally
+special in LaTeX.
+
+\begin{ndemotable}
+\demo{\$}
+\demo{\%}
+\demo{\#}
+\demo{\&}
+\demo{\_}
+\demo{\{}
+\demo{\}}
+\ndemo{No\ break}{Produces a non-breaking space}
+\end{ndemotable}
+
+\subsection*{Text Spacing Commands}
+
+\begin{demotable}
+\demo{A\,B}
+\demo{A\hspace{2em}B}
+\end{demotable}
+
+\subsection*{Punctuation}
+
+\begin{ndemotable}
+\demo{`Single Quotes'}
+\demo{``Double Quotes''}
+\ndemo{Yes --- but no!}{Dash}
+\ndemo{1--2}{Dash used for numerical ranges}
+\ndemo{Mr.\ Blitherington-Smythe}{Single '-' is a hyphen}
+\ndemo{No~Break}{Non-breaking space}
+\demo{Boring\ldots}
+\demo{<}
+\demo{>}
+\demo{|}
+\end{ndemotable}
+
+\subsection*{Lists}
+
+SnuggleTeX supports the {\tt itemize} and {\tt enumerate} environments.
+
+\begin{demotable}
+\bigdemo{\begin{itemize}
+  \item First item
+  \item Second item
+\end{itemize}}
+\bigdemo{\begin{enumerate}
+  \item First item
+  \item Second item
+\end{enumerate}}
+\end{demotable}
+
+\subsection*{Text Styling}
+
+These commands style text using the old TeX approach,
+causing the new style to be applied until the end of
+the current level (i.e. closing curly bracket).
+
+\newcommand{\styledemo}[1]{\demo{#1 Some Text}}
+\begin{demotable}
+\styledemo{\em}
+\styledemo{\bf}
+\styledemo{\rm}
+\styledemo{\it}
+\styledemo{\tt}
+\styledemo{\sc}
+\styledemo{\sl}
+\styledemo{\sf}
+\end{demotable}
+
+\subsection*{Newer Text Stylings}
+
+The following commands are similar but the styles apply to their
+arguments explicitly.
+
+\newcommand{\textstyledemo}[1]{\demo{#1{Some Text}}}
+
+\begin{demotable}
+\textstyledemo{\textrm}
+\textstyledemo{\textsf}
+\textstyledemo{\textit}
+\textstyledemo{\textsl}
+\textstyledemo{\textsc}
+\textstyledemo{\textbf}
+\textstyledemo{\texttt}
+\textstyledemo{\emph}
+\end{demotable}
+
+\subsection*{Sizing Commands}
+
+The standard TeX sizing commands are supported. These apply until the
+end of the current level (i.e. closing curly bracket).
+
+\begin{demotable}
+\styledemo{\tiny}
+\styledemo{\scriptsize}
+\styledemo{\footnotesize}
+\styledemo{\small}
+\styledemo{\normalsize}
+\styledemo{\large}
+\styledemo{\Large}
+\styledemo{\LARGE}
+\styledemo{\huge}
+\styledemo{\Huge}
+\end{demotable}
+
+\subsection*{Text Mode Accents}
+
+Applying accents to characters in XHTML is more difficult to implement than
+you might except as it usually requires remapping Unicode characters to their
+accented equivalents, requiring appropriate fonts to be installed to ensure
+they display correctly. As a result, SnuggleTeX currently only supports a
+subset of the accenting that you would normally expect; it will report
+error \href[\verb|TDETA2|]{error-codes.html#TDETA2} if can't create a particular accent you requested.
+We may add support for less common accented characters provided the results
+work well across all target browsers and platforms. (You might be better
+creating Math-mode accents in these cases.)
+
+The table below shows the characters that SnuggleTeX currently accents correctly.
+The exception here is \verb|\underline|, which SnuggleTeX implements using CSS
+so can safely be applied to any character (provided of course you ensure that
+the CSS is correctly used).
+
+\begin{demotable}
+\demo{\'a\'e\'i\'o\'u\'y\'A\'E\'I\'O\'U}
+\demo{\`a\`e\`i\`o\`u\`A\`E\`I\`O\`U}
+\demo{\^a\^e\^i\^o\^u\^A\^E\^I\^O\^U}
+\demo{\~a\~n\~o\~A\~O}
+\demo{\"a\"e\"i\"o\"u\"A\"E\"I\"O\"U}
+\demo{\underline{a} et.\ al.}
+\end{demotable}
+
+\subsection*{Miscellaneous Text-mode Symbols}
+
+We also support the following basic text-mode symbols:
+
+\begin{demotable}
+\demo{\ae}
+\demo{\oe}
+\demo{\dag}
+\demo{\pounds}
+\end{demotable}
+
+

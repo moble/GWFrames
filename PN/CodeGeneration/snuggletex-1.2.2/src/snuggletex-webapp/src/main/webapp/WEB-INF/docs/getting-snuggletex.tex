@@ -1,0 +1,59 @@
+\pageId{download}
+
+\subsection*{Download from Sourceforge.net}
+
+You can \href[download]{http://sourceforge.net/project/showfiles.php?group_id=221375}
+any of the SnuggleTeX ZIP distributions from SourceForge.net. We currently offer two
+flavours:
+
+\begin{itemize}
+  \item \verb|snuggletex-n.n.n-basic.zip| is a basic binary distribution containing
+    everything you need for SnuggleTeX's core functionality, allowing
+    you to convert LaTeX to XHTML/MathML. No further JAR files
+    are required for this.
+
+  \item \verb|snuggletex-n.n.n-full.zip| is the full distribution containing
+    all SnuggleTeX code module binariees, all optional dependency JARs and the
+    SnuggleTeX source code. Use this one if you additionally want to do look at the
+    source,
+    \href[convert LaTeX to XHTML+images]{docs://legacyWebPages},
+    or use the \href[semantic enrichment]{docs://upconversion}
+    to generate Content MathML and/or Maxima syntax.
+\end{itemize}
+
+You can also download SnuggleTeX development snapshots from its
+\href[Subversion repository]{http://sourceforge.net/scm/?type=svn&group_id=221375}
+if you enjoy living on the edge! You will need
+\href[Apache Maven]{http://maven.apache.org/} to build SnuggleTeX from source.
+
+\subsection*{Maven Users}
+
+If you are using \href[Apache Maven]{http://maven.apache.org/} then you can
+automatically obtain SnuggleTeX artifacts (starting from 1.1.0-beta1)
+from the following repository:
+
+\begin{verbatim}<repository>
+  <id>www2.ph.ed.ac.uk-releases</id>
+  <url>http://www2.ph.ed.ac.uk/maven2</url>
+</repository>\end{verbatim}
+
+where you will find the following:
+
+\begin{verbatim}<dependency>
+  <groupId>uk.ac.ed.ph.snuggletex</groupId>
+  <artifactId>snuggletex-core</artifactId>
+  <version>...</version>
+</dependency>
+<dependency>
+  <groupId>uk.ac.ed.ph.snuggletex</groupId>
+  <artifactId>snuggletex-upconversion</artifactId>
+  <version>...</version>
+</dependency>
+<dependency>
+  <groupId>uk.ac.ed.ph.snuggletex</groupId>
+  <artifactId>snuggletex-jeuclid</artifactId>
+  <version>...</version>
+</dependency>\end{verbatim}
+
+Consult the Maven documentation for instructions on setting up your \verb|pom.xml|
+as appropriate.

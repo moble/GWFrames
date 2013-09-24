@@ -1,0 +1,110 @@
+\pageId{upconversionUsage}
+
+\subsection*{Getting Started}
+
+\begin{itemize}
+
+\item
+  In order to use the up-conversion features, you will have to download the
+  \href[full distribution of SnuggleTeX]{docs://download}.
+
+\item
+  You must have \verb|snuggletex-core.jar| and
+  \verb|snuggletex-upconversion.jar| in your runtime ClassPath, as well as
+  \verb|saxon9.jar| and \verb|saxon9-dom.jar|. (The JARs in the distributon
+  ZIP file contain version numbers in their names; it should be obvious what
+  we mean here!)
+
+\end{itemize}
+
+\subsection*{Example}
+
+Have a look at the source code for
+\href[\verb|BasicUpConversionExample.java|]{maven://xref/uk/ac/ed/ph/snuggletex/upconversion/samples/BasicUpConversionExample.html}
+to see how to invoke the up-conversion process.
+
+The key to invoking the up-conversion process is by attaching an
+\verb|UpConvertingPostProcessor| into the SnuggleTeX DOM-building process using
+the \verb|addDOMPostProcessor()| method of your \verb|DOMOutputOptions|,
+\verb|XMLStringOutputOptions|.
+
+Additionally, if you want to use any of the special LaTeX up-conversion
+commands added in SnuggleTeX 1.2.0, such as \verb|\assumeSymbol|
+and \verb|\setUpConversionOption|, then you must also register the
+appropriate \verb|SnugglePackage| with your \verb|SnuggleEngine| as
+follows:
+
+\begin{verbatim}
+SnuggleEngine engine = new SnuggleEngine();
+engine.addPackage(UpConversionPackageDefinitions.getPackage());
+\end{verbatim}
+
+\subsection*{Extracting Information from Resulting MathML}
+
+The up-conversion process {\it replaces} each raw MathML \verb|<math/>| element
+with an annotated element housing all of the resulting output forms together. In
+the case of the above example, the resulting MathML is:
+
+\begin{verbatim}
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+   <semantics>
+      <mfrac>
+         ...
+      </mfrac>
+      <annotation-xml encoding="MathML-Content">
+         <apply>
+            <divide/>
+            ...
+         </apply>
+      </annotation-xml>
+      <annotation encoding="Maxima">((2 * x) - (y^2)) / sin((x * y * (x - 2)))</annotation>
+   </semantics>
+</math>
+\end{verbatim}
+
+The SnuggleTeX utility class
+\href[\verb|MathMLUtilities|]{maven://xref/uk/ac/ed/ph/snuggletex/utilities/MathMLUtilities.html}
+includes some useful helper methods for extracting individual parts of the
+MathML. Here are some examples:
+
+\begin{itemize}
+
+\item \verb|extractAnnotationXML(element, "MathML-Content")|
+will extract the content of the named \verb|<annotation-xml/>| element,
+in this case giving you an \verb|Element| of the form:
+\begin{verbatim}
+<apply>
+   <divide/>
+   ...
+</apply>
+\end{verbatim}
+
+\item You can use \verb|isolateAnnotationXML(element, "MathML-Content")|
+to do the same thing, but wrapping the result in a \verb|<math/>| having
+the same attributes as the original one, giving:
+\begin{verbatim}
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <apply>
+     <divide/>
+     ...
+  </apply>
+</math>
+\end{verbatim}
+
+\item Use \verb|extractAnnotationString(element, "Maxima")|
+to get the Maxima input annotation. This would give you:
+\begin{verbatim}
+((2 * x) - (y^2)) / sin((x * y * (x - 2)))
+\end{verbatim}
+
+\item The \verb|unwrapParallelMathMLDOM()| method returns a simple
+Object with all of the annotations extracted that can be easily
+interrogated.
+
+\item
+\href[\verb|MathMLUtilities|]{maven://xref/uk/ac/ed/ph/snuggletex/utilities/MathMLUtilities.html}
+has some convenience methods for serialising MathML \verb|Element|s and
+\verb|Document|s as XML Strings, that can be useful for debugging or
+documentation purposes.
+
+\end{itemize}
