@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+Log4J Configuration for the SnuggleTeX Demo/Documentation webapp.
+
+NOTE: This only works on Tomcat as it uses the ${catalina.home}
+variable...
+
+$Id: log4j.xml 516 2009-11-26 15:13:21Z davemckain $
+
+-->
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+  <!-- Log most events to custom file -->
+  <appender name="FILE"  class="org.apache.log4j.RollingFileAppender">
+    <param name="File" value="${catalina.home}/logs/snuggletex.log"/>
+    <param name="MaxFileSize" value="500KB" />
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern" value="%-5p [%d{ISO8601}] [%c{1}/%L#%M()] - %m%n"/>
+    </layout>
+    <filter class="org.apache.log4j.varia.LevelRangeFilter">
+      <param name="LevelMin" value="INFO"/>
+      <param name="LevelMax" value="FATAL"/>
+    </filter>
+  </appender>
+
+  <!-- Custom loggers to allow fine-grained logging level selection -->
+  <!--
+  <logger name="uk.ac.ed.ph.snuggletex.webapp">
+    <level value="DEBUG"/>
+  </logger>
+  -->
+
+  <!-- Root logger -->
+  <root>
+    <level value="INFO"/>
+    <appender-ref ref="FILE"/>
+  </root>
+
+</log4j:configuration>

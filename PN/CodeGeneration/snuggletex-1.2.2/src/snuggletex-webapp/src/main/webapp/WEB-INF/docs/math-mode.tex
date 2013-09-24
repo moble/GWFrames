@@ -1,0 +1,570 @@
+\pageId{mathMode}
+
+% Simple input/result table environment
+\newenvironment{demotable}
+{\begin{center}
+ \begin{tabular}{|r|c|}
+ \hline \\
+ Input & Result \\
+ \hline \\
+}{\hline
+ \end{tabular}
+ \end{center}
+}
+
+\newenvironment{ndemotable}
+{\begin{center}
+ \begin{tabular}{|l|c|l|}
+ \hline \\
+ Input & Result & Notes \\
+ \hline \\
+}{\hline
+ \end{tabular}
+ \end{center}
+}
+
+% Creates two columns, 1st shows math input, 2nd shows math output
+\newcommand{\minout}[1]{\verb|$ #1 $| & $#1$}
+\newcommand{\dminout}[1]{\verb|$$ #1 $$| & $$#1$$}
+\newcommand{\bigdminout}[1]{\begin{verbatim}\[
+#1
+\]\end{verbatim} & $$#1$$}
+\newcommand{\note}[1]{\small #1}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+This page lists the main commands for producing basic symbols and
+operators in math mode.
+
+\textbf{NOTE:} The default view of this page (with the \verb|.html|
+file extension) is actually the \href[Legacy Web Pages]{docs://legacyWebPages}
+output! If you want to see MathML versions of this page, look at the
+\href[Web Output Samples]{docs://samples} page for details.
+
+\subsection*{Entering and Leaving math Mode}
+
+SnuggleTeX supports the usual LaTeX commands for entering and leaving
+math mode:
+
+\begin{itemize}
+  \item \verb|$...$|
+  \item \verb|\(...\)|
+  \item \verb|\begin{math}...\end{math}|
+\end{itemize}
+all produce inline mathematics, whereas:
+
+\begin{itemize}
+  \item \verb|$$...$$|
+  \item \verb|\[...\]|
+  \item \verb|\begin{displaymath}...\end{displaymath}|
+\end{itemize}
+
+all produce "display" mathematics. The \verb|eqnarray| and \verb|eqnarray*|
+environments also enter math mode.
+
+SnuggleTeX also supports the \verb|\ensuremath{...}| command.
+
+\subsection*{Basic Mathematics}
+
+\begin{ndemotable}
+\minout{-5.32} & \note{Simple number. (Currently SnuggleTeX only understands UK number
+  formats but this will improve soon\ldots)} \\
+\minout{x} & \note{An identifier} \\
+\minout{x+1 \over 3y} & \note{Old style fractions} \\
+\minout{\frac{x+1}{3y}} & \note{New style fractions} \\
+\minout{x^2} & \note{Simple superscript example} \\
+\minout{x^{2^{y-z}}} & \note{Complex superscript example} \\
+\minout{(x_1, x_2)} & \note{Subscript example.} \\
+\minout{x_1^2} & \note{Mix of subscripts and superscripts} \\
+\minout{\sqrt{x}} & \note{Square roots} \\
+\minout{\sqrt[n]{x}} & \note{$n^\mathrm{th}$ roots} \\
+\end{ndemotable}
+
+\subsection*{Greek Letters}
+
+As is normal here, note that commands are only required for upper case letters
+if there is no standard roman alphabet equivalent.
+
+\newcommand{\gkdemo}[1]{\minout{#1} \\}
+\newcommand{\Gkdemo}[2]{\minout{#1} & \minout{#2} \\}
+\begin{center}
+\begin{tabular}{|r|c|r|c|}
+\hline
+Input & Result & Input & Result \\
+\hline
+\gkdemo{\alpha}
+\gkdemo{\beta}
+\Gkdemo{\gamma}{\Gamma}
+\Gkdemo{\delta}{\Delta}
+\gkdemo{\epsilon}
+\gkdemo{\varepsilon}
+\gkdemo{\zeta}
+\gkdemo{\eta}
+\Gkdemo{\theta}{\Theta}
+\gkdemo{\vartheta}
+\gkdemo{\iota}
+\gkdemo{\kappa}
+\Gkdemo{\lambda}{\Lambda}
+\gkdemo{\mu}
+\gkdemo{\nu}
+\Gkdemo{\xi}{\Xi}
+\Gkdemo{\pi}{\Pi}
+\gkdemo{\varpi}
+\gkdemo{\rho}
+\gkdemo{\varrho}
+\Gkdemo{\sigma}{\Sigma}
+\gkdemo{\varsigma}
+\gkdemo{\tau}
+\Gkdemo{\upsilon}{\Upsilon}
+\Gkdemo{\phi}{\Phi}
+\gkdemo{\varphi}
+\gkdemo{\chi}
+\Gkdemo{\psi}{\Psi}
+\Gkdemo{\omega}{\Omega}
+\hline
+\end{tabular}
+\end{center}
+
+\subsection*{Mathematical Functions}
+
+% Math-mode demo line
+\newcommand{\mdemo}[1]{\minout{#1} \\}
+
+\begin{demotable}
+\mdemo{\arccos x}
+\mdemo{\arcsin x}
+\mdemo{\arctan x}
+\mdemo{\arg x}
+\mdemo{\cos x}
+\mdemo{\cosh x}
+\mdemo{\cot x}
+\mdemo{\coth x}
+\mdemo{\csc x}
+\mdemo{\deg x}
+\mdemo{\det x}
+\mdemo{\dim x}
+\mdemo{\exp x}
+\mdemo{\gcd x}
+\mdemo{\hom x}
+\mdemo{\inf x}
+\mdemo{\ker x}
+\mdemo{\lg x}
+\mdemo{\lim x}
+\mdemo{\liminf x}
+\mdemo{\limsup x}
+\mdemo{\ln x}
+\mdemo{\log x}
+\mdemo{\max x}
+\mdemo{\min x}
+\mdemo{\Pr x}
+\mdemo{\sec x}
+\mdemo{\sin x}
+\mdemo{\sinh x}
+\mdemo{\sup x}
+\mdemo{\tan x}
+\mdemo{\tanh x}
+\end{demotable}
+
+\subsection*{Ellipses}
+
+\begin{demotable}
+\mdemo{\cdots}
+\mdemo{\vdots}
+\mdemo{\ddots}
+\end{demotable}
+
+\subsection*{Spacing}
+
+Note that MathML-enabled browsers don't support spacing particularly well.
+You can also use the \verb|\hspace| command to enter specific amounts of spacing.
+
+\begin{demotable}
+\mdemo{a\!b}
+\mdemo{a\,b}
+\mdemo{a\:b}
+\mdemo{a\;b}
+\mdemo{a\quad b}
+\mdemo{a\qquad b}
+\mdemo{a\hspace{3.0em}b}
+\end{demotable}
+
+\subsection*{Variable-sized symbols}
+
+Note that some of the more exotic operators may require extra fonts installed.
+
+\newcommand{\dmdemo}[1]{\minout{#1} & \dminout{#1} \\}
+\newcommand{\vdemo}[1]{\dmdemo{#1_a^b A_{\lambda}}}
+
+\newenvironment{dmdemotable}
+{\begin{center}
+ \begin{tabular}{|r|l|r|l|}
+ \hline \\
+ Input & Result & Input (Displaymath) & Result \\
+ \hline \\
+}{\hline
+ \end{tabular}
+ \end{center}
+}
+
+\begin{dmdemotable}
+\vdemo{\sum}
+\vdemo{\prod}
+\vdemo{\coprod}
+\vdemo{\int}
+\vdemo{\oint}
+\vdemo{\bigcap}
+\vdemo{\bigcup}
+\vdemo{\bigsqcup}
+\vdemo{\bigvee}
+\vdemo{\bigwedge}
+\vdemo{\bigodot}
+\vdemo{\bigotimes}
+\vdemo{\bigoplus}
+\vdemo{\biguplus}
+\end{dmdemotable}
+
+\subsection*{Binary Operators}
+
+As with LaTeX, we support the \verb|\not| command to negate certain operators. Only
+the ones listed in the table below are supported.
+
+\newcommand{\rdemo}[1]{\minout{#1} & & \\}
+\newcommand{\rndemo}[1]{\minout{#1} & \minout{\not #1} \\}
+\newenvironment{rdemotable}
+{\begin{center}
+ \begin{tabular}{|r|l|r|l|}
+ \hline \\
+ Input & Result & Input (negated) & Result \\
+ \hline \\
+}{\hline
+ \end{tabular}
+ \end{center}
+}
+
+\begin{rdemotable}
+\rdemo{\pm}
+\rdemo{\mp}
+\rdemo{\times}
+\rdemo{\div}
+\rdemo{\ast}
+\rdemo{\star}
+\rdemo{\circ}
+\rdemo{\bullet}
+\rdemo{\cdot}
+\rdemo{\cap}
+\rdemo{\cup}
+\rdemo{\uplus}
+\rdemo{\sqcap}
+\rdemo{\sqcup}
+\rdemo{\vee}
+\rdemo{\lor}
+\rdemo{\wedge}
+\rdemo{\land}
+\rdemo{\setminus}
+\rdemo{\wr}
+\rdemo{\diamond}
+\rdemo{\bigtriangleup}
+\rdemo{\bigtriangledown}
+\rdemo{\triangleleft}
+\rdemo{\triangleright}
+\rdemo{\oplus}
+\rdemo{\ominus}
+\rdemo{\otimes}
+\rdemo{\oslash}
+\rdemo{\odot}
+\rdemo{\bigcirc}
+\rdemo{\dagger}
+\rdemo{\ddagger}
+\rdemo{\amalg}
+\rndemo{\leq}
+\rndemo{\le}
+\rndemo{\prec}
+\rdemo{\preceq}
+\rdemo{\ll}
+\rndemo{\subset}
+\rndemo{\subseteq}
+\rdemo{\sqsubset}
+\rndemo{\sqsubseteq}
+\rndemo{\in}
+\rndemo{\vdash}
+\rndemo{\geq}
+\rndemo{\ge}
+\rndemo{\succ}
+\rdemo{\succeq}
+\rdemo{\gg}
+\rndemo{\supset}
+\rndemo{\supseteq}
+\rdemo{\sqsupset}
+\rndemo{\sqsupseteq}
+\rndemo{\ni}
+\rdemo{\dashv}
+\rndemo{\equiv}
+\rndemo{\sim}
+\rndemo{\simeq}
+\rdemo{\asymp}
+\rndemo{\approx}
+\rndemo{\cong}
+\rdemo{\neq}
+\rdemo{\doteq}
+\rdemo{\notin}
+\rdemo{\models}
+\rdemo{\perp}
+\rndemo{\mid}
+\rdemo{\parallel}
+\rdemo{\bowtie}
+\rdemo{\smile}
+\rdemo{\frown}
+\rdemo{\propto}
+\end{rdemotable}
+
+SnuggleTeX also supports \verb|\stackrel| to make stacked operators:
+
+\begin{demotable}
+\mdemo{1 \stackrel{2}{+} y}
+\end{demotable}
+
+\subsection*{Arrows}
+
+\begin{demotable}
+\mdemo{\leftarrow}
+\mdemo{\Leftarrow}
+\mdemo{\rightarrow}
+\mdemo{\Rightarrow}
+\mdemo{\leftrightarrow}
+\mdemo{\Leftrightarrow}
+\mdemo{\mapsto}
+\mdemo{\hookleftarrow}
+\mdemo{\leftharpoonup}
+\mdemo{\leftharpoondown}
+\mdemo{\rightleftharpoons}
+\mdemo{\longleftarrow}
+\mdemo{\Longleftarrow}
+\mdemo{\longrightarrow}
+\mdemo{\Longrightarrow}
+\mdemo{\longleftrightarrow}
+\mdemo{\Longleftrightarrow}
+\mdemo{\longmapsto}
+\mdemo{\hookrightarrow}
+\mdemo{\rightharpoonup}
+\mdemo{\rightharpoondown}
+\mdemo{\uparrow}
+\mdemo{\Uparrow}
+\mdemo{\downarrow}
+\mdemo{\Downarrow}
+\mdemo{\updownarrow}
+\mdemo{\Updownarrow}
+\mdemo{\nearrow}
+\mdemo{\searrow}
+\mdemo{\swarrow}
+\mdemo{\nwarrow}
+\end{demotable}
+
+\subsection*{Miscellaneous Maths Symbols}
+
+\begin{demotable}
+\mdemo{\aleph}
+\mdemo{\imath}
+\mdemo{\jmath}
+\mdemo{\ell}
+\mdemo{\wp}
+\mdemo{\Re}
+\mdemo{\Im}
+\mdemo{\mho}
+\mdemo{\prime}
+\mdemo{\emptyset}
+\mdemo{\nabla}
+\mdemo{\surd}
+\mdemo{\top}
+\mdemo{\bot}
+\mdemo{\angle}
+\mdemo{\forall}
+\mdemo{\exists}
+\mdemo{\neg}
+\mdemo{\lnot}
+\mdemo{\flat}
+\mdemo{\natural}
+\mdemo{\sharp}
+\mdemo{\backslash}
+\mdemo{\partial}
+\mdemo{\infty}
+\mdemo{\triangle}
+\mdemo{\clubsuit}
+\mdemo{\diamondsuit}
+\mdemo{\heartsuit}
+\mdemo{\spadesuit}
+\mdemo{\hbar}
+\mdemo{\aa}
+\mdemo{\AA}
+\verb_$ \| $_ & $\|$ \\
+\end{demotable}
+
+\subsection*{Mathematical Accents}
+
+Some of these do not work particularly well in some cases, so it is wise to check the
+results on all of the browsers that you need to support!
+
+\newcommand{\mademo}[1]{\minout{#1{x}} & \minout{#1{x-y}} \\ }
+\newenvironment{mademotable}
+{\begin{center}
+ \begin{tabular}{|r|l|r|l|}
+ \hline \\
+ Input (narrow) & Result & Input (wide) & Result \\
+ \hline \\
+}{\hline
+ \end{tabular}
+ \end{center}
+}
+
+\begin{mademotable}
+\mademo{\hat}
+\mademo{\bar}
+\mademo{\vec}
+\mademo{\dot}
+\mademo{\ddot}
+\mademo{\tilde}
+\mademo{\widehat}
+\mademo{\widetilde}
+\mademo{\overline}
+\mademo{\overbrace}
+\mademo{\underbrace}
+\mademo{\overrightarrow}
+\mademo{\overleftarrow}
+\mademo{\underline}
+\end{mademotable}
+
+\subsection*{Stretchy Parentheses}
+
+\newcommand{\mpdemo}[2]{\minout{\left#1 x \right#2} & \minout{\left#1 \frac{1}{1+\frac{1}{1+x}} \right#2} \\ }
+\newenvironment{mptable}
+{\begin{center}
+ \begin{tabular}{|r|l|r|l|}
+ \hline \\
+ Input (narrow) & Result & Input (wide) & Result \\
+ \hline \\
+}{\hline
+ \end{tabular}
+ \end{center}
+}
+
+\begin{mptable}
+\mpdemo{(}{)}
+\mpdemo{[}{]}
+\mpdemo{\{}{\}}
+\mpdemo{\vert}{\vert}
+\mpdemo{\Vert}{\Vert}
+\mpdemo{<}{>}
+\mpdemo{.}{)}
+\mpdemo{[}{.}
+\end{mptable}
+
+\subsection*{Math Fonts}
+
+These LaTeX commands apply a particular mathematical style to their arguments. Note
+that some styles are not supported well by some browsers.
+
+\newcommand{\mfdemo}[1]{\mdemo{#1{xyz} + xyz}}
+\begin{demotable}
+\mfdemo{\mathrm}
+\mfdemo{\mathsf}
+\mfdemo{\mathit}
+\mfdemo{\mathbf}
+\mfdemo{\mathtt}
+\end{demotable}
+
+\subsection*{Text inside Maths}
+
+SnuggleTeX supports the traditional \verb|\mbox| command to enter LR mode from
+within math mode. It also supports \verb|\textrm| and friends.
+
+\begin{demotable}
+\mdemo{1\mbox{ if $x=3$}}
+\mdemo{1\textrm{ if $x=3$}}
+\mdemo{1\textsf{ if $x=3$}}
+\mdemo{1\textit{ if $x=3$}}
+\mdemo{1\textsl{ if $x=3$}}
+\mdemo{1\textsc{ if $x=3$}}
+\mdemo{1\textbf{ if $x=3$}}
+\mdemo{1\texttt{ if $x=3$}}
+\mdemo{1\emph{ if $x=3$}}
+\end{demotable}
+
+\subsection*{Mathematical Structures}
+
+\begin{ndemotable}
+\newcommand{\biginout}[1]{\begin{verbatim}#1\end{verbatim} & #1}
+\biginout{\begin{eqnarray*}
+  x & = & y \\
+    & = & z
+\end{eqnarray*}} &
+  \note{This is a standard LaTeX \texttt{eqnarray*}.
+  SnuggleTeX also supports \texttt{eqnarray}, though labelling is not supported so it
+  behaves exactly like \texttt{eqnarray*}.}
+  \\
+\bigdminout{\left(
+  \begin{array}{cc}
+    1 & 2 \\
+    3 & 4
+  \end{array}
+\right)} & \note{This uses the \texttt{array} environment combined with stretchy brackets to make a matrix.} \\
+\bigdminout{\begin{matrix}
+  1 & 2 \\
+  3 & 4
+\end{matrix}} & \note{SnuggleTeX supports the convenient AMS-LaTeX  \texttt{matrix} environment\ldots} \\
+\bigdminout{\begin{pmatrix}
+  1 & 2 \\
+  3 & 4
+\end{pmatrix}} & \note{\ldots and \texttt{pmatrix} \ldots} \\
+\bigdminout{\begin{bmatrix}
+  1 & 2 \\
+  3 & 4
+\end{bmatrix}} & \note{\ldots and \texttt{bmatrix} \ldots} \\
+\bigdminout{\begin{Bmatrix}
+  1 & 2 \\
+  3 & 4
+\end{Bmatrix}} & \note{\ldots and \texttt{Bmatrix} \ldots} \\
+\bigdminout{\begin{vmatrix}
+  1 & 2 \\
+  3 & 4
+\end{vmatrix}} & \note{\ldots and \texttt{vmatrix} \ldots} \\
+\bigdminout{\begin{Vmatrix}
+  1 & 2 \\
+  3 & 4
+\end{Vmatrix}} & \note{\ldots and \texttt{Vmatrix}.} \\
+\bigdminout{A=\begin{cases}
+  1 & 2 \\
+  3 & 4
+\end{cases}} & \note{Another useful AMS-LaTeX environment environment.} \\
+\end{ndemotable}
+
+\subsection*{Variant Characters}
+
+This is one area of MathML which cause practical issues in browsers, usually due to a lack
+of fonts. By default, SnuggleTeX adds \texttt{mathvariant} attributes to the MathML whenever
+variant fonts like "script" (a.k.a.\ "calligraphic"), "fraktur" and "double-struck" are used,
+leaving the browser to use an appropriate font. By default, Firefox doesn't do anything here
+so, like similar conversion tools, SnuggleTeX can also try to remap certain "safe" characters
+to other symbols that users are likely to have installed. The output below demonstrates this.
+
+\newcommand{\vcdemo}[1]{\minout{#1{abcdefghijklmnopqrstuvwxyz}} \\ }
+\newcommand{\vcudemo}[1]{\minout{#1{ABCDEFGHIJKLMNOPQRSTUVWXYZ}} \\ }
+\newenvironment{vctable}
+{\begin{center}
+ \begin{tabular}{|r|l|}
+ \hline \\
+ Input & Result \\
+ \hline \\
+}{\hline
+ \end{tabular}
+ \end{center}
+}
+\begin{vctable}
+\vcdemo{\mathcal}
+\vcudemo{\mathcal}
+\vcdemo{\mathsc}
+\vcudemo{\mathsc}
+\vcdemo{\mathbb}
+\vcudemo{\mathbb}
+\vcdemo{\mathfrak}
+\vcudemo{\mathfrak}
+\end{vctable}
+

@@ -1,0 +1,301 @@
+/*
+ * Main stylesheet for the SnuggleTeX webapp
+ *
+ * $Id: webapp.css 575 2010-05-21 10:40:58Z davemckain $
+ */
+
+#content {
+  padding: 0;
+  margin: 0;
+  background-color: #f2d7da;
+  font-family: Arial, Helvetica, Sans-Serif;
+}
+
+#skipnavigation {
+  display: none;
+}
+
+/************************************************************/
+
+#navigation {
+  float: right;
+  width: 27%;
+  font-size: 80%;
+  background-color: #f2d7da;
+}
+
+#navinner {
+  padding: 20px 16px 0 16px;
+}
+
+#navinner h2 {
+  color: #f25c69;
+  padding: 0;
+  border-bottom: 1px solid #f25c69;
+  margin: 0 0 0.2em 0;
+  font-weight: bold;
+  font-size: 120%;
+}
+
+#navinner h2 a:link, #navinner h2 a:visited {
+  color: inherit;
+}
+
+#navinner ul {
+  margin: 0 0 1.5em 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+#navinner ul ul {
+  margin: 0 0 0 1em;
+}
+
+#navinner li {
+  margin: 0;
+  padding: 0;
+}
+
+#navinner a:link, #navinner a:visited {
+  color: #736667;
+  text-decoration: none;
+}
+
+#navinner a:active {
+  color: #f25c69;
+  text-decoration: none;
+}
+
+#navinner a:hover {
+  color: #f25c69;
+  text-decoration: none;
+}
+
+#navinner a.selected {
+  color: #f25c69 !important;
+  font-weight: bold;
+}
+
+
+/************************************************************/
+
+#maincontent {
+  margin: 0 27% 0 0;
+  background-color: white;
+  border: 1px solid white;
+  font-size: 90%;
+}
+
+#maininner {
+  padding: 20px 16px 40px 16px;
+  overflow-x: auto;
+}
+
+#maininner h2 {
+  color: #f25c69;
+  margin-top: 0;
+  padding: 0.5em;
+  font-weight: bold;
+  font-size: 150%;
+  background-color: #f2d7da;
+  -moz-border-radius: 0.5em;
+  -webkit-border-radius: 0.5em;
+}
+
+#maininner h3 {
+  color: black;
+  font-size: 140%;
+  padding: 0.1em 0;
+}
+
+#maininner h3 tt {
+  color: black;
+}
+
+#maininner h4 {
+  color: #232b5a;
+  text-transform: uppercase;
+  font-size: 120%;
+}
+
+#maininner a:link {
+  color: #f25c69;
+}
+
+#maininner a:visited {
+  color: #736667;
+}
+
+#maininner a:hover {
+  background-color: #ffeeee;
+}
+
+/************************************************************/
+span.extlink {
+  padding-right: 12px;
+  margin-left: 2px;
+  background: url(extlink.png) no-repeat center left;
+}
+
+tt, code {
+  font-family: Monospace;
+  font-size: 110%;
+  font-weight: bold;
+  color: #333366;
+}
+
+.warning {
+  background-color: #f2d7da;
+  border: 2px solid red;
+  padding: 0.5em;
+  margin: 0.5em 0;
+  -moz-border-radius: 1em;
+  -webkit-border-radius: 1em;
+}
+
+pre.verbatim, .note, .result {
+  background-color: #dad7f2;
+  padding: 1em;
+  color: #333366;
+  border: 1px solid #333366;
+  overflow: auto;
+  -moz-border-radius: 1em;
+  -webkit-border-radius: 1em;
+}
+
+/* (Override for things inside tables) */
+.tabular pre.verbatim {
+  background: none;
+  padding: 0;
+  color: black;
+  border: none;
+  font-weight: bold;
+}
+
+fieldset {
+  border: none;
+}
+
+textarea {
+  width: 100%;
+}
+
+.inputBox {
+  background-color: #f2d7da;
+  border: 2px solid black;
+  color: black;
+  -moz-border-radius: 1em;
+  -webkit-border-radius: 1em;
+  padding: 2em;
+  text-align: center;
+  font-size: larger;
+}
+
+.optionsBox {
+  background-color: #f2d7da;
+  border: 1px solid black;
+  color: black;
+  -moz-border-radius: 1em;
+  -webkit-border-radius: 0.5em;
+  padding: 1em;
+}
+
+form.input textarea {
+  width: 100%;
+  background-color: #fff7f7;
+}
+
+form.input input[type='text'] {
+  background-color: #fff7f7;
+}
+
+form.input input[type='button'] {
+  background-color: #fff7f7;
+}
+
+form.input input[type='submit'] {
+  background-color: #fff7f7;
+}
+
+.error {
+  -moz-border-radius: 0.5em;
+  -webkit-border-radius: 0.5em;
+}
+
+table.failures {
+  width: 100%;
+  -moz-border-radius: 1em;
+  -webkit-border-radius: 1em;
+}
+
+table.failures th {
+  background-color: #8a87f2;
+  padding: 0.5em;
+  -moz-border-radius: 1em;
+  -webkit-border-radius: 1em;
+  text-align: center;
+}
+
+table.failures td {
+  background-color: #dad7f2;
+  padding: 0.1em 0.5em;
+  -moz-border-radius: 1em;
+  -webkit-border-radius: 1em;
+  text-align: center;
+}
+
+table.failures td pre {
+  text-align: left;
+}
+
+address {
+  font-style: normal;
+}
+
+blockquote {
+  font-style: italic;
+}
+
+/************************************************************/
+
+#popup {
+  display: none;
+}
+
+.ui-dialog .ui-dialog-content {
+  padding: 0 !important;
+}
+
+.ui-tabs .ui-tabs-nav li {
+  font-size: smaller !important;
+}
+
+div.exampleResult {
+  font-size: small;
+}
+
+a.upconversionExample {
+  display: block;
+  padding: 0.3em;
+  text-align: center;
+  background-color: #eeeeee;
+  border: 1px solid #dddddd;
+  -moz-border-radius: 0.3em;
+  -webkit-border-radius: 0.3em;
+}
+
+/************************************************************/
+
+/* Override setting in main stylesheet */
+#copyright {
+  background-color: white;
+  border-top: 1px dotted #f2d7da;
+  margin-top: 0;
+  padding-top: 1em;
+  font-size: smaller;
+}
+
+#maincontent li {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}

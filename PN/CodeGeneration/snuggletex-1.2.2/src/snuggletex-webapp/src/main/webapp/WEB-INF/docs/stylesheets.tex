@@ -1,0 +1,30 @@
+\pageId{stylesheets}
+
+SnuggleTeX defaults to using CSS (Cascading StyleSheets) to style XHTML elements.
+This can be controlled in a number of ways:
+
+\begin{itemize}
+
+\item
+  The default option when creating web pages is to include all of the CSS
+  declarations within a \verb|<style>...</style>| section in the XHTML
+  \verb|<head>....</head>| section. This can be turned off by calling
+  \verb|setIncludingStyleElement(false)| on your \verb|WebPageOutputOptions|
+  Object. In this case, you will want to use one of following alternative
+  approaches for providing the style information.
+
+\item
+  By calling \verb|setInliningCSS(true)| on your \verb|WebPageOutputOptions|
+  (or indeed \verb|DOMOutputOptions|)
+  Object, SnuggleTeX will add \verb|style| attributes to XHTML elements as
+  required. This might be a useful option if the resulting XHTML is going to
+  be grafted into the content of another page on another system, as it still
+  gives you some control over CSS.
+
+\item
+  The SnuggleTeX distributions include a \verb|snuggletex.css| file that may
+  be able to deploy alongside your web outputs. In that case, use the
+  \verb|setCSSStylesheetURLs()| to link this (and any other) CSS files to
+  your web outputs.
+
+\end{itemize}

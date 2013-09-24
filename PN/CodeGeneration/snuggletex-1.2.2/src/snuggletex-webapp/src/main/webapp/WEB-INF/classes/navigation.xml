@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<!--
+
+$Id: navigation.xml 525 2010-01-05 14:07:36Z davemckain $
+
+Stylesheet to soup up the raw output from the SnuggleTeX
+process to make a nice web page.
+
+This adds in the rest of the <head/> stuff, standard headers & footers
+and the navigation menu.
+
+Relative links are fixed up so they are relative to the supplied
+context-path.
+
+Copyright (c) 2010, The University of Edinburgh.
+All Rights Reserved
+
+-->
+<navigation xmlns="http://www.ph.ed.ac.uk/snuggletex">
+  <section name="About SnuggleTeX">
+    <node id="overview" href="/documentation/overview-and-features.html" name="Overview &amp; Features"/>
+    <node id="usecases" href="/documentation/use-cases.html" name="Why Use SnuggleTeX?"/>
+    <node id="license" href="/documentation/license.html" name="License"/>
+    <node id="releasenotes" href="/documentation/release-notes.html" name="Release Notes"/>
+  </section>
+  <section name="Demos &amp; Samples">
+    <node id="mathInputDemo" href="/MathInputDemo" name="Simple Math Input Demo"/>
+    <node id="fullLaTeXInputDemo" href="/FullLaTeXInputDemo" name="Full LaTeX Input Demo"/>
+    <node id="upConversionDemo" href="/UpConversionDemo" name="MathML Semantic Enrichment Demo"/>
+    <node id="asciiMathMLUpConversionDemo" href="/ASCIIMathMLUpConversionDemo" name="ASCIIMathML Enrichment Demo"/>
+    <node id="samples" href="/documentation/web-output-samples.html" name="Web Output Samples"/>
+  </section>
+  <section name="User Guide">
+    <node id="download" href="/documentation/getting-snuggletex.html" name="Getting SnuggleTeX"/>
+    <node id="requirements" href="/documentation/software-requirements.html" name="Software Requirements"/>
+    <node id="classpath" href="/documentation/your-classpath.html" name="Setting up Your ClassPath"/>
+    <node id="examples" href="/documentation/examples.html" name="Examples">
+      <node id="firstExample" href="/documentation/minimal-example.html" name="Minimal Example"/>
+      <node id="xmlStringOutputExample" href="/documentation/xml-string-output-example.html" name="XML String Output Example"/>
+      <node id="webPageExample" href="/documentation/web-page-example.html" name="Web Page Example"/>
+    </node>
+    <node id="basicUsage" href="/documentation/basic-usage.html" name="Basic Usage"/>
+    <node id="inputs" href="/documentation/inputs.html" name="Parsing LaTeX Inputs"/>
+    <node id="domOutput" href="/documentation/xml-or-dom-output.html" name="Creating XML String or DOM Outputs"/>
+    <node id="webOutput" href="/documentation/web-output.html" name="Creating Web Pages">
+      <node id="webPageTypes" href="/documentation/web-page-types.html" name="XHTML+MathML Web Page Types"/>
+      <node id="browserRequirements" href="/documentation/browser-requirements.html" name="MathML Browser Requirements"/>
+      <node id="legacyWebPages" href="/documentation/legacy-web-pages.html" name="Creating Legacy Web Pages"/>
+      <node id="stylesheets" href="/documentation/stylesheets.html" name="CSS Stylesheet Notes"/>
+    </node>
+    <node id="errors" href="/documentation/error-reporting.html" name="Error Reporting">
+      <node id="errorCodes" href="/documentation/error-codes.html" name="SnuggleTeX Error Codes"/>
+    </node>
+    <node id="supportedLaTeX" href="/documentation/supported-latex.html" name="Supported LaTeX">
+      <node id="textMode" href="/documentation/text-mode.html" name="Basic Text Mode Commands"/>
+      <node id="mathMode" href="/documentation/math-mode.html" name="Basic Math Mode Commands"/>
+      <node id="verbatimMode" href="/documentation/verbatim-mode.html" name="Verbatim Mode"/>
+      <node id="commands" href="/documentation/defining-commands.html" name="Defining Commands &amp; Environments"/>
+      <node id="xhtmlCommands" href="/documentation/xhtml-commands.html" name="XHTML-related Commands"/>
+      <node id="xmlCommands" href="/documentation/xml-commands.html" name="XML-related Commands"/>
+    </node>
+    <node id="advanced" href="/documentation/advanced-usage.html" name="Advanced Usage"/>
+    <node id="upconversion" href="/documentation/semantic-enrichment.html" name="Semantic Enrichment">
+      <node id="pmathmlEnhancement" href="/documentation/pmathml-enhancement.html" name="Presentation MathML Enhancement"/>
+      <node id="cmathml" href="/documentation/generating-content-mathml.html" name="Generating Content MathML"/>
+      <node id="maxima" href="/documentation/generating-maxima-input.html" name="Generating Maxima Input"/>
+      <node id="upconversionUsage" href="/documentation/upconversion-usage.html" name="Up-Conversion Usage"/>
+      <node id="upconversionFailures" href="/documentation/upconversion-failures.html" name="Up-Conversion Failure Handling"/>
+      <!-- Also need to document ASCIIMathML -->
+    </node>
+    <node id="migrating" href="/documentation/migrating-from-older-versions.html" name="Migrating from older versions">
+      <node id="migration110to120" href="/documentation/migration-110-to-120.html" name="SnuggleTeX 1.1.0 to 1.2.0 migration guide"/>
+      <node id="migration10xto110" href="/documentation/migration-10x-to-110.html" name="SnuggleTeX 1.0.x to 1.1.0 migration guide"/>
+    </node>
+    <node id="projects" href="maven://apidocs/index.html" name="API Documentation"/>
+    <node id="crossref" href="maven://xref/index.html" name="Source Code Cross-Reference"/>
+  </section>
+  <section name="SnuggleTeX Project Links">
+    <node href="http://sourceforge.net/project/showfiles.php?group_id=221375" name="Download from SourceForge.net"/>
+    <node href="http://sourceforge.net/projects/snuggletex/" name="SnuggleTeX on SourceForge.net"/>
+    <node href="http://snuggletex.sourceforge.net/maven/" name="SnuggleTeX Maven Developer Reports"/>
+    <node href="https://www.wiki.ed.ac.uk/display/Physics/SnuggleTeX" name="SnuggleTeX Wiki"/>
+  </section>
+</navigation>

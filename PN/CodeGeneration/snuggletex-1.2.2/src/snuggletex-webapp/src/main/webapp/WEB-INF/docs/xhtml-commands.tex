@@ -1,0 +1,58 @@
+\pageId{xhtmlCommands}
+
+SnuggleTeX provides a small number of custom commands to do
+certain web-related tasks. (There are also a number of related commands for
+doing more general \href[XML-related]{docs://xmlCommands} things.)
+
+\subsection*{Hyperlinks}
+
+Use the \verb|\href| command to generate a simple web hyperlink. It
+takes an optional argument and one required argument as follows:
+
+\begin{itemize}
+  \item \textbf{Link Text} (optional): This is the text that users
+    will click on to follow the link. If omitted, the supplied URL
+    will be displayed instead. This is parsed in LR mode.
+
+  \item \textbf{URL} (required): This is the URL (i.e.\ web address)
+    that the hyperlink should go to. This is parsed in verbatim mode.
+
+\end{itemize}
+
+The URL must follow the correct syntax for a URI, otherwise a
+\href[\verb|TDEX04|]{error-codes.html#TDEX04} error is recorded.
+
+SnuggleTeX provides a programmatic mechanism for messing around with
+URLs before they are output, which can sometimes be useful. Have a look
+at the \verb|LinkResolver| interface, which you implement and pass as
+part of your \verb|DOMBuilderOptions|.
+
+\subsubsection*{Example}
+
+\begin{verbatim}
+\href[SnuggleTeX Home Page]{http://www.ph.ed.ac.uk/snuggletex/}
+\end{verbatim}
+
+produces a link to the SnuggleTeX home page.
+
+\subsection*{Anchors}
+
+You can use the \verb|\anchor| command to create a hypertext anchor
+within a page. This anchor can be referred to using \verb|\href| with a URL of
+the form \verb|...#anchorId|.
+
+\subsubsection*{Example}
+
+\begin{verbatim}
+\subsection*{\anchor{boring}A Long And Boring Section}
+
+...
+
+\subsection*{Later On}
+
+Back in the \href[long and boring section]{#boring} we saw...
+\end{verbatim}
+
+The \verb|\anchor| command parses its argument in verbatim mode; a variant
+command \verb|\anchor*| also exists which parses its argument in LR mode,
+which can sometimes be useful.

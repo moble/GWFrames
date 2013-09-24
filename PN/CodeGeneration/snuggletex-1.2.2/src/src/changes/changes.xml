@@ -1,0 +1,332 @@
+<?xml version="1.0"?>
+<!--
+
+Changes since 1.1.0-beta1 are now recorded here...
+
+See http://maven.apache.org/plugins/maven-changes-plugin/changes.html
+for a guide to how this works.
+
+$Id: changes.xml 583 2010-05-24 10:28:13Z davemckain $
+
+Copyright (c) 2010, The University of Edinburgh
+All Rights Reserved
+
+-->
+<document xmlns="http://maven.apache.org/changes/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
+  <properties>
+    <title>Changes Report (from 1.1.0-beta1 onwards)</title>
+    <author email="david.mckain&#xa0;[at]&#xa0;ed.ac.uk">David McKain</author>
+  </properties>
+  <body>
+    <release version="1.2.2" date="2010-05-24" description="Version 1.2.2 (SVN revision 584)">
+      <action dev="davemckain" type="update" date="2010-05-24">
+        Updated to JEuclid 3.1.9
+      </action>
+      <action dev="davemckain" type="fix" date="2010-05-21">
+        The UpConversionExampleFragmentServlet now detects and deals with double-encoded
+        query strings, which I was finding from certain search engines.
+      </action>
+      <action dev="davemckain" type="add" date="2010-05-21">
+        Added a trivial CommandLineRunner class to the samples package, which lets you run
+        SnuggleTeX from the command line, giving access to most (but not all) XML and web output
+        options. The snuggletex-core.jar now has this listed as its Main-Class, so the JAR can now
+        be executed directly.
+      </action>
+      <action dev="davemckain" type="add" date="2010-05-21">
+        Added a couple of new overloaded versions of SnuggleSession.writeWebPage() that
+        let you specify what should be done with the OutputStream once the content has
+        been written. Previously the stream was automatically closed; you can now choose
+        between closing it, flushing it or doing nothing.
+      </action>
+      <action dev="davemckain" type="fix" date="2010-05-21">
+        Fixed bug in the Content MathML to Maxima XSLT that was causing tunnel
+        parameters not to be passed on in certain cases. This appears to have been
+        quite obscure as I've never seen it before. Added an additional regression test
+        for future.
+      </action>
+      <action dev="davemckain" type="fix" date="2010-05-21">
+        Handling of the XHTML serialisation method and the usingNamedEntities
+        output property was not working as advertised when there was no XSLT
+        2.0 processor available. Instead of failing, SnuggleTeX now silently
+        downgrades XHTML output to XML and ignores usingNamedEntities when running
+        on XSLT 1.0.
+      </action>
+      <action dev="davemckain" type="update" date="2010-05-21">
+        Changed system for XHTML + MathML back to identifiers to the value it had before 1.2.0,
+        at the advice of the validator, which seems to have changed behaviour again!
+      </action>
+      <action dev="davemckain" type="fix" date="2010-05-20">
+        Added an expansionLimit property to the SessionConfiguration class that specifies
+        how deep to go when expanding out user-defined commands and environments. This
+        provides simple protection against possible infinite recursion, which can arise
+        in a number of ways and is not easy to test for due to the highly dynamic nature
+        of LaTeX input. There is a new error code for this - TTEU00. This subsumes the
+        role of the previous TTEUE4 error code, which has been removed.
+        <fixes issue="2998211"/>
+      </action>
+      <action dev="davemckain" type="fix" date="2010-05-19">
+        Fixed minor bug that caused certain verbatim-related error messages not to be included
+        in the resulting DOM (when generated in this way).
+      </action>
+      <action dev="davemckain" type="fix" date="2010-05-19">
+        User-defined commands and environments now have their #n references checked to make sure
+        they're in the correct range. This makes detection of this issue happen at definition time,
+        rather than evaluation time. New error codes TTEUCA, TTEUE5 and TTEUE6 are used to flag
+        these issues.
+      </action>
+      <action dev="davemckain" type="fix" date="2010-05-19">
+        Tidied up code that substitutes arguments into user-defined commands/environments,
+        so that \#n is now correctly handled.
+      </action>
+      <action dev="davemckain" type="update" date="2010-04-30">
+        Updated the ASCIIMathML input and up-conversion demo to use the final version
+        of all of the code from MathAssessEngine. Also added in a real-time preview
+        of the resulting source MathML, and fixed a couple of minor bugs.
+      </action>
+      <action dev="davemckain" type="update" date="2010-04-26">
+        Improved structure of full ZIP bundle
+      </action>
+      <action dev="davemckain" type="fix" date="2010-04-22">
+        Added support for \not|, which continues through to generation of Content MathML
+        <fixes issue="2807101"/>
+      </action>
+      <action dev="davemckain" type="fix" date="2010-04-20">
+        Minor fix to the output of the Math Input demo
+      </action>
+      <action dev="davemckain" type="fix" date="2010-04-20">
+        Renamed *_en.properties as *.properties so as to avoid startup Exception in non-EN locales.
+        This was a silly error on my behalf. Thanks to Konstantin Rybakov for pointing this out.
+      </action>
+      <action dev="davemckain" type="fix" date="2010-04-12">
+        Fixed output of \neq, which was previously generating a "not in"
+        character. Thanks to Konstantin Rybakov for pointing out this silly
+        mistake!
+      </action>
+    </release>
+    <release version="1.2.1" date="2010-04-02" description="Version 1.2.1 (SVN revision 545)">
+      <action dev="davemckain" type="add" date="2010-03-24">
+        Added 'applyingFirefox3SemanticsWorkaround' property to
+        DOMOutputOptions that wraps annotated MathML inside an additional
+        &lt;mstyle> wrapper to work around rendering issues in Firefox 3.
+      </action>
+      <action dev="davemckain" type="fix" date="2010-03-24">
+        Fixed minor issue with the handling of whitespace at the start and end of
+        Text tokens in MATH mode.
+      </action>
+      <action dev="davemckain" type="fix" date="2010-03-24">
+        Fixed the output of Math styling constructs like \textrm{} so that an empty &lt;mrow/>
+        is generated instead of an empty &lt;mstyle/>, as the latter is not valid.
+      </action>
+      <action dev="davemckain" type="fix" date="2010-03-24">
+        Line endings in input are now normalised to a single newline when building XML outputs.
+        This prevent extraneous carriage returns appearing in some situations when running
+        on Windows.
+      </action>
+      <action dev="davemckain" type="fix" date="2010-03-24">
+        The content of \textrm{...} and friends is now correctly parsed in LR
+        mode, instead of PARAGRAPH mode.
+      </action>
+      <action dev="davemckain" type="fix" date="2010-03-19">
+        Fixed unbelievably silly reversed logic that would try to use an XSLT 2.0 processor when
+        asking for an XSLT 1.0 processor, and vice versa. This would have prevented
+        the examples from working.
+      </action>
+    </release>
+    <release version="1.2.0" date="2010-02-04" description="Version 1.2.0 (SVN revision 533)">
+      <action dev="davemckain" type="fix" date="2010-02-04">
+        Error Tokens recorded due to using environments in an incorrect mode were
+        being lost, even though the errors themselves were being recorded correctly.
+        This is now fixed.
+        <fixes issue="2945869"/>
+      </action>
+      <action dev="davemckain" type="update" date="2010-01-08">
+        Tidied up the ASCIIMathML input demo a bit so that the JavaScript helper code can be
+        more easily reused by people. (Also cut down ASCIIMathML.js to remove the optional
+        extra stuff included inside it, such as LaTeXMathML.js and ASCIIsvg.js.)
+      </action>
+      <action dev="davemckain" type="fix" date="2010-01-06">
+        Fixed bug in handling of \verb and \verb* when the ending delimiter is not found.
+        <fixes issue="2926914"/>
+      </action>
+    </release>
+    <release version="1.2.0-beta1" date="2009-11-26" description="Version 1.2.0-beta1 (SVN revision 518)">
+      <action dev="davemckain" type="add" date="2009-11-24">
+        Added ErrorGroup interface and implementations to group related ErrorCodes together.
+        Error Codes documentation page updated to use this concept.
+      </action>
+      <action dev="davemckain" type="update" date="2009-11-23">
+        Added support for $f^{-1}$ and $f^2$ in Content MathML to Maxima up-conversion stylesheet.
+      </action>
+      <action dev="davemckain" type="fix" date="2009-11-13">
+        WebPageOutputOptionsTemplates now sets content type correctly when generating MOZILLA pages.
+      </action>
+      <action dev="davemckain" type="update" date="2009-10-30">
+        Web page builder now always adds xml:lang attribute when generating XHTML or XML outputs.
+      </action>
+      <action dev="davemckain" type="update" date="2009-10-30">
+        Changed public/system identifiers to -//W3C//DTD XHTML 1.1 plus MathML 2.0//EN
+        and http://www.w3.org/TR/MathML2/dtd/xhtml-math11-f.dtd when generating web pages
+        of type CROSS_BROWSER_XHTML.
+      </action>
+      <action dev="davemckain" type="fix" date="2009-10-30">
+        SnuggleTeX was incorrectly creating 'accent' attributes instead of 'accentunder'
+        attributes when creating munder elements.
+      </action>
+      <action dev="davemckain" type="update" date="2009-08-03">
+        Extracted the parts of XMLStringOutputOptions pertaining to XML serialization to an
+        interface called SerializationOptions, with a "standalone" implementation that
+        replaces and simplifies the various overloaded serialization methods in MathMLUtilities
+        and friends. Most of these existing methods have been kept for the time being, but
+        marked as deprecated. Also did some further tidying to StylesheetManager, moving some
+        code previously in XMLUtilities here where it can be more easily managed.
+        Finally, the demo webapp now outputs named entities in MathML source
+        fragments, which is more useful for demonstration purposes.
+      </action>
+      <action dev="davemckain" type="fix" date="2009-08-03">
+        Fixed overly permissive handling of extraneous '$' characters when parsing math mode.
+        <fixes issue="2831470"/>
+      </action>
+      <action dev="davemckain" type="fix" date="2009-07-27">
+        Fixed the Unicode characters emitted within the resulting MathML for
+        \cdot, \bullet, \diamond and \frown.
+      </action>
+      <action dev="davemckain" type="add" date="2009-07-27">
+        Added TransformerFactoryChooser interface that allows users with exacting requirements
+        to control the choice of XSLT 1.0 (and 2.0, where required) processors. A default
+        implementation is provided that uses the standard JAXP TransformerFactoryImpl search,
+        and there's also one which picks Saxon 9.X in all circumstances.
+      </action>
+      <action dev="davemckain" type="update" date="2009-07-21">
+        Improved the mechanism for adding custom built-in commands and environments.
+        The old DefinitionMap has been renamed as SnugglePackage and moved to top package.
+        Each SnugglePackage can have its own error codes and message bundles.
+        A "core" package now provides the functionality for the core module, and the
+        old ErrorCode enumeration has been split into an interface of the same name and
+        a CoreErrorCodes enumeration. The up-conversion functionality and error codes have
+        been moved into a separate package, which can be accessed via the
+        UpConversionPackageDefinitions class.
+      </action>
+      <action dev="davemckain" type="update" date="2009-07-17">
+        W3C-related constants have been moved out of the Globals class and now use
+        either the standard XMLConstants or new W3CContants classes.
+      </action>
+      <action dev="davemckain" type="add" date="2009-07-17">
+        Added first cut of new \assume command that will be used to control aspects of
+        the up-conversion process.
+      </action>
+      <action dev="davemckain" type="add" date="2009-07-17">
+        Enhanced DOMOutputOptions to allow caller to specify whether to use
+        namespace prefixes for XHTML and SnuggleTeX XML elements.
+      </action>
+      <action dev="davemckain" type="add" date="2009-07-16">
+        Added very simple mechanism for getting and setting variables, which will
+        be used for "assume" functionality to make up-conversion more customisable.
+      </action>
+      <action dev="davemckain" type="update" date="2009-07-15">
+        Renamed SnuggleSession.getCommandByTeXName() as getBuiltinCommandByTeXName(), and
+        similarly the version for environments. These methods are likely to have been used by
+        very few people.
+      </action>
+      <action dev="davemckain" type="add" date="2009-07-15">
+        Added new XMLStringOutputOptions Object, sitting between DOMOutputOptions and WebPageOutputOptions.
+        New versions of SnuggleSession.buildXMLString() have been added to reflect this; the existing
+        ones are now deprecated and will be removed at the next major release.
+      </action>
+      <action dev="davemckain" type="add" date="2009-07-03">
+        Math Input Demo now shows both MathML rendering and XHTML+CSS/image renderings
+        of the results, which might be useful for comparison purposes.
+      </action>
+      <action dev="davemckain" type="add" date="2009-07-02">
+        Added support for the AMS-LaTeX cases, matrix, pmatrix, bmatrix, Bmatrix, vmatrix and Vmatrix environments.
+      </action>
+      <action dev="davemckain" type="fix" date="2009-07-02">
+        Up-conversion process now generates MathML using the same namespace prefix
+        as the original Presentation MathML produced by SnuggleTeX.
+      </action>
+      <action dev="davemckain" type="add" date="2009-07-02">
+        Changed the characters for left and right angle brackets to U+2329 and U+232A
+        respectively.
+      </action>
+      <action dev="davemckain" type="add" date="2009-07-02">
+        Added missing support for '\left.' and '\right.'
+        <fixes issue="2814534"/>
+      </action>
+      <action dev="davemckain" type="add" date="2009-07-02">
+        Internal refactoring of the Interpretation class hierarchy, to make it easier for
+        commands and tokens to have multiple meanings. The old MathMLOperator enumeration
+        has been replaced with a more general set of constants defining various MathML symbols.
+        (Note that if you have been defining your own BuiltinCommand and BuiltinEnvironment
+        instances, then you will need to change them slightly. The vast majority of users will
+        not have been doing this as the process is not documented - contact me for help if this
+        is not the case for you and you can't work out what to do!)
+      </action>
+      <action dev="davemckain" type="add" date="2009-06-25">
+        Up-conversion process now includes an XPath expression within the <![CDATA[<s:fail/>]]>
+        element to help locate where the failure occurred.
+      </action>
+      <action dev="davemckain" type="add" date="2009-06-23">
+        Filled in gap in support for optional arguments in user-defined commands and
+        environments.
+        <fixes issue="2810332"/>
+      </action>
+    </release>
+    <release version="1.1.0" date="2009-06-19" description="Version 1.1.0 (SVN revision 428)">
+      <action dev="davemckain" type="update" date="2009-06-19">
+        Improved structure of the "full" distribution bundle, also fixing a couple of issues
+        with the way Maven was assembling it.
+      </action>
+      <action dev="davemckain" type="update" date="2009-06-19">
+        Renamed UCExxx and UMExxx error codes as UCFxxx and UMFxxx respectively, to
+        reflect the fact that they are not handled as errors in the normal way.
+      </action>
+      <action dev="davemckain" type="update" date="2009-06-19">
+        Improved logging in the demo/documentation webapp.
+      </action>
+      <action dev="davemckain" type="update" date="2009-06-17">
+        Further updates and improvements to documentation.
+      </action>
+      <action dev="davemckain" type="update" date="2009-06-16">
+        "Error Codes" page now groups related codes together.
+      </action>
+    </release>
+    <release version="1.1.0-beta2" date="2009-06-16" description="Version 1.1.0-beta2 (SVN revision 415)">
+      <action dev="davemckain" type="add" date="2009-06-11">
+        Added Maven "changes" plugin to reporting process
+      </action>
+      <action dev="davemckain" type="fix" date="2009-06-13">
+        Fixed issue with handling of certain comments introduced when removing them
+        from the parse tree for 1.1.0-beta1.
+        <fixes issue="2801656"/>
+      </action>
+      <action dev="davemckain" type="fix" date="2009-06-14">
+        Fixed bug in grouping of sub-expressions for left associative infix operators
+        in the up-conversion process.
+      </action>
+      <action dev="davemckain" type="add" date="2009-06-14">
+        Documentation and demonstration web application improved significantly.
+      </action>
+      <action dev="davemckain" type="add" date="2009-06-15">
+        ZIP bundles now include snuggletex.css. This disappeared when moving to new
+        output structure in 1.1.0-beta1.
+      </action>
+      <action dev="davemckain" type="update" date="2009-06-16">
+        Improvements and additions to User Guide material.
+      </action>
+    </release>
+    <release version="1.1.0-beta1" date="2009-06-08" description="Version 1.1.0-beta1 (SVN revision 390)">
+      <action dev="davemckain" type="update">
+        See old release notes at http://www.ph.ed.ac.uk/snuggletex/documentation/release-notes.html
+      </action>
+    </release>
+    <release version="1.0.1" date="2009-01-09" description="Version 1.0.1 (SVN revision 228)">
+      <action dev="davemckain" type="update">
+        See old release notes at http://www.ph.ed.ac.uk/snuggletex/documentation/release-notes.html
+      </action>
+    </release>
+    <release version="1.0.0" date="2008-08-18" description="Version 1.0.1 (SVN revision 216)">
+      <action dev="davemckain" type="update">
+        See old release notes at http://www.ph.ed.ac.uk/snuggletex/documentation/release-notes.html
+      </action>
+    </release>
+  </body>
+</document>

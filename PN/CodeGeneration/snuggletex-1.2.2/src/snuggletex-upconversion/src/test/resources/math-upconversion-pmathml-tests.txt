@@ -1,0 +1,739 @@
+# Defines single-line tests of basic up-conversion of Presentation MathML.
+#
+# Input format is:
+#
+# LaTeX (interpreted inside $...$)
+# EITHER enriched PMathML OR !ErrorCode (up-conversion only)
+# ==== (divider)
+#
+# Lines starting with '#' are documentation and are stripped out when running tests
+#
+## Normal tests
+1
+<mn>1</mn>
+====
+\alpha
+<mi>&#x3b1;</mi>
+=====
+x = 3
+<mi>x</mi>
+<mo>=</mo>
+<mn>3</mn>
+====
+1+x = 2
+<mrow>
+  <mn>1</mn>
+  <mo>+</mo>
+  <mi>x</mi>
+</mrow>
+<mo>=</mo>
+<mn>2</mn>
+====
+x
+<mi>x</mi>
+====
+-x
+<mo>-</mo>
+<mi>x</mi>
+====
+1+x
+<mn>1</mn>
+<mo>+</mo>
+<mi>x</mi>
+====
+-x+1
+<mrow>
+  <mo>-</mo>
+  <mi>x</mi>
+</mrow>
+<mo>+</mo>
+<mn>1</mn>
+====
+## Implicit Multiplication
+2x
+<mn>2</mn>
+<mo>&#x2062;</mo>
+<mi>x</mi>
+====
+(2x)
+<mfenced open='(' close=')'>
+  <mrow>
+    <mn>2</mn>
+    <mo>&#x2062;</mo>
+    <mi>x</mi>
+  </mrow>
+</mfenced>
+====
+a/b
+<mi>a</mi>
+<mo>/</mo>
+<mi>b</mi>
+====
+a/b/c
+<mrow>
+  <mi>a</mi>
+  <mo>/</mo>
+  <mi>b</mi>
+</mrow>
+<mo>/</mo>
+<mi>c</mi>
+====
+\sin x
+<mi>sin</mi>
+<mo>&#x2061;</mo>
+<mi>x</mi>
+====
+2\alpha
+<mn>2</mn>
+<mo>&#x2062;</mo>
+<mi>&#x3b1;</mi>
+====
+2x+4
+<mrow>
+  <mn>2</mn>
+  <mo>&#x2062;</mo>
+  <mi>x</mi>
+</mrow>
+<mo>+</mo>
+<mn>4</mn>
+====
+2\alpha - \sin y + x
+<mrow>
+  <mrow>
+    <mn>2</mn>
+    <mo>&#x2062;</mo>
+    <mi>&#x3b1;</mi>
+  </mrow>
+  <mo>-</mo>
+  <mrow>
+    <mi>sin</mi>
+    <mo>&#x2061;</mo>
+    <mi>y</mi>
+  </mrow>
+</mrow>
+<mo>+</mo>
+<mi>x</mi>
+====
+\frac{1}{2}
+<mfrac>
+  <mn>1</mn>
+  <mn>2</mn>
+</mfrac>
+====
+\frac{x+y}{2}
+<mfrac>
+  <mrow>
+    <mi>x</mi>
+    <mo>+</mo>
+    <mi>y</mi>
+  </mrow>
+  <mn>2</mn>
+</mfrac>
+====
+\sqrt x
+<msqrt>
+  <mi>x</mi>
+</msqrt>
+====
+\sqrt x y
+<msqrt>
+  <mi>x</mi>
+</msqrt>
+<mo>&#x2062;</mo>
+<mi>y</mi>
+====
+\sqrt{b^2-4ac}
+<msqrt>
+  <msup>
+    <mi>b</mi>
+    <mn>2</mn>
+  </msup>
+  <mo>-</mo>
+  <mrow>
+    <mn>4</mn>
+    <mo>&#x2062;</mo>
+    <mi>a</mi>
+    <mo>&#x2062;</mo>
+    <mi>c</mi>
+  </mrow>
+</msqrt>
+====
+## The Quadractic Equation (phew!)
+\frac{-b+\sqrt{b^2-4ac}}{2a}
+<mfrac>
+  <mrow>
+    <mrow>
+      <mo>-</mo>
+      <mi>b</mi>
+    </mrow>
+    <mo>+</mo>
+    <msqrt>
+      <msup>
+        <mi>b</mi>
+        <mn>2</mn>
+      </msup>
+      <mo>-</mo>
+      <mrow>
+        <mn>4</mn>
+        <mo>&#x2062;</mo>
+        <mi>a</mi>
+        <mo>&#x2062;</mo>
+        <mi>c</mi>
+      </mrow>
+    </msqrt>
+  </mrow>
+  <mrow>
+    <mn>2</mn>
+    <mo>&#x2062;</mo>
+    <mi>a</mi>
+  </mrow>
+</mfrac>
+====
+\sqrt[3]{x}
+<mroot>
+  <mi>x</mi>
+  <mn>3</mn>
+</mroot>
+====
+x^2 + 1
+<msup>
+  <mi>x</mi>
+  <mn>2</mn>
+</msup>
+<mo>+</mo>
+<mn>1</mn>
+====
+# Any kind of space is kept but suppresses an implicit multiplcation before it. Anything following
+# will still get an implicit multiplication, which makes sense I think.
+\,
+<mspace width="0.167em"/>
+====
+x\,y
+<mi>x</mi>
+<mspace width="0.167em"/>
+<mo>&#x2062;</mo>
+<mi>y</mi>
+====
+x\,y\,z
+<mi>x</mi>
+<mspace width="0.167em"/>
+<mo>&#x2062;</mo>
+<mi>y</mi>
+<mspace width="0.167em"/>
+<mo>&#x2062;</mo>
+<mi>z</mi>
+====
+\sin x\,y
+<mrow>
+  <mi>sin</mi>
+  <mo>&#x2061;</mo>
+  <mi>x</mi>
+</mrow>
+<mspace width="0.167em"/>
+<mo>&#x2062;</mo>
+<mi>y</mi>
+====
+## We now break subexpressions over fences as well, so the 'z' does
+## not bind with application of 'sin' below. This makes more sense
+## for n-ary functions...
+\sin(x+y) z
+<mrow>
+  <mi>sin</mi>
+  <mo>&#x2061;</mo>
+  <mfenced open='(' close=')'>
+    <mrow>
+      <mi>x</mi>
+      <mo>+</mo>
+      <mi>y</mi>
+    </mrow>
+  </mfenced>
+</mrow>
+<mo>&#x2062;</mo>
+<mi>z</mi>
+====
+\sin \cos x
+<mi>sin</mi>
+<mo>&#x2061;</mo>
+<mrow>
+  <mi>cos</mi>
+  <mo>&#x2061;</mo>
+  <mi>x</mi>
+</mrow>
+====
+#########################
+# Tests various "empty" cases
+\frac{}{}
+<mfrac>
+  <mrow/>
+  <mrow/>
+</mfrac>
+====
+## Test inference of apply function on inverses
+\sin^{-1} x
+<msup>
+  <mi>sin</mi>
+  <mn>-1</mn>
+</msup>
+<mo>&#x2061;</mo>
+<mi>x</mi>
+====
+## Test inference of apply function on powers
+\sin^{2} x
+<msup>
+  <mi>sin</mi>
+  <mn>2</mn>
+</msup>
+<mo>&#x2061;</mo>
+<mi>x</mi>
+====
+## Similarly we can let apply function work over subscripted logs, interpreted as bases.
+\log_a x
+<msub>
+  <mi>log</mi>
+  <mi>a</mi>
+</msub>
+<mo>&#x2061;</mo>
+<mi>x</mi>
+====
+## Also do logs over bases with powers and inverses
+\log_a^2 x
+<msubsup>
+  <mi>log</mi>
+  <mi>a</mi>
+  <mn>2</mn>
+</msubsup>
+<mo>&#x2061;</mo>
+<mi>x</mi>
+====
+#########################
+## New improved prefix/infix/postfix handling
+1++x
+<mn>1</mn>
+<mo>+</mo>
+<mrow>
+  <mo>+</mo>
+  <mi>x</mi>
+</mrow>
+====
+1+-x
+<mn>1</mn>
+<mo>+</mo>
+<mrow>
+  <mo>-</mo>
+  <mi>x</mi>
+</mrow>
+====
+1-+x
+<mn>1</mn>
+<mo>-</mo>
+<mrow>
+  <mo>+</mo>
+  <mi>x</mi>
+</mrow>
+====
+1+++x
+<mn>1</mn>
+<mo>+</mo>
+<mrow>
+  <mo>+</mo>
+  <mrow>
+    <mo>+</mo>
+    <mi>x</mi>
+  </mrow>
+</mrow>
+====
+1---x
+<mn>1</mn>
+<mo>-</mo>
+<mrow>
+  <mo>-</mo>
+  <mrow>
+    <mo>-</mo>
+    <mi>x</mi>
+  </mrow>
+</mrow>
+====
+## This is a pathological case where the enhancer gives up
+1--
+<mn>1</mn>
+<mo>-</mo>
+<mo>-</mo>
+====
+## Bare operators are allowed
++
+<mo>+</mo>
+====
+## Yes, this is pathological but currently allowed
+1+
+<mn>1</mn>
+<mo>+</mo>
+====
+## This is pathological too, = is treated as a prefix operator here
+=1
+<mo>=</mo>
+<mn>1</mn>
+====
+## Even more pathological!
+++
+<mo>+</mo>
+<mo>+</mo>
+====
+++1
+<mo>+</mo>
+<mrow>
+  <mo>+</mo>
+  <mn>1</mn>
+</mrow>
+====
+## Unapplied elementary functions are OK but need specified in an interesting way
+\sin {}
+<mi>sin</mi>
+<mo>&#x2061;</mo>
+<mrow/>
+====
+## c.f. above
+\sin
+<mi>sin</mi>
+====
+\sin^2
+<msup>
+  <mi>sin</mi>
+  <mn>2</mn>
+</msup>
+====
+\sin^2 {}
+<msup>
+  <mi>sin</mi>
+  <mn>2</mn>
+</msup>
+<mo>&#x2061;</mo>
+<mrow/>
+====
+\sin^{-1}
+<msup>
+  <mi>sin</mi>
+  <mn>-1</mn>
+</msup>
+====
+\sin^{-1} {}
+<msup>
+  <mi>sin</mi>
+  <mn>-1</mn>
+</msup>
+<mo>&#x2061;</mo>
+<mrow/>
+====
+x!
+<mi>x</mi>
+<mo>!</mo>
+====
+x!!
+<mrow>
+  <mi>x</mi>
+  <mo>!</mo>
+</mrow>
+<mo>!</mo>
+====
+x!y!
+<mrow>
+  <mi>x</mi>
+  <mo>!</mo>
+</mrow>
+<mo>&#x2062;</mo>
+<mrow>
+  <mi>y</mi>
+  <mo>!</mo>
+</mrow>
+====
+## The ! operator only binds to the preceding item
+2x!
+<mn>2</mn>
+<mo>&#x2062;</mo>
+<mrow>
+  <mi>x</mi>
+  <mo>!</mo>
+</mrow>
+====
+\sin 2x!
+<mi>sin</mi>
+<mo>&#x2061;</mo>
+<mrow>
+  <mn>2</mn>
+  <mo>&#x2062;</mo>
+  <mrow>
+    <mi>x</mi>
+    <mo>!</mo>
+  </mrow>
+</mrow>
+====
+## As above
+2x!!
+<mn>2</mn>
+<mo>&#x2062;</mo>
+<mrow>
+  <mrow>
+    <mi>x</mi>
+    <mo>!</mo>
+  </mrow>
+  <mo>!</mo>
+</mrow>
+====
+## Lonely factorial
+!
+<mo>!</mo>
+====
+## Logical operators
+\lnot A
+<mo>&#xac;</mo>
+<mi>A</mi>
+====
+\neg \neg A
+<mo>&#xac;</mo>
+<mrow>
+  <mo>&#xac;</mo>
+  <mi>A</mi>
+</mrow>
+====
+\neg \neg \neg A
+<mo>&#xac;</mo>
+<mrow>
+  <mo>&#xac;</mo>
+  <mrow>
+    <mo>&#xac;</mo>
+    <mi>A</mi>
+  </mrow>
+</mrow>
+====
+A \land B \lor C
+<mrow>
+  <mi>A</mi>
+  <mo>&#x2227;</mo>
+  <mi>B</mi>
+</mrow>
+<mo>&#x2228;</mo>
+<mi>C</mi>
+====
+\neg (A \vee B)
+<mo>&#xac;</mo>
+<mfenced open='(' close=')'>
+  <mrow>
+    <mi>A</mi>
+    <mo>&#x2228;</mo>
+    <mi>B</mi>
+  </mrow>
+</mfenced>
+====
+\neg {A \vee B}
+<mo>&#xac;</mo>
+<mrow>
+  <mi>A</mi>
+  <mo>&#x2228;</mo>
+  <mi>B</mi>
+</mrow>
+====
+a \land \lnot b
+<mi>a</mi>
+<mo>&#x2227;</mo>
+<mrow>
+  <mo>&#xac;</mo>
+  <mi>b</mi>
+</mrow>
+====
+## (Pathological)
+\neg \neg
+<mo>&#xac;</mo>
+<mo>&#xac;</mo>
+====
+## (Pathological)
+\neg \neg \neg
+<mo>&#xac;</mo>
+<mrow>
+  <mo>&#xac;</mo>
+  <mo>&#xac;</mo>
+</mrow>
+====
+## Odd but allowed (until later in the up-conversion process)
+x^{!}
+<msup>
+  <mi>x</mi>
+  <mo>!</mo>
+</msup>
+====
+## Relation operators share same precedence level
+1 < 2 = 3
+<mn>1</mn>
+<mo>&lt;</mo>
+<mn>2</mn>
+<mo>=</mo>
+<mn>3</mn>
+====
+x \not\in A
+<mi>x</mi>
+<mo>&#x2209;</mo>
+<mi>A</mi>
+====
+x+A \in B
+<mrow>
+  <mi>x</mi>
+  <mo>+</mo>
+  <mi>A</mi>
+</mrow>
+<mo>&#x2208;</mo>
+<mi>B</mi>
+====
+## More set theory
+A \cup B
+<mi>A</mi>
+<mo>&#x222a;</mo>
+<mi>B</mi>
+====
+A \cup x+A
+<mi>A</mi>
+<mo>&#x222a;</mo>
+<mrow>
+  <mi>x</mi>
+  <mo>+</mo>
+  <mi>A</mi>
+</mrow>
+====
+A \cup B \cap C
+<mi>A</mi>
+<mo>&#x222a;</mo>
+<mrow>
+  <mi>B</mi>
+  <mo>&#x2229;</mo>
+  <mi>C</mi>
+</mrow>
+====
+A \setminus x+B
+<mi>A</mi>
+<mo>&#x2216;</mo>
+<mrow>
+  <mi>x</mi>
+  <mo>+</mo>
+  <mi>B</mi>
+</mrow>
+====
+A \cup B \setminus C
+<mi>A</mi>
+<mo>&#x222a;</mo>
+<mrow>
+  <mi>B</mi>
+  <mo>&#x2216;</mo>
+  <mi>C</mi>
+</mrow>
+====
+## Comma operator
+a,b
+<mfenced open='' close=''>
+  <mi>a</mi>
+  <mi>b</mi>
+</mfenced>
+====
+x_{1,2}
+<msub>
+  <mi>x</mi>
+  <mfenced open='' close=''>
+    <mn>1</mn>
+    <mn>2</mn>
+  </mfenced>
+</msub>
+====
+## Other functions
+\Re x
+<mi>&#x211c;</mi>
+<mo>&#x2061;</mo>
+<mi>x</mi>
+====
+\Re x \Im y
+<mrow>
+  <mi>&#x211c;</mi>
+  <mo>&#x2061;</mo>
+  <mi>x</mi>
+</mrow>
+<mo>&#x2062;</mo>
+<mrow>
+  <mi>&#x2111;</mi>
+  <mo>&#x2061;</mo>
+  <mi>y</mi>
+</mrow>
+====
+\gcd(x,y)
+<mi>gcd</mi>
+<mo>&#x2061;</mo>
+<mfenced open='(' close=')'>
+  <mi>x</mi>
+  <mi>y</mi>
+</mfenced>
+====
+## Again, note how the 'z' isn't part of gcd's operand. This makes
+## it easier to convert to Content MathML later on.
+\gcd(x,y) z
+<mrow>
+  <mi>gcd</mi>
+  <mo>&#x2061;</mo>
+  <mfenced open='(' close=')'>
+    <mi>x</mi>
+    <mi>y</mi>
+  </mfenced>
+</mrow>
+<mo>&#x2062;</mo>
+<mi>z</mi>
+====
+###########################################################
+# Assumption tests
+#
+## By default, we don't interpret this as a function...
+f(x)
+<mi>f</mi>
+<mo>&#x2062;</mo>
+<mfenced open='(' close=')'>
+  <mi>x</mi>
+</mfenced>
+====
+## ...but this can be requested using \assumeSymbol
+\assumeSymbol{f}{function} $f(x)$
+<mi>f</mi>
+<mo>&#x2061;</mo>
+<mfenced open='(' close=')'>
+  <mi>x</mi>
+</mfenced>
+====
+\assumeSymbol{f}{function}\unassumeSymbol{f} $f(x)$
+<mi>f</mi>
+<mo>&#x2062;</mo>
+<mfenced open='(' close=')'>
+  <mi>x</mi>
+</mfenced>
+====
+\assumeSymbol{f}{function} $f^2(x)$
+<msup>
+  <mi>f</mi>
+  <mn>2</mn>
+</msup>
+<mo>&#x2061;</mo>
+<mfenced open='(' close=')'>
+  <mi>x</mi>
+</mfenced>
+====
+\assumeSymbol{f_n}{function} $f_n(x)$
+<msub>
+  <mi>f</mi>
+  <mi>n</mi>
+</msub>
+<mo>&#x2061;</mo>
+<mfenced open='(' close=')'>
+  <mi>x</mi>
+</mfenced>
+====
+\assumeSymbol{f_n}{function} $f_n^{-1}(x)$
+<msubsup>
+  <mi>f</mi>
+  <mi>n</mi>
+  <mn>-1</mn>
+</msubsup>
+<mo>&#x2061;</mo>
+<mfenced open='(' close=')'>
+  <mi>x</mi>
+</mfenced>
+====

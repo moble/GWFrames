@@ -1,0 +1,87 @@
+\pageId{webPageTypes}
+
+SnuggleTeX supports a number of pre-defined ``Web Page Types'' that you can select
+in order to generate MathML-based web pages that work across a number of different
+browsers and platforms.
+
+These types are defined in the \verb|WebPageOutputOptions.WebPageType|
+enumeration and you simply pass one of these enumerated values to the
+\verb|WebPageOutputOptionsTemplates.createWebPageOptions()| utility method to
+create a working \verb|WebPageOutputOptions| Object that you can tweak or use
+immediately.
+
+(You might also want to look at the \href[MathML Browser Requirements]{docs://browserRequirements}
+page, which looks at these ideas from a slightly different perspective.)
+
+\subsection*{Pre-defined \verb|WebPageType|s}
+
+\begin{itemize}
+\item
+  \subsubsection*{\anchor{MOZILLA}\verb|MOZILLA| (\href[Example]{math-mode.xhtml})}
+  This generates an XHTML + MathML document suitable for
+  Mozilla-based browsers (e.g. Firefox). It is served as \verb|application/xhtml+html|,
+  with no XML declaration and no DOCTYPE declaration. Do \emph{not} use this if you
+  are targeting Internet Explorer as it will display your page as an XML tree.
+
+\item
+  \subsubsection*{\anchor{crossbrowser}\verb|CROSS_BROWSER_XHTML| (\href[Example]{math-mode.cxml})}
+
+  This generates an XHTML + MathML document that displays well on both
+  Mozilla-based browsers and Internet Explorer 6 and above (providing that the
+  MathPlayer plug-in has already been installed).  It is served as
+  \verb|application/xhtml+html|, has an XML declaration and a DOCTYPE
+  declaration.
+  \begin{itemize}
+    \item This will not display correctly on Internet Explorer if MathPlayer has not
+      already been installed on it by your target user.
+    \item Internet Explorer will download the DTD, which will slow rendering down
+      somewhat.
+  \end{itemize}
+
+\item
+  \subsubsection*{\anchor{mathplayer}\verb|MATHPLAYER_HTML| (\href[Example]{docs://mathMode})}
+
+  This generates an HTML document that displays well on Internet Explorer 6 and
+  above with the MathPlayer plugin already installed. It will not display MathML
+  correctly on Mozilla-based browsers.
+
+\item
+  \subsubsection*{\anchor{uss}\verb|UNIVERSAL_STYLESHEET| (\href[Example]{math-mode.xml})}
+
+  This generates an XHTML + MathML document that is served as XML and can be
+  served to both Mozilla-based browsers and Internet Explorer 6+. It includes an
+  XML processing instruction that tells browsers to apply the Universal MathML
+  StyleSheet to the page before delivering, prompting IE users to download and
+  install MathPlayer if they do not already have it.
+  \begin{itemize}
+    \item IE requires that client-side XSLT stylesheets are loaded from the same server
+      that the document came from, so you must copy the USS bundled with SnuggleTeX to
+      your own server and tell SnuggleTeX where you put it by calling the
+      \verb|setClientSideXSLTStylesheetURLs()| method.
+    \item This can be a very good option for decent portability, though it does slow
+      rendering down somewhat and may also increase the load on your server as some
+      browsers will load static resources both before and after the XSLT is applied.
+  \end{itemize}
+
+\item
+  \subsubsection*{\anchor{xsl}\verb|CLIENT_SIDE_XSLT_STYLESHEET|}
+
+  This generates a XHTML + MathML document,
+  served as \verb|application/xhtml+html| with no XML declaration and no DOCTYPE declaration.
+  It is intended to be used with a client-side XSLT of your choice.
+  (This is a more advanced option!)
+
+\item
+  \subsubsection*{\anchor{processed}\verb|PROCESSED_HTML|}
+
+  This is another advanced option that assumes it will generate a plain old
+  HTML document, served as \verb|text/html|.
+  You will have to post-process the resulting DOM to produce something sensible here
+  by registering a \verb|DOMPostProcessor| with your \verb|WebPageOutputOptions|.
+  This may appear to be a rather esoteric option, but is actually what the SnuggleTeX JEuclid
+  module uses when converting the results to legacy HTML + Images.
+\end{itemize}
+
+
+
+

@@ -1,0 +1,17 @@
+<!--
+
+$Id: context.xml 2712 2008-03-10 17:01:01Z davemckain $
+
+Tomcat webapp configuration file for Aardvark.
+
+This used to contain JDBC authentication stuff but is now blank.
+Add any Tomcat-specific things here that might be required in future.
+
+NOTE: This gets filtered to produce a version suitable for deploying
+into a running Tomcat, using the build/webapp as docBase and with
+reloadable='true'.
+
+-->
+<Context path="/snuggletex" reloadable="true"
+  processTlds="false"
+  docBase="/Home/dmckain/Projects/SnuggleTeX/snuggletex-webapp/target/snuggletex-webapp-1.2-SNAPSHOT"/>

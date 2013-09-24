@@ -1,0 +1,53 @@
+<!--
+
+Assembly descriptor for the basic SnuggleTeX bundle
+containing just the core SnuggleTeX JAR, and a few
+other minor bits and pieces.
+
+$Id: basic.xml 554 2010-04-26 10:23:22Z davemckain $
+
+Copyright (c) 2010, The University of Edinburgh
+All Rights Reserved
+
+-->
+<assembly>
+  <id>basic</id>
+  <formats>
+    <format>zip</format>
+  </formats>
+  <includeBaseDirectory>true</includeBaseDirectory>
+  <moduleSets>
+    <moduleSet>
+      <includes>
+        <include>uk.ac.ed.ph.snuggletex:snuggletex-core</include>
+      </includes>
+      <binaries>
+        <outputDirectory>/</outputDirectory>
+        <includeDependencies>false</includeDependencies>
+        <unpack>false</unpack>
+      </binaries>
+      <!-- (We need the generated snuggletex.css) -->
+      <sources>
+        <includeModuleDirectory>false</includeModuleDirectory>
+        <fileSets>
+          <fileSet>
+            <directory>target</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+              <include>snuggletex.css</include>
+            </includes>
+          </fileSet>
+        </fileSets>
+      </sources>
+    </moduleSet>
+  </moduleSets>
+  <fileSets>
+    <fileSet>
+      <directory>${project.basedir}</directory>
+      <includes>
+        <include>LICENSE.txt</include>
+        <include>README.txt</include>
+      </includes>
+    </fileSet>
+  </fileSets>
+</assembly>

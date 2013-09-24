@@ -1,0 +1,67 @@
+\pageId{usecases}
+
+There are a healthy number of tools which have functionality related to SnuggleTeX,
+which can make it hard to decide which tool bits fits your given requirements.
+Like all tools, SnuggleTeX has its relative strengths and weaknesses that you
+should consider:
+
+\begin{itemize}
+
+\item
+  SnuggleTeX was originally developed to support our
+  \href[Aardvark Content Management System]{http://www.ph.ed.ac.uk/elearning/projects/aardvark/}
+  in order to facilitate the conversion of fragments of LaTeX written by
+  academics into XML tree branches. Another example of this type of use
+  might be a kind of LaTeX-based Wiki, where SnuggleTeX could be plugged in and
+  used at some point in the LaTeX to XHTML conversion pipeline.
+
+\item
+  SnuggleTeX is 100\% Java with minimal (usually no) dependencies on
+  other libraries so can be easily integrated into a Java software
+  development project as a library for converting LaTeX to XML.
+
+\item
+  SnuggleTeX can also be used to generate
+  \href[``legacy'' web pages]{docs://legacyWebPages}
+  where mathematical formulae are represented by HTML + CSS (if suitably
+  simple) and/or images. (This uses the open-source
+  \href[JEuclid]{http://jeuclid.sourceforge.net} library.)
+
+\item
+  SnuggleTeX was \emph{not} intended to be a standalone tool that you
+  could throw complete LaTeX documents at and have them converted into web
+  pages. Other tools do this type of thing very well, such as
+  \href[TeX4ht]{http://www.cse.ohio-state.edu/~gurari/TeX4ht/}.
+
+\item
+  SnuggleTeX supports a pragmatic subset of LaTeX but does not include anything
+  that is particularly paper- or page-specific. It also currently doesn't
+  do cross-referencing or numbering as it could be argued that this is better
+  done at a higher level. Other tools might therefore be a better fit for these
+  types of requirements.
+
+\item
+  SnuggleTeX's parser pretends that TeX never happened and may behave slightly
+  differently to what experienced LaTeX users might expect. Alternatively,
+  novice LaTeX users will not notice any difference and might actually find the
+  error messages provided here more helpful!
+
+\item
+  SnuggleTeX's web page outputs are highly configurable and make it relatively
+  easy to create MathML-enabled pages that will work across a range of
+  browser platforms. Hooks are available to customise the web page outputs to
+  more exacting requirements; these require a knowledge of XSLT.
+
+\item
+  The new (and slightly experimental) features introduced in SnuggleTeX 1.1.0
+  for converting LaTeX to Content MathML and Maxima were added for the
+  \href[JISC MathAssess Project]{http://mathassess.ecs.soton.ac.uk/}
+  in order to ``understand'' responses made by students to test questions. These
+  features might have applications for similar projects.
+
+\item
+  A quick summary on the types of problem that SnuggleTeX (and related
+  packages) attempt to address can be found in some
+  \href[slides on conversion of Mathematical Content]{http://physics-elearning.blogspot.com/2009/10/some-slides-on-conversion-of.html}.
+
+\end{itemize}

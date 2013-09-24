@@ -1,0 +1,115 @@
+/* School of Physics and Astronomy core stylesheet
+ *
+ * $Id: core.css 516 2009-11-26 15:13:21Z davemckain $
+ */
+
+body {
+  font-family: Arial, sans-serif;
+  padding: 0;
+  margin: 0;
+}
+
+h1 {
+  font-size: 150%;
+}
+
+h2 {
+  font-size: 160%;
+}
+
+h3 {
+  font-size: 130%;
+}
+
+#header {
+  background-color: #232b5a;
+  background-image: url(header.jpg);
+  background-repeat: no-repeat;
+  background-position: top right;
+}
+
+#header a:link,
+#header a:visited {
+  color: white;
+  text-decoration: none;
+}
+
+#header a:hover {
+  text-decoration: underline;
+}
+
+#header h1 {
+  color: white;
+  font-size: 150%;
+  font-weight: bold;
+  padding: 0;
+  margin: 0;
+}
+
+#header h3 {
+  color: white;
+  font-size: 130%;
+  font-weight: bold;
+  margin: 0;
+  padding: 0 0 8px 0;
+}
+
+#header td#logo {
+  width: 84px;
+  height: 84px;
+}
+
+#header img {
+  border: none;
+}
+
+#topnavigation {
+  margin: 0.5em 20px 0.5em 0;
+  list-style-image: url(arrow.gif);
+}
+
+#location {
+  background: #555588;
+  color: white;
+  font-weight: bold;
+  font-size: 100%;
+  margin: 0;
+  padding: 0.5em;
+}
+
+#location a {
+  color: white;
+  text-decoration: none;
+}
+
+#location a:visited {
+  color: #ccccff;
+}
+
+#location a:hover {
+  text-decoration: underline;
+}
+
+#location a:visited:hover {
+  color: #ccccff;
+}
+
+#content {
+  padding: 1em;
+}
+
+#copyright {
+  margin-top: 10px;
+  border-top: 1px solid #232b5a;
+  clear: both;
+  padding: 10px;
+  font-style: italic;
+}
+
+#copyright a:link {
+  color: black;
+}
+
+#copyright a:visited {
+  color: #000033;
+}
