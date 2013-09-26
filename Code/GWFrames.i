@@ -183,8 +183,8 @@ namespace std {
 //// Import the quaternion class ////
 /////////////////////////////////////
 %ignore GWFrames::Quaternion::operator=;
-%rename(__getitem__) GWFrames::Quaternion::operator [](unsigned int const) const;
-%rename(__setitem__) GWFrames::Quaternion::operator [](unsigned int const);
+%rename(__getitem__) GWFrames::Quaternion::operator [](const unsigned int) const;
+%rename(__setitem__) GWFrames::Quaternion::operator [](const unsigned int);
 %include "Quaternions.hpp"
 %extend GWFrames::Quaternion {
   // This function is called when printing a Quaternion object
@@ -421,10 +421,10 @@ namespace std {
 %insert("python") %{
 
 ### This adds a new method to Waveform objects, returning unwrapped phase.
-// def ArgUnwrapper(self, mode) :
-//     import numpy
-//     return numpy.unwrap(self.Arg(mode))
-// Waveform.ArgUnwrapped = ArgUnwrapper
+# def ArgUnwrapper(self, mode) :
+#     import numpy
+#     return numpy.unwrap(self.Arg(mode))
+# Waveform.ArgUnwrapped = ArgUnwrapper
 
 
 def GetFileNamePrefix(W) :
