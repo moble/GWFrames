@@ -30,7 +30,7 @@ private:
   double v, powv2, powv3, powv5, powv6, powv10;  // various powers of v are needed several times, and may as well be stored
   GWFrames::Quaternion Rax, nHat, lambdaHat;
   const double *chi1, *chi2, *OmegaHat_orb; // Components in the static Cartesian basis
-  double chi1n, chi2n, chi1l, chi2l, chi1la, chi2la, chi1chi1, chi1chi2, chi2chi2; // The remaining dot products
+  double chi1n, chi2n, chi1la, chi2la, chi1l, chi2l, chi1chi1, chi1chi2, chi2chi2; // The remaining dot products
 private:
   vector<double> Omega_spin(const unsigned int HoleIndex) const {
     // Eq. (4.5) of Bohé et al. (2012) <http://arxiv.org/abs/1212.5520v1>
@@ -48,15 +48,9 @@ private:
     // Eqs. (4.3) and (4.4), and above Eq. (4.1), of Bohé et al.
     // (2012) <http://arxiv.org/abs/1212.5520v1>.  Note that this
     // vector is completely along nHat (by definition).
-    return
-      powv6 * (
-	       chi2n*(5 - 5*delta - 13*nu) + chi1n*(5 + 5*delta - 13*nu)
-	       + powv2 * (
-			  ((chi1n*(-12 + nu + 92*pownu2 - delta*(12 + 35*nu)))/4. + (chi2n*(-12 + nu + 92*pownu2 + delta*(12 + 35*nu)))/4.)
-			  + powv2 * ((chi2n*(-72 + delta*(72 + (939 - 320*nu)*nu) + nu*(-723 + 4*(665 - 212*nu)*nu)))/48.
-				     + (chi1n*(-72 + nu*(-723 + 4*(665 - 212*nu)*nu) + delta*(-72 + nu*(-939 + 320*nu))))/48.)
-			  )
-	       );
+    const double gamma = 5.51146384479718e-6*pow(v, 2)*(pow(v, 2)*(-60480.0*nu + v*(-30240.0*chi1l*(3.0*delta*(delta + 1.0) - 10.0) + 30240.0*chi2l*(-3.0*delta*(delta - 1.0) + 10.0) + v*(-982800.0*nu + v*(20160.0*chi1l*(-9.0*delta*(delta + 1.0) + 8.0*nu + 30.0) + 20160.0*chi2l*(-9.0*delta*(delta - 1.0) + 8.0*nu + 30.0) + v*(-nu*(-560.0*nu*(4.0*nu + 2061.0) + 541013.822520207) + 15120.0*v*(chi1l*(delta*(delta*(nu*(16.0*nu + 61.0) - 18.0) + nu*(16.0*nu + 61.0) - 18.0) - nu*(72.0*nu + 127.0) + 60.0) + chi2l*(delta*(delta*(nu*(16.0*nu + 61.0) - 18.0) - nu*(16.0*nu + 61.0) + 18.0) - nu*(72.0*nu + 127.0) + 60.0)) + 181440.0)) + 181440.0)) + 181440.0) + 181440.0);
+    const double a_l_over_v3 = 0.00694444444444444*pow(v, 4)*(-72.0*chi1n*(3.0*delta*(delta + 1.0) - 14.0) + 72.0*chi2n*(-3.0*delta*(delta - 1.0) + 14.0) + pow(v, 2)*(-12.0*chi1n*(-9.0*delta*(delta*(3.0*nu + 4.0) + 3.0*nu + 4.0) + 116.0*nu + 120.0) - 12.0*chi2n*(9.0*delta*(-delta*(3.0*nu + 4.0) + 3.0*nu + 4.0) + 116.0*nu + 120.0) + pow(v, 2)*(chi1n*(-3.0*delta*(delta*(nu*(68.0*nu + 219.0) + 36.0) + nu*(68.0*nu + 219.0) + 36.0) + 4.0*nu*(208.0*nu + 531.0) + 216.0) + chi2n*(3.0*delta*(-delta*(nu*(68.0*nu + 219.0) + 36.0) + nu*(68.0*nu + 219.0) + 36.0) + 4.0*nu*(208.0*nu + 531.0) + 216.0))));
+    return gamma*a_l_over_v3;
   }
   double Flux() const {
     // Eqs. (C7) -- (C13) of <http://arxiv.org/abs/0810.5336v3> [NOTE VERSION NUMBER!!!]
@@ -128,9 +122,9 @@ public:
 	   const GWFrames::Quaternion R_0=GWFrames::Quaternion(1,0,0,0)) :
     delta(idelta),
     nu((1.0-delta*delta)/4.0), pownu2(nu*nu), pownu3(pownu2*nu),
-    v(v_0), powv2(v*v), powv3(v*powv2), powv5(powv2*powv3), powv6(powv3*powv3), powv10(v*powv3*powv6),
+    v(v_0), powv2(v*v), powv3(v*powv2), powv5(powv2*powv3), powv6(powv3*powv3), powv10(powv5*powv5),
     Rax(R_0), nHat(R_0 * xHat * R_0.conjugate()), lambdaHat(R_0 * yHat * R_0.conjugate()),
-    chi1n(chi1_0[0]), chi2n(chi2_0[0]), chi1l(chi1_0[2]), chi2l(chi2_0[2]), chi1la(chi1_0[1]), chi2la(chi2_0[1]),
+    chi1n(chi1_0[0]), chi2n(chi2_0[0]), chi1la(chi1_0[1]), chi2la(chi2_0[1]), chi1l(chi1_0[2]), chi2l(chi2_0[2]),
     chi1chi1(dot(&chi1_0[0], &chi1_0[0])), chi1chi2(dot(&chi1_0[0], &chi2_0[0])), chi2chi2(dot(&chi2_0[0], &chi2_0[0]))
   { }
   ~TaylorT1() { }
@@ -143,13 +137,14 @@ public:
     powv3 = v*powv2;
     powv5 = powv2*powv3;
     powv6 = powv3*powv3;
-    powv10 = v*powv3*powv6;
+    powv10 = powv5*powv5;
     chi1 = &y[2];
     chi2 = &y[5];
     OmegaHat_orb = &y[8];
     const GWFrames::Quaternion chi1Q(0., chi1[0], chi1[1], chi1[2]);
     const GWFrames::Quaternion chi2Q(0., chi2[0], chi2[1], chi2[2]);
-    const GWFrames::Quaternion OmegaHat_orbQ = GWFrames::normalized(GWFrames::Quaternion(0., y[8], y[9], y[10]));
+    const GWFrames::Quaternion OmegaHat_orbQ
+      = GWFrames::normalized(GWFrames::Quaternion(0., OmegaHat_orb[0], OmegaHat_orb[1], OmegaHat_orb[2]));
     Rax = GWFrames::sqrtOfRotor(-OmegaHat_orbQ*zHat);
     const GWFrames::Quaternion R = Rax * GWFrames::exp(((gamma+Phi)/2.)*zHat);
     nHat = R*xHat*R.conjugate();
