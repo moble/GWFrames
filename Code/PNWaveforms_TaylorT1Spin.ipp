@@ -36,7 +36,7 @@ private:
     // Eq. (4.5) of Bohé et al. (2012) <http://arxiv.org/abs/1212.5520v1>
     const double d = (HoleIndex==1 ? delta : -delta);
     const double Omega_s = powv5 * (0.75*(1-d) + 0.5*nu
-				    + powv2*(0.5625*(1-d)+1.25*nu*(1+0.5*d)-0.041666666666666667*pownu2
+				    + powv2*(0.5625*(1-d)+0.625*nu*(2+d)-0.041666666666666667*pownu2
 					     + powv2*(0.84375 + d*(-0.84375 + (4.875 - 0.15625*nu)*nu) + nu*(0.1875 + (-3.28125 - 0.020833333333333332*nu)*nu))));
     vector<double> Omega_sVec(3);
     Omega_sVec[0] = Omega_s * OmegaHat_orb[0];
@@ -48,9 +48,9 @@ private:
     // Eqs. (4.3) and (4.4), and above Eq. (4.1), of Bohé et al.
     // (2012) <http://arxiv.org/abs/1212.5520v1>.  Note that this
     // vector is completely along nHat (by definition).
-    const double gamma = 5.51146384479718e-6*pow(v, 2)*(pow(v, 2)*(-60480.0*nu + v*(-30240.0*chi1l*(3.0*delta*(delta + 1.0) - 10.0) + 30240.0*chi2l*(-3.0*delta*(delta - 1.0) + 10.0) + v*(-982800.0*nu + v*(20160.0*chi1l*(-9.0*delta*(delta + 1.0) + 8.0*nu + 30.0) + 20160.0*chi2l*(-9.0*delta*(delta - 1.0) + 8.0*nu + 30.0) + v*(-nu*(-560.0*nu*(4.0*nu + 2061.0) + 541013.822520207) + 15120.0*v*(chi1l*(delta*(delta*(nu*(16.0*nu + 61.0) - 18.0) + nu*(16.0*nu + 61.0) - 18.0) - nu*(72.0*nu + 127.0) + 60.0) + chi2l*(delta*(delta*(nu*(16.0*nu + 61.0) - 18.0) - nu*(16.0*nu + 61.0) + 18.0) - nu*(72.0*nu + 127.0) + 60.0)) + 181440.0)) + 181440.0)) + 181440.0) + 181440.0);
-    const double a_l_over_v3 = 0.00694444444444444*pow(v, 4)*(-72.0*chi1n*(3.0*delta*(delta + 1.0) - 14.0) + 72.0*chi2n*(-3.0*delta*(delta - 1.0) + 14.0) + pow(v, 2)*(-12.0*chi1n*(-9.0*delta*(delta*(3.0*nu + 4.0) + 3.0*nu + 4.0) + 116.0*nu + 120.0) - 12.0*chi2n*(9.0*delta*(-delta*(3.0*nu + 4.0) + 3.0*nu + 4.0) + 116.0*nu + 120.0) + pow(v, 2)*(chi1n*(-3.0*delta*(delta*(nu*(68.0*nu + 219.0) + 36.0) + nu*(68.0*nu + 219.0) + 36.0) + 4.0*nu*(208.0*nu + 531.0) + 216.0) + chi2n*(3.0*delta*(-delta*(nu*(68.0*nu + 219.0) + 36.0) + nu*(68.0*nu + 219.0) + 36.0) + 4.0*nu*(208.0*nu + 531.0) + 216.0))));
-    return gamma*a_l_over_v3;
+    const double gamma = 5.51146384479718e-6*pow(v, 2)*(pow(v, 2)*(-60480.0*nu + v*(15120.0*chi1l*(-6.0*delta*(delta + 1.0) + 5.0*delta*(delta + 2.0) + 5.0) + 15120.0*chi2l*(-6.0*delta*(delta - 1.0) + 5.0*delta*(delta - 2.0) + 5.0) + v*(-982800.0*nu + v*(10080.0*chi1l*(-18.0*delta*(delta + 1.0) + delta*(delta*(4.0*nu + 15.0) + 8.0*nu + 30.0) + 4.0*nu + 15.0) + 10080.0*chi2l*(-18.0*delta*(delta - 1.0) - delta*(-delta*(4.0*nu + 15.0) + 8.0*nu + 30.0) + 4.0*nu + 15.0) + v*(-nu*(-560.0*nu*(4.0*nu + 2061.0) + 541013.822520207) + 3780.0*v*(chi1l*(4.0*delta*(delta*(nu*(16.0*nu + 61.0) - 18.0) + nu*(16.0*nu + 61.0) - 18.0) + delta*(-delta*(nu*(72.0*nu + 127.0) - 60.0) - 2.0*nu*(72.0*nu + 127.0) + 120.0) - nu*(72.0*nu + 127.0) + 60.0) + chi2l*(4.0*delta*(delta*(nu*(16.0*nu + 61.0) - 18.0) - nu*(16.0*nu + 61.0) + 18.0) + delta*(-delta*(nu*(72.0*nu + 127.0) - 60.0) + 2.0*nu*(72.0*nu + 127.0) - 120.0) - nu*(72.0*nu + 127.0) + 60.0)) + 181440.0)) + 181440.0)) + 181440.0) + 181440.0);
+    const double a_l_over_vcubed = 0.00694444444444444*pow(v, 4)*(36.0*chi1n*(-6.0*delta*(delta + 1.0) + 7.0*delta*(delta + 2.0) + 7.0) + 36.0*chi2n*(-6.0*delta*(delta - 1.0) + 7.0*delta*(delta - 2.0) + 7.0) + pow(v, 2)*(-12.0*chi1n*(-9.0*delta*(delta*(3.0*nu + 4.0) + 3.0*nu + 4.0) + delta*(delta*(29.0*nu + 30.0) + 58.0*nu + 60.0) + 29.0*nu + 30.0) - 12.0*chi2n*(9.0*delta*(-delta*(3.0*nu + 4.0) + 3.0*nu + 4.0) - delta*(-delta*(29.0*nu + 30.0) + 58.0*nu + 60.0) + 29.0*nu + 30.0) + pow(v, 2)*(chi1n*(-3.0*delta*(delta*(nu*(68.0*nu + 219.0) + 36.0) + nu*(68.0*nu + 219.0) + 36.0) + delta*(delta*(nu*(208.0*nu + 531.0) + 54.0) + 2.0*nu*(208.0*nu + 531.0) + 108.0) + nu*(208.0*nu + 531.0) + 54.0) + chi2n*(3.0*delta*(-delta*(nu*(68.0*nu + 219.0) + 36.0) + nu*(68.0*nu + 219.0) + 36.0) - delta*(-delta*(nu*(208.0*nu + 531.0) + 54.0) + 2.0*nu*(208.0*nu + 531.0) + 108.0) + nu*(208.0*nu + 531.0) + 54.0))));
+    return gamma*a_l_over_vcubed;
   }
   double Flux() const {
     // Eqs. (C7) -- (C13) of <http://arxiv.org/abs/0810.5336v3> [NOTE VERSION NUMBER!!!]
@@ -124,7 +124,11 @@ public:
     nu((1.0-delta*delta)/4.0), pownu2(nu*nu), pownu3(pownu2*nu),
     v(v_0), powv2(v*v), powv3(v*powv2), powv5(powv2*powv3), powv6(powv3*powv3), powv10(powv5*powv5),
     Rax(R_0), nHat(R_0 * xHat * R_0.conjugate()), lambdaHat(R_0 * yHat * R_0.conjugate()),
-    chi1n(chi1_0[0]), chi2n(chi2_0[0]), chi1la(chi1_0[1]), chi2la(chi2_0[1]), chi1l(chi1_0[2]), chi2l(chi2_0[2]),
+    // chi1, chi2, and OmegaHat_orb will point to things in the evolution system
+    chi1n(Quaternion(chi1_0).dot(nHat)), chi2n(Quaternion(chi2_0).dot(nHat)), 
+    chi1la(Quaternion(chi1_0).dot(lambdaHat)), chi2la(Quaternion(chi2_0).dot(lambdaHat)),
+    chi1l(Quaternion(chi1_0).dot(R_0*zHat*R_0.conjugate())), chi2l(Quaternion(chi2_0).dot(R_0*zHat*R_0.conjugate())), 
+    // chi1n(chi1_0[0]), chi2n(chi2_0[0]), chi1la(chi1_0[1]), chi2la(chi2_0[1]), chi1l(chi1_0[2]), chi2l(chi2_0[2]),
     chi1chi1(dot(&chi1_0[0], &chi1_0[0])), chi1chi2(dot(&chi1_0[0], &chi2_0[0])), chi2chi2(dot(&chi2_0[0], &chi2_0[0]))
   { }
   ~TaylorT1() { }
@@ -150,11 +154,11 @@ public:
     nHat = R*xHat*R.conjugate();
     lambdaHat = R*yHat*R.conjugate();
     chi1n = chi1Q.dot(nHat);
-    chi1l = chi1Q.dot(OmegaHat_orbQ);
-    chi1la = chi1Q.dot(lambdaHat);
     chi2n = chi2Q.dot(nHat);
-    chi2l = chi2Q.dot(OmegaHat_orbQ);
+    chi1la = chi1Q.dot(lambdaHat);
     chi2la = chi2Q.dot(lambdaHat);
+    chi1l = chi1Q.dot(OmegaHat_orbQ);
+    chi2l = chi2Q.dot(OmegaHat_orbQ);
     chi1chi1 = chi1Q.dot(chi1Q);
     chi1chi2 = chi1Q.dot(chi2Q);
     chi2chi2 = chi2Q.dot(chi2Q);
@@ -214,6 +218,10 @@ public:
     cross(&Omega_spin1[0], chi1, &dydt[2]);
     cross(&Omega_spin2[0], chi2, &dydt[5]);
     cross(&Omega_precVec[0], OmegaHat_orb, &dydt[8]);
+    
+    // const double k = (nu/v) * (1.0 + powv2*( 1.5+nu/6.0 + powv2*( 3.375 + nu*(-2.375+0.0416666666667*nu) ) ) );
+    // dydt[8] = (-1.0/k)*(*dydt[2] + *dydt[5]);
+    
     const GWFrames::Quaternion adot(0., dydt[8], dydt[9], dydt[10]);
     const GWFrames::Quaternion Raxdot = ( (-1.0/std::sqrt(2+2*y[10]))*adot*zHat - (dydt[10]/(2+2*y[10]))*Rax );
     const GWFrames::Quaternion dydt11 = 2*(Rax.conjugate() * Raxdot * zHat);
