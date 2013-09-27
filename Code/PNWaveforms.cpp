@@ -14,6 +14,7 @@
 
 using std::vector;
 using std::string;
+using GWFrames::Quaternion;
 
 // Local utility functions
 std::string VectorStringForm(const std::vector<double>& V) {
@@ -166,9 +167,9 @@ GWFrames::PNWaveform::PNWaveform(const double delta,
   
   TaylorT1 T1(delta, chi1_0, chi2_0, ystart[0], R_0);
   T1.RecalculateValues(time, &ystart[0]);
-  const double eps_abs = 1.e-15;
+  const double eps_abs = 1.e-12;
   const double eps_rel = 1.e-10;
-  const double hmin = 1.0e-3;
+  const double hmin = 1.0e-5;
   const double hmax = (endtime-time) / (2.0*MinSteps);
   const GWFrames::Quaternion zHat(0,0,0,1);
   
@@ -195,13 +196,13 @@ GWFrames::PNWaveform::PNWaveform(const double delta,
   
   // Store the data at the first step
   {
+    T1.RecalculateValues(time, &y[0]);
     v.push_back(y[0]);
     mchi1.push_back(std::vector<double>(&y[2],&y[5]));
     mchi2.push_back(std::vector<double>(&y[5],&y[8]));
     const double Omega_orbMag = y[0]*y[0]*y[0];
     double Omega_orb[3] = {Omega_orbMag*y[8], Omega_orbMag*y[9], Omega_orbMag*y[10]};
     mOmega_orb.push_back(std::vector<double>(Omega_orb,Omega_orb+3));
-    T1.RecalculateValues(time, &y[0]);
     mOmega_prec.push_back(T1.Omega_prec());
     mL.push_back(T1.L());
     mPhi_orb.push_back(y[1]);
@@ -229,13 +230,13 @@ GWFrames::PNWaveform::PNWaveform(const double delta,
     }
     
     // If so, store the data
+    T1.RecalculateValues(time, &y[0]);
     v.push_back(y[0]);
     mchi1.push_back(std::vector<double>(&y[2],&y[5]));
     mchi2.push_back(std::vector<double>(&y[5],&y[8]));
     const double Omega_orbMag = y[0]*y[0]*y[0];
     double Omega_orb[3] = {Omega_orbMag*y[8], Omega_orbMag*y[9], Omega_orbMag*y[10]};
     mOmega_orb.push_back(std::vector<double>(Omega_orb,Omega_orb+3));
-    T1.RecalculateValues(time, &y[0]);
     mOmega_prec.push_back(T1.Omega_prec());
     mL.push_back(T1.L());
     mPhi_orb.push_back(y[1]);
