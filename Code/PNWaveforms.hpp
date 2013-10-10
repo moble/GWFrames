@@ -6,18 +6,20 @@
 
 #include "Waveforms.hpp"
 
+#define PNWaveforms_ellMax 8
+
 namespace GWFrames {
-  
+
   /// Object for calculating a post-Newtonian Waveform with (optional) precession
   class PNWaveform : public Waveform {
-    
+
   public:  // Constructors and Destructor
     PNWaveform();
     PNWaveform(const PNWaveform& W);
-    PNWaveform(const double delta, const std::vector<double>& chi1_0, const std::vector<double>& chi2_0, const double Omega_orb_0,
-	       const GWFrames::Quaternion& R_0=GWFrames::Quaternion(1,0,0,0));
+    PNWaveform(const std::string& Approximant, const double delta, const std::vector<double>& chi1_0, const std::vector<double>& chi2_0,
+	       const double Omega_orb_0, const Quaternions::Quaternion& R_0=Quaternions::Quaternion(1,0,0,0));
     ~PNWaveform() { }
-    
+
   private:  // Member data
     // std::stringstream history;           // inherited from Waveform
     // std::vector<double> t;               // inherited from Waveform
@@ -30,7 +32,7 @@ namespace GWFrames {
     std::vector<std::vector<double> > mOmega_prec;
     std::vector<std::vector<double> > mL;
     std::vector<double> mPhi_orb;
-    
+
   public:  // Data access functions
     // Vector a specific time index
     inline const std::vector<double>& chi1(const unsigned int iTime) const { return mchi1[iTime]; }
@@ -75,9 +77,21 @@ namespace GWFrames {
     // Phase
     inline double Phi_orb(const unsigned int iTime) const { return mPhi_orb[iTime]; }
     inline const std::vector<double>& Phi_orb() const { return mPhi_orb; }
-    
+
   }; // class PNWaveform
-  
+
+
+  /// Construct PN waveform given dynamics, assuming standard orientation
+  class PNWaveformModes {
+  private:
+    // These constants will be fixed once the mass-difference is known
+    const double delta, nu, pownu2, pownu3;
+    const double HhatL2M0Rev0, HhatL2M1Imv1, HhatL2M1Imv3, HhatL2M1Imv4, HhatL2M1Imv5, HhatL2M1Rev6, HhatL2M1Imv6, HhatL2M2Rev0, HhatL2M2Rev2, HhatL2M2Rev5, HhatL2M2Imv5, HhatL2M2Rev6, HhatL2M2Imv6, HhatL2M2Rev6lnv, HhatL2M2Rev7, HhatL2M2Imv7, HhatL3M0Imv5, HhatL3M1Imv1, HhatL3M1Imv3, HhatL3M1Imv4, HhatL3M1Imv5, HhatL3M1Rev6, HhatL3M1Imv6, HhatL3M2Rev2, HhatL3M2Rev4, HhatL3M2Rev5, HhatL3M2Imv5, HhatL3M2Rev6, HhatL3M3Imv1, HhatL3M3Imv3, HhatL3M3Imv4, HhatL3M3Imv5, HhatL3M3Rev6, HhatL3M3Imv6, HhatL4M0Rev0, HhatL4M1Imv3, HhatL4M1Imv5, HhatL4M1Rev6, HhatL4M1Imv6, HhatL4M2Rev2, HhatL4M2Rev4, HhatL4M2Rev5, HhatL4M2Imv5, HhatL4M2Rev6, HhatL4M3Imv3, HhatL4M3Imv5, HhatL4M3Rev6, HhatL4M3Imv6, HhatL4M4Rev2, HhatL4M4Rev4, HhatL4M4Rev5, HhatL4M4Imv5, HhatL4M4Rev6, HhatL5M1Imv3, HhatL5M1Imv5, HhatL5M1Rev6, HhatL5M1Imv6, HhatL5M2Rev4, HhatL5M2Rev6, HhatL5M3Imv3, HhatL5M3Imv5, HhatL5M3Rev6, HhatL5M3Imv6, HhatL5M4Rev4, HhatL5M4Rev6, HhatL5M5Imv3, HhatL5M5Imv5, HhatL5M5Rev6, HhatL5M5Imv6, HhatL6M1Imv5, HhatL6M2Rev4, HhatL6M2Rev6, HhatL6M3Imv5, HhatL6M4Rev4, HhatL6M4Rev6, HhatL6M5Imv5, HhatL6M6Rev4, HhatL6M6Rev6, HhatL7M1Imv5, HhatL7M2Rev6, HhatL7M3Imv5, HhatL7M4Rev6, HhatL7M5Imv5, HhatL7M6Rev6, HhatL7M7Imv5, HhatL8M2Rev6, HhatL8M4Rev6, HhatL8M6Rev6, HhatL8M8Rev6;
+  public:
+    PNWaveformModes(const double idelta);
+    void operator()(const double v, const double chis, const double chia, std::vector<std::complex<double> >& modes);
+  }; // class PNWaveformModes
+
 } // namespace GWFrames
 
 #endif // PNWAVEFORMS_HPP

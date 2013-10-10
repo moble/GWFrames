@@ -134,7 +134,8 @@
   #include <iomanip>
   #include <complex>
   #include "Utilities.hpp"
-  #include "Quaternions.hpp"
+  #include "Quaternions/Quaternions.hpp"
+  #include "Quaternions/IntegrateAngularVelocity.hpp"
   #include "Scri.hpp"
   #include "SphericalHarmonics.hpp"
   #include "Waveforms.hpp"
@@ -142,10 +143,23 @@
 %}
 
 
-// This imports spinsfast.so, so we don't need to pull any tricks
+// This attempts to import the Quaternions module
 %pythoncode %{
-  import spinsfast;
+  try :
+    import Quaternions
+  except ImportError :
+    pass
+%}
+
+
+// This attempts to import spinsfast.so, so we don't need to pull any tricks
+%pythoncode %{
+  try :
+    import spinsfast
+  except ImportError :
+    pass
   %}
+
 
 //////////////////////////////////////////////////////////////////////
 //// The following translates between c++ and python types nicely ////
@@ -163,7 +177,7 @@
 // };
 //// Make sure std::vectors are dealt with appropriately
 %include <std_vector.i>
-namespace GWFrames {
+namespace Quaternions {
   class Quaternion;
  };
 namespace std {
@@ -173,46 +187,10 @@ namespace std {
   %template(vectorvectord) vector<vector<double> >;
   %template(vectorc) vector<std::complex<double> >;
   %template(vectorvectorc) vector<vector<std::complex<double> > >;
-  %template(vectorq) vector<GWFrames::Quaternion>;
+  %template(vectorq) vector<Quaternions::Quaternion>;
   %template(vectors) vector<string>;
   %template(vectorvectors) vector<vector<std::string> >;
 };
-
-
-/////////////////////////////////////
-//// Import the quaternion class ////
-/////////////////////////////////////
-%ignore GWFrames::Quaternion::operator=;
-%rename(__getitem__) GWFrames::Quaternion::operator [](const unsigned int) const;
-%rename(__setitem__) GWFrames::Quaternion::operator [](const unsigned int);
-%include "Quaternions.hpp"
-%extend GWFrames::Quaternion {
-  // This function is called when printing a Quaternion object
-  const char* __str__() {
-    std::stringstream S;
-    S << std::setprecision(14) << "["
-      << $self->operator[](0) << ", "
-      << $self->operator[](1) << ", "
-      << $self->operator[](2) << ", " 
-      << $self->operator[](3) << "]";
-    const std::string& tmp = S.str();
-    const char* cstr = tmp.c_str();
-    return cstr;
-  }
-  // This prints the Quaternion nicely at the prompt and allows nucer manipulations
-  %pythoncode{
-    def __repr__(self):
-        return 'Quaternion('+repr(self[0])+', '+repr(self[1])+', '+repr(self[2])+', '+repr(self[3])+')'
-    def __pow__(self, P) :
-        return self.pow(P)
-    __radd__ = __add__
-    def __rsub__(self, t) :
-        return -self+t
-    __rmul__ = __mul__
-    def __rdiv__(self, t) :
-        return self.inverse()*t
-  };
- };
 
 
 ////////////////////////////////////////////////////////////
@@ -276,11 +254,11 @@ namespace std {
 %extend GWFrames::Matrix {
   // Print the Matrix nicely at the prompt
   %pythoncode{
-    def __repr__(self) :
+    def __repr__(self):
         return "".join(
-            [  'Matrix(['+repr([self(0,c) for c in range(self.ncols())])+',\n']
-            + ['        '+repr([self(r,c) for c in range(self.ncols())])+',\n' for r in range(1,self.nrows()-1)]
-            + ['        '+repr([self(r,c) for c in range(self.ncols()) for r in [self.nrows()-1]])+'])'] )
+                       [  'Matrix(['+repr([self(0,c) for c in range(self.ncols())])+',\n']
+                       + ['        '+repr([self(r,c) for c in range(self.ncols())])+',\n' for r in range(1,self.nrows()-1)]
+                       + ['        '+repr([self(r,c) for c in range(self.ncols()) for r in [self.nrows()-1]])+'])'] )
   };
  };
 
@@ -301,9 +279,9 @@ namespace std {
 %ignore operator<<;
 %ignore GWFrames::Waveform::operator=;
 //// Allow us to get Quaternions returned naturally when passed by reference
-%typemap(in,numinputs=0) GWFrames::Quaternion& OUTPUT (GWFrames::Quaternion temp) { $1 = &temp; }
-%typemap(argout) GWFrames::Quaternion& OUTPUT {
-  $result = SWIG_Python_AppendOutput($result, SWIG_NewPointerObj((new GWFrames::Quaternion(static_cast< const GWFrames::Quaternion& >(temp$argnum))), SWIGTYPE_p_GWFrames__Quaternion, SWIG_POINTER_OWN |  0 ));
+%typemap(in,numinputs=0) Quaternions::Quaternion& OUTPUT (Quaternions::Quaternion temp) { $1 = &temp; }
+%typemap(argout) Quaternions::Quaternion& OUTPUT {
+  $result = SWIG_Python_AppendOutput($result, SWIG_NewPointerObj((new Quaternions::Quaternion(static_cast< const Quaternions::Quaternion& >(temp$argnum))), SWIGTYPE_p_Quaternions__Quaternion, SWIG_POINTER_OWN |  0 ));
 }
 //// These will convert the output data to numpy.ndarray for easier use
 %feature("pythonappend") GWFrames::Waveform::T() const %{ if isinstance(val, tuple) : val = numpy.array(val) %}
@@ -327,7 +305,7 @@ namespace std {
 %feature("pythonappend") GWFrames::Waveform::PNEquivalentPrecessionalAV() const %{ if isinstance(val, tuple) : val = numpy.array(val) %}
 //// Allow us to extract the outputs naturally in python
 %apply double& OUTPUT { double& deltat };
-%apply GWFrames::Quaternion& OUTPUT { GWFrames::Quaternion& R_delta };
+%apply Quaternions::Quaternion& OUTPUT { Quaternions::Quaternion& R_delta };
 //// Parse the header file to generate wrappers
 %include "Waveforms.hpp"
 //// Make sure vectors of Waveform are understood
@@ -346,7 +324,7 @@ namespace std {
     for(unsigned int t=0; t<$self->NTimes(); ++t) {
       S << $self->T(t) << " ";
       for(unsigned int mode=0; mode<$self->NModes(); ++mode) {
-  	S << $self->Re(mode, t) << " " << $self->Im(mode, t) << " ";
+        S << $self->Re(mode, t) << " " << $self->Im(mode, t) << " ";
       }
       S << std::endl;
     }
@@ -355,29 +333,29 @@ namespace std {
   //// Allow Waveform objects to be pickled
   %insert("python") %{
     def __getstate__(self) :
-      return (self.HistoryStr(),
-  	      self.T(),
-  	      self.Frame(),  
-  	      self.FrameType(),
-  	      self.DataType(),
-  	      self.RIsScaledOut(),
-  	      self.MIsScaledOut(),
-	      self.LM(),
-  	      self.Data()
-  	      )
+        return (self.HistoryStr(),
+            self.T(),
+            self.Frame(),
+            self.FrameType(),
+            self.DataType(),
+            self.RIsScaledOut(),
+            self.MIsScaledOut(),
+            self.LM(),
+            self.Data()
+          )
     __safe_for_unpickling__ = True
     def __reduce__(self) :
         return (Waveform, (), self.__getstate__())
     def __setstate__(self, data) :
-      self.SetHistory(data[0])
-      self.SetTime(data[1])
-      self.SetFrame(data[2])
-      self.SetFrameType(data[3])
-      self.SetDataType(data[4])
-      self.SetRIsScaledOut(data[5])
-      self.SetMIsScaledOut(data[6])
-      self.SetLM(data[7].tolist())
-      self.SetData(data[8])
+        self.SetHistory(data[0])
+        self.SetTime(data[1])
+        self.SetFrame(data[2])
+        self.SetFrameType(data[3])
+        self.SetDataType(data[4])
+        self.SetRIsScaledOut(data[5])
+        self.SetMIsScaledOut(data[6])
+        self.SetLM(data[7].tolist())
+        self.SetData(data[8])
   %}
  };
 %extend GWFrames::Waveforms {
@@ -394,6 +372,8 @@ namespace std {
 //// Ignore things that don't translate well...
 // %ignore operator<<;
 // %ignore GWFrames::Waveform::operator=;
+//// Get output from PNWaveformModes
+%apply std::vector<std::complex<double> >& OUTPUT {std::vector<std::complex<double> >& modes };
 //// These will convert the output data to numpy.ndarray for easier use
 %feature("pythonappend") GWFrames::PNWaveform::chi1() const %{ if isinstance(val, tuple) : val = numpy.array(val) %}
 %feature("pythonappend") GWFrames::PNWaveform::chi2() const %{ if isinstance(val, tuple) : val = numpy.array(val) %}
@@ -419,12 +399,6 @@ namespace std {
 /// Add utility functions that are specific to python.  Note that
 /// these are defined in the GWFrames namespace.
 %insert("python") %{
-
-### This adds a new method to Waveform objects, returning unwrapped phase.
-# def ArgUnwrapper(self, mode) :
-#     import numpy
-#     return numpy.unwrap(self.Arg(mode))
-# Waveform.ArgUnwrapped = ArgUnwrapper
 
 
 def GetFileNamePrefix(W) :
@@ -453,11 +427,11 @@ Waveform.GetLaTeXDataDescription = GetLaTeXDataDescription
 def OutputToNRAR(W, FileName, FileWriteMode='w') :
     """
     Output the Waveform in NRAR format.
-    
+
     Note that the FileName is prepended with some descriptive
     information involving the data type and the frame type, such as
     'rhOverM_' or 'rMPsi4_'.
-    
+
     """
     from h5py import File
     from os.path import basename, dirname
@@ -486,10 +460,10 @@ def OutputToNRAR(W, FileName, FileWriteMode='w') :
         # Now write all the data to various groups in the file
         G.attrs['OutputFormatVersion'] = 'GWFrames_NRAR'
         G.create_dataset("History.txt", data = W.HistoryStr() + '### OutputToNRAR(W, {0})\n'.format(FileName))
-	G.attrs['FrameType'] = W.FrameType()
-	G.attrs['DataType'] = W.DataType()
-	G.attrs['RIsScaledOut'] = int(W.RIsScaledOut())
-	G.attrs['MIsScaledOut'] = int(W.MIsScaledOut())
+        G.attrs['FrameType'] = W.FrameType()
+        G.attrs['DataType'] = W.DataType()
+        G.attrs['RIsScaledOut'] = int(W.RIsScaledOut())
+        G.attrs['MIsScaledOut'] = int(W.MIsScaledOut())
         for i_m in range(W.NModes()) :
             ell,m = W.LM()[i_m]
             Data_m = G.create_dataset("Y_l{0}_m{1}.dat".format(ell, m), data=[[t, d.real, d.imag] for t,d in zip(W.T(),W.Data(i_m))])
@@ -504,11 +478,11 @@ Waveform.OutputToNRAR = OutputToNRAR
 def OutputToH5(W, FileName) :
     """
     Output the Waveform with all necessary information.
-    
+
     Note that the FileName is prepended with some descriptive
     information involving the data type and the frame type, such as
     'rhOverM_Corotating_' or 'rPsi4_Aligned_'.
-    
+
     """
     from h5py import File
     from os.path import basename, dirname
@@ -530,10 +504,10 @@ def OutputToH5(W, FileName) :
             F.create_dataset("Frame", data=[[r[0], r[1], r[2], r[3]] for r in W.Frame()])
         else :
             F.create_dataset("Frame", shape=())
-	F.attrs['FrameType'] = W.FrameType()
-	F.attrs['DataType'] = W.DataType()
-	F.attrs['RIsScaledOut'] = int(W.RIsScaledOut())
-	F.attrs['MIsScaledOut'] = int(W.MIsScaledOut())
+        F.attrs['FrameType'] = W.FrameType()
+        F.attrs['DataType'] = W.DataType()
+        F.attrs['RIsScaledOut'] = int(W.RIsScaledOut())
+        F.attrs['MIsScaledOut'] = int(W.MIsScaledOut())
         Data = F.create_group("Data")
         for i_m in range(W.NModes()) :
             ell,m = W.LM()[i_m]
@@ -551,7 +525,8 @@ def ReadFromH5(FileName) :
     Read data from an H5 file, as output by GWFrames.
     """
     from h5py import File
-    from GWFrames import Waveform, Quaternion
+    from GWFrames import Waveform
+    from Quaternions import Quaternion
     from numpy import empty
     try :
         f = File(FileName, 'r')
@@ -631,7 +606,8 @@ def ReadFromNRAR(FileName) :
     """
     import re
     import h5py
-    from GWFrames import Waveform, Quaternion
+    from GWFrames import Waveform
+    from Quaternions import Quaternion
     import numpy
     YlmRegex = re.compile(r"""Y_l(?P<L>[0-9]+)_m(?P<M>[-+0-9]+)\.dat""")
     # Initialize the Waveform object
@@ -659,7 +635,7 @@ def ReadFromNRAR(FileName) :
             W.AppendHistory("##### Begin Previous History\n#" + OldHistory.replace('\n','\n#') + "#### End Previous History\n")
         except KeyError :
             pass # Did not find a history
-        # Get the frame data, converting to GWFrame.Quaternion objects
+        # Get the frame data, converting to Quaternions.Quaternion objects
         try :
             W.SetFrame([Quaternion(r) for r in f['Frame']])
         except KeyError :

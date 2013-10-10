@@ -39,7 +39,8 @@ namespace GWFrames {
 #include "Waveforms.hpp"
 #include "Errors.hpp"
 
-using GWFrames::Quaternion;
+using Quaternions::Quaternion;
+using GWFrames::ThreeVector;
 using GWFrames::FourVector;
 using GWFrames::DataGrid;
 using GWFrames::Modes;
@@ -70,13 +71,71 @@ const double sqrt8pi = std::sqrt(8*M_PI);
 const double sqrt3 = std::sqrt(3.0);
 const double sqrt3over2 = std::sqrt(1.5);
 
+/// Returns the rapidity of a Lorentz boost with velocity three-vector v
+double Rapidity(const std::vector<double>& v) {
+  /// The vector v is expected to be the velocity three-vector of the
+  /// new frame relative to the current frame, in units where c=1.
+  const double magv = std::sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
+  return acosh(1.0/std::sqrt(1.0-magv*magv));
+}
+
+/// Return a rotor taking n into its boosted version
+Quaternion Boost(ThreeVector v, ThreeVector n) {
+  ///
+  /// \param v Three-vector velocity of the new frame WRT this frame
+  /// \param n Three-vector direction to be boosted by the rotor
+  ///
+  /// This function returns a rotor \f$R_b\f$ that takes the input
+  /// vector \f$\hat{n}\f$ (which will be normalized) on the future
+  /// null sphere into its boosted version.  Note that this rotor is a
+  /// function of both the vector being boosted and the boost itself.
+  ///
+
+  const double alpha = Rapidity(v);
+
+  // If v is too small to make much difference, just return the identity
+  const double absv = std::sqrt(v[0]*v[0]+v[1]*v[1]+v[2]*v[2]);
+  if(absv<1.0e-14 || std::abs(1-std::exp(alpha))<1.0e-14) {
+    return Quaternion(1.0, 0.0, 0.0, 0.0);
+  }
+
+  // Otherwise, just normalize
+  v[0] = v[0]/absv;
+  v[1] = v[1]/absv;
+  v[2] = v[2]/absv;
+
+  // Normalize n if possible
+  const double absn = std::sqrt(n[0]*n[0]+n[1]*n[1]+n[2]*n[2]);
+  if(absn==0.) {
+    cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": |n|=" << absn << " is too small." << endl;
+    throw(GWFrames_ValueError);
+  }
+  n[0] = n[0]/absn;
+  n[1] = n[1]/absn;
+  n[2] = n[2]/absn;
+
+  // Evaluate the angle between n and v
+  const double Theta = std::acos(n[0]*v[0]+n[1]*v[1]+n[2]*v[2]);
+
+  // Calculate the new angle between nPrime and v
+  const double ThetaPrime = 2 * std::atan( std::exp(alpha) * std::tan(0.5*Theta) );
+
+  // Evaluate the cross product; if it is too small, just return the identity
+  Quaternion vn = Quaternion(v).cross(Quaternion(n));
+  const double absvn = vn.abs();
+  if(absvn<1.0e-14) {
+    return Quaternion(1.0, 0.0, 0.0, 0.0);
+  }
+
+  return Quaternions::exp( 0.5*(ThetaPrime-Theta) * vn.normalized() );
+}
 
 
 //////////////
 // DataGrid //
 //////////////
 
-DataGrid::DataGrid(const int Spin, const int N_theta, const int N_phi, const std::vector<std::complex<double> >& D) 
+DataGrid::DataGrid(const int Spin, const int N_theta, const int N_phi, const std::vector<std::complex<double> >& D)
   : s(Spin), n_theta(N_theta), n_phi(N_phi), data(D)
 {
   // Check that we have the right amount of data
@@ -105,7 +164,7 @@ DataGrid::DataGrid(const Modes& M, const GWFrames::ThreeVector& v, const int N_t
   for(int i_g=0, i_theta=0; i_theta<n_theta; ++i_theta) {
     for(int i_phi=0; i_phi<n_phi; ++i_phi, ++i_g) {
       const Quaternion Rp(dtheta*i_theta, dphi*i_phi);
-      const Quaternion R_b = GWFrames::Boost(-v, (Rp*zHat*Rp.conjugate()).vec());
+      const Quaternion R_b = Boost(-v, (Rp*zHat*Rp.conjugate()).vec());
       data[i_g] = M.EvaluateAtPoint(R_b*Rp);
     }
   }
@@ -120,20 +179,20 @@ DataGrid::DataGrid(const int Spin, const int N_theta, const int N_phi, const GWF
   /// \param N_phi Number of points in output grid in phi
   /// \param v Three-vector velocity of boosted frame relative to current frame
   /// \param f Functor operating on a Quaternion object
-  /// 
+  ///
   /// The functor takes a Quaternion argument, which describes the
   /// location and orientation of the point to be evaluated.  In
   /// particular, the rotor takes the \f$\hat{z}\f$ vector into the
   /// point at which the field is to be measured, and takes \f$\hat{x}
   /// + i \hat{y}\f$ into the \f$m\f$ vector (within normalization)
   /// needed for spin-weighted fields.
-  
+
   const double dtheta = M_PI/double(n_theta-1); // theta should return to M_PI
   const double dphi = 2*M_PI/double(n_phi); // phi should not return to 2*M_PI
   for(int i_g=0, i_theta=0; i_theta<n_theta; ++i_theta) {
     for(int i_phi=0; i_phi<n_phi; ++i_phi, ++i_g) {
       const Quaternion Rp(dtheta*i_theta, dphi*i_phi);
-      const Quaternion R_b = GWFrames::Boost(-v, (Rp*zHat*Rp.conjugate()).vec());
+      const Quaternion R_b = Boost(-v, (Rp*zHat*Rp.conjugate()).vec());
       data[i_g] = f(R_b*Rp);
     }
   }
@@ -141,7 +200,7 @@ DataGrid::DataGrid(const int Spin, const int N_theta, const int N_phi, const GWF
 
 DataGrid DataGrid::operator*(const DataGrid& A) const {
   const DataGrid& B=*this;
-  
+
   // Check that we have the same amounts of data
   if(A.n_theta != B.n_theta) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
@@ -157,20 +216,20 @@ DataGrid DataGrid::operator*(const DataGrid& A) const {
 	      << std::endl;
     throw(GWFrames_VectorSizeMismatch);
   }
-  
+
   // Do the work
   DataGrid C(B);
   for(unsigned int i=0; i<data.size(); ++i) {
     C.data[i] *= A.data[i];
   }
   C.s = s + A.s;
-  
+
   return C;
 }
 
 DataGrid DataGrid::operator/(const DataGrid& A) const {
   const DataGrid& B=*this;
-  
+
   // Check that we have the same amounts of data
   if(A.n_theta != B.n_theta) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
@@ -186,20 +245,20 @@ DataGrid DataGrid::operator/(const DataGrid& A) const {
 	      << std::endl;
     throw(GWFrames_VectorSizeMismatch);
   }
-  
+
   // Do the work
   DataGrid C(B);
   for(unsigned int i=0; i<data.size(); ++i) {
     C.data[i] /= A.data[i];
   }
   C.s = s - A.s;
-  
+
   return C;
 }
 
 DataGrid DataGrid::operator+(const DataGrid& A) const {
   const DataGrid& B=*this;
-  
+
   // Check that we have the same amounts of data
   if(A.n_theta != B.n_theta) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
@@ -215,19 +274,19 @@ DataGrid DataGrid::operator+(const DataGrid& A) const {
 	      << std::endl;
     throw(GWFrames_VectorSizeMismatch);
   }
-  
+
   // Do the work
   DataGrid C(B);
   for(unsigned int i=0; i<data.size(); ++i) {
     C.data[i] += A.data[i];
   }
-  
+
   return C;
 }
 
 DataGrid DataGrid::operator-(const DataGrid& A) const {
   const DataGrid& B=*this;
-  
+
   // Check that we have the same amounts of data
   if(A.n_theta != B.n_theta) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
@@ -243,13 +302,13 @@ DataGrid DataGrid::operator-(const DataGrid& A) const {
 	      << std::endl;
     throw(GWFrames_VectorSizeMismatch);
   }
-  
+
   // Do the work
   DataGrid C(B);
   for(unsigned int i=0; i<data.size(); ++i) {
     C.data[i] -= A.data[i];
   }
-  
+
   return C;
 }
 
@@ -346,7 +405,7 @@ public:
   InverseConformalFactorFunctor(const GWFrames::ThreeVector& vi)
     : gamma(1.0/std::sqrt(1-vi[0]*vi[0]-vi[1]*vi[1]-vi[2]*vi[2])),
       v(0., vi[0], vi[1], vi[2]) { }
-  virtual double operator()(const GWFrames::Quaternion& R) const {
+  virtual double operator()(const Quaternions::Quaternion& R) const {
     return gamma*( 1 - v.dot(R*zHat*R.conjugate()) );
   }
 };
@@ -372,7 +431,7 @@ Modes::Modes(const int spin, const std::vector<std::complex<double> >& Data)
       break;
     }
   }
-  
+
   // Make sure Data doesn't have more ell modes than ellMax_GWFrames
   if(ellMax>=ellMax_GWFrames) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
@@ -431,18 +490,18 @@ Modes Modes::operator+(const Modes& M) const {
 	      << std::endl;
     throw(GWFrames_BadWaveformInformation);
   }
-  
+
   // Choose `A` to be the input with a larger data set
   const Modes& A = (data.size()>=M.data.size() ? *this : M);
   const Modes& B = (data.size()< M.data.size() ? *this : M);
   Modes C(A);
-  
+
   // Just loop over the data elements in the smaller data set
   // (assuming higher modes are zero)
   for(unsigned int i=0; i<B.data.size(); ++i) {
     C.data[i] += B.data[i];
   }
-  
+
   return C;
 }
 
@@ -455,7 +514,7 @@ Modes Modes::operator-(const Modes& M) const {
 	      << std::endl;
     throw(GWFrames_BadWaveformInformation);
   }
-  
+
   if(data.size()>=M.data.size()) {
     Modes C(*this);
     for(unsigned int i=0; i<M.data.size(); ++i) {
@@ -480,7 +539,7 @@ Modes Modes::edth() const {
   /// This operator is the one defined by Geroch et al. (1973).  It
   /// raises the spin weight of any field on the sphere by 1, while
   /// leaving the boost weight unchanged.
-  /// 
+  ///
   /// This operator is very similar to the basic Newman-Penrose edth
   /// operator, except that it preserves boost weights.  Its effect in
   /// this implementation is identical (up to a factor of
@@ -488,14 +547,14 @@ Modes Modes::edth() const {
   /// the definition of the GHP operator, but its value is zero.  (It
   /// transforms nontrivially, though.)  In this context, we have
   /// `NPEdth() = sqrt(2)*GHPEdth()`.
-  /// 
+  ///
   /// The complex shear \f$\sigma\f$ has spin weight +2 and boost
   /// weight +1.  The radial coordinate \f$r\f$ has boost weight -1,
   /// and the derivative with respect to time \f$d/du\f$ has boost
   /// weight -1.  The asymptotic metric shear \f$r\, h\f$ has spin
   /// weight -2 and boost weight -1.  In particular, it seems that
   /// \f$r\, h = r^2\, \bar{\sigma}\f$.
-  /// 
+  ///
   /// The Newman-Penrose scalars \f$\Psi_i\f$ have spin weight and
   /// boost weight equal to \f$2-i\f$.  (E.g., \f$\Psi_4\f$ has \f$s =
   /// b = -2\f$.)  However, when these are multiplied by the
@@ -504,18 +563,18 @@ Modes Modes::edth() const {
   /// \f$\Psi_i\f$ by \f$r^{5-i}\f$ to get nonzero values at scri,
   /// which adds \f$i-5\f$ to the boost weight, so that the asymptotic
   /// NP scalars all have boost weight -3.
-  
+
   const Modes& A=*this;
   Modes B(A);
   const int ellMin = std::abs(s+1);
-  
+
   for(int i_m=0, ell=0; ell<=ellMax; ++ell) {
     const double factor = (ell<ellMin ? 0.0 : std::sqrt((ell-s)*(ell+s+1.)/2.));
     for(int m=-ell; m<=ell; ++m, ++i_m) {
       B.data[i_m] *= factor;
     }
   }
-  
+
   B.SetSpin(A.Spin()+1);
   return B;
 }
@@ -524,7 +583,7 @@ Modes Modes::edthbar() const {
   /// This operator is the one defined by Geroch et al. (1973).  It
   /// lowers the spin weight of any field on the sphere by 1, while
   /// leaving the boost weight unchanged.
-  /// 
+  ///
   /// This operator is very similar to the basic Newman-Penrose edth
   /// operator, except that it preserves boost weights.  Its effect in
   /// this implementation is identical (up to a factor of
@@ -532,14 +591,14 @@ Modes Modes::edthbar() const {
   /// the definition of the GHP operator, but its value is zero.  (It
   /// transforms nontrivially, though.)  In this context, we have
   /// `NPEdthBar() = sqrt(2)*GHPEdthBar()`.
-  /// 
+  ///
   /// The complex shear \f$\sigma\f$ has spin weight +2 and boost
   /// weight +1.  The radial coordinate \f$r\f$ has boost weight -1,
   /// and the derivative with respect to time \f$d/du\f$ has boost
   /// weight -1.  The asymptotic metric shear \f$r\, h\f$ has spin
   /// weight -2 and boost weight -1.  In particular, it seems that
   /// \f$r\, h = r^2\, \bar{\sigma}\f$.
-  /// 
+  ///
   /// The Newman-Penrose scalars \f$\Psi_i\f$ have spin weight and
   /// boost weight equal to \f$2-i\f$.  (E.g., \f$\Psi_4\f$ has \f$s =
   /// b = -2\f$.)  However, when these are multiplied by the
@@ -548,18 +607,18 @@ Modes Modes::edthbar() const {
   /// \f$\Psi_i\f$ by \f$r^{5-i}\f$ to get nonzero values at scri,
   /// which adds \f$i-5\f$ to the boost weight, so that the asymptotic
   /// NP scalars all have boost weight -3.
-  
+
   const Modes& A=*this;
   Modes B(A);
   const int ellMin = std::abs(s-1);
-  
+
   for(int i_m=0, ell=0; ell<=ellMax; ++ell) {
     const double factor = (ell<ellMin ? 0.0 : -std::sqrt((ell+s)*(ell-s+1.)/2.));
     for(int m=-ell; m<=ell; ++m, ++i_m) {
       B.data[i_m] *= factor;
     }
   }
-  
+
   B.SetSpin(A.Spin()-1);
   return B;
 }
@@ -567,25 +626,25 @@ Modes Modes::edthbar() const {
 /// The operator edth^2 bar{edth}^2
 Modes Modes::edth2edthbar2() const {
   Modes B(*this);
-  
+
   for(int i_m=0, ell=0; ell<=ellMax; ++ell) {
     const double factor = (ell-1)*(ell)*(ell+1)*(ell+2);
     for(int m=-ell; m<=ell; ++m, ++i_m) {
       B.data[i_m] *= factor;
     }
   }
-  
+
   return B;
 }
 
 
 /// Evaluate Waveform at a particular sky location
 std::complex<double> Modes::EvaluateAtPoint(const double vartheta, const double varphi) const {
-  /// 
+  ///
   /// \param vartheta Polar angle of detector
   /// \param varphi Azimuthal angle of detector
-  /// 
-  
+  ///
+
   complex<double> d(0.0, 0.0);
   GWFrames::SWSH Y(s);
   Y.SetAngles(vartheta, varphi);
@@ -600,17 +659,17 @@ std::complex<double> Modes::EvaluateAtPoint(const double vartheta, const double 
 }
 
 /// Evaluate Waveform at a particular sky location
-std::complex<double> Modes::EvaluateAtPoint(const GWFrames::Quaternion& R) const {
-  /// 
+std::complex<double> Modes::EvaluateAtPoint(const Quaternions::Quaternion& R) const {
+  ///
   /// \param R Quaternion giving point by rotation of \f$\hat{z}\f$
-  /// 
+  ///
   /// Note that the argument `R` might typically be thought of as the
   /// rotor taking the unit \f$z\f$ vector into a point \f$(\vartheta,
   /// \varphi)\f$.  However, more general arguments are possible; this
   /// feature is used to greatly simplify the process of constructing
   /// a `DataGrid` object from a `Modes` object with a boost.
-  /// 
-  
+  ///
+
   complex<double> d(0.0, 0.0);
   GWFrames::SWSH Y(s, R);
   for(int i_m=0, ell=0; ell<=ellMax; ++ell) {
@@ -722,10 +781,10 @@ GWFrames::SliceGrid SliceModes::BMSTransformationOnSlice(const double u, const T
   /// point, and the change of grid points themselves.  The returned
   /// object is a `DataGrid` object, each point of which can then be
   /// used to interpolate to the supertranslated time.
-  
+
   const int n_theta = 2*EllMax()+1;
   const int n_phi = n_theta;
-  
+
   // Evaluate the functions we need on the boosted (and appropriately spin-transformed) grid
   const DataGrid oneoverK_g = GWFrames::InverseConformalFactorBoostedGrid(v, n_theta, n_phi);
   const DataGrid oneoverKcubed_g = oneoverK_g.pow(3);
@@ -739,7 +798,7 @@ GWFrames::SliceGrid SliceModes::BMSTransformationOnSlice(const double u, const T
   const DataGrid psi4_g(psi4, v, n_theta, n_phi);
   const DataGrid sigma_g(sigma, v, n_theta, n_phi);
   const DataGrid sigmadot_g(sigmadot, v, n_theta, n_phi);
-  
+
   // Construct new data accounting for changes of tetrad
   SliceGrid Grids;
   Grids.psi4 = oneoverKcubed_g*(psi4_g);
@@ -749,7 +808,7 @@ GWFrames::SliceGrid SliceModes::BMSTransformationOnSlice(const double u, const T
   Grids.psi0 = oneoverKcubed_g*(psi0_g - ethupok_g*(4*psi1_g - ethupok_g*(6*psi2_g - ethupok_g*(4*psi3_g - ethupok_g*psi4_g))));
   Grids.sigma = oneoverK_g*(sigma_g - ethethdelta_g);
   Grids.sigmadot = sigmadot_g*(oneoverK_g.pow(2));
-  
+
   return Grids;
 }
 
@@ -757,16 +816,16 @@ GWFrames::SliceGrid SliceModes::BMSTransformationOnSlice(const double u, const T
 void SliceModes::MoreschiIteration(GWFrames::Modes& OneOverK_ip1, GWFrames::Modes& delta_ip1) const {
   /// \param OneOverK_ip1 Inverse conformal factor for the next step
   /// \param delta_ip1 Supertranslation for the next step
-  /// 
+  ///
   /// This member function applies to a `SliceModes` object that has
   /// already been transformed by the BMS transformation represented
   /// by \f$K_i\f$ and \f$\delta_i\f$.  This then takes the data on
   /// that slice and computes the values of \f$K_{i+1}\f$ and
   /// \f$\delta_{i+1}\f$, returning them by reference.
-  
+
   const Modes Psi = SuperMomentum();
   const double M = Mass();
-  
+
   // 1/K is just Psi/M in the first two ell values
   OneOverK_ip1 = Modes(4);
   OneOverK_ip1.SetEllMax(1);
@@ -774,9 +833,9 @@ void SliceModes::MoreschiIteration(GWFrames::Modes& OneOverK_ip1, GWFrames::Mode
   OneOverK_ip1[1] = Psi[1]/M;
   OneOverK_ip1[2] = Psi[2]/M;
   OneOverK_ip1[3] = Psi[3]/M;
-  
-  // 
-  
+
+  //
+
   throw(GWFrames_NotYetImplemented);
   return;
 }
@@ -806,7 +865,7 @@ Scri::Scri(const GWFrames::Waveform& psi0, const GWFrames::Waveform& psi1,
 	      << std::endl;
     throw(GWFrames_VectorSizeMismatch);
   }
-  
+
   // Check that everyone has the same EllMax()
   const int ellMax = psi0.EllMax();
   if(ellMax!=psi1.EllMax() || ellMax!=psi2.EllMax() ||
@@ -818,7 +877,7 @@ Scri::Scri(const GWFrames::Waveform& psi0, const GWFrames::Waveform& psi1,
 	      << std::endl;
     throw(GWFrames_VectorSizeMismatch);
   }
-  
+
   // Fill the new data
   const unsigned int ntimes = t.size();
   for(unsigned int i_t=0; i_t<ntimes; ++i_t) { // Fill everything but sigmadot
@@ -850,7 +909,7 @@ SliceModes Scri::BMSTransformation(const double& u0, const ThreeVector& v, const
   /// \param u0 Initial time slice to transform
   /// \param v Three-vector of the boost relative to the current frame
   /// \param delta Spherical-harmonic modes of the supertranslation
-  /// 
+  ///
   /// A general BMS transformation is expressed as a conformal
   /// transformation of the sphere (which encompasses rotations and
   /// boosts) and a supertranslation (which affects only the time
@@ -862,7 +921,7 @@ SliceModes Scri::BMSTransformation(const double& u0, const ThreeVector& v, const
   /// harmonics.  The input data is assumed to satisfy conditions on
   /// the nonzero data such that the values everywhere on the sphere
   /// are real.
-  /// 
+  ///
   /// The work to be done by this function includes (1) evaluating the
   /// data on the appropriate equi-angular grid of the final frame,
   /// while simultaneously transforming the data at each point by the
@@ -870,7 +929,7 @@ SliceModes Scri::BMSTransformation(const double& u0, const ThreeVector& v, const
   /// interpolating those data to the appropriate values of retarded
   /// time of the final frame; and (3) transforming back to spectral
   /// space to store the data in their usual representation.
-  /// 
+  ///
   /// The relation between the new and old time coordinates is \f$u' =
   /// K(u-\delta)\f$, where \f$K\f$ is the conformal factor (which is
   /// a function of angle).  So we need to interpolate at each point
@@ -880,10 +939,10 @@ SliceModes Scri::BMSTransformation(const double& u0, const ThreeVector& v, const
   /// arbitrarily set \f$u' = 0\f$, because any other choice can be
   /// absorbed into a time- and space-translation.  This does not
   /// matter, of course, because that choice is not stored in any way.
-  
+
   const int n_theta = 2*slices[0].EllMax()+1;
   const int n_phi = n_theta;
-  
+
   // (0) Find current time slices on which we need data to interpolate
   // to the new time slice
   const DataGrid u = u0 + DataGrid(delta, n_theta, n_phi); // This choice arbitrarily sets u'=0; other choices are degenerate with a space-time translation
@@ -908,7 +967,7 @@ SliceModes Scri::BMSTransformation(const double& u0, const ThreeVector& v, const
   while(t[iMin]<uMin && iMin<int(t.size())-1) { ++iMin; } // t[iMin] is now strictly greater than uMin
   iMin = std::max(0, iMin-3);
   iMax = std::min(int(t.size())-1, std::max(iMin+7, iMax+3));
-  
+
   // (1) Evaluate BMS-transformed data on equi-angular grids of the final frame at a series of times
   const unsigned int Nslices = iMax-iMin+1;
   vector<SliceGrid> transformedslices(Nslices);
@@ -919,7 +978,7 @@ SliceModes Scri::BMSTransformation(const double& u0, const ThreeVector& v, const
   }
   const int n_theta2 = transformedslices[0][0].N_theta();
   const int n_phi2 = transformedslices[0][0].N_phi();
-  
+
   // (2) Interpolate to new retarded time
   // Create new object to hold the data
   SliceGrid BMStransformedGrid(n_theta2*n_phi2);
@@ -953,13 +1012,13 @@ SliceModes Scri::BMSTransformation(const double& u0, const ThreeVector& v, const
   gsl_interp_accel_free(accIm);
   gsl_spline_free(splineRe);
   gsl_spline_free(splineIm);
-  
+
   // (3) Transform back to spectral space
   SliceModes BMStransformed(slices[0].EllMax());
   for(int i_D=0; i_D<7; ++i_D) { // Loop over data types
     BMStransformed[i_D] = Modes(BMStransformedGrid[i_D]);
   }
-  
+
   return BMStransformed;
 }
 
@@ -980,7 +1039,7 @@ GWFrames::Modes GWFrames::SuperMomenta::BMSTransform(const GWFrames::Modes& OneO
   const int n_theta = 2*Psi[0].EllMax()+1;
   const int n_phi = n_theta;
   const ThreeVector v = GWFrames::vFromOneOverK(OneOverK);
-  
+
   // (0) Find current time slices on which we need data to interpolate
   ////////////////////////////////////////////////////////////////////
   // to the new time slice
@@ -1005,7 +1064,7 @@ GWFrames::Modes GWFrames::SuperMomenta::BMSTransform(const GWFrames::Modes& OneO
   while(t[iMin]<uMin && iMin<int(t.size())-1) { ++iMin; } // t[iMin] is now strictly greater than uMin
   iMin = std::max(0, iMin-3);
   iMax = std::min(int(t.size())-1, std::max(iMin+7, iMax+3));
-  
+
   // (1) Evaluate BMS-transformed data on equi-angular grids of the final frame at a series of times
   //////////////////////////////////////////////////////////////////////////////////////////////////
   const unsigned int Nslices = iMax-iMin+1;
@@ -1017,7 +1076,7 @@ GWFrames::Modes GWFrames::SuperMomenta::BMSTransform(const GWFrames::Modes& OneO
   }
   const int n_theta2 = transformedslices[0].N_theta();
   const int n_phi2 = transformedslices[0].N_phi();
-  
+
   // (2) Interpolate to new retarded time
   ///////////////////////////////////////
   // Create new object to hold the data
@@ -1050,7 +1109,7 @@ GWFrames::Modes GWFrames::SuperMomenta::BMSTransform(const GWFrames::Modes& OneO
   gsl_interp_accel_free(accIm);
   gsl_spline_free(splineRe);
   gsl_spline_free(splineIm);
-  
+
   // (3) Transform back to spectral space
   ///////////////////////////////////////
   return Modes(BMStransformedGrid);
@@ -1060,12 +1119,12 @@ GWFrames::Modes GWFrames::SuperMomenta::BMSTransform(const GWFrames::Modes& OneO
 void GWFrames::SuperMomenta::MoreschiIteration(GWFrames::Modes& OneOverK, GWFrames::Modes& delta) const {
   /// \param OneOverK Inverse conformal factor (input/output)
   /// \param delta Supertranslation (input/output)
-  /// 
+  ///
   /// This function first transforms Psi to a u'=constant slice
   /// centered at the value delta[0] with the given BMS transformation.  It
   /// then replaces the values of that BMS transformation with the
   /// next step in the Moreschi algorithm.
-  
+
   // Record the values of the supermomentum, four-momentum, and mass on this slice
   const Modes Psi_i = BMSTransform(OneOverK, delta);
   FourVector p(4);
@@ -1078,7 +1137,7 @@ void GWFrames::SuperMomenta::MoreschiIteration(GWFrames::Modes& OneOverK, GWFram
   p[2] = -std::real(complexi*(Psi_i[1]+Psi_i[3]))/(sqrt3*sqrt8pi);
   p[3] = std::real(Psi_i[2])/(sqrt3*sqrt4pi);
   const double M = std::sqrt(p[0]*p[0]-p[1]*p[1]-p[2]*p[2]-p[3]*p[3]);
-  
+
   // Increment the values of delta to the next step
   const int ellMax = delta.EllMax();
   const Modes deltaderiv = Psi_i + Modes(M/DataGrid(OneOverK, 7, 7).pow(3));
@@ -1088,7 +1147,7 @@ void GWFrames::SuperMomenta::MoreschiIteration(GWFrames::Modes& OneOverK, GWFram
       delta[i_m] = factor*deltaderiv[i_m];
     }
   }
-  
+
   // Increment the values of OneOverK to the next step
   OneOverK[0] = Psi_i[0]/M;
   // The following are divided by 3 relative to what I would naively
@@ -1101,6 +1160,6 @@ void GWFrames::SuperMomenta::MoreschiIteration(GWFrames::Modes& OneOverK, GWFram
   OneOverK[1] = -Psi_i[1]/(3*M);
   OneOverK[2] = -Psi_i[2]/(3*M);
   OneOverK[3] = -Psi_i[3]/(3*M);
-  
+
   return;
 }

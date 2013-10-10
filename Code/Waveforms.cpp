@@ -23,15 +23,17 @@
 #include "Waveforms.hpp"
 #include "Utilities.hpp"
 #include "Quaternions.hpp"
+#include "IntegrateAngularVelocity.hpp"
 #include "SphericalHarmonics.hpp"
 #include "Errors.hpp"
 
-using GWFrames::Quaternions;
+using Quaternions::Quaternion;
+using Quaternions::QuaternionArray;
 using GWFrames::Matrix;
 using GWFrames::LadderOperatorFactorFunctor;
 using GWFrames::abs;
-using GWFrames::PrescribedRotation;
-using GWFrames::FrameFromZ;
+using Quaternions::PrescribedRotation;
+using Quaternions::FrameFromZ;
 using std::string;
 using std::vector;
 using std::cout;
@@ -110,10 +112,10 @@ GWFrames::Waveform::Waveform(const std::string& FileName, const std::string& Dat
   spinweight(-2), history(""), t(0), frame(0), frameType(GWFrames::UnknownFrameType),
   dataType(GWFrames::UnknownDataType), rIsScaledOut(false), mIsScaledOut(false), lm(), data()
 {
-  /// 
+  ///
   /// \param FileName Relative path to data file
   /// \param DataFormat Either 'ReIm' or 'MagArg'
-  /// 
+  ///
   /// NOTE: This function assumes that the data are stored as (ell,m)
   /// modes, starting with (2,-2), incrementing m, then incrementing
   /// ell and starting again at m=-ell.  If this is not how the modes
@@ -136,7 +138,7 @@ GWFrames::Waveform::Waveform(const std::string& FileName, const std::string& Dat
 	    << "### date = " << date // comes with a newline
 	    << "### Waveform(" << FileName << ", " << DataFormat << "); // Constructor from data file" << endl;
   }
-  
+
   // Get the number of lines in the file
   char LengthChar[9];
   FILE* fp = popen(("wc -l " + FileName).c_str(), "r");
@@ -154,14 +156,14 @@ GWFrames::Waveform::Waveform(const std::string& FileName, const std::string& Dat
   }
   pclose(fp);
   const int FileLength = atoi(LengthChar);
-  
+
   // Open the input file stream
   ifstream ifs(FileName.c_str(), ifstream::in);
   if(!ifs.is_open()) {
     cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Couldn't open '" << FileName << "'" << endl;
     throw(GWFrames_BadFileName);
   }
-  
+
   // Get the header and save to 'history'
   int HeaderLines = 0;
   {
@@ -174,7 +176,7 @@ GWFrames::Waveform::Waveform(const std::string& FileName, const std::string& Dat
     }
     history << "#### End Previous History\n";
   }
-  
+
   // Read the complex data
   vector<double> Line;
   unsigned int NTimes = FileLength - HeaderLines;
@@ -218,10 +220,10 @@ GWFrames::Waveform::Waveform(const std::string& FileName, const std::string& Dat
     cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Unknown data format '" << DataFormat << "' not yet implemented" << endl;
     throw(GWFrames_NotYetImplemented);
   }
-  
+
   // Close the file stream
   ifs.close();
-  
+
   // Set the (ell,m) data
   lm = vector<vector<int> >(NModes, vector<int>(2,0));
   cerr << "Warning: Waveform constructor assumes (ell,m) modes are stored as (2,-2), (2,-1), ...\n";
@@ -259,7 +261,7 @@ GWFrames::Waveform& GWFrames::Waveform::operator=(const GWFrames::Waveform& a) {
 void GWFrames::Waveform::swap(GWFrames::Waveform& b) {
   /// This function uses the std::vector method 'swap' which simply
   /// swaps pointers to data, for efficiency.
-  
+
   // This call should not be recorded explicitly in the history,
   // because the histories are swapped
   { const int NewSpinWeight=b.spinweight; b.spinweight=spinweight; spinweight=NewSpinWeight; }
@@ -285,7 +287,7 @@ GWFrames::Waveform::Waveform(const std::vector<double>& T, const std::vector<std
     dataType(GWFrames::UnknownDataType), rIsScaledOut(false), mIsScaledOut(false), lm(LM), data(Data)
 {
   /// Arguments are T, LM, Data, which consist of the explicit data.
-  
+
   // Check that dimensions match (though this is not an exhaustive check)
   if( Data.size()!=0 && ( (t.size() != Data[0].size()) || (Data.size() != lm.size()) ) ) {
     cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": t.size()=" << t.size()
@@ -304,19 +306,19 @@ std::vector<std::complex<double> > GWFrames::Waveform::DataDot(const unsigned in
 
 /// Return the norm (sum of squares of modes) of the waveform
 std::vector<double> GWFrames::Waveform::Norm(const bool TakeSquareRoot) const {
-  /// 
+  ///
   /// \param TakeSquareRoot If true, the square root is taken at each instant before returning
-  /// 
+  ///
   /// This returns the norm of the waveform, defined as the sum of the
   /// complex norms of the modes.  Note that we are calling this norm
   /// in analogy with the c++ std::complex norm, which is the square
   /// of the absolute value.  However, there is also an option to take
   /// the square root of the data at each time step, which would be
   /// the usual L2 norm of the waveform.
-  /// 
+  ///
   /// \sa MaxNormIndex
   /// \sa MaxNormTime
-  /// 
+  ///
   vector<double> norm(NTimes(), 0.0);
   for(unsigned int i_t=0; i_t<NTimes(); ++i_t) {
     for(unsigned int i_m=0; i_m<NModes(); ++i_m) {
@@ -331,17 +333,17 @@ std::vector<double> GWFrames::Waveform::Norm(const bool TakeSquareRoot) const {
 
 /// Return the data index corresponding to the time of the largest norm
 unsigned int GWFrames::Waveform::MaxNormIndex(const unsigned int SkipFraction) const {
-  /// 
+  ///
   /// \param SkipFraction Integer fraction of data to skip before looking
-  /// 
+  ///
   /// The default value of `SkipFraction` is 4, meaning that we start
   /// looking for the maximum after 1/4th of the data, so as to cut
   /// out junk radiation.  Note that this is integer division, so an
   /// argument of `NTimes()+1` will look through all of the data.
-  /// 
+  ///
   /// \sa Norm()
   /// \sa MaxNormTime()
-  /// 
+  ///
   const unsigned int StartIndex = NTimes()/SkipFraction;
   const vector<double> norm = Norm(false); // don't bother taking the square root
   unsigned int index = StartIndex;
@@ -526,7 +528,7 @@ unsigned int GWFrames::Waveform::FindModeIndex(const int l, const int m) const {
 unsigned int GWFrames::Waveform::FindModeIndexWithoutError(const int l, const int m) const {
   /// If the requested mode is not present, the returned index is 1
   /// beyond the end of the mode vector.
-  
+
   // ORIENTATION!!! following loop
   unsigned int i=0;
   for(; i<NModes(); ++i) {
@@ -537,11 +539,11 @@ unsigned int GWFrames::Waveform::FindModeIndexWithoutError(const int l, const in
 }
 
 /// Rotate the physical content of the Waveform by a constant rotor.
-GWFrames::Waveform& GWFrames::Waveform::RotatePhysicalSystem(const GWFrames::Quaternion& R_phys) {
+GWFrames::Waveform& GWFrames::Waveform::RotatePhysicalSystem(const Quaternions::Quaternion& R_phys) {
   history << "### this->RotatePhysicalSystem(" << R_phys << ");" << endl;
-  
+
   this->TransformModesToRotatedFrame(vector<Quaternion>(1,R_phys.conjugate()));
-  
+
   // Record the change of frame
   if(frame.size()==0) { // set frame data equal to input data
     frame = vector<Quaternion>(1,R_phys.conjugate());
@@ -550,18 +552,18 @@ GWFrames::Waveform& GWFrames::Waveform::RotatePhysicalSystem(const GWFrames::Qua
   } else { // multiply frame data by input rotation
     frame = frame * R_phys.conjugate();
   }
-  
+
   return *this;
 }
 
 /// Rotate the physical content of the Waveform.
-GWFrames::Waveform& GWFrames::Waveform::RotatePhysicalSystem(std::vector<GWFrames::Quaternion> R_phys) {
-  /// 
+GWFrames::Waveform& GWFrames::Waveform::RotatePhysicalSystem(std::vector<Quaternions::Quaternion> R_phys) {
+  ///
   /// \param R_phys Vector of Quaternions by which to rotate
-  /// 
+  ///
   /// This rotates the physical system, leaving the coordinates in
   /// place.
-  /// 
+  ///
   /// The Waveform's `frame` data records the rotors needed to rotate
   /// the standard (x,y,z) basis into the (X,Y,Z) basis with respect
   /// to which the Waveform modes are decomposed.  If this is not the
@@ -570,24 +572,24 @@ GWFrames::Waveform& GWFrames::Waveform::RotatePhysicalSystem(std::vector<GWFrame
   /// system, while leaving fixed the basis with respect to which the
   /// modes are decomposed.  Therefore, the new frame must be the
   /// original `frame` data times \f$\bar{R}_{phys}\f$.
-  /// 
+  ///
   /// Note that this function does not change the `frameType`; this is
   /// left to the calling function.
-  /// 
-  
+  ///
+
   history << "### this->RotatePhysicalSystem(R_phys); // R_phys=["
 	  << std::setprecision(16) << R_phys[0];
   if(R_phys.size()>1) {
     history << ", " << R_phys[1] << ", ...";
   }
   history << "]" << endl;
-  
+
   // We won't use R_phys from now on, so transform to R_physbar
-  R_phys = GWFrames::conjugate(R_phys);
+  R_phys = Quaternions::conjugate(R_phys);
   vector<Quaternion>& R_physbar = R_phys;
-  
+
   this->TransformModesToRotatedFrame(R_physbar);
-  
+
   // Record the change of frame
   if(frame.size()==0) { // set frame data equal to input data
     frame = R_physbar;
@@ -596,16 +598,16 @@ GWFrames::Waveform& GWFrames::Waveform::RotatePhysicalSystem(std::vector<GWFrame
   } else { // multiply frame data by input rotation
     frame = frame * R_physbar;
   }
-  
+
   return *this;
 }
 
 /// Rotate the basis in which this Waveform is measured by a constant rotor.
-GWFrames::Waveform& GWFrames::Waveform::RotateDecompositionBasis(const GWFrames::Quaternion& R_frame) {
+GWFrames::Waveform& GWFrames::Waveform::RotateDecompositionBasis(const Quaternions::Quaternion& R_frame) {
   history << "### this->RotateDecompositionBasis(" << R_frame << ");" << endl;
-  
+
   this->TransformModesToRotatedFrame(vector<Quaternion>(1,R_frame));
-  
+
   // Record the change of frame
   if(frame.size()==0) { // set frame data equal to input data
     frame = vector<Quaternion>(1,R_frame);
@@ -614,18 +616,18 @@ GWFrames::Waveform& GWFrames::Waveform::RotateDecompositionBasis(const GWFrames:
   } else { // multiply frame data by input rotation
     frame = frame * R_frame;
   }
-  
+
   return *this;
 }
 
 /// Rotate the basis in which this Waveform is measured.
-GWFrames::Waveform& GWFrames::Waveform::RotateDecompositionBasis(const std::vector<GWFrames::Quaternion>& R_frame) {
-  /// 
+GWFrames::Waveform& GWFrames::Waveform::RotateDecompositionBasis(const std::vector<Quaternions::Quaternion>& R_frame) {
+  ///
   /// \param R_frame Vector of Quaternions by which to rotate
-  /// 
+  ///
   /// This rotates the coordinate basis, leaving the physical system
   /// in place.
-  /// 
+  ///
   /// The Waveform's `frame` data records the rotors needed to rotate
   /// the standard (x,y,z) basis into the (X,Y,Z) basis with respect
   /// to which the Waveform modes are decomposed.  If this is not the
@@ -633,20 +635,20 @@ GWFrames::Waveform& GWFrames::Waveform::RotateDecompositionBasis(const std::vect
   /// record the total rotation.  Here, we are just composing
   /// rotations, so we need to store R_frame times the original frame
   /// data.
-  /// 
+  ///
   /// Note that this function does not change the `frameType`; this is
   /// left to the calling function.
-  /// 
-  
+  ///
+
   history << "### this->RotateDecompositionBasis(R_frame); // R_frame=["
 	  << std::setprecision(16) << R_frame[0];
   if(R_frame.size()>1) {
     history << ", " << R_frame[1] << ", ...";
   }
   history << "]" << endl;
-  
+
   this->TransformModesToRotatedFrame(R_frame);
-  
+
   // Record the change of frame
   if(frame.size()==0) { // set frame data equal to input data
     frame = R_frame;
@@ -655,18 +657,18 @@ GWFrames::Waveform& GWFrames::Waveform::RotateDecompositionBasis(const std::vect
   } else { // multiply frame data by input rotation
     frame = frame * R_frame;
   }
-  
+
   return *this;
 }
 
 /// Rotate the basis in which this Waveform's uncertainties are measured.
-GWFrames::Waveform& GWFrames::Waveform::RotateDecompositionBasisOfUncertainties(const std::vector<GWFrames::Quaternion>& R_frame) {
-  /// 
+GWFrames::Waveform& GWFrames::Waveform::RotateDecompositionBasisOfUncertainties(const std::vector<Quaternions::Quaternion>& R_frame) {
+  ///
   /// \param R_frame Vector of Quaternions by which to rotate
-  /// 
+  ///
   /// This rotates the coordinate basis, leaving the physical system
   /// in place.
-  /// 
+  ///
   /// The Waveform's `frame` data records the rotors needed to rotate
   /// the standard (x,y,z) basis into the (X,Y,Z) basis with respect
   /// to which the Waveform modes are decomposed.  If this is not the
@@ -674,20 +676,20 @@ GWFrames::Waveform& GWFrames::Waveform::RotateDecompositionBasisOfUncertainties(
   /// record the total rotation.  Here, we are just composing
   /// rotations, so we need to store R_frame times the original frame
   /// data.
-  /// 
+  ///
   /// Note that this function does not change the `frameType`; this is
   /// left to the calling function.
-  /// 
-  
+  ///
+
   history << "### this->RotateDecompositionBasisOfUncertainties(R_frame); // R_frame=["
 	  << std::setprecision(16) << R_frame[0];
   if(R_frame.size()>1) {
     history << ", " << R_frame[1] << ", ...";
   }
   history << "]" << endl;
-  
+
   this->TransformUncertaintiesToRotatedFrame(R_frame);
-  
+
   // Record the change of frame
   if(frame.size()==0) { // set frame data equal to input data
     frame = R_frame;
@@ -696,7 +698,7 @@ GWFrames::Waveform& GWFrames::Waveform::RotateDecompositionBasisOfUncertainties(
   } else { // multiply frame data by input rotation
     frame = frame * R_frame;
   }
-  
+
   return *this;
 }
 
@@ -707,28 +709,28 @@ GWFrames::Waveform& GWFrames::Waveform::TransformModesToRotatedFrame(const std::
   /// basis rotated with respect to the first by \f$R_{frame}\f$.
   /// This is equivalent to rotating the physical system by
   /// \f$\bar{R}_{frame}\f$, while leaving the basis fixed.
-  /// 
+  ///
   /// Note that this private function does not rotate the `frame`
   /// data, which should instead be done by the public functions
   /// RotatePhysicalSystem and RotateDecompositionBasis.  Also, this
   /// does not adjust the `frameType`, which is left to the calling
   /// functions.
-  /// 
-  
+  ///
+
   const int NModes = this->NModes();
   const int NTimes = this->NTimes();
-  
+
   if(int(R_frame.size())!=NTimes && R_frame.size()!=1) {
     cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": R_frame.size()=" << R_frame.size() << "; NTimes()=" << NTimes << endl;
     throw(GWFrames_VectorSizeMismatch);
   }
-  
+
   // Loop through each mode and do the rotation
   {
     int mode=1;
     for(int l=std::abs(SpinWeight()); l<NModes; ++l) {
       if(NModes<mode) { break; }
-      
+
       // Use a vector of mode indices, in case the modes are out of
       // order.  This still assumes that we have each l from l=2 up to
       // some l_max, but it's better than assuming that, plus assuming
@@ -742,15 +744,15 @@ GWFrames::Waveform& GWFrames::Waveform::TransformModesToRotatedFrame(const std::
 	  throw(thrown);
 	}
       }
-      
+
       # pragma omp parallel
       {
-	
+
 	// Construct the D matrix and data storage
 	WignerDMatrix D(R_frame[0]);
 	vector<vector<complex<double> > > Ds(2*l+1, vector<complex<double> >(2*l+1));
 	vector<complex<double> > Data(2*l+1);
-	
+
 	if(R_frame.size()==1) {
 	  // Get the Wigner D matrix data just once
 	  for(int m=-l; m<=l; ++m) {
@@ -797,13 +799,13 @@ GWFrames::Waveform& GWFrames::Waveform::TransformModesToRotatedFrame(const std::
 	    }
 	  }
 	}
-	
+
       } // end #pragma omp parallel
-      
+
       mode += 2*l+1;
     }
   }
-  
+
   return *this;
 }
 
@@ -811,28 +813,28 @@ inline double SQR(const double a) { return a*a; }
 
 /// Rotate modes of the uncertainty of a Waveform object.
 GWFrames::Waveform& GWFrames::Waveform::TransformUncertaintiesToRotatedFrame(const std::vector<Quaternion>& R_frame) {
-  /// 
+  ///
   /// Assuming the data stored in the Waveform represent uncertainties
   /// (square-root of sigma), rotate those uncertainties, using the
   /// standard method of combining by quadrature.
-  /// 
+  ///
   /// \sa TransformModesToRotatedFrame
-  /// 
-  
+  ///
+
   const int NModes = this->NModes();
   const int NTimes = this->NTimes();
-  
+
   if(int(R_frame.size())!=NTimes && R_frame.size()!=1) {
     cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": R_frame.size()=" << R_frame.size() << "; NTimes()=" << NTimes << endl;
     throw(GWFrames_VectorSizeMismatch);
   }
-  
+
   // Loop through each mode and do the rotation
   {
     int mode=1;
     for(int l=2; l<NModes; ++l) {
       if(NModes<mode) { break; }
-      
+
       // Use a vector of mode indices, in case the modes are out of
       // order.  This still assumes that we have each l from l=2 up to
       // some l_max, but it's better than assuming that, plus assuming
@@ -846,15 +848,15 @@ GWFrames::Waveform& GWFrames::Waveform::TransformUncertaintiesToRotatedFrame(con
 	  throw(thrown);
 	}
       }
-      
+
       # pragma omp parallel
       {
-	
+
 	// Construct the D matrix and data storage
 	WignerDMatrix D(R_frame[0]);
 	vector<vector<complex<double> > > Ds(2*l+1, vector<complex<double> >(2*l+1));
 	vector<complex<double> > Data(2*l+1);
-	
+
 	if(R_frame.size()==1) {
 	  // Get the Wigner D matrix data just once
 	  for(int m=-l; m<=l; ++m) {
@@ -915,32 +917,32 @@ GWFrames::Waveform& GWFrames::Waveform::TransformUncertaintiesToRotatedFrame(con
 	    }
 	  }
 	}
-	
+
       } // end #pragma omp parallel
-      
+
       mode += 2*l+1;
     }
   }
-  
+
   return *this;
 }
 
 
 /// Calculate the \f$<L \partial_t>\f$ quantity defined in the paper.
 vector<vector<double> > GWFrames::Waveform::LdtVector(vector<int> Lmodes) const {
-  /// 
+  ///
   /// \param Lmodes L modes to evaluate
-  /// 
+  ///
   /// If Lmodes is empty (default), all L modes are used.  Setting
   /// Lmodes to [2] or [2,3,4], for example, restricts the range of
   /// the sum.
-  /// 
+  ///
   /// \f$<L \partial_t>^a = \sum_{\ell,m,m'} \Im [ \bar{f}^{\ell,m'} < \ell,m' | L_a | \ell,m > \dot{f}^{\ell,m} ]\f$
-  
+
   // L+ = Lx + i Ly      Lx =    (L+ + L-) / 2     Im(Lx) =  ( Im(L+) + Im(L-) ) / 2
   // L- = Lx - i Ly      Ly = -i (L+ - L-) / 2     Im(Ly) = -( Re(L+) - Re(L-) ) / 2
   // Lz = Lz             Lz = Lz                   Im(Lz) = Im(Lz)
-  
+
   LadderOperatorFactorFunctor LadderOperatorFactor;
   if(Lmodes.size()==0) {
     Lmodes.push_back(lm[0][0]);
@@ -987,17 +989,17 @@ vector<vector<double> > GWFrames::Waveform::LdtVector(vector<int> Lmodes) const 
 
 /// Calculate the \f$<LL>\f$ quantity defined in the paper.
 vector<Matrix> GWFrames::Waveform::LLMatrix(vector<int> Lmodes) const {
-  /// 
+  ///
   /// \param Lmodes L modes to evaluate
-  /// 
+  ///
   /// If Lmodes is empty (default), all L modes are used.  Setting
   /// Lmodes to [2] or [2,3,4], for example, restricts the range of
   /// the sum.
-  /// 
+  ///
   /// \f$<LL>^{ab} = \sum_{\ell,m,m'} [\bar{f}^{\ell,m'} < \ell,m' | L_a L_b | \ell,m > f^{\ell,m} ]\f$
-  
+
   // Big, bad, ugly, obvious way to do the calculation
-  
+
   // L+ = Lx + i Ly      Lx =    (L+ + L-) / 2     Im(Lx) =  ( Im(L+) + Im(L-) ) / 2
   // L- = Lx - i Ly      Ly = -i (L+ - L-) / 2     Im(Ly) = -( Re(L+) - Re(L-) ) / 2
   // Lz = Lz             Lz = Lz                   Im(Lz) = Im(Lz)
@@ -1146,10 +1148,10 @@ vector<vector<double> > GWFrames::Waveform::SchmidtEtAlVector(const double alpha
   const gsl_multimin_fdfminimizer_type* T;
   gsl_multimin_fdfminimizer* s;
   double h[10] = {this->Re(i2Neg2, 0), this->Im(i2Neg2, 0),
-  		  this->Re(i2Neg1, 0), this->Im(i2Neg1, 0),
-  		  this->Re(i20,    0), this->Im(i20,    0),
-  		  this->Re(i2Pos1, 0), this->Im(i2Pos1, 0),
-  		  this->Re(i2Pos2, 0), this->Im(i2Pos2, 0)};
+		  this->Re(i2Neg1, 0), this->Im(i2Neg1, 0),
+		  this->Re(i20,    0), this->Im(i20,    0),
+		  this->Re(i2Pos1, 0), this->Im(i2Pos1, 0),
+		  this->Re(i2Pos2, 0), this->Im(i2Pos2, 0)};
   gsl_vector* x;
   gsl_multimin_function_fdf SchmidtEtAl_func;
   SchmidtEtAl_func.n = 2;
@@ -1162,7 +1164,7 @@ vector<vector<double> > GWFrames::Waveform::SchmidtEtAlVector(const double alpha
   gsl_vector_set(x, 1, beta0Guess);
   T = gsl_multimin_fdfminimizer_conjugate_fr;
   s = gsl_multimin_fdfminimizer_alloc (T, 2);
-  
+
   vector<vector<double> > v(NTimes(), vector<double>(3));
   for(unsigned int iTime=0; iTime<NTimes(); ++iTime) {
     iter = 0;
@@ -1178,15 +1180,15 @@ vector<vector<double> > GWFrames::Waveform::SchmidtEtAlVector(const double alpha
 	iter++;
 	status = gsl_multimin_fdfminimizer_iterate (s);
 	if (status) {
-  	  cerr << "STATUS: " << status << endl;
-  	  break;
-  	}
+	  cerr << "STATUS: " << status << endl;
+	  break;
+	}
 	status = gsl_multimin_test_gradient (s->gradient, NormOfGradientOnStop);
 	if (status == GSL_SUCCESS)
 	  printf ("Minimum found at:\n");
 	printf ("%5d %.16f %.16f %21.16f\n", int(iter),
-		gsl_vector_get (s->x, 0), 
-		gsl_vector_get (s->x, 1), 
+		gsl_vector_get (s->x, 0),
+		gsl_vector_get (s->x, 1),
 		s->f);
       }
     while (status == GSL_CONTINUE && iter < iterMax);
@@ -1205,23 +1207,23 @@ vector<vector<double> > GWFrames::Waveform::SchmidtEtAlVector(const double alpha
 
 /// Calculate the principal axis of the LL matrix, as prescribed by O'Shaughnessy et al.
 std::vector<std::vector<double> > GWFrames::Waveform::OShaughnessyEtAlVector(const std::vector<int>& Lmodes) const {
-  /// 
+  ///
   /// \param Lmodes L modes to evaluate
-  /// 
+  ///
   /// If Lmodes is empty (default), all L modes are used.  Setting
   /// Lmodes to [2] or [2,3,4], for example, restricts the range of
   /// the sum.
-  /// 
-  
+  ///
+
   // Calculate the LL matrix at each instant
   vector<Matrix> ll = LLMatrix(Lmodes);
-  
+
   // Calculate the dominant principal axis of LL at each instant
   vector<vector<double> > dpa(NTimes(), vector<double>(3));
   for(unsigned int i=0; i<ll.size(); ++i) {
     dpa[i] = GWFrames::DominantPrincipalAxis(ll[i]);
   }
-  
+
   // Now, go through and make the vectors reasonably continuous.
   for(unsigned int i=1; i<dpa.size(); ++i) {
     const double x=dpa[i][0];
@@ -1238,58 +1240,58 @@ std::vector<std::vector<double> > GWFrames::Waveform::OShaughnessyEtAlVector(con
       dpa[i][2] = -dpa[i][2];
     }
   }
-  
+
   return dpa;
 }
 
 /// Calculate the angular velocity of the Waveform.
 vector<vector<double> > GWFrames::Waveform::AngularVelocityVector(const vector<int>& Lmodes) const {
-  /// 
+  ///
   /// \param Lmodes L modes to evaluate
-  /// 
+  ///
   /// This returns the angular velocity of the Waveform, as defined in
   /// Sec. II of <a href="http://arxiv.org/abs/1302.2919">"Angular
   /// velocity of gravitational radiation and the corotating
   /// frame"</a>.  Note that the returned vector is relative to the
   /// inertial frame.
-  /// 
+  ///
   /// If Lmodes is empty (default), all L modes are used.  Setting
   /// Lmodes to [2] or [2,3,4], for example, restricts the range of
   /// the sum.
-  /// 
-  
+  ///
+
   // Calculate the L vector and LL matrix at each instant
   vector<vector<double> > l = LdtVector(Lmodes);
   vector<Matrix> ll = LLMatrix(Lmodes);
-  
+
   // If the frame is nontrivial, include its contribution
   const bool TimeDependentFrame = (frame.size()>1);
   const vector<Quaternion> Rdot = (TimeDependentFrame
-				   ? GWFrames::QuaternionDerivative(frame, t)
+				   ? Quaternions::QuaternionDerivative(frame, t)
 				   : vector<Quaternion>(0));
   const bool ConstantNontrivialFrame = (frame.size()==1);
   const Quaternion R0 = (ConstantNontrivialFrame
 			 ? frame[0]
 			 : Quaternion(1,0,0,0));
-  
+
   // Construct some objects for storage
   vector<vector<double> > omega(NTimes(), vector<double>(3));
   int s;
   gsl_vector* x = gsl_vector_alloc(3);
   gsl_permutation* p = gsl_permutation_alloc(3);
-  
+
   // Loop through time steps
   for(unsigned int iTime=0; iTime<omega.size(); ++iTime) {
     // Solve   -omega * LL = L   at each time step, using LU decomposition
     gsl_vector_view b = gsl_vector_view_array(&l[iTime][0], 3);
     gsl_linalg_LU_decomp(ll[iTime].gslobj(), p, &s);
     gsl_linalg_LU_solve(ll[iTime].gslobj(), p, &b.vector, x);
-    
+
     // Save data for this time step
     omega[iTime][0] = -gsl_vector_get(x, 0);
     omega[iTime][1] = -gsl_vector_get(x, 1);
     omega[iTime][2] = -gsl_vector_get(x, 2);
-    
+
     if(TimeDependentFrame) { // Include frame-rotation effects
       const Quaternion& R = frame[iTime];
       omega[iTime] = (R*Quaternion(omega[iTime])*R.conjugate() + 2*Rdot[iTime]*R.conjugate()).vec();
@@ -1297,58 +1299,58 @@ vector<vector<double> > GWFrames::Waveform::AngularVelocityVector(const vector<i
       omega[iTime] = (R0*Quaternion(omega[iTime])*R0.conjugate()).vec();
     }
   }
-  
+
   // Free the memory
   gsl_permutation_free(p);
   gsl_vector_free(x);
-  
+
   return omega;
 }
 
 
 /// Frame in which the rotation is minimal.
-std::vector<GWFrames::Quaternion> GWFrames::Waveform::CorotatingFrame(const std::vector<int>& Lmodes) const {
-  /// 
+std::vector<Quaternions::Quaternion> GWFrames::Waveform::CorotatingFrame(const std::vector<int>& Lmodes) const {
+  ///
   /// \param Lmodes L modes to evaluate
-  /// 
+  ///
   /// This function combines the steps required to obtain the
   /// corotating frame.
-  /// 
+  ///
   /// If Lmodes is empty (default), all L modes are used.  Setting
   /// Lmodes to [2] or [2,3,4], for example, restricts the range of
   /// the sum.
-  /// 
-  
-  return GWFrames::FrameFromAngularVelocity(Quaternions(AngularVelocityVector(Lmodes)), T());
+  ///
+
+  return Quaternions::FrameFromAngularVelocity(QuaternionArray(AngularVelocityVector(Lmodes)), T());
 }
 
 /// Deduce PN-equivalent orbital angular velocity from Waveform
 vector<vector<double> > GWFrames::Waveform::PNEquivalentOrbitalAV(const vector<int>& Lmodes) const {
-  /// 
+  ///
   /// \param Lmodes L modes to evaluate
-  /// 
+  ///
   /// This function simply takes the projection of the field's
   /// angular-velocity vector \f$\vec{\omega}\f$ along the dominant
   /// eigenvector \f$\hat{V}_f\f$ of \f$<LL>\f$.  This should be
   /// equivalent to the orbital angular velocity of the PN system.
   /// Note that the returned vector is relative to the inertial frame.
-  /// 
+  ///
   /// If Lmodes is empty (default), all L modes are used.  Setting
   /// Lmodes to [2] or [2,3,4], for example, restricts the range of
   /// the sum.
-  /// 
-  
+  ///
+
   // If the frame is nontrivial, include its contribution
   const bool TimeDependentFrame = (frame.size()>1);
   const bool ConstantNontrivialFrame = (frame.size()==1);
   const Quaternion R0 = (ConstantNontrivialFrame
 			 ? frame[0]
 			 : Quaternion(1,0,0,0));
-  
+
   // Get the vectors we need
   const vector<vector<double> > omega = AngularVelocityVector(Lmodes);
   vector<vector<double> > V_f = OShaughnessyEtAlVector(Lmodes);
-  
+
   // Do the calculation
   for(unsigned int i=0; i<V_f.size(); ++i) {
     // Rotate V_f[i] into the inertial frame, if necessary
@@ -1373,25 +1375,25 @@ vector<vector<double> > GWFrames::Waveform::PNEquivalentOrbitalAV(const vector<i
 
 /// Deduce PN-equivalent precessional angular velocity from Waveform
 vector<vector<double> > GWFrames::Waveform::PNEquivalentPrecessionalAV(const vector<int>& Lmodes) const {
-  /// 
+  ///
   /// \param Lmodes L modes to evaluate
-  /// 
+  ///
   /// This function subtracts the PN-equivalent *orbital* angular
   /// velocity (given by PNEquivalentOrbitalAV) from the field's
   /// angular velocity.  This should be equivalent to the precessional
   /// angular velocity of the PN system.  Note that the returned
   /// vector is relative to the inertial frame.
-  /// 
+  ///
   /// This may be essentially numerical noise if there is no
   /// precession, or if precession has oscillated to zero.
-  /// 
+  ///
   /// If Lmodes is empty (default), all L modes are used.  Setting
   /// Lmodes to [2] or [2,3,4], for example, restricts the range of
   /// the sum.
-  /// 
+  ///
   /// \sa PNEquivalentOrbitalAV
-  /// 
-  
+  ///
+
   vector<vector<double> > omega = AngularVelocityVector(Lmodes);
   const vector<vector<double> > Omega_orb = PNEquivalentOrbitalAV(Lmodes);
   for(unsigned int i=0; i<Omega_orb.size(); ++i) {
@@ -1405,69 +1407,69 @@ vector<vector<double> > GWFrames::Waveform::PNEquivalentPrecessionalAV(const vec
 
 /// Transform Waveform to Schmidt et al. frame.
 GWFrames::Waveform& GWFrames::Waveform::TransformToSchmidtEtAlFrame(const double alpha0Guess, const double beta0Guess) {
-  /// 
+  ///
   /// \param alpha0Guess Initial guess for optimal direction alpha
   /// \param beta0Guess  Initial guess for optimal direction beta
-  /// 
+  ///
   /// This function combines the steps required to obtain the Waveform
   /// in the Schmidt et al. frame.
   history << "### this->TransformToSchmidtEtAlFrame(" << alpha0Guess << ", " << beta0Guess << ")\n#";
   this->frameType = GWFrames::Aligned;
-  return this->RotateDecompositionBasis(FrameFromZ(normalized(Quaternions(this->SchmidtEtAlVector(alpha0Guess, beta0Guess))), T()));
+  return this->RotateDecompositionBasis(FrameFromZ(normalized(QuaternionArray(this->SchmidtEtAlVector(alpha0Guess, beta0Guess))), T()));
 }
 
 /// Transform Waveform to O'Shaughnessy et al. frame.
 GWFrames::Waveform& GWFrames::Waveform::TransformToOShaughnessyEtAlFrame(const std::vector<int>& Lmodes) {
-  /// 
+  ///
   /// \param Lmodes L modes to evaluate
-  /// 
+  ///
   /// This function combines the steps required to obtain the Waveform
   /// in the O'Shaughnessy et al. frame.
-  /// 
+  ///
   /// If Lmodes is empty (default), all L modes are used.  Setting
   /// Lmodes to [2] or [2,3,4], for example, restricts the range of
   /// the sum.
-  /// 
+  ///
   history << "### this->TransformToOShaughnessyEtAlFrame(" << StringForm(Lmodes) << ")\n#";
   this->frameType = GWFrames::Aligned;
-  return this->RotateDecompositionBasis(FrameFromZ(normalized(Quaternions(this->OShaughnessyEtAlVector(Lmodes))), T()));
+  return this->RotateDecompositionBasis(FrameFromZ(normalized(QuaternionArray(this->OShaughnessyEtAlVector(Lmodes))), T()));
 }
 
 /// Transform Waveform to frame aligned with angular-velocity vector.
 GWFrames::Waveform& GWFrames::Waveform::TransformToAngularVelocityFrame(const std::vector<int>& Lmodes) {
-  /// 
+  ///
   /// \param Lmodes L modes to evaluate
-  /// 
+  ///
   /// This function combines the steps required to obtain the Waveform
   /// in the frame aligned with the angular-velocity vector.  Note
   /// that this frame is not the corotating frame; this frame has its
   /// z axis aligned with the angular-velocity vector.
-  /// 
+  ///
   /// If Lmodes is empty (default), all L modes are used.  Setting
   /// Lmodes to [2] or [2,3,4], for example, restricts the range of
   /// the sum.
-  /// 
+  ///
   history << "### this->TransformToAngularVelocityFrame(" << StringForm(Lmodes) << ")\n#";
-  vector<Quaternion> R_AV = normalized(Quaternions(this->AngularVelocityVector(Lmodes)));
+  vector<Quaternion> R_AV = normalized(QuaternionArray(this->AngularVelocityVector(Lmodes)));
   this->frameType = GWFrames::Aligned;
   return this->RotateDecompositionBasis(FrameFromZ(R_AV, T()));
 }
 
 /// Transform Waveform to corotating frame.
 GWFrames::Waveform& GWFrames::Waveform::TransformToCorotatingFrame(const std::vector<int>& Lmodes) {
-  /// 
+  ///
   /// \param Lmodes L modes to evaluate
-  /// 
+  ///
   /// This function combines the steps required to obtain the Waveform
   /// in the corotating frame.  Note that this leaves an integration
   /// constant unset.  To set it, the modes should be rotated so that
   /// they are aligned with the frame using `AlignModesToFrame`.
-  /// 
+  ///
   /// If Lmodes is empty (default), all L modes are used.  Setting
   /// Lmodes to [2] or [2,3,4], for example, restricts the range of
   /// the sum.
-  /// 
-  
+  ///
+
   if(frameType != GWFrames::Inertial) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
 	      << "\nWarning: Asking a Waveform in the " << GWFrames::WaveformFrameNames[frameType] << " frame  into the corotating frame."
@@ -1475,7 +1477,7 @@ GWFrames::Waveform& GWFrames::Waveform::TransformToCorotatingFrame(const std::ve
 	      << "\n         This should probably only be applied to Waveforms in the " << GWFrames::WaveformFrameNames[GWFrames::Inertial] << " frame.\n"
 	      << std::endl;
   }
-  
+
   vector<Quaternion> R_corot = this->CorotatingFrame(Lmodes);
   this->frameType = GWFrames::Corotating;
   history << "### this->TransformToCorotatingFrame(" << StringForm(Lmodes) << ")\n#";
@@ -1484,25 +1486,25 @@ GWFrames::Waveform& GWFrames::Waveform::TransformToCorotatingFrame(const std::ve
 
 /// Transform Waveform to an inertial frame.
 GWFrames::Waveform& GWFrames::Waveform::TransformToInertialFrame() {
-  /// 
+  ///
   /// This function uses the stored frame information to transform
   /// from whatever rotating frame the waveform is currently in, to a
   /// stationary, inertial frame.  This is the usual frame of scri^+,
   /// and is the frame in which GW observations should be made.
-  /// 
+  ///
   history << "### this->TransformToInertialFrame();\n#";
   this->frameType = GWFrames::Inertial; // Must come first
-  this->RotateDecompositionBasis(GWFrames::conjugate(frame));
+  this->RotateDecompositionBasis(Quaternions::conjugate(frame));
   this->SetFrame(vector<Quaternion>(0));
   return *this;
 }
 
 /// Transform Waveform uncertainties to corotating frame.
-GWFrames::Waveform& GWFrames::Waveform::TransformUncertaintiesToCorotatingFrame(const std::vector<GWFrames::Quaternion>& R_frame) {
-  /// 
+GWFrames::Waveform& GWFrames::Waveform::TransformUncertaintiesToCorotatingFrame(const std::vector<Quaternions::Quaternion>& R_frame) {
+  ///
   /// \param R_frame Vector of rotors giving corotating frame of the data.
-  /// 
-  
+  ///
+
   if(frameType != GWFrames::Inertial) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
 	      << "\nWarning: Asking a Waveform in the " << GWFrames::WaveformFrameNames[frameType] << " frame  into the corotating frame."
@@ -1516,7 +1518,7 @@ GWFrames::Waveform& GWFrames::Waveform::TransformUncertaintiesToCorotatingFrame(
 	      << std::endl;
     throw(GWFrames_VectorSizeMismatch);
   }
-  
+
   this->frameType = GWFrames::Corotating;
   history << "### this->TransformUncertaintiesToCorotatingFrame(R_frame); // R_frame=[" << setprecision(16) << R_frame[0] << ", " << R_frame[1] << ", ...]\n#";
   return this->RotateDecompositionBasisOfUncertainties(R_frame);
@@ -1524,15 +1526,15 @@ GWFrames::Waveform& GWFrames::Waveform::TransformUncertaintiesToCorotatingFrame(
 
 /// Transform Waveform to an inertial frame.
 GWFrames::Waveform& GWFrames::Waveform::TransformUncertaintiesToInertialFrame() {
-  /// 
+  ///
   /// This function uses the stored frame information to transform
   /// from whatever rotating frame the waveform is currently in, to a
   /// stationary, inertial frame.  This is the usual frame of scri^+,
   /// and is the frame in which GW observations should be made.
-  /// 
+  ///
   history << "### this->TransformUncertaintiesToInertialFrame();\n#";
   this->frameType = GWFrames::Inertial; // Must come first
-  this->RotateDecompositionBasisOfUncertainties(GWFrames::conjugate(frame));
+  this->RotateDecompositionBasisOfUncertainties(Quaternions::conjugate(frame));
   this->SetFrame(vector<Quaternion>(0));
   return *this;
 }
@@ -1553,7 +1555,7 @@ GWFrames::Waveform GWFrames::Waveform::Interpolate(const std::vector<double>& Ne
 	      << "NewTime.back()=" << NewTime.back() << "\tt.back()=" << t.back() << std::endl;
     throw(GWFrames_EmptyIntersection);
   }
-  
+
   Waveform C;
   C.history << HistoryStr()
 	    << "### *this = this->Interpolate(NewTime);" << std::endl;
@@ -1592,16 +1594,16 @@ GWFrames::Waveform GWFrames::Waveform::Interpolate(const std::vector<double>& Ne
   gsl_interp_accel_free(accIm);
   gsl_spline_free(splineRe);
   gsl_spline_free(splineIm);
-  
+
   return C;
 }
 
 /// Extract a segment of a Waveform.
 GWFrames::Waveform GWFrames::Waveform::Segment(const unsigned int i1, const unsigned int i2) const {
-  /// 
+  ///
   /// \param i1 Index of initial time
   /// \param i2 Index just beyond final time
-  /// 
+  ///
   if(i1>i2) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Requesting impossible segment"
 	      << "\ni1=" << i1 << "  >  i2=" << i2 << std::endl;
@@ -1619,7 +1621,7 @@ GWFrames::Waveform GWFrames::Waveform::Segment(const unsigned int i1, const unsi
   if(frame.size()==1) {
     C.frame = frame;
   } else if(frame.size()>1) {
-    C.frame = vector<GWFrames::Quaternion>(&frame[i1], &frame[i2]);
+    C.frame = vector<Quaternions::Quaternion>(&frame[i1], &frame[i2]);
   }
   C.frameType = frameType;
   C.dataType = dataType;
@@ -1637,21 +1639,21 @@ GWFrames::Waveform GWFrames::Waveform::Segment(const unsigned int i1, const unsi
 
 /// Find the time offset aligning this waveform to the other at the fiducial time.
 void GWFrames::Waveform::GetAlignmentOfTime(const Waveform& A, const double t_fid, double& deltat) const {
-  /// 
+  ///
   /// \param A Fixed Waveform in inertial frame to which this Waveform is aligned
   /// \param t_fid
   /// \param deltat The value to be returned
-  /// 
+  ///
   /// This function simply finds the appropriate time offset, rather
   /// than applying it.  This is called by `AlignTime` and probably
   /// does not need to be called directly; see that function's
   /// documentation for more details.
-  /// 
+  ///
   /// \sa AlignTime
-  /// 
-  
+  ///
+
   const Waveform& B = *this;
-  
+
   // Interpolate the angular velocity magnitude of A to t_fid
   double MagAV_fid=0.0;
   {
@@ -1667,7 +1669,7 @@ void GWFrames::Waveform::GetAlignmentOfTime(const Waveform& A, const double t_fi
     gsl_spline_free(spline);
     gsl_interp_accel_free(acc);
   }
-  
+
   // Find that value in this waveform
   {
     const vector<vector<double> > AV_B = B.AngularVelocityVector();
@@ -1696,56 +1698,56 @@ void GWFrames::Waveform::GetAlignmentOfTime(const Waveform& A, const double t_fi
 
 /// Change this Waveform by aligning to the other at the given time
 GWFrames::Waveform& GWFrames::Waveform::AlignTime(const GWFrames::Waveform& A, const double t_fid) {
-  /// 
+  ///
   /// \param A Fixed Waveform in inertial frame to which this Waveform is aligned
   /// \param t_fid
-  /// 
+  ///
   /// Note that this function operates in place; the Waveform to which
   /// it is applied will change.
-  /// 
+  ///
   /// As noted above, it is implicitly assumed that both Waveforms are
   /// in an inertial frame, so that the magnitude of the angular
   /// velocity may be properly measured.  This could be adjusted to
   /// account for the angular velocity of the frame, but hasn't been
   /// yet.
-  /// 
+  ///
   /// To improve accuracy, the angular velocity of A is interpolated
   /// to t_fid.  The time of B is then interpolated to the
   /// interpolated angular velocity.  This assumes that B's angular
   /// velocity is strictly monotonic for roughly 5 data points to
   /// either side.
-  /// 
-  
+  ///
+
   // Call GetAlignment to find the deltat
   double deltat;
   GetAlignmentOfTime(A, t_fid, deltat);
-  
+
   // Offset the time axis by that amount
   t = t + deltat;
-  
+
   // Record what happened
   history << "### this->AlignTime(A, " << std::setprecision(16) << t_fid << ");  # deltat=" << deltat << std::endl;
-  
+
   return *this;
 }
 
-/// Find the appropriate rotation to fix the orientation of the corotating frame. 
+/// Find the appropriate rotation to fix the orientation of the corotating frame.
 void GWFrames::Waveform::GetAlignmentOfDecompositionFrameToModes(const double t_fid, Quaternion& R_delta, const std::vector<int>& Lmodes) const {
-  /// 
+  ///
   /// \param t_fid Fiducial time at which the alignment should happen
   /// \param R_delta Returned rotor
   /// \param Lmodes Lmodes to use in computing \f$<LL>\f$
-  /// 
+  ///
   /// This function simply finds the rotation necessary to align the
   /// corotating frame to the waveform at the fiducial time, rather
   /// than applying it.  This is called by
   /// `AlignDecompositionFrameToModes` and probably does not need to
   /// be called directly; see that function's documentation for more
   /// details.
-  /// 
+  ///
   /// \sa AlignDecompositionFrameToModes
-  /// 
-  
+  ///
+
   // We seek that R_c such that R_corot(t_fid)*R_c rotates the z axis
   // onto V_f.  V_f measured in this frame is given by
   //     V_f = R_V_f * Z * R_V_f.conjugate(),
@@ -1759,14 +1761,14 @@ void GWFrames::Waveform::GetAlignmentOfDecompositionFrameToModes(const double t_
   // the decomposition basis.  We also want to rotate so that the
   // phase of the (2,2) mode is zero at t_fid.  This can be achieved
   // with an initial rotation.
-  
+
   if(frameType != GWFrames::Corotating) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ":"
 	      << "\nError: GetAlignmentOfDecompositionFrameToModes only takes Waveforms in the " << GWFrames::WaveformFrameNames[GWFrames::Corotating] << " frame."
 	      << "\n       This Waveform is in the " << GWFrames::WaveformFrameNames[frameType] << " frame." << std::endl;
     throw(GWFrames_WrongFrameType);
   }
-  
+
   // Get direction of angular-velocity vector near t_fid
   Quaternion omegaHat;
   {
@@ -1786,34 +1788,34 @@ void GWFrames::Waveform::GetAlignmentOfDecompositionFrameToModes(const double t_
       omegaHat = R.inverse() * omegaHat * R;
     }
   }
-  
+
   // Interpolate the Waveform to t_fid
   Waveform Instant = this->Interpolate(vector<double>(1,t_fid));
-  
+
   // V_f is the dominant eigenvector of <LL>, suggested by O'Shaughnessy et al.
-  const Quaternion V_f = GWFrames::Quaternion(Instant.OShaughnessyEtAlVector(Lmodes)[0]);
+  const Quaternion V_f = Quaternions::Quaternion(Instant.OShaughnessyEtAlVector(Lmodes)[0]);
   const Quaternion V_f_aligned = (omegaHat.dot(V_f.normalized()) < 0 ? -V_f : V_f);
-  
+
   // R_V_f is the rotor taking the Z axis onto V_f
-  const Quaternion R_V_f = GWFrames::sqrtOfRotor(-V_f_aligned*GWFrames::Quaternion(0,0,0,1));
-  
+  const Quaternion R_V_f = Quaternions::sqrtOfRotor(-V_f_aligned*Quaternions::Quaternion(0,0,0,1));
+
   // Now rotate Instant so that its z axis is aligned with V_f
   Instant.RotateDecompositionBasis(R_V_f);
-  
+
   // Get the phase of the (2,2) mode after rotation
   const unsigned int i_22 = Instant.FindModeIndex(2,2);
   const double phase_22 = std::atan2(Instant.Im(i_22,0),Instant.Re(i_22,0));
-  
+
   // R_delta is the rotation we will be applying on the right-hand side
-  R_delta = R_V_f * GWFrames::exp(GWFrames::Quaternion(0,0,0,(-phase_22/4)));
+  R_delta = R_V_f * Quaternions::exp(Quaternions::Quaternion(0,0,0,(-phase_22/4)));
 }
 
 /// Fix the orientation of the corotating frame.
 GWFrames::Waveform& GWFrames::Waveform::AlignDecompositionFrameToModes(const double t_fid, const std::vector<int>& Lmodes) {
-  /// 
+  ///
   /// \param t_fid Fiducial time at which the alignment should happen
   /// \param Lmodes Lmodes to use in computing \f$<LL>\f$
-  /// 
+  ///
   /// The corotating frame is only defined up to some constant rotor
   /// R_c; if R_corot is corotating, then so is R_corot*R_c.  This
   /// function uses that freedom to ensure that the frame is aligned
@@ -1822,41 +1824,41 @@ GWFrames::Waveform& GWFrames::Waveform::AlignDecompositionFrameToModes(const dou
   /// is done is along the dominant eigenvector of \f$<LL>\f$
   /// (suggested by O'Shaughnessy et al.), and the phase of the (2,2)
   /// mode is zero.
-  /// 
+  ///
   /// If Lmodes is empty (default), all L modes are used.  Setting
   /// Lmodes to [2] or [2,3,4], for example, restricts the range of
   /// the sum.
-  /// 
-  
+  ///
+
   // Find the appropriate rotation
   Quaternion R_c;
   GetAlignmentOfDecompositionFrameToModes(t_fid, R_c, Lmodes);
-  
+
   // Now, apply the rotation
   this->RotateDecompositionBasis(R_c);
-  
+
   // Record what happened
   history << "### this->AlignDecompositionFrameToModes(" << std::setprecision(16) << t_fid << ", ...);  # R_c=" << R_c << std::endl;
-  
+
   return *this;
 }
 
 /// Get the rotor needed to align this waveform's frame to the other's at the given time
 void GWFrames::Waveform::GetAlignmentOfFrame(const Waveform& A, const double t_fid, Quaternion& R_delta) const {
-  /// 
+  ///
   /// \param A Fixed Waveform in corotating frame to which this Waveform is aligned
   /// \param t_fid Fiducial time at which to equate frames
   /// \param R_delta Returned rotor
-  /// 
+  ///
   /// This function simply finds the rotation necessary to align this
   /// waveform's frame to the other at the fiducial time, rather than
   /// applying it.  This is called by `AlignFrame` and probably does
   /// not need to be called directly; see that function's
   /// documentation for more details.
-  /// 
+  ///
   /// \sa AlignFrame
-  /// 
-  
+  ///
+
   if(frameType != A.frameType && (frameType!=GWFrames::Corotating || frameType!=GWFrames::Aligned)) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
 	      << "\nError: GetAlignmentOfFrame assumes that the two Waveforms are in the same type of frame, and that"
@@ -1868,7 +1870,7 @@ void GWFrames::Waveform::GetAlignmentOfFrame(const Waveform& A, const double t_f
 	      << std::endl;
     throw(GWFrames_WrongFrameType);
   }
-  
+
   const Waveform& B = *this;
   const Quaternion RA = Squad(A.Frame(), A.T(), vector<double>(1, t_fid))[0];
   const Quaternion RB = Squad(B.Frame(), B.T(), vector<double>(1, t_fid))[0];
@@ -1877,40 +1879,40 @@ void GWFrames::Waveform::GetAlignmentOfFrame(const Waveform& A, const double t_f
 
 /// Change this Waveform by aligning the frame to the other's at the given time
 GWFrames::Waveform& GWFrames::Waveform::AlignFrame(const GWFrames::Waveform& A, const double t_fid) {
-  /// 
+  ///
   /// \param A Fixed Waveform in corotating frame to which this Waveform is aligned
   /// \param t_fid Fiducial time at which to equate frames
-  /// 
+  ///
   /// Note that this function operates in place; the Waveform to which
   /// it is applied will change.  However, the modes are not altered;
   /// only the `frame` data is.
-  /// 
+  ///
   /// As noted above, it is implicitly assumed that both Waveforms are
   /// in their corotating frames, with the modes appropriately aligned
   /// to the frames at t_fid.  The assumption is that the frames
   /// actually represent something physically meaningful, so that it
   /// is meaningful to insist that they be the same.
-  /// 
+  ///
   /// Then, this function aligns the frames at t_fid by multiplying
   /// this->frame on the left by a constant rotor such that
   /// this->frame at t_fid is exactly A.frame at t_fid.  The resulting
   /// frame is now corotating with an angular-velocity vector that has
   /// been rotated by that constant rotor, relative to the inertial
   /// basis.
-  /// 
+  ///
   /// \sa AlignDecompositionFrameToModes
-  /// 
-  
+  ///
+
   // Get the necessary rotation
   Quaternion R_delta;
   GetAlignmentOfFrame(A, t_fid, R_delta);
-  
+
   // Apply the shift in frame
   SetFrame(R_delta * Frame());
-  
+
   // Record what happened
   history << "### this->AlignFrame(A, " << std::setprecision(16) << t_fid << ");  # R_delta=" << R_delta << std::endl;
-  
+
   return *this;
 }
 
@@ -1920,7 +1922,7 @@ class WaveformAligner {
 private:
   const GWFrames::Waveform& a, b;
   std::vector<double> t;
-  std::vector<GWFrames::Quaternion> aFrame;
+  std::vector<Quaternions::Quaternion> aFrame;
 public:
   double Multiplier;
   WaveformAligner(const GWFrames::Waveform& A, const GWFrames::Waveform& B, const double t1, const double t2, const double M=100.0)
@@ -1959,16 +1961,16 @@ public:
     t.erase(t.begin(), t.begin()+i);
     aFrame.erase(aFrame.begin(), aFrame.begin()+i);
   }
-  
+
   double EvaluateMinimizationQuantity(const double deltat, const double deltax, const double deltay, const double deltaz) const {
     using namespace GWFrames; // Allow me to subtract a double from a vector<double> below
-    const GWFrames::Quaternion R_delta = GWFrames::exp(GWFrames::Quaternion(0, deltax, deltay, deltaz));
-    const std::vector<GWFrames::Quaternion> bFrame = GWFrames::Squad(R_delta * b.Frame(), (b.T())+Multiplier*deltat, t);
+    const Quaternions::Quaternion R_delta = Quaternions::exp(Quaternions::Quaternion(0, deltax, deltay, deltaz));
+    const std::vector<Quaternions::Quaternion> bFrame = Quaternions::Squad(R_delta * b.Frame(), (b.T())+Multiplier*deltat, t);
     const unsigned int Size=bFrame.size();
     double f = 0.0;
-    double fdot_last = 4 * GWFrames::normsquared( GWFrames::log( aFrame[0] * GWFrames::inverse(bFrame[0]) ) );
+    double fdot_last = 4 * Quaternions::normsquared( Quaternions::log( aFrame[0] * Quaternions::inverse(bFrame[0]) ) );
     for(unsigned int i=1; i<Size; ++i) {
-      const double fdot = 4 * GWFrames::normsquared( GWFrames::log( aFrame[i] * GWFrames::inverse(bFrame[i]) ) );
+      const double fdot = 4 * Quaternions::normsquared( Quaternions::log( aFrame[i] * Quaternions::inverse(bFrame[i]) ) );
       f += (t[i]-t[i-1])*(fdot+fdot_last)/2.0;
       fdot_last = fdot;
     }
@@ -1987,22 +1989,22 @@ double minfunc (const gsl_vector* delta, void* params) {
 
 /// Get time and frame offset for alignment over extended region.
 void GWFrames::Waveform::GetAlignmentOfTimeAndFrame(const Waveform& A, const double t1, const double t2, double& deltat, Quaternion& R_delta) const {
-  /// 
+  ///
   /// \param A Fixed Waveform in corotating frame to which this Waveform is aligned
   /// \param t1 Initial time of region over which differences are minimized
   /// \param t2 Final time of region over which differences are minimized
   /// \param deltat Returned time offset
   /// \param R_delta Returned rotation offset
-  /// 
+  ///
   /// This function simply finds the time and rotation shifts
   /// necessary to align this waveform to the other at the fiducial
   /// time, rather than applying it.  This is called by
   /// `AlignTimeAndFrame` and probably does not need to be called
   /// directly; see that function's documentation for more details.
-  /// 
+  ///
   /// \sa AlignTimeAndFrame
-  /// 
-  
+  ///
+
   if(frameType != A.frameType || (frameType!=GWFrames::Corotating && frameType!=GWFrames::Aligned)) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
 	      << "\nError: GetAlignmentOfTimeAndFrame assumes that the two Waveforms are in the type of same frame, and that"
@@ -2015,19 +2017,19 @@ void GWFrames::Waveform::GetAlignmentOfTimeAndFrame(const Waveform& A, const dou
 	      << std::endl;
     throw(GWFrames_WrongFrameType);
   }
-  
+
   const Waveform& B = *this;
-  
+
   const unsigned int MaxIterations = 2000;
   const double MinSimplexSize = 1.0e-10;
   const double InitialTrialTimeStep = 0.01;
   const double InitialTrialAngleStep = 0.01;
-  
+
   WaveformAligner Aligner(A, B, t1, t2);
   const unsigned int NDimensions = 4;
-  
+
   // Use Nelder-Mead simplex minimization
-  const gsl_multimin_fminimizer_type* T = 
+  const gsl_multimin_fminimizer_type* T =
     gsl_multimin_fminimizer_nmsimplex2;
   gsl_multimin_fminimizer* s = NULL;
   gsl_vector* ss;
@@ -2036,45 +2038,45 @@ void GWFrames::Waveform::GetAlignmentOfTimeAndFrame(const Waveform& A, const dou
   size_t iter = 0;
   int status = GSL_CONTINUE;
   double size = 0.0;
-  
+
   // Set initial values
   x = gsl_vector_alloc(NDimensions);
   gsl_vector_set(x, 0, 0.0);
   gsl_vector_set(x, 1, 0.0);
   gsl_vector_set(x, 2, 0.0);
   gsl_vector_set(x, 3, 0.0);
-  
+
   // Set initial step sizes
   ss = gsl_vector_alloc(NDimensions);
   gsl_vector_set(ss, 0, InitialTrialTimeStep);
   gsl_vector_set(ss, 1, InitialTrialAngleStep);
   gsl_vector_set(ss, 2, InitialTrialAngleStep);
   gsl_vector_set(ss, 3, InitialTrialAngleStep);
-  
+
   minex_func.n = NDimensions;
   minex_func.f = &minfunc;
   minex_func.params = (void*) &Aligner;
-  
+
   s = gsl_multimin_fminimizer_alloc(T, NDimensions);
   gsl_multimin_fminimizer_set(s, &minex_func, x, ss);
-  
+
   // Run the minimization
   while(status == GSL_CONTINUE && iter < MaxIterations) {
     iter++;
     status = gsl_multimin_fminimizer_iterate(s);
     // std::cout << iter
-    // 	      << "\t" << gsl_vector_get(s->x,0) << "\t" << gsl_vector_get(s->x,1)
-    // 	      << "\t" << gsl_vector_get(s->x,2) << "\t" << gsl_vector_get(s->x,3)
-    // 	      << "\t" << s->fval << std::endl;
+    //	      << "\t" << gsl_vector_get(s->x,0) << "\t" << gsl_vector_get(s->x,1)
+    //	      << "\t" << gsl_vector_get(s->x,2) << "\t" << gsl_vector_get(s->x,3)
+    //	      << "\t" << s->fval << std::endl;
     if(status) break;
     size = gsl_multimin_fminimizer_size(s);
     status = gsl_multimin_test_size(size, MinSimplexSize);
   }
-  
+
   // Apply time shift and rotation
   deltat = gsl_vector_get(s->x, 0) * Aligner.Multiplier;
-  R_delta = GWFrames::exp(GWFrames::Quaternion(0.0, gsl_vector_get(s->x, 1), gsl_vector_get(s->x, 2), gsl_vector_get(s->x, 3)));
-  
+  R_delta = Quaternions::exp(Quaternions::Quaternion(0.0, gsl_vector_get(s->x, 1), gsl_vector_get(s->x, 2), gsl_vector_get(s->x, 3)));
+
   // Free allocated memory
   gsl_vector_free(x);
   gsl_vector_free(ss);
@@ -2084,44 +2086,44 @@ void GWFrames::Waveform::GetAlignmentOfTimeAndFrame(const Waveform& A, const dou
 
 /// Align time and frame over extended region.
 GWFrames::Waveform& GWFrames::Waveform::AlignTimeAndFrame(const GWFrames::Waveform& A, const double t1, const double t2) {
-  /// 
+  ///
   /// \param A Fixed Waveform in corotating frame to which this Waveform is aligned
   /// \param t1 Initial time of region over which differences are minimized
   /// \param t2 Final time of region over which differences are minimized
-  /// 
+  ///
   /// Note that this function operates in place; the Waveform to which
   /// it is applied will change.  However, the modes are not altered;
   /// only the `t` and `frame` data are.
-  /// 
+  ///
   /// As noted above, it is implicitly assumed that both Waveforms are
   /// in their corotating frames, with the modes appropriately aligned
   /// to the frames at t_fid.  The assumption is that the frames
   /// actually represent something physically meaningful, so that it
   /// is meaningful to insist that they be the same.
-  /// 
+  ///
   /// Then, this function adjust the time and orientation of this
   /// Waveform, so that the difference between the two frames is
   /// minimized.  That difference is measured by finding the rotor
   /// R_Delta required to rotate one frame into the other, taking the
   /// angle of that rotor, and integrating over the region [t1, t2].
-  /// 
+  ///
   /// Relative to the inertial basis, the physical measurables
   /// (angular-velocity vector and dominant eigenvector of \f$<LL>\f$)
   /// of this Waveform are rotated.
-  /// 
+  ///
   /// \sa AlignDecompositionFrameToModes
-  /// 
-  
+  ///
+
   // Apply time shift and rotation
   double deltat;
   Quaternion R_delta;
   GetAlignmentOfTimeAndFrame(A, t1, t2, deltat, R_delta);
   SetTime(T() + deltat);
   SetFrame(R_delta * Frame());
-  
+
   // Record what happened
   history << "### this->AlignTimeAndFrame(A, " << std::setprecision(16) << t1 << ", " << t2 << ");  # deltat=" << deltat << "; R_delta=" << R_delta << std::endl;
-  
+
   return *this;
 }
 
@@ -2132,10 +2134,10 @@ GWFrames::Waveform GWFrames::Waveform::Compare(const GWFrames::Waveform& A, cons
   /// the data in Waveform A, and finds the rotation needed to take
   /// this frame into frame A.  Note that the waveform data are stored
   /// as complex numbers, rather than as modulus and phase.
-  
+
   // Make B a convenient alias for *this
   const GWFrames::Waveform& B = *this;
-  
+
   // Check to see if the frameTypes are the same
   if(frameType != A.frameType) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
@@ -2145,7 +2147,7 @@ GWFrames::Waveform GWFrames::Waveform::Compare(const GWFrames::Waveform& A, cons
 	      << "\n       Comparing them probably does not make sense.\n"
 	      << std::endl;
   }
-  
+
   // Make sure we have the same number of modes in the input data
   if(NModes() != B.NModes()) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Trying to Compare Waveforms with mismatched LM data."
@@ -2172,35 +2174,35 @@ GWFrames::Waveform GWFrames::Waveform::Compare(const GWFrames::Waveform& A, cons
   // Process the frame, depending on the sizes of the input frames
   if(A.Frame().size()>1 && B.Frame().size()>1) {
     // Find the frames interpolated to the appropriate times
-    const vector<Quaternion> Aframe = GWFrames::Squad(A.frame, A.t, C.t);
-    const vector<Quaternion> Bframe = GWFrames::Squad(B.frame, B.t, C.t);
+    const vector<Quaternion> Aframe = Quaternions::Squad(A.frame, A.t, C.t);
+    const vector<Quaternion> Bframe = Quaternions::Squad(B.frame, B.t, C.t);
     // Assign the data
     C.frame.resize(C.NTimes());
     for(unsigned int i_t=0; i_t<C.t.size(); ++i_t) {
-      C.frame[i_t] = Aframe[i_t] * GWFrames::inverse(Bframe[i_t]);
+      C.frame[i_t] = Aframe[i_t] * Quaternions::inverse(Bframe[i_t]);
     }
   } else if(A.Frame().size()==1 && B.Frame().size()>1) {
     // Find the frames interpolated to the appropriate times
-    const vector<Quaternion> Bframe = GWFrames::Squad(B.frame, B.t, C.t);
+    const vector<Quaternion> Bframe = Quaternions::Squad(B.frame, B.t, C.t);
     // Assign the data
     C.frame.resize(C.NTimes());
     for(unsigned int i_t=0; i_t<C.t.size(); ++i_t) {
-      C.frame[i_t] = A.Frame(0) * GWFrames::inverse(Bframe[i_t]);
+      C.frame[i_t] = A.Frame(0) * Quaternions::inverse(Bframe[i_t]);
     }
   } else if(A.Frame().size()>1 && B.Frame().size()==1) {
     // Find the frames interpolated to the appropriate times
-    const vector<Quaternion> Aframe = GWFrames::Squad(A.frame, A.t, C.t);
+    const vector<Quaternion> Aframe = Quaternions::Squad(A.frame, A.t, C.t);
     // Assign the data
     C.frame.resize(C.NTimes());
     for(unsigned int i_t=0; i_t<C.t.size(); ++i_t) {
-      C.frame[i_t] = Aframe[i_t] * GWFrames::inverse(B.Frame(0));
+      C.frame[i_t] = Aframe[i_t] * Quaternions::inverse(B.Frame(0));
     }
   } else if(A.Frame().size()==1 && B.Frame().size()==1) {
     // Assign the data
-    C.frame = vector<Quaternion>(1,A.Frame(0) * GWFrames::inverse(B.Frame(0)));
+    C.frame = vector<Quaternion>(1,A.Frame(0) * Quaternions::inverse(B.Frame(0)));
   } else if(A.Frame().size()==0 && B.Frame().size()==1) {
     // Assign the data
-    C.frame = vector<Quaternion>(1,GWFrames::inverse(B.Frame(0)));
+    C.frame = vector<Quaternion>(1,Quaternions::inverse(B.Frame(0)));
   } else if(A.Frame().size()==1 && B.Frame().size()==0) {
     // Assign the data
     C.frame = vector<Quaternion>(1,A.Frame(0));
@@ -2244,11 +2246,11 @@ GWFrames::Waveform GWFrames::Waveform::Compare(const GWFrames::Waveform& A, cons
   gsl_spline_free(splineImA);
   gsl_spline_free(splineReB);
   gsl_spline_free(splineImB);
-  
+
   return C;
 }
 
-/// Local utility function 
+/// Local utility function
 inline double TransitionFunction_Smooth(const double x) {
   /// This smoothly transitions from 0.0 for x<=0.0 to 1.0 for x>=1.0.
   /// The function is just the usual transition function based on the
@@ -2258,22 +2260,22 @@ inline double TransitionFunction_Smooth(const double x) {
 
 /// Hybridize this Waveform with another.
 GWFrames::Waveform GWFrames::Waveform::Hybridize(const GWFrames::Waveform& B, const double t1, const double t2, const double tMinStep) const {
-  /// 
+  ///
   /// \param B Second Waveform to hybridize with
   /// \param t1 Beginning of time over which to transition
   /// \param t2 End of time over which to transition
   /// \param tMinStep Lower limit on time step appearing in the output
-  /// 
+  ///
   /// This function simply takes two Waveforms and blends them
   /// together.  In particular, it does not align the Waveforms; that
-  /// is assumed to have been done already.  The transition function is a smooth 
-  /// 
+  /// is assumed to have been done already.  The transition function is a smooth
+  ///
   /// Note that this function does NOT operate in place; a new
   /// Waveform object is constructed and returned.
-  
+
   // Make A a convenient alias
   const GWFrames::Waveform& A = *this;
-  
+
   // Check to see if the frameTypes are the same
   if(A.frameType != B.frameType) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
@@ -2283,7 +2285,7 @@ GWFrames::Waveform GWFrames::Waveform::Hybridize(const GWFrames::Waveform& B, co
 	      << "\n       Comparing them probably does not make sense.\n"
 	      << std::endl;
   }
-  
+
   // Make sure we have the same number of modes in the input data
   if(NModes() != B.NModes()) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Trying to Align Waveforms with mismatched LM data."
@@ -2329,8 +2331,8 @@ GWFrames::Waveform GWFrames::Waveform::Hybridize(const GWFrames::Waveform& B, co
   const double T01 = C.T(J01);
   const double TransitionLength = C.T(J12)-T01;
   // Find the frames interpolated to the appropriate times
-  vector<Quaternion> Aframe = GWFrames::Squad(A.frame, A.t, vector<double>(&(C.t)[0], &(C.t)[J12]));
-  vector<Quaternion> Bframe = GWFrames::Squad(B.frame, B.t, vector<double>(&(C.t)[J01], &(C.t)[C.NTimes()-1]));
+  vector<Quaternion> Aframe = Quaternions::Squad(A.frame, A.t, vector<double>(&(C.t)[0], &(C.t)[J12]));
+  vector<Quaternion> Bframe = Quaternions::Squad(B.frame, B.t, vector<double>(&(C.t)[J01], &(C.t)[C.NTimes()-1]));
   // Assign the frame data from earliest part
   for(unsigned int j=0; j<J01; ++j) {
     C.frame[j] = Aframe[j];
@@ -2338,7 +2340,7 @@ GWFrames::Waveform GWFrames::Waveform::Hybridize(const GWFrames::Waveform& B, co
   // Assign the frame data from the transition
   for(unsigned int j=J01; j<J12; ++j) {
     const double Transition = TransitionFunction_Smooth((C.T(j)-T01)/TransitionLength);
-    C.frame[j] = GWFrames::Slerp(Transition, Aframe[j], Bframe[j-J01]);
+    C.frame[j] = Quaternions::Slerp(Transition, Aframe[j], Bframe[j-J01]);
   }
   // Assign the frame data from the latest part
   for(unsigned int j=J12; j<C.NTimes(); ++j) {
@@ -2390,24 +2392,24 @@ GWFrames::Waveform GWFrames::Waveform::Hybridize(const GWFrames::Waveform& B, co
   gsl_spline_free(splineImA);
   gsl_spline_free(splineReB);
   gsl_spline_free(splineImB);
-  
+
   return C;
 }
 
 
 /// Evaluate Waveform at a particular sky location
 std::vector<std::complex<double> > GWFrames::Waveform::EvaluateAtPoint(const double vartheta, const double varphi) const {
-  /// 
+  ///
   /// \param vartheta Polar angle of detector
   /// \param varphi Azimuthal angle of detector
-  /// 
+  ///
   /// Note that the input angle parameters are measured relative to
   /// the binary's coordinate system.  In particular, this will make
   /// no sense if the frame type is something other than inertial, and
   /// will fail if the `FrameType` is neither `UnknownFrameType` nor
   /// `Inertial`.
-  /// 
-  
+  ///
+
   if(frameType != GWFrames::Inertial) {
     if(frameType == GWFrames::UnknownFrameType) {
       std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
@@ -2422,13 +2424,13 @@ std::vector<std::complex<double> > GWFrames::Waveform::EvaluateAtPoint(const dou
       throw(GWFrames_WrongFrameType);
     }
   }
-  
+
   const int NT = NTimes();
   const int NM = NModes();
   vector<complex<double> > d(NT, complex<double>(0.,0.));
   SWSH Y(SpinWeight());
   Y.SetAngles(vartheta, varphi);
-  
+
   for(int i_m=0; i_m<NM; ++i_m) {
     const int ell = LM(i_m)[0];
     const int m   = LM(i_m)[1];
@@ -2438,7 +2440,7 @@ std::vector<std::complex<double> > GWFrames::Waveform::EvaluateAtPoint(const dou
       d[i_t] += Data(i_m, i_t) * Ylm;
     }
   }
-  
+
   return d;
 }
 
@@ -2512,7 +2514,7 @@ GWFrames::Waveform& GWFrames::Waveform::HackSpECSignError() {
 
 GWFrames::Waveform GWFrames::Waveform::operator+(const GWFrames::Waveform& B) const {
   const Waveform& A = *this;
-  
+
   if(A.spinweight != B.spinweight) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
 	      << "\nError: Asking for the sum of two Waveform objects with different spin weights."
@@ -2520,7 +2522,7 @@ GWFrames::Waveform GWFrames::Waveform::operator+(const GWFrames::Waveform& B) co
 	      << std::endl;
     throw(GWFrames_BadWaveformInformation);
   }
-  
+
   if(A.frameType != GWFrames::Inertial || B.frameType != GWFrames::Inertial) {
     if(A.frameType != B.frameType) {
       std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
@@ -2537,7 +2539,7 @@ GWFrames::Waveform GWFrames::Waveform::operator+(const GWFrames::Waveform& B) co
       throw(GWFrames_WrongFrameType);
     }
   }
-  
+
   if(A.NTimes() != B.NTimes()) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
 	      << "\nError: Asking for the sum of two Waveform objects with different time data."
@@ -2546,15 +2548,15 @@ GWFrames::Waveform GWFrames::Waveform::operator+(const GWFrames::Waveform& B) co
 	      << std::endl;
     throw(GWFrames_MatrixSizeMismatch);
   }
-  
+
   // This will be the new object holding the multiplied data
   GWFrames::Waveform C(A);
-  
+
   // Store both old histories in C's
   C.history << "### *this = *this+B\n"
 	    << "#### B.history.str():\n" << B.history.str()
-	    << "#### End of old histories from `A+B`" << std::endl;  
-  
+	    << "#### End of old histories from `A+B`" << std::endl;
+
   // Do the work of addition
   const unsigned int ntimes = NTimes();
   const unsigned int nmodes = NModes();
@@ -2564,13 +2566,13 @@ GWFrames::Waveform GWFrames::Waveform::operator+(const GWFrames::Waveform& B) co
       C.SetData(i_A, i_t, A.Data(i_A,i_t)+B.Data(i_B,i_t));
     }
   }
-  
+
   return C;
 }
 
 GWFrames::Waveform GWFrames::Waveform::operator-(const GWFrames::Waveform& B) const {
   const Waveform& A = *this;
-  
+
   if(A.spinweight != B.spinweight) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
 	      << "\nError: Asking for the difference of two Waveform objects with different spin weights."
@@ -2578,7 +2580,7 @@ GWFrames::Waveform GWFrames::Waveform::operator-(const GWFrames::Waveform& B) co
 	      << std::endl;
     throw(GWFrames_BadWaveformInformation);
   }
-  
+
   if(A.frameType != GWFrames::Inertial || B.frameType != GWFrames::Inertial) {
     if(A.frameType != B.frameType) {
       std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
@@ -2595,7 +2597,7 @@ GWFrames::Waveform GWFrames::Waveform::operator-(const GWFrames::Waveform& B) co
       throw(GWFrames_WrongFrameType);
     }
   }
-  
+
   if(A.NTimes() != B.NTimes()) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
 	      << "\nError: Asking for the difference of two Waveform objects with different time data."
@@ -2604,15 +2606,15 @@ GWFrames::Waveform GWFrames::Waveform::operator-(const GWFrames::Waveform& B) co
 	      << std::endl;
     throw(GWFrames_MatrixSizeMismatch);
   }
-  
+
   // This will be the new object holding the multiplied data
   GWFrames::Waveform C(A);
-  
+
   // Store both old histories in C's
   C.history << "### *this = *this-B\n"
 	    << "#### B.history.str():\n" << B.history.str()
-	    << "#### End of old histories from `A-B`" << std::endl;  
-  
+	    << "#### End of old histories from `A-B`" << std::endl;
+
   // Do the work of addition
   const unsigned int ntimes = NTimes();
   const unsigned int nmodes = NModes();
@@ -2622,19 +2624,19 @@ GWFrames::Waveform GWFrames::Waveform::operator-(const GWFrames::Waveform& B) co
       C.SetData(i_A, i_t, A.Data(i_A,i_t)-B.Data(i_B,i_t));
     }
   }
-  
+
   return C;
 }
 
 GWFrames::Waveform GWFrames::Waveform::operator*(const double b) const {
   const Waveform& A = *this;
-  
+
   // This will be the new object holding the multiplied data
   GWFrames::Waveform C(A);
-  
+
   // Record the activity
   C.history << "### *this = (*this) * " << b << std::endl;
-  
+
   // Do the work of addition
   const unsigned int ntimes = NTimes();
   const unsigned int nmodes = NModes();
@@ -2643,19 +2645,19 @@ GWFrames::Waveform GWFrames::Waveform::operator*(const double b) const {
       C.SetData(i_A, i_t, A.Data(i_A,i_t)*b);
     }
   }
-  
+
   return C;
 }
 
 GWFrames::Waveform GWFrames::Waveform::operator/(const double b) const {
   const Waveform& A = *this;
-  
+
   // This will be the new object holding the multiplied data
   GWFrames::Waveform C(A);
-  
+
   // Record the activity
   C.history << "### *this = (*this) / " << b << std::endl;
-  
+
   // Do the work of addition
   const unsigned int ntimes = NTimes();
   const unsigned int nmodes = NModes();
@@ -2664,7 +2666,7 @@ GWFrames::Waveform GWFrames::Waveform::operator/(const double b) const {
       C.SetData(i_A, i_t, A.Data(i_A,i_t)/b);
     }
   }
-  
+
   return C;
 }
 
@@ -2684,11 +2686,11 @@ GWFrames::Waveform GWFrames::Waveform::NPEdth() const {
   /// versions is the factor of \f$\sqrt{2}\f$.  The additional GHP
   /// term that keeps the boost weight meaningful is zero in any given
   /// frame -- though it transforms nontrivially.
-  /// 
+  ///
   /// Note that the boost weight is set to the value of `WeightError`,
   /// which is just meant to be large enough that it will give
   /// improbable values if used.  This is not fool-proof.
-  /// 
+  ///
   /// \sa NPEdthBar
   /// \sa GHPEdth
   /// \sa GHPEdthBar
@@ -2696,7 +2698,7 @@ GWFrames::Waveform GWFrames::Waveform::NPEdth() const {
   /// \sa IntegrateNPEdthBar
   /// \sa IntegrateGHPEdth
   /// \sa IntegrateGHPEdthBar
-  
+
   const Waveform& A = *this;
   const int NModes = A.NModes();
   const int NTimes = A.NTimes();
@@ -2704,7 +2706,7 @@ GWFrames::Waveform GWFrames::Waveform::NPEdth() const {
   const int lMin = std::abs(s+1);
   Waveform EdthA(A);
   EdthA.history << "### this->NPEdth();" << endl;
-  
+
   for(int i_m=0; i_m<NModes; ++i_m) {
     const int l = A.LM(i_m)[0];
     if(l<lMin) {
@@ -2718,10 +2720,10 @@ GWFrames::Waveform GWFrames::Waveform::NPEdth() const {
       }
     }
   }
-  
+
   EdthA.SetSpinWeight(A.SpinWeight()+1);
   EdthA.SetBoostWeight(WeightError);
-  
+
   return EdthA;
 }
 
@@ -2736,11 +2738,11 @@ GWFrames::Waveform GWFrames::Waveform::NPEdthBar() const {
   /// versions is the factor of \f$\sqrt{2}\f$.  The additional GHP
   /// term that keeps the boost weight meaningful is zero in any given
   /// frame -- though it transforms nontrivially.
-  /// 
+  ///
   /// Note that the boost weight is set to the value of `WeightError`,
   /// which is just meant to be large enough that it will give
   /// improbable values if used.  This is not fool-proof.
-  /// 
+  ///
   /// \sa NPEdth
   /// \sa GHPEdth
   /// \sa GHPEdthBar
@@ -2748,7 +2750,7 @@ GWFrames::Waveform GWFrames::Waveform::NPEdthBar() const {
   /// \sa IntegrateNPEdthBar
   /// \sa IntegrateGHPEdth
   /// \sa IntegrateGHPEdthBar
-  
+
   const Waveform& A = *this;
   const int NModes = A.NModes();
   const int NTimes = A.NTimes();
@@ -2756,7 +2758,7 @@ GWFrames::Waveform GWFrames::Waveform::NPEdthBar() const {
   const int lMin = std::abs(s-1);
   Waveform EdthBarA(A);
   EdthBarA.history << "### this->NPEdthBar();" << endl;
-  
+
   for(int i_m=0; i_m<NModes; ++i_m) {
     const int l = A.LM(i_m)[0];
     if(l<lMin) {
@@ -2770,10 +2772,10 @@ GWFrames::Waveform GWFrames::Waveform::NPEdthBar() const {
       }
     }
   }
-  
+
   EdthBarA.SetSpinWeight(A.SpinWeight()-1);
   EdthBarA.SetBoostWeight(WeightError);
-  
+
   return EdthBarA;
 }
 
@@ -2782,7 +2784,7 @@ GWFrames::Waveform GWFrames::Waveform::GHPEdth() const {
   /// This operator is the one defined by Geroch et al. (1973).  It
   /// raises the spin weight of any field on the sphere by 1, while
   /// leaving the boost weight unchanged.
-  /// 
+  ///
   /// This operator is very similar to the basic Newman-Penrose edth
   /// operator, except that it preserves boost weights.  Its effect in
   /// this implementation is identical (up to a factor of
@@ -2790,14 +2792,14 @@ GWFrames::Waveform GWFrames::Waveform::GHPEdth() const {
   /// the definition of the GHP operator, but its value is zero.  (It
   /// transforms nontrivially, though.)  In this context, we have
   /// `NPEdth() = sqrt(2)*GHPEdth()`.
-  /// 
+  ///
   /// The complex shear \f$\sigma\f$ has spin weight +2 and boost
   /// weight +1.  The radial coordinate \f$r\f$ has boost weight -1,
   /// and the derivative with respect to time \f$d/du\f$ has boost
   /// weight -1.  The asymptotic metric shear \f$r\, h\f$ has spin
   /// weight -2 and boost weight -1.  In particular, it seems that
   /// \f$r\, h = r^2\, \bar{\sigma}\f$.
-  /// 
+  ///
   /// The Newman-Penrose scalars \f$\Psi_i\f$ have spin weight and
   /// boost weight equal to \f$2-i\f$.  (E.g., \f$\Psi_4\f$ has \f$s =
   /// b = -2\f$.)  However, when these are multiplied by the
@@ -2806,7 +2808,7 @@ GWFrames::Waveform GWFrames::Waveform::GHPEdth() const {
   /// \f$\Psi_i\f$ by \f$r^{5-i}\f$ to get nonzero values at scri,
   /// which adds \f$i-5\f$ to the boost weight, so that the asymptotic
   /// NP scalars all have boost weight -3.
-  /// 
+  ///
   /// \sa NPEdth
   /// \sa NPEdthBar
   /// \sa GHPEdthBar
@@ -2814,7 +2816,7 @@ GWFrames::Waveform GWFrames::Waveform::GHPEdth() const {
   /// \sa IntegrateNPEdthBar
   /// \sa IntegrateGHPEdth
   /// \sa IntegrateGHPEdthBar
-  
+
   const Waveform& A = *this;
   const int NModes = A.NModes();
   const int NTimes = A.NTimes();
@@ -2822,7 +2824,7 @@ GWFrames::Waveform GWFrames::Waveform::GHPEdth() const {
   const int lMin = std::abs(s+1);
   Waveform EdthA(A);
   EdthA.history << "### this->GHPEdth();" << endl;
-  
+
   for(int i_m=0; i_m<NModes; ++i_m) {
     const int l = A.LM(i_m)[0];
     if(l<lMin) {
@@ -2836,10 +2838,10 @@ GWFrames::Waveform GWFrames::Waveform::GHPEdth() const {
       }
     }
   }
-  
+
   EdthA.SetSpinWeight(A.SpinWeight()+1);
   //EdthA.SetBoostWeight(A.BoostWeight()); // No change
-  
+
   return EdthA;
 }
 
@@ -2848,7 +2850,7 @@ GWFrames::Waveform GWFrames::Waveform::GHPEdthBar() const {
   /// This operator is the one defined by Geroch et al. (1973).  It
   /// lowers the spin weight of any field on the sphere by 1, while
   /// leaving the boost weight unchanged.
-  /// 
+  ///
   /// This operator is very similar to the basic Newman-Penrose edth
   /// operator, except that it preserves boost weights.  Its effect in
   /// this implementation is identical (up to a factor of
@@ -2856,14 +2858,14 @@ GWFrames::Waveform GWFrames::Waveform::GHPEdthBar() const {
   /// the definition of the GHP operator, but its value is zero.  (It
   /// transforms nontrivially, though.)  In this context, we have
   /// `NPEdthBar() = sqrt(2)*GHPEdthBar()`.
-  /// 
+  ///
   /// The complex shear \f$\sigma\f$ has spin weight +2 and boost
   /// weight +1.  The radial coordinate \f$r\f$ has boost weight -1,
   /// and the derivative with respect to time \f$d/du\f$ has boost
   /// weight -1.  The asymptotic metric shear \f$r\, h\f$ has spin
   /// weight -2 and boost weight -1.  In particular, it seems that
   /// \f$r\, h = r^2\, \bar{\sigma}\f$.
-  /// 
+  ///
   /// The Newman-Penrose scalars \f$\Psi_i\f$ have spin weight and
   /// boost weight equal to \f$2-i\f$.  (E.g., \f$\Psi_4\f$ has \f$s =
   /// b = -2\f$.)  However, when these are multiplied by the
@@ -2872,7 +2874,7 @@ GWFrames::Waveform GWFrames::Waveform::GHPEdthBar() const {
   /// \f$\Psi_i\f$ by \f$r^{5-i}\f$ to get nonzero values at scri,
   /// which adds \f$i-5\f$ to the boost weight, so that the asymptotic
   /// NP scalars all have boost weight -3.
-  /// 
+  ///
   /// \sa NPEdth
   /// \sa NPEdthBar
   /// \sa GHPEdth
@@ -2880,7 +2882,7 @@ GWFrames::Waveform GWFrames::Waveform::GHPEdthBar() const {
   /// \sa IntegrateNPEdthBar
   /// \sa IntegrateGHPEdth
   /// \sa IntegrateGHPEdthBar
-  
+
   const Waveform& A = *this;
   const int NModes = A.NModes();
   const int NTimes = A.NTimes();
@@ -2888,7 +2890,7 @@ GWFrames::Waveform GWFrames::Waveform::GHPEdthBar() const {
   const int lMin = std::abs(s-1);
   Waveform EdthBarA(A);
   EdthBarA.history << "### this->GHPEdthBar();" << endl;
-  
+
   for(int i_m=0; i_m<NModes; ++i_m) {
     const int l = A.LM(i_m)[0];
     if(l<lMin) {
@@ -2902,10 +2904,10 @@ GWFrames::Waveform GWFrames::Waveform::GHPEdthBar() const {
       }
     }
   }
-  
+
   EdthBarA.SetSpinWeight(A.SpinWeight()-1);
   //EdthBarA.SetBoostWeight(A.BoostWeight()); // No change
-  
+
   return EdthBarA;
 }
 
@@ -2919,13 +2921,13 @@ GWFrames::Waveform GWFrames::Waveform::IntegrateNPEdth() const {
   /// is set to zero.  To be precise, if `Waveform A` has spin weight
   /// \f$s\f$, then `A.NPEdth().IntegrateNPEdth()` has the effect of
   /// setting the \f$\ell=s\f$ term in `A` to zero.
-  /// 
+  ///
   /// Note that the N-P edth operator does not preserve boost weights,
   /// so the boost weight is set to the value of `WeightError`, which
   /// is just meant to be large enough that it will give improbable
   /// values if used.  This is not fool-proof.  See the GHP edth
   /// operator for a weight-preserving version.
-  /// 
+  ///
   /// \sa NPEdth
   /// \sa NPEdthBar
   /// \sa GHPEdth
@@ -2933,7 +2935,7 @@ GWFrames::Waveform GWFrames::Waveform::IntegrateNPEdth() const {
   /// \sa IntegrateNPEdthBar
   /// \sa IntegrateGHPEdth
   /// \sa IntegrateGHPEdthBar
-  
+
   const Waveform& A = *this;
   const int NModes = A.NModes();
   const int NTimes = A.NTimes();
@@ -2941,7 +2943,7 @@ GWFrames::Waveform GWFrames::Waveform::IntegrateNPEdth() const {
   const int lMin = std::abs(s);
   Waveform IntegralEdthA(A);
   IntegralEdthA.history << "### this->IntegrateNPEdth();" << endl;
-  
+
   for(int i_m=0; i_m<NModes; ++i_m) {
     const int l = A.LM(i_m)[0];
     const double factor = std::sqrt((l-s)*(l+s+1));
@@ -2955,10 +2957,10 @@ GWFrames::Waveform GWFrames::Waveform::IntegrateNPEdth() const {
       }
     }
   }
-  
+
   IntegralEdthA.SetSpinWeight(A.SpinWeight()-1);
   IntegralEdthA.SetBoostWeight(WeightError);
-  
+
   return IntegralEdthA;
 }
 
@@ -2970,13 +2972,13 @@ GWFrames::Waveform GWFrames::Waveform::IntegrateNPEdthBar() const {
   /// `Waveform A` has spin weight \f$s\f$, then
   /// `A.NPEdthBar().IntegrateNPEdthBar()` has the effect of setting
   /// the \f$\ell=s\f$ term in `A` to zero.
-  /// 
+  ///
   /// Note that the N-P edth operator does not preserve boost weights,
   /// so the boost weight is set to the value of `WeightError`, which
   /// is just meant to be large enough that it will give improbable
   /// values if used.  This is not fool-proof.  See the GHP edth
   /// operator for a weight-preserving version.
-  /// 
+  ///
   /// \sa NPEdth
   /// \sa NPEdthBar
   /// \sa GHPEdth
@@ -2984,7 +2986,7 @@ GWFrames::Waveform GWFrames::Waveform::IntegrateNPEdthBar() const {
   /// \sa IntegrateNPEdthBar
   /// \sa IntegrateGHPEdth
   /// \sa IntegrateGHPEdthBar
-  
+
   const Waveform& A = *this;
   const int NModes = A.NModes();
   const int NTimes = A.NTimes();
@@ -2992,7 +2994,7 @@ GWFrames::Waveform GWFrames::Waveform::IntegrateNPEdthBar() const {
   const int lMin = std::abs(s);
   Waveform IntegralEdthBarA(A);
   IntegralEdthBarA.history << "### this->IntegrateNPEdthBar();" << endl;
-  
+
   for(int i_m=0; i_m<NModes; ++i_m) {
     const int l = A.LM(i_m)[0];
     const double factor = -std::sqrt((l+s)*(l-s+1));
@@ -3006,10 +3008,10 @@ GWFrames::Waveform GWFrames::Waveform::IntegrateNPEdthBar() const {
       }
     }
   }
-  
+
   IntegralEdthBarA.SetSpinWeight(A.SpinWeight()+1);
   IntegralEdthBarA.SetBoostWeight(WeightError);
-  
+
   return IntegralEdthBarA;
 }
 
@@ -3020,7 +3022,7 @@ GWFrames::Waveform GWFrames::Waveform::IntegrateGHPEdth() const {
   /// To be precise, if `Waveform A` has spins weight \f$s\f$, then
   /// `A.GHPEdth().IntegrateGHPEdth()` has the effect of setting the
   /// \f$\ell=s\f$ term in `A` to zero.
-  /// 
+  ///
   /// \sa NPEdth
   /// \sa NPEdthBar
   /// \sa GHPEdth
@@ -3028,7 +3030,7 @@ GWFrames::Waveform GWFrames::Waveform::IntegrateGHPEdth() const {
   /// \sa IntegrateNPEdth
   /// \sa IntegrateNPEdthBar
   /// \sa IntegrateGHPEdthBar
-  
+
   const Waveform& A = *this;
   const int NModes = A.NModes();
   const int NTimes = A.NTimes();
@@ -3036,7 +3038,7 @@ GWFrames::Waveform GWFrames::Waveform::IntegrateGHPEdth() const {
   const int lMin = std::abs(s);
   Waveform IntegralEdthA(A);
   IntegralEdthA.history << "### this->IntegrateGHPEdth();" << endl;
-  
+
   for(int i_m=0; i_m<NModes; ++i_m) {
     const int l = A.LM(i_m)[0];
     const double factor = std::sqrt((l-s)*(l+s+1.)/2.);
@@ -3050,10 +3052,10 @@ GWFrames::Waveform GWFrames::Waveform::IntegrateGHPEdth() const {
       }
     }
   }
-  
+
   IntegralEdthA.SetSpinWeight(A.SpinWeight()-1);
   //IntegralEdthA.SetBoostWeight(A.BoostWeight()); // No change
-  
+
   return IntegralEdthA;
 }
 
@@ -3064,7 +3066,7 @@ GWFrames::Waveform GWFrames::Waveform::IntegrateGHPEdthBar() const {
   /// To be precise, if `Waveform A` has spins weight \f$s\f$, then
   /// `A.GHPEdth().IntegrateGHPEdth()` has the effect of setting the
   /// \f$\ell=s\f$ term in `A` to zero.
-  /// 
+  ///
   /// \sa NPEdth
   /// \sa NPEdthBar
   /// \sa GHPEdth
@@ -3072,7 +3074,7 @@ GWFrames::Waveform GWFrames::Waveform::IntegrateGHPEdthBar() const {
   /// \sa IntegrateNPEdth
   /// \sa IntegrateNPEdthBar
   /// \sa IntegrateGHPEdth
-  
+
   const Waveform& A = *this;
   const int NModes = A.NModes();
   const int NTimes = A.NTimes();
@@ -3080,7 +3082,7 @@ GWFrames::Waveform GWFrames::Waveform::IntegrateGHPEdthBar() const {
   const int lMin = std::abs(s);
   Waveform IntegralEdthBarA(A);
   IntegralEdthBarA.history << "### this->GHPEdthBar();" << endl;
-  
+
   for(int i_m=0; i_m<NModes; ++i_m) {
     const int l = A.LM(i_m)[0];
     const double factor = -std::sqrt((l+s)*(l-s+1.)/2.);
@@ -3094,10 +3096,10 @@ GWFrames::Waveform GWFrames::Waveform::IntegrateGHPEdthBar() const {
       }
     }
   }
-  
+
   IntegralEdthBarA.SetSpinWeight(A.SpinWeight()+1);
   //IntegralEdthBarA.SetBoostWeight(A.BoostWeight()); // No change
-  
+
   return IntegralEdthBarA;
 }
 
@@ -3126,7 +3128,7 @@ GWFrames::Waveform GWFrames::Waveform::ApplySupertranslation(std::vector<std::co
   /// harmonics on a given slicing, transforms to physical space,
   /// re-interpolates the data at each point to a new set of time
   /// slices, and transforms back to spherical-harmonic coefficients.
-  /// 
+  ///
   /// The supertranslation data input `gamma` is a vector of
   /// complex numbers representing the (scalar) spherical-harmonic
   /// components of the supertranslation, stored in the order (0,0),
@@ -3136,13 +3138,13 @@ GWFrames::Waveform GWFrames::Waveform::ApplySupertranslation(std::vector<std::co
   /// components give the proper supertranslations.  In particular, a
   /// proper supertranslation will have its first four coefficients
   /// equal to 0.0.
-  /// 
+  ///
   /// Note that, for general spin-weighted spherical-harmonic
   /// components \f${}_{s}a_{l,m}\f$, a real function results when
   /// \f${}_{-s}a_{l,-m} = {}_{s}a_{l,m}^\ast\f$.  In particular, the
   /// input `gamma` data are assumed to satisfy this formula with
   /// \f$s=0\f$.
-  
+
   // Find the max ell present in the input gamma data
   int lMax=0;
   for(; lMax<=ellMax_GWFrames; ++lMax) {
@@ -3150,7 +3152,7 @@ GWFrames::Waveform GWFrames::Waveform::ApplySupertranslation(std::vector<std::co
       break;
     }
   }
-  
+
   // Make sure gamma doesn't have more ell modes than ellMax_GWFrames
   if(lMax>=ellMax_GWFrames) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
@@ -3160,7 +3162,7 @@ GWFrames::Waveform GWFrames::Waveform::ApplySupertranslation(std::vector<std::co
     throw(GWFrames_VectorSizeMismatch);
   }
   const unsigned int Nlm = N_lm(lMax);
-  
+
   // Make sure the Waveform is in the inertial frame
   if(frameType != GWFrames::Inertial) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
@@ -3169,14 +3171,14 @@ GWFrames::Waveform GWFrames::Waveform::ApplySupertranslation(std::vector<std::co
 	      << std::endl;
     throw(GWFrames_WrongFrameType);
   }
-  
+
   // Set up some constants
   const Waveform& A = *this;
   const unsigned int ntimes = A.NTimes();
   const unsigned int nmodes = A.NModes();
   const complex<double> zero(0.0,0.0);
   const complex<double> I(0.0,1.0);
-  
+
   // Copy infrastructure to new Waveform
   Waveform B;
   B.spinweight = A.spinweight;
@@ -3194,14 +3196,14 @@ GWFrames::Waveform GWFrames::Waveform::ApplySupertranslation(std::vector<std::co
   B.rIsScaledOut = A.rIsScaledOut;
   B.mIsScaledOut = A.mIsScaledOut;
   B.lm = A.lm;
-  
+
   // These numbers determine the equi-angular grid on which we will do
   // the interpolation.  For best accuracy, have N_phi > 2*lMax and
   // N_theta > 2*lMax; but for speed, don't make them much greater.
   const unsigned int N_phi = 2*lMax + 1;
   const unsigned int N_theta = 2*lMax + 1;
   const unsigned int N_tot = N_phi*N_theta;
-  
+
   // Transform times to physical space
   vector<complex<double> > DeltaT_complex(N_tot, zero);
   spinsfast_salm2map(reinterpret_cast<fftw_complex*>(&gamma[0]),
@@ -3211,7 +3213,7 @@ GWFrames::Waveform GWFrames::Waveform::ApplySupertranslation(std::vector<std::co
   for(unsigned int i=0; i<DeltaT.size(); ++i) {
     DeltaT[i] = real(DeltaT_complex[i]);
   }
-  
+
   // Find largest and smallest time excursions
   double MinDeltaT = 0.0;
   double MaxDeltaT = 0.0;
@@ -3221,7 +3223,7 @@ GWFrames::Waveform GWFrames::Waveform::ApplySupertranslation(std::vector<std::co
     if(DeltaT[i_t] > MaxDeltaT) { MaxDeltaT = DeltaT[i_t]; }
   }
   // cerr << "Min/MaxDeltaT: " << MinDeltaT << " " << MaxDeltaT << endl;
-  
+
   // Set up new time slices, beginning with an offset of MinDeltaT
   // and ending with an offset of -MaxDeltaT (so that the
   // interpolation does not need to extrapolate)
@@ -3244,14 +3246,14 @@ GWFrames::Waveform GWFrames::Waveform::ApplySupertranslation(std::vector<std::co
   // cerr << "First/LastT: " << FirstT << " " << LastT << endl;
   // cerr << "i_Min/Max: " << i_Min << " " << i_Max << endl;
   // cerr << "Times: " << B.t[0] << " " << B.t.back() << endl;
-  
+
   // Storage arrays
   std::vector<std::complex<double> > alm(Nlm); // Work array
   std::vector<std::complex<double> > mapA(N_tot); // Work array
   std::vector<std::vector<double> > fARe(N_tot, std::vector<double>(ntimes));
   std::vector<std::vector<double> > fAIm(N_tot, std::vector<double>(ntimes));
   std::vector<std::vector<std::complex<double> > > fB(ntimesB, std::vector<std::complex<double> >(N_tot));
-  
+
   // Transform to physical space (before interpolation)
   for(unsigned int i_t=0; i_t<ntimes; ++i_t) {
     // Get alm data at this time
@@ -3268,13 +3270,13 @@ GWFrames::Waveform GWFrames::Waveform::ApplySupertranslation(std::vector<std::co
       fAIm[i_p][i_t] = imag(mapA[i_p]);
     }
   }
-  
+
   // Declare the GSL interpolators for the data
   gsl_interp_accel* accRe = gsl_interp_accel_alloc();
   gsl_interp_accel* accIm = gsl_interp_accel_alloc();
   gsl_spline* splineRe = gsl_spline_alloc(gsl_interp_cspline, ntimes);
   gsl_spline* splineIm = gsl_spline_alloc(gsl_interp_cspline, ntimes);
-  
+
   // Loop over all points doing interpolation
   // cerr << "Begin\n=====" << endl;
   for(unsigned int i_p=0; i_p<N_tot; ++i_p) {
@@ -3293,7 +3295,7 @@ GWFrames::Waveform GWFrames::Waveform::ApplySupertranslation(std::vector<std::co
     // cerr << "+" << endl;
   }
   // cerr << "End\n===" << endl;
-  
+
   // Free the data and interpolators
   fARe.clear();
   fAIm.clear();
@@ -3301,7 +3303,7 @@ GWFrames::Waveform GWFrames::Waveform::ApplySupertranslation(std::vector<std::co
   gsl_interp_accel_free(accIm);
   gsl_spline_free(splineRe);
   gsl_spline_free(splineIm);
-  
+
   // Transform back to spectral space (after interpolation)
   for(unsigned int i_t=0; i_t<ntimesB; ++i_t) {
     // Transform
@@ -3313,7 +3315,7 @@ GWFrames::Waveform GWFrames::Waveform::ApplySupertranslation(std::vector<std::co
       B.data[i_m][i_t] = alm[i_m];
     }
   }
-  
+
   return B;
 }
 
@@ -3327,11 +3329,11 @@ GWFrames::Waveform GWFrames::Waveform::Boost(const std::vector<double>& v) const
   /// \f$K^b(\vartheta, \varphi)\f$, where \f$b\f$ is the boost weight
   /// stored with the Waveform.  Finally, it transforms back to
   /// Fourier space using that new equi-angular grid.
-  
-  
+
+
   std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Not properly implemented yet." << std::endl;
   throw(GWFrames_NotYetImplemented);
-  
+
   return Waveform();
   // return B;
 }
@@ -3415,22 +3417,22 @@ GWFrames::Waveforms GWFrames::Waveforms::Extrapolate(std::vector<std::vector<dou
 						     const std::vector<int>& ExtrapolationOrders,
 						     const std::vector<double>& Omegas)
 {
-  /// 
+  ///
   /// \param Radii Array of radii for each Waveform (first index) and each time (second index)
   /// \param ExtrapolationOrders List of integers denote extrapolation orders
   /// \param Omegas Optional list of angular frequencies for scaling extrapolation polynomial
-  /// 
+  ///
   /// The input FiniteRadiusWaveforms are assumed to be properly
   /// scaled and time-retarded, and interpolated to a uniform set of
   /// retarded times.  This function simply steps through the indices,
   /// fitting those data to polynomials in 1/radius, and evaluating at
   /// 0 (for infinity).
-  /// 
+  ///
   /// The extrapolation orders can be negative.  In this case, the
   /// scaled, time-retarded waveform at finite radius is given, where
   /// N=-1 is the outermost Waveform, N=-2 is the second to outermost,
   /// etc.
-  /// 
+  ///
   /// Note that the fitting uses gsl_multifit_linear_usvd, which is
   /// GSL's fitting function that does NOT use column scaling
   /// (specified by the 'u' in front of 'svd' in the function name).
@@ -3438,11 +3440,11 @@ GWFrames::Waveforms GWFrames::Waveforms::Extrapolate(std::vector<std::vector<dou
   /// the accuracy of the singular values".  However, for convergent
   /// series, this scaling can make all the coefficients roughly equal
   /// (just as the `Omegas` option does), which defeats the SVD.
-  /// 
-  
+  ///
+
   Waveforms& FiniteRadiusWaveforms = *this;
   if(! FiniteRadiusWaveforms.CommonTimeSet) { FiniteRadiusWaveforms.SetCommonTime(Radii); }
-  
+
   // Get the various dimensions, etc.
   const int MaxN = *std::max_element(ExtrapolationOrders.begin(), ExtrapolationOrders.end());
   const int MinN = *std::min_element(ExtrapolationOrders.begin(), ExtrapolationOrders.end());
@@ -3452,7 +3454,7 @@ GWFrames::Waveforms GWFrames::Waveforms::Extrapolate(std::vector<std::vector<dou
   const unsigned int NFiniteRadii = FiniteRadiusWaveforms.size();
   const unsigned int NExtrapolations = ExtrapolationOrders.size();
   const double SVDTol = 1.e-12; // Same as Numerical Recipes default in fitsvd.h
-  
+
   // Make sure everyone is playing with a full deck
   if((unsigned int)(std::abs(MinN))>NFiniteRadii) {
       cerr << "\n\n" << __FILE__ << ":" << __LINE__
@@ -3478,10 +3480,10 @@ GWFrames::Waveforms GWFrames::Waveforms::Extrapolate(std::vector<std::vector<dou
   }
   if(UseOmegas && int(Omegas.size())!=NTimes) {
       cerr << "\n\n" << __FILE__ << ":" << __LINE__
-  	   << "\nERROR: NTimes mismatch in data to be extrapolated."
-  	   << "\n       FiniteRadiusWaveforms[0].NTimes()=" << NTimes
-  	   << "\n       Omegas.size()=" << Omegas.size()
-  	   << "\n\n" << endl;
+	   << "\nERROR: NTimes mismatch in data to be extrapolated."
+	   << "\n       FiniteRadiusWaveforms[0].NTimes()=" << NTimes
+	   << "\n       Omegas.size()=" << Omegas.size()
+	   << "\n\n" << endl;
       throw(GWFrames_VectorSizeMismatch);
   }
   for(unsigned int i_W=1; i_W<NFiniteRadii; ++i_W) {
@@ -3510,7 +3512,7 @@ GWFrames::Waveforms GWFrames::Waveforms::Extrapolate(std::vector<std::vector<dou
       throw(GWFrames_VectorSizeMismatch);
     }
   }
-  
+
   // Set up the output data, recording everything but the mode data
   GWFrames::Waveforms ExtrapolatedWaveforms(2*NExtrapolations);
   for(unsigned int i_N=0; i_N<NExtrapolations; ++i_N) {
@@ -3547,10 +3549,10 @@ GWFrames::Waveforms GWFrames::Waveforms::Extrapolate(std::vector<std::vector<dou
       ExtrapolatedWaveforms[i_N+NExtrapolations].ResizeData(NModes, NTimes);
     }
   }
-  
+
   if(MaxN<0) { return ExtrapolatedWaveforms; }
   const unsigned int MaxCoefficients = (unsigned int)(MaxN+1);
-  
+
   // // Clear the extrapolation-coefficient files and write the headers
   // for(unsigned int i_N=0; i_N<NExtrapolations; ++i_N) {
   //   const int N = ExtrapolationOrders[i_N];
@@ -3564,11 +3566,11 @@ GWFrames::Waveforms GWFrames::Waveforms::Extrapolate(std::vector<std::vector<dou
   //   }
   //   fclose(ofp);
   // }
-  
+
   // Loop over time
   #pragma omp parallel for
   for(int i_t=0; i_t<NTimes; ++i_t) {
-    
+
     // Set up the gsl storage variables
     size_t EffectiveRank;
     double ChiSquared;
@@ -3579,7 +3581,7 @@ GWFrames::Waveforms GWFrames::Waveforms::Extrapolate(std::vector<std::vector<dou
     Re = gsl_vector_alloc(NFiniteRadii);
     Im = gsl_vector_alloc(NFiniteRadii);
     FitCoefficients = gsl_vector_alloc(MaxCoefficients);
-    
+
     // Set up the radius data (if we're not using Omega)
     if(! UseOmegas) {
       for(unsigned int i_W=0; i_W<NFiniteRadii; ++i_W) {
@@ -3590,10 +3592,10 @@ GWFrames::Waveforms GWFrames::Waveforms::Extrapolate(std::vector<std::vector<dou
 	}
       }
     }
-    
+
     // Loop over modes
     for(unsigned int i_m=0; i_m<NModes; ++i_m) {
-      
+
       // Set up the radius data (if we are using Omega)
       const int M = FiniteRadiusWaveforms[0].LM(i_m)[1];
       if(UseOmegas) {
@@ -3605,23 +3607,23 @@ GWFrames::Waveforms GWFrames::Waveforms::Extrapolate(std::vector<std::vector<dou
 	  }
 	}
       }
-      
+
       // Set up the mode data
       for(unsigned int i_W=0; i_W<NFiniteRadii; ++i_W) {
 	gsl_vector_set(Re, i_W, FiniteRadiusWaveforms[i_W].Re(i_m,i_t));
 	gsl_vector_set(Im, i_W, FiniteRadiusWaveforms[i_W].Im(i_m,i_t));
       }
-      
+
       // Loop over extrapolation orders
       for(unsigned int i_N=0; i_N<NExtrapolations; ++i_N) {
 	const int N = ExtrapolationOrders[i_N];
-	
+
 	// If non-extrapolating, skip to the next one (the copying was
 	// done when ExtrapolatedWaveforms[i_N] was constructed)
 	if(N<0) {
 	  continue;
 	}
-	
+
 	// Do the extrapolations
 	gsl_multifit_linear_workspace* Workspace = gsl_multifit_linear_alloc(NFiniteRadii, N+1);
 	gsl_matrix_view OneOverRadii_N = gsl_matrix_submatrix(OneOverRadii, 0, 0, NFiniteRadii, N+1);
@@ -3647,18 +3649,18 @@ GWFrames::Waveforms GWFrames::Waveforms::Extrapolate(std::vector<std::vector<dou
 	gsl_multifit_linear_free(Workspace);
 	ExtrapolatedWaveforms[i_N].SetData(i_m, i_t, std::complex<double>(re,im));
 	ExtrapolatedWaveforms[i_N+NExtrapolations].SetData(i_m, i_t, std::complex<double>(re_err,im_err));
-	
+
       } // Loop over extrapolation orders
-      
+
     } // Loop over modes
-    
+
     gsl_vector_free(FitCoefficients);
     gsl_vector_free(Im);
     gsl_vector_free(Re);
     gsl_matrix_free(Covariance);
     gsl_matrix_free(OneOverRadii);
-    
+
   } // Loop over time
-  
+
   return ExtrapolatedWaveforms;
 }

@@ -11,15 +11,15 @@
 #include "Waveforms.hpp"
 
 namespace GWFrames {
-  
+
   // This header defines the basic objects `Modes` and `DataGrid`.
   // `SliceOfScri<D>` contains a set of either `Modes` or `DataGrid` objects.
   // `SliceModes` and `SliceGrid` are specific instances of this template; `SliceModes` has some extras
-  // 
-  
+  //
+
   class Modes; // Forward declaration for DataGrid constructor
-  class ScriFunctor { public: virtual double operator()(const GWFrames::Quaternion&) const { return 0.0; } };
-  
+  class ScriFunctor { public: virtual double operator()(const Quaternions::Quaternion&) const { return 0.0; } };
+
   class DataGrid {
     /// This object holds complex spin-weighted data on the sphere in
     /// an equi-angular representation.  That is, given integers
@@ -66,8 +66,8 @@ namespace GWFrames {
   DataGrid ConformalFactorGrid(const GWFrames::ThreeVector& v, const int n_theta, const int n_phi);
   DataGrid InverseConformalFactorGrid(const GWFrames::ThreeVector& v, const int n_theta, const int n_phi);
   DataGrid InverseConformalFactorBoostedGrid(const GWFrames::ThreeVector& v, const int n_theta, const int n_phi);
-  
-  
+
+
   class Modes {
     /// This object holds complex spin-weighted data on the sphere in
     /// a spin-weighted spherical-harmonic mode representation.  All
@@ -105,11 +105,11 @@ namespace GWFrames {
     Modes edthbar() const;
     Modes edth2edthbar2() const;
     std::complex<double> EvaluateAtPoint(const double vartheta, const double varphi) const;
-    std::complex<double> EvaluateAtPoint(const GWFrames::Quaternion& R) const;
+    std::complex<double> EvaluateAtPoint(const Quaternions::Quaternion& R) const;
   }; // class Modes
   GWFrames::ThreeVector vFromOneOverK(const GWFrames::Modes& OneOverK);
-  
-  
+
+
   template <class D>
   class SliceOfScri {
     /// This class holds all the necessary objects needed to
@@ -141,10 +141,10 @@ namespace GWFrames {
       else { std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << "\nError: (i=" << i << ")>6\n" << std::endl; throw(GWFrames_IndexOutOfBounds); }
     }
   }; // class SliceOfScri
-  
+
   typedef SliceOfScri<DataGrid> SliceGrid;
-  
-  
+
+
   class SliceModes : public SliceOfScri<Modes> {
   public:
     // Constructors
@@ -160,11 +160,11 @@ namespace GWFrames {
     // Moreschi algorithm
     void MoreschiIteration(GWFrames::Modes& OneOverK_ip1, GWFrames::Modes& delta_ip1) const;
   }; // class SliceModes
-  
-  
+
+
   typedef std::vector<DataGrid> SliceOfScriGrids;
-  
-  
+
+
   class Scri {
     /// A `Scri` object contains all the information needed to express
     /// the asymptotic geometry of null infinity, and symmetry
@@ -180,8 +180,8 @@ namespace GWFrames {
     std::vector<SliceModes> slices;
   public: // Constructor
     Scri(const GWFrames::Waveform& psi0, const GWFrames::Waveform& psi1,
-  	 const GWFrames::Waveform& psi2, const GWFrames::Waveform& psi3,
-  	 const GWFrames::Waveform& psi4, const GWFrames::Waveform& sigma);
+	 const GWFrames::Waveform& psi2, const GWFrames::Waveform& psi3,
+	 const GWFrames::Waveform& psi4, const GWFrames::Waveform& sigma);
     Scri(const Scri& S) : t(S.t), slices(S.slices) { }
   public: // Member functions
     // Transformations
@@ -192,8 +192,8 @@ namespace GWFrames {
     inline const SliceModes operator[](const unsigned int i) const { return slices[i]; }
     inline SliceModes& operator[](const unsigned int i) { return slices[i]; }
   }; // class Scri
-  
-  
+
+
   class SuperMomenta {
   private:
     std::vector<double> t;
@@ -213,8 +213,8 @@ namespace GWFrames {
     Modes BMSTransform(const GWFrames::Modes& OneOverK, const GWFrames::Modes& delta) const;
     void MoreschiIteration(GWFrames::Modes& OneOverK, GWFrames::Modes& delta) const;
   }; // class SuperMomenta
-  
-  
+
+
 } // namespace GWFrames
 
 #endif // SCRI_HPP
