@@ -48,10 +48,10 @@ from os import devnull, environ
 
 ## See if GSL_HOME is set; if so, use it
 if "GSL_HOME" in environ :
-    IncDirs = [environ["GSL_HOME"]+'/include', '/opt/local/include', 'spinsfast/include']
+    IncDirs = [environ["GSL_HOME"]+'/include', '/opt/local/include', 'spinsfast/include', 'Quaternions']
     LibDirs = [environ["GSL_HOME"]+'/lib', '/opt/local/lib', 'spinsfast/lib']
 else :
-    IncDirs = ['/opt/local/include', 'spinsfast/include']
+    IncDirs = ['/opt/local/include', 'spinsfast/include', 'Quaternions']
     LibDirs = ['/opt/local/lib', 'spinsfast/lib']
 
 ## Remove a compiler flag that doesn't belong there for C++
@@ -96,14 +96,16 @@ setup(name="GWFrames",
       # py_modules = ['GWFrames'],
       scripts = ['Scripts/RunExtrapolations.py', 'Scripts/ConvertGWDatToH5.py'],
       ext_modules = [
-        Extension('_GWFrames', ['Quaternions.cpp',
+        Extension('_GWFrames', ['Quaternions/Quaternions.cpp',
+                                'Quaternions/IntegrateAngularVelocity.cpp',
                                 'Utilities.cpp',
                                 'Waveforms.cpp',
                                 'PNWaveforms.cpp',
                                 'Scri.cpp',
                                 'SphericalHarmonics.cpp',
                                 'GWFrames.i'],
-                  depends = ['Quaternions.hpp',
+                  depends = ['Quaternions/Quaternions.hpp',
+                             'Quaternions/IntegrateAngularVelocity.hpp',
                              'Utilities.hpp',
                              'Waveforms.hpp',
                              'PNWaveforms.hpp',

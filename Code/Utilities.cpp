@@ -12,7 +12,7 @@
 #include "Errors.hpp"
 using GWFrames::Matrix;
 using GWFrames::MatrixC;
-using GWFrames::Quaternion;
+using Quaternions::Quaternion;
 using std::vector;
 using std::complex;
 using std::cerr;

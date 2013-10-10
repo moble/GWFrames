@@ -9,7 +9,7 @@ using GWFrames::BinomialCoefficientFunctor;
 using GWFrames::LadderOperatorFactorFunctor;
 using GWFrames::WignerCoefficientFunctor;
 using GWFrames::WignerDMatrix;
-using GWFrames::Quaternion;
+using Quaternions::Quaternion;
 using std::vector;
 using std::complex;
 using std::cerr;

@@ -1,8 +1,8 @@
-## 
+##
 ## NOTE: When compiling python, this Makefile is only used to call the
 ## python build process.  No variables set in this file affect python.
 ## If the python build is having trouble, look in setup.py to fix it.
-## 
+##
 
 
 
@@ -39,7 +39,7 @@ all : spinsfast
 # Library) headers and libraries.  The following paths are the most
 # common places for these to be installed.  If compilation doesn't
 # work, correct these paths.
-INCFLAGS = -I/opt/local/include -I/usr/local/include -Ispinsfast/include
+INCFLAGS = -I/opt/local/include -I/usr/local/include -Ispinsfast/include -IQuaternions
 LIBFLAGS = -L/opt/local/lib -L/usr/local/lib -Lspinsfast/lib
 ifdef GSL_HOME
 	INCFLAGS = -I${GSL_HOME}/include ${INCFLAGS}
@@ -59,7 +59,7 @@ OPT = -O3 -fopenmp -Wall -Wno-deprecated
 .PHONY : all cpp clean allclean realclean swig spinsfast
 
 # If needed, we can also make object files to use in other C++ programs
-cpp : Utilities.o Quaternions.o Waveforms.o PNWaveforms.o Scri.o SphericalHarmonics.o
+cpp : Utilities.o Quaternions/Quaternions.o Waveforms.o PNWaveforms.o Scri.o SphericalHarmonics.o
 
 # This is how to build those object files
 %.o : %.cpp %.hpp Errors.hpp
