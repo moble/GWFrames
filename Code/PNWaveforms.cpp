@@ -1,6 +1,7 @@
 // Copyright (c) 2013, Michael Boyle
 // See LICENSE file for details
 
+#include <unistd.h>
 #include <sys/param.h>
 #include <iostream>
 #include <iomanip>
