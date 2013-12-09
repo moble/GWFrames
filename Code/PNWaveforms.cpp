@@ -70,7 +70,7 @@ GWFrames::PNWaveform::PNWaveform(const PNWaveform& a) :
 // This file contains all the equations for evolving the dynamics of
 // the PN system.
 // #include "PNWaveforms_TaylorTn.ipp"
-#include "TaylorApproximants.ipp"
+#include "PNWaveformApproximants.ipp"
 
 // This file contains a class for calculating the polarization modes
 #include "PNWaveformModes.ipp"
@@ -91,6 +91,7 @@ int funcT5 (double t, const double y[], double dydt[], void* params) {
 }
 
 void WaveformModes(const double delta, const double v, const double chisl, const double chial, std::vector<std::complex<double> >& modes);
+
 
 /// Constructor of PN waveform from parameters
 GWFrames::PNWaveform::PNWaveform(const std::string& Approximant, const double delta,
@@ -233,7 +234,7 @@ GWFrames::PNWaveform::PNWaveform(const std::string& Approximant, const double de
     double Omega_orb[3] = {Omega_orbMag*y[8], Omega_orbMag*y[9], Omega_orbMag*y[10]};
     mOmega_orb.push_back(std::vector<double>(Omega_orb,Omega_orb+3));
     // mOmega_prec.push_back(Tn.Omega_prec());
-    // mL.push_back(Tn.L());
+    mL.push_back(Tn.L());
     mPhi_orb.push_back(y[1]);
     frame.push_back(Quaternions::sqrtOfRotor(-Quaternions::Quaternion(mOmega_orb.back()).normalized()*zHat) * Quaternions::exp(((y[11]+y[1])/2.)*zHat));
     t.push_back(time);
@@ -268,7 +269,7 @@ GWFrames::PNWaveform::PNWaveform(const std::string& Approximant, const double de
     double Omega_orb[3] = {Omega_orbMag*y[8], Omega_orbMag*y[9], Omega_orbMag*y[10]};
     mOmega_orb.push_back(std::vector<double>(Omega_orb,Omega_orb+3));
     // mOmega_prec.push_back(Tn.Omega_prec());
-    // mL.push_back(Tn.L());
+    mL.push_back(Tn.L());
     mPhi_orb.push_back(y[1]);
     frame.push_back(Quaternions::sqrtOfRotor(-Quaternions::Quaternion(mOmega_orb.back()).normalized()*zHat) * Quaternions::exp(((y[11]+y[1])/2.)*zHat));
     t.push_back(time);
