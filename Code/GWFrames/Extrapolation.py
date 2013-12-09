@@ -281,7 +281,8 @@ def Extrapolate(**kwargs) :
           extrapolation order N is substituted for '{N}', and the
           previous extrapolation order is substituted for {Nm1}.  The
           data-type inferred from the DataFile name is prepended.  If
-          DifferenceFiles is empty, none are output.
+          ExtrapolationUncertaintyFiles or DifferenceFiles are empty,
+          the corresponding files are not output.
         
         PlotFormat               'pdf'
           The format of output plots.  This can be the empty string,
@@ -490,7 +491,7 @@ def Extrapolate(**kwargs) :
             ExtrapolatedWaveforms[i].Output(dirname(ExtrapolatedFile)+'/'+ExtrapolatedWaveforms[i].GetFileNamePrefix()+basename(ExtrapolatedFile))
         else :
             ExtrapolatedWaveforms[i].OutputToH5(ExtrapolatedFile)
-        if(ExtrapolationOrder>=0) :
+        if(ExtrapolationOrder>=0 and ExtrapolationUncertaintyFiles) :
             ExtrapolationUncertaintyFile = OutputDirectory+ExtrapolationUncertaintyFiles.format(N=ExtrapolationOrder)
             if(ExtrapolationUncertaintyFile.endswith('.dat')) :
                 ExtrapolatedWaveforms[i+NExtrapolations].Output(dirname(ExtrapolationUncertaintyFile)+'/'+ExtrapolatedWaveforms[i+NExtrapolations].GetFileNamePrefix()+basename(ExtrapolationUncertaintyFile))
