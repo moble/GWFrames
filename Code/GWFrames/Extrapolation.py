@@ -128,7 +128,7 @@ def ReadFiniteRadiusWaveform(n, filename, WaveformName, ChMass, InitialAdmEnergy
         T[1:] = integrate(AverageLapse/sqrt(((-2.0*InitialAdmEnergy)/Radii) + 1.0), T) + T[0]
         T -= (Radii + (2.0*InitialAdmEnergy)*log((Radii/(2.0*InitialAdmEnergy))-1.0))
         Ws[n].SetTime(T/ChMass)
-        Radii /= ChMass
+        # WRONG!!!: # Radii /= ChMass
         NTimes = Ws[n].NTimes()
         # Ws[n].SetFrame is not done, because we assume the inertial frame
         Ws[n].SetFrameType(GWFrames.Inertial) # Assumption! (but this should be safe)
@@ -138,18 +138,21 @@ def ReadFiniteRadiusWaveform(n, filename, WaveformName, ChMass, InitialAdmEnergy
         Ws[n].SetLM(LM)
         Data = empty((NModes, NTimes), dtype='complex')
         if(DataType == GWFrames.h) :
-            RadiusRatio = Radii / (ChMass * CoordRadius)
+            UnitScaleFactor = 1.0 / ChMass
         elif(DataType == GWFrames.hdot) :
-            RadiusRatio = Radii / CoordRadius
+            UnitScaleFactor = 1.0
         elif(DataType == GWFrames.Psi4) :
-            RadiusRatio = Radii * (ChMass / CoordRadius)
+            UnitScaleFactor = ChMass
+        RadiusRatio = Radii / CoordRadius
+        else :
+            raise ValueError('DataType "{0}" is unknown.'.format(DataType))
         for m,DataSet in enumerate(YLMdata) :
             modedata = array(W[DataSet])
-            Data[m,:] = (modedata[Indices,1] + 1j*modedata[Indices,2]) * RadiusRatio
+            Data[m,:] = (modedata[Indices,1] + 1j*modedata[Indices,2]) * RadiusRatio * UnitScaleFactor
         Ws[n].SetData(Data)
     finally :
         f.close()
-    return Radii
+    return Radii/ChMass
 
 
 def ReadFiniteRadiusData(ChMass=0.0, filename='rh_FiniteRadii_CodeUnits.h5', CoordRadii=[], LModes=range(2,100)) :
