@@ -567,8 +567,7 @@ def ReadFromNRAR(FileName) :
     """
     import re
     import h5py
-    from GWFrames import Waveform
-    from Quaternions import Quaternion
+    from GWFrames import Waveform,Quaternion
     import numpy
     YlmRegex = re.compile(r"""Y_l(?P<L>[0-9]+)_m(?P<M>[-+0-9]+)\.dat""")
     # Initialize the Waveform object
