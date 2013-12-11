@@ -567,7 +567,7 @@ def ReadFromNRAR(FileName) :
     """
     import re
     import h5py
-    from GWFrames import Waveform,Quaternion,WaveformDataType
+    from GWFrames import Waveform,Quaternion
     import numpy
     YlmRegex = re.compile(r"""Y_l(?P<L>[0-9]+)_m(?P<M>[-+0-9]+)\.dat""")
     # Initialize the Waveform object
@@ -613,11 +613,11 @@ def ReadFromNRAR(FileName) :
             W.SetRIsScaledOut(True)
             W.SetMIsScaledOut(True)
             if('psi4' in FileName.lower()) :
-                W.SetDataType(WaveformDataType[3])
+                W.SetDataType(3)
             elif('hdot' in FileName.lower()) :
-                W.SetDataType(WaveformDataType[2])
+                W.SetDataType(2)
             elif('h' in FileName.lower()) :
-                W.SetDataType(WaveformDataType[1])
+                W.SetDataType(1)
         # Get the names of all the datasets in the h5 file, and check for matches
         YLMdata = [DataSet for DataSet in list(f) for m in [YlmRegex.search(DataSet)] if m]
         if(len(YLMdata)==0) :
