@@ -143,9 +143,9 @@ def ReadFiniteRadiusWaveform(n, filename, WaveformName, ChMass, InitialAdmEnergy
             UnitScaleFactor = 1.0
         elif(DataType == GWFrames.Psi4) :
             UnitScaleFactor = ChMass
-        RadiusRatio = Radii / CoordRadius
         else :
             raise ValueError('DataType "{0}" is unknown.'.format(DataType))
+        RadiusRatio = Radii / CoordRadius
         for m,DataSet in enumerate(YLMdata) :
             modedata = array(W[DataSet])
             Data[m,:] = (modedata[Indices,1] + 1j*modedata[Indices,2]) * RadiusRatio * UnitScaleFactor
