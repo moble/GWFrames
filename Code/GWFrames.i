@@ -769,11 +769,11 @@ def ReadFromNRAR(FileName) :
             W.SetRIsScaledOut(True)
             W.SetMIsScaledOut(True)
             if('psi4' in FileName.lower()) :
-                W.SetDataType(GWFrames.WaveformDataType[3])
+                W.SetDataType(3)
             elif('hdot' in FileName.lower()) :
-                W.SetDataType(GWFrames.WaveformDataType[2])
+                W.SetDataType(2)
             elif('h' in FileName.lower()) :
-                W.SetDataType(GWFrames.WaveformDataType[1])
+                W.SetDataType(1)
         # Get the names of all the datasets in the h5 file, and check for matches
         YLMdata = [DataSet for DataSet in list(f) for m in [YlmRegex.search(DataSet)] if m]
         if(len(YLMdata)==0) :
