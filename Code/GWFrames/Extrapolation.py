@@ -299,7 +299,7 @@ def Extrapolate(**kwargs) :
           The format of output plots.  This can be the empty string,
           in which case no plotting is done.  Or, these can be any of
           the formats supported by your installation of matplotlib.
-        
+
         MinTimeStep              0.005
           The smallest allowed time step in the output data.
         
