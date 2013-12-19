@@ -455,14 +455,9 @@ def Extrapolate(**kwargs) :
         Omegas = vectord([])
 
     # Transform W_outer into its smoothed corotating frame, and align modes with frame at given instant
-    # print("Rotating into common (outer) frame...")
     stdout.write("Rotating into common (outer) frame...\n"); stdout.flush()
     if(W_outer.FrameType() != Inertial) :
         raise ValueError("Extrapolation assumes that the input data are in the inertial frame")
-    # AV = array(W_outer.AngularVelocityVector())
-    # #AV = transpose([splev(W_outer.T(),splrep(W_outer.T(),AV[:,i],s=0.1)) for i in range(3)])
-    # W_outer.RotateDecompositionBasis(FrameFromAngularVelocity(Quaternions(AV), W_outer.T()))
-    # W_outer.SetFrameType(Corotating)
     W_outer.TransformToCorotatingFrame()
     W_outer.AlignDecompositionFrameToModes(AlignmentTime)
 
@@ -511,7 +506,9 @@ def Extrapolate(**kwargs) :
         if(ExtrapolationOrder>=0 and ExtrapolationUncertaintyFiles) :
             ExtrapolationUncertaintyFile = OutputDirectory+ExtrapolationUncertaintyFiles.format(N=ExtrapolationOrder)
             if(ExtrapolationUncertaintyFile.endswith('.dat')) :
-                ExtrapolatedWaveforms[i+NExtrapolations].Output(dirname(ExtrapolationUncertaintyFile)+'/'+ExtrapolatedWaveforms[i+NExtrapolations].GetFileNamePrefix()+basename(ExtrapolationUncertaintyFile))
+                ExtrapolatedWaveforms[i+NExtrapolations].Output(dirname(ExtrapolationUncertaintyFile)+'/'
+                                                                +ExtrapolatedWaveforms[i+NExtrapolations].GetFileNamePrefix()
+                                                                +basename(ExtrapolationUncertaintyFile))
             else :
                 ExtrapolatedWaveforms[i+NExtrapolations].OutputToH5(ExtrapolationUncertaintyFile)
         print("☺"); stdout.flush()
