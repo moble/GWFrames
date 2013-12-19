@@ -504,14 +504,10 @@ def Extrapolate(**kwargs) :
         if(ExtrapolatedFile.endswith('.dat')) :
             ExtrapolatedWaveforms[i].Output(dirname(ExtrapolatedFile)+'/'+ExtrapolatedWaveforms[i].GetFileNamePrefix()+basename(ExtrapolatedFile))
         else :
-<<<<<<< HEAD
             if(UseStupidNRARFormat) :
                 ExtrapolatedWaveforms[i].OutputToNRAR(ExtrapolatedFile)
             else :
                 ExtrapolatedWaveforms[i].OutputToH5(ExtrapolatedFile)
-=======
-            ExtrapolatedWaveforms[i].OutputToH5(ExtrapolatedFile)
->>>>>>> Minor cosmetics
         if(ExtrapolationOrder>=0 and ExtrapolationUncertaintyFiles) :
             ExtrapolationUncertaintyFile = OutputDirectory+ExtrapolationUncertaintyFiles.format(N=ExtrapolationOrder)
             if(ExtrapolationUncertaintyFile.endswith('.dat')) :
