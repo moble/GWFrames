@@ -445,7 +445,7 @@ def OutputToNRAR(W, FileName, FileWriteMode='w') :
     if(not dirname(FileName)) :
         FileName = W.DescriptorString() + '_' + basename(FileName)
     else :
-        FileName = dirname(FileName) + '/' + W.DescriptorString() + '_' + basename(FileName)
+        FileName = dirname(FileName) + '/' + basename(FileName)
     # Open the file for output
     try :
         F = File(FileName, FileWriteMode)
