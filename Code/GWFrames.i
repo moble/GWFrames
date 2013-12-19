@@ -317,10 +317,11 @@ namespace std {
   //// This function is called when printing the Waveform object
   std::string __str__() {
     std::stringstream S;
-    S << ($self->HistoryStr()) << "###\n"
-      << "### # In python:\n"
-      << "### import GWFrames\n"
-      << "### print(this)" << std::endl << std::setprecision(14);
+    S << ($self->HistoryStr()) << "#\n"
+      << "# <in_python>\n"
+      << "import GWFrames\n"
+      << "print(this)\n"
+      << "# </in_python>" << std::endl << std::setprecision(14);
     for(unsigned int t=0; t<$self->NTimes(); ++t) {
       S << $self->T(t) << " ";
       for(unsigned int mode=0; mode<$self->NModes(); ++mode) {
@@ -459,7 +460,7 @@ def OutputToNRAR(W, FileName, FileWriteMode='w') :
             G = F
         # Now write all the data to various groups in the file
         G.attrs['OutputFormatVersion'] = 'GWFrames_NRAR'
-        G.create_dataset("History.txt", data = W.HistoryStr() + '### OutputToNRAR(W, {0})\n'.format(FileName))
+        G.create_dataset("History.txt", data = W.HistoryStr() + 'OutputToNRAR(W, {0})\n'.format(FileName))
         G.attrs['FrameType'] = W.FrameType()
         G.attrs['DataType'] = W.DataType()
         G.attrs['RIsScaledOut'] = int(W.RIsScaledOut())
@@ -498,7 +499,7 @@ def OutputToH5(W, FileName) :
     try :
         # Now write all the data to various groups in the file
         F.attrs['OutputFormatVersion'] = 'GWFrames_v2'
-        F.create_dataset("History", data = W.HistoryStr() + '### OutputToH5(W, {0})\n'.format(FileName))
+        F.create_dataset("History", data = W.HistoryStr() + 'OutputToH5(W, {0})\n'.format(FileName))
         F.create_dataset("Time", data=W.T().tolist())
         if(len(W.Frame())>0) :
             F.create_dataset("Frame", data=[[r[0], r[1], r[2], r[3]] for r in W.Frame()])
@@ -537,9 +538,9 @@ def ReadFromH5(FileName) :
         # Initialize the Waveform object
         W = Waveform()
         # Record the filename being read in
-        W.AppendHistory("### *this = GWFrames.ReadFromH5(FileName='{0}')\n".format(FileName))
+        W.AppendHistory("*this = GWFrames.ReadFromH5(FileName='{0}')\n".format(FileName))
         # Add the old history to the new history
-        W.AppendHistory("##### Begin Previous History\n#" + f['History'][()].replace('\n','\n#') + "#### End Previous History\n")
+        W.AppendHistory("# <previous_history>\n#" + f['History'][()].replace('\n','\n#') + "# </previous_history>\n")
         # Get the time data
         W.SetTime(f['Time'])
         # Get the frame data, converting to GWFrame.Quaternion objects
@@ -611,7 +612,7 @@ def ReadFromNRAR(FileName) :
     # Initialize the Waveform object
     W = Waveform()
     # Record the filename being read in
-    W.AppendHistory("### *this = GWFrames.ReadFromNRAR(FileName='{0}')\n".format(FileName))
+    W.AppendHistory("*this = GWFrames.ReadFromNRAR(FileName='{0}')\n".format(FileName))
     try :
         FileName, RootGroup = FileName.rsplit('.h5', 1)
         FileName += '.h5'
@@ -630,7 +631,7 @@ def ReadFromNRAR(FileName) :
         try :
             # Add the old history to the new history, if found
             OldHistory = f['History.txt'][()]
-            W.AppendHistory("##### Begin Previous History\n#" + OldHistory.replace('\n','\n#') + "#### End Previous History\n")
+            W.AppendHistory("# <previous_history>\n#" + OldHistory.replace('\n','\n#') + "# </previous_history>\n")
         except KeyError :
             pass # Did not find a history
         # Get the frame data, converting to Quaternions.Quaternion objects

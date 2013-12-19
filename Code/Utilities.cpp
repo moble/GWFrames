@@ -116,6 +116,15 @@ std::vector<std::vector<double> > GWFrames::operator/(const std::vector<std::vec
   return c;
 }
 
+std::vector<double> GWFrames::pow(const std::vector<double>& a, const double b) {
+  const unsigned int size = a.size();
+  vector<double> c(size);
+  for(unsigned int i=0; i<size; ++i) {
+    c[i] = std::pow(a[i], b);
+  }
+  return c;
+}
+
 /// Unwrap phase so that it is (roughly) continuous.
 std::vector<double> GWFrames::Unwrap(const std::vector<double>& Arg) {
   // Compare Matlab's unwrap.m file
@@ -123,7 +132,7 @@ std::vector<double> GWFrames::Unwrap(const std::vector<double>& Arg) {
   double Dp = 0.0;
   double Dps = 0.0;
   double CumCorr = 0.0;
-  
+
   // Dp will contain the incremental phase variations;
   // Dps will contain the equivalents, confined to [-pi,pi)
   // CumCorr will contain the incremental phase corrections
@@ -139,7 +148,7 @@ std::vector<double> GWFrames::Unwrap(const std::vector<double>& Arg) {
     CumCorr += Dps - Dp;
     ArgUnwrapped[i] += CumCorr;
   }
-  
+
   return ArgUnwrapped;
 }
 
@@ -296,7 +305,7 @@ std::vector<double> GWFrames::Intersection(const std::vector<double>& t1, const 
   /// t1 and t2 at that instant, or MinStep, whichever is greater.
   /// The output starts at the earliest moment common to t1 and t2, or
   /// MinTime, whichever is greater.
-  /// 
+  ///
   /// The input to this function is assumed to be strictly monotonic.
   if(t1.size()==0) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": t1 is empty.  Assuming this is not desired." << std::endl;
@@ -349,7 +358,7 @@ std::vector<double> GWFrames::Union(const std::vector<double>& t1, const std::ve
   /// On the overlap between the two sequences, the time is built up
   /// by taking the smaller time step in either of the two sequences,
   /// or MinStep if that step is smaller.
-  /// 
+  ///
   /// The input to this function is assumed to be strictly monotonic.
   if(t1.size()==0) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": t1 is empty.  Returning trivial Union." << std::endl;
@@ -455,7 +464,7 @@ Matrix& Matrix::operator=(const std::vector<std::vector<double> >& DataIn) {
 
 Matrix Matrix::operator-(const Matrix& rhs) {
   if(ncols() != rhs.ncols() || nrows() != rhs.nrows()) {
-    cerr << "\n\n" << __FILE__ << ":" << __LINE__ 
+    cerr << "\n\n" << __FILE__ << ":" << __LINE__
 	 << ": ncols=" << ncols() << "; rhs.ncols()=" << rhs.ncols()
 	 << "\nnrows=" << nrows() << "; rhs.nrows()=" << rhs.nrows() << endl;
     throw(GWFrames_MatrixSizeMismatch);
