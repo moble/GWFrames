@@ -287,6 +287,14 @@ def Extrapolate(**kwargs) :
           ExtrapolationUncertaintyFiles or DifferenceFiles are empty,
           the corresponding files are not output.
         
+        UseStupidNRARFormat      False
+          If True (and `ExtrapolatedFiles` does not end in '.dat'),
+          then the h5 output format will be that stupid, old
+          NRAR/NINJA format that doesn't convey enough information,
+          is slow, and uses 33% more space than it needs to.  But you
+          know, if you're into that kind of thing, whatever.  Who am
+          I to judge?
+        
         PlotFormat               'pdf'
           The format of output plots.  This can be the empty string,
           in which case no plotting is done.  Or, these can be any of
@@ -334,6 +342,7 @@ def Extrapolate(**kwargs) :
     ExtrapolatedFiles = kwargs.pop('ExtrapolatedFiles', 'Extrapolated_N{N}.h5')
     ExtrapolationUncertaintyFiles = kwargs.pop('ExtrapolationUncertaintyFiles', 'ExtrapolationUncertainty_N{N}.h5')
     DifferenceFiles = kwargs.pop('DifferenceFiles', 'ExtrapConvergence_N{N}-N{Nm1}.h5')
+    UseStupidNRARFormat = kwargs.pop('UseStupidNRARFormat', False)
     PlotFormat = kwargs.pop('PlotFormat', 'pdf')
     MinTimeStep = kwargs.pop('MinTimeStep', 0.005)
     EarliestTime = kwargs.pop('EarliestTime', -3.0e300)
@@ -396,27 +405,28 @@ def Extrapolate(**kwargs) :
     
     # Print the input arguments neatly for the history
     InputArguments = """\
-        ### # Extrapolation input arguments:
-        ### D = {{}}
-        ### D['InputDirectory'] = {InputDirectory}
-        ### D['OutputDirectory'] = {OutputDirectory}
-        ### D['DataFile'] = {DataFile}
-        ### D['ChMass'] = {ChMass}
-        ### D['HorizonsFile'] = {HorizonsFile}
-        ### D['CoordRadii'] = {CoordRadii}
-        ### D['LModes'] = {LModes}
-        ### D['ExtrapolationOrders'] = {ExtrapolationOrders}
-        ### D['UseOmega'] = {UseOmega}
-        ### D['OutputFrame'] = {OutputFrame}
-        ### D['ExtrapolatedFiles'] = {ExtrapolatedFiles}
-        ### D['ExtrapolationUncertaintyFiles'] = {ExtrapolationUncertaintyFiles}
-        ### D['DifferenceFiles'] = {DifferenceFiles}
-        ### D['PlotFormat'] = {PlotFormat}
-        ### D['MinTimeStep'] = {MinTimeStep}
-        ### D['EarliestTime'] = {EarliestTime}
-        ### D['LatestTime'] = {LatestTime}
-        ### D['AlignmentTime'] = {AlignmentTime}
-        ### # End Extrapolation input arguments
+        # Extrapolation input arguments:
+        D = {{}}
+        D['InputDirectory'] = {InputDirectory}
+        D['OutputDirectory'] = {OutputDirectory}
+        D['DataFile'] = {DataFile}
+        D['ChMass'] = {ChMass}
+        D['HorizonsFile'] = {HorizonsFile}
+        D['CoordRadii'] = {CoordRadii}
+        D['LModes'] = {LModes}
+        D['ExtrapolationOrders'] = {ExtrapolationOrders}
+        D['UseOmega'] = {UseOmega}
+        D['OutputFrame'] = {OutputFrame}
+        D['ExtrapolatedFiles'] = {ExtrapolatedFiles}
+        D['ExtrapolationUncertaintyFiles'] = {ExtrapolationUncertaintyFiles}
+        D['DifferenceFiles'] = {DifferenceFiles}
+        D['UseStupidNRARFormat'] = {UseStupidNRARFormat}
+        D['PlotFormat'] = {PlotFormat}
+        D['MinTimeStep'] = {MinTimeStep}
+        D['EarliestTime'] = {EarliestTime}
+        D['LatestTime'] = {LatestTime}
+        D['AlignmentTime'] = {AlignmentTime}
+        # End Extrapolation input arguments
         """.format(InputDirectory = InputDirectory,
                    OutputDirectory = OutputDirectory,
                    DataFile = DataFile,
@@ -430,6 +440,7 @@ def Extrapolate(**kwargs) :
                    ExtrapolatedFiles = ExtrapolatedFiles,
                    ExtrapolationUncertaintyFiles = ExtrapolationUncertaintyFiles,
                    DifferenceFiles = DifferenceFiles,
+                   UseStupidNRARFormat = UseStupidNRARFormat,
                    PlotFormat = PlotFormat,
                    MinTimeStep = MinTimeStep,
                    EarliestTime = EarliestTime,
@@ -493,7 +504,10 @@ def Extrapolate(**kwargs) :
         if(ExtrapolatedFile.endswith('.dat')) :
             ExtrapolatedWaveforms[i].Output(dirname(ExtrapolatedFile)+'/'+ExtrapolatedWaveforms[i].GetFileNamePrefix()+basename(ExtrapolatedFile))
         else :
-            ExtrapolatedWaveforms[i].OutputToH5(ExtrapolatedFile)
+            if(UseStupidNRARFormat) :
+                ExtrapolatedWaveforms[i].OutputToNRAR(ExtrapolatedFile)
+            else :
+                ExtrapolatedWaveforms[i].OutputToH5(ExtrapolatedFile)
         if(ExtrapolationOrder>=0 and ExtrapolationUncertaintyFiles) :
             ExtrapolationUncertaintyFile = OutputDirectory+ExtrapolationUncertaintyFiles.format(N=ExtrapolationOrder)
             if(ExtrapolationUncertaintyFile.endswith('.dat')) :
