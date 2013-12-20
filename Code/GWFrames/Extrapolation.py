@@ -320,7 +320,7 @@ def Extrapolate(**kwargs) :
     """
 
     # Basic imports
-    from os import makedirs
+    from os import makedirs, remove
     from os.path import exists, basename, dirname
     from sys import stdout, stderr
     from textwrap import dedent
@@ -466,6 +466,14 @@ def Extrapolate(**kwargs) :
         Ws[i].RotateDecompositionBasis(W_outer.Frame())
         Ws[i].SetFrameType(Corotating)
 
+    # Remove old h5 file if necessary
+    if(!ExtrapolatedFile.endswith('.dat') and UseStupidNRARFormat) :
+        h5Index = ExtrapolatedFile.find('.h5/')
+        if(h5Index>0) :
+            remove(ExtrapolatedFile[:h5Index+3])
+        else :
+            remove(ExtrapolatedFile)
+
     # Do the actual extrapolations
     print("Running extrapolations."); stdout.flush()
     ExtrapolatedWaveforms = Ws.Extrapolate(Radii, ExtrapolationOrders, Omegas)
@@ -500,7 +508,7 @@ def Extrapolate(**kwargs) :
             ExtrapolatedWaveforms[i].Output(dirname(ExtrapolatedFile)+'/'+ExtrapolatedWaveforms[i].GetFileNamePrefix()+basename(ExtrapolatedFile))
         else :
             if(UseStupidNRARFormat) :
-                ExtrapolatedWaveforms[i].OutputToNRAR(ExtrapolatedFile)
+                ExtrapolatedWaveforms[i].OutputToNRAR(ExtrapolatedFile, 'a')
             else :
                 ExtrapolatedWaveforms[i].OutputToH5(ExtrapolatedFile)
         if(ExtrapolationOrder>=0 and ExtrapolationUncertaintyFiles) :
