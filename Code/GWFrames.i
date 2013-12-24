@@ -422,8 +422,7 @@ def OutputToNRAR(W, FileName, FileWriteMode='w') :
             G = F
         # Now write all the data to various groups in the file
         G.attrs['OutputFormatVersion'] = 'GWFrames_NRAR'
-        G.create_dataset("History.txt", data = W.HistoryStr() + '### OutputToNRAR(W, {0})\n'.format(FileName),
-			 compression="gzip", shuffle=True)
+        G.create_dataset("History.txt", data = W.HistoryStr() + '### OutputToNRAR(W, {0})\n'.format(FileName))
         G.attrs['FrameType'] = W.FrameType()
         G.attrs['DataType'] = W.DataType()
         G.attrs['RIsScaledOut'] = int(W.RIsScaledOut())
@@ -463,16 +462,12 @@ def OutputToH5(W, FileName) :
     try :
         # Now write all the data to various groups in the file
         F.attrs['OutputFormatVersion'] = 'GWFrames_v2'
-        F.create_dataset("History", data = W.HistoryStr() + '### OutputToH5(W, {0})\n'.format(FileName),
-			 compression="gzip", shuffle=True)
-        F.create_dataset("Time", data=W.T().tolist(),
-			 compression="gzip", shuffle=True)
+        F.create_dataset("History", data = W.HistoryStr() + '### OutputToH5(W, {0})\n'.format(FileName))
+        F.create_dataset("Time", data=W.T().tolist(), compression="gzip", shuffle=True)
         if(len(W.Frame())>0) :
-            F.create_dataset("Frame", data=[[r[0], r[1], r[2], r[3]] for r in W.Frame()],
-			     compression="gzip", shuffle=True)
+            F.create_dataset("Frame", data=[[r[0], r[1], r[2], r[3]] for r in W.Frame()])
         else :
-            F.create_dataset("Frame", shape=(),
-			     compression="gzip", shuffle=True)
+            F.create_dataset("Frame", shape=())
         F.attrs['FrameType'] = W.FrameType()
         F.attrs['DataType'] = W.DataType()
         F.attrs['RIsScaledOut'] = int(W.RIsScaledOut())
