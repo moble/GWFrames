@@ -467,12 +467,10 @@ def Extrapolate(**kwargs) :
         Ws[i].SetFrameType(Corotating)
 
     # Remove old h5 file if necessary
-    if(!ExtrapolatedFile.endswith('.dat') and UseStupidNRARFormat) :
-        h5Index = ExtrapolatedFile.find('.h5/')
+    if(not ExtrapolatedFiles.endswith('.dat') and UseStupidNRARFormat) :
+        h5Index = ExtrapolatedFiles.find('.h5/')
         if(h5Index>0) :
-            remove(ExtrapolatedFile[:h5Index+3])
-        else :
-            remove(ExtrapolatedFile)
+            remove(ExtrapolatedFiles[:h5Index+3])
 
     # Do the actual extrapolations
     print("Running extrapolations."); stdout.flush()

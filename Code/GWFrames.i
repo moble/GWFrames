@@ -334,16 +334,16 @@ namespace std {
   //// Allow Waveform objects to be pickled
   %insert("python") %{
     def __getstate__(self) :
-        return (self.HistoryStr(),
-            self.T(),
-            self.Frame(),
-            self.FrameType(),
-            self.DataType(),
-            self.RIsScaledOut(),
-            self.MIsScaledOut(),
-            self.LM(),
-            self.Data()
-          )
+      return (self.HistoryStr(),
+              self.T(),
+              self.Frame(),
+              self.FrameType(),
+              self.DataType(),
+              self.RIsScaledOut(),
+              self.MIsScaledOut(),
+              self.LM(),
+              self.Data()
+              )
     __safe_for_unpickling__ = True
     def __reduce__(self) :
         return (Waveform, (), self.__getstate__())
@@ -467,7 +467,8 @@ def OutputToNRAR(W, FileName, FileWriteMode='w') :
         G.attrs['MIsScaledOut'] = int(W.MIsScaledOut())
         for i_m in range(W.NModes()) :
             ell,m = W.LM()[i_m]
-            Data_m = G.create_dataset("Y_l{0}_m{1}.dat".format(ell, m), data=[[t, d.real, d.imag] for t,d in zip(W.T(),W.Data(i_m))])
+            Data_m = G.create_dataset("Y_l{0}_m{1}.dat".format(ell, m), data=[[t, d.real, d.imag] for t,d in zip(W.T(),W.Data(i_m))],
+				      compression="gzip", shuffle=True)
             Data_m.attrs['ell'] = ell
             Data_m.attrs['m'] = m
     finally : # Use `finally` to make sure this happens:
@@ -502,7 +503,8 @@ def OutputToH5(W, FileName) :
         F.create_dataset("History", data = W.HistoryStr() + 'OutputToH5(W, {0})\n'.format(FileName))
         F.create_dataset("Time", data=W.T().tolist())
         if(len(W.Frame())>0) :
-            F.create_dataset("Frame", data=[[r[0], r[1], r[2], r[3]] for r in W.Frame()])
+            F.create_dataset("Frame", data=[[r[0], r[1], r[2], r[3]] for r in W.Frame()],
+			     compression="gzip", shuffle=True)
         else :
             F.create_dataset("Frame", shape=())
         F.attrs['FrameType'] = W.FrameType()
@@ -512,7 +514,8 @@ def OutputToH5(W, FileName) :
         Data = F.create_group("Data")
         for i_m in range(W.NModes()) :
             ell,m = W.LM()[i_m]
-            Data_m = Data.create_dataset("l{0}_m{1:+}".format(ell, m), data=W.Data(i_m))
+            Data_m = Data.create_dataset("l{0}_m{1:+}".format(ell, m), data=W.Data(i_m),
+					 compression="gzip", shuffle=True)
             Data_m.attrs['ell'] = ell
             Data_m.attrs['m'] = m
     finally : # Use `finally` to make sure this happens:
