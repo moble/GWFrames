@@ -503,8 +503,7 @@ def OutputToH5(W, FileName) :
         F.create_dataset("History", data = W.HistoryStr() + 'OutputToH5(W, {0})\n'.format(FileName))
         F.create_dataset("Time", data=W.T().tolist())
         if(len(W.Frame())>0) :
-            F.create_dataset("Frame", data=[[r[0], r[1], r[2], r[3]] for r in W.Frame()],
-			     compression="gzip", shuffle=True)
+            F.create_dataset("Frame", data=[[r[0], r[1], r[2], r[3]] for r in W.Frame()])
         else :
             F.create_dataset("Frame", shape=())
         F.attrs['FrameType'] = W.FrameType()
