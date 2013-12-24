@@ -100,7 +100,7 @@ def ReadFiniteRadiusWaveform(n, filename, WaveformName, ChMass, InitialAdmEnergy
     This is just a worker function defined for ReadFiniteRadiusData,
     below, reading a single waveform from an h5 file of many
     waveforms.  You probably don't need to call this directly.
-    
+
     """
     from scipy.integrate import cumtrapz as integrate
     from numpy import setdiff1d, empty, delete, sqrt, log, array
@@ -158,12 +158,12 @@ def ReadFiniteRadiusWaveform(n, filename, WaveformName, ChMass, InitialAdmEnergy
 def ReadFiniteRadiusData(ChMass=0.0, filename='rh_FiniteRadii_CodeUnits.h5', CoordRadii=[], LModes=range(2,100)) :
     """
     Read data at various radii, and offset by tortoise coordinate.
-    
+
     """
-    
+
     if(ChMass==0.0) :
         raise ValueError("ChMass=0.0 is not a valid input value.")
-    
+
     from sys import stdout, stderr
     from os.path import basename
     from h5py import File
@@ -233,39 +233,39 @@ def Extrapolate(**kwargs) :
     ==============================================
       Parameters
       ----------
-        InputDirectory	         './'
+        InputDirectory           './'
           Where to find the input data.  Can be relative or absolute.
-        
-        OutputDirectory	         './'
+
+        OutputDirectory          './'
           This directory will be made if it does not exist.
-        
+
         DataFile                 'rh_FiniteRadii_CodeUnits.h5'
           Input file holding the data from all the radii.
-        
-        ChMass	 	         0.0
+
+        ChMass                   0.0
           Christodoulou mass in the same units as the rest of the
           data.  All the data will be rescaled into units such that
           this is one.  If this is zero, the Christodoulou mass will
           be extracted automatically from the horizons file below.
-        
+
         HorizonsFile             'Horizons.h5'
           File name to read for horizon data (if ChMass is 0.0).
-        
-        CoordRadii	         []
+
+        CoordRadii               []
           List of strings containing the radii to use, or of (integer)
           indices of the list of waveform names.  If this is a list of
           indices, the order is just the order output by the command
           `list(h5py.File(DataFile))` which *should* be the same as
-          `h5ls`.  If the list is empty, all radii that can be found 
+          `h5ls`.  If the list is empty, all radii that can be found
           are used.
-        
+
         LModes                   range(2,100)
           List of ell modes to extrapolate
-        
+
         ExtrapolationOrders      [-1, 2, 3, 4, 5, 6]
           Negative numbers correspond to extracted data, counting down
           from the outermost extraction radius (which is -1).
-        
+
         UseOmega                 False
           Whether or not to extrapolate as a function of lambda/r =
           1/(r*m*omega), where omega is the instantaneous angular
@@ -273,10 +273,10 @@ def Extrapolate(**kwargs) :
           will usually not converge for high N; if this is False, SVD
           will generally cause the convergence to appear to fall to
           roundoff, though the accuracy presumably is not so great.
-        
+
         OutputFrame              GWFrames.Inertial
           Transform to this frame before comparison and output.
-        
+
         ExtrapolatedFiles        'Extrapolated_N{N}.h5'
         ExtrapolationUncertaintyFiles  'ExtrapolationUncertainty_N{N}.h5'
         DifferenceFiles          'ExtrapConvergence_N{N}-N{Nm1}.h5'
@@ -286,7 +286,7 @@ def Extrapolate(**kwargs) :
           data-type inferred from the DataFile name is prepended.  If
           ExtrapolationUncertaintyFiles or DifferenceFiles are empty,
           the corresponding files are not output.
-        
+
         UseStupidNRARFormat      False
           If True (and `ExtrapolatedFiles` does not end in '.dat'),
           then the h5 output format will be that stupid, old
@@ -294,7 +294,7 @@ def Extrapolate(**kwargs) :
           is slow, and uses 33% more space than it needs to.  But you
           know, if you're into that kind of thing, whatever.  Who am
           I to judge?
-        
+
         PlotFormat               'pdf'
           The format of output plots.  This can be the empty string,
           in which case no plotting is done.  Or, these can be any of
@@ -302,23 +302,23 @@ def Extrapolate(**kwargs) :
 
         MinTimeStep              0.005
           The smallest allowed time step in the output data.
-        
+
         EarliestTime             -3.0e300
           The earliest time in the output data.  For values less than
           0, some of the data corresponds to times when only junk
           radiation is present.
-        
+
         LatestTime               3.0e300
           The latest time in the output data.
-        
+
         AlignmentTime            None
           The time at which to align the Waveform with the dominant
           eigenvector of <LL>.  If the input value is `None` or is
           outside of the input data, it will be reset to the midpoint
           of the waveform: (W_outer.T(0)+W_outer.T(-1))/2
-    
+
     """
-    
+
     # Basic imports
     from os import makedirs, remove
     from os.path import exists, basename, dirname
@@ -327,7 +327,7 @@ def Extrapolate(**kwargs) :
     from numpy import sqrt, abs, fmod, pi, transpose, array
     from scipy.interpolate import splev, splrep
     from GWFrames import Inertial, Corotating, Intersection, FrameFromAngularVelocity, Quaternions, Waveform, Waveforms, vectorW, vectord, vectorvectord
-    
+
     # Process keyword arguments
     InputDirectory = kwargs.pop('InputDirectory', './')
     OutputDirectory = kwargs.pop('OutputDirectory', './')
@@ -350,7 +350,7 @@ def Extrapolate(**kwargs) :
     AlignmentTime = kwargs.pop('AlignmentTime', None)
     if(len(kwargs)>0) :
         raise ValueError("Unknown arguments to `Extrapolate`: kwargs={0}".format(kwargs))
-    
+
     # Polish up the input arguments
     if(not InputDirectory.endswith('/')) : InputDirectory += '/'
     if(not OutputDirectory.endswith('/')) : OutputDirectory += '/'
@@ -361,7 +361,7 @@ def Extrapolate(**kwargs) :
         ChMass = PickChMass(HorizonsFile)
     # AlignmentTime is reset properly once the data are read in, if necessary.
     # The reasonableness of ExtrapolationOrder is checked below.
-    
+
     # Don't bother loading plotting modules unless we're plotting
     if(PlotFormat) :
         import matplotlib as mpl
@@ -375,34 +375,34 @@ def Extrapolate(**kwargs) :
         figabs = plt.figure(0)
         figarg = plt.figure(1)
         fignorm = plt.figure(2)
-    
+
     # Read in the Waveforms
     print("Reading Waveforms from {0}...".format(DataFile)); stdout.flush()
     Ws,Radii,CoordRadii = ReadFiniteRadiusData(ChMass=ChMass, filename=DataFile, CoordRadii=CoordRadii, LModes=LModes)
-    
+
     Radii_shape = (len(Radii),len(Radii[0]))
-    
+
     # Make sure there are enough radii to do the requested extrapolations
     if((len(Ws) <= max(ExtrapolationOrders)) and (max(ExtrapolationOrders)>-1)) :
         raise ValueError("Not enough data sets ({0}) for max extrapolation order (N={1}).".format(len(Ws), max(ExtrapolationOrders)))
     if(-len(Ws)>min(ExtrapolationOrders)) :
         raise ValueError("Not enough data sets ({0}) for min extrapolation order (N={1}).".format(len(Ws), min(ExtrapolationOrders)))
-    
+
     # Figure out which is the outermost data
     SortedRadiiIndices = sorted(range(len(CoordRadii)), key=lambda k: float(CoordRadii[k]))
     i_outer = SortedRadiiIndices[-1]
-    
+
     # Convert to c++ objects and interpolate to common times
     Ws = Waveforms(vectorW(Ws))
     Radii = vectorvectord(Radii)
     print("Interpolating to common times..."); stdout.flush()
     Ws.SetCommonTime(Radii, MinTimeStep, EarliestTime, LatestTime)
     W_outer = Ws[i_outer]
-    
+
     # If the AlignmentTime is not set properly, set it to the default
     if( (not AlignmentTime) or AlignmentTime<W_outer.T(0) or AlignmentTime>=W_outer.T(W_outer.NTimes()-1)) :
         AlignmentTime = (W_outer.T(0)+W_outer.T(W_outer.NTimes()-1))/2
-    
+
     # Print the input arguments neatly for the history
     InputArguments = """\
         # Extrapolation input arguments:
@@ -447,13 +447,13 @@ def Extrapolate(**kwargs) :
                    LatestTime = LatestTime,
                    AlignmentTime = AlignmentTime)
     InputArguments = dedent(InputArguments)
-    
+
     # If required, figure out the orbital frequencies
     if(UseOmega) :
         Omegas = vectord([sqrt(sum([c**2 for c in o])) for o in W_outer.AngularVelocityVector([2])])
     else :
         Omegas = vectord([])
-    
+
     # Transform W_outer into its smoothed corotating frame, and align modes with frame at given instant
     # print("Rotating into common (outer) frame...")
     stdout.write("Rotating into common (outer) frame...\n"); stdout.flush()
@@ -465,24 +465,22 @@ def Extrapolate(**kwargs) :
     # W_outer.SetFrameType(Corotating)
     W_outer.TransformToCorotatingFrame()
     W_outer.AlignDecompositionFrameToModes(AlignmentTime)
-    
+
     # Transform everyone else into the same frame
     for i in SortedRadiiIndices[:-1] :
         Ws[i].RotateDecompositionBasis(W_outer.Frame())
         Ws[i].SetFrameType(Corotating)
 
     # Remove old h5 file if necessary
-    if(!ExtrapolatedFile.endswith('.dat') and UseStupidNRARFormat) :
-        h5Index = ExtrapolatedFile.find('.h5/')
+    if(not ExtrapolatedFiles.endswith('.dat') and UseStupidNRARFormat) :
+        h5Index = ExtrapolatedFiles.find('.h5/')
         if(h5Index>0) :
-            remove(ExtrapolatedFile[:h5Index+3])
-        else :
-            remove(ExtrapolatedFile)
+            remove(ExtrapolatedFiles[:h5Index+3])
 
     # Do the actual extrapolations
     print("Running extrapolations."); stdout.flush()
     ExtrapolatedWaveforms = Ws.Extrapolate(Radii, ExtrapolationOrders, Omegas)
-    
+
     NExtrapolations = len(ExtrapolationOrders)
     for i,ExtrapolationOrder in enumerate(ExtrapolationOrders) :
         # If necessary, rotate
@@ -498,12 +496,12 @@ def Extrapolate(**kwargs) :
             if(ExtrapolationOrder>=0) :
                 ExtrapolatedWaveforms[i+NExtrapolations].TransformUncertaintiesToCorotatingFrame(ExtrapolatedWaveforms[i].Frame())
             print("☺"); stdout.flush()
-        
+
         # Append the relevant information to the history
         ExtrapolatedWaveforms[i].AppendHistory(InputArguments)
         if(ExtrapolationOrder>=0) :
             ExtrapolatedWaveforms[i+NExtrapolations].AppendHistory(InputArguments)
-        
+
         # Output the data
         ExtrapolatedFile = OutputDirectory+ExtrapolatedFiles.format(N=ExtrapolationOrder)
         stdout.write("N={0}: Writing {1}... ".format(ExtrapolationOrder, ExtrapolatedFile)); stdout.flush()
@@ -523,7 +521,7 @@ def Extrapolate(**kwargs) :
             else :
                 ExtrapolatedWaveforms[i+NExtrapolations].OutputToH5(ExtrapolationUncertaintyFile)
         print("☺"); stdout.flush()
-    
+
     MaxNormTime = ExtrapolatedWaveforms[0].MaxNormTime()
     FileNamePrefixString = ExtrapolatedWaveforms[0].GetFileNamePrefix()
     if(PlotFormat) :
@@ -533,7 +531,7 @@ def Extrapolate(**kwargs) :
         figabs.gca().set_ylabel(r'$\Delta\, \mathrm{abs} \left( '+ExtrapolatedWaveforms[0].GetLaTeXDataDescription()+r' \right) $')
         figarg.gca().set_ylabel(r'$\Delta\, \mathrm{uarg} \left( '+ExtrapolatedWaveforms[0].GetLaTeXDataDescription()+r' \right) $')
         fignorm.gca().set_ylabel(r'$\left\| \Delta\, '+ExtrapolatedWaveforms[0].GetLaTeXDataDescription()+r' \right\|_{L_2} $')
-    
+
     for i,ExtrapolationOrder in reversed(list(enumerate(ExtrapolationOrders))) :
         if(i>0) : # Compare to the last one
             if(DifferenceFiles or PlotFormat) :
@@ -565,7 +563,7 @@ def Extrapolate(**kwargs) :
                 plt.semilogy(Diff.T(), Diff.Norm(True)/Normalization,
                              label=r'$(N={0}) - (N={1})$'.format(ExtrapolationOrder, ExtrapolationOrders[i-1]))
                 # print("☺"); stdout.flush()
-    
+
     # Finish up the plots and save
     if(PlotFormat) :
         stdout.write("Saving plots... "); stdout.flush()
@@ -619,7 +617,7 @@ def Extrapolate(**kwargs) :
             fignorm.savefig('{0}/{1}ExtrapConvergence_Norm_Merger.{2}'.format(OutputDirectory, FileNamePrefixString, 'png'))
         plt.close(fignorm)
         print("☺"); stdout.flush()
-    
+
     return ExtrapolatedWaveforms
 
 
@@ -634,12 +632,12 @@ def Extrapolate(**kwargs) :
 def _safe_format(s, **keys) :
     """
     Like str.format, but doesn't mind missing arguments.
-    
+
     This function is used to replace strings like '{SomeKey}' in
-    the template with the arguments given as keys.  For example, 
-    
+    the template with the arguments given as keys.  For example,
+
       _safe_format('{SomeKey} {SomeOtherKey}', SomeKey='Hello', SomeMissingKey='Bla')
-    
+
     returns 'Hello {SomeOtherKey}', without errors, ignoring the
     `SomeMissingKey` argument, and not bothering with
     '{SomeOtherKey}', so that that can be replaced later.
@@ -654,7 +652,7 @@ def _safe_format(s, **keys) :
 def UnstartedExtrapolations(TopLevelOutputDir, SubdirectoriesAndDataFiles) :
     """
     Find unstarted extrapolation directories
-    
+
     """
     from os.path import exists
     Unstarted = []
@@ -667,7 +665,7 @@ def UnstartedExtrapolations(TopLevelOutputDir, SubdirectoriesAndDataFiles) :
 def NewerDataThanExtrapolation(TopLevelInputDir, TopLevelOutputDir, SubdirectoriesAndDataFiles) :
     """
     Find newer data than extrapolation
-    
+
     """
     from os.path import exists, getmtime
     Newer = []
@@ -684,7 +682,7 @@ def NewerDataThanExtrapolation(TopLevelInputDir, TopLevelOutputDir, Subdirectori
 def StartedButUnfinishedExtrapolations(TopLevelOutputDir, SubdirectoriesAndDataFiles) :
     """
     Find directories with extrapolations that started but didn't finish.
-    
+
     """
     from os.path import exists
     Unfinished = []
@@ -699,7 +697,7 @@ def StartedButUnfinishedExtrapolations(TopLevelOutputDir, SubdirectoriesAndDataF
 def ErroredExtrapolations(TopLevelOutputDir, SubdirectoriesAndDataFiles) :
     """
     Find directories with errors
-    
+
     """
     from os.path import exists
     Errored = []
@@ -712,14 +710,14 @@ def ErroredExtrapolations(TopLevelOutputDir, SubdirectoriesAndDataFiles) :
 def FindPossibleExtrapolationsToRun(TopLevelInputDir) :
     """
     Find all possible extrapolations
-    
+
     """
     from os import walk
     from re import compile as re_compile
-    
+
     SubdirectoriesAndDataFiles = []
     LevPattern = re_compile(r'/Lev[0-9]*$')
-    
+
     # Walk the input directory
     for step in walk(TopLevelInputDir, followlinks=True) :
         if(LevPattern.search(step[0])) :
@@ -734,12 +732,12 @@ def RunExtrapolation(TopLevelInputDir, TopLevelOutputDir, Subdirectory, DataFile
     from os import makedirs, chdir, getcwd, utime, remove
     from os.path import exists
     from subprocess import call
-    
+
     InputDir = '{0}/{1}'.format(TopLevelInputDir, Subdirectory)
     OutputDir = '{0}/{1}'.format(TopLevelOutputDir, Subdirectory)
     if not exists(OutputDir) :
         makedirs(OutputDir)
-    
+
     # If OutputDir/.started_r...h5 doesn't exist, touch it; remove errors and finished reports
     with file('{0}/.started_{1}'.format(OutputDir,DataFile), 'a') :
         utime('{0}/.started_{1}'.format(OutputDir,DataFile), None)
@@ -747,11 +745,11 @@ def RunExtrapolation(TopLevelInputDir, TopLevelOutputDir, Subdirectory, DataFile
         remove('{0}/.error_{1}'.format(OutputDir,DataFile))
     if(exists('{0}/.finished_{1}'.format(OutputDir,DataFile))) :
         remove('{0}/.finished_{1}'.format(OutputDir,DataFile))
-    
+
     # Copy the template file to OutputDir
     with open('{0}/Extrapolate_{1}.py'.format(OutputDir,DataFile[:-3]), 'w') as TemplateFile :
         TemplateFile.write(_safe_format(Template, DataFile=DataFile, Subdirectory=Subdirectory))
-    
+
     # Try to run the extrapolation
     OriginalDir = getcwd()
     try :
@@ -774,6 +772,5 @@ def RunExtrapolation(TopLevelInputDir, TopLevelOutputDir, Subdirectory, DataFile
         print("\n\nRunExtrapolation got an error on ['{0}', '{1}', '{2}', '{3}'].\n\n".format(TopLevelInputDir, TopLevelOutputDir, Subdirectory, DataFile))
     finally :
         chdir(OriginalDir)
-    
-    return 0
 
+    return 0

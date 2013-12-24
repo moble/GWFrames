@@ -180,7 +180,7 @@ namespace std {
     S << std::setprecision(14) << "["
       << $self->operator[](0) << ", "
       << $self->operator[](1) << ", "
-      << $self->operator[](2) << ", " 
+      << $self->operator[](2) << ", "
       << $self->operator[](3) << "]";
     const std::string& tmp = S.str();
     const char* cstr = tmp.c_str();
@@ -283,7 +283,7 @@ namespace std {
     for(unsigned int t=0; t<$self->NTimes(); ++t) {
       S << $self->T(t) << " ";
       for(unsigned int mode=0; mode<$self->NModes(); ++mode) {
-  	S << $self->Re(mode, t) << " " << $self->Im(mode, t) << " ";
+        S << $self->Re(mode, t) << " " << $self->Im(mode, t) << " ";
       }
       S << std::endl;
     }
@@ -293,15 +293,15 @@ namespace std {
   %insert("python") %{
     def __getstate__(self) :
       return (self.HistoryStr(),
-  	      self.T(),
-  	      self.Frame(),  
-  	      self.FrameType(),
-  	      self.DataType(),
-  	      self.RIsScaledOut(),
-  	      self.MIsScaledOut(),
-	      self.LM(),
-  	      self.Data()
-  	      )
+              self.T(),
+              self.Frame(),
+              self.FrameType(),
+              self.DataType(),
+              self.RIsScaledOut(),
+              self.MIsScaledOut(),
+              self.LM(),
+              self.Data()
+              )
     __safe_for_unpickling__ = True
     def __reduce__(self) :
         return (Waveform, (), self.__getstate__())
@@ -390,11 +390,11 @@ Waveform.GetLaTeXDataDescription = GetLaTeXDataDescription
 def OutputToNRAR(W, FileName, FileWriteMode='w') :
     """
     Output the Waveform in NRAR format.
-    
+
     Note that the FileName is prepended with some descriptive
     information involving the data type and the frame type, such as
     'rhOverM_' or 'rMPsi4_'.
-    
+
     """
     from h5py import File
     from os.path import basename, dirname
@@ -422,14 +422,16 @@ def OutputToNRAR(W, FileName, FileWriteMode='w') :
             G = F
         # Now write all the data to various groups in the file
         G.attrs['OutputFormatVersion'] = 'GWFrames_NRAR'
-        G.create_dataset("History.txt", data = W.HistoryStr() + '### OutputToNRAR(W, {0})\n'.format(FileName))
-	G.attrs['FrameType'] = W.FrameType()
-	G.attrs['DataType'] = W.DataType()
-	G.attrs['RIsScaledOut'] = int(W.RIsScaledOut())
-	G.attrs['MIsScaledOut'] = int(W.MIsScaledOut())
+        G.create_dataset("History.txt", data = W.HistoryStr() + '### OutputToNRAR(W, {0})\n'.format(FileName),
+			 compression="gzip", shuffle=True)
+        G.attrs['FrameType'] = W.FrameType()
+        G.attrs['DataType'] = W.DataType()
+        G.attrs['RIsScaledOut'] = int(W.RIsScaledOut())
+        G.attrs['MIsScaledOut'] = int(W.MIsScaledOut())
         for i_m in range(W.NModes()) :
             ell,m = W.LM()[i_m]
-            Data_m = G.create_dataset("Y_l{0}_m{1}.dat".format(ell, m), data=[[t, d.real, d.imag] for t,d in zip(W.T(),W.Data(i_m))])
+            Data_m = G.create_dataset("Y_l{0}_m{1}.dat".format(ell, m), data=[[t, d.real, d.imag] for t,d in zip(W.T(),W.Data(i_m))],
+				      compression="gzip", shuffle=True)
             Data_m.attrs['ell'] = ell
             Data_m.attrs['m'] = m
     finally : # Use `finally` to make sure this happens:
@@ -441,11 +443,11 @@ Waveform.OutputToNRAR = OutputToNRAR
 def OutputToH5(W, FileName) :
     """
     Output the Waveform with all necessary information.
-    
+
     Note that the FileName is prepended with some descriptive
     information involving the data type and the frame type, such as
     'rhOverM_Corotating_' or 'rPsi4_Aligned_'.
-    
+
     """
     from h5py import File
     from os.path import basename, dirname
@@ -461,20 +463,25 @@ def OutputToH5(W, FileName) :
     try :
         # Now write all the data to various groups in the file
         F.attrs['OutputFormatVersion'] = 'GWFrames_v2'
-        F.create_dataset("History", data = W.HistoryStr() + '### OutputToH5(W, {0})\n'.format(FileName))
-        F.create_dataset("Time", data=W.T().tolist())
+        F.create_dataset("History", data = W.HistoryStr() + '### OutputToH5(W, {0})\n'.format(FileName),
+			 compression="gzip", shuffle=True)
+        F.create_dataset("Time", data=W.T().tolist(),
+			 compression="gzip", shuffle=True)
         if(len(W.Frame())>0) :
-            F.create_dataset("Frame", data=[[r[0], r[1], r[2], r[3]] for r in W.Frame()])
+            F.create_dataset("Frame", data=[[r[0], r[1], r[2], r[3]] for r in W.Frame()],
+			     compression="gzip", shuffle=True)
         else :
-            F.create_dataset("Frame", shape=())
-	F.attrs['FrameType'] = W.FrameType()
-	F.attrs['DataType'] = W.DataType()
-	F.attrs['RIsScaledOut'] = int(W.RIsScaledOut())
-	F.attrs['MIsScaledOut'] = int(W.MIsScaledOut())
+            F.create_dataset("Frame", shape=(),
+			     compression="gzip", shuffle=True)
+        F.attrs['FrameType'] = W.FrameType()
+        F.attrs['DataType'] = W.DataType()
+        F.attrs['RIsScaledOut'] = int(W.RIsScaledOut())
+        F.attrs['MIsScaledOut'] = int(W.MIsScaledOut())
         Data = F.create_group("Data")
         for i_m in range(W.NModes()) :
             ell,m = W.LM()[i_m]
-            Data_m = Data.create_dataset("l{0}_m{1:+}".format(ell, m), data=W.Data(i_m))
+            Data_m = Data.create_dataset("l{0}_m{1:+}".format(ell, m), data=W.Data(i_m),
+					 compression="gzip", shuffle=True)
             Data_m.attrs['ell'] = ell
             Data_m.attrs['m'] = m
     finally : # Use `finally` to make sure this happens:
