@@ -470,7 +470,8 @@ def Extrapolate(**kwargs) :
     if(not ExtrapolatedFiles.endswith('.dat') and UseStupidNRARFormat) :
         h5Index = ExtrapolatedFiles.find('.h5/')
         if(h5Index>0) :
-            remove(ExtrapolatedFiles[:h5Index+3])
+            if(exists(ExtrapolatedFiles[:h5Index+3])) :
+                remove(ExtrapolatedFiles[:h5Index+3])
 
     # Do the actual extrapolations
     print("Running extrapolations."); stdout.flush()
