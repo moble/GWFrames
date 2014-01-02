@@ -501,7 +501,7 @@ def OutputToH5(W, FileName) :
         # Now write all the data to various groups in the file
         F.attrs['OutputFormatVersion'] = 'GWFrames_v2'
         F.create_dataset("History", data = W.HistoryStr() + 'OutputToH5(W, {0})\n'.format(FileName))
-        F.create_dataset("Time", data=W.T().tolist())
+        F.create_dataset("Time", data=W.T().tolist(), compression="gzip", shuffle=True)
         if(len(W.Frame())>0) :
             F.create_dataset("Frame", data=[[r[0], r[1], r[2], r[3]] for r in W.Frame()])
         else :
