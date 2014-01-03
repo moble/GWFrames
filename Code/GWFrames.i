@@ -389,7 +389,11 @@ Waveform.GetLaTeXDataDescription = GetLaTeXDataDescription
 
 def OutputToNRAR(W, FileName, FileWriteMode='w') :
     """
-    Output the Waveform in NRAR format.
+    Output the Waveform in that awful NRAR format.
+
+    If `FileName` contains '.h5' at a position other than the end,
+    it is assumed that the rest of the string names the group
+    within the HDF5 file at which to root the new data.
 
     Note that the FileName is prepended with some descriptive
     information involving the data type and the frame type, such as
@@ -443,6 +447,10 @@ def OutputToH5(W, FileName) :
     """
     Output the Waveform with all necessary information.
 
+    If `FileName` contains '.h5' at a position other than the end,
+    it is assumed that the rest of the string names the group
+    within the HDF5 file at which to root the new data.
+
     Note that the FileName is prepended with some descriptive
     information involving the data type and the frame type, such as
     'rhOverM_Corotating_' or 'rPsi4_Aligned_'.
@@ -488,6 +496,10 @@ Waveform.OutputToH5 = OutputToH5
 def ReadFromH5(FileName) :
     """
     Read data from an H5 file, as output by this module.
+
+    If `FileName` contains '.h5' at a position other than the end,
+    it is assumed that the rest of the string names the group
+    in which to find the new data within the HDF5 file.
 
     The return value is a `Waveform` object containing
     the data.
@@ -569,6 +581,10 @@ def MonotonicIndices(T, MinTimeStep=1.e-5) :
 def ReadFromNRAR(FileName) :
     """
     Read data from an H5 file in that awful NRAR format.
+
+    If `FileName` contains '.h5' at a position other than the end,
+    it is assumed that the rest of the string names the group
+    in which to find the new data within the HDF5 file.
 
     The return value is a `Waveform` object containing
     the data.
