@@ -487,7 +487,10 @@ Waveform.OutputToH5 = OutputToH5
 
 def ReadFromH5(FileName) :
     """
-    Read data from an H5 file, as output by GWFrames.
+    Read data from an H5 file, as output by this module.
+
+    The return value is a `Waveform` object containing
+    the data.
     """
     from h5py import File
     from GWFrames import Waveform, Quaternion
@@ -565,7 +568,10 @@ def MonotonicIndices(T, MinTimeStep=1.e-5) :
 
 def ReadFromNRAR(FileName) :
     """
-    Read data from an H5 file in NRAR format.
+    Read data from an H5 file in that awful NRAR format.
+
+    The return value is a `Waveform` object containing
+    the data.
     """
     import re
     import h5py
