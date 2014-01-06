@@ -29,22 +29,20 @@ To build just the C++ code:
 To use the optional—but highly recommended—Python interface:
 * [SWIG](http://www.swig.org/) v2.0 or greater
 * [Python](http://www.python.org/getit/) v2.7.4 (not v3.*)
+* [HDF5](http://www.hdfgroup.org/HDF5/) v1.8.10 or greater, built as a shared library
 
 And the following, for which python's automatic installation utility
 `pip` is very useful:
 * [NumPy](http://www.numpy.org/) v1.7 or greater (`pip install numpy`)
 * [Matplotlib](http://matplotlib.org/) v1.2 or greater (`pip install matplotlib`)
-
-If you will need access to HDF5 files through the python interface,
-you should also install
-* [HDF5](http://www.hdfgroup.org/HDF5/) v1.8.10 or greater
 * [h5py](http://code.google.com/p/h5py/) v2.1 or greater (`pip install h5py`)
 
 For interactive python sessions, IPython is the way to go.  And its
 Mathematica-like [notebook
 interface](http://ipython.org/notebook.html) is superb.  This is even
-more optional than the above, but even more highly recommended:
-* [IPython](http://ipython.org/) with notebook interface (`pip install ipython [notebook]`)
+more optional than the above, but even more highly recommended: *
+[IPython](http://ipython.org/) with notebook interface (`pip install
+ipython [notebook]`)
 
 N.B.: These are all relatively recent versions, and must all be
 compiled with the same compiler.  In particular, modules on clusters
