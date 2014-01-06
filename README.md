@@ -38,9 +38,10 @@ And the following, for which python's automatic installation utility
 * [h5py](http://code.google.com/p/h5py/) v2.1 or greater (`pip install --user h5py`)
 * [IPython](http://ipython.org/) v1.0 or greater, with notebook (`pip install --user ipython \[notebook\]`)
 
-N.B.: These must all be compiled with the same compiler.  In
-particular, if you are using this on a cluster, check to ensure that
-the requirements are all compiled with the same compiler.
+N.B.: GSL, HDF5, and Python must all be compiled with the same
+compiler.  In particular, if you are installing this on a cluster,
+check to ensure that the requirements are compiled with the same
+compiler.
 
 All of the above are reasonably standard, and can be installed easily
 through package managers such as apt and homebrew.  The notebook
