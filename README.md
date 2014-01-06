@@ -24,30 +24,23 @@ Build requirements
 ==================
 To build just the C++ code:
 * C++ compiler
-* [GNU Scientific Library](http://www.gnu.org/software/gsl/)
+* [GNU Scientific Library](http://www.gnu.org/software/gsl/), built as a shared library
 
 To use the optional—but highly recommended—Python interface:
 * [SWIG](http://www.swig.org/) v2.0 or greater
-* [Python](http://www.python.org/getit/) v2.7.4 (not v3.*)
-* [HDF5](http://www.hdfgroup.org/HDF5/) v1.8.10 or greater, built as a shared library
+* [Python](http://www.python.org/getit/) v2.7.4 or greater (but not v3.*), with development headers (python-dev or similar)
+* [HDF5](http://www.hdfgroup.org/HDF5/) v1.8.10 or greater, built as a shared library with development headers (libhdf5-dev or similar)
 
 And the following, for which python's automatic installation utility
-`pip` is very useful:
-* [NumPy](http://www.numpy.org/) v1.7 or greater (`pip install numpy`)
-* [Matplotlib](http://matplotlib.org/) v1.2 or greater (`pip install matplotlib`)
-* [h5py](http://code.google.com/p/h5py/) v2.1 or greater (`pip install h5py`)
+[`pip`](http://www.pip-installer.org) can do all the work:
+* [NumPy](http://www.numpy.org/) v1.7 or greater (`pip install --user numpy`)
+* [Matplotlib](http://matplotlib.org/) v1.2 or greater (`pip install --user matplotlib`)
+* [h5py](http://code.google.com/p/h5py/) v2.1 or greater (`pip install --user h5py`)
+* [IPython](http://ipython.org/) v1.0 or greater, with notebook (`pip install --user ipython \[notebook\]`)
 
-For interactive python sessions, IPython is the way to go.  And its
-Mathematica-like [notebook
-interface](http://ipython.org/notebook.html) is superb.  This is even
-more optional than the above, but even more highly recommended: *
-[IPython](http://ipython.org/) with notebook interface (`pip install
-ipython [notebook]`)
-
-N.B.: These are all relatively recent versions, and must all be
-compiled with the same compiler.  In particular, modules on clusters
-that I've used have not been good at having all of these compiled
-consistently.
+N.B.: These must all be compiled with the same compiler.  In
+particular, if you are using this on a cluster, check to ensure that
+the requirements are all compiled with the same compiler.
 
 All of the above are reasonably standard, and can be installed easily
 through package managers such as apt and homebrew.  The notebook
