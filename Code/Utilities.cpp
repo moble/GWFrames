@@ -129,6 +129,21 @@ std::vector<std::vector<double> > GWFrames::operator*(const std::vector<double>&
   return c;
 }
 
+std::vector<std::vector<double> > GWFrames::operator-(const std::vector<std::vector<double> >& a, const std::vector<std::vector<double> >& b) {
+  const unsigned int size1 = a.size();
+  if(size1==0) { return std::vector<std::vector<double> >(0); }
+  const unsigned int size2 = a[0].size();
+  // if(b.size() != size) {
+  //   cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": a.size()=" << a.size() << "; b.size()=" << b.size() << endl;
+  //   throw(GWFrames_VectorSizeMismatch);
+  // }
+  vector<vector<double> > c(size1, vector<double>(size2));
+  for(unsigned int i=0; i<size1; ++i) {
+    c[i] = a[i]-b[i];
+  }
+  return c;
+}
+
 std::vector<double> GWFrames::pow(const std::vector<double>& a, const double b) {
   const unsigned int size = a.size();
   vector<double> c(size);

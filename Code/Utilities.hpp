@@ -26,6 +26,7 @@ namespace GWFrames {
   std::vector<double> operator-(const std::vector<double>& a);
   std::vector<std::vector<double> > operator/(const std::vector<std::vector<double> > & a, const std::vector<double>& b);
   std::vector<std::vector<double> > operator*(const std::vector<double> & a, const std::vector<std::vector<double> >& b);
+  std::vector<std::vector<double> > operator-(const std::vector<std::vector<double> >& a, const std::vector<std::vector<double> >& b);
   std::vector<double> pow(const std::vector<double>& a, const double b);
   std::vector<double> Unwrap(const std::vector<double>& In);
 
