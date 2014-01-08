@@ -116,6 +116,19 @@ std::vector<std::vector<double> > GWFrames::operator/(const std::vector<std::vec
   return c;
 }
 
+std::vector<std::vector<double> > GWFrames::operator*(const std::vector<double>& a, const std::vector<std::vector<double> >& b) {
+  const unsigned int size1 = b.size();
+  if(size1<1) { return vector<vector<double> >(0); }
+  const unsigned int size2 = b[0].size();
+  vector<vector<double> > c(b);
+  for(unsigned int i=0; i<size1; ++i) {
+    for(unsigned int j=0; j<size2; ++j) {
+      c[i][j] *= a[i];
+    }
+  }
+  return c;
+}
+
 std::vector<double> GWFrames::pow(const std::vector<double>& a, const double b) {
   const unsigned int size = a.size();
   vector<double> c(size);
