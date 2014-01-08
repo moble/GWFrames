@@ -9,6 +9,7 @@
 #include <gsl/gsl_odeiv2.h>
 #include "PNWaveforms.hpp"
 #include "PostNewtonian/C++/PNEvolution.hpp"
+#include "PostNewtonian/C++/PNWaveformModes.hpp"
 #include "Quaternions.hpp"
 #include "Utilities.hpp"
 #include "Errors.hpp"
@@ -67,12 +68,6 @@ GWFrames::PNWaveform::PNWaveform(const PNWaveform& a) :
   /// object, including history
   history.seekp(0, std::ios_base::end);
 }
-
-// This file contains a class for calculating the polarization modes
-#include "PNWaveformModes.ipp"
-
-
-void WaveformModes(const double delta, const double v, const double chisl, const double chial, std::vector<std::complex<double> >& modes);
 
 
 /// Constructor of PN waveform from parameters
@@ -136,11 +131,11 @@ GWFrames::PNWaveform::PNWaveform(const std::string& Approximant, const double de
     string date = asctime ( localtime ( &rawtime ) );
     history.str("");
     history.clear();
-    history << "### Code revision (`git rev-parse HEAD` or arXiv version) = " << CodeRevision << std::endl
-	    << "### pwd = " << pwd << std::endl
-	    << "### hostname = " << hostname << std::endl
-	    << "### date = " << date // comes with a newline
-	    << "### PNWaveform(" << delta << ", " << VectorStringForm(chi1_i) << ", " << VectorStringForm(chi2_i)
+    history << "# Code revision (`git rev-parse HEAD` or arXiv version) = " << CodeRevision << std::endl
+	    << "# pwd = " << pwd << std::endl
+	    << "# hostname = " << hostname << std::endl
+	    << "# date = " << date // comes with a newline
+	    << "PNWaveform(" << delta << ", " << VectorStringForm(chi1_i) << ", " << VectorStringForm(chi2_i)
 	    << ", " << Omega_orb_i << ", " << R_frame_i << ");" << std::endl;
   }
 
@@ -148,14 +143,10 @@ GWFrames::PNWaveform::PNWaveform(const std::string& Approximant, const double de
   vector<Quaternion> frame;
 
   PostNewtonian::EvolvePN(Approximant, PNOrder, v_0, v_i, m1, m2, chi1_i, chi2_i, R_frame_i,
-			  t, v, mchi1, mchi2, frame, mPhi_orb);
+			  t, v, mchi1, mchi2, frame, mPhi_orb, mL);
 
-  std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Re-implementation of PN waveforms not yet finished." << std::endl;
-  // mOmega_orb = pow(v,3);
-  // mOmega_prec = ;
-  // mL = ;
-  throw(GWFrames_NotYetImplemented);
-
+  mOmega_orb = pow(v,3)*PostNewtonian::ellHat(frame);
+  mOmega_prec = Quaternions::vec(Quaternions::FrameAngularVelocity(frame, t)) - mOmega_orb;
 
   // Set up the (ell,m) data
   // We need (2*ell+1) coefficients for each value of ell from 2 up to
@@ -184,21 +175,9 @@ GWFrames::PNWaveform::PNWaveform(const std::string& Approximant, const double de
   // frame in standard position (BHs on the x axis, with angular
   // velocity along the positive z axis).  This can then be
   // transformed to a stationary frame, using the stored 'frame' data.
-  data.resize(lm.size(), t.size());
-  std::vector<std::complex<double> > modes(lm.size());
-  PNWaveformModes rhOverM(delta);
-  for(unsigned int i_t=0; i_t<t.size(); ++i_t) {
-    const double v_t = v[i_t];
-    const double Omega_orb = v_t*v_t*v_t;
-    const double chi1l_t = dotproduct(&mchi1[i_t][0], &mOmega_orb[i_t][0]) / Omega_orb;
-    const double chi2l_t = dotproduct(&mchi2[i_t][0], &mOmega_orb[i_t][0]) / Omega_orb;
-    const double chisl_t = 0.5*(chi1l_t+chi2l_t);
-    const double chial_t = 0.5*(chi1l_t-chi2l_t);
-    rhOverM(v_t, chisl_t, chial_t, modes);
-    for(unsigned int i_lm=0; i_lm<lm.size(); ++i_lm) {
-      data[i_lm][i_t] = modes[i_lm];
-    }
-  }
+  data = MatrixC(PostNewtonian::WaveformModes(m1, m2, v,
+					      Quaternions::vec(Quaternions::conjugate(frame)*Quaternions::QuaternionArray(mchi1)*frame),
+					      Quaternions::vec(Quaternions::conjugate(frame)*Quaternions::QuaternionArray(mchi2)*frame)));
 
 } // end PN constructor
 
