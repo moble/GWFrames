@@ -46,7 +46,10 @@ from distutils.core import setup, Extension
 from subprocess import check_output, CalledProcessError
 from os import devnull, environ
 
-IncDirs = ['spinsfast/include', 'Quaternions']
+
+# Add directories for numpy and other inclusions
+from numpy import get_include
+IncDirs = ['spinsfast/include', 'PostNewtonian/C++/Quaternions', get_include()]
 LibDirs = ['spinsfast/lib']
 
 ## See if GSL_HOME is set; if so, use it
@@ -87,7 +90,7 @@ except IOError :
 
 ## This does the actual work
 setup(name="GWFrames",
-      version=PackageVersion,
+      # version=PackageVersion,
       description='Angular velocity of gravitational radiation from precessing binaries and the corotating frame',
       long_description="""
       This package implements various methods described in the paper
@@ -103,8 +106,8 @@ setup(name="GWFrames",
       # py_modules = ['GWFrames'],
       scripts = ['Scripts/RunExtrapolations.py', 'Scripts/ConvertGWDatToH5.py'],
       ext_modules = [
-        Extension('_GWFrames', ['Quaternions/Quaternions.cpp',
-                                'Quaternions/IntegrateAngularVelocity.cpp',
+        Extension('_GWFrames', ['PostNewtonian/C++/Quaternions/Quaternions.cpp',
+                                'PostNewtonian/C++/Quaternions/IntegrateAngularVelocity.cpp',
                                 'PostNewtonian/C++/PNEvolution.cpp',
                                 'PostNewtonian/C++/PNEvolution_Q.cpp',
                                 'PostNewtonian/C++/PNWaveformModes.cpp',
@@ -114,8 +117,8 @@ setup(name="GWFrames",
                                 'Scri.cpp',
                                 'SphericalHarmonics.cpp',
                                 'GWFrames.i'],
-                  depends = ['Quaternions/Quaternions.hpp',
-                             'Quaternions/IntegrateAngularVelocity.hpp',
+                  depends = ['PostNewtonian/C++/Quaternions/Quaternions.hpp',
+                             'PostNewtonian/C++/Quaternions/IntegrateAngularVelocity.hpp',
                              'PostNewtonian/C++/PNEvolution.hpp',
                              'PostNewtonian/C++/PNWaveformModes.hpp',
                              'Utilities.hpp',
@@ -130,7 +133,7 @@ setup(name="GWFrames",
                   libraries=['gsl', 'gslcblas', 'fftw3', 'spinsfast'],
                   define_macros = [('CodeRevision', CodeRevision)],
                   language='c++',
-                  swig_opts=['-globals', 'constants', '-c++'],
+                  swig_opts=['-globals', 'constants', '-c++'], # `'-builtin'` doesn't let Waveform have methods attached to it
                   extra_link_args=['-lgomp', '-fPIC'],
                   # extra_link_args=['-lgomp', '-fPIC', '-Wl,-undefined,error'], # `-undefined,error` tells the linker to fail on undefined symbols
                   extra_compile_args=['-Wno-deprecated'] #'-fopenmp',

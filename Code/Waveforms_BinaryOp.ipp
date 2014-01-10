@@ -22,7 +22,7 @@ extern "C" {
 template <typename Op>
 GWFrames::Waveform GWFrames::Waveform::BinaryOp(const GWFrames::Waveform& B) const {
   const Waveform& A = *this;
-  
+
   if(A.NTimes() != B.NTimes()) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
 	      << "\nError: Asking for the product of two Waveform objects with different time data."
@@ -31,7 +31,7 @@ GWFrames::Waveform GWFrames::Waveform::BinaryOp(const GWFrames::Waveform& B) con
 	      << std::endl;
     throw(GWFrames_MatrixSizeMismatch);
   }
-  
+
   if(A.frameType != GWFrames::Inertial || B.frameType != GWFrames::Inertial) {
     if(A.frameType != B.frameType) {
       std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
@@ -48,19 +48,19 @@ GWFrames::Waveform GWFrames::Waveform::BinaryOp(const GWFrames::Waveform& B) con
       throw(GWFrames_WrongFrameType);
     }
   }
-  
+
   // This will be the new object holding the multiplied data
   GWFrames::Waveform C;
-  
+
   // The new spin weight is the sum of the old ones
   C.spinweight = A.spinweight + B.spinweight;
-  
+
   // Store both old histories in C's
   C.history << "### *this = A*B\n"
 	    << "#### A.history.str():\n" << A.history.str()
 	    << "#### B.history.str():\n" << B.history.str()
-	    << "#### End of old histories from `A*B`" << std::endl;  
-  
+	    << "#### End of old histories from `A*B`" << std::endl;
+
   // Just copy other data from A
   C.t = A.t;
   C.frame = A.frame;
@@ -68,7 +68,7 @@ GWFrames::Waveform GWFrames::Waveform::BinaryOp(const GWFrames::Waveform& B) con
   C.dataType = A.dataType;
   C.rIsScaledOut = A.rIsScaledOut;
   C.mIsScaledOut = A.mIsScaledOut;
-  
+
   // Determine the ranges of l that the output should have
   int lMinA = std::abs(A.SpinWeight());
   int lMinB = std::abs(B.SpinWeight());
@@ -86,7 +86,7 @@ GWFrames::Waveform GWFrames::Waveform::BinaryOp(const GWFrames::Waveform& B) con
     lMax = (lMaxA>lMaxB ? lMaxB : lMaxA); // Take the smaller
   }
   int Nlm = N_lm(lMax);
-  
+
   // Set the output lm data
   C.lm = std::vector<std::vector<int> >(lMax*(2+lMax)-lMin*lMin+1, std::vector<int>(2,0));
   {
@@ -99,28 +99,28 @@ GWFrames::Waveform GWFrames::Waveform::BinaryOp(const GWFrames::Waveform& B) con
       }
     }
   }
-  
+
   // These numbers determine the equi-angular grid on which we will do
   // the pointwise multiplication.  For best accuracy, have N_phi>
   // 2*lMax and N_theta > 2*lMax; but for speed, don't make them much
   // greater.
   int N_phi = 2*lMax + 1;
   int N_theta = 2*lMax + 1;
-  
+
   // These will be work arrays
   const complex<double> I(0.0,1.0);
   const complex<double> zero(0.0,0.0);
   std::vector<std::complex<double> > almA(Nlm);
   std::vector<std::complex<double> > almB(Nlm);
   std::vector<std::complex<double> > almC(Nlm);
-  
+
   // Now, loop through each time step doing the work
   C.data.resize(C.lm.size(), C.t.size());
   for(unsigned int i_t=0; i_t<C.t.size(); ++i_t) {
     std::vector<std::complex<double> > fA(N_phi*N_theta, zero);
     std::vector<std::complex<double> > fB(N_phi*N_theta, zero);
     std::vector<std::complex<double> > fC(N_phi*N_theta, zero);
-    
+
     { // Set the a_lm coefficients of A
       unsigned int i=0;
       for(int l=0; l<lMinA; ++l) {
@@ -137,7 +137,7 @@ GWFrames::Waveform GWFrames::Waveform::BinaryOp(const GWFrames::Waveform& B) con
 	}
       }
     }
-    
+
     { // Set the a_lm coefficients of B
       unsigned int i=0;
       for(int l=0; l<lMinB; ++l) {
@@ -154,7 +154,7 @@ GWFrames::Waveform GWFrames::Waveform::BinaryOp(const GWFrames::Waveform& B) con
 	}
       }
     }
-    
+
     { // Transform each and multiply pointwise
       spinsfast_salm2map(reinterpret_cast<fftw_complex*>(&almA[0]),
 			 reinterpret_cast<fftw_complex*>(&fA[0]),
@@ -166,7 +166,7 @@ GWFrames::Waveform GWFrames::Waveform::BinaryOp(const GWFrames::Waveform& B) con
 	fC[i] = Op()(fA[i], fB[i]);
       }
     }
-    
+
     // Transform back and record the new data in C
     spinsfast_map2salm(reinterpret_cast<fftw_complex*>(&fC[0]),
 		       reinterpret_cast<fftw_complex*>(&almC[0]),
@@ -174,8 +174,8 @@ GWFrames::Waveform GWFrames::Waveform::BinaryOp(const GWFrames::Waveform& B) con
     for(unsigned int i_m=0; i_m<C.NModes(); ++i_m) {
       C.SetData(i_m, i_t, almC[i_m+lMin*lMin]);
     }
-    
+
   } // Finish loop over time
-  
+
   return C;
 }

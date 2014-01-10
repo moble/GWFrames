@@ -11,66 +11,6 @@
 %include <typemaps.i>
 %include <stl.i>
 
-// %{
-//   #include "/opt/local/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/numpy/core/include/numpy/arrayobject.h"
-//   #include <vector>
-// %}
-
-// %init %{
-//   import_array();
-// %}
-
-// %typemap(out) std::vector<int> {
-//   npy_intp result_size = $1.size();
-//   npy_intp dims[1] = { result_size };
-//   PyArrayObject* npy_arr = (PyArrayObject*)PyArray_SimpleNew(1, dims, NPY_INT);
-//   int* dat = (int*) PyArray_DATA(npy_arr);
-//   for (size_t i = 0; i < result_size; ++i) { dat[i] = $1[i]; }
-//   $result = PyArray_Return(npy_arr);
-// }
-// %typemap(out) std::vector<int>& {
-//   npy_intp result_size = $1->size();
-//   npy_intp dims[1] = { result_size };
-//   PyArrayObject* npy_arr = (PyArrayObject*)PyArray_SimpleNew(1, dims, NPY_INT);
-//   int* dat = (int*) PyArray_DATA(npy_arr);
-//   for (size_t i = 0; i < result_size; ++i) { dat[i] = (*$1)[i]; }
-//   $result = PyArray_Return(npy_arr);
-// }
-// %typemap(out) std::vector<std::vector<int> >& {
-//   npy_intp result_size = $1->size();
-//   npy_intp result_size2 = (result_size>0 ? (*$1)[0].size() : 0);
-//   npy_intp dims[2] = { result_size, result_size2 };
-//   PyArrayObject* npy_arr = (PyArrayObject*)PyArray_SimpleNew(2, dims, NPY_INT);
-//   int* dat = (int*) PyArray_DATA(npy_arr);
-//   for (size_t i = 0; i < result_size; ++i) { for (size_t j = 0; j < result_size2; ++j) { dat[i*result_size2+j] = (*$1)[i][j]; } }
-//   $result = PyArray_Return(npy_arr);
-// }
-
-// %typemap(out) std::vector<double> {
-//   npy_intp result_size = $1.size();
-//   npy_intp dims[1] = { result_size };
-//   PyArrayObject* npy_arr = (PyArrayObject*)PyArray_SimpleNew(1, dims, NPY_DOUBLE);
-//   double* dat = (double*) PyArray_DATA(npy_arr);
-//   for (size_t i = 0; i < result_size; ++i) { dat[i] = $1[i]; }
-//   $result = PyArray_Return(npy_arr);
-// }
-// %typemap(out) std::vector<double>& {
-//   npy_intp result_size = $1->size();
-//   npy_intp dims[1] = { result_size };
-//   PyArrayObject* npy_arr = (PyArrayObject*)PyArray_SimpleNew(1, dims, NPY_DOUBLE);
-//   double* dat = (double*) PyArray_DATA(npy_arr);
-//   for (size_t i = 0; i < result_size; ++i) { dat[i] = (*$1)[i]; }
-//   $result = PyArray_Return(npy_arr);
-// }
-// %typemap(out) std::vector<std::vector<double> >& {
-//   npy_intp result_size = $1->size();
-//   npy_intp result_size2 = (result_size>0 ? (*$1)[0].size() : 0);
-//   npy_intp dims[2] = { result_size, result_size2 };
-//   PyArrayObject* npy_arr = (PyArrayObject*)PyArray_SimpleNew(2, dims, NPY_DOUBLE);
-//   double* dat = (double*) PyArray_DATA(npy_arr);
-//   for (size_t i = 0; i < result_size; ++i) { for (size_t j = 0; j < result_size2; ++j) { dat[i*result_size2+j] = (*$1)[i][j]; } }
-//   $result = PyArray_Return(npy_arr);
-// }
 
 %include "../Docs/GWFrames_Doc.i"
 
@@ -128,18 +68,21 @@
 //// These will be needed by the c++ wrapper ////
 /////////////////////////////////////////////////
 %{
+  #define SWIG_FILE_WITH_INIT
   #include <iostream>
   #include <string>
   #include <sstream>
   #include <iomanip>
   #include <complex>
   #include "Utilities.hpp"
-  #include "Quaternions/Quaternions.hpp"
-  #include "Quaternions/IntegrateAngularVelocity.hpp"
+  #include "Quaternions.hpp"
+  #include "IntegrateAngularVelocity.hpp"
   #include "Scri.hpp"
   #include "SphericalHarmonics.hpp"
   #include "Waveforms.hpp"
   #include "PNWaveforms.hpp"
+
+  typedef std::complex<double> std_complex_double;
 %}
 
 
@@ -168,6 +111,7 @@
 %pythoncode %{
   import numpy;
   %}
+
 //// Make sure std::strings are dealt with appropriately
 %include <std_string.i>
 //// Make sure std::complex numbers are dealt with appropriately
@@ -177,20 +121,32 @@
 // };
 //// Make sure std::vectors are dealt with appropriately
 %include <std_vector.i>
-namespace Quaternions {
-  class Quaternion;
- };
+// namespace Quaternions {
+//   class Quaternion;
+//  };
 namespace std {
   %template(vectori) vector<int>;
   %template(vectorvectori) vector<vector<int> >;
-  %template(vectord) vector<double>;
-  %template(vectorvectord) vector<vector<double> >;
+  // %template(vectord) vector<double>;
+  // %template(vectorvectord) vector<vector<double> >;
   %template(vectorc) vector<std::complex<double> >;
   %template(vectorvectorc) vector<vector<std::complex<double> > >;
-  %template(vectorq) vector<Quaternions::Quaternion>;
+  // %template(vectorq) vector<Quaternions::Quaternion>;
   %template(vectors) vector<string>;
   %template(vectorvectors) vector<vector<std::string> >;
 };
+
+%include "PostNewtonian/C++/Quaternions/Quaternions_typemaps.i"
+// %include "PostNewtonian/C++/Quaternions/Quaternions.hpp"
+// Return the values by reference as python
+ARGOUT_TYPEMAP_STD_VECTOR_OF_PRIMITIVES(double, DOUBLE, t, NPY_DOUBLE)
+ARGOUT_TYPEMAP_STD_VECTOR_OF_PRIMITIVES(double, DOUBLE, v, NPY_DOUBLE)
+ARGOUT_TYPEMAP_STD_VECTOR_OF_STD_VECTOR_OF_PRIMITIVES(double, DOUBLE, chi1, NPY_DOUBLE)
+ARGOUT_TYPEMAP_STD_VECTOR_OF_STD_VECTOR_OF_PRIMITIVES(double, DOUBLE, chi2, NPY_DOUBLE)
+%apply std::vector<Quaternions::Quaternion>& Quaternion_argout { std::vector<Quaternions::Quaternion>& R_frame };
+ARGOUT_TYPEMAP_STD_VECTOR_OF_PRIMITIVES(double, DOUBLE, Phi, NPY_DOUBLE)
+ARGOUT_TYPEMAP_STD_VECTOR_OF_STD_VECTOR_OF_PRIMITIVES(double, DOUBLE, L, NPY_DOUBLE)
+OUT_TYPEMAP_STD_VECTOR_OF_STD_VECTOR_OF_PRIMITIVES(double, NPY_DOUBLE)
 
 
 ////////////////////////////////////////////////////////////
@@ -212,41 +168,47 @@ namespace std {
 // %rename(__setitem__) GWFrames::SliceGrid::operator [](unsigned int const);
 // %rename(__getitem__) GWFrames::Scri::operator [](unsigned int const) const;
 // %rename(__setitem__) GWFrames::Scri::operator [](unsigned int const);
-%include "Scri.hpp"
-namespace GWFrames {
-  %template(SliceOfScriGrid) SliceOfScri<DataGrid>;
-  %template(SliceOfScriModes) SliceOfScri<Modes>;
-}
-%extend GWFrames::DataGrid { // None of the above seem to work, so...
-  const std::complex<double> __getitem__(const unsigned int i) const { return $self->operator[](i); }
-  void __setitem__(const unsigned int i, const std::complex<double>& a) { $self->operator[](i)=a; }
-};
-%extend GWFrames::Modes { // None of the above seem to work, so...
-  const std::complex<double> __getitem__(const unsigned int i) const { return $self->operator[](i); }
-  void __setitem__(const unsigned int i, const std::complex<double>& a) { $self->operator[](i)=a; }
-};
-%extend GWFrames::SliceModes { // None of the above seem to work, so...
-  const GWFrames::Modes& __getitem__(const unsigned int i) const { return $self->operator[](i); }
-  void __setitem__(const unsigned int i, const GWFrames::Modes& a) { $self->operator[](i)=a; }
-};
-%extend GWFrames::SliceGrid { // None of the above seem to work, so...
-  const GWFrames::DataGrid& __getitem__(const unsigned int i) const { return $self->operator[](i); }
-  void __setitem__(const unsigned int i, const GWFrames::DataGrid& a) { $self->operator[](i)=a; }
-};
-%extend GWFrames::Scri { // None of the above seem to work, so...
-  const GWFrames::SliceModes __getitem__(const unsigned int i) const { return $self->operator[](i); }
-  void __setitem__(const unsigned int i, const GWFrames::SliceModes& a) { $self->operator[](i) = a; }
-};
-%extend GWFrames::SuperMomenta { // None of the above seem to work, so...
-  const GWFrames::Modes __getitem__(const unsigned int i) const { return $self->operator[](i); }
-  void __setitem__(const unsigned int i, const GWFrames::Modes& a) { $self->operator[](i) = a; }
-};
+// %include "Scri.hpp"
+// namespace GWFrames {
+//   %template(SliceOfScriGrid) SliceOfScri<DataGrid>;
+//   %template(SliceOfScriModes) SliceOfScri<Modes>;
+// }
+// %extend GWFrames::DataGrid { // None of the above seem to work, so...
+//   const std::complex<double> __getitem__(const unsigned int i) const { return $self->operator[](i); }
+//   void __setitem__(const unsigned int i, const std::complex<double>& a) { $self->operator[](i)=a; }
+// };
+// %extend GWFrames::Modes { // None of the above seem to work, so...
+//   const std::complex<double> __getitem__(const unsigned int i) const { return $self->operator[](i); }
+//   void __setitem__(const unsigned int i, const std::complex<double>& a) { $self->operator[](i)=a; }
+// };
+// %extend GWFrames::SliceModes { // None of the above seem to work, so...
+//   const GWFrames::Modes& __getitem__(const unsigned int i) const { return $self->operator[](i); }
+//   void __setitem__(const unsigned int i, const GWFrames::Modes& a) { $self->operator[](i)=a; }
+// };
+// %extend GWFrames::SliceGrid { // None of the above seem to work, so...
+//   const GWFrames::DataGrid& __getitem__(const unsigned int i) const { return $self->operator[](i); }
+//   void __setitem__(const unsigned int i, const GWFrames::DataGrid& a) { $self->operator[](i)=a; }
+// };
+// %extend GWFrames::Scri { // None of the above seem to work, so...
+//   const GWFrames::SliceModes __getitem__(const unsigned int i) const { return $self->operator[](i); }
+//   void __setitem__(const unsigned int i, const GWFrames::SliceModes& a) { $self->operator[](i) = a; }
+// };
+// %extend GWFrames::SuperMomenta { // None of the above seem to work, so...
+//   const GWFrames::Modes __getitem__(const unsigned int i) const { return $self->operator[](i); }
+//   void __setitem__(const unsigned int i, const GWFrames::Modes& a) { $self->operator[](i) = a; }
+// };
 
 //////////////////////////
 //// Import utilities ////
 //////////////////////////
 %ignore GWFrames::Matrix::operator=;
 %ignore GWFrames::Matrix::operator[];
+%ignore GWFrames::operator+;
+%ignore GWFrames::operator-;
+%ignore GWFrames::operator*;
+%ignore GWFrames::operator/;
+%ignore GWFrames::abs;
+%ignore GWFrames::pow;
 %include "Utilities.hpp"
 namespace std {
   %template(vectorM) vector<GWFrames::Matrix>;
@@ -278,12 +240,14 @@ namespace std {
 //// Ignore things that don't translate well...
 %ignore operator<<;
 %ignore GWFrames::Waveform::operator=;
-//// Allow us to get Quaternions returned naturally when passed by reference
-%typemap(in,numinputs=0) Quaternions::Quaternion& OUTPUT (Quaternions::Quaternion temp) { $1 = &temp; }
-%typemap(argout) Quaternions::Quaternion& OUTPUT {
-  $result = SWIG_Python_AppendOutput($result, SWIG_NewPointerObj((new Quaternions::Quaternion(static_cast< const Quaternions::Quaternion& >(temp$argnum))), SWIGTYPE_p_Quaternions__Quaternion, SWIG_POINTER_OWN |  0 ));
-}
+// //// Allow us to get Quaternions returned naturally when passed by reference
+// %typemap(in,numinputs=0) Quaternions::Quaternion& OUTPUT (Quaternions::Quaternion temp) { $1 = &temp; }
+// %typemap(argout) Quaternions::Quaternion& OUTPUT {
+//   $result = SWIG_Python_AppendOutput($result, SWIG_NewPointerObj((new Quaternions::Quaternion(static_cast< const Quaternions::Quaternion& >(temp$argnum))), SWIGTYPE_p_Quaternions__Quaternion, SWIG_POINTER_OWN |  0 ));
+// }
 //// These will convert the output data to numpy.ndarray for easier use
+#if defined(SWIGPYTHON_BUILTIN)
+#else
 %feature("pythonappend") GWFrames::Waveform::T() const %{ if isinstance(val, tuple) : val = numpy.array(val) %}
 %feature("pythonappend") GWFrames::Waveform::Frame() const %{ if isinstance(val, tuple) : val = numpy.array(val) %}
 %feature("pythonappend") GWFrames::Waveform::LM() const %{ if isinstance(val, tuple) : val = numpy.array(val) %}
@@ -303,9 +267,10 @@ namespace std {
 %feature("pythonappend") GWFrames::Waveform::CorotatingFrame() const %{ if isinstance(val, tuple) : val = numpy.array(val) %}
 %feature("pythonappend") GWFrames::Waveform::PNEquivalentOrbitalAV() const %{ if isinstance(val, tuple) : val = numpy.array(val) %}
 %feature("pythonappend") GWFrames::Waveform::PNEquivalentPrecessionalAV() const %{ if isinstance(val, tuple) : val = numpy.array(val) %}
+#endif
 //// Allow us to extract the outputs naturally in python
 %apply double& OUTPUT { double& deltat };
-%apply Quaternions::Quaternion& OUTPUT { Quaternions::Quaternion& R_delta };
+// %apply Quaternions::Quaternion& OUTPUT { Quaternions::Quaternion& R_delta };
 //// Parse the header file to generate wrappers
 %include "Waveforms.hpp"
 //// Make sure vectors of Waveform are understood

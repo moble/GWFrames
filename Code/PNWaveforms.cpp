@@ -135,15 +135,14 @@ GWFrames::PNWaveform::PNWaveform(const std::string& Approximant, const double de
 	    << "# pwd = " << pwd << std::endl
 	    << "# hostname = " << hostname << std::endl
 	    << "# date = " << date // comes with a newline
-	    << "PNWaveform(" << delta << ", " << VectorStringForm(chi1_i) << ", " << VectorStringForm(chi2_i)
-	    << ", " << Omega_orb_i << ", " << R_frame_i << ");" << std::endl;
+	    << "W = PNWaveform(" << Approximant << ", " << delta << ", " << VectorStringForm(chi1_i) << ", " << VectorStringForm(chi2_i)
+	    << ", " << Omega_orb_i << ", " << R_frame_i << ", " << PNOrder << ", " << v_0 << ");" << std::endl;
   }
 
   vector<double> v;
-  vector<Quaternion> frame;
 
-  PostNewtonian::EvolvePN(Approximant, PNOrder, v_0, v_i, m1, m2, chi1_i, chi2_i, R_frame_i,
-			  t, v, mchi1, mchi2, frame, mPhi_orb, mL);
+  PostNewtonian::EvolvePN_Q(Approximant, PNOrder, v_0, v_i, m1, m2, chi1_i, chi2_i, R_frame_i,
+			    t, v, mchi1, mchi2, frame, mPhi_orb, mL);
 
   mOmega_orb = pow(v,3)*PostNewtonian::ellHat(frame);
   mOmega_prec = Quaternions::vec(Quaternions::FrameAngularVelocity(frame, t)) - mOmega_orb;
