@@ -3,14 +3,26 @@
 // Copyright (c) 2013, Michael Boyle
 // See LICENSE file for details
 
-
 %module GWFrames
 
- // Quiet warnings about overloaded operators being ignored.
+// Quiet warnings about overloaded operators being ignored.
 #pragma SWIG nowarn=362,389,401,509
 %include <typemaps.i>
 %include <stl.i>
 
+//// This lets me use numpy.array in the code below
+%{
+  #define SWIG_FILE_WITH_INIT
+  %}
+%include "numpy.i"
+%init %{
+  import_array();
+  %}
+%pythoncode %{
+  %}
+
+%import "PostNewtonian/C++/Quaternions/Quaternions.i"
+%import "PostNewtonian/C++/Quaternions/Quaternions_typemaps.i"
 
 %include "../Docs/GWFrames_Doc.i"
 
@@ -68,7 +80,6 @@
 //// These will be needed by the c++ wrapper ////
 /////////////////////////////////////////////////
 %{
-  #define SWIG_FILE_WITH_INIT
   #include <iostream>
   #include <string>
   #include <sstream>
@@ -77,26 +88,21 @@
   #include "Utilities.hpp"
   #include "Quaternions.hpp"
   #include "IntegrateAngularVelocity.hpp"
-  #include "Scri.hpp"
+  // #include "Scri.hpp"
   #include "SphericalHarmonics.hpp"
   #include "Waveforms.hpp"
   #include "PNWaveforms.hpp"
-
-  typedef std::complex<double> std_complex_double;
 %}
 
 
-// This attempts to import the Quaternions module
 %pythoncode %{
-  try :
-    import Quaternions
-  except ImportError :
-    pass
-%}
+  ## We have to be able to import numpy
+  import numpy;
 
+  ## We have to be able to import Quaternions
+  import Quaternions
 
-// This attempts to import spinsfast.so, so we don't need to pull any tricks
-%pythoncode %{
+  ## We do not necessarily need spinsfast
   try :
     import spinsfast
   except ImportError :
@@ -107,51 +113,29 @@
 //////////////////////////////////////////////////////////////////////
 //// The following translates between c++ and python types nicely ////
 //////////////////////////////////////////////////////////////////////
-//// This lets me use numpy.array in the code below
-%pythoncode %{
-  import numpy;
-  %}
-
 //// Make sure std::strings are dealt with appropriately
 %include <std_string.i>
 //// Make sure std::complex numbers are dealt with appropriately
 %include <std_complex.i>
-// namespace std {
-//   %template(complexd) complex<double>; // Don't use this line!!!
-// };
 //// Make sure std::vectors are dealt with appropriately
 %include <std_vector.i>
-// namespace Quaternions {
-//   class Quaternion;
-//  };
 namespace std {
+  //%template(complexd) complex<double>; // Don't use this line!!!
   %template(vectori) vector<int>;
   %template(vectorvectori) vector<vector<int> >;
   // %template(vectord) vector<double>;
   // %template(vectorvectord) vector<vector<double> >;
   %template(vectorc) vector<std::complex<double> >;
   %template(vectorvectorc) vector<vector<std::complex<double> > >;
-  // %template(vectorq) vector<Quaternions::Quaternion>;
+  %template(vectorq) vector<Quaternions::Quaternion>;
   %template(vectors) vector<string>;
   %template(vectorvectors) vector<vector<std::string> >;
 };
 
-%include "PostNewtonian/C++/Quaternions/Quaternions_typemaps.i"
-// %include "PostNewtonian/C++/Quaternions/Quaternions.hpp"
-// Return the values by reference as python
-ARGOUT_TYPEMAP_STD_VECTOR_OF_PRIMITIVES(double, DOUBLE, t, NPY_DOUBLE)
-ARGOUT_TYPEMAP_STD_VECTOR_OF_PRIMITIVES(double, DOUBLE, v, NPY_DOUBLE)
-ARGOUT_TYPEMAP_STD_VECTOR_OF_STD_VECTOR_OF_PRIMITIVES(double, DOUBLE, chi1, NPY_DOUBLE)
-ARGOUT_TYPEMAP_STD_VECTOR_OF_STD_VECTOR_OF_PRIMITIVES(double, DOUBLE, chi2, NPY_DOUBLE)
-%apply std::vector<Quaternions::Quaternion>& Quaternion_argout { std::vector<Quaternions::Quaternion>& R_frame };
-ARGOUT_TYPEMAP_STD_VECTOR_OF_PRIMITIVES(double, DOUBLE, Phi, NPY_DOUBLE)
-ARGOUT_TYPEMAP_STD_VECTOR_OF_STD_VECTOR_OF_PRIMITIVES(double, DOUBLE, L, NPY_DOUBLE)
-OUT_TYPEMAP_STD_VECTOR_OF_STD_VECTOR_OF_PRIMITIVES(double, NPY_DOUBLE)
 
-
-////////////////////////////////////////////////////////////
-//// Import the various functions for spherical harmonics //
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////
+//// Import the SphericalFunctions module //
+////////////////////////////////////////////
 %include "SphericalHarmonics.hpp"
 
 
@@ -226,28 +210,21 @@ namespace std {
 
 
 
-////////////////////////////////////////////////
-//// Prepare to read in the Waveforms class ////
-////////////////////////////////////////////////
-//// Ignore this, as neither const nor non-const will work (copy constructor issues?)
-%ignore GWFrames::Waveforms::operator[];
-%rename(__getitem__) GWFrames::Waveforms::operator[] const;
-
-
 ////////////////////////////////////
 //// Read in the Waveform class ////
 ////////////////////////////////////
 //// Ignore things that don't translate well...
 %ignore operator<<;
 %ignore GWFrames::Waveform::operator=;
+%ignore GWFrames::Waveforms::operator[];
+%rename(__getitem__) GWFrames::Waveforms::operator[] const;
 // //// Allow us to get Quaternions returned naturally when passed by reference
 // %typemap(in,numinputs=0) Quaternions::Quaternion& OUTPUT (Quaternions::Quaternion temp) { $1 = &temp; }
 // %typemap(argout) Quaternions::Quaternion& OUTPUT {
 //   $result = SWIG_Python_AppendOutput($result, SWIG_NewPointerObj((new Quaternions::Quaternion(static_cast< const Quaternions::Quaternion& >(temp$argnum))), SWIGTYPE_p_Quaternions__Quaternion, SWIG_POINTER_OWN |  0 ));
 // }
 //// These will convert the output data to numpy.ndarray for easier use
-#if defined(SWIGPYTHON_BUILTIN)
-#else
+#ifndef SWIGPYTHON_BUILTIN
 %feature("pythonappend") GWFrames::Waveform::T() const %{ if isinstance(val, tuple) : val = numpy.array(val) %}
 %feature("pythonappend") GWFrames::Waveform::Frame() const %{ if isinstance(val, tuple) : val = numpy.array(val) %}
 %feature("pythonappend") GWFrames::Waveform::LM() const %{ if isinstance(val, tuple) : val = numpy.array(val) %}
@@ -324,6 +301,7 @@ namespace std {
         self.SetData(data[8])
   %}
  };
+// Note the 's' on 'Waveforms' below!
 %extend GWFrames::Waveforms {
   void __setitem__(int i, const GWFrames::Waveform& W) {
     $self->operator[](i) = W;
@@ -339,8 +317,9 @@ namespace std {
 // %ignore operator<<;
 // %ignore GWFrames::Waveform::operator=;
 //// Get output from PNWaveformModes
-%apply std::vector<std::complex<double> >& OUTPUT {std::vector<std::complex<double> >& modes };
+%apply std::vector<std::complex<double> >& OUTPUT { std::vector<std::complex<double> >& modes };
 //// These will convert the output data to numpy.ndarray for easier use
+#ifndef SWIGPYTHON_BUILTIN
 %feature("pythonappend") GWFrames::PNWaveform::chi1() const %{ if isinstance(val, tuple) : val = numpy.array(val) %}
 %feature("pythonappend") GWFrames::PNWaveform::chi2() const %{ if isinstance(val, tuple) : val = numpy.array(val) %}
 %feature("pythonappend") GWFrames::PNWaveform::Omega_orb() const %{ if isinstance(val, tuple) : val = numpy.array(val) %}
@@ -358,6 +337,7 @@ namespace std {
 %feature("pythonappend") GWFrames::PNWaveform::OmegaHat_prec() const %{ if isinstance(val, tuple) : val = numpy.array(val) %}
 %feature("pythonappend") GWFrames::PNWaveform::OmegaHat_tot() const %{ if isinstance(val, tuple) : val = numpy.array(val) %}
 %feature("pythonappend") GWFrames::PNWaveform::LHat() const %{ if isinstance(val, tuple) : val = numpy.array(val) %}
+#endif
 //// Parse the header file to generate wrappers
 %include "PNWaveforms.hpp"
 
