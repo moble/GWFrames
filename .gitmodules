@@ -1,6 +1,3 @@
-[submodule "Code/Quaternions"]
-	path = Code/Quaternions
-	url = git@github.com:MOBle/Quaternions.git
 [submodule "Code/PostNewtonian"]
 	path = Code/PostNewtonian
 	url = git@github.com:MOBle/PostNewtonian.git
