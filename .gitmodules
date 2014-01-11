@@ -2,3 +2,6 @@
 	path = Code/PostNewtonian
 	url = git@github.com:MOBle/PostNewtonian.git
 	branch = master
+[submodule "Code/SphericalFunctions"]
+	path = Code/SphericalFunctions
+	url = git@github.com:MOBle/SphericalFunctions.git
