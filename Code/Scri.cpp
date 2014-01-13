@@ -35,7 +35,7 @@ namespace GWFrames {
 
 #include "Utilities.hpp"
 #include "Quaternions.hpp"
-#include "SphericalHarmonics.hpp"
+#include "SphericalFunctions/SWSHs.hpp"
 #include "Waveforms.hpp"
 #include "Errors.hpp"
 
@@ -426,14 +426,14 @@ Modes::Modes(const int spin, const std::vector<std::complex<double> >& Data)
   : s(spin), ellMax(0), data(Data)
 {
   // Find the appropriate ellMax for this data length
-  for(; ellMax<=ellMax_GWFrames; ++ellMax) {
+  for(; ellMax<=SphericalFunctions::ellMax; ++ellMax) {
     if(N_lm(ellMax)==int(Data.size())) {
       break;
     }
   }
 
-  // Make sure Data doesn't have more ell modes than ellMax_GWFrames
-  if(ellMax>=ellMax_GWFrames) {
+  // Make sure Data doesn't have more ell modes than SphericalFunctions::ellMax
+  if(ellMax>=SphericalFunctions::ellMax) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
 	      << "\nError: Input data has length " << Data.size() << "."
 	      << "\n       This is not a recognized length for spherical-harmonic data.\n"
@@ -646,7 +646,7 @@ std::complex<double> Modes::EvaluateAtPoint(const double vartheta, const double 
   ///
 
   complex<double> d(0.0, 0.0);
-  GWFrames::SWSH Y(s);
+  SphericalFunctions::SWSH Y(s);
   Y.SetAngles(vartheta, varphi);
   int i=0;
   for(int ell=0; ell<=ellMax; ++ell) {
@@ -671,7 +671,7 @@ std::complex<double> Modes::EvaluateAtPoint(const Quaternions::Quaternion& R) co
   ///
 
   complex<double> d(0.0, 0.0);
-  GWFrames::SWSH Y(s, R);
+  SphericalFunctions::SWSH Y(s, R);
   for(int i_m=0, ell=0; ell<=ellMax; ++ell) {
     for(int m=-ell; m<=ell; ++m, ++i_m) {
       d += data[i_m]*Y(ell,m);

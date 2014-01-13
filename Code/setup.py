@@ -49,7 +49,7 @@ from os import devnull, environ
 
 # Add directories for numpy and other inclusions
 from numpy import get_include
-IncDirs = ['spinsfast/include', 'PostNewtonian/C++/Quaternions', get_include()]
+IncDirs = ['spinsfast/include', 'SphericalFunctions/Quaternions', get_include()]
 LibDirs = ['spinsfast/lib']
 
 ## See if GSL_HOME is set; if so, use it
@@ -106,26 +106,26 @@ setup(name="GWFrames",
       # py_modules = ['GWFrames'],
       scripts = ['Scripts/RunExtrapolations.py', 'Scripts/ConvertGWDatToH5.py'],
       ext_modules = [
-        Extension('_GWFrames', ['PostNewtonian/C++/Quaternions/Quaternions.cpp',
-                                'PostNewtonian/C++/Quaternions/IntegrateAngularVelocity.cpp',
+        Extension('_GWFrames', ['SphericalFunctions/Quaternions/Quaternions.cpp',
+                                'SphericalFunctions/Quaternions/IntegrateAngularVelocity.cpp',
                                 'PostNewtonian/C++/PNEvolution.cpp',
                                 'PostNewtonian/C++/PNEvolution_Q.cpp',
                                 'PostNewtonian/C++/PNWaveformModes.cpp',
+                                'SphericalFunctions/SWSHs.cpp',
                                 'Utilities.cpp',
                                 'Waveforms.cpp',
                                 'PNWaveforms.cpp',
                                 'Scri.cpp',
-                                'SphericalHarmonics.cpp',
                                 'GWFrames.i'],
-                  depends = ['PostNewtonian/C++/Quaternions/Quaternions.hpp',
-                             'PostNewtonian/C++/Quaternions/IntegrateAngularVelocity.hpp',
+                  depends = ['SphericalFunctions/Quaternions/Quaternions.hpp',
+                             'SphericalFunctions/Quaternions/IntegrateAngularVelocity.hpp',
                              'PostNewtonian/C++/PNEvolution.hpp',
                              'PostNewtonian/C++/PNWaveformModes.hpp',
+                             'SphericalFunctions/SWSHs.hpp',
                              'Utilities.hpp',
                              'Waveforms.hpp',
                              'PNWaveforms.hpp',
                              'Scri.hpp',
-                             'SphericalHarmonics.hpp',
                              'Errors.hpp',
                              'GWFrames_Doc.i'],
                   include_dirs=IncDirs,

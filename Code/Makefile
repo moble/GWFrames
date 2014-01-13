@@ -9,9 +9,15 @@
 
 
 # By default, just call the python build process
-all : spinsfast
+all : spinsfast SphericalFunctions
 	python setup.py install --user
 
+spinsfast :
+	build=build/config.mk $(MAKE) -C spinsfast
+	cp spinsfast/lib/spinsfast.so `python -m site --user-site`/
+
+SphericalFunctions :
+	$(MAKE) -C SphericalFunctions
 
 
 
@@ -39,7 +45,7 @@ all : spinsfast
 # Library) headers and libraries.  The following paths are the most
 # common places for these to be installed.  If compilation doesn't
 # work, correct these paths.
-INCFLAGS = -I/opt/local/include -I/usr/local/include -Ispinsfast/include -IPostNewtonian/C++/Quaternions
+INCFLAGS = -I/opt/local/include -I/usr/local/include -Ispinsfast/include -ISphericalFunctions/Quaternions
 LIBFLAGS = -L/opt/local/lib -L/usr/local/lib -Lspinsfast/lib
 ifdef GSL_HOME
 	INCFLAGS = -I${GSL_HOME}/include ${INCFLAGS}
@@ -56,10 +62,10 @@ OPT = -O3 -fopenmp -Wall -Wno-deprecated
 #############################################################################
 
 # Tell 'make' not to look for files with the following names
-.PHONY : all cpp clean allclean realclean swig spinsfast
+.PHONY : all cpp clean allclean realclean swig spinsfast SphericalFunctions
 
 # If needed, we can also make object files to use in other C++ programs
-cpp : Utilities.o PostNewtonian/C++/Quaternions/Quaternions.o Waveforms.o PNWaveforms.o Scri.o SphericalHarmonics.o
+cpp : Utilities.o SphericalFunctions/Quaternions/Quaternions.o Waveforms.o PNWaveforms.o Scri.o SphericalHarmonics.o
 
 # This is how to build those object files
 %.o : %.cpp %.hpp Errors.hpp
@@ -70,14 +76,9 @@ clean :
 	-/bin/rm -f *.o
 allclean : clean
 	-/bin/rm -rf build
-	-build=build/config.mk make -C spinsfast clean
+	-build=build/config.mk $(MAKE) -C spinsfast clean
 realclean : allclean
 
 # This just runs SWIG, which can be handy for committing pre-swigged files
 swig :
 	swig -python -globals constants -c++ -o GWFrames_wrap.cpp GWFrames.i
-
-# This attempts to build spinsfast
-spinsfast :
-	build=build/config.mk make -C spinsfast
-	cp spinsfast/lib/spinsfast.so `python -m site --user-site`/

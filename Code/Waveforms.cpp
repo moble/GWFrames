@@ -24,13 +24,13 @@
 #include "Utilities.hpp"
 #include "Quaternions.hpp"
 #include "IntegrateAngularVelocity.hpp"
-#include "SphericalHarmonics.hpp"
+#include "SphericalFunctions/SWSHs.hpp"
 #include "Errors.hpp"
 
 using Quaternions::Quaternion;
 using Quaternions::QuaternionArray;
 using GWFrames::Matrix;
-using GWFrames::LadderOperatorFactorFunctor;
+using SphericalFunctions::LadderOperatorFactorFunctor;
 using GWFrames::abs;
 using Quaternions::PrescribedRotation;
 using Quaternions::FrameFromZ;
@@ -749,7 +749,7 @@ GWFrames::Waveform& GWFrames::Waveform::TransformModesToRotatedFrame(const std::
       {
 
 	// Construct the D matrix and data storage
-	WignerDMatrix D(R_frame[0]);
+	SphericalFunctions::WignerDMatrix D(R_frame[0]);
 	vector<vector<complex<double> > > Ds(2*l+1, vector<complex<double> >(2*l+1));
 	vector<complex<double> > Data(2*l+1);
 
@@ -853,7 +853,7 @@ GWFrames::Waveform& GWFrames::Waveform::TransformUncertaintiesToRotatedFrame(con
       {
 
 	// Construct the D matrix and data storage
-	WignerDMatrix D(R_frame[0]);
+	SphericalFunctions::WignerDMatrix D(R_frame[0]);
 	vector<vector<complex<double> > > Ds(2*l+1, vector<complex<double> >(2*l+1));
 	vector<complex<double> > Data(2*l+1);
 
@@ -2428,7 +2428,7 @@ std::vector<std::complex<double> > GWFrames::Waveform::EvaluateAtPoint(const dou
   const int NT = NTimes();
   const int NM = NModes();
   vector<complex<double> > d(NT, complex<double>(0.,0.));
-  SWSH Y(SpinWeight());
+  SphericalFunctions::SWSH Y(SpinWeight());
   Y.SetAngles(vartheta, varphi);
 
   for(int i_m=0; i_m<NM; ++i_m) {
@@ -3147,14 +3147,14 @@ GWFrames::Waveform GWFrames::Waveform::ApplySupertranslation(std::vector<std::co
 
   // Find the max ell present in the input gamma data
   int lMax=0;
-  for(; lMax<=ellMax_GWFrames; ++lMax) {
+  for(; lMax<=SphericalFunctions::ellMax; ++lMax) {
     if(N_lm(lMax)==int(gamma.size())) {
       break;
     }
   }
 
-  // Make sure gamma doesn't have more ell modes than ellMax_GWFrames
-  if(lMax>=ellMax_GWFrames) {
+  // Make sure gamma doesn't have more ell modes than SphericalFunctions::ellMax
+  if(lMax>=SphericalFunctions::ellMax) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
 	      << "\nError: Input supertranslation data has length " << gamma.size() << "."
 	      << "\n       This is not a recognized length for spherical-harmonic data.\n"

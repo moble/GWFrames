@@ -21,8 +21,9 @@
 %pythoncode %{
   %}
 
-%import "PostNewtonian/C++/Quaternions/Quaternions.i"
-%import "PostNewtonian/C++/Quaternions/Quaternions_typemaps.i"
+%import "SphericalFunctions/Quaternions/Quaternions.i"
+%import "SphericalFunctions/Quaternions/Quaternions_typemaps.i"
+%import "SphericalFunctions/SphericalFunctions.i"
 
 %include "../Docs/GWFrames_Doc.i"
 
@@ -89,7 +90,7 @@
   #include "Quaternions.hpp"
   #include "IntegrateAngularVelocity.hpp"
   // #include "Scri.hpp"
-  #include "SphericalHarmonics.hpp"
+  #include "SphericalFunctions/SWSHs.hpp"
   #include "Waveforms.hpp"
   #include "PNWaveforms.hpp"
 %}
@@ -119,24 +120,7 @@
 %include <std_complex.i>
 //// Make sure std::vectors are dealt with appropriately
 %include <std_vector.i>
-namespace std {
-  //%template(complexd) complex<double>; // Don't use this line!!!
-  %template(vectori) vector<int>;
-  %template(vectorvectori) vector<vector<int> >;
-  // %template(vectord) vector<double>;
-  // %template(vectorvectord) vector<vector<double> >;
-  %template(vectorc) vector<std::complex<double> >;
-  %template(vectorvectorc) vector<vector<std::complex<double> > >;
-  %template(vectorq) vector<Quaternions::Quaternion>;
-  %template(vectors) vector<string>;
-  %template(vectorvectors) vector<vector<std::string> >;
-};
-
-
-////////////////////////////////////////////
-//// Import the SphericalFunctions module //
-////////////////////////////////////////////
-%include "SphericalHarmonics.hpp"
+// Note: All template instantiations should be done in SphericalHarmonics.i or below.
 
 
 ///////////////////////////////////////
