@@ -112,6 +112,10 @@ GWFrames::PNWaveform::PNWaveform(const double delta,
   /// 
   /// Note that, to get the PNWaveform in an inertial frame, you must
   /// first apply the method TransformToCorotatingFrame().
+
+  std::cerr << "WARNING: The precession equations for `PNWaveform` are incorrect.  Non-precessing systems"
+            << "         should be correct.  Otherwise, however, take these as simply test data for other code."
+            << std::endl;
   
   SetFrameType(GWFrames::Coorbital);
   SetDataType(GWFrames::h);
