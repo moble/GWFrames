@@ -120,7 +120,7 @@
 %include <std_complex.i>
 //// Make sure std::vectors are dealt with appropriately
 %include <std_vector.i>
-// Note: All template instantiations should be done in SphericalHarmonics.i or below.
+// Note: All template instantiations should be done in SphericalFunctions.i or lower.
 
 
 ///////////////////////////////////////

@@ -65,7 +65,7 @@ OPT = -O3 -fopenmp -Wall -Wno-deprecated
 .PHONY : all cpp clean allclean realclean swig spinsfast SphericalFunctions
 
 # If needed, we can also make object files to use in other C++ programs
-cpp : Utilities.o SphericalFunctions/Quaternions/Quaternions.o Waveforms.o PNWaveforms.o Scri.o SphericalHarmonics.o
+cpp : Utilities.o SphericalFunctions/Quaternions/Quaternions.o Waveforms.o PNWaveforms.o Scri.o
 
 # This is how to build those object files
 %.o : %.cpp %.hpp Errors.hpp
