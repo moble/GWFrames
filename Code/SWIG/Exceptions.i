@@ -24,13 +24,12 @@
     "Matrix size mismatch.",
     "Matrix size is assumed to be 3x3 in this function.",
     "Not enough points to take a derivative.",
-    "Empty instersection requested.",
-    "Unknown exception",
+    "Empty intersection requested.",
     "Waveform is missing requested (ell,m) component.",
     "Wrong frame type for this operation.",
     "Bad Waveform information."
   };
-  const int GWFramesNumberOfErrors = 24;
+  const int GWFramesNumberOfErrors = 23;
   PyObject* const GWFramesExceptions[] = {
     PyExc_NotImplementedError, // Not implemented
     PyExc_SystemError, // Failed system call
@@ -52,7 +51,6 @@
     PyExc_AssertionError, // 3x3 matrix assumed
     PyExc_AssertionError, // Not enough points for derivative
     PyExc_AssertionError, // Empty intersection
-    PyExc_RuntimeError, // [empty]
     PyExc_IndexError, // Waveform missing ell,m
     PyExc_AssertionError, // Bad frame type
     PyExc_ValueError, // Bad Waveform information

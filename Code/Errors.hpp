@@ -27,13 +27,8 @@
 #define GWFrames_MatrixSizeAssumedToBeThree 17
 #define GWFrames_NotEnoughPointsForDerivative 18
 #define GWFrames_EmptyIntersection 19
-// #define GWFrames_ 20
-#define GWFrames_WaveformMissingLMIndex 21
-#define GWFrames_WrongFrameType 22
-#define GWFrames_BadWaveformInformation 23
-
-// #define GWFrames_CannotExtrapolateQuaternions 4
-// #define GWFrames_QuaternionVectorSizeNotUnderstood 7
-// #define GWFrames_InfinitelyManySolutions 2
+#define GWFrames_WaveformMissingLMIndex 20
+#define GWFrames_WrongFrameType 21
+#define GWFrames_BadWaveformInformation 22
 
 #endif // ERRORS_HPP
