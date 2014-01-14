@@ -49,7 +49,7 @@ from os import devnull, environ
 
 # Add directories for numpy and other inclusions
 from numpy import get_include
-IncDirs = ['spinsfast/include', 'SphericalFunctions/Quaternions', get_include()]
+IncDirs = ['spinsfast/include', 'SphericalFunctions', 'SphericalFunctions/Quaternions', get_include()]
 LibDirs = ['spinsfast/lib']
 
 ## See if GSL_HOME is set; if so, use it
@@ -118,7 +118,7 @@ setup(name="GWFrames",
                                 'Waveforms.cpp',
                                 'PNWaveforms.cpp',
                                 'Scri.cpp',
-                                'GWFrames.i'],
+                                'SWIG/GWFrames.i'],
                   depends = ['SphericalFunctions/Quaternions/Quaternions.hpp',
                              'SphericalFunctions/Quaternions/IntegrateAngularVelocity.hpp',
                              'PostNewtonian/C++/PNEvolution.hpp',
@@ -137,7 +137,7 @@ setup(name="GWFrames",
                   libraries=['gsl', 'gslcblas', 'fftw3', 'spinsfast'],
                   define_macros = [('CodeRevision', CodeRevision)],
                   language='c++',
-                  swig_opts=['-globals', 'constants', '-c++'], # `'-builtin'` doesn't let Waveform have methods attached to it
+                  swig_opts=['-globals', 'constants', '-c++', '-outdir', '../'], # `'-builtin'` doesn't let Waveform have methods attached to it
                   extra_link_args=['-lgomp', '-fPIC'],
                   # extra_link_args=['-lgomp', '-fPIC', '-Wl,-undefined,error'], # `-undefined,error` tells the linker to fail on undefined symbols
                   extra_compile_args=['-Wno-deprecated'] #'-fopenmp',
