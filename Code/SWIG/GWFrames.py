@@ -114,20 +114,8 @@ except ImportError :
 
 
 def Unwrap(*args):
-  """
-    Unwrap phase so that it is (roughly) continuous.
-    ================================================
-      Parameters
-      ----------
-        const vector<double>& In
-      
-      Returns
-      -------
-        vector<double>
-      
-
-    """
   return _GWFrames.Unwrap(*args)
+Unwrap = _GWFrames.Unwrap
 
 def ScalarIntegral(*args):
   """
@@ -149,173 +137,33 @@ def ScalarIntegral(*args):
   return _GWFrames.ScalarIntegral(*args)
 
 def CumulativeScalarIntegral(*args):
-  """
-    Integrate scalar function by simple trapezoidal rule.
-    =====================================================
-      Parameters
-      ----------
-        const vector<double>& fdot
-          Vector of scalars.
-        const vector<double>& t
-          Vector of corresponding time steps.
-      
-      Returns
-      -------
-        double
-      
-
-    """
   return _GWFrames.CumulativeScalarIntegral(*args)
+CumulativeScalarIntegral = _GWFrames.CumulativeScalarIntegral
 
 def ScalarDerivative(*args):
-  """
-    Three-point finite-differencing of vector of scalars.
-    =====================================================
-      Parameters
-      ----------
-        const vector<double>& f
-          Vector of scalars.
-        const vector<double>& t
-          Vector of corresponding time steps.
-      
-      Returns
-      -------
-        vector<double>
-      
-      Description
-      -----------
-        Sundquist and Veronis, Tellus XXII (1970), 1
-      
-
-    """
   return _GWFrames.ScalarDerivative(*args)
+ScalarDerivative = _GWFrames.ScalarDerivative
 
 def ComplexDerivative(*args):
-  """
-    Three-point finite-differencing of vector of complex<double>.
-    =============================================================
-      Parameters
-      ----------
-        const vector<complex<double>>& f
-          Vector of complex<double>.
-        const vector<double>& t
-          Vector of corresponding time steps.
-      
-      Returns
-      -------
-        vector<complex<double>>
-      
-      Description
-      -----------
-        Sundquist and Veronis, Tellus XXII (1970), 1
-      
-
-    """
   return _GWFrames.ComplexDerivative(*args)
+ComplexDerivative = _GWFrames.ComplexDerivative
 
 def VectorIntegral(*args):
-  """
-    Integrate vector function by simple trapezoidal rule.
-    =====================================================
-      Parameters
-      ----------
-        const vector<vector<double>>& fdot
-          Vector of vectors (first index time).
-        const vector<double>& t
-          Vector of corresponding time steps.
-      
-      Returns
-      -------
-        vector<vector<double>>
-      
-
-    """
   return _GWFrames.VectorIntegral(*args)
+VectorIntegral = _GWFrames.VectorIntegral
 
 def CumulativeVectorIntegral(*args):
-  """
-    Integrate vector function by simple trapezoidal rule.
-    =====================================================
-      Parameters
-      ----------
-        const vector<vector<double>>& fdot
-          Vector of vectors (first index time).
-        const vector<double>& t
-          Vector of corresponding time steps.
-      
-      Returns
-      -------
-        vector<double>
-      
-
-    """
   return _GWFrames.CumulativeVectorIntegral(*args)
+CumulativeVectorIntegral = _GWFrames.CumulativeVectorIntegral
 
 def Intersection(*args):
-  """
-    Return the intersection of two time sequences.
-    ==============================================
-      Parameters
-      ----------
-        const vector<double>& t1
-        const vector<double>& t2
-        const double MinStep = 0.005
-        const double MinTime = -1e300
-        const double MaxTime = 1e300
-      
-      Returns
-      -------
-        vector<double>
-      
-      Description
-      -----------
-        The time step at each point is the minimum of the time steps in t1 and t2
-        at that instant, or MinStep, whichever is greater. The output starts at the
-        earliest moment common to t1 and t2, or MinTime, whichever is greater.
-        
-        The input to this function is assumed to be strictly monotonic.
-      
-
-    """
   return _GWFrames.Intersection(*args)
+Intersection = _GWFrames.Intersection
 
 def Union(*args):
-  """
-    Return the union of two time sequences.
-    =======================================
-      Parameters
-      ----------
-        const vector<double>& t1
-        const vector<double>& t2
-        const double MinStep = 0.005
-      
-      Returns
-      -------
-        vector<double>
-      
-      Description
-      -----------
-        On the overlap between the two sequences, the time is built up by taking
-        the smaller time step in either of the two sequences, or MinStep if that
-        step is smaller.
-        
-        The input to this function is assumed to be strictly monotonic.
-      
-
-    """
   return _GWFrames.Union(*args)
+Union = _GWFrames.Union
 class Matrix(_object):
-    """
-    class GWFrames::Matrix
-    ======================
-      3x3 object wrapping GSL matrix; probably not needed directly
-      
-      Member variables
-      ----------------
-        gsl_matrix * m
-      
-
-    """
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, Matrix, name, value)
     __swig_getmethods__ = {}
@@ -326,97 +174,17 @@ class Matrix(_object):
         try: self.this.append(this)
         except: self.this = this
     def __sub__(self, *args): return _GWFrames.Matrix___sub__(self, *args)
-    def __call__(self, *args):
-        """
-        Parameters
-        ----------
-          const unsigned int row
-          const unsigned int col
-
-        Returns
-        -------
-          double
-
-
-
-
-        Parameters
-        ----------
-          const unsigned int row
-          const unsigned int col
-
-        Returns
-        -------
-          double&
-
-
-        """
-        return _GWFrames.Matrix___call__(self, *args)
-
-    def set(self, *args):
-        """
-        Parameters
-        ----------
-          const unsigned int r
-          const unsigned int c
-          const double v
-
-        Returns
-        -------
-          Matrix&
-
-
-        """
-        return _GWFrames.Matrix_set(self, *args)
-
-    def nrows(self):
-        """
-        Parameters
-        ----------
-          (none)
-
-        Returns
-        -------
-          unsigned int
-
-
-        """
-        return _GWFrames.Matrix_nrows(self)
-
-    def ncols(self):
-        """
-        Parameters
-        ----------
-          (none)
-
-        Returns
-        -------
-          unsigned int
-
-
-        """
-        return _GWFrames.Matrix_ncols(self)
-
+    def __call__(self, *args): return _GWFrames.Matrix___call__(self, *args)
+    def set(self, *args): return _GWFrames.Matrix_set(self, *args)
+    def nrows(self): return _GWFrames.Matrix_nrows(self)
+    def ncols(self): return _GWFrames.Matrix_ncols(self)
     def resize(self, *args): return _GWFrames.Matrix_resize(self, *args)
     def clear(self): return _GWFrames.Matrix_clear(self)
     def swap(self, *args): return _GWFrames.Matrix_swap(self, *args)
     __swig_destroy__ = _GWFrames.delete_Matrix
     __del__ = lambda self : None;
     def __mul__(self, *args): return _GWFrames.Matrix___mul__(self, *args)
-    def gslobj(self, *args):
-        """
-        Parameters
-        ----------
-          (none)
-
-        Returns
-        -------
-          const gsl_matrix *
-
-
-        """
-        return _GWFrames.Matrix_gslobj(self, *args)
-
+    def gslobj(self, *args): return _GWFrames.Matrix_gslobj(self, *args)
     def __repr__(self):
         return "".join(
                        [  'Matrix(['+repr([self(0,c) for c in range(self.ncols())])+',\n']
@@ -428,88 +196,25 @@ Matrix_swigregister(Matrix)
 
 
 def DominantPrincipalAxis(*args):
-  """
-    Parameters
-    ----------
-      Matrix& M
-
-    Returns
-    -------
-      vector<double>
-
-
-    """
   return _GWFrames.DominantPrincipalAxis(*args)
+DominantPrincipalAxis = _GWFrames.DominantPrincipalAxis
 
 def Eigenvalues(*args):
-  """
-    Parameters
-    ----------
-      Matrix& M
-
-    Returns
-    -------
-      vector<double>
-
-
-    """
   return _GWFrames.Eigenvalues(*args)
+Eigenvalues = _GWFrames.Eigenvalues
 
 def Eigenvectors(*args):
-  """
-    Parameters
-    ----------
-      Matrix& M
-
-    Returns
-    -------
-      vector<double>
-
-
-    """
   return _GWFrames.Eigenvectors(*args)
+Eigenvectors = _GWFrames.Eigenvectors
 
 def Eigensystem(*args):
-  """
-    Parameters
-    ----------
-      Matrix& M
-
-    Returns
-    -------
-      vector<double>
-
-
-    """
   return _GWFrames.Eigensystem(*args)
+Eigensystem = _GWFrames.Eigensystem
 
 def Determinant(*args):
-  """
-    Parameters
-    ----------
-      Matrix& M
-
-    Returns
-    -------
-      double
-
-
-    """
   return _GWFrames.Determinant(*args)
+Determinant = _GWFrames.Determinant
 class MatrixC(_object):
-    """
-    class GWFrames::MatrixC
-    =======================
-      Rectangular array of complex data; probably not needed directly.
-      
-      Member variables
-      ----------------
-        int nn
-        int mm
-        complex<double> ** v
-      
-
-    """
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, MatrixC, name, value)
     __swig_getmethods__ = {}
@@ -520,34 +225,8 @@ class MatrixC(_object):
         try: self.this.append(this)
         except: self.this = this
     def swap(self, *args): return _GWFrames.MatrixC_swap(self, *args)
-    def nrows(self):
-        """
-        Parameters
-        ----------
-          (none)
-
-        Returns
-        -------
-          int
-
-
-        """
-        return _GWFrames.MatrixC_nrows(self)
-
-    def ncols(self):
-        """
-        Parameters
-        ----------
-          (none)
-
-        Returns
-        -------
-          int
-
-
-        """
-        return _GWFrames.MatrixC_ncols(self)
-
+    def nrows(self): return _GWFrames.MatrixC_nrows(self)
+    def ncols(self): return _GWFrames.MatrixC_ncols(self)
     def resize(self, *args): return _GWFrames.MatrixC_resize(self, *args)
     def assign(self, *args): return _GWFrames.MatrixC_assign(self, *args)
     __swig_destroy__ = _GWFrames.delete_MatrixC
@@ -623,7 +302,7 @@ class Waveform(_object):
         int boostweight
         stringstream history
         vector<double> t
-        vector<Quaternion> frame
+        vector<Quaternions::Quaternion> frame
         WaveformFrameType frameType
         WaveformDataType dataType
         bool rIsScaledOut
@@ -805,7 +484,7 @@ class Waveform(_object):
         """
         Parameters
         ----------
-          const vector<Quaternion>& a
+          const vector<Quaternions::Quaternion>& a
 
         Returns
         -------
@@ -1195,7 +874,7 @@ class Waveform(_object):
 
         Returns
         -------
-          Quaternion
+          Quaternions::Quaternion
 
 
 
@@ -1206,7 +885,7 @@ class Waveform(_object):
 
         Returns
         -------
-          const vector<Quaternion>&
+          const vector<Quaternions::Quaternion>&
 
 
         """
@@ -1627,7 +1306,7 @@ class Waveform(_object):
         ================================================================
           Parameters
           ----------
-            const Quaternion& R_phys
+            const Quaternions::Quaternion& R_phys
           
           Returns
           -------
@@ -1638,7 +1317,7 @@ class Waveform(_object):
         ============================================
           Parameters
           ----------
-            vector<Quaternion> R_phys
+            vector<Quaternions::Quaternion> R_phys
               Vector of Quaternions by which to rotate
           
           Returns
@@ -1670,7 +1349,7 @@ class Waveform(_object):
         ========================================================================
           Parameters
           ----------
-            const Quaternion& R_frame
+            const Quaternions::Quaternion& R_frame
           
           Returns
           -------
@@ -1681,7 +1360,7 @@ class Waveform(_object):
         ====================================================
           Parameters
           ----------
-            const vector<Quaternion>& R_frame
+            const vector<Quaternions::Quaternion>& R_frame
               Vector of Quaternions by which to rotate
           
           Returns
@@ -1712,7 +1391,7 @@ class Waveform(_object):
         =====================================================================
           Parameters
           ----------
-            const vector<Quaternion>& R_frame
+            const vector<Quaternions::Quaternion>& R_frame
               Vector of Quaternions by which to rotate
           
           Returns
@@ -1876,7 +1555,7 @@ class Waveform(_object):
           
           Returns
           -------
-            vector<Quaternion>
+            vector<Quaternions::Quaternion>
           
           Description
           -----------
@@ -2089,7 +1768,7 @@ class Waveform(_object):
         =====================================================
           Parameters
           ----------
-            const vector<Quaternion>& R_frame
+            const vector<Quaternions::Quaternion>& R_frame
               Vector of rotors giving corotating frame of the data.
           
           Returns
@@ -2226,7 +1905,7 @@ class Waveform(_object):
           ----------
             const double t_fid
               Fiducial time at which the alignment should happen
-            Quaternion& R_delta
+            Quaternions::Quaternion& R_delta
               Returned rotor
             const vector<int>& Lmodes = vector<int>(0)
               Lmodes to use in computing $<LL>$
@@ -2290,7 +1969,7 @@ class Waveform(_object):
               Fixed Waveform in corotating frame to which this Waveform is aligned
             const double t_fid
               Fiducial time at which to equate frames
-            Quaternion& R_delta
+            Quaternions::Quaternion& R_delta
               Returned rotor
           
           Returns
@@ -2363,7 +2042,7 @@ class Waveform(_object):
               Final time of region over which differences are minimized
             double& deltat
               Returned time offset
-            Quaternion& R_delta
+            Quaternions::Quaternion& R_delta
               Returned rotation offset
           
           Returns
@@ -3334,71 +3013,43 @@ class PNWaveform(Waveform):
     __repr__ = _swig_repr
     def __init__(self, *args): 
         """
-        Default constructor for an empty object.
-        ========================================
-          Parameters
-          ----------
-            (none)
-          
-          Returns
-          -------
-            PNWaveform
-          
+        Parameters
+        ----------
+          (none)
 
-        Copy constructor.
-        =================
-          Parameters
-          ----------
-            const PNWaveform& W
-          
-          Returns
-          -------
-            PNWaveform
-          
-          Description
-          -----------
-            Simply copies all fields in the input object to the constructed object,
-            including history
-          
+        Returns
+        -------
+          PNWaveform
 
-        Constructor of PN waveform from parameters.
-        ===========================================
-          Parameters
-          ----------
-            const double delta
-              Normalized BH mass difference (M1-M2)/(M1+M2)
-            const vector<double>& chi1_0
-              Initial dimensionless spin vector of BH1
-            const vector<double>& chi2_0
-              Initial dimensionless spin vector of BH2
-            const double Omega_orb_0
-              Initial orbital angular frequency
-            const Quaternion& R_0 = Quaternion(1, 0, 0, 0)
-              Overall rotation of the system (optional)
-          
-          Returns
-          -------
-            PNWaveform
-          
-          Description
-          -----------
-            The PN system is initialized having the BHs along the x axis, with the
-            orbital angular velocity along the positive z axis, having magnitude
-            Omega_orb_0. The input spin vectors must be defined with respect to this
-            basis.
-            
-            The TaylorT1 system is first integrated to compute the dynamics of the
-            binary. The evolved spin vectors chi1 and chi2, orbital angular-velocity
-            vector Omega_orb, and orbital phase Phi_orb are stored. Simultaneously, the
-            minimal-rotation frame of the angular-velocity vector is computed, then
-            rotated about the z' axis by Phi_orb, resulting in the binary's frame. Once
-            this step is completed, the information is used to construct the waveform
-            in the minimal-rotation frame. (That is, the waveform will be essentially
-            corotating.)
-            
-            Note that, to get the PNWaveform in an inertial frame, you must first apply
-            the method TransformToCorotatingFrame().
-          
+
+
+
+        Parameters
+        ----------
+          const PNWaveform& W
+
+        Returns
+        -------
+          PNWaveform
+
+
+
+
+        Parameters
+        ----------
+          const string& Approximant
+          const double delta
+          const vector<double>& chi1_i
+          const vector<double>& chi2_i
+          const double Omega_orb_i
+          const Quaternions::Quaternion& R_frame_i = Quaternions::Quaternion(1, 0, 0, 0)
+          const double PNOrder = 4.0
+          double v_0 = -1.0
+
+        Returns
+        -------
+          PNWaveform
+
 
         """
         this = _GWFrames.new_PNWaveform(*args)
@@ -3548,27 +3199,25 @@ class PNWaveform(Waveform):
 
     def Omega_tot(self, *args):
         """
-        Total angular velocity of PN binary at an instant of time.
-        ==========================================================
-          Parameters
-          ----------
-            const unsigned int iTime
-          
-          Returns
-          -------
-            vector<double>
-          
+        Parameters
+        ----------
+          const unsigned int iTime
 
-        Total angular velocity of PN binary at each instant of time.
-        ============================================================
-          Parameters
-          ----------
-            (none)
-          
-          Returns
-          -------
-            vector<vector<double>>
-          
+        Returns
+        -------
+          vector<double>
+
+
+
+
+        Parameters
+        ----------
+          (none)
+
+        Returns
+        -------
+          vector<vector<double>>
+
 
         """
         val = _GWFrames.PNWaveform_Omega_tot(self, *args)
@@ -3615,8 +3264,8 @@ class PNWaveform(Waveform):
           double
 
 
-        ctor of magnitudes of Omega_orb at each instant of time.
-        ========================================================
+
+
         Parameters
         ----------
           (none)
@@ -3643,8 +3292,8 @@ class PNWaveform(Waveform):
           double
 
 
-        ctor of magnitudes of Omega_prec at each instant of time.
-        =========================================================
+
+
         Parameters
         ----------
           (none)
@@ -3671,8 +3320,8 @@ class PNWaveform(Waveform):
           double
 
 
-        ctor of magnitudes of Omega_tot at each instant of time.
-        ========================================================
+
+
         Parameters
         ----------
           (none)
@@ -3699,8 +3348,8 @@ class PNWaveform(Waveform):
           double
 
 
-        ctor of magnitudes of angular momentum L at each instant of time.
-        =================================================================
+
+
         Parameters
         ----------
           (none)
