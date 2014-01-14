@@ -4488,6 +4488,61 @@ namespace swig
 }
 
 
+  const char* const GWFramesErrors[] = {
+    "This function is not yet implemented.",
+    "Failed system call.",
+    "Bad file name.",
+    "Failed GSL call.",
+    "Unknown exception",
+    "Unknown exception",
+    "Unknown exception",
+    "Unknown exception",
+    "Unknown exception",
+    "Unknown exception",
+    "Bad value.",
+    "Bad switches; we should not have gotten here.",
+    "Index out of bounds.",
+    "Unknown exception",
+    "Unknown exception",
+    "Vector size mismatch.",
+    "Matrix size mismatch.",
+    "Matrix size is assumed to be 3x3 in this function.",
+    "Not enough points to take a derivative.",
+    "Empty instersection requested.",
+    "Unknown exception",
+    "Waveform is missing requested (ell,m) component.",
+    "Wrong frame type for this operation.",
+    "Bad Waveform information."
+  };
+  const int GWFramesNumberOfErrors = 24;
+  PyObject* const GWFramesExceptions[] = {
+    PyExc_NotImplementedError, // Not implemented
+    PyExc_SystemError, // Failed system call
+    PyExc_IOError, // Bad file name
+    PyExc_RuntimeError, // GSL failed
+    PyExc_RuntimeError, // [empty]
+    PyExc_RuntimeError, // [empty]
+    PyExc_RuntimeError, // [empty]
+    PyExc_RuntimeError, // [empty]
+    PyExc_RuntimeError, // [empty]
+    PyExc_RuntimeError, // [empty]
+    PyExc_ValueError, // Bad value
+    PyExc_ValueError, // Bad switches
+    PyExc_IndexError, // Index out of bounds
+    PyExc_RuntimeError, // [empty]
+    PyExc_RuntimeError, // [empty]
+    PyExc_AssertionError, // Mismatched vector size
+    PyExc_AssertionError, // Mismatched matrix size
+    PyExc_AssertionError, // 3x3 matrix assumed
+    PyExc_AssertionError, // Not enough points for derivative
+    PyExc_AssertionError, // Empty intersection
+    PyExc_RuntimeError, // [empty]
+    PyExc_IndexError, // Waveform missing ell,m
+    PyExc_AssertionError, // Bad frame type
+    PyExc_ValueError, // Bad Waveform information
+  };
+
+
   #define SWIG_From_double   PyFloat_FromDouble 
 
 
@@ -6081,45 +6136,14 @@ SWIGINTERN PyObject *_wrap_Unwrap(PyObject *SWIGUNUSEDPARM(self), PyObject *args
     try {
       result = GWFrames::Unwrap((std::vector< double,std::allocator< double > > const &)*arg1);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -6169,45 +6193,14 @@ SWIGINTERN PyObject *_wrap_ScalarIntegral(PyObject *SWIGUNUSEDPARM(self), PyObje
     try {
       result = GWFrames::ScalarIntegral((std::vector< double,std::allocator< double > > const &)*arg1,(std::vector< double,std::allocator< double > > const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -6259,45 +6252,14 @@ SWIGINTERN PyObject *_wrap_CumulativeScalarIntegral(PyObject *SWIGUNUSEDPARM(sel
     try {
       result = (double)GWFrames::CumulativeScalarIntegral((std::vector< double,std::allocator< double > > const &)*arg1,(std::vector< double,std::allocator< double > > const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -6349,45 +6311,14 @@ SWIGINTERN PyObject *_wrap_ScalarDerivative(PyObject *SWIGUNUSEDPARM(self), PyOb
     try {
       result = GWFrames::ScalarDerivative((std::vector< double,std::allocator< double > > const &)*arg1,(std::vector< double,std::allocator< double > > const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -6439,45 +6370,14 @@ SWIGINTERN PyObject *_wrap_ComplexDerivative(PyObject *SWIGUNUSEDPARM(self), PyO
     try {
       result = GWFrames::ComplexDerivative((std::vector< std::complex< double >,std::allocator< std::complex< double > > > const &)*arg1,(std::vector< double,std::allocator< double > > const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -6529,45 +6429,14 @@ SWIGINTERN PyObject *_wrap_VectorIntegral(PyObject *SWIGUNUSEDPARM(self), PyObje
     try {
       result = GWFrames::VectorIntegral((std::vector< std::vector< double,std::allocator< double > >,std::allocator< std::vector< double,std::allocator< double > > > > const &)*arg1,(std::vector< double,std::allocator< double > > const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -6619,45 +6488,14 @@ SWIGINTERN PyObject *_wrap_CumulativeVectorIntegral(PyObject *SWIGUNUSEDPARM(sel
     try {
       result = GWFrames::CumulativeVectorIntegral((std::vector< std::vector< double,std::allocator< double > >,std::allocator< std::vector< double,std::allocator< double > > > > const &)*arg1,(std::vector< double,std::allocator< double > > const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -6736,45 +6574,14 @@ SWIGINTERN PyObject *_wrap_Intersection__SWIG_0(PyObject *SWIGUNUSEDPARM(self), 
     try {
       result = GWFrames::Intersection((std::vector< double,std::allocator< double > > const &)*arg1,(std::vector< double,std::allocator< double > > const &)*arg2,arg3,arg4,arg5);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -6844,45 +6651,14 @@ SWIGINTERN PyObject *_wrap_Intersection__SWIG_1(PyObject *SWIGUNUSEDPARM(self), 
     try {
       result = GWFrames::Intersection((std::vector< double,std::allocator< double > > const &)*arg1,(std::vector< double,std::allocator< double > > const &)*arg2,arg3,arg4);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -6943,45 +6719,14 @@ SWIGINTERN PyObject *_wrap_Intersection__SWIG_2(PyObject *SWIGUNUSEDPARM(self), 
     try {
       result = GWFrames::Intersection((std::vector< double,std::allocator< double > > const &)*arg1,(std::vector< double,std::allocator< double > > const &)*arg2,arg3);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -7033,45 +6778,14 @@ SWIGINTERN PyObject *_wrap_Intersection__SWIG_3(PyObject *SWIGUNUSEDPARM(self), 
     try {
       result = GWFrames::Intersection((std::vector< double,std::allocator< double > > const &)*arg1,(std::vector< double,std::allocator< double > > const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -7238,45 +6952,14 @@ SWIGINTERN PyObject *_wrap_Union__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObjec
     try {
       result = GWFrames::Union((std::vector< double,std::allocator< double > > const &)*arg1,(std::vector< double,std::allocator< double > > const &)*arg2,arg3);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -7328,45 +7011,14 @@ SWIGINTERN PyObject *_wrap_Union__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObjec
     try {
       result = GWFrames::Union((std::vector< double,std::allocator< double > > const &)*arg1,(std::vector< double,std::allocator< double > > const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -7440,45 +7092,14 @@ SWIGINTERN PyObject *_wrap_new_Matrix__SWIG_0(PyObject *SWIGUNUSEDPARM(self), Py
     try {
       result = (GWFrames::Matrix *)new GWFrames::Matrix();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -7516,45 +7137,14 @@ SWIGINTERN PyObject *_wrap_new_Matrix__SWIG_1(PyObject *SWIGUNUSEDPARM(self), Py
     try {
       result = (GWFrames::Matrix *)new GWFrames::Matrix(arg1,arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -7601,45 +7191,14 @@ SWIGINTERN PyObject *_wrap_new_Matrix__SWIG_2(PyObject *SWIGUNUSEDPARM(self), Py
     try {
       result = (GWFrames::Matrix *)new GWFrames::Matrix(arg1,arg2,arg3);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -7671,45 +7230,14 @@ SWIGINTERN PyObject *_wrap_new_Matrix__SWIG_3(PyObject *SWIGUNUSEDPARM(self), Py
     try {
       result = (GWFrames::Matrix *)new GWFrames::Matrix((GWFrames::Matrix const &)*arg1);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -7743,45 +7271,14 @@ SWIGINTERN PyObject *_wrap_new_Matrix__SWIG_4(PyObject *SWIGUNUSEDPARM(self), Py
     try {
       result = (GWFrames::Matrix *)new GWFrames::Matrix((std::vector< std::vector< double,std::allocator< double > >,std::allocator< std::vector< double,std::allocator< double > > > > const &)*arg1);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -7904,45 +7401,14 @@ SWIGINTERN PyObject *_wrap_Matrix___sub__(PyObject *SWIGUNUSEDPARM(self), PyObje
     try {
       result = (arg1)->operator -((GWFrames::Matrix const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -7989,45 +7455,14 @@ SWIGINTERN PyObject *_wrap_Matrix___call____SWIG_0(PyObject *SWIGUNUSEDPARM(self
     try {
       result = (double)((GWFrames::Matrix const *)arg1)->operator ()(arg2,arg3);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -8074,45 +7509,14 @@ SWIGINTERN PyObject *_wrap_Matrix___call____SWIG_1(PyObject *SWIGUNUSEDPARM(self
     try {
       result = (double *) &(arg1)->operator ()(arg2,arg3);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -8230,45 +7634,14 @@ SWIGINTERN PyObject *_wrap_Matrix_set(PyObject *SWIGUNUSEDPARM(self), PyObject *
     try {
       result = (GWFrames::Matrix *) &(arg1)->set(arg2,arg3,arg4);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -8297,45 +7670,14 @@ SWIGINTERN PyObject *_wrap_Matrix_nrows(PyObject *SWIGUNUSEDPARM(self), PyObject
     try {
       result = (unsigned int)((GWFrames::Matrix const *)arg1)->nrows();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -8364,45 +7706,14 @@ SWIGINTERN PyObject *_wrap_Matrix_ncols(PyObject *SWIGUNUSEDPARM(self), PyObject
     try {
       result = (unsigned int)((GWFrames::Matrix const *)arg1)->ncols();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -8457,45 +7768,14 @@ SWIGINTERN PyObject *_wrap_Matrix_resize__SWIG_0(PyObject *SWIGUNUSEDPARM(self),
     try {
       (arg1)->resize(arg2,arg3,arg4);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -8541,45 +7821,14 @@ SWIGINTERN PyObject *_wrap_Matrix_resize__SWIG_1(PyObject *SWIGUNUSEDPARM(self),
     try {
       (arg1)->resize(arg2,arg3);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -8675,45 +7924,14 @@ SWIGINTERN PyObject *_wrap_Matrix_clear(PyObject *SWIGUNUSEDPARM(self), PyObject
     try {
       (arg1)->clear();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -8753,45 +7971,14 @@ SWIGINTERN PyObject *_wrap_Matrix_swap(PyObject *SWIGUNUSEDPARM(self), PyObject 
     try {
       (arg1)->swap(*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -8819,45 +8006,14 @@ SWIGINTERN PyObject *_wrap_delete_Matrix(PyObject *SWIGUNUSEDPARM(self), PyObjec
     try {
       delete arg1;;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -8900,45 +8056,14 @@ SWIGINTERN PyObject *_wrap_Matrix___mul__(PyObject *SWIGUNUSEDPARM(self), PyObje
     try {
       result = ((GWFrames::Matrix const *)arg1)->operator *((std::vector< double,std::allocator< double > > const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -8969,45 +8094,14 @@ SWIGINTERN PyObject *_wrap_Matrix_gslobj__SWIG_0(PyObject *SWIGUNUSEDPARM(self),
     try {
       result = (gsl_matrix *)(arg1)->gslobj();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -9036,45 +8130,14 @@ SWIGINTERN PyObject *_wrap_Matrix_gslobj__SWIG_1(PyObject *SWIGUNUSEDPARM(self),
     try {
       result = (gsl_matrix *)((GWFrames::Matrix const *)arg1)->gslobj();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -9151,45 +8214,14 @@ SWIGINTERN PyObject *_wrap_DominantPrincipalAxis(PyObject *SWIGUNUSEDPARM(self),
     try {
       result = GWFrames::DominantPrincipalAxis(*arg1);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -9221,45 +8253,14 @@ SWIGINTERN PyObject *_wrap_Eigenvalues(PyObject *SWIGUNUSEDPARM(self), PyObject 
     try {
       result = GWFrames::Eigenvalues(*arg1);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -9291,45 +8292,14 @@ SWIGINTERN PyObject *_wrap_Eigenvectors(PyObject *SWIGUNUSEDPARM(self), PyObject
     try {
       result = GWFrames::Eigenvectors(*arg1);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -9361,45 +8331,14 @@ SWIGINTERN PyObject *_wrap_Eigensystem(PyObject *SWIGUNUSEDPARM(self), PyObject 
     try {
       result = GWFrames::Eigensystem(*arg1);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -9431,45 +8370,14 @@ SWIGINTERN PyObject *_wrap_Determinant(PyObject *SWIGUNUSEDPARM(self), PyObject 
     try {
       result = (double)GWFrames::Determinant(*arg1);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -9489,45 +8397,14 @@ SWIGINTERN PyObject *_wrap_new_MatrixC__SWIG_0(PyObject *SWIGUNUSEDPARM(self), P
     try {
       result = (GWFrames::MatrixC *)new GWFrames::MatrixC();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -9565,45 +8442,14 @@ SWIGINTERN PyObject *_wrap_new_MatrixC__SWIG_1(PyObject *SWIGUNUSEDPARM(self), P
     try {
       result = (GWFrames::MatrixC *)new GWFrames::MatrixC(arg1,arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -9652,45 +8498,14 @@ SWIGINTERN PyObject *_wrap_new_MatrixC__SWIG_2(PyObject *SWIGUNUSEDPARM(self), P
     try {
       result = (GWFrames::MatrixC *)new GWFrames::MatrixC(arg1,arg2,(std::complex< double > const &)*arg3);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -9737,45 +8552,14 @@ SWIGINTERN PyObject *_wrap_new_MatrixC__SWIG_3(PyObject *SWIGUNUSEDPARM(self), P
     try {
       result = (GWFrames::MatrixC *)new GWFrames::MatrixC(arg1,arg2,(std::complex< double > const *)arg3);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -9809,45 +8593,14 @@ SWIGINTERN PyObject *_wrap_new_MatrixC__SWIG_4(PyObject *SWIGUNUSEDPARM(self), P
     try {
       result = (GWFrames::MatrixC *)new GWFrames::MatrixC((std::vector< std::vector< std::complex< double >,std::allocator< std::complex< double > > >,std::allocator< std::vector< std::complex< double >,std::allocator< std::complex< double > > > > > const &)*arg1);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -9881,45 +8634,14 @@ SWIGINTERN PyObject *_wrap_new_MatrixC__SWIG_5(PyObject *SWIGUNUSEDPARM(self), P
     try {
       result = (GWFrames::MatrixC *)new GWFrames::MatrixC((GWFrames::MatrixC const &)*arg1);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -10061,45 +8783,14 @@ SWIGINTERN PyObject *_wrap_MatrixC_swap(PyObject *SWIGUNUSEDPARM(self), PyObject
     try {
       (arg1)->swap(*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -10128,45 +8819,14 @@ SWIGINTERN PyObject *_wrap_MatrixC_nrows(PyObject *SWIGUNUSEDPARM(self), PyObjec
     try {
       result = (int)((GWFrames::MatrixC const *)arg1)->nrows();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -10195,45 +8855,14 @@ SWIGINTERN PyObject *_wrap_MatrixC_ncols(PyObject *SWIGUNUSEDPARM(self), PyObjec
     try {
       result = (int)((GWFrames::MatrixC const *)arg1)->ncols();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -10279,45 +8908,14 @@ SWIGINTERN PyObject *_wrap_MatrixC_resize(PyObject *SWIGUNUSEDPARM(self), PyObje
     try {
       (arg1)->resize(arg2,arg3);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -10374,45 +8972,14 @@ SWIGINTERN PyObject *_wrap_MatrixC_assign(PyObject *SWIGUNUSEDPARM(self), PyObje
     try {
       (arg1)->assign(arg2,arg3,(std::complex< double > const &)*arg4);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -10440,45 +9007,14 @@ SWIGINTERN PyObject *_wrap_delete_MatrixC(PyObject *SWIGUNUSEDPARM(self), PyObje
     try {
       delete arg1;;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -10516,45 +9052,14 @@ SWIGINTERN PyObject *_wrap_vectorM_iterator(PyObject *SWIGUNUSEDPARM(self), PyOb
     try {
       result = (swig::SwigPyIterator *)std_vector_Sl_GWFrames_Matrix_Sg__iterator(arg1,arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -10583,45 +9088,14 @@ SWIGINTERN PyObject *_wrap_vectorM___nonzero__(PyObject *SWIGUNUSEDPARM(self), P
     try {
       result = (bool)std_vector_Sl_GWFrames_Matrix_Sg____nonzero__((std::vector< GWFrames::Matrix > const *)arg1);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -10650,45 +9124,14 @@ SWIGINTERN PyObject *_wrap_vectorM___bool__(PyObject *SWIGUNUSEDPARM(self), PyOb
     try {
       result = (bool)std_vector_Sl_GWFrames_Matrix_Sg____bool__((std::vector< GWFrames::Matrix > const *)arg1);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -10717,45 +9160,14 @@ SWIGINTERN PyObject *_wrap_vectorM___len__(PyObject *SWIGUNUSEDPARM(self), PyObj
     try {
       result = std_vector_Sl_GWFrames_Matrix_Sg____len__((std::vector< GWFrames::Matrix > const *)arg1);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -10790,45 +9202,14 @@ SWIGINTERN PyObject *_wrap_vectorM_pop(PyObject *SWIGUNUSEDPARM(self), PyObject 
       }
       ;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -10884,45 +9265,14 @@ SWIGINTERN PyObject *_wrap_vectorM___getslice__(PyObject *SWIGUNUSEDPARM(self), 
       }
       ;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -10991,45 +9341,14 @@ SWIGINTERN PyObject *_wrap_vectorM___setslice____SWIG_0(PyObject *SWIGUNUSEDPARM
       }
       ;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -11086,45 +9405,14 @@ SWIGINTERN PyObject *_wrap_vectorM___setslice____SWIG_1(PyObject *SWIGUNUSEDPARM
       }
       ;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -11243,45 +9531,14 @@ SWIGINTERN PyObject *_wrap_vectorM___delslice__(PyObject *SWIGUNUSEDPARM(self), 
       }
       ;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -11324,45 +9581,14 @@ SWIGINTERN PyObject *_wrap_vectorM___delitem____SWIG_0(PyObject *SWIGUNUSEDPARM(
       }
       ;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -11408,45 +9634,14 @@ SWIGINTERN PyObject *_wrap_vectorM___getitem____SWIG_0(PyObject *SWIGUNUSEDPARM(
       }
       ;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -11505,45 +9700,14 @@ SWIGINTERN PyObject *_wrap_vectorM___setitem____SWIG_0(PyObject *SWIGUNUSEDPARM(
       }
       ;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -11590,45 +9754,14 @@ SWIGINTERN PyObject *_wrap_vectorM___setitem____SWIG_1(PyObject *SWIGUNUSEDPARM(
       }
       ;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -11673,45 +9806,14 @@ SWIGINTERN PyObject *_wrap_vectorM___delitem____SWIG_1(PyObject *SWIGUNUSEDPARM(
       }
       ;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -11802,45 +9904,14 @@ SWIGINTERN PyObject *_wrap_vectorM___getitem____SWIG_1(PyObject *SWIGUNUSEDPARM(
       }
       ;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -11942,45 +10013,14 @@ SWIGINTERN PyObject *_wrap_vectorM___setitem____SWIG_2(PyObject *SWIGUNUSEDPARM(
       }
       ;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -12089,45 +10129,14 @@ SWIGINTERN PyObject *_wrap_vectorM_append(PyObject *SWIGUNUSEDPARM(self), PyObje
     try {
       std_vector_Sl_GWFrames_Matrix_Sg__append(arg1,(GWFrames::Matrix const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -12147,45 +10156,14 @@ SWIGINTERN PyObject *_wrap_new_vectorM__SWIG_0(PyObject *SWIGUNUSEDPARM(self), P
     try {
       result = (std::vector< GWFrames::Matrix > *)new std::vector< GWFrames::Matrix >();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -12219,45 +10197,14 @@ SWIGINTERN PyObject *_wrap_new_vectorM__SWIG_1(PyObject *SWIGUNUSEDPARM(self), P
     try {
       result = (std::vector< GWFrames::Matrix > *)new std::vector< GWFrames::Matrix >((std::vector< GWFrames::Matrix > const &)*arg1);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -12288,45 +10235,14 @@ SWIGINTERN PyObject *_wrap_vectorM_empty(PyObject *SWIGUNUSEDPARM(self), PyObjec
     try {
       result = (bool)((std::vector< GWFrames::Matrix > const *)arg1)->empty();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -12355,45 +10271,14 @@ SWIGINTERN PyObject *_wrap_vectorM_size(PyObject *SWIGUNUSEDPARM(self), PyObject
     try {
       result = ((std::vector< GWFrames::Matrix > const *)arg1)->size();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -12421,45 +10306,14 @@ SWIGINTERN PyObject *_wrap_vectorM_clear(PyObject *SWIGUNUSEDPARM(self), PyObjec
     try {
       (arg1)->clear();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -12499,45 +10353,14 @@ SWIGINTERN PyObject *_wrap_vectorM_swap(PyObject *SWIGUNUSEDPARM(self), PyObject
     try {
       (arg1)->swap(*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -12566,45 +10389,14 @@ SWIGINTERN PyObject *_wrap_vectorM_get_allocator(PyObject *SWIGUNUSEDPARM(self),
     try {
       result = ((std::vector< GWFrames::Matrix > const *)arg1)->get_allocator();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -12633,45 +10425,14 @@ SWIGINTERN PyObject *_wrap_vectorM_begin(PyObject *SWIGUNUSEDPARM(self), PyObjec
     try {
       result = (arg1)->begin();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -12701,45 +10462,14 @@ SWIGINTERN PyObject *_wrap_vectorM_end(PyObject *SWIGUNUSEDPARM(self), PyObject 
     try {
       result = (arg1)->end();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -12769,45 +10499,14 @@ SWIGINTERN PyObject *_wrap_vectorM_rbegin(PyObject *SWIGUNUSEDPARM(self), PyObje
     try {
       result = (arg1)->rbegin();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -12837,45 +10536,14 @@ SWIGINTERN PyObject *_wrap_vectorM_rend(PyObject *SWIGUNUSEDPARM(self), PyObject
     try {
       result = (arg1)->rend();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -12905,45 +10573,14 @@ SWIGINTERN PyObject *_wrap_new_vectorM__SWIG_2(PyObject *SWIGUNUSEDPARM(self), P
     try {
       result = (std::vector< GWFrames::Matrix > *)new std::vector< GWFrames::Matrix >(arg1);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -12971,45 +10608,14 @@ SWIGINTERN PyObject *_wrap_vectorM_pop_back(PyObject *SWIGUNUSEDPARM(self), PyOb
     try {
       (arg1)->pop_back();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -13046,45 +10652,14 @@ SWIGINTERN PyObject *_wrap_vectorM_resize__SWIG_0(PyObject *SWIGUNUSEDPARM(self)
     try {
       (arg1)->resize(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -13128,45 +10703,14 @@ SWIGINTERN PyObject *_wrap_vectorM_erase__SWIG_0(PyObject *SWIGUNUSEDPARM(self),
     try {
       result = (arg1)->erase(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -13226,45 +10770,14 @@ SWIGINTERN PyObject *_wrap_vectorM_erase__SWIG_1(PyObject *SWIGUNUSEDPARM(self),
     try {
       result = (arg1)->erase(arg2,arg3);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -13357,45 +10870,14 @@ SWIGINTERN PyObject *_wrap_new_vectorM__SWIG_3(PyObject *SWIGUNUSEDPARM(self), P
     try {
       result = (std::vector< GWFrames::Matrix > *)new std::vector< GWFrames::Matrix >(arg1,(std::vector< GWFrames::Matrix >::value_type const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -13492,45 +10974,14 @@ SWIGINTERN PyObject *_wrap_vectorM_push_back(PyObject *SWIGUNUSEDPARM(self), PyO
     try {
       (arg1)->push_back((std::vector< GWFrames::Matrix >::value_type const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -13559,45 +11010,14 @@ SWIGINTERN PyObject *_wrap_vectorM_front(PyObject *SWIGUNUSEDPARM(self), PyObjec
     try {
       result = (std::vector< GWFrames::Matrix >::value_type *) &((std::vector< GWFrames::Matrix > const *)arg1)->front();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -13626,45 +11046,14 @@ SWIGINTERN PyObject *_wrap_vectorM_back(PyObject *SWIGUNUSEDPARM(self), PyObject
     try {
       result = (std::vector< GWFrames::Matrix >::value_type *) &((std::vector< GWFrames::Matrix > const *)arg1)->back();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -13713,45 +11102,14 @@ SWIGINTERN PyObject *_wrap_vectorM_assign(PyObject *SWIGUNUSEDPARM(self), PyObje
     try {
       (arg1)->assign(arg2,(std::vector< GWFrames::Matrix >::value_type const &)*arg3);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -13800,45 +11158,14 @@ SWIGINTERN PyObject *_wrap_vectorM_resize__SWIG_1(PyObject *SWIGUNUSEDPARM(self)
     try {
       (arg1)->resize(arg2,(std::vector< GWFrames::Matrix >::value_type const &)*arg3);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -13946,45 +11273,14 @@ SWIGINTERN PyObject *_wrap_vectorM_insert__SWIG_0(PyObject *SWIGUNUSEDPARM(self)
     try {
       result = (arg1)->insert(arg2,(std::vector< GWFrames::Matrix >::value_type const &)*arg3);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -14049,45 +11345,14 @@ SWIGINTERN PyObject *_wrap_vectorM_insert__SWIG_1(PyObject *SWIGUNUSEDPARM(self)
     try {
       (arg1)->insert(arg2,arg3,(std::vector< GWFrames::Matrix >::value_type const &)*arg4);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -14184,45 +11449,14 @@ SWIGINTERN PyObject *_wrap_vectorM_reserve(PyObject *SWIGUNUSEDPARM(self), PyObj
     try {
       (arg1)->reserve(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -14251,45 +11485,14 @@ SWIGINTERN PyObject *_wrap_vectorM_capacity(PyObject *SWIGUNUSEDPARM(self), PyOb
     try {
       result = ((std::vector< GWFrames::Matrix > const *)arg1)->capacity();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -14317,45 +11520,14 @@ SWIGINTERN PyObject *_wrap_delete_vectorM(PyObject *SWIGUNUSEDPARM(self), PyObje
     try {
       delete arg1;;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -14438,45 +11610,14 @@ SWIGINTERN PyObject *_wrap_new_Waveform__SWIG_0(PyObject *SWIGUNUSEDPARM(self), 
     try {
       result = (GWFrames::Waveform *)new GWFrames::Waveform();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -14508,45 +11649,14 @@ SWIGINTERN PyObject *_wrap_new_Waveform__SWIG_1(PyObject *SWIGUNUSEDPARM(self), 
     try {
       result = (GWFrames::Waveform *)new GWFrames::Waveform((GWFrames::Waveform const &)*arg1);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -14594,45 +11704,14 @@ SWIGINTERN PyObject *_wrap_new_Waveform__SWIG_2(PyObject *SWIGUNUSEDPARM(self), 
     try {
       result = (GWFrames::Waveform *)new GWFrames::Waveform((std::string const &)*arg1,(std::string const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -14698,45 +11777,14 @@ SWIGINTERN PyObject *_wrap_new_Waveform__SWIG_3(PyObject *SWIGUNUSEDPARM(self), 
     try {
       result = (GWFrames::Waveform *)new GWFrames::Waveform((std::vector< double,std::allocator< double > > const &)*arg1,(std::vector< std::vector< int,std::allocator< int > >,std::allocator< std::vector< int,std::allocator< int > > > > const &)*arg2,(std::vector< std::vector< std::complex< double >,std::allocator< std::complex< double > > >,std::allocator< std::vector< std::complex< double >,std::allocator< std::complex< double > > > > > const &)*arg3);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -14831,45 +11879,14 @@ SWIGINTERN PyObject *_wrap_delete_Waveform(PyObject *SWIGUNUSEDPARM(self), PyObj
     try {
       delete arg1;;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -14906,45 +11923,14 @@ SWIGINTERN PyObject *_wrap_Waveform_SetSpinWeight(PyObject *SWIGUNUSEDPARM(self)
     try {
       (arg1)->SetSpinWeight(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -14981,45 +11967,14 @@ SWIGINTERN PyObject *_wrap_Waveform_SetBoostWeight(PyObject *SWIGUNUSEDPARM(self
     try {
       (arg1)->SetBoostWeight(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -15061,45 +12016,14 @@ SWIGINTERN PyObject *_wrap_Waveform_AppendHistory(PyObject *SWIGUNUSEDPARM(self)
     try {
       (arg1)->AppendHistory((std::string const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -15143,45 +12067,14 @@ SWIGINTERN PyObject *_wrap_Waveform_SetHistory(PyObject *SWIGUNUSEDPARM(self), P
     try {
       (arg1)->SetHistory((std::string const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -15225,45 +12118,14 @@ SWIGINTERN PyObject *_wrap_Waveform_SetT(PyObject *SWIGUNUSEDPARM(self), PyObjec
     try {
       (arg1)->SetT((std::vector< double,std::allocator< double > > const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -15307,45 +12169,14 @@ SWIGINTERN PyObject *_wrap_Waveform_SetTime(PyObject *SWIGUNUSEDPARM(self), PyOb
     try {
       (arg1)->SetTime((std::vector< double,std::allocator< double > > const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -15389,45 +12220,14 @@ SWIGINTERN PyObject *_wrap_Waveform_SetFrame(PyObject *SWIGUNUSEDPARM(self), PyO
     try {
       (arg1)->SetFrame((std::vector< Quaternions::Quaternion,std::allocator< Quaternions::Quaternion > > const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -15466,45 +12266,14 @@ SWIGINTERN PyObject *_wrap_Waveform_SetFrameType(PyObject *SWIGUNUSEDPARM(self),
     try {
       (arg1)->SetFrameType(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -15541,45 +12310,14 @@ SWIGINTERN PyObject *_wrap_Waveform_SetDataType(PyObject *SWIGUNUSEDPARM(self), 
     try {
       (arg1)->SetDataType(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -15616,45 +12354,14 @@ SWIGINTERN PyObject *_wrap_Waveform_SetRIsScaledOut(PyObject *SWIGUNUSEDPARM(sel
     try {
       (arg1)->SetRIsScaledOut(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -15691,45 +12398,14 @@ SWIGINTERN PyObject *_wrap_Waveform_SetMIsScaledOut(PyObject *SWIGUNUSEDPARM(sel
     try {
       (arg1)->SetMIsScaledOut(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -15771,45 +12447,14 @@ SWIGINTERN PyObject *_wrap_Waveform_SetLM(PyObject *SWIGUNUSEDPARM(self), PyObje
     try {
       (arg1)->SetLM((std::vector< std::vector< int,std::allocator< int > >,std::allocator< std::vector< int,std::allocator< int > > > > const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -15853,45 +12498,14 @@ SWIGINTERN PyObject *_wrap_Waveform_SetData__SWIG_0(PyObject *SWIGUNUSEDPARM(sel
     try {
       (arg1)->SetData((std::vector< std::vector< std::complex< double >,std::allocator< std::complex< double > > >,std::allocator< std::vector< std::complex< double >,std::allocator< std::complex< double > > > > > const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -15950,45 +12564,14 @@ SWIGINTERN PyObject *_wrap_Waveform_SetData__SWIG_1(PyObject *SWIGUNUSEDPARM(sel
     try {
       (arg1)->SetData(arg2,arg3,(std::complex< double > const &)*arg4);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -16094,45 +12677,14 @@ SWIGINTERN PyObject *_wrap_Waveform_ResizeData(PyObject *SWIGUNUSEDPARM(self), P
     try {
       (arg1)->ResizeData(arg2,arg3);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -16172,45 +12724,14 @@ SWIGINTERN PyObject *_wrap_Waveform_swap(PyObject *SWIGUNUSEDPARM(self), PyObjec
     try {
       (arg1)->swap(*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -16239,45 +12760,14 @@ SWIGINTERN PyObject *_wrap_Waveform_NTimes(PyObject *SWIGUNUSEDPARM(self), PyObj
     try {
       result = (unsigned int)((GWFrames::Waveform const *)arg1)->NTimes();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -16306,45 +12796,14 @@ SWIGINTERN PyObject *_wrap_Waveform_NModes(PyObject *SWIGUNUSEDPARM(self), PyObj
     try {
       result = (unsigned int)((GWFrames::Waveform const *)arg1)->NModes();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -16373,45 +12832,14 @@ SWIGINTERN PyObject *_wrap_Waveform_SpinWeight(PyObject *SWIGUNUSEDPARM(self), P
     try {
       result = (int)((GWFrames::Waveform const *)arg1)->SpinWeight();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -16440,45 +12868,14 @@ SWIGINTERN PyObject *_wrap_Waveform_BoostWeight(PyObject *SWIGUNUSEDPARM(self), 
     try {
       result = (int)((GWFrames::Waveform const *)arg1)->BoostWeight();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -16507,45 +12904,14 @@ SWIGINTERN PyObject *_wrap_Waveform_HistoryStr(PyObject *SWIGUNUSEDPARM(self), P
     try {
       result = ((GWFrames::Waveform const *)arg1)->HistoryStr();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -16574,45 +12940,14 @@ SWIGINTERN PyObject *_wrap_Waveform_HistoryStream(PyObject *SWIGUNUSEDPARM(self)
     try {
       result = (std::stringstream *) &(arg1)->HistoryStream();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -16641,45 +12976,14 @@ SWIGINTERN PyObject *_wrap_Waveform_FrameType(PyObject *SWIGUNUSEDPARM(self), Py
     try {
       result = (int)((GWFrames::Waveform const *)arg1)->FrameType();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -16708,45 +13012,14 @@ SWIGINTERN PyObject *_wrap_Waveform_DataType(PyObject *SWIGUNUSEDPARM(self), PyO
     try {
       result = (int)((GWFrames::Waveform const *)arg1)->DataType();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -16775,45 +13048,14 @@ SWIGINTERN PyObject *_wrap_Waveform_FrameTypeString(PyObject *SWIGUNUSEDPARM(sel
     try {
       result = ((GWFrames::Waveform const *)arg1)->FrameTypeString();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -16842,45 +13084,14 @@ SWIGINTERN PyObject *_wrap_Waveform_DataTypeString(PyObject *SWIGUNUSEDPARM(self
     try {
       result = ((GWFrames::Waveform const *)arg1)->DataTypeString();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -16909,45 +13120,14 @@ SWIGINTERN PyObject *_wrap_Waveform_DataTypeLaTeXString(PyObject *SWIGUNUSEDPARM
     try {
       result = ((GWFrames::Waveform const *)arg1)->DataTypeLaTeXString();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -16976,45 +13156,14 @@ SWIGINTERN PyObject *_wrap_Waveform_DescriptorString(PyObject *SWIGUNUSEDPARM(se
     try {
       result = ((GWFrames::Waveform const *)arg1)->DescriptorString();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -17043,45 +13192,14 @@ SWIGINTERN PyObject *_wrap_Waveform_RIsScaledOut(PyObject *SWIGUNUSEDPARM(self),
     try {
       result = (bool)((GWFrames::Waveform const *)arg1)->RIsScaledOut();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -17110,45 +13228,14 @@ SWIGINTERN PyObject *_wrap_Waveform_MIsScaledOut(PyObject *SWIGUNUSEDPARM(self),
     try {
       result = (bool)((GWFrames::Waveform const *)arg1)->MIsScaledOut();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -17186,45 +13273,14 @@ SWIGINTERN PyObject *_wrap_Waveform_T__SWIG_0(PyObject *SWIGUNUSEDPARM(self), Py
     try {
       result = (double)((GWFrames::Waveform const *)arg1)->T(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -17262,45 +13318,14 @@ SWIGINTERN PyObject *_wrap_Waveform_Frame__SWIG_0(PyObject *SWIGUNUSEDPARM(self)
     try {
       result = ((GWFrames::Waveform const *)arg1)->Frame(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -17347,45 +13372,14 @@ SWIGINTERN PyObject *_wrap_Waveform_Re__SWIG_0(PyObject *SWIGUNUSEDPARM(self), P
     try {
       result = (double)((GWFrames::Waveform const *)arg1)->Re(arg2,arg3);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -17432,45 +13426,14 @@ SWIGINTERN PyObject *_wrap_Waveform_Im__SWIG_0(PyObject *SWIGUNUSEDPARM(self), P
     try {
       result = (double)((GWFrames::Waveform const *)arg1)->Im(arg2,arg3);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -17517,45 +13480,14 @@ SWIGINTERN PyObject *_wrap_Waveform_Abs__SWIG_0(PyObject *SWIGUNUSEDPARM(self), 
     try {
       result = (double)((GWFrames::Waveform const *)arg1)->Abs(arg2,arg3);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -17602,45 +13534,14 @@ SWIGINTERN PyObject *_wrap_Waveform_Arg__SWIG_0(PyObject *SWIGUNUSEDPARM(self), 
     try {
       result = (double)((GWFrames::Waveform const *)arg1)->Arg(arg2,arg3);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -17687,45 +13588,14 @@ SWIGINTERN PyObject *_wrap_Waveform_Data__SWIG_0(PyObject *SWIGUNUSEDPARM(self),
     try {
       result = ((GWFrames::Waveform const *)arg1)->Data(arg2,arg3);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -17772,45 +13642,14 @@ SWIGINTERN PyObject *_wrap_Waveform___call____SWIG_0(PyObject *SWIGUNUSEDPARM(se
     try {
       result = ((GWFrames::Waveform const *)arg1)->operator ()(arg2,arg3);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -17848,45 +13687,14 @@ SWIGINTERN PyObject *_wrap_Waveform_LM__SWIG_0(PyObject *SWIGUNUSEDPARM(self), P
     try {
       result = (std::vector< int,std::allocator< int > > *) &((GWFrames::Waveform const *)arg1)->LM(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -17924,45 +13732,14 @@ SWIGINTERN PyObject *_wrap_Waveform_Re__SWIG_1(PyObject *SWIGUNUSEDPARM(self), P
     try {
       result = ((GWFrames::Waveform const *)arg1)->Re(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -18000,45 +13777,14 @@ SWIGINTERN PyObject *_wrap_Waveform_Im__SWIG_1(PyObject *SWIGUNUSEDPARM(self), P
     try {
       result = ((GWFrames::Waveform const *)arg1)->Im(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -18076,45 +13822,14 @@ SWIGINTERN PyObject *_wrap_Waveform_Abs__SWIG_1(PyObject *SWIGUNUSEDPARM(self), 
     try {
       result = ((GWFrames::Waveform const *)arg1)->Abs(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -18152,45 +13867,14 @@ SWIGINTERN PyObject *_wrap_Waveform_Arg__SWIG_1(PyObject *SWIGUNUSEDPARM(self), 
     try {
       result = ((GWFrames::Waveform const *)arg1)->Arg(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -18228,45 +13912,14 @@ SWIGINTERN PyObject *_wrap_Waveform_ArgUnwrapped__SWIG_0(PyObject *SWIGUNUSEDPAR
     try {
       result = ((GWFrames::Waveform const *)arg1)->ArgUnwrapped(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -18304,45 +13957,14 @@ SWIGINTERN PyObject *_wrap_Waveform_Data__SWIG_1(PyObject *SWIGUNUSEDPARM(self),
     try {
       result = ((GWFrames::Waveform const *)arg1)->Data(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -18380,45 +14002,14 @@ SWIGINTERN PyObject *_wrap_Waveform___call____SWIG_1(PyObject *SWIGUNUSEDPARM(se
     try {
       result = (std::complex< double > *)((GWFrames::Waveform const *)arg1)->operator ()(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -18503,45 +14094,14 @@ SWIGINTERN PyObject *_wrap_Waveform_T__SWIG_1(PyObject *SWIGUNUSEDPARM(self), Py
     try {
       result = (std::vector< double,std::allocator< double > > *) &((GWFrames::Waveform const *)arg1)->T();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -18614,45 +14174,14 @@ SWIGINTERN PyObject *_wrap_Waveform_Frame__SWIG_1(PyObject *SWIGUNUSEDPARM(self)
     try {
       result = (std::vector< Quaternions::Quaternion,std::allocator< Quaternions::Quaternion > > *) &((GWFrames::Waveform const *)arg1)->Frame();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -18725,45 +14254,14 @@ SWIGINTERN PyObject *_wrap_Waveform_LM__SWIG_1(PyObject *SWIGUNUSEDPARM(self), P
     try {
       result = (std::vector< std::vector< int,std::allocator< int > >,std::allocator< std::vector< int,std::allocator< int > > > > *) &((GWFrames::Waveform const *)arg1)->LM();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -18836,45 +14334,14 @@ SWIGINTERN PyObject *_wrap_Waveform_Re__SWIG_2(PyObject *SWIGUNUSEDPARM(self), P
     try {
       result = ((GWFrames::Waveform const *)arg1)->Re();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -18969,45 +14436,14 @@ SWIGINTERN PyObject *_wrap_Waveform_Im__SWIG_2(PyObject *SWIGUNUSEDPARM(self), P
     try {
       result = ((GWFrames::Waveform const *)arg1)->Im();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -19102,45 +14538,14 @@ SWIGINTERN PyObject *_wrap_Waveform_Abs__SWIG_2(PyObject *SWIGUNUSEDPARM(self), 
     try {
       result = ((GWFrames::Waveform const *)arg1)->Abs();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -19235,45 +14640,14 @@ SWIGINTERN PyObject *_wrap_Waveform_Arg__SWIG_2(PyObject *SWIGUNUSEDPARM(self), 
     try {
       result = ((GWFrames::Waveform const *)arg1)->Arg();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -19368,45 +14742,14 @@ SWIGINTERN PyObject *_wrap_Waveform_ArgUnwrapped__SWIG_1(PyObject *SWIGUNUSEDPAR
     try {
       result = ((GWFrames::Waveform const *)arg1)->ArgUnwrapped();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -19479,45 +14822,14 @@ SWIGINTERN PyObject *_wrap_Waveform_Data__SWIG_2(PyObject *SWIGUNUSEDPARM(self),
     try {
       result = ((GWFrames::Waveform const *)arg1)->Data();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -19612,45 +14924,14 @@ SWIGINTERN PyObject *_wrap_Waveform_EllMax(PyObject *SWIGUNUSEDPARM(self), PyObj
     try {
       result = (int)((GWFrames::Waveform const *)arg1)->EllMax();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -19697,45 +14978,14 @@ SWIGINTERN PyObject *_wrap_Waveform_FindModeIndex(PyObject *SWIGUNUSEDPARM(self)
     try {
       result = (unsigned int)((GWFrames::Waveform const *)arg1)->FindModeIndex(arg2,arg3);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -19782,45 +15032,14 @@ SWIGINTERN PyObject *_wrap_Waveform_FindModeIndexWithoutError(PyObject *SWIGUNUS
     try {
       result = (unsigned int)((GWFrames::Waveform const *)arg1)->FindModeIndexWithoutError(arg2,arg3);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -19858,45 +15077,14 @@ SWIGINTERN PyObject *_wrap_Waveform_DataDot(PyObject *SWIGUNUSEDPARM(self), PyOb
     try {
       result = ((GWFrames::Waveform const *)arg1)->DataDot(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -19934,45 +15122,14 @@ SWIGINTERN PyObject *_wrap_Waveform_Norm__SWIG_0(PyObject *SWIGUNUSEDPARM(self),
     try {
       result = ((GWFrames::Waveform const *)arg1)->Norm(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -20001,45 +15158,14 @@ SWIGINTERN PyObject *_wrap_Waveform_Norm__SWIG_1(PyObject *SWIGUNUSEDPARM(self),
     try {
       result = ((GWFrames::Waveform const *)arg1)->Norm();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -20121,45 +15247,14 @@ SWIGINTERN PyObject *_wrap_Waveform_MaxNormIndex__SWIG_0(PyObject *SWIGUNUSEDPAR
     try {
       result = (unsigned int)((GWFrames::Waveform const *)arg1)->MaxNormIndex(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -20188,45 +15283,14 @@ SWIGINTERN PyObject *_wrap_Waveform_MaxNormIndex__SWIG_1(PyObject *SWIGUNUSEDPAR
     try {
       result = (unsigned int)((GWFrames::Waveform const *)arg1)->MaxNormIndex();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -20308,45 +15372,14 @@ SWIGINTERN PyObject *_wrap_Waveform_MaxNormTime__SWIG_0(PyObject *SWIGUNUSEDPARM
     try {
       result = (double)((GWFrames::Waveform const *)arg1)->MaxNormTime(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -20375,45 +15408,14 @@ SWIGINTERN PyObject *_wrap_Waveform_MaxNormTime__SWIG_1(PyObject *SWIGUNUSEDPARM
     try {
       result = (double)((GWFrames::Waveform const *)arg1)->MaxNormTime();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -20517,45 +15519,14 @@ SWIGINTERN PyObject *_wrap_Waveform_RotatePhysicalSystem__SWIG_0(PyObject *SWIGU
     try {
       result = (GWFrames::Waveform *) &(arg1)->RotatePhysicalSystem((Quaternions::Quaternion const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -20595,45 +15566,14 @@ SWIGINTERN PyObject *_wrap_Waveform_RotatePhysicalSystem__SWIG_1(PyObject *SWIGU
     try {
       result = (GWFrames::Waveform *) &(arg1)->RotatePhysicalSystem(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -20749,45 +15689,14 @@ SWIGINTERN PyObject *_wrap_Waveform_RotateDecompositionBasis__SWIG_0(PyObject *S
     try {
       result = (GWFrames::Waveform *) &(arg1)->RotateDecompositionBasis((Quaternions::Quaternion const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -20830,45 +15739,14 @@ SWIGINTERN PyObject *_wrap_Waveform_RotateDecompositionBasis__SWIG_1(PyObject *S
     try {
       result = (GWFrames::Waveform *) &(arg1)->RotateDecompositionBasis((std::vector< Quaternions::Quaternion,std::allocator< Quaternions::Quaternion > > const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -20969,45 +15847,14 @@ SWIGINTERN PyObject *_wrap_Waveform_RotateDecompositionBasisOfUncertainties(PyOb
     try {
       result = (GWFrames::Waveform *) &(arg1)->RotateDecompositionBasisOfUncertainties((std::vector< Quaternions::Quaternion,std::allocator< Quaternions::Quaternion > > const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -21049,45 +15896,14 @@ SWIGINTERN PyObject *_wrap_Waveform_LdtVector__SWIG_0(PyObject *SWIGUNUSEDPARM(s
     try {
       result = ((GWFrames::Waveform const *)arg1)->LdtVector(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -21116,45 +15932,14 @@ SWIGINTERN PyObject *_wrap_Waveform_LdtVector__SWIG_1(PyObject *SWIGUNUSEDPARM(s
     try {
       result = ((GWFrames::Waveform const *)arg1)->LdtVector();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -21236,45 +16021,14 @@ SWIGINTERN PyObject *_wrap_Waveform_LLMatrix__SWIG_0(PyObject *SWIGUNUSEDPARM(se
     try {
       result = ((GWFrames::Waveform const *)arg1)->LLMatrix(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -21303,45 +16057,14 @@ SWIGINTERN PyObject *_wrap_Waveform_LLMatrix__SWIG_1(PyObject *SWIGUNUSEDPARM(se
     try {
       result = ((GWFrames::Waveform const *)arg1)->LLMatrix();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -21430,45 +16153,14 @@ SWIGINTERN PyObject *_wrap_Waveform_SchmidtEtAlVector__SWIG_0(PyObject *SWIGUNUS
     try {
       result = ((GWFrames::Waveform const *)arg1)->SchmidtEtAlVector(arg2,arg3);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -21506,45 +16198,14 @@ SWIGINTERN PyObject *_wrap_Waveform_SchmidtEtAlVector__SWIG_1(PyObject *SWIGUNUS
     try {
       result = ((GWFrames::Waveform const *)arg1)->SchmidtEtAlVector(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -21573,45 +16234,14 @@ SWIGINTERN PyObject *_wrap_Waveform_SchmidtEtAlVector__SWIG_2(PyObject *SWIGUNUS
     try {
       result = ((GWFrames::Waveform const *)arg1)->SchmidtEtAlVector();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -21720,45 +16350,14 @@ SWIGINTERN PyObject *_wrap_Waveform_OShaughnessyEtAlVector__SWIG_0(PyObject *SWI
     try {
       result = ((GWFrames::Waveform const *)arg1)->OShaughnessyEtAlVector((std::vector< int,std::allocator< int > > const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -21789,45 +16388,14 @@ SWIGINTERN PyObject *_wrap_Waveform_OShaughnessyEtAlVector__SWIG_1(PyObject *SWI
     try {
       result = ((GWFrames::Waveform const *)arg1)->OShaughnessyEtAlVector();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -21912,45 +16480,14 @@ SWIGINTERN PyObject *_wrap_Waveform_AngularVelocityVector__SWIG_0(PyObject *SWIG
     try {
       result = ((GWFrames::Waveform const *)arg1)->AngularVelocityVector((std::vector< int,std::allocator< int > > const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -21981,45 +16518,14 @@ SWIGINTERN PyObject *_wrap_Waveform_AngularVelocityVector__SWIG_1(PyObject *SWIG
     try {
       result = ((GWFrames::Waveform const *)arg1)->AngularVelocityVector();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -22104,45 +16610,14 @@ SWIGINTERN PyObject *_wrap_Waveform_CorotatingFrame__SWIG_0(PyObject *SWIGUNUSED
     try {
       result = ((GWFrames::Waveform const *)arg1)->CorotatingFrame((std::vector< int,std::allocator< int > > const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -22173,45 +16648,14 @@ SWIGINTERN PyObject *_wrap_Waveform_CorotatingFrame__SWIG_1(PyObject *SWIGUNUSED
     try {
       result = ((GWFrames::Waveform const *)arg1)->CorotatingFrame();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -22296,45 +16740,14 @@ SWIGINTERN PyObject *_wrap_Waveform_PNEquivalentOrbitalAV__SWIG_0(PyObject *SWIG
     try {
       result = ((GWFrames::Waveform const *)arg1)->PNEquivalentOrbitalAV((std::vector< int,std::allocator< int > > const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -22365,45 +16778,14 @@ SWIGINTERN PyObject *_wrap_Waveform_PNEquivalentOrbitalAV__SWIG_1(PyObject *SWIG
     try {
       result = ((GWFrames::Waveform const *)arg1)->PNEquivalentOrbitalAV();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -22488,45 +16870,14 @@ SWIGINTERN PyObject *_wrap_Waveform_PNEquivalentPrecessionalAV__SWIG_0(PyObject 
     try {
       result = ((GWFrames::Waveform const *)arg1)->PNEquivalentPrecessionalAV((std::vector< int,std::allocator< int > > const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -22557,45 +16908,14 @@ SWIGINTERN PyObject *_wrap_Waveform_PNEquivalentPrecessionalAV__SWIG_1(PyObject 
     try {
       result = ((GWFrames::Waveform const *)arg1)->PNEquivalentPrecessionalAV();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -22684,45 +17004,14 @@ SWIGINTERN PyObject *_wrap_Waveform_TransformToSchmidtEtAlFrame__SWIG_0(PyObject
     try {
       result = (GWFrames::Waveform *) &(arg1)->TransformToSchmidtEtAlFrame(arg2,arg3);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -22760,45 +17049,14 @@ SWIGINTERN PyObject *_wrap_Waveform_TransformToSchmidtEtAlFrame__SWIG_1(PyObject
     try {
       result = (GWFrames::Waveform *) &(arg1)->TransformToSchmidtEtAlFrame(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -22827,45 +17085,14 @@ SWIGINTERN PyObject *_wrap_Waveform_TransformToSchmidtEtAlFrame__SWIG_2(PyObject
     try {
       result = (GWFrames::Waveform *) &(arg1)->TransformToSchmidtEtAlFrame();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -22974,45 +17201,14 @@ SWIGINTERN PyObject *_wrap_Waveform_TransformToOShaughnessyEtAlFrame__SWIG_0(PyO
     try {
       result = (GWFrames::Waveform *) &(arg1)->TransformToOShaughnessyEtAlFrame((std::vector< int,std::allocator< int > > const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -23043,45 +17239,14 @@ SWIGINTERN PyObject *_wrap_Waveform_TransformToOShaughnessyEtAlFrame__SWIG_1(PyO
     try {
       result = (GWFrames::Waveform *) &(arg1)->TransformToOShaughnessyEtAlFrame();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -23166,45 +17331,14 @@ SWIGINTERN PyObject *_wrap_Waveform_TransformToAngularVelocityFrame__SWIG_0(PyOb
     try {
       result = (GWFrames::Waveform *) &(arg1)->TransformToAngularVelocityFrame((std::vector< int,std::allocator< int > > const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -23235,45 +17369,14 @@ SWIGINTERN PyObject *_wrap_Waveform_TransformToAngularVelocityFrame__SWIG_1(PyOb
     try {
       result = (GWFrames::Waveform *) &(arg1)->TransformToAngularVelocityFrame();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -23358,45 +17461,14 @@ SWIGINTERN PyObject *_wrap_Waveform_TransformToCorotatingFrame__SWIG_0(PyObject 
     try {
       result = (GWFrames::Waveform *) &(arg1)->TransformToCorotatingFrame((std::vector< int,std::allocator< int > > const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -23427,45 +17499,14 @@ SWIGINTERN PyObject *_wrap_Waveform_TransformToCorotatingFrame__SWIG_1(PyObject 
     try {
       result = (GWFrames::Waveform *) &(arg1)->TransformToCorotatingFrame();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -23536,45 +17577,14 @@ SWIGINTERN PyObject *_wrap_Waveform_TransformToInertialFrame(PyObject *SWIGUNUSE
     try {
       result = (GWFrames::Waveform *) &(arg1)->TransformToInertialFrame();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -23617,45 +17627,14 @@ SWIGINTERN PyObject *_wrap_Waveform_TransformUncertaintiesToCorotatingFrame(PyOb
     try {
       result = (GWFrames::Waveform *) &(arg1)->TransformUncertaintiesToCorotatingFrame((std::vector< Quaternions::Quaternion,std::allocator< Quaternions::Quaternion > > const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -23686,45 +17665,14 @@ SWIGINTERN PyObject *_wrap_Waveform_TransformUncertaintiesToInertialFrame(PyObje
     try {
       result = (GWFrames::Waveform *) &(arg1)->TransformUncertaintiesToInertialFrame();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -23767,45 +17715,14 @@ SWIGINTERN PyObject *_wrap_Waveform_Interpolate(PyObject *SWIGUNUSEDPARM(self), 
     try {
       result = ((GWFrames::Waveform const *)arg1)->Interpolate((std::vector< double,std::allocator< double > > const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -23854,45 +17771,14 @@ SWIGINTERN PyObject *_wrap_Waveform_Segment(PyObject *SWIGUNUSEDPARM(self), PyOb
     try {
       result = ((GWFrames::Waveform const *)arg1)->Segment(arg2,arg3);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -23945,45 +17831,14 @@ SWIGINTERN PyObject *_wrap_Waveform_GetAlignmentOfTime(PyObject *SWIGUNUSEDPARM(
     try {
       ((GWFrames::Waveform const *)arg1)->GetAlignmentOfTime((GWFrames::Waveform const &)*arg2,arg3,*arg4);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -24039,45 +17894,14 @@ SWIGINTERN PyObject *_wrap_Waveform_AlignTime(PyObject *SWIGUNUSEDPARM(self), Py
     try {
       result = (GWFrames::Waveform *) &(arg1)->AlignTime((GWFrames::Waveform const &)*arg2,arg3);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -24140,45 +17964,14 @@ SWIGINTERN PyObject *_wrap_Waveform_GetAlignmentOfDecompositionFrameToModes__SWI
     try {
       ((GWFrames::Waveform const *)arg1)->GetAlignmentOfDecompositionFrameToModes(arg2,*arg3,(std::vector< int,std::allocator< int > > const &)*arg4);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -24229,45 +18022,14 @@ SWIGINTERN PyObject *_wrap_Waveform_GetAlignmentOfDecompositionFrameToModes__SWI
     try {
       ((GWFrames::Waveform const *)arg1)->GetAlignmentOfDecompositionFrameToModes(arg2,*arg3);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -24383,45 +18145,14 @@ SWIGINTERN PyObject *_wrap_Waveform_AlignDecompositionFrameToModes__SWIG_0(PyObj
     try {
       result = (GWFrames::Waveform *) &(arg1)->AlignDecompositionFrameToModes(arg2,(std::vector< int,std::allocator< int > > const &)*arg3);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -24461,45 +18192,14 @@ SWIGINTERN PyObject *_wrap_Waveform_AlignDecompositionFrameToModes__SWIG_1(PyObj
     try {
       result = (GWFrames::Waveform *) &(arg1)->AlignDecompositionFrameToModes(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -24614,45 +18314,14 @@ SWIGINTERN PyObject *_wrap_Waveform_GetAlignmentOfFrame(PyObject *SWIGUNUSEDPARM
     try {
       ((GWFrames::Waveform const *)arg1)->GetAlignmentOfFrame((GWFrames::Waveform const &)*arg2,arg3,*arg4);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -24702,45 +18371,14 @@ SWIGINTERN PyObject *_wrap_Waveform_AlignFrame(PyObject *SWIGUNUSEDPARM(self), P
     try {
       result = (GWFrames::Waveform *) &(arg1)->AlignFrame((GWFrames::Waveform const &)*arg2,arg3);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -24814,45 +18452,14 @@ SWIGINTERN PyObject *_wrap_Waveform_GetAlignmentOfTimeAndFrame(PyObject *SWIGUNU
     try {
       ((GWFrames::Waveform const *)arg1)->GetAlignmentOfTimeAndFrame((GWFrames::Waveform const &)*arg2,arg3,arg4,*arg5,*arg6);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -24917,45 +18524,14 @@ SWIGINTERN PyObject *_wrap_Waveform_AlignTimeAndFrame(PyObject *SWIGUNUSEDPARM(s
     try {
       result = (GWFrames::Waveform *) &(arg1)->AlignTimeAndFrame((GWFrames::Waveform const &)*arg2,arg3,arg4);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -25014,45 +18590,14 @@ SWIGINTERN PyObject *_wrap_Waveform_Compare__SWIG_0(PyObject *SWIGUNUSEDPARM(sel
     try {
       result = ((GWFrames::Waveform const *)arg1)->Compare((GWFrames::Waveform const &)*arg2,arg3,arg4);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -25102,45 +18647,14 @@ SWIGINTERN PyObject *_wrap_Waveform_Compare__SWIG_1(PyObject *SWIGUNUSEDPARM(sel
     try {
       result = ((GWFrames::Waveform const *)arg1)->Compare((GWFrames::Waveform const &)*arg2,arg3);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -25181,45 +18695,14 @@ SWIGINTERN PyObject *_wrap_Waveform_Compare__SWIG_2(PyObject *SWIGUNUSEDPARM(sel
     try {
       result = ((GWFrames::Waveform const *)arg1)->Compare((GWFrames::Waveform const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -25365,45 +18848,14 @@ SWIGINTERN PyObject *_wrap_Waveform_Hybridize__SWIG_0(PyObject *SWIGUNUSEDPARM(s
     try {
       result = ((GWFrames::Waveform const *)arg1)->Hybridize((GWFrames::Waveform const &)*arg2,arg3,arg4,arg5);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -25462,45 +18914,14 @@ SWIGINTERN PyObject *_wrap_Waveform_Hybridize__SWIG_1(PyObject *SWIGUNUSEDPARM(s
     try {
       result = ((GWFrames::Waveform const *)arg1)->Hybridize((GWFrames::Waveform const &)*arg2,arg3,arg4);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -25623,45 +19044,14 @@ SWIGINTERN PyObject *_wrap_Waveform_EvaluateAtPoint(PyObject *SWIGUNUSEDPARM(sel
     try {
       result = ((GWFrames::Waveform const *)arg1)->EvaluateAtPoint(arg2,arg3);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -25702,45 +19092,14 @@ SWIGINTERN PyObject *_wrap_Waveform___add__(PyObject *SWIGUNUSEDPARM(self), PyOb
     try {
       result = ((GWFrames::Waveform const *)arg1)->operator +((GWFrames::Waveform const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -25781,45 +19140,14 @@ SWIGINTERN PyObject *_wrap_Waveform___sub__(PyObject *SWIGUNUSEDPARM(self), PyOb
     try {
       result = ((GWFrames::Waveform const *)arg1)->operator -((GWFrames::Waveform const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -25860,45 +19188,14 @@ SWIGINTERN PyObject *_wrap_Waveform___mul____SWIG_0(PyObject *SWIGUNUSEDPARM(sel
     try {
       result = ((GWFrames::Waveform const *)arg1)->operator *((GWFrames::Waveform const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -25939,45 +19236,14 @@ SWIGINTERN PyObject *_wrap_Waveform___div____SWIG_0(PyObject *SWIGUNUSEDPARM(sel
     try {
       result = ((GWFrames::Waveform const *)arg1)->operator /((GWFrames::Waveform const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -26015,45 +19281,14 @@ SWIGINTERN PyObject *_wrap_Waveform___mul____SWIG_1(PyObject *SWIGUNUSEDPARM(sel
     try {
       result = ((GWFrames::Waveform const *)arg1)->operator *(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -26136,45 +19371,14 @@ SWIGINTERN PyObject *_wrap_Waveform___div____SWIG_1(PyObject *SWIGUNUSEDPARM(sel
     try {
       result = ((GWFrames::Waveform const *)arg1)->operator /(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -26248,45 +19452,14 @@ SWIGINTERN PyObject *_wrap_Waveform_NPEdth(PyObject *SWIGUNUSEDPARM(self), PyObj
     try {
       result = ((GWFrames::Waveform const *)arg1)->NPEdth();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -26315,45 +19488,14 @@ SWIGINTERN PyObject *_wrap_Waveform_NPEdthBar(PyObject *SWIGUNUSEDPARM(self), Py
     try {
       result = ((GWFrames::Waveform const *)arg1)->NPEdthBar();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -26382,45 +19524,14 @@ SWIGINTERN PyObject *_wrap_Waveform_GHPEdth(PyObject *SWIGUNUSEDPARM(self), PyOb
     try {
       result = ((GWFrames::Waveform const *)arg1)->GHPEdth();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -26449,45 +19560,14 @@ SWIGINTERN PyObject *_wrap_Waveform_GHPEdthBar(PyObject *SWIGUNUSEDPARM(self), P
     try {
       result = ((GWFrames::Waveform const *)arg1)->GHPEdthBar();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -26516,45 +19596,14 @@ SWIGINTERN PyObject *_wrap_Waveform_IntegrateNPEdth(PyObject *SWIGUNUSEDPARM(sel
     try {
       result = ((GWFrames::Waveform const *)arg1)->IntegrateNPEdth();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -26583,45 +19632,14 @@ SWIGINTERN PyObject *_wrap_Waveform_IntegrateNPEdthBar(PyObject *SWIGUNUSEDPARM(
     try {
       result = ((GWFrames::Waveform const *)arg1)->IntegrateNPEdthBar();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -26650,45 +19668,14 @@ SWIGINTERN PyObject *_wrap_Waveform_IntegrateGHPEdth(PyObject *SWIGUNUSEDPARM(se
     try {
       result = ((GWFrames::Waveform const *)arg1)->IntegrateGHPEdth();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -26717,45 +19704,14 @@ SWIGINTERN PyObject *_wrap_Waveform_IntegrateGHPEdthBar(PyObject *SWIGUNUSEDPARM
     try {
       result = ((GWFrames::Waveform const *)arg1)->IntegrateGHPEdthBar();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -26796,45 +19752,14 @@ SWIGINTERN PyObject *_wrap_Waveform_ApplySupertranslation(PyObject *SWIGUNUSEDPA
     try {
       result = ((GWFrames::Waveform const *)arg1)->ApplySupertranslation(*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -26877,45 +19802,14 @@ SWIGINTERN PyObject *_wrap_Waveform_Boost(PyObject *SWIGUNUSEDPARM(self), PyObje
     try {
       result = ((GWFrames::Waveform const *)arg1)->Boost((std::vector< double,std::allocator< double > > const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -26969,45 +19863,14 @@ SWIGINTERN PyObject *_wrap_Waveform_Output__SWIG_0(PyObject *SWIGUNUSEDPARM(self
     try {
       result = (GWFrames::Waveform *) &((GWFrames::Waveform const *)arg1)->Output((std::string const &)*arg2,arg3);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -27052,45 +19915,14 @@ SWIGINTERN PyObject *_wrap_Waveform_Output__SWIG_1(PyObject *SWIGUNUSEDPARM(self
     try {
       result = (GWFrames::Waveform *) &((GWFrames::Waveform const *)arg1)->Output((std::string const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -27173,45 +20005,14 @@ SWIGINTERN PyObject *_wrap_Waveform_HackSpECSignError(PyObject *SWIGUNUSEDPARM(s
     try {
       result = (GWFrames::Waveform *) &(arg1)->HackSpECSignError();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -27240,45 +20041,14 @@ SWIGINTERN PyObject *_wrap_Waveform___str__(PyObject *SWIGUNUSEDPARM(self), PyOb
     try {
       result = GWFrames_Waveform___str__(arg1);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -27314,45 +20084,14 @@ SWIGINTERN PyObject *_wrap_new_Waveforms__SWIG_0(PyObject *SWIGUNUSEDPARM(self),
     try {
       result = (GWFrames::Waveforms *)new GWFrames::Waveforms(arg1);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -27372,45 +20111,14 @@ SWIGINTERN PyObject *_wrap_new_Waveforms__SWIG_1(PyObject *SWIGUNUSEDPARM(self),
     try {
       result = (GWFrames::Waveforms *)new GWFrames::Waveforms();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -27442,45 +20150,14 @@ SWIGINTERN PyObject *_wrap_new_Waveforms__SWIG_2(PyObject *SWIGUNUSEDPARM(self),
     try {
       result = (GWFrames::Waveforms *)new GWFrames::Waveforms((GWFrames::Waveforms const &)*arg1);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -27512,45 +20189,14 @@ SWIGINTERN PyObject *_wrap_new_Waveforms__SWIG_3(PyObject *SWIGUNUSEDPARM(self),
     try {
       result = (GWFrames::Waveforms *)new GWFrames::Waveforms((std::vector< GWFrames::Waveform,std::allocator< GWFrames::Waveform > > const &)*arg1);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -27629,45 +20275,14 @@ SWIGINTERN PyObject *_wrap_delete_Waveforms(PyObject *SWIGUNUSEDPARM(self), PyOb
     try {
       delete arg1;;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -27705,45 +20320,14 @@ SWIGINTERN PyObject *_wrap_Waveforms___getitem____SWIG_0(PyObject *SWIGUNUSEDPAR
     try {
       result = (GWFrames::Waveform *) &((GWFrames::Waveforms const *)arg1)->operator [](arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -27781,45 +20365,14 @@ SWIGINTERN PyObject *_wrap_Waveforms___getitem____SWIG_1(PyObject *SWIGUNUSEDPAR
     try {
       result = (GWFrames::Waveform *) &(arg1)->operator [](arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -27897,45 +20450,14 @@ SWIGINTERN PyObject *_wrap_Waveforms_clear(PyObject *SWIGUNUSEDPARM(self), PyObj
     try {
       (arg1)->clear();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -27964,45 +20486,14 @@ SWIGINTERN PyObject *_wrap_Waveforms_size(PyObject *SWIGUNUSEDPARM(self), PyObje
     try {
       result = (unsigned int)((GWFrames::Waveforms const *)arg1)->size();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -28069,45 +20560,14 @@ SWIGINTERN PyObject *_wrap_Waveforms_SetCommonTime__SWIG_0(PyObject *SWIGUNUSEDP
     try {
       (arg1)->SetCommonTime(*arg2,arg3,arg4,arg5);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -28165,45 +20625,14 @@ SWIGINTERN PyObject *_wrap_Waveforms_SetCommonTime__SWIG_1(PyObject *SWIGUNUSEDP
     try {
       (arg1)->SetCommonTime(*arg2,arg3,arg4);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -28252,45 +20681,14 @@ SWIGINTERN PyObject *_wrap_Waveforms_SetCommonTime__SWIG_2(PyObject *SWIGUNUSEDP
     try {
       (arg1)->SetCommonTime(*arg2,arg3);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -28330,45 +20728,14 @@ SWIGINTERN PyObject *_wrap_Waveforms_SetCommonTime__SWIG_3(PyObject *SWIGUNUSEDP
     try {
       (arg1)->SetCommonTime(*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -28551,45 +20918,14 @@ SWIGINTERN PyObject *_wrap_Waveforms_Extrapolate__SWIG_0(PyObject *SWIGUNUSEDPAR
     try {
       result = (arg1)->Extrapolate(*arg2,(std::vector< int,std::allocator< int > > const &)*arg3,(std::vector< double,std::allocator< double > > const &)*arg4);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -28648,45 +20984,14 @@ SWIGINTERN PyObject *_wrap_Waveforms_Extrapolate__SWIG_1(PyObject *SWIGUNUSEDPAR
     try {
       result = (arg1)->Extrapolate(*arg2,(std::vector< int,std::allocator< int > > const &)*arg3);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -28797,45 +21102,14 @@ SWIGINTERN PyObject *_wrap_Waveforms___setitem__(PyObject *SWIGUNUSEDPARM(self),
     try {
       GWFrames_Waveforms___setitem__(arg1,arg2,(GWFrames::Waveform const &)*arg3);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -28873,45 +21147,14 @@ SWIGINTERN PyObject *_wrap_vectorW_iterator(PyObject *SWIGUNUSEDPARM(self), PyOb
     try {
       result = (swig::SwigPyIterator *)std_vector_Sl_GWFrames_Waveform_Sg__iterator(arg1,arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -28940,45 +21183,14 @@ SWIGINTERN PyObject *_wrap_vectorW___nonzero__(PyObject *SWIGUNUSEDPARM(self), P
     try {
       result = (bool)std_vector_Sl_GWFrames_Waveform_Sg____nonzero__((std::vector< GWFrames::Waveform > const *)arg1);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -29007,45 +21219,14 @@ SWIGINTERN PyObject *_wrap_vectorW___bool__(PyObject *SWIGUNUSEDPARM(self), PyOb
     try {
       result = (bool)std_vector_Sl_GWFrames_Waveform_Sg____bool__((std::vector< GWFrames::Waveform > const *)arg1);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -29074,45 +21255,14 @@ SWIGINTERN PyObject *_wrap_vectorW___len__(PyObject *SWIGUNUSEDPARM(self), PyObj
     try {
       result = std_vector_Sl_GWFrames_Waveform_Sg____len__((std::vector< GWFrames::Waveform > const *)arg1);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -29147,45 +21297,14 @@ SWIGINTERN PyObject *_wrap_vectorW_pop(PyObject *SWIGUNUSEDPARM(self), PyObject 
       }
       ;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -29241,45 +21360,14 @@ SWIGINTERN PyObject *_wrap_vectorW___getslice__(PyObject *SWIGUNUSEDPARM(self), 
       }
       ;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -29348,45 +21436,14 @@ SWIGINTERN PyObject *_wrap_vectorW___setslice____SWIG_0(PyObject *SWIGUNUSEDPARM
       }
       ;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -29443,45 +21500,14 @@ SWIGINTERN PyObject *_wrap_vectorW___setslice____SWIG_1(PyObject *SWIGUNUSEDPARM
       }
       ;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -29600,45 +21626,14 @@ SWIGINTERN PyObject *_wrap_vectorW___delslice__(PyObject *SWIGUNUSEDPARM(self), 
       }
       ;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -29681,45 +21676,14 @@ SWIGINTERN PyObject *_wrap_vectorW___delitem____SWIG_0(PyObject *SWIGUNUSEDPARM(
       }
       ;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -29765,45 +21729,14 @@ SWIGINTERN PyObject *_wrap_vectorW___getitem____SWIG_0(PyObject *SWIGUNUSEDPARM(
       }
       ;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -29862,45 +21795,14 @@ SWIGINTERN PyObject *_wrap_vectorW___setitem____SWIG_0(PyObject *SWIGUNUSEDPARM(
       }
       ;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -29947,45 +21849,14 @@ SWIGINTERN PyObject *_wrap_vectorW___setitem____SWIG_1(PyObject *SWIGUNUSEDPARM(
       }
       ;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -30030,45 +21901,14 @@ SWIGINTERN PyObject *_wrap_vectorW___delitem____SWIG_1(PyObject *SWIGUNUSEDPARM(
       }
       ;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -30159,45 +21999,14 @@ SWIGINTERN PyObject *_wrap_vectorW___getitem____SWIG_1(PyObject *SWIGUNUSEDPARM(
       }
       ;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -30299,45 +22108,14 @@ SWIGINTERN PyObject *_wrap_vectorW___setitem____SWIG_2(PyObject *SWIGUNUSEDPARM(
       }
       ;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -30446,45 +22224,14 @@ SWIGINTERN PyObject *_wrap_vectorW_append(PyObject *SWIGUNUSEDPARM(self), PyObje
     try {
       std_vector_Sl_GWFrames_Waveform_Sg__append(arg1,(GWFrames::Waveform const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -30504,45 +22251,14 @@ SWIGINTERN PyObject *_wrap_new_vectorW__SWIG_0(PyObject *SWIGUNUSEDPARM(self), P
     try {
       result = (std::vector< GWFrames::Waveform > *)new std::vector< GWFrames::Waveform >();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -30576,45 +22292,14 @@ SWIGINTERN PyObject *_wrap_new_vectorW__SWIG_1(PyObject *SWIGUNUSEDPARM(self), P
     try {
       result = (std::vector< GWFrames::Waveform > *)new std::vector< GWFrames::Waveform >((std::vector< GWFrames::Waveform > const &)*arg1);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -30645,45 +22330,14 @@ SWIGINTERN PyObject *_wrap_vectorW_empty(PyObject *SWIGUNUSEDPARM(self), PyObjec
     try {
       result = (bool)((std::vector< GWFrames::Waveform > const *)arg1)->empty();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -30712,45 +22366,14 @@ SWIGINTERN PyObject *_wrap_vectorW_size(PyObject *SWIGUNUSEDPARM(self), PyObject
     try {
       result = ((std::vector< GWFrames::Waveform > const *)arg1)->size();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -30778,45 +22401,14 @@ SWIGINTERN PyObject *_wrap_vectorW_clear(PyObject *SWIGUNUSEDPARM(self), PyObjec
     try {
       (arg1)->clear();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -30856,45 +22448,14 @@ SWIGINTERN PyObject *_wrap_vectorW_swap(PyObject *SWIGUNUSEDPARM(self), PyObject
     try {
       (arg1)->swap(*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -30923,45 +22484,14 @@ SWIGINTERN PyObject *_wrap_vectorW_get_allocator(PyObject *SWIGUNUSEDPARM(self),
     try {
       result = ((std::vector< GWFrames::Waveform > const *)arg1)->get_allocator();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -30990,45 +22520,14 @@ SWIGINTERN PyObject *_wrap_vectorW_begin(PyObject *SWIGUNUSEDPARM(self), PyObjec
     try {
       result = (arg1)->begin();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -31058,45 +22557,14 @@ SWIGINTERN PyObject *_wrap_vectorW_end(PyObject *SWIGUNUSEDPARM(self), PyObject 
     try {
       result = (arg1)->end();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -31126,45 +22594,14 @@ SWIGINTERN PyObject *_wrap_vectorW_rbegin(PyObject *SWIGUNUSEDPARM(self), PyObje
     try {
       result = (arg1)->rbegin();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -31194,45 +22631,14 @@ SWIGINTERN PyObject *_wrap_vectorW_rend(PyObject *SWIGUNUSEDPARM(self), PyObject
     try {
       result = (arg1)->rend();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -31262,45 +22668,14 @@ SWIGINTERN PyObject *_wrap_new_vectorW__SWIG_2(PyObject *SWIGUNUSEDPARM(self), P
     try {
       result = (std::vector< GWFrames::Waveform > *)new std::vector< GWFrames::Waveform >(arg1);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -31328,45 +22703,14 @@ SWIGINTERN PyObject *_wrap_vectorW_pop_back(PyObject *SWIGUNUSEDPARM(self), PyOb
     try {
       (arg1)->pop_back();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -31403,45 +22747,14 @@ SWIGINTERN PyObject *_wrap_vectorW_resize__SWIG_0(PyObject *SWIGUNUSEDPARM(self)
     try {
       (arg1)->resize(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -31485,45 +22798,14 @@ SWIGINTERN PyObject *_wrap_vectorW_erase__SWIG_0(PyObject *SWIGUNUSEDPARM(self),
     try {
       result = (arg1)->erase(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -31583,45 +22865,14 @@ SWIGINTERN PyObject *_wrap_vectorW_erase__SWIG_1(PyObject *SWIGUNUSEDPARM(self),
     try {
       result = (arg1)->erase(arg2,arg3);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -31714,45 +22965,14 @@ SWIGINTERN PyObject *_wrap_new_vectorW__SWIG_3(PyObject *SWIGUNUSEDPARM(self), P
     try {
       result = (std::vector< GWFrames::Waveform > *)new std::vector< GWFrames::Waveform >(arg1,(std::vector< GWFrames::Waveform >::value_type const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -31849,45 +23069,14 @@ SWIGINTERN PyObject *_wrap_vectorW_push_back(PyObject *SWIGUNUSEDPARM(self), PyO
     try {
       (arg1)->push_back((std::vector< GWFrames::Waveform >::value_type const &)*arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -31916,45 +23105,14 @@ SWIGINTERN PyObject *_wrap_vectorW_front(PyObject *SWIGUNUSEDPARM(self), PyObjec
     try {
       result = (std::vector< GWFrames::Waveform >::value_type *) &((std::vector< GWFrames::Waveform > const *)arg1)->front();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -31983,45 +23141,14 @@ SWIGINTERN PyObject *_wrap_vectorW_back(PyObject *SWIGUNUSEDPARM(self), PyObject
     try {
       result = (std::vector< GWFrames::Waveform >::value_type *) &((std::vector< GWFrames::Waveform > const *)arg1)->back();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -32070,45 +23197,14 @@ SWIGINTERN PyObject *_wrap_vectorW_assign(PyObject *SWIGUNUSEDPARM(self), PyObje
     try {
       (arg1)->assign(arg2,(std::vector< GWFrames::Waveform >::value_type const &)*arg3);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -32157,45 +23253,14 @@ SWIGINTERN PyObject *_wrap_vectorW_resize__SWIG_1(PyObject *SWIGUNUSEDPARM(self)
     try {
       (arg1)->resize(arg2,(std::vector< GWFrames::Waveform >::value_type const &)*arg3);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -32303,45 +23368,14 @@ SWIGINTERN PyObject *_wrap_vectorW_insert__SWIG_0(PyObject *SWIGUNUSEDPARM(self)
     try {
       result = (arg1)->insert(arg2,(std::vector< GWFrames::Waveform >::value_type const &)*arg3);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -32406,45 +23440,14 @@ SWIGINTERN PyObject *_wrap_vectorW_insert__SWIG_1(PyObject *SWIGUNUSEDPARM(self)
     try {
       (arg1)->insert(arg2,arg3,(std::vector< GWFrames::Waveform >::value_type const &)*arg4);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -32541,45 +23544,14 @@ SWIGINTERN PyObject *_wrap_vectorW_reserve(PyObject *SWIGUNUSEDPARM(self), PyObj
     try {
       (arg1)->reserve(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -32608,45 +23580,14 @@ SWIGINTERN PyObject *_wrap_vectorW_capacity(PyObject *SWIGUNUSEDPARM(self), PyOb
     try {
       result = ((std::vector< GWFrames::Waveform > const *)arg1)->capacity();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -32674,45 +23615,14 @@ SWIGINTERN PyObject *_wrap_delete_vectorW(PyObject *SWIGUNUSEDPARM(self), PyObje
     try {
       delete arg1;;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -32739,45 +23649,14 @@ SWIGINTERN PyObject *_wrap_new_PNWaveform__SWIG_0(PyObject *SWIGUNUSEDPARM(self)
     try {
       result = (GWFrames::PNWaveform *)new GWFrames::PNWaveform();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -32809,45 +23688,14 @@ SWIGINTERN PyObject *_wrap_new_PNWaveform__SWIG_1(PyObject *SWIGUNUSEDPARM(self)
     try {
       result = (GWFrames::PNWaveform *)new GWFrames::PNWaveform((GWFrames::PNWaveform const &)*arg1);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -32976,45 +23824,14 @@ SWIGINTERN PyObject *_wrap_new_PNWaveform__SWIG_2(PyObject *SWIGUNUSEDPARM(self)
     try {
       result = (GWFrames::PNWaveform *)new GWFrames::PNWaveform((std::string const &)*arg1,arg2,(std::vector< double,std::allocator< double > > const &)*arg3,(std::vector< double,std::allocator< double > > const &)*arg4,arg5,(Quaternions::Quaternion const &)*arg6,arg7,arg8);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -33140,45 +23957,14 @@ SWIGINTERN PyObject *_wrap_new_PNWaveform__SWIG_3(PyObject *SWIGUNUSEDPARM(self)
     try {
       result = (GWFrames::PNWaveform *)new GWFrames::PNWaveform((std::string const &)*arg1,arg2,(std::vector< double,std::allocator< double > > const &)*arg3,(std::vector< double,std::allocator< double > > const &)*arg4,arg5,(Quaternions::Quaternion const &)*arg6,arg7);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -33295,45 +24081,14 @@ SWIGINTERN PyObject *_wrap_new_PNWaveform__SWIG_4(PyObject *SWIGUNUSEDPARM(self)
     try {
       result = (GWFrames::PNWaveform *)new GWFrames::PNWaveform((std::string const &)*arg1,arg2,(std::vector< double,std::allocator< double > > const &)*arg3,(std::vector< double,std::allocator< double > > const &)*arg4,arg5,(Quaternions::Quaternion const &)*arg6);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -33419,45 +24174,14 @@ SWIGINTERN PyObject *_wrap_new_PNWaveform__SWIG_5(PyObject *SWIGUNUSEDPARM(self)
     try {
       result = (GWFrames::PNWaveform *)new GWFrames::PNWaveform((std::string const &)*arg1,arg2,(std::vector< double,std::allocator< double > > const &)*arg3,(std::vector< double,std::allocator< double > > const &)*arg4,arg5);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -33698,45 +24422,14 @@ SWIGINTERN PyObject *_wrap_delete_PNWaveform(PyObject *SWIGUNUSEDPARM(self), PyO
     try {
       delete arg1;;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -33774,45 +24467,14 @@ SWIGINTERN PyObject *_wrap_PNWaveform_chi1__SWIG_0(PyObject *SWIGUNUSEDPARM(self
     try {
       result = (std::vector< double,std::allocator< double > > *) &((GWFrames::PNWaveform const *)arg1)->chi1(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -33850,45 +24512,14 @@ SWIGINTERN PyObject *_wrap_PNWaveform_chi2__SWIG_0(PyObject *SWIGUNUSEDPARM(self
     try {
       result = (std::vector< double,std::allocator< double > > *) &((GWFrames::PNWaveform const *)arg1)->chi2(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -33926,45 +24557,14 @@ SWIGINTERN PyObject *_wrap_PNWaveform_Omega_orb__SWIG_0(PyObject *SWIGUNUSEDPARM
     try {
       result = (std::vector< double,std::allocator< double > > *) &((GWFrames::PNWaveform const *)arg1)->Omega_orb(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -34002,45 +24602,14 @@ SWIGINTERN PyObject *_wrap_PNWaveform_Omega_prec__SWIG_0(PyObject *SWIGUNUSEDPAR
     try {
       result = (std::vector< double,std::allocator< double > > *) &((GWFrames::PNWaveform const *)arg1)->Omega_prec(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -34078,45 +24647,14 @@ SWIGINTERN PyObject *_wrap_PNWaveform_Omega_tot__SWIG_0(PyObject *SWIGUNUSEDPARM
     try {
       result = ((GWFrames::PNWaveform const *)arg1)->Omega_tot(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -34154,45 +24692,14 @@ SWIGINTERN PyObject *_wrap_PNWaveform_L__SWIG_0(PyObject *SWIGUNUSEDPARM(self), 
     try {
       result = (std::vector< double,std::allocator< double > > *) &((GWFrames::PNWaveform const *)arg1)->L(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -34230,45 +24737,14 @@ SWIGINTERN PyObject *_wrap_PNWaveform_chi1Mag(PyObject *SWIGUNUSEDPARM(self), Py
     try {
       result = (double)((GWFrames::PNWaveform const *)arg1)->chi1Mag(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -34306,45 +24782,14 @@ SWIGINTERN PyObject *_wrap_PNWaveform_chi2Mag(PyObject *SWIGUNUSEDPARM(self), Py
     try {
       result = (double)((GWFrames::PNWaveform const *)arg1)->chi2Mag(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -34382,45 +24827,14 @@ SWIGINTERN PyObject *_wrap_PNWaveform_Omega_orbMag__SWIG_0(PyObject *SWIGUNUSEDP
     try {
       result = (double)((GWFrames::PNWaveform const *)arg1)->Omega_orbMag(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -34458,45 +24872,14 @@ SWIGINTERN PyObject *_wrap_PNWaveform_Omega_precMag__SWIG_0(PyObject *SWIGUNUSED
     try {
       result = (double)((GWFrames::PNWaveform const *)arg1)->Omega_precMag(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -34534,45 +24917,14 @@ SWIGINTERN PyObject *_wrap_PNWaveform_Omega_totMag__SWIG_0(PyObject *SWIGUNUSEDP
     try {
       result = (double)((GWFrames::PNWaveform const *)arg1)->Omega_totMag(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -34610,45 +24962,14 @@ SWIGINTERN PyObject *_wrap_PNWaveform_LMag__SWIG_0(PyObject *SWIGUNUSEDPARM(self
     try {
       result = (double)((GWFrames::PNWaveform const *)arg1)->LMag(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -34686,45 +25007,14 @@ SWIGINTERN PyObject *_wrap_PNWaveform_chiHat1__SWIG_0(PyObject *SWIGUNUSEDPARM(s
     try {
       result = ((GWFrames::PNWaveform const *)arg1)->chiHat1(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -34762,45 +25052,14 @@ SWIGINTERN PyObject *_wrap_PNWaveform_chiHat2__SWIG_0(PyObject *SWIGUNUSEDPARM(s
     try {
       result = ((GWFrames::PNWaveform const *)arg1)->chiHat2(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -34838,45 +25097,14 @@ SWIGINTERN PyObject *_wrap_PNWaveform_OmegaHat_orb__SWIG_0(PyObject *SWIGUNUSEDP
     try {
       result = ((GWFrames::PNWaveform const *)arg1)->OmegaHat_orb(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -34914,45 +25142,14 @@ SWIGINTERN PyObject *_wrap_PNWaveform_OmegaHat_prec__SWIG_0(PyObject *SWIGUNUSED
     try {
       result = ((GWFrames::PNWaveform const *)arg1)->OmegaHat_prec(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -34990,45 +25187,14 @@ SWIGINTERN PyObject *_wrap_PNWaveform_OmegaHat_tot__SWIG_0(PyObject *SWIGUNUSEDP
     try {
       result = ((GWFrames::PNWaveform const *)arg1)->OmegaHat_tot(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -35066,45 +25232,14 @@ SWIGINTERN PyObject *_wrap_PNWaveform_LHat__SWIG_0(PyObject *SWIGUNUSEDPARM(self
     try {
       result = ((GWFrames::PNWaveform const *)arg1)->LHat(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -35133,45 +25268,14 @@ SWIGINTERN PyObject *_wrap_PNWaveform_chi1__SWIG_1(PyObject *SWIGUNUSEDPARM(self
     try {
       result = (std::vector< std::vector< double,std::allocator< double > >,std::allocator< std::vector< double,std::allocator< double > > > > *) &((GWFrames::PNWaveform const *)arg1)->chi1();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -35244,45 +25348,14 @@ SWIGINTERN PyObject *_wrap_PNWaveform_chi2__SWIG_1(PyObject *SWIGUNUSEDPARM(self
     try {
       result = (std::vector< std::vector< double,std::allocator< double > >,std::allocator< std::vector< double,std::allocator< double > > > > *) &((GWFrames::PNWaveform const *)arg1)->chi2();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -35355,45 +25428,14 @@ SWIGINTERN PyObject *_wrap_PNWaveform_Omega_orb__SWIG_1(PyObject *SWIGUNUSEDPARM
     try {
       result = (std::vector< std::vector< double,std::allocator< double > >,std::allocator< std::vector< double,std::allocator< double > > > > *) &((GWFrames::PNWaveform const *)arg1)->Omega_orb();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -35466,45 +25508,14 @@ SWIGINTERN PyObject *_wrap_PNWaveform_Omega_prec__SWIG_1(PyObject *SWIGUNUSEDPAR
     try {
       result = (std::vector< std::vector< double,std::allocator< double > >,std::allocator< std::vector< double,std::allocator< double > > > > *) &((GWFrames::PNWaveform const *)arg1)->Omega_prec();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -35577,45 +25588,14 @@ SWIGINTERN PyObject *_wrap_PNWaveform_Omega_tot__SWIG_1(PyObject *SWIGUNUSEDPARM
     try {
       result = ((GWFrames::PNWaveform const *)arg1)->Omega_tot();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -35688,45 +25668,14 @@ SWIGINTERN PyObject *_wrap_PNWaveform_L__SWIG_1(PyObject *SWIGUNUSEDPARM(self), 
     try {
       result = (std::vector< std::vector< double,std::allocator< double > >,std::allocator< std::vector< double,std::allocator< double > > > > *) &((GWFrames::PNWaveform const *)arg1)->L();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -35799,45 +25748,14 @@ SWIGINTERN PyObject *_wrap_PNWaveform_Omega_orbMag__SWIG_1(PyObject *SWIGUNUSEDP
     try {
       result = ((GWFrames::PNWaveform const *)arg1)->Omega_orbMag();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -35910,45 +25828,14 @@ SWIGINTERN PyObject *_wrap_PNWaveform_Omega_precMag__SWIG_1(PyObject *SWIGUNUSED
     try {
       result = ((GWFrames::PNWaveform const *)arg1)->Omega_precMag();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -36021,45 +25908,14 @@ SWIGINTERN PyObject *_wrap_PNWaveform_Omega_totMag__SWIG_1(PyObject *SWIGUNUSEDP
     try {
       result = ((GWFrames::PNWaveform const *)arg1)->Omega_totMag();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -36132,45 +25988,14 @@ SWIGINTERN PyObject *_wrap_PNWaveform_LMag__SWIG_1(PyObject *SWIGUNUSEDPARM(self
     try {
       result = ((GWFrames::PNWaveform const *)arg1)->LMag();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -36243,45 +26068,14 @@ SWIGINTERN PyObject *_wrap_PNWaveform_chiHat1__SWIG_1(PyObject *SWIGUNUSEDPARM(s
     try {
       result = ((GWFrames::PNWaveform const *)arg1)->chiHat1();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -36354,45 +26148,14 @@ SWIGINTERN PyObject *_wrap_PNWaveform_chiHat2__SWIG_1(PyObject *SWIGUNUSEDPARM(s
     try {
       result = ((GWFrames::PNWaveform const *)arg1)->chiHat2();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -36465,45 +26228,14 @@ SWIGINTERN PyObject *_wrap_PNWaveform_OmegaHat_orb__SWIG_1(PyObject *SWIGUNUSEDP
     try {
       result = ((GWFrames::PNWaveform const *)arg1)->OmegaHat_orb();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -36576,45 +26308,14 @@ SWIGINTERN PyObject *_wrap_PNWaveform_OmegaHat_prec__SWIG_1(PyObject *SWIGUNUSED
     try {
       result = ((GWFrames::PNWaveform const *)arg1)->OmegaHat_prec();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -36687,45 +26388,14 @@ SWIGINTERN PyObject *_wrap_PNWaveform_OmegaHat_tot__SWIG_1(PyObject *SWIGUNUSEDP
     try {
       result = ((GWFrames::PNWaveform const *)arg1)->OmegaHat_tot();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -36798,45 +26468,14 @@ SWIGINTERN PyObject *_wrap_PNWaveform_LHat__SWIG_1(PyObject *SWIGUNUSEDPARM(self
     try {
       result = ((GWFrames::PNWaveform const *)arg1)->LHat();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -36918,45 +26557,14 @@ SWIGINTERN PyObject *_wrap_PNWaveform_Phi_orb__SWIG_0(PyObject *SWIGUNUSEDPARM(s
     try {
       result = (double)((GWFrames::PNWaveform const *)arg1)->Phi_orb(arg2);;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }
@@ -36985,45 +26593,14 @@ SWIGINTERN PyObject *_wrap_PNWaveform_Phi_orb__SWIG_1(PyObject *SWIGUNUSEDPARM(s
     try {
       result = (std::vector< double,std::allocator< double > > *) &((GWFrames::PNWaveform const *)arg1)->Phi_orb();;
     } catch(int i) {
-      if(i==0) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-      } else if(i==1) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-      } else if(i==2) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-      } else if(i==3) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-      } else if(i==4) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-      } else if(i==5) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-      } else if(i==6) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-      } else if(i==7) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-      } else if(i==8) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-      } else if(i==9) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-      } else if(i==10) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-      } else if(i==11) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-      } else if(i==12) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-      } else if(i==13) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-      } else if(i==14) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-      } else if(i==15) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-      } else if(i==16) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-      } else if(i==17) {
-        PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-      } else  {
-        PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
       }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
       return NULL;
     }
   }

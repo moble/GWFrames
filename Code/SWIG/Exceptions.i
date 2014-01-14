@@ -1,49 +1,76 @@
 ///////////////////////////////////
 //// Handle exceptions cleanly ////
 ///////////////////////////////////
+
+// The following will appear in the header of the `_wrap.cpp` file.
+%{
+  const char* const GWFramesErrors[] = {
+    "This function is not yet implemented.",
+    "Failed system call.",
+    "Bad file name.",
+    "Failed GSL call.",
+    "Unknown exception",
+    "Unknown exception",
+    "Unknown exception",
+    "Unknown exception",
+    "Unknown exception",
+    "Unknown exception",
+    "Bad value.",
+    "Bad switches; we should not have gotten here.",
+    "Index out of bounds.",
+    "Unknown exception",
+    "Unknown exception",
+    "Vector size mismatch.",
+    "Matrix size mismatch.",
+    "Matrix size is assumed to be 3x3 in this function.",
+    "Not enough points to take a derivative.",
+    "Empty instersection requested.",
+    "Unknown exception",
+    "Waveform is missing requested (ell,m) component.",
+    "Wrong frame type for this operation.",
+    "Bad Waveform information."
+  };
+  const int GWFramesNumberOfErrors = 24;
+  PyObject* const GWFramesExceptions[] = {
+    PyExc_NotImplementedError, // Not implemented
+    PyExc_SystemError, // Failed system call
+    PyExc_IOError, // Bad file name
+    PyExc_RuntimeError, // GSL failed
+    PyExc_RuntimeError, // [empty]
+    PyExc_RuntimeError, // [empty]
+    PyExc_RuntimeError, // [empty]
+    PyExc_RuntimeError, // [empty]
+    PyExc_RuntimeError, // [empty]
+    PyExc_RuntimeError, // [empty]
+    PyExc_ValueError, // Bad value
+    PyExc_ValueError, // Bad switches
+    PyExc_IndexError, // Index out of bounds
+    PyExc_RuntimeError, // [empty]
+    PyExc_RuntimeError, // [empty]
+    PyExc_AssertionError, // Mismatched vector size
+    PyExc_AssertionError, // Mismatched matrix size
+    PyExc_AssertionError, // 3x3 matrix assumed
+    PyExc_AssertionError, // Not enough points for derivative
+    PyExc_AssertionError, // Empty intersection
+    PyExc_RuntimeError, // [empty]
+    PyExc_IndexError, // Waveform missing ell,m
+    PyExc_AssertionError, // Bad frame type
+    PyExc_ValueError, // Bad Waveform information
+  };
+%}
+
+// This will go inside every python wrapper for any function I've
+// included; the code of the function itself will replace `$action`.
+// It's a good idea to try to keep this part brief, just to cut down
+// the size of the wrapper file.
 %exception {
   try {
     $action;
   } catch(int i) {
-    if(i==0) {
-      PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not yet implemented.");
-    } else if(i==1) {
-      PyErr_SetString(PyExc_RuntimeError, "GWFrames: Index out of bounds.");
-    } else if(i==2) {
-      PyErr_SetString(PyExc_RuntimeError, "GWFrames: Infinitely many solutions.");
-    } else if(i==3) {
-      PyErr_SetString(PyExc_RuntimeError, "GWFrames: Input vector size mismatch.");
-    } else if(i==4) {
-      PyErr_SetString(PyExc_RuntimeError, "GWFrames: Cannot extrapolate quaternions.");
-    } else if(i==5) {
-      PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size mismatch.");
-    } else if(i==6) {
-      PyErr_SetString(PyExc_RuntimeError, "GWFrames: Matrix size is assumed to be 3x3 in this function.");
-    } else if(i==7) {
-      PyErr_SetString(PyExc_RuntimeError, "GWFrames: Quaternion constructor's vector size not understood; should be 3 or 4.");
-    } else if(i==8) {
-      PyErr_SetString(PyExc_RuntimeError, "GWFrames: Waveform is missing requested l,m component.");
-    } else if(i==9) {
-      PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad file name.");
-    } else if(i==10) {
-      PyErr_SetString(PyExc_RuntimeError, "GWFrames: Not enough points to take a derivative.");
-    } else if(i==11) {
-      PyErr_SetString(PyExc_RuntimeError, "GWFrames: Empty intersection requested.");
-    } else if(i==12) {
-      PyErr_SetString(PyExc_RuntimeError, "GWFrames: Failed system call.");
-    } else if(i==13) {
-      PyErr_SetString(PyExc_RuntimeError, "GWFrames: Wrong FrameType for this operation.  Maybe you forgot to `SetFrameType`?");
-    } else if(i==14) {
-      PyErr_SetString(PyExc_RuntimeError, "GWFrames: GSL failed.");
-    } else if(i==15) {
-      PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad Waveform information.");
-    } else if(i==16) {
-      PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad switches; we should not have gotten here.");
-    } else if(i==17) {
-      PyErr_SetString(PyExc_RuntimeError, "GWFrames: Bad value.");
-    } else  {
-      PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
-    }
+    std::stringstream s;
+    if(i>-1 && i<GWFramesNumberOfErrors) { s << "GWFrames exception: " << GWFramesErrors[i]; }
+    else  { s << "GWFrames: Unknown exception number {" << i << "}"; }
+    PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
     return NULL;
   }
 }

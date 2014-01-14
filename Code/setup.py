@@ -39,7 +39,7 @@ class build_ext(_build_ext):
     """Specialized Python source builder for moving SWIG module."""
     def run(self):
         _build_ext.run(self)
-        copy_file('GWFrames.py', 'GWFrames/__init__.py')
+        copy_file('SWIG/GWFrames.py', 'GWFrames/__init__.py')
 
 ## Now import the basics
 from distutils.core import setup, Extension
@@ -104,7 +104,7 @@ setup(name="GWFrames",
       license=License,
       packages = ['GWFrames'],
       # py_modules = ['GWFrames'],
-      scripts = ['Scripts/RunExtrapolations.py', 'Scripts/ConvertGWDatToH5.py'],
+      scripts = ['Scripts/RunExtrapolations.py', 'Scripts/ExtrapolateAnnex.py'],
       ext_modules = [
         Extension('_GWFrames', ['SphericalFunctions/Quaternions/Quaternions.cpp',
                                 'SphericalFunctions/Quaternions/IntegrateAngularVelocity.cpp',
@@ -137,7 +137,7 @@ setup(name="GWFrames",
                   libraries=['gsl', 'gslcblas', 'fftw3', 'spinsfast'],
                   define_macros = [('CodeRevision', CodeRevision)],
                   language='c++',
-                  swig_opts=['-globals', 'constants', '-c++', '-outdir', '../'], # `'-builtin'` doesn't let Waveform have methods attached to it
+                  swig_opts=['-globals', 'constants', '-c++', '-outdir', 'SWIG/'], # `'-builtin'` doesn't let Waveform have methods attached to it
                   extra_link_args=['-lgomp', '-fPIC'],
                   # extra_link_args=['-lgomp', '-fPIC', '-Wl,-undefined,error'], # `-undefined,error` tells the linker to fail on undefined symbols
                   extra_compile_args=['-Wno-deprecated'] #'-fopenmp',
