@@ -10,7 +10,10 @@ this project is the last commit of the paper's project.
 
 The license for using this software is basically open (see the LICENSE
 file in this directory), though citations to the original paper are
-appreciated, where relevant.
+appreciated, where relevant.  Also, if your work depends on features
+found in this module that have not been described in a separate
+publication of mine, I would appreciate the opportunity to be a
+coauthor.
 
 Note that this code is not optimized.  In many cases, obvious
 optimizations were rejected in favor of clearer or simpler code, or
