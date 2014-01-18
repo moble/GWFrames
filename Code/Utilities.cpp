@@ -218,67 +218,377 @@ double GWFrames::CumulativeScalarIntegral(const std::vector<double>& fdot, const
 
 inline double SQR(const double a) { return a*a; }
 
-/// Three-point finite-differencing of vector of scalars.
+// /// Three-point finite-differencing of vector of scalars.
+// std::vector<double> GWFrames::ScalarDerivative(const std::vector<double>& f, const std::vector<double>& t) {
+//   ///
+//   /// \param f Vector of scalars.
+//   /// \param t Vector of corresponding time steps.
+//   if(f.size() != t.size()) {
+//     cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": f.size()=" << f.size() << " != t.size()=" << t.size() << endl;
+//     throw(GWFrames_VectorSizeMismatch);
+//   }
+//   if(f.size()<3) { cerr << "\n" << __FILE__ << ":" << __LINE__ << ": size=" << f.size() << endl; throw(GWFrames_NotEnoughPointsForDerivative); }
+//   vector<double> D(f.size());
+//   const unsigned int i1 = f.size()-1;
+//   double hprev = t[1]-t[0];
+//   { // Compute first point
+//     const double hnext = t[2]-t[1];
+//     D[0] = -((2*hprev+hnext)/(hprev*(hprev+hnext)))*f[0] + ((hnext+hprev)/(hnext*hprev))*f[1] - (hprev/(hnext*(hnext+hprev)))*f[2];
+//   }
+//   for(unsigned int i=1; i<i1; ++i) { // Compute intermediate points
+//     const double hnext = t[i+1]-t[i];
+//     /// Sundquist and Veronis, Tellus XXII (1970), 1
+//     D[i] = (f[i+1] - f[i-1]*SQR(hnext/hprev) - f[i]*(1-SQR(hnext/hprev))) / (hnext*(1+hnext/hprev));
+//     hprev = hnext;
+//   }
+//   { // Compute final point
+//     const double hnext = t[i1]  -t[i1-1];
+//     const double hprev = t[i1-1]-t[i1-2];
+//     D[i1] = (hnext/(hprev*(hprev+hnext)))*f[i1-2] - ((hnext+hprev)/(hnext*hprev))*f[i1-1] + ((hprev+2*hnext)/(hnext*(hnext+hprev)))*f[i1];
+//   }
+//   return D;
+// }
+
+// /// Three-point finite-differencing of vector of complex<double>.
+// std::vector<std::complex<double> > GWFrames::ComplexDerivative(const std::vector<std::complex<double> >& f, const std::vector<double>& t) {
+//   ///
+//   /// \param f Vector of complex<double>.
+//   /// \param t Vector of corresponding time steps.
+//   if(f.size() != t.size()) {
+//     cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": f.size()=" << f.size() << " != t.size()=" << t.size() << endl;
+//     throw(GWFrames_VectorSizeMismatch);
+//   }
+//   if(f.size()<3) { cerr << "\n" << __FILE__ << ":" << __LINE__ << ": size=" << f.size() << endl; throw(GWFrames_NotEnoughPointsForDerivative); }
+//   vector<std::complex<double> > D(f.size());
+//   const unsigned int i1 = f.size()-1;
+//   double hprev = t[1]-t[0];
+//   { // Compute first point
+//     const double hnext = t[2]-t[1];
+//     D[0] = -((2*hprev+hnext)/(hprev*(hprev+hnext)))*f[0] + ((hnext+hprev)/(hnext*hprev))*f[1] - (hprev/(hnext*(hnext+hprev)))*f[2];
+//   }
+//   for(unsigned int i=1; i<i1; ++i) { // Compute intermediate points
+//     const double hnext = t[i+1]-t[i];
+//     /// Sundquist and Veronis, Tellus XXII (1970), 1
+//     D[i] = (f[i+1] - f[i-1]*SQR(hnext/hprev) - f[i]*(1-SQR(hnext/hprev))) / (hnext*(1+hnext/hprev));
+//     hprev = hnext;
+//   }
+//   { // Compute final point
+//     const double hnext = t[i1]  -t[i1-1];
+//     const double hprev = t[i1-1]-t[i1-2];
+//     D[i1] = (hnext/(hprev*(hprev+hnext)))*f[i1-2] - ((hnext+hprev)/(hnext*hprev))*f[i1-1] + ((hprev+2*hnext)/(hnext*(hnext+hprev)))*f[i1];
+//   }
+//   return D;
+// }
+
+/// Five-point finite-differencing of vector of doubles.
 std::vector<double> GWFrames::ScalarDerivative(const std::vector<double>& f, const std::vector<double>& t) {
   ///
-  /// \param f Vector of scalars.
+  /// \param f Vector of doubles.
   /// \param t Vector of corresponding time steps.
+  ///
+  /// The formula for this finite difference comes from Eq. (A 5b) of
+  /// "Derivative formulas and errors for non-uniformly spaced points"
+  /// by M. K. Bowen and Ronald Smith.  As explained in their Eqs. (B
+  /// 9b) and (B 10b), this is a fourth-order formula.
+  ///
+  /// If there are fewer than five points, the function reverts to
+  /// simpler formulas.  If there are fewer than two points, or there
+  /// are different numbers of points in the two input vectors, an
+  /// exception is thrown.
+
   if(f.size() != t.size()) {
     cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": f.size()=" << f.size() << " != t.size()=" << t.size() << endl;
     throw(GWFrames_VectorSizeMismatch);
   }
-  if(f.size()<3) { cerr << "\n" << __FILE__ << ":" << __LINE__ << ": size=" << f.size() << endl; throw(GWFrames_NotEnoughPointsForDerivative); }
+  if(f.size()<2) { cerr << "\n" << __FILE__ << ":" << __LINE__ << ": size=" << f.size() << endl; throw(GWFrames_NotEnoughPointsForDerivative); }
+
   vector<double> D(f.size());
-  const unsigned int i1 = f.size()-1;
-  double hprev = t[1]-t[0];
-  { // Compute first point
-    const double hnext = t[2]-t[1];
-    D[0] = -((2*hprev+hnext)/(hprev*(hprev+hnext)))*f[0] + ((hnext+hprev)/(hnext*hprev))*f[1] - (hprev/(hnext*(hnext+hprev)))*f[2];
+  const unsigned int i_f = f.size()-1;
+
+  if(f.size()==2) {
+    D[0] = (f[1]-f[0])/(t[1]-t[0]);
+    D[1] = D[0];
+    return D;
   }
-  for(unsigned int i=1; i<i1; ++i) { // Compute intermediate points
-    const double hnext = t[i+1]-t[i];
-    /// Sundquist and Veronis, Tellus XXII (1970), 1
-    D[i] = (f[i+1] - f[i-1]*SQR(hnext/hprev) - f[i]*(1-SQR(hnext/hprev))) / (hnext*(1+hnext/hprev));
-    hprev = hnext;
+
+  if(f.size()==3 || f.size()==4) {
+    double hprev = t[1]-t[0];
+    { // Compute first point
+      const double hnext = t[2]-t[1];
+      D[0] = -((2*hprev+hnext)/(hprev*(hprev+hnext)))*f[0] + ((hnext+hprev)/(hnext*hprev))*f[1] - (hprev/(hnext*(hnext+hprev)))*f[2];
+    }
+    for(unsigned int i=1; i<i_f; ++i) { // Compute intermediate points
+      const double hnext = t[i+1]-t[i];
+      /// Sundqvist and Veronis, Tellus XXII (1970), 1
+      D[i] = (f[i+1] - f[i-1]*SQR(hnext/hprev) - f[i]*(1-SQR(hnext/hprev))) / (hnext*(1+hnext/hprev));
+      hprev = hnext;
+    }
+    { // Compute final point
+      const double hnext = t[i_f]  -t[i_f-1];
+      const double hprev = t[i_f-1]-t[i_f-2];
+      D[i_f] = (hnext/(hprev*(hprev+hnext)))*f[i_f-2] - ((hnext+hprev)/(hnext*hprev))*f[i_f-1] + ((hprev+2*hnext)/(hnext*(hnext+hprev)))*f[i_f];
+    }
+    return D;
   }
-  { // Compute final point
-    const double hnext = t[i1]  -t[i1-1];
-    const double hprev = t[i1-1]-t[i1-2];
-    D[i1] = (hnext/(hprev*(hprev+hnext)))*f[i1-2] - ((hnext+hprev)/(hnext*hprev))*f[i1-1] + ((hprev+2*hnext)/(hnext*(hnext+hprev)))*f[i1];
+
+  for(unsigned int i=0; i<2; ++i) {
+    const double x = t[i];
+    const double& f1 = f[0];
+    const double& f2 = f[1];
+    const double& f3 = f[2];
+    const double& f4 = f[3];
+    const double& f5 = f[4];
+    const double& x1 = t[0];
+    const double& x2 = t[1];
+    const double& x3 = t[2];
+    const double& x4 = t[3];
+    const double& x5 = t[4];
+    const double h1 = x1 - x;
+    const double h2 = x2 - x;
+    const double h3 = x3 - x;
+    const double h4 = x4 - x;
+    const double h5 = x5 - x;
+    const double h12 = x1 - x2;
+    const double h13 = x1 - x3;
+    const double h14 = x1 - x4;
+    const double h15 = x1 - x5;
+    const double h23 = x2 - x3;
+    const double h24 = x2 - x4;
+    const double h25 = x2 - x5;
+    const double h34 = x3 - x4;
+    const double h35 = x3 - x5;
+    const double h45 = x4 - x5;
+    D[i] =
+      (-(h2*h3*h4 +h2*h3*h5 +h2*h4*h5 +h3*h4*h5)*f1/((h12)*(h13)*(h14)*(h15))
+       +(h1*h3*h4 + h1*h3*h5 + h1*h4*h5 + h3*h4*h5)*f2/((h12)*(h23)*(h24)*(h25))
+       -(h1*h2*h4 + h1*h2*h5 + h1*h4*h5 + h2*h4*h5)*f3/((h13)*(h23)*(h34)*(h35))
+       +(h1*h2*h3 + h1*h2*h5 + h1*h3*h5 + h2*h3*h5)*f4/((h14)*(h24)*(h34)*(h45))
+       -(h1*h2*h3 + h1*h2*h4 + h1*h3*h4 + h2*h3*h4)*f5/((h15)*(h25)*(h35)*(h45)));
+  }
+  for(unsigned int i=2; i<i_f-1; ++i) {
+    const double& f1 = f[i-2];
+    const double& f2 = f[i-1];
+    const double& f3 = f[i];
+    const double& f4 = f[i+1];
+    const double& f5 = f[i+2];
+    const double& x1 = t[i-2];
+    const double& x2 = t[i-1];
+    const double& x3 = t[i];
+    const double& x4 = t[i+1];
+    const double& x5 = t[i+2];
+    const double h1 = x1 - x3;
+    const double h2 = x2 - x3;
+    const double h4 = x4 - x3;
+    const double h5 = x5 - x3;
+    const double h12 = x1 - x2;
+    const double h13 = x1 - x3;
+    const double h14 = x1 - x4;
+    const double h15 = x1 - x5;
+    const double h23 = x2 - x3;
+    const double h24 = x2 - x4;
+    const double h25 = x2 - x5;
+    const double h34 = x3 - x4;
+    const double h35 = x3 - x5;
+    const double h45 = x4 - x5;
+    D[i] =
+      (-(h2*h4*h5)*f1/(h12*h13*h14*h15)
+       +(h1*h4*h5)*f2/(h12*h23*h24*h25)
+       -(h1*h2*h4 + h1*h2*h5 + h1*h4*h5 + h2*h4*h5)*f3/((h13)*(h23)*(h34)*(h35))
+       +(h1*h2*h5)*f4/(h14*h24*h34*h45)
+       -(h1*h2*h4)*f5/(h15*h25*h35*h45));
+  }
+  for(unsigned int i=i_f-1; i<i_f+1; ++i) {
+    const double x = t[i];
+    const double& f1 = f[i_f-4];
+    const double& f2 = f[i_f-3];
+    const double& f3 = f[i_f-2];
+    const double& f4 = f[i_f-1];
+    const double& f5 = f[i_f];
+    const double& x1 = t[i_f-4];
+    const double& x2 = t[i_f-3];
+    const double& x3 = t[i_f-2];
+    const double& x4 = t[i_f-1];
+    const double& x5 = t[i_f];
+    const double h1 = x1 - x;
+    const double h2 = x2 - x;
+    const double h3 = x3 - x;
+    const double h4 = x4 - x;
+    const double h5 = x5 - x;
+    const double h12 = x1 - x2;
+    const double h13 = x1 - x3;
+    const double h14 = x1 - x4;
+    const double h15 = x1 - x5;
+    const double h23 = x2 - x3;
+    const double h24 = x2 - x4;
+    const double h25 = x2 - x5;
+    const double h34 = x3 - x4;
+    const double h35 = x3 - x5;
+    const double h45 = x4 - x5;
+    D[i] =
+      (-(h2*h3*h4 +h2*h3*h5 +h2*h4*h5 +h3*h4*h5)*f1/((h12)*(h13)*(h14)*(h15))
+       +(h1*h3*h4 + h1*h3*h5 + h1*h4*h5 + h3*h4*h5)*f2/((h12)*(h23)*(h24)*(h25))
+       -(h1*h2*h4 + h1*h2*h5 + h1*h4*h5 + h2*h4*h5)*f3/((h13)*(h23)*(h34)*(h35))
+       +(h1*h2*h3 + h1*h2*h5 + h1*h3*h5 + h2*h3*h5)*f4/((h14)*(h24)*(h34)*(h45))
+       -(h1*h2*h3 + h1*h2*h4 + h1*h3*h4 + h2*h3*h4)*f5/((h15)*(h25)*(h35)*(h45)));
   }
   return D;
-}
 
-/// Three-point finite-differencing of vector of complex<double>.
+}
+/// Five-point finite-differencing of vector of complex numbers.
 std::vector<std::complex<double> > GWFrames::ComplexDerivative(const std::vector<std::complex<double> >& f, const std::vector<double>& t) {
   ///
-  /// \param f Vector of complex<double>.
+  /// \param f Vector of std::complex<double>s.
   /// \param t Vector of corresponding time steps.
+  ///
+  /// The formula for this finite difference comes from Eq. (A 5b) of
+  /// "Derivative formulas and errors for non-uniformly spaced points"
+  /// by M. K. Bowen and Ronald Smith.  As explained in their Eqs. (B
+  /// 9b) and (B 10b), this is a fourth-order formula.
+  ///
+  /// If there are fewer than five points, the function reverts to
+  /// simpler formulas.  If there are fewer than two points, or there
+  /// are different numbers of points in the two input vectors, an
+  /// exception is thrown.
+
   if(f.size() != t.size()) {
     cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": f.size()=" << f.size() << " != t.size()=" << t.size() << endl;
     throw(GWFrames_VectorSizeMismatch);
   }
-  if(f.size()<3) { cerr << "\n" << __FILE__ << ":" << __LINE__ << ": size=" << f.size() << endl; throw(GWFrames_NotEnoughPointsForDerivative); }
+  if(f.size()<2) { cerr << "\n" << __FILE__ << ":" << __LINE__ << ": size=" << f.size() << endl; throw(GWFrames_NotEnoughPointsForDerivative); }
+
   vector<std::complex<double> > D(f.size());
-  const unsigned int i1 = f.size()-1;
-  double hprev = t[1]-t[0];
-  { // Compute first point
-    const double hnext = t[2]-t[1];
-    D[0] = -((2*hprev+hnext)/(hprev*(hprev+hnext)))*f[0] + ((hnext+hprev)/(hnext*hprev))*f[1] - (hprev/(hnext*(hnext+hprev)))*f[2];
+  const unsigned int i_f = f.size()-1;
+
+  if(f.size()==2) {
+    D[0] = (f[1]-f[0])/(t[1]-t[0]);
+    D[1] = D[0];
+    return D;
   }
-  for(unsigned int i=1; i<i1; ++i) { // Compute intermediate points
-    const double hnext = t[i+1]-t[i];
-    /// Sundquist and Veronis, Tellus XXII (1970), 1
-    D[i] = (f[i+1] - f[i-1]*SQR(hnext/hprev) - f[i]*(1-SQR(hnext/hprev))) / (hnext*(1+hnext/hprev));
-    hprev = hnext;
+
+  if(f.size()==3 || f.size()==4) {
+    double hprev = t[1]-t[0];
+    { // Compute first point
+      const double hnext = t[2]-t[1];
+      D[0] = -((2*hprev+hnext)/(hprev*(hprev+hnext)))*f[0] + ((hnext+hprev)/(hnext*hprev))*f[1] - (hprev/(hnext*(hnext+hprev)))*f[2];
+    }
+    for(unsigned int i=1; i<i_f; ++i) { // Compute intermediate points
+      const double hnext = t[i+1]-t[i];
+      /// Sundqvist and Veronis, Tellus XXII (1970), 1
+      D[i] = (f[i+1] - f[i-1]*SQR(hnext/hprev) - f[i]*(1-SQR(hnext/hprev))) / (hnext*(1+hnext/hprev));
+      hprev = hnext;
+    }
+    { // Compute final point
+      const double hnext = t[i_f]  -t[i_f-1];
+      const double hprev = t[i_f-1]-t[i_f-2];
+      D[i_f] = (hnext/(hprev*(hprev+hnext)))*f[i_f-2] - ((hnext+hprev)/(hnext*hprev))*f[i_f-1] + ((hprev+2*hnext)/(hnext*(hnext+hprev)))*f[i_f];
+    }
+    return D;
   }
-  { // Compute final point
-    const double hnext = t[i1]  -t[i1-1];
-    const double hprev = t[i1-1]-t[i1-2];
-    D[i1] = (hnext/(hprev*(hprev+hnext)))*f[i1-2] - ((hnext+hprev)/(hnext*hprev))*f[i1-1] + ((hprev+2*hnext)/(hnext*(hnext+hprev)))*f[i1];
+
+  for(unsigned int i=0; i<2; ++i) {
+    const double x = t[i];
+    const std::complex<double>& f1 = f[0];
+    const std::complex<double>& f2 = f[1];
+    const std::complex<double>& f3 = f[2];
+    const std::complex<double>& f4 = f[3];
+    const std::complex<double>& f5 = f[4];
+    const double& x1 = t[0];
+    const double& x2 = t[1];
+    const double& x3 = t[2];
+    const double& x4 = t[3];
+    const double& x5 = t[4];
+    const double h1 = x1 - x;
+    const double h2 = x2 - x;
+    const double h3 = x3 - x;
+    const double h4 = x4 - x;
+    const double h5 = x5 - x;
+    const double h12 = x1 - x2;
+    const double h13 = x1 - x3;
+    const double h14 = x1 - x4;
+    const double h15 = x1 - x5;
+    const double h23 = x2 - x3;
+    const double h24 = x2 - x4;
+    const double h25 = x2 - x5;
+    const double h34 = x3 - x4;
+    const double h35 = x3 - x5;
+    const double h45 = x4 - x5;
+    D[i] =
+      (-(h2*h3*h4 +h2*h3*h5 +h2*h4*h5 +h3*h4*h5)*f1/((h12)*(h13)*(h14)*(h15))
+       +(h1*h3*h4 + h1*h3*h5 + h1*h4*h5 + h3*h4*h5)*f2/((h12)*(h23)*(h24)*(h25))
+       -(h1*h2*h4 + h1*h2*h5 + h1*h4*h5 + h2*h4*h5)*f3/((h13)*(h23)*(h34)*(h35))
+       +(h1*h2*h3 + h1*h2*h5 + h1*h3*h5 + h2*h3*h5)*f4/((h14)*(h24)*(h34)*(h45))
+       -(h1*h2*h3 + h1*h2*h4 + h1*h3*h4 + h2*h3*h4)*f5/((h15)*(h25)*(h35)*(h45)));
+  }
+  for(unsigned int i=2; i<i_f-1; ++i) {
+    const std::complex<double>& f1 = f[i-2];
+    const std::complex<double>& f2 = f[i-1];
+    const std::complex<double>& f3 = f[i];
+    const std::complex<double>& f4 = f[i+1];
+    const std::complex<double>& f5 = f[i+2];
+    const double& x1 = t[i-2];
+    const double& x2 = t[i-1];
+    const double& x3 = t[i];
+    const double& x4 = t[i+1];
+    const double& x5 = t[i+2];
+    const double h1 = x1 - x3;
+    const double h2 = x2 - x3;
+    const double h4 = x4 - x3;
+    const double h5 = x5 - x3;
+    const double h12 = x1 - x2;
+    const double h13 = x1 - x3;
+    const double h14 = x1 - x4;
+    const double h15 = x1 - x5;
+    const double h23 = x2 - x3;
+    const double h24 = x2 - x4;
+    const double h25 = x2 - x5;
+    const double h34 = x3 - x4;
+    const double h35 = x3 - x5;
+    const double h45 = x4 - x5;
+    D[i] =
+      (-(h2*h4*h5)*f1/(h12*h13*h14*h15)
+       +(h1*h4*h5)*f2/(h12*h23*h24*h25)
+       -(h1*h2*h4 + h1*h2*h5 + h1*h4*h5 + h2*h4*h5)*f3/((h13)*(h23)*(h34)*(h35))
+       +(h1*h2*h5)*f4/(h14*h24*h34*h45)
+       -(h1*h2*h4)*f5/(h15*h25*h35*h45));
+  }
+  for(unsigned int i=i_f-1; i<i_f+1; ++i) {
+    const double x = t[i];
+    const std::complex<double>& f1 = f[i_f-4];
+    const std::complex<double>& f2 = f[i_f-3];
+    const std::complex<double>& f3 = f[i_f-2];
+    const std::complex<double>& f4 = f[i_f-1];
+    const std::complex<double>& f5 = f[i_f];
+    const double& x1 = t[i_f-4];
+    const double& x2 = t[i_f-3];
+    const double& x3 = t[i_f-2];
+    const double& x4 = t[i_f-1];
+    const double& x5 = t[i_f];
+    const double h1 = x1 - x;
+    const double h2 = x2 - x;
+    const double h3 = x3 - x;
+    const double h4 = x4 - x;
+    const double h5 = x5 - x;
+    const double h12 = x1 - x2;
+    const double h13 = x1 - x3;
+    const double h14 = x1 - x4;
+    const double h15 = x1 - x5;
+    const double h23 = x2 - x3;
+    const double h24 = x2 - x4;
+    const double h25 = x2 - x5;
+    const double h34 = x3 - x4;
+    const double h35 = x3 - x5;
+    const double h45 = x4 - x5;
+    D[i] =
+      (-(h2*h3*h4 +h2*h3*h5 +h2*h4*h5 +h3*h4*h5)*f1/((h12)*(h13)*(h14)*(h15))
+       +(h1*h3*h4 + h1*h3*h5 + h1*h4*h5 + h3*h4*h5)*f2/((h12)*(h23)*(h24)*(h25))
+       -(h1*h2*h4 + h1*h2*h5 + h1*h4*h5 + h2*h4*h5)*f3/((h13)*(h23)*(h34)*(h35))
+       +(h1*h2*h3 + h1*h2*h5 + h1*h3*h5 + h2*h3*h5)*f4/((h14)*(h24)*(h34)*(h45))
+       -(h1*h2*h3 + h1*h2*h4 + h1*h3*h4 + h2*h3*h4)*f5/((h15)*(h25)*(h35)*(h45)));
   }
   return D;
+
 }
+
 
 /// Integrate vector function by simple trapezoidal rule.
 std::vector<std::vector<double> > GWFrames::VectorIntegral(const std::vector<std::vector<double> >& fdot, const std::vector<double>& t) {
