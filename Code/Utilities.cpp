@@ -218,68 +218,6 @@ double GWFrames::CumulativeScalarIntegral(const std::vector<double>& fdot, const
 
 inline double SQR(const double a) { return a*a; }
 
-// /// Three-point finite-differencing of vector of scalars.
-// std::vector<double> GWFrames::ScalarDerivative(const std::vector<double>& f, const std::vector<double>& t) {
-//   ///
-//   /// \param f Vector of scalars.
-//   /// \param t Vector of corresponding time steps.
-//   if(f.size() != t.size()) {
-//     cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": f.size()=" << f.size() << " != t.size()=" << t.size() << endl;
-//     throw(GWFrames_VectorSizeMismatch);
-//   }
-//   if(f.size()<3) { cerr << "\n" << __FILE__ << ":" << __LINE__ << ": size=" << f.size() << endl; throw(GWFrames_NotEnoughPointsForDerivative); }
-//   vector<double> D(f.size());
-//   const unsigned int i1 = f.size()-1;
-//   double hprev = t[1]-t[0];
-//   { // Compute first point
-//     const double hnext = t[2]-t[1];
-//     D[0] = -((2*hprev+hnext)/(hprev*(hprev+hnext)))*f[0] + ((hnext+hprev)/(hnext*hprev))*f[1] - (hprev/(hnext*(hnext+hprev)))*f[2];
-//   }
-//   for(unsigned int i=1; i<i1; ++i) { // Compute intermediate points
-//     const double hnext = t[i+1]-t[i];
-//     /// Sundquist and Veronis, Tellus XXII (1970), 1
-//     D[i] = (f[i+1] - f[i-1]*SQR(hnext/hprev) - f[i]*(1-SQR(hnext/hprev))) / (hnext*(1+hnext/hprev));
-//     hprev = hnext;
-//   }
-//   { // Compute final point
-//     const double hnext = t[i1]  -t[i1-1];
-//     const double hprev = t[i1-1]-t[i1-2];
-//     D[i1] = (hnext/(hprev*(hprev+hnext)))*f[i1-2] - ((hnext+hprev)/(hnext*hprev))*f[i1-1] + ((hprev+2*hnext)/(hnext*(hnext+hprev)))*f[i1];
-//   }
-//   return D;
-// }
-
-// /// Three-point finite-differencing of vector of complex<double>.
-// std::vector<std::complex<double> > GWFrames::ComplexDerivative(const std::vector<std::complex<double> >& f, const std::vector<double>& t) {
-//   ///
-//   /// \param f Vector of complex<double>.
-//   /// \param t Vector of corresponding time steps.
-//   if(f.size() != t.size()) {
-//     cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": f.size()=" << f.size() << " != t.size()=" << t.size() << endl;
-//     throw(GWFrames_VectorSizeMismatch);
-//   }
-//   if(f.size()<3) { cerr << "\n" << __FILE__ << ":" << __LINE__ << ": size=" << f.size() << endl; throw(GWFrames_NotEnoughPointsForDerivative); }
-//   vector<std::complex<double> > D(f.size());
-//   const unsigned int i1 = f.size()-1;
-//   double hprev = t[1]-t[0];
-//   { // Compute first point
-//     const double hnext = t[2]-t[1];
-//     D[0] = -((2*hprev+hnext)/(hprev*(hprev+hnext)))*f[0] + ((hnext+hprev)/(hnext*hprev))*f[1] - (hprev/(hnext*(hnext+hprev)))*f[2];
-//   }
-//   for(unsigned int i=1; i<i1; ++i) { // Compute intermediate points
-//     const double hnext = t[i+1]-t[i];
-//     /// Sundquist and Veronis, Tellus XXII (1970), 1
-//     D[i] = (f[i+1] - f[i-1]*SQR(hnext/hprev) - f[i]*(1-SQR(hnext/hprev))) / (hnext*(1+hnext/hprev));
-//     hprev = hnext;
-//   }
-//   { // Compute final point
-//     const double hnext = t[i1]  -t[i1-1];
-//     const double hprev = t[i1-1]-t[i1-2];
-//     D[i1] = (hnext/(hprev*(hprev+hnext)))*f[i1-2] - ((hnext+hprev)/(hnext*hprev))*f[i1-1] + ((hprev+2*hnext)/(hnext*(hnext+hprev)))*f[i1];
-//   }
-//   return D;
-// }
-
 /// Five-point finite-differencing of vector of doubles.
 std::vector<double> GWFrames::ScalarDerivative(const std::vector<double>& f, const std::vector<double>& t) {
   ///
