@@ -2,6 +2,9 @@
 ////////////////////////////////////
 //// Read in the Waveform class ////
 ////////////////////////////////////
+// Rename C++ Waveform objects to be _Waveform, so that we can
+// subclass Waveform objects in python.
+%rename(_Waveform) Waveform;
 //// Ignore things that don't translate well...
 %ignore operator<<;
 %ignore GWFrames::Waveform::operator=;
@@ -41,7 +44,7 @@
 %include "../Waveforms.hpp"
 //// Make sure vectors of Waveform are understood
 namespace std {
-  %template(vectorW) vector<GWFrames::Waveform>;
+  %template(_vectorW) vector<GWFrames::Waveform>;
 };
 //// Make any additions to the Waveform class here
 %extend GWFrames::Waveform {

@@ -11,7 +11,7 @@
 %ignore GWFrames::pow;
 %include "../Utilities.hpp"
 namespace std {
-  %template(vectorM) vector<GWFrames::Matrix>;
+  %template(_vectorM) vector<GWFrames::Matrix>;
 };
 %extend GWFrames::Matrix {
   // Print the Matrix nicely at the prompt

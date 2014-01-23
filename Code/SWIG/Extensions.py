@@ -2,6 +2,22 @@
 /// these are defined in the GWFrames namespace.
 %insert("python") %{
 
+# The following are necessary to allow us to attach new attributes
+# (methods) to `Waveform` objects.  This is required because we are
+# calling SWIG with the `-builtin` option, which makes it a little
+# more complicated to add new attributes.  This defeats the whole
+# point of `-builtin` for this particular object.  But it allows other
+# objects (especially `Quaternion`s) to be implemented more cleanly
+# and efficiently.  Note also that the `_Waveform` was given that name
+# above by the line
+#    %rename(_Waveform) Waveform;
+# in `Waveforms.i`.
+class _MetaWaveform(type(_Waveform)):
+    pass
+class Waveform(_Waveform):
+    __metaclass__ = _MetaWaveform
+
+
 def GetFileNamePrefix(W) :
     return W.DescriptorString() + '_' + W.FrameTypeString() + '_'
 Waveform.GetFileNamePrefix = GetFileNamePrefix

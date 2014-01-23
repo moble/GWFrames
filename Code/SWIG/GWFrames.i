@@ -6,7 +6,7 @@
 %module GWFrames
 
 // Quiet warnings about overloaded operators being ignored.
-#pragma SWIG nowarn=362,389,401,509
+ //#pragma SWIG nowarn=362,389,401,509
 
 
 /////////////////////////////////////////////////
@@ -28,19 +28,6 @@
 %}
 
 
-//////////////////////////////////////////////////////////////////////
-//// The following translates between c++ and python types nicely ////
-//////////////////////////////////////////////////////////////////////
-%include <typemaps.i>
-%include <stl.i>
-//// Make sure std::strings are dealt with appropriately
-%include <std_string.i>
-//// Make sure std::complex numbers are dealt with appropriately
-%include <std_complex.i>
-//// Make sure std::vectors are dealt with appropriately
-%include <std_vector.i>
-// Note: All template instantiations should be done in SphericalFunctions.i or lower.
-
 ////////////////////////////////////////////////////////
 //// This lets me use numpy.array in the code below ////
 ////////////////////////////////////////////////////////
@@ -53,12 +40,46 @@ import_array();
 %}
 
 
+//////////////////////////////////////////////////////////////////////
+//// The following translates between c++ and python types nicely ////
+//////////////////////////////////////////////////////////////////////
+
+%import "../SphericalFunctions/Quaternions/Quaternions.i"
+%import "../SphericalFunctions/Quaternions/Quaternions_typemaps.i"
+//%import "../SphericalFunctions/SphericalFunctions.i"
+%include "../SphericalFunctions/Quaternions/vector_typemaps.i"
+
+%include <typemaps.i>
+%include <stl.i>
+//// Make sure std::strings are dealt with appropriately
+%include <std_string.i>
+//// Make sure std::complex numbers are dealt with appropriately
+%include <std_complex.i>
+// //// Make sure std::vectors are dealt with appropriately
+// %include <std_vector.i>
+// //// Instantiate the various vector templates
+// namespace std {
+//   // %template(_complexd) complex<double>; // Don't use this line!!!  It gives errors for some reason.
+//   %template(_vectori) vector<int>;
+//   %template(_vectorvectori) vector<vector<int> >;
+//   %template(_vectord) vector<double>;
+//   %template(_vectorvectord) vector<vector<double> >;
+//   %template(_vectorc) vector<std::complex<double> >;
+//   %template(_vectorvectorc) vector<vector<std::complex<double> > >;
+//   %template(_vectorq) vector<Quaternions::Quaternion>;
+//   %template(_vectors) vector<string>;
+//   %template(_vectorvectors) vector<vector<std::string> >;
+// };
+
 //////////////////////////////////////////////////////////
 //// We need to tell SWIG about certain other modules ////
 //////////////////////////////////////////////////////////
 %import "../SphericalFunctions/Quaternions/Quaternions.i"
 %import "../SphericalFunctions/Quaternions/Quaternions_typemaps.i"
-%import "../SphericalFunctions/SphericalFunctions.i"
+//%import "../SphericalFunctions/SphericalFunctions.i"
+
+%include "../SphericalFunctions/Quaternions/vector_typemaps.i"
+
 
 
 /////////////////////////////////////////////////////////////////////

@@ -174,6 +174,12 @@ GWFrames::PNWaveform::PNWaveform(const std::string& Approximant, const double de
   // frame in standard position (BHs on the x axis, with angular
   // velocity along the positive z axis).  This can then be
   // transformed to a stationary frame, using the stored 'frame' data.
+  //
+  // The frame rotor is the rotor necessary to take a vector in the
+  // co-orbital onto its equivalent in the inertial frame.  The chi
+  // vectors are given in the inertial frame, but are needed in the
+  // co-orbital frame.  Thus, we rotate with the inverse (conjugate)
+  // rotor in the following.
   data = MatrixC(PostNewtonian::WaveformModes(m1, m2, v,
 					      Quaternions::vec(Quaternions::conjugate(frame)*Quaternions::QuaternionArray(mchi1)*frame),
 					      Quaternions::vec(Quaternions::conjugate(frame)*Quaternions::QuaternionArray(mchi2)*frame)));
