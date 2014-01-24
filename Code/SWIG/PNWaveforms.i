@@ -4,8 +4,6 @@
 //// Ignore things that don't translate well...
 // %ignore operator<<;
 // %ignore GWFrames::Waveform::operator=;
-//// Get output from PNWaveformModes
-%apply std::vector<std::complex<double> >& OUTPUT { std::vector<std::complex<double> >& modes };
 //// These will convert the output data to numpy.ndarray for easier use
 #ifndef SWIGPYTHON_BUILTIN
 %feature("pythonappend") GWFrames::PNWaveform::chi1() const %{ if isinstance(val, tuple) : val = numpy.array(val) %}

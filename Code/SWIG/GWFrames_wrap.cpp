@@ -7763,7 +7763,7 @@ SWIGINTERN PyObject *_wrap_Intersection(PyObject *self, PyObject *args) {
           _v = true;
         } else {
           PyObject* item = PySequence_GetItem(argv[0], 0);
-          double* temp;
+          double* temp=0;
           _v = SWIG_IsOK(SWIG_AsVal_double (item, temp));
         }
       }
@@ -7778,7 +7778,7 @@ SWIGINTERN PyObject *_wrap_Intersection(PyObject *self, PyObject *args) {
             _v = true;
           } else {
             PyObject* item = PySequence_GetItem(argv[1], 0);
-            double* temp;
+            double* temp=0;
             _v = SWIG_IsOK(SWIG_AsVal_double (item, temp));
           }
         }
@@ -7799,7 +7799,7 @@ SWIGINTERN PyObject *_wrap_Intersection(PyObject *self, PyObject *args) {
           _v = true;
         } else {
           PyObject* item = PySequence_GetItem(argv[0], 0);
-          double* temp;
+          double* temp=0;
           _v = SWIG_IsOK(SWIG_AsVal_double (item, temp));
         }
       }
@@ -7814,7 +7814,7 @@ SWIGINTERN PyObject *_wrap_Intersection(PyObject *self, PyObject *args) {
             _v = true;
           } else {
             PyObject* item = PySequence_GetItem(argv[1], 0);
-            double* temp;
+            double* temp=0;
             _v = SWIG_IsOK(SWIG_AsVal_double (item, temp));
           }
         }
@@ -7841,7 +7841,7 @@ SWIGINTERN PyObject *_wrap_Intersection(PyObject *self, PyObject *args) {
           _v = true;
         } else {
           PyObject* item = PySequence_GetItem(argv[0], 0);
-          double* temp;
+          double* temp=0;
           _v = SWIG_IsOK(SWIG_AsVal_double (item, temp));
         }
       }
@@ -7856,7 +7856,7 @@ SWIGINTERN PyObject *_wrap_Intersection(PyObject *self, PyObject *args) {
             _v = true;
           } else {
             PyObject* item = PySequence_GetItem(argv[1], 0);
-            double* temp;
+            double* temp=0;
             _v = SWIG_IsOK(SWIG_AsVal_double (item, temp));
           }
         }
@@ -7889,7 +7889,7 @@ SWIGINTERN PyObject *_wrap_Intersection(PyObject *self, PyObject *args) {
           _v = true;
         } else {
           PyObject* item = PySequence_GetItem(argv[0], 0);
-          double* temp;
+          double* temp=0;
           _v = SWIG_IsOK(SWIG_AsVal_double (item, temp));
         }
       }
@@ -7904,7 +7904,7 @@ SWIGINTERN PyObject *_wrap_Intersection(PyObject *self, PyObject *args) {
             _v = true;
           } else {
             PyObject* item = PySequence_GetItem(argv[1], 0);
-            double* temp;
+            double* temp=0;
             _v = SWIG_IsOK(SWIG_AsVal_double (item, temp));
           }
         }
@@ -8196,7 +8196,7 @@ SWIGINTERN PyObject *_wrap_Union(PyObject *self, PyObject *args) {
           _v = true;
         } else {
           PyObject* item = PySequence_GetItem(argv[0], 0);
-          double* temp;
+          double* temp=0;
           _v = SWIG_IsOK(SWIG_AsVal_double (item, temp));
         }
       }
@@ -8211,7 +8211,7 @@ SWIGINTERN PyObject *_wrap_Union(PyObject *self, PyObject *args) {
             _v = true;
           } else {
             PyObject* item = PySequence_GetItem(argv[1], 0);
-            double* temp;
+            double* temp=0;
             _v = SWIG_IsOK(SWIG_AsVal_double (item, temp));
           }
         }
@@ -8232,7 +8232,7 @@ SWIGINTERN PyObject *_wrap_Union(PyObject *self, PyObject *args) {
           _v = true;
         } else {
           PyObject* item = PySequence_GetItem(argv[0], 0);
-          double* temp;
+          double* temp=0;
           _v = SWIG_IsOK(SWIG_AsVal_double (item, temp));
         }
       }
@@ -8247,7 +8247,7 @@ SWIGINTERN PyObject *_wrap_Union(PyObject *self, PyObject *args) {
             _v = true;
           } else {
             PyObject* item = PySequence_GetItem(argv[1], 0);
-            double* temp;
+            double* temp=0;
             _v = SWIG_IsOK(SWIG_AsVal_double (item, temp));
           }
         }
@@ -8549,7 +8549,7 @@ SWIGINTERN int _wrap_new_Matrix(PyObject *self, PyObject *args) {
             _v = true;
           } else {
             PyObject* item1 = PySequence_GetItem(item0, 0);
-            double* temp;
+            double* temp=0;
             _v = SWIG_IsOK(SWIG_AsVal_double (item1, temp));
           }
         }
@@ -10002,7 +10002,7 @@ SWIGINTERN int _wrap_new_MatrixC(PyObject *self, PyObject *args) {
             _v = true;
           } else {
             PyObject* item1 = PySequence_GetItem(item0, 0);
-            std_complex_double* temp;
+            std_complex_double* temp=0;
             _v = SWIG_IsOK(SWIG_AsVal_std_complex_double (item1, temp));
           }
         }
@@ -13235,7 +13235,7 @@ SWIGINTERN int _wrap_new__Waveform(PyObject *self, PyObject *args) {
           _v = true;
         } else {
           PyObject* item = PySequence_GetItem(argv[0], 0);
-          double* temp;
+          double* temp=0;
           _v = SWIG_IsOK(SWIG_AsVal_double (item, temp));
         }
       }
@@ -13254,7 +13254,7 @@ SWIGINTERN int _wrap_new__Waveform(PyObject *self, PyObject *args) {
               _v = true;
             } else {
               PyObject* item1 = PySequence_GetItem(item0, 0);
-              int* temp;
+              int* temp=0;
               _v = SWIG_IsOK(SWIG_AsVal_int (item1, temp));
             }
           }
@@ -13274,7 +13274,7 @@ SWIGINTERN int _wrap_new__Waveform(PyObject *self, PyObject *args) {
                 _v = true;
               } else {
                 PyObject* item1 = PySequence_GetItem(item0, 0);
-                std_complex_double* temp;
+                std_complex_double* temp=0;
                 _v = SWIG_IsOK(SWIG_AsVal_std_complex_double (item1, temp));
               }
             }
@@ -14177,7 +14177,7 @@ SWIGINTERN PyObject *_wrap__Waveform_SetData(PyObject *self, PyObject *args) {
               _v = true;
             } else {
               PyObject* item1 = PySequence_GetItem(item0, 0);
-              std_complex_double* temp;
+              std_complex_double* temp=0;
               _v = SWIG_IsOK(SWIG_AsVal_std_complex_double (item1, temp));
             }
           }
@@ -18404,7 +18404,7 @@ SWIGINTERN PyObject *_wrap__Waveform_OShaughnessyEtAlVector(PyObject *self, PyOb
             _v = true;
           } else {
             PyObject* item = PySequence_GetItem(argv[1], 0);
-            int* temp;
+            int* temp=0;
             _v = SWIG_IsOK(SWIG_AsVal_int (item, temp));
           }
         }
@@ -18597,7 +18597,7 @@ SWIGINTERN PyObject *_wrap__Waveform_AngularVelocityVector(PyObject *self, PyObj
             _v = true;
           } else {
             PyObject* item = PySequence_GetItem(argv[1], 0);
-            int* temp;
+            int* temp=0;
             _v = SWIG_IsOK(SWIG_AsVal_int (item, temp));
           }
         }
@@ -18788,7 +18788,7 @@ SWIGINTERN PyObject *_wrap__Waveform_CorotatingFrame(PyObject *self, PyObject *a
             _v = true;
           } else {
             PyObject* item = PySequence_GetItem(argv[1], 0);
-            int* temp;
+            int* temp=0;
             _v = SWIG_IsOK(SWIG_AsVal_int (item, temp));
           }
         }
@@ -18981,7 +18981,7 @@ SWIGINTERN PyObject *_wrap__Waveform_PNEquivalentOrbitalAV(PyObject *self, PyObj
             _v = true;
           } else {
             PyObject* item = PySequence_GetItem(argv[1], 0);
-            int* temp;
+            int* temp=0;
             _v = SWIG_IsOK(SWIG_AsVal_int (item, temp));
           }
         }
@@ -19174,7 +19174,7 @@ SWIGINTERN PyObject *_wrap__Waveform_PNEquivalentPrecessionalAV(PyObject *self, 
             _v = true;
           } else {
             PyObject* item = PySequence_GetItem(argv[1], 0);
-            int* temp;
+            int* temp=0;
             _v = SWIG_IsOK(SWIG_AsVal_int (item, temp));
           }
         }
@@ -19539,7 +19539,7 @@ SWIGINTERN PyObject *_wrap__Waveform_TransformToOShaughnessyEtAlFrame(PyObject *
             _v = true;
           } else {
             PyObject* item = PySequence_GetItem(argv[1], 0);
-            int* temp;
+            int* temp=0;
             _v = SWIG_IsOK(SWIG_AsVal_int (item, temp));
           }
         }
@@ -19704,7 +19704,7 @@ SWIGINTERN PyObject *_wrap__Waveform_TransformToAngularVelocityFrame(PyObject *s
             _v = true;
           } else {
             PyObject* item = PySequence_GetItem(argv[1], 0);
-            int* temp;
+            int* temp=0;
             _v = SWIG_IsOK(SWIG_AsVal_int (item, temp));
           }
         }
@@ -19869,7 +19869,7 @@ SWIGINTERN PyObject *_wrap__Waveform_TransformToCorotatingFrame(PyObject *self, 
             _v = true;
           } else {
             PyObject* item = PySequence_GetItem(argv[1], 0);
-            int* temp;
+            int* temp=0;
             _v = SWIG_IsOK(SWIG_AsVal_int (item, temp));
           }
         }
@@ -20496,7 +20496,7 @@ SWIGINTERN PyObject *_wrap__Waveform_GetAlignmentOfDecompositionFrameToModes(PyO
                 _v = true;
               } else {
                 PyObject* item = PySequence_GetItem(argv[3], 0);
-                int* temp;
+                int* temp=0;
                 _v = SWIG_IsOK(SWIG_AsVal_int (item, temp));
               }
             }
@@ -20692,7 +20692,7 @@ SWIGINTERN PyObject *_wrap__Waveform_AlignDecompositionFrameToModes(PyObject *se
               _v = true;
             } else {
               PyObject* item = PySequence_GetItem(argv[2], 0);
-              int* temp;
+              int* temp=0;
               _v = SWIG_IsOK(SWIG_AsVal_int (item, temp));
             }
           }
@@ -23556,7 +23556,7 @@ SWIGINTERN PyObject *_wrap_Waveforms_Extrapolate(PyObject *self, PyObject *args)
               _v = true;
             } else {
               PyObject* item = PySequence_GetItem(argv[2], 0);
-              int* temp;
+              int* temp=0;
               _v = SWIG_IsOK(SWIG_AsVal_int (item, temp));
             }
           }
@@ -23586,7 +23586,7 @@ SWIGINTERN PyObject *_wrap_Waveforms_Extrapolate(PyObject *self, PyObject *args)
               _v = true;
             } else {
               PyObject* item = PySequence_GetItem(argv[2], 0);
-              int* temp;
+              int* temp=0;
               _v = SWIG_IsOK(SWIG_AsVal_int (item, temp));
             }
           }
@@ -23601,7 +23601,7 @@ SWIGINTERN PyObject *_wrap_Waveforms_Extrapolate(PyObject *self, PyObject *args)
                 _v = true;
               } else {
                 PyObject* item = PySequence_GetItem(argv[3], 0);
-                double* temp;
+                double* temp=0;
                 _v = SWIG_IsOK(SWIG_AsVal_double (item, temp));
               }
             }
@@ -26950,7 +26950,7 @@ SWIGINTERN int _wrap_new_PNWaveform(PyObject *self, PyObject *args) {
               _v = true;
             } else {
               PyObject* item = PySequence_GetItem(argv[2], 0);
-              double* temp;
+              double* temp=0;
               _v = SWIG_IsOK(SWIG_AsVal_double (item, temp));
             }
           }
@@ -26965,7 +26965,7 @@ SWIGINTERN int _wrap_new_PNWaveform(PyObject *self, PyObject *args) {
                 _v = true;
               } else {
                 PyObject* item = PySequence_GetItem(argv[3], 0);
-                double* temp;
+                double* temp=0;
                 _v = SWIG_IsOK(SWIG_AsVal_double (item, temp));
               }
             }
@@ -27002,7 +27002,7 @@ SWIGINTERN int _wrap_new_PNWaveform(PyObject *self, PyObject *args) {
               _v = true;
             } else {
               PyObject* item = PySequence_GetItem(argv[2], 0);
-              double* temp;
+              double* temp=0;
               _v = SWIG_IsOK(SWIG_AsVal_double (item, temp));
             }
           }
@@ -27017,7 +27017,7 @@ SWIGINTERN int _wrap_new_PNWaveform(PyObject *self, PyObject *args) {
                 _v = true;
               } else {
                 PyObject* item = PySequence_GetItem(argv[3], 0);
-                double* temp;
+                double* temp=0;
                 _v = SWIG_IsOK(SWIG_AsVal_double (item, temp));
               }
             }
@@ -27068,7 +27068,7 @@ SWIGINTERN int _wrap_new_PNWaveform(PyObject *self, PyObject *args) {
               _v = true;
             } else {
               PyObject* item = PySequence_GetItem(argv[2], 0);
-              double* temp;
+              double* temp=0;
               _v = SWIG_IsOK(SWIG_AsVal_double (item, temp));
             }
           }
@@ -27083,7 +27083,7 @@ SWIGINTERN int _wrap_new_PNWaveform(PyObject *self, PyObject *args) {
                 _v = true;
               } else {
                 PyObject* item = PySequence_GetItem(argv[3], 0);
-                double* temp;
+                double* temp=0;
                 _v = SWIG_IsOK(SWIG_AsVal_double (item, temp));
               }
             }
@@ -27140,7 +27140,7 @@ SWIGINTERN int _wrap_new_PNWaveform(PyObject *self, PyObject *args) {
               _v = true;
             } else {
               PyObject* item = PySequence_GetItem(argv[2], 0);
-              double* temp;
+              double* temp=0;
               _v = SWIG_IsOK(SWIG_AsVal_double (item, temp));
             }
           }
@@ -27155,7 +27155,7 @@ SWIGINTERN int _wrap_new_PNWaveform(PyObject *self, PyObject *args) {
                 _v = true;
               } else {
                 PyObject* item = PySequence_GetItem(argv[3], 0);
-                double* temp;
+                double* temp=0;
                 _v = SWIG_IsOK(SWIG_AsVal_double (item, temp));
               }
             }
