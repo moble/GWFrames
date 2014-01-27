@@ -95,7 +95,7 @@ def ValidateGroupOfWaveforms(h5file, filename, WaveformNames, LModes) :
         # stderr.write("In '{0}', the following waveforms are not valid:\n\t{1}\n".format(filename, '\n\t'.join(FailedWaveforms)))
     return Valid
 
-def ReadFiniteRadiusWaveform(n, filename, WaveformName, ChMass, InitialAdmEnergy, YLMRegex, LModes, DataType, Ws) :
+def ReadFiniteRadiusWaveform(n, filename, WaveformName, ChMass, InitialAdmEnergy, YLMRegex, LModes, DataType, Ws, DoTortoiseCoord=True) :
     """
     This is just a worker function defined for ReadFiniteRadiusData,
     below, reading a single waveform from an h5 file of many
@@ -124,9 +124,10 @@ def ReadFiniteRadiusWaveform(n, filename, WaveformName, ChMass, InitialAdmEnergy
         YLMdata = sorted(YLMdata, key=lambda DataSet : [int(YLMRegex.search(DataSet).group('L')), int(YLMRegex.search(DataSet).group('M'))])
         LM = sorted([[int(m.group('L')), int(m.group('M'))] for DataSet in YLMdata for m in [YLMRegex.search(DataSet)] if m])
         NModes = len(LM)
+        if DoTortoiseCoord:
         # Lapse is given by 1/sqrt(-g^{00}), where g is the full 4-metric
-        T[1:] = integrate(AverageLapse/sqrt(((-2.0*InitialAdmEnergy)/Radii) + 1.0), T) + T[0]
-        T -= (Radii + (2.0*InitialAdmEnergy)*log((Radii/(2.0*InitialAdmEnergy))-1.0))
+            T[1:] = integrate(AverageLapse/sqrt(((-2.0*InitialAdmEnergy)/Radii) + 1.0), T) + T[0]
+            T -= (Radii + (2.0*InitialAdmEnergy)*log((Radii/(2.0*InitialAdmEnergy))-1.0))
         Ws[n].SetTime(T/ChMass)
         # WRONG!!!: # Radii /= ChMass
         NTimes = Ws[n].NTimes()
@@ -155,7 +156,7 @@ def ReadFiniteRadiusWaveform(n, filename, WaveformName, ChMass, InitialAdmEnergy
     return Radii/ChMass
 
 
-def ReadFiniteRadiusData(ChMass=0.0, filename='rh_FiniteRadii_CodeUnits.h5', CoordRadii=[], LModes=range(2,100)) :
+def ReadFiniteRadiusData(ChMass=0.0, filename='rh_FiniteRadii_CodeUnits.h5', CoordRadii=[], LModes=range(2,100), DoTortoiseCoord=True) :
     """
     Read data at various radii, and offset by tortoise coordinate.
 
@@ -219,7 +220,7 @@ def ReadFiniteRadiusData(ChMass=0.0, filename='rh_FiniteRadii_CodeUnits.h5', Coo
                 #print(WaveformNameString),
                 stdout.write(WaveformNameString); stdout.flush()
                 PrintedLine += WaveformNameString
-            Radii[n] = ReadFiniteRadiusWaveform(n, filename, WaveformNames[n], ChMass, InitialAdmEnergy, YLMRegex, LModes, DataType, Ws)
+            Radii[n] = ReadFiniteRadiusWaveform(n, filename, WaveformNames[n], ChMass, InitialAdmEnergy, YLMRegex, LModes, DataType, Ws, DoTortoiseCoord)
             Ws[n].AppendHistory("### # Python read from '{0}/{1}'.\n".format(filename,WaveformNames[n]))
     finally :
         f.close()
