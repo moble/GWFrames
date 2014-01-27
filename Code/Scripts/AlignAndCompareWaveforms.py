@@ -1,9 +1,9 @@
 # List the file (and directory within each H5 file) that you want to
 # compare.  The first one will be used as the fiducial waveform, and
 # everything else will be shifted to best agree with it.
-Files = ['/Users/boyle/Research/Data/SimulationAnnex/Catalog/SKS/d15_q1_sA_0_0_0.97_sB_0_0_0.97_ecc6e-4/Lev6/rhOverM_Asymptotic_GeometricUnits.h5/Extrapolated_N2.dir',
-         '/Users/boyle/Research/Data/SimulationAnnex/Catalog/SKS/d15_q1_sA_0_0_0.97_sB_0_0_0.97_ecc6e-4/Lev6/rhOverM_Asymptotic_GeometricUnits.h5/Extrapolated_N3.dir',
-         '/Users/boyle/Research/Data/SimulationAnnex/Catalog/SKS/d15_q1_sA_0_0_0.97_sB_0_0_0.97_ecc6e-4/Lev6/rhOverM_Asymptotic_GeometricUnits.h5/Extrapolated_N4.dir']
+Files = ['SimulationAnnex/Catalog/SKS/d15_q1_sA_0_0_0.97_sB_0_0_0.97_ecc6e-4/Lev6/rhOverM_Asymptotic_GeometricUnits.h5/Extrapolated_N2.dir',
+         'SimulationAnnex/Catalog/SKS/d15_q1_sA_0_0_0.97_sB_0_0_0.97_ecc6e-4/Lev6/rhOverM_Asymptotic_GeometricUnits.h5/Extrapolated_N3.dir',
+         'SimulationAnnex/Catalog/SKS/d15_q1_sA_0_0_0.97_sB_0_0_0.97_ecc6e-4/Lev6/rhOverM_Asymptotic_GeometricUnits.h5/Extrapolated_N4.dir']
 
 # This is an automatic legend generator for each of the lines in the
 # plots.  Alternatively, just write your own list of legends.  They
@@ -26,7 +26,11 @@ tmax = 6550.
 
 
 
-## Things below should not need to change often
+
+##################################################
+## Things below should not need to change often ##
+##################################################
+
 from numpy import pi, array, argmin, abs
 import matplotlib as mpl
 mpl.use('Agg')
