@@ -57,17 +57,17 @@ for W in Ws[1:]:
 print("Finished!\n")
 
 # First, we interpolate everything onto the common subset of time steps:
-Ti = max([W.T(0) for W in Ws])
-Tf = min([W.T(W.NTimes()-1) for W in Ws])
-R0 = W0.Frame()[(W0.T()>=Ti) & (W0.T()<=Tf)]
-T0 = W0.T()[(W0.T()>=Ti) & (W0.T()<=Tf)]
+Tini = max([W.T(0) for W in Ws])
+Tfin = min([W.T(W.NTimes()-1) for W in Ws])
+R0 = W0.Frame()[(W0.T()>=Tini) & (W0.T()<=Tfin)]
+T0 = W0.T()[(W0.T()>=Tini) & (W0.T()<=Tfin)]
 Abs0 = W0.Interpolate(T0).Abs(W0.FindModeIndex(2,2))
 Imid = argmin(abs(T0-tmid))
 plt.figure(0)
 plt.figure(1)
 for i,W in enumerate(Ws[1:]):
     print("Plotting difference {0} of {1}...".format(i, len(Ws[1:])))
-    Ti = W.T()[(W.T()>=Ti) & (W.T()<=Tf)]
+    Ti = W.T()[(W.T()>=Tini) & (W.T()<=Tfin)]
     Ri = GWFrames.Squad(W.Frame(), W.T(), T0)
     RDelta = GWFrames.UnflipRotors(GWFrames.RDelta(R0, Ri, Imid))
     PhiDelta = array(GWFrames.angle(RDelta))
