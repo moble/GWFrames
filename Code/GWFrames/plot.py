@@ -152,10 +152,10 @@ def plotWaveform(this, WaveformPart='Abs', Modes=(), t_fid=None, *pyplot_args, *
         ion()
         gcf().show()
 
-    try :
-        tight_layout(pad=0.1)
-    except :
-        pass
+    # try :
+    #     tight_layout(pad=0.1)
+    # except :
+    #     pass
 
     for i in range(len(Lines)) :
         setp(Lines[i], label=Labels[i])
