@@ -169,3 +169,4 @@ def plotWaveform(this, WaveformPart='Abs', Modes=(), t_fid=None, *pyplot_args, *
 ###   W.plot('Abs', ((2,2), (2,-2)))
 import GWFrames
 GWFrames.Waveform.plot = plotWaveform
+GWFrames.PNWaveform.plot = plotWaveform

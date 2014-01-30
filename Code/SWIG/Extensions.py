@@ -16,11 +16,16 @@ class _MetaWaveform(type(_Waveform)):
     pass
 class Waveform(_Waveform):
     __metaclass__ = _MetaWaveform
+class _MetaPNWaveform(type(_PNWaveform)):
+    pass
+class PNWaveform(_PNWaveform):
+    __metaclass__ = _MetaPNWaveform
 
 
 def GetFileNamePrefix(W) :
     return W.DescriptorString() + '_' + W.FrameTypeString() + '_'
 Waveform.GetFileNamePrefix = GetFileNamePrefix
+PNWaveform.GetFileNamePrefix = GetFileNamePrefix
 
 
 def GetLaTeXDataDescription(W) :
@@ -39,6 +44,7 @@ def GetLaTeXDataDescription(W) :
         LaTeXDataDescription = LaTeXDataDescription + W.DataTypeLaTeXString()
     return LaTeXDataDescription
 Waveform.GetLaTeXDataDescription = GetLaTeXDataDescription
+PNWaveform.GetLaTeXDataDescription = GetLaTeXDataDescription
 
 
 def OutputToNRAR(W, FileName, FileWriteMode='w') :

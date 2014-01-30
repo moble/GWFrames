@@ -1,6 +1,9 @@
 //////////////////////////////////////
 //// Read in the PNWaveform class ////
 //////////////////////////////////////
+// Rename C++ PNWaveform objects to be _PNWaveform, so that we can
+// subclass PNWaveform objects in python.
+%rename(_PNWaveform) PNWaveform;
 //// Ignore things that don't translate well...
 // %ignore operator<<;
 // %ignore GWFrames::Waveform::operator=;

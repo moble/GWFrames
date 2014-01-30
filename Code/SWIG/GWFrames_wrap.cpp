@@ -26168,7 +26168,7 @@ fail:
 }
 
 
-SWIGINTERN int _wrap_new_PNWaveform__SWIG_0(PyObject *self, PyObject *args) {
+SWIGINTERN int _wrap_new__PNWaveform__SWIG_0(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::PNWaveform *result = 0 ;
   
@@ -26195,7 +26195,7 @@ fail:
 }
 
 
-SWIGINTERN int _wrap_new_PNWaveform__SWIG_1(PyObject *self, PyObject *args) {
+SWIGINTERN int _wrap_new__PNWaveform__SWIG_1(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::PNWaveform *arg1 = 0 ;
   void *argp1 = 0 ;
@@ -26203,13 +26203,13 @@ SWIGINTERN int _wrap_new_PNWaveform__SWIG_1(PyObject *self, PyObject *args) {
   PyObject * obj1 = 0 ;
   GWFrames::PNWaveform *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:new_PNWaveform",&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:new__PNWaveform",&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj1, &argp1, SWIGTYPE_p_GWFrames__PNWaveform,  0  | 0);
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_PNWaveform" "', argument " "1"" of type '" "GWFrames::PNWaveform const &""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new__PNWaveform" "', argument " "1"" of type '" "GWFrames::PNWaveform const &""'"); 
   }
   if (!argp1) {
-    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_PNWaveform" "', argument " "1"" of type '" "GWFrames::PNWaveform const &""'"); 
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new__PNWaveform" "', argument " "1"" of type '" "GWFrames::PNWaveform const &""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::PNWaveform * >(argp1);
   {
@@ -26234,7 +26234,7 @@ fail:
 }
 
 
-SWIGINTERN int _wrap_new_PNWaveform__SWIG_2(PyObject *self, PyObject *args) {
+SWIGINTERN int _wrap_new__PNWaveform__SWIG_2(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   std::string *arg1 = 0 ;
   double arg2 ;
@@ -26268,21 +26268,21 @@ SWIGINTERN int _wrap_new_PNWaveform__SWIG_2(PyObject *self, PyObject *args) {
   PyObject * obj8 = 0 ;
   GWFrames::PNWaveform *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOOOOOOO:new_PNWaveform",&obj1,&obj2,&obj3,&obj4,&obj5,&obj6,&obj7,&obj8)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOOOO:new__PNWaveform",&obj1,&obj2,&obj3,&obj4,&obj5,&obj6,&obj7,&obj8)) SWIG_fail;
   {
     std::string *ptr = (std::string *)0;
     res1 = SWIG_AsPtr_std_string(obj1, &ptr);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_PNWaveform" "', argument " "1"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new__PNWaveform" "', argument " "1"" of type '" "std::string const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_PNWaveform" "', argument " "1"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new__PNWaveform" "', argument " "1"" of type '" "std::string const &""'"); 
     }
     arg1 = ptr;
   }
   ecode2 = SWIG_AsVal_double(obj2, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new_PNWaveform" "', argument " "2"" of type '" "double""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new__PNWaveform" "', argument " "2"" of type '" "double""'");
   } 
   arg2 = static_cast< double >(val2);
   {
@@ -26359,7 +26359,7 @@ SWIGINTERN int _wrap_new_PNWaveform__SWIG_2(PyObject *self, PyObject *args) {
   }
   ecode5 = SWIG_AsVal_double(obj5, &val5);
   if (!SWIG_IsOK(ecode5)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "new_PNWaveform" "', argument " "5"" of type '" "double""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "new__PNWaveform" "', argument " "5"" of type '" "double""'");
   } 
   arg5 = static_cast< double >(val5);
   {
@@ -26390,12 +26390,12 @@ SWIGINTERN int _wrap_new_PNWaveform__SWIG_2(PyObject *self, PyObject *args) {
   }
   ecode7 = SWIG_AsVal_double(obj7, &val7);
   if (!SWIG_IsOK(ecode7)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "new_PNWaveform" "', argument " "7"" of type '" "double""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "new__PNWaveform" "', argument " "7"" of type '" "double""'");
   } 
   arg7 = static_cast< double >(val7);
   ecode8 = SWIG_AsVal_double(obj8, &val8);
   if (!SWIG_IsOK(ecode8)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode8), "in method '" "new_PNWaveform" "', argument " "8"" of type '" "double""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode8), "in method '" "new__PNWaveform" "', argument " "8"" of type '" "double""'");
   } 
   arg8 = static_cast< double >(val8);
   {
@@ -26422,7 +26422,7 @@ fail:
 }
 
 
-SWIGINTERN int _wrap_new_PNWaveform__SWIG_3(PyObject *self, PyObject *args) {
+SWIGINTERN int _wrap_new__PNWaveform__SWIG_3(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   std::string *arg1 = 0 ;
   double arg2 ;
@@ -26452,21 +26452,21 @@ SWIGINTERN int _wrap_new_PNWaveform__SWIG_3(PyObject *self, PyObject *args) {
   PyObject * obj7 = 0 ;
   GWFrames::PNWaveform *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOOOOOO:new_PNWaveform",&obj1,&obj2,&obj3,&obj4,&obj5,&obj6,&obj7)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOOO:new__PNWaveform",&obj1,&obj2,&obj3,&obj4,&obj5,&obj6,&obj7)) SWIG_fail;
   {
     std::string *ptr = (std::string *)0;
     res1 = SWIG_AsPtr_std_string(obj1, &ptr);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_PNWaveform" "', argument " "1"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new__PNWaveform" "', argument " "1"" of type '" "std::string const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_PNWaveform" "', argument " "1"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new__PNWaveform" "', argument " "1"" of type '" "std::string const &""'"); 
     }
     arg1 = ptr;
   }
   ecode2 = SWIG_AsVal_double(obj2, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new_PNWaveform" "', argument " "2"" of type '" "double""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new__PNWaveform" "', argument " "2"" of type '" "double""'");
   } 
   arg2 = static_cast< double >(val2);
   {
@@ -26543,7 +26543,7 @@ SWIGINTERN int _wrap_new_PNWaveform__SWIG_3(PyObject *self, PyObject *args) {
   }
   ecode5 = SWIG_AsVal_double(obj5, &val5);
   if (!SWIG_IsOK(ecode5)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "new_PNWaveform" "', argument " "5"" of type '" "double""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "new__PNWaveform" "', argument " "5"" of type '" "double""'");
   } 
   arg5 = static_cast< double >(val5);
   {
@@ -26574,7 +26574,7 @@ SWIGINTERN int _wrap_new_PNWaveform__SWIG_3(PyObject *self, PyObject *args) {
   }
   ecode7 = SWIG_AsVal_double(obj7, &val7);
   if (!SWIG_IsOK(ecode7)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "new_PNWaveform" "', argument " "7"" of type '" "double""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "new__PNWaveform" "', argument " "7"" of type '" "double""'");
   } 
   arg7 = static_cast< double >(val7);
   {
@@ -26601,7 +26601,7 @@ fail:
 }
 
 
-SWIGINTERN int _wrap_new_PNWaveform__SWIG_4(PyObject *self, PyObject *args) {
+SWIGINTERN int _wrap_new__PNWaveform__SWIG_4(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   std::string *arg1 = 0 ;
   double arg2 ;
@@ -26627,21 +26627,21 @@ SWIGINTERN int _wrap_new_PNWaveform__SWIG_4(PyObject *self, PyObject *args) {
   PyObject * obj6 = 0 ;
   GWFrames::PNWaveform *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOOOOO:new_PNWaveform",&obj1,&obj2,&obj3,&obj4,&obj5,&obj6)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOO:new__PNWaveform",&obj1,&obj2,&obj3,&obj4,&obj5,&obj6)) SWIG_fail;
   {
     std::string *ptr = (std::string *)0;
     res1 = SWIG_AsPtr_std_string(obj1, &ptr);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_PNWaveform" "', argument " "1"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new__PNWaveform" "', argument " "1"" of type '" "std::string const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_PNWaveform" "', argument " "1"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new__PNWaveform" "', argument " "1"" of type '" "std::string const &""'"); 
     }
     arg1 = ptr;
   }
   ecode2 = SWIG_AsVal_double(obj2, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new_PNWaveform" "', argument " "2"" of type '" "double""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new__PNWaveform" "', argument " "2"" of type '" "double""'");
   } 
   arg2 = static_cast< double >(val2);
   {
@@ -26718,7 +26718,7 @@ SWIGINTERN int _wrap_new_PNWaveform__SWIG_4(PyObject *self, PyObject *args) {
   }
   ecode5 = SWIG_AsVal_double(obj5, &val5);
   if (!SWIG_IsOK(ecode5)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "new_PNWaveform" "', argument " "5"" of type '" "double""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "new__PNWaveform" "', argument " "5"" of type '" "double""'");
   } 
   arg5 = static_cast< double >(val5);
   {
@@ -26771,7 +26771,7 @@ fail:
 }
 
 
-SWIGINTERN int _wrap_new_PNWaveform__SWIG_5(PyObject *self, PyObject *args) {
+SWIGINTERN int _wrap_new__PNWaveform__SWIG_5(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   std::string *arg1 = 0 ;
   double arg2 ;
@@ -26792,21 +26792,21 @@ SWIGINTERN int _wrap_new_PNWaveform__SWIG_5(PyObject *self, PyObject *args) {
   PyObject * obj5 = 0 ;
   GWFrames::PNWaveform *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOOOO:new_PNWaveform",&obj1,&obj2,&obj3,&obj4,&obj5)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOOOO:new__PNWaveform",&obj1,&obj2,&obj3,&obj4,&obj5)) SWIG_fail;
   {
     std::string *ptr = (std::string *)0;
     res1 = SWIG_AsPtr_std_string(obj1, &ptr);
     if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_PNWaveform" "', argument " "1"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new__PNWaveform" "', argument " "1"" of type '" "std::string const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_PNWaveform" "', argument " "1"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new__PNWaveform" "', argument " "1"" of type '" "std::string const &""'"); 
     }
     arg1 = ptr;
   }
   ecode2 = SWIG_AsVal_double(obj2, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new_PNWaveform" "', argument " "2"" of type '" "double""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new__PNWaveform" "', argument " "2"" of type '" "double""'");
   } 
   arg2 = static_cast< double >(val2);
   {
@@ -26883,7 +26883,7 @@ SWIGINTERN int _wrap_new_PNWaveform__SWIG_5(PyObject *self, PyObject *args) {
   }
   ecode5 = SWIG_AsVal_double(obj5, &val5);
   if (!SWIG_IsOK(ecode5)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "new_PNWaveform" "', argument " "5"" of type '" "double""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "new__PNWaveform" "', argument " "5"" of type '" "double""'");
   } 
   arg5 = static_cast< double >(val5);
   {
@@ -26910,7 +26910,7 @@ fail:
 }
 
 
-SWIGINTERN int _wrap_new_PNWaveform(PyObject *self, PyObject *args) {
+SWIGINTERN int _wrap_new__PNWaveform(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[9];
   int ii;
@@ -26921,14 +26921,14 @@ SWIGINTERN int _wrap_new_PNWaveform(PyObject *self, PyObject *args) {
     argv[ii] = PyTuple_GET_ITEM(args,ii);
   }
   if (argc == 0) {
-    return _wrap_new_PNWaveform__SWIG_0(self, args);
+    return _wrap_new__PNWaveform__SWIG_0(self, args);
   }
   if (argc == 1) {
     int _v;
     int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_GWFrames__PNWaveform, 0);
     _v = SWIG_CheckState(res);
     if (_v) {
-      return _wrap_new_PNWaveform__SWIG_1(self, args);
+      return _wrap_new__PNWaveform__SWIG_1(self, args);
     }
   }
   if (argc == 5) {
@@ -26976,7 +26976,7 @@ SWIGINTERN int _wrap_new_PNWaveform(PyObject *self, PyObject *args) {
               _v = SWIG_CheckState(res);
             }
             if (_v) {
-              return _wrap_new_PNWaveform__SWIG_5(self, args);
+              return _wrap_new__PNWaveform__SWIG_5(self, args);
             }
           }
         }
@@ -27041,7 +27041,7 @@ SWIGINTERN int _wrap_new_PNWaveform(PyObject *self, PyObject *args) {
                 }
               }
               if (_v) {
-                return _wrap_new_PNWaveform__SWIG_4(self, args);
+                return _wrap_new__PNWaveform__SWIG_4(self, args);
               }
             }
           }
@@ -27112,7 +27112,7 @@ SWIGINTERN int _wrap_new_PNWaveform(PyObject *self, PyObject *args) {
                   _v = SWIG_CheckState(res);
                 }
                 if (_v) {
-                  return _wrap_new_PNWaveform__SWIG_3(self, args);
+                  return _wrap_new__PNWaveform__SWIG_3(self, args);
                 }
               }
             }
@@ -27189,7 +27189,7 @@ SWIGINTERN int _wrap_new_PNWaveform(PyObject *self, PyObject *args) {
                     _v = SWIG_CheckState(res);
                   }
                   if (_v) {
-                    return _wrap_new_PNWaveform__SWIG_2(self, args);
+                    return _wrap_new__PNWaveform__SWIG_2(self, args);
                   }
                 }
               }
@@ -27201,7 +27201,7 @@ SWIGINTERN int _wrap_new_PNWaveform(PyObject *self, PyObject *args) {
   }
   
 fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'new_PNWaveform'.\n"
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'new__PNWaveform'.\n"
     "  Possible C/C++ prototypes are:\n"
     "    GWFrames::PNWaveform::PNWaveform()\n"
     "    GWFrames::PNWaveform::PNWaveform(GWFrames::PNWaveform const &)\n"
@@ -27213,7 +27213,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_delete_PNWaveform(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_delete__PNWaveform(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::PNWaveform *arg1 = (GWFrames::PNWaveform *) 0 ;
   void *argp1 = 0 ;
@@ -27222,7 +27222,7 @@ SWIGINTERN PyObject *_wrap_delete_PNWaveform(PyObject *self, PyObject *args) {
   if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__PNWaveform, SWIG_POINTER_DISOWN |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_PNWaveform" "', argument " "1"" of type '" "GWFrames::PNWaveform *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete__PNWaveform" "', argument " "1"" of type '" "GWFrames::PNWaveform *""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::PNWaveform * >(argp1);
   {
@@ -27247,7 +27247,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_chi1__SWIG_0(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_chi1__SWIG_0(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::PNWaveform *arg1 = (GWFrames::PNWaveform *) 0 ;
   unsigned int arg2 ;
@@ -27258,15 +27258,15 @@ SWIGINTERN PyObject *_wrap_PNWaveform_chi1__SWIG_0(PyObject *self, PyObject *arg
   PyObject * obj1 = 0 ;
   std::vector< double,std::allocator< double > > *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:PNWaveform_chi1",&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:_PNWaveform_chi1",&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__PNWaveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PNWaveform_chi1" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_PNWaveform_chi1" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::PNWaveform * >(argp1);
   ecode2 = SWIG_AsVal_unsigned_SS_int(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "PNWaveform_chi1" "', argument " "2"" of type '" "unsigned int""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "_PNWaveform_chi1" "', argument " "2"" of type '" "unsigned int""'");
   } 
   arg2 = static_cast< unsigned int >(val2);
   {
@@ -27297,7 +27297,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_chi2__SWIG_0(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_chi2__SWIG_0(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::PNWaveform *arg1 = (GWFrames::PNWaveform *) 0 ;
   unsigned int arg2 ;
@@ -27308,15 +27308,15 @@ SWIGINTERN PyObject *_wrap_PNWaveform_chi2__SWIG_0(PyObject *self, PyObject *arg
   PyObject * obj1 = 0 ;
   std::vector< double,std::allocator< double > > *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:PNWaveform_chi2",&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:_PNWaveform_chi2",&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__PNWaveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PNWaveform_chi2" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_PNWaveform_chi2" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::PNWaveform * >(argp1);
   ecode2 = SWIG_AsVal_unsigned_SS_int(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "PNWaveform_chi2" "', argument " "2"" of type '" "unsigned int""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "_PNWaveform_chi2" "', argument " "2"" of type '" "unsigned int""'");
   } 
   arg2 = static_cast< unsigned int >(val2);
   {
@@ -27347,7 +27347,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_Omega_orb__SWIG_0(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_Omega_orb__SWIG_0(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::PNWaveform *arg1 = (GWFrames::PNWaveform *) 0 ;
   unsigned int arg2 ;
@@ -27358,15 +27358,15 @@ SWIGINTERN PyObject *_wrap_PNWaveform_Omega_orb__SWIG_0(PyObject *self, PyObject
   PyObject * obj1 = 0 ;
   std::vector< double,std::allocator< double > > *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:PNWaveform_Omega_orb",&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:_PNWaveform_Omega_orb",&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__PNWaveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PNWaveform_Omega_orb" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_PNWaveform_Omega_orb" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::PNWaveform * >(argp1);
   ecode2 = SWIG_AsVal_unsigned_SS_int(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "PNWaveform_Omega_orb" "', argument " "2"" of type '" "unsigned int""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "_PNWaveform_Omega_orb" "', argument " "2"" of type '" "unsigned int""'");
   } 
   arg2 = static_cast< unsigned int >(val2);
   {
@@ -27397,7 +27397,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_Omega_prec__SWIG_0(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_Omega_prec__SWIG_0(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::PNWaveform *arg1 = (GWFrames::PNWaveform *) 0 ;
   unsigned int arg2 ;
@@ -27408,15 +27408,15 @@ SWIGINTERN PyObject *_wrap_PNWaveform_Omega_prec__SWIG_0(PyObject *self, PyObjec
   PyObject * obj1 = 0 ;
   std::vector< double,std::allocator< double > > *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:PNWaveform_Omega_prec",&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:_PNWaveform_Omega_prec",&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__PNWaveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PNWaveform_Omega_prec" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_PNWaveform_Omega_prec" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::PNWaveform * >(argp1);
   ecode2 = SWIG_AsVal_unsigned_SS_int(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "PNWaveform_Omega_prec" "', argument " "2"" of type '" "unsigned int""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "_PNWaveform_Omega_prec" "', argument " "2"" of type '" "unsigned int""'");
   } 
   arg2 = static_cast< unsigned int >(val2);
   {
@@ -27447,7 +27447,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_Omega_tot__SWIG_0(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_Omega_tot__SWIG_0(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::PNWaveform *arg1 = (GWFrames::PNWaveform *) 0 ;
   unsigned int arg2 ;
@@ -27458,15 +27458,15 @@ SWIGINTERN PyObject *_wrap_PNWaveform_Omega_tot__SWIG_0(PyObject *self, PyObject
   PyObject * obj1 = 0 ;
   SwigValueWrapper< std::vector< double,std::allocator< double > > > result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:PNWaveform_Omega_tot",&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:_PNWaveform_Omega_tot",&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__PNWaveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PNWaveform_Omega_tot" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_PNWaveform_Omega_tot" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::PNWaveform * >(argp1);
   ecode2 = SWIG_AsVal_unsigned_SS_int(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "PNWaveform_Omega_tot" "', argument " "2"" of type '" "unsigned int""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "_PNWaveform_Omega_tot" "', argument " "2"" of type '" "unsigned int""'");
   } 
   arg2 = static_cast< unsigned int >(val2);
   {
@@ -27497,7 +27497,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_L__SWIG_0(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_L__SWIG_0(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::PNWaveform *arg1 = (GWFrames::PNWaveform *) 0 ;
   unsigned int arg2 ;
@@ -27508,15 +27508,15 @@ SWIGINTERN PyObject *_wrap_PNWaveform_L__SWIG_0(PyObject *self, PyObject *args) 
   PyObject * obj1 = 0 ;
   std::vector< double,std::allocator< double > > *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:PNWaveform_L",&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:_PNWaveform_L",&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__PNWaveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PNWaveform_L" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_PNWaveform_L" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::PNWaveform * >(argp1);
   ecode2 = SWIG_AsVal_unsigned_SS_int(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "PNWaveform_L" "', argument " "2"" of type '" "unsigned int""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "_PNWaveform_L" "', argument " "2"" of type '" "unsigned int""'");
   } 
   arg2 = static_cast< unsigned int >(val2);
   {
@@ -27547,7 +27547,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_chi1Mag(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_chi1Mag(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::PNWaveform *arg1 = (GWFrames::PNWaveform *) 0 ;
   unsigned int arg2 ;
@@ -27558,15 +27558,15 @@ SWIGINTERN PyObject *_wrap_PNWaveform_chi1Mag(PyObject *self, PyObject *args) {
   PyObject * obj1 = 0 ;
   double result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:PNWaveform_chi1Mag",&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:_PNWaveform_chi1Mag",&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__PNWaveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PNWaveform_chi1Mag" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_PNWaveform_chi1Mag" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::PNWaveform * >(argp1);
   ecode2 = SWIG_AsVal_unsigned_SS_int(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "PNWaveform_chi1Mag" "', argument " "2"" of type '" "unsigned int""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "_PNWaveform_chi1Mag" "', argument " "2"" of type '" "unsigned int""'");
   } 
   arg2 = static_cast< unsigned int >(val2);
   {
@@ -27591,7 +27591,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_chi2Mag(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_chi2Mag(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::PNWaveform *arg1 = (GWFrames::PNWaveform *) 0 ;
   unsigned int arg2 ;
@@ -27602,15 +27602,15 @@ SWIGINTERN PyObject *_wrap_PNWaveform_chi2Mag(PyObject *self, PyObject *args) {
   PyObject * obj1 = 0 ;
   double result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:PNWaveform_chi2Mag",&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:_PNWaveform_chi2Mag",&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__PNWaveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PNWaveform_chi2Mag" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_PNWaveform_chi2Mag" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::PNWaveform * >(argp1);
   ecode2 = SWIG_AsVal_unsigned_SS_int(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "PNWaveform_chi2Mag" "', argument " "2"" of type '" "unsigned int""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "_PNWaveform_chi2Mag" "', argument " "2"" of type '" "unsigned int""'");
   } 
   arg2 = static_cast< unsigned int >(val2);
   {
@@ -27635,7 +27635,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_Omega_orbMag__SWIG_0(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_Omega_orbMag__SWIG_0(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::PNWaveform *arg1 = (GWFrames::PNWaveform *) 0 ;
   unsigned int arg2 ;
@@ -27646,15 +27646,15 @@ SWIGINTERN PyObject *_wrap_PNWaveform_Omega_orbMag__SWIG_0(PyObject *self, PyObj
   PyObject * obj1 = 0 ;
   double result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:PNWaveform_Omega_orbMag",&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:_PNWaveform_Omega_orbMag",&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__PNWaveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PNWaveform_Omega_orbMag" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_PNWaveform_Omega_orbMag" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::PNWaveform * >(argp1);
   ecode2 = SWIG_AsVal_unsigned_SS_int(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "PNWaveform_Omega_orbMag" "', argument " "2"" of type '" "unsigned int""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "_PNWaveform_Omega_orbMag" "', argument " "2"" of type '" "unsigned int""'");
   } 
   arg2 = static_cast< unsigned int >(val2);
   {
@@ -27679,7 +27679,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_Omega_precMag__SWIG_0(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_Omega_precMag__SWIG_0(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::PNWaveform *arg1 = (GWFrames::PNWaveform *) 0 ;
   unsigned int arg2 ;
@@ -27690,15 +27690,15 @@ SWIGINTERN PyObject *_wrap_PNWaveform_Omega_precMag__SWIG_0(PyObject *self, PyOb
   PyObject * obj1 = 0 ;
   double result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:PNWaveform_Omega_precMag",&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:_PNWaveform_Omega_precMag",&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__PNWaveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PNWaveform_Omega_precMag" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_PNWaveform_Omega_precMag" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::PNWaveform * >(argp1);
   ecode2 = SWIG_AsVal_unsigned_SS_int(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "PNWaveform_Omega_precMag" "', argument " "2"" of type '" "unsigned int""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "_PNWaveform_Omega_precMag" "', argument " "2"" of type '" "unsigned int""'");
   } 
   arg2 = static_cast< unsigned int >(val2);
   {
@@ -27723,7 +27723,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_Omega_totMag__SWIG_0(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_Omega_totMag__SWIG_0(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::PNWaveform *arg1 = (GWFrames::PNWaveform *) 0 ;
   unsigned int arg2 ;
@@ -27734,15 +27734,15 @@ SWIGINTERN PyObject *_wrap_PNWaveform_Omega_totMag__SWIG_0(PyObject *self, PyObj
   PyObject * obj1 = 0 ;
   double result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:PNWaveform_Omega_totMag",&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:_PNWaveform_Omega_totMag",&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__PNWaveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PNWaveform_Omega_totMag" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_PNWaveform_Omega_totMag" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::PNWaveform * >(argp1);
   ecode2 = SWIG_AsVal_unsigned_SS_int(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "PNWaveform_Omega_totMag" "', argument " "2"" of type '" "unsigned int""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "_PNWaveform_Omega_totMag" "', argument " "2"" of type '" "unsigned int""'");
   } 
   arg2 = static_cast< unsigned int >(val2);
   {
@@ -27767,7 +27767,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_LMag__SWIG_0(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_LMag__SWIG_0(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::PNWaveform *arg1 = (GWFrames::PNWaveform *) 0 ;
   unsigned int arg2 ;
@@ -27778,15 +27778,15 @@ SWIGINTERN PyObject *_wrap_PNWaveform_LMag__SWIG_0(PyObject *self, PyObject *arg
   PyObject * obj1 = 0 ;
   double result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:PNWaveform_LMag",&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:_PNWaveform_LMag",&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__PNWaveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PNWaveform_LMag" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_PNWaveform_LMag" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::PNWaveform * >(argp1);
   ecode2 = SWIG_AsVal_unsigned_SS_int(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "PNWaveform_LMag" "', argument " "2"" of type '" "unsigned int""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "_PNWaveform_LMag" "', argument " "2"" of type '" "unsigned int""'");
   } 
   arg2 = static_cast< unsigned int >(val2);
   {
@@ -27811,7 +27811,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_chiHat1__SWIG_0(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_chiHat1__SWIG_0(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::PNWaveform *arg1 = (GWFrames::PNWaveform *) 0 ;
   unsigned int arg2 ;
@@ -27822,15 +27822,15 @@ SWIGINTERN PyObject *_wrap_PNWaveform_chiHat1__SWIG_0(PyObject *self, PyObject *
   PyObject * obj1 = 0 ;
   SwigValueWrapper< std::vector< double,std::allocator< double > > > result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:PNWaveform_chiHat1",&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:_PNWaveform_chiHat1",&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__PNWaveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PNWaveform_chiHat1" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_PNWaveform_chiHat1" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::PNWaveform * >(argp1);
   ecode2 = SWIG_AsVal_unsigned_SS_int(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "PNWaveform_chiHat1" "', argument " "2"" of type '" "unsigned int""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "_PNWaveform_chiHat1" "', argument " "2"" of type '" "unsigned int""'");
   } 
   arg2 = static_cast< unsigned int >(val2);
   {
@@ -27861,7 +27861,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_chiHat2__SWIG_0(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_chiHat2__SWIG_0(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::PNWaveform *arg1 = (GWFrames::PNWaveform *) 0 ;
   unsigned int arg2 ;
@@ -27872,15 +27872,15 @@ SWIGINTERN PyObject *_wrap_PNWaveform_chiHat2__SWIG_0(PyObject *self, PyObject *
   PyObject * obj1 = 0 ;
   SwigValueWrapper< std::vector< double,std::allocator< double > > > result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:PNWaveform_chiHat2",&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:_PNWaveform_chiHat2",&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__PNWaveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PNWaveform_chiHat2" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_PNWaveform_chiHat2" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::PNWaveform * >(argp1);
   ecode2 = SWIG_AsVal_unsigned_SS_int(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "PNWaveform_chiHat2" "', argument " "2"" of type '" "unsigned int""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "_PNWaveform_chiHat2" "', argument " "2"" of type '" "unsigned int""'");
   } 
   arg2 = static_cast< unsigned int >(val2);
   {
@@ -27911,7 +27911,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_OmegaHat_orb__SWIG_0(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_OmegaHat_orb__SWIG_0(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::PNWaveform *arg1 = (GWFrames::PNWaveform *) 0 ;
   unsigned int arg2 ;
@@ -27922,15 +27922,15 @@ SWIGINTERN PyObject *_wrap_PNWaveform_OmegaHat_orb__SWIG_0(PyObject *self, PyObj
   PyObject * obj1 = 0 ;
   SwigValueWrapper< std::vector< double,std::allocator< double > > > result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:PNWaveform_OmegaHat_orb",&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:_PNWaveform_OmegaHat_orb",&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__PNWaveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PNWaveform_OmegaHat_orb" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_PNWaveform_OmegaHat_orb" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::PNWaveform * >(argp1);
   ecode2 = SWIG_AsVal_unsigned_SS_int(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "PNWaveform_OmegaHat_orb" "', argument " "2"" of type '" "unsigned int""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "_PNWaveform_OmegaHat_orb" "', argument " "2"" of type '" "unsigned int""'");
   } 
   arg2 = static_cast< unsigned int >(val2);
   {
@@ -27961,7 +27961,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_OmegaHat_prec__SWIG_0(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_OmegaHat_prec__SWIG_0(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::PNWaveform *arg1 = (GWFrames::PNWaveform *) 0 ;
   unsigned int arg2 ;
@@ -27972,15 +27972,15 @@ SWIGINTERN PyObject *_wrap_PNWaveform_OmegaHat_prec__SWIG_0(PyObject *self, PyOb
   PyObject * obj1 = 0 ;
   SwigValueWrapper< std::vector< double,std::allocator< double > > > result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:PNWaveform_OmegaHat_prec",&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:_PNWaveform_OmegaHat_prec",&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__PNWaveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PNWaveform_OmegaHat_prec" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_PNWaveform_OmegaHat_prec" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::PNWaveform * >(argp1);
   ecode2 = SWIG_AsVal_unsigned_SS_int(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "PNWaveform_OmegaHat_prec" "', argument " "2"" of type '" "unsigned int""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "_PNWaveform_OmegaHat_prec" "', argument " "2"" of type '" "unsigned int""'");
   } 
   arg2 = static_cast< unsigned int >(val2);
   {
@@ -28011,7 +28011,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_OmegaHat_tot__SWIG_0(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_OmegaHat_tot__SWIG_0(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::PNWaveform *arg1 = (GWFrames::PNWaveform *) 0 ;
   unsigned int arg2 ;
@@ -28022,15 +28022,15 @@ SWIGINTERN PyObject *_wrap_PNWaveform_OmegaHat_tot__SWIG_0(PyObject *self, PyObj
   PyObject * obj1 = 0 ;
   SwigValueWrapper< std::vector< double,std::allocator< double > > > result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:PNWaveform_OmegaHat_tot",&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:_PNWaveform_OmegaHat_tot",&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__PNWaveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PNWaveform_OmegaHat_tot" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_PNWaveform_OmegaHat_tot" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::PNWaveform * >(argp1);
   ecode2 = SWIG_AsVal_unsigned_SS_int(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "PNWaveform_OmegaHat_tot" "', argument " "2"" of type '" "unsigned int""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "_PNWaveform_OmegaHat_tot" "', argument " "2"" of type '" "unsigned int""'");
   } 
   arg2 = static_cast< unsigned int >(val2);
   {
@@ -28061,7 +28061,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_LHat__SWIG_0(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_LHat__SWIG_0(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::PNWaveform *arg1 = (GWFrames::PNWaveform *) 0 ;
   unsigned int arg2 ;
@@ -28072,15 +28072,15 @@ SWIGINTERN PyObject *_wrap_PNWaveform_LHat__SWIG_0(PyObject *self, PyObject *arg
   PyObject * obj1 = 0 ;
   SwigValueWrapper< std::vector< double,std::allocator< double > > > result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:PNWaveform_LHat",&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:_PNWaveform_LHat",&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__PNWaveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PNWaveform_LHat" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_PNWaveform_LHat" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::PNWaveform * >(argp1);
   ecode2 = SWIG_AsVal_unsigned_SS_int(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "PNWaveform_LHat" "', argument " "2"" of type '" "unsigned int""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "_PNWaveform_LHat" "', argument " "2"" of type '" "unsigned int""'");
   } 
   arg2 = static_cast< unsigned int >(val2);
   {
@@ -28111,7 +28111,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_chi1__SWIG_1(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_chi1__SWIG_1(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::PNWaveform *arg1 = (GWFrames::PNWaveform *) 0 ;
   void *argp1 = 0 ;
@@ -28121,7 +28121,7 @@ SWIGINTERN PyObject *_wrap_PNWaveform_chi1__SWIG_1(PyObject *self, PyObject *arg
   if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__PNWaveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PNWaveform_chi1" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_PNWaveform_chi1" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::PNWaveform * >(argp1);
   {
@@ -28160,7 +28160,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_chi1(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_chi1(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[3];
   int ii;
@@ -28178,7 +28178,7 @@ SWIGINTERN PyObject *_wrap_PNWaveform_chi1(PyObject *self, PyObject *args) {
     int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__PNWaveform, 0);
     _v = SWIG_CheckState(res);
     if (_v) {
-      return _wrap_PNWaveform_chi1__SWIG_1(self, args);
+      return _wrap__PNWaveform_chi1__SWIG_1(self, args);
     }
   }
   if (argc == 2) {
@@ -28192,13 +28192,13 @@ SWIGINTERN PyObject *_wrap_PNWaveform_chi1(PyObject *self, PyObject *args) {
         _v = SWIG_CheckState(res);
       }
       if (_v) {
-        return _wrap_PNWaveform_chi1__SWIG_0(self, args);
+        return _wrap__PNWaveform_chi1__SWIG_0(self, args);
       }
     }
   }
   
 fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'PNWaveform_chi1'.\n"
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function '_PNWaveform_chi1'.\n"
     "  Possible C/C++ prototypes are:\n"
     "    GWFrames::PNWaveform::chi1(unsigned int const) const\n"
     "    GWFrames::PNWaveform::chi1() const\n");
@@ -28206,7 +28206,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_chi2__SWIG_1(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_chi2__SWIG_1(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::PNWaveform *arg1 = (GWFrames::PNWaveform *) 0 ;
   void *argp1 = 0 ;
@@ -28216,7 +28216,7 @@ SWIGINTERN PyObject *_wrap_PNWaveform_chi2__SWIG_1(PyObject *self, PyObject *arg
   if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__PNWaveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PNWaveform_chi2" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_PNWaveform_chi2" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::PNWaveform * >(argp1);
   {
@@ -28255,7 +28255,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_chi2(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_chi2(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[3];
   int ii;
@@ -28273,7 +28273,7 @@ SWIGINTERN PyObject *_wrap_PNWaveform_chi2(PyObject *self, PyObject *args) {
     int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__PNWaveform, 0);
     _v = SWIG_CheckState(res);
     if (_v) {
-      return _wrap_PNWaveform_chi2__SWIG_1(self, args);
+      return _wrap__PNWaveform_chi2__SWIG_1(self, args);
     }
   }
   if (argc == 2) {
@@ -28287,13 +28287,13 @@ SWIGINTERN PyObject *_wrap_PNWaveform_chi2(PyObject *self, PyObject *args) {
         _v = SWIG_CheckState(res);
       }
       if (_v) {
-        return _wrap_PNWaveform_chi2__SWIG_0(self, args);
+        return _wrap__PNWaveform_chi2__SWIG_0(self, args);
       }
     }
   }
   
 fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'PNWaveform_chi2'.\n"
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function '_PNWaveform_chi2'.\n"
     "  Possible C/C++ prototypes are:\n"
     "    GWFrames::PNWaveform::chi2(unsigned int const) const\n"
     "    GWFrames::PNWaveform::chi2() const\n");
@@ -28301,7 +28301,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_Omega_orb__SWIG_1(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_Omega_orb__SWIG_1(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::PNWaveform *arg1 = (GWFrames::PNWaveform *) 0 ;
   void *argp1 = 0 ;
@@ -28311,7 +28311,7 @@ SWIGINTERN PyObject *_wrap_PNWaveform_Omega_orb__SWIG_1(PyObject *self, PyObject
   if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__PNWaveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PNWaveform_Omega_orb" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_PNWaveform_Omega_orb" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::PNWaveform * >(argp1);
   {
@@ -28350,7 +28350,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_Omega_orb(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_Omega_orb(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[3];
   int ii;
@@ -28368,7 +28368,7 @@ SWIGINTERN PyObject *_wrap_PNWaveform_Omega_orb(PyObject *self, PyObject *args) 
     int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__PNWaveform, 0);
     _v = SWIG_CheckState(res);
     if (_v) {
-      return _wrap_PNWaveform_Omega_orb__SWIG_1(self, args);
+      return _wrap__PNWaveform_Omega_orb__SWIG_1(self, args);
     }
   }
   if (argc == 2) {
@@ -28382,13 +28382,13 @@ SWIGINTERN PyObject *_wrap_PNWaveform_Omega_orb(PyObject *self, PyObject *args) 
         _v = SWIG_CheckState(res);
       }
       if (_v) {
-        return _wrap_PNWaveform_Omega_orb__SWIG_0(self, args);
+        return _wrap__PNWaveform_Omega_orb__SWIG_0(self, args);
       }
     }
   }
   
 fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'PNWaveform_Omega_orb'.\n"
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function '_PNWaveform_Omega_orb'.\n"
     "  Possible C/C++ prototypes are:\n"
     "    GWFrames::PNWaveform::Omega_orb(unsigned int const) const\n"
     "    GWFrames::PNWaveform::Omega_orb() const\n");
@@ -28396,7 +28396,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_Omega_prec__SWIG_1(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_Omega_prec__SWIG_1(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::PNWaveform *arg1 = (GWFrames::PNWaveform *) 0 ;
   void *argp1 = 0 ;
@@ -28406,7 +28406,7 @@ SWIGINTERN PyObject *_wrap_PNWaveform_Omega_prec__SWIG_1(PyObject *self, PyObjec
   if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__PNWaveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PNWaveform_Omega_prec" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_PNWaveform_Omega_prec" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::PNWaveform * >(argp1);
   {
@@ -28445,7 +28445,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_Omega_prec(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_Omega_prec(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[3];
   int ii;
@@ -28463,7 +28463,7 @@ SWIGINTERN PyObject *_wrap_PNWaveform_Omega_prec(PyObject *self, PyObject *args)
     int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__PNWaveform, 0);
     _v = SWIG_CheckState(res);
     if (_v) {
-      return _wrap_PNWaveform_Omega_prec__SWIG_1(self, args);
+      return _wrap__PNWaveform_Omega_prec__SWIG_1(self, args);
     }
   }
   if (argc == 2) {
@@ -28477,13 +28477,13 @@ SWIGINTERN PyObject *_wrap_PNWaveform_Omega_prec(PyObject *self, PyObject *args)
         _v = SWIG_CheckState(res);
       }
       if (_v) {
-        return _wrap_PNWaveform_Omega_prec__SWIG_0(self, args);
+        return _wrap__PNWaveform_Omega_prec__SWIG_0(self, args);
       }
     }
   }
   
 fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'PNWaveform_Omega_prec'.\n"
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function '_PNWaveform_Omega_prec'.\n"
     "  Possible C/C++ prototypes are:\n"
     "    GWFrames::PNWaveform::Omega_prec(unsigned int const) const\n"
     "    GWFrames::PNWaveform::Omega_prec() const\n");
@@ -28491,7 +28491,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_Omega_tot__SWIG_1(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_Omega_tot__SWIG_1(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::PNWaveform *arg1 = (GWFrames::PNWaveform *) 0 ;
   void *argp1 = 0 ;
@@ -28501,7 +28501,7 @@ SWIGINTERN PyObject *_wrap_PNWaveform_Omega_tot__SWIG_1(PyObject *self, PyObject
   if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__PNWaveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PNWaveform_Omega_tot" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_PNWaveform_Omega_tot" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::PNWaveform * >(argp1);
   {
@@ -28540,7 +28540,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_Omega_tot(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_Omega_tot(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[3];
   int ii;
@@ -28558,7 +28558,7 @@ SWIGINTERN PyObject *_wrap_PNWaveform_Omega_tot(PyObject *self, PyObject *args) 
     int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__PNWaveform, 0);
     _v = SWIG_CheckState(res);
     if (_v) {
-      return _wrap_PNWaveform_Omega_tot__SWIG_1(self, args);
+      return _wrap__PNWaveform_Omega_tot__SWIG_1(self, args);
     }
   }
   if (argc == 2) {
@@ -28572,13 +28572,13 @@ SWIGINTERN PyObject *_wrap_PNWaveform_Omega_tot(PyObject *self, PyObject *args) 
         _v = SWIG_CheckState(res);
       }
       if (_v) {
-        return _wrap_PNWaveform_Omega_tot__SWIG_0(self, args);
+        return _wrap__PNWaveform_Omega_tot__SWIG_0(self, args);
       }
     }
   }
   
 fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'PNWaveform_Omega_tot'.\n"
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function '_PNWaveform_Omega_tot'.\n"
     "  Possible C/C++ prototypes are:\n"
     "    GWFrames::PNWaveform::Omega_tot(unsigned int const) const\n"
     "    GWFrames::PNWaveform::Omega_tot() const\n");
@@ -28586,7 +28586,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_L__SWIG_1(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_L__SWIG_1(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::PNWaveform *arg1 = (GWFrames::PNWaveform *) 0 ;
   void *argp1 = 0 ;
@@ -28596,7 +28596,7 @@ SWIGINTERN PyObject *_wrap_PNWaveform_L__SWIG_1(PyObject *self, PyObject *args) 
   if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__PNWaveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PNWaveform_L" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_PNWaveform_L" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::PNWaveform * >(argp1);
   {
@@ -28635,7 +28635,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_L(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_L(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[3];
   int ii;
@@ -28653,7 +28653,7 @@ SWIGINTERN PyObject *_wrap_PNWaveform_L(PyObject *self, PyObject *args) {
     int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__PNWaveform, 0);
     _v = SWIG_CheckState(res);
     if (_v) {
-      return _wrap_PNWaveform_L__SWIG_1(self, args);
+      return _wrap__PNWaveform_L__SWIG_1(self, args);
     }
   }
   if (argc == 2) {
@@ -28667,13 +28667,13 @@ SWIGINTERN PyObject *_wrap_PNWaveform_L(PyObject *self, PyObject *args) {
         _v = SWIG_CheckState(res);
       }
       if (_v) {
-        return _wrap_PNWaveform_L__SWIG_0(self, args);
+        return _wrap__PNWaveform_L__SWIG_0(self, args);
       }
     }
   }
   
 fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'PNWaveform_L'.\n"
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function '_PNWaveform_L'.\n"
     "  Possible C/C++ prototypes are:\n"
     "    GWFrames::PNWaveform::L(unsigned int const) const\n"
     "    GWFrames::PNWaveform::L() const\n");
@@ -28681,7 +28681,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_Omega_orbMag__SWIG_1(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_Omega_orbMag__SWIG_1(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::PNWaveform *arg1 = (GWFrames::PNWaveform *) 0 ;
   void *argp1 = 0 ;
@@ -28691,7 +28691,7 @@ SWIGINTERN PyObject *_wrap_PNWaveform_Omega_orbMag__SWIG_1(PyObject *self, PyObj
   if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__PNWaveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PNWaveform_Omega_orbMag" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_PNWaveform_Omega_orbMag" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::PNWaveform * >(argp1);
   {
@@ -28722,7 +28722,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_Omega_orbMag(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_Omega_orbMag(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[3];
   int ii;
@@ -28740,7 +28740,7 @@ SWIGINTERN PyObject *_wrap_PNWaveform_Omega_orbMag(PyObject *self, PyObject *arg
     int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__PNWaveform, 0);
     _v = SWIG_CheckState(res);
     if (_v) {
-      return _wrap_PNWaveform_Omega_orbMag__SWIG_1(self, args);
+      return _wrap__PNWaveform_Omega_orbMag__SWIG_1(self, args);
     }
   }
   if (argc == 2) {
@@ -28754,13 +28754,13 @@ SWIGINTERN PyObject *_wrap_PNWaveform_Omega_orbMag(PyObject *self, PyObject *arg
         _v = SWIG_CheckState(res);
       }
       if (_v) {
-        return _wrap_PNWaveform_Omega_orbMag__SWIG_0(self, args);
+        return _wrap__PNWaveform_Omega_orbMag__SWIG_0(self, args);
       }
     }
   }
   
 fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'PNWaveform_Omega_orbMag'.\n"
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function '_PNWaveform_Omega_orbMag'.\n"
     "  Possible C/C++ prototypes are:\n"
     "    GWFrames::PNWaveform::Omega_orbMag(unsigned int const) const\n"
     "    GWFrames::PNWaveform::Omega_orbMag() const\n");
@@ -28768,7 +28768,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_Omega_precMag__SWIG_1(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_Omega_precMag__SWIG_1(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::PNWaveform *arg1 = (GWFrames::PNWaveform *) 0 ;
   void *argp1 = 0 ;
@@ -28778,7 +28778,7 @@ SWIGINTERN PyObject *_wrap_PNWaveform_Omega_precMag__SWIG_1(PyObject *self, PyOb
   if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__PNWaveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PNWaveform_Omega_precMag" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_PNWaveform_Omega_precMag" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::PNWaveform * >(argp1);
   {
@@ -28809,7 +28809,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_Omega_precMag(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_Omega_precMag(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[3];
   int ii;
@@ -28827,7 +28827,7 @@ SWIGINTERN PyObject *_wrap_PNWaveform_Omega_precMag(PyObject *self, PyObject *ar
     int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__PNWaveform, 0);
     _v = SWIG_CheckState(res);
     if (_v) {
-      return _wrap_PNWaveform_Omega_precMag__SWIG_1(self, args);
+      return _wrap__PNWaveform_Omega_precMag__SWIG_1(self, args);
     }
   }
   if (argc == 2) {
@@ -28841,13 +28841,13 @@ SWIGINTERN PyObject *_wrap_PNWaveform_Omega_precMag(PyObject *self, PyObject *ar
         _v = SWIG_CheckState(res);
       }
       if (_v) {
-        return _wrap_PNWaveform_Omega_precMag__SWIG_0(self, args);
+        return _wrap__PNWaveform_Omega_precMag__SWIG_0(self, args);
       }
     }
   }
   
 fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'PNWaveform_Omega_precMag'.\n"
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function '_PNWaveform_Omega_precMag'.\n"
     "  Possible C/C++ prototypes are:\n"
     "    GWFrames::PNWaveform::Omega_precMag(unsigned int const) const\n"
     "    GWFrames::PNWaveform::Omega_precMag() const\n");
@@ -28855,7 +28855,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_Omega_totMag__SWIG_1(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_Omega_totMag__SWIG_1(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::PNWaveform *arg1 = (GWFrames::PNWaveform *) 0 ;
   void *argp1 = 0 ;
@@ -28865,7 +28865,7 @@ SWIGINTERN PyObject *_wrap_PNWaveform_Omega_totMag__SWIG_1(PyObject *self, PyObj
   if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__PNWaveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PNWaveform_Omega_totMag" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_PNWaveform_Omega_totMag" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::PNWaveform * >(argp1);
   {
@@ -28896,7 +28896,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_Omega_totMag(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_Omega_totMag(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[3];
   int ii;
@@ -28914,7 +28914,7 @@ SWIGINTERN PyObject *_wrap_PNWaveform_Omega_totMag(PyObject *self, PyObject *arg
     int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__PNWaveform, 0);
     _v = SWIG_CheckState(res);
     if (_v) {
-      return _wrap_PNWaveform_Omega_totMag__SWIG_1(self, args);
+      return _wrap__PNWaveform_Omega_totMag__SWIG_1(self, args);
     }
   }
   if (argc == 2) {
@@ -28928,13 +28928,13 @@ SWIGINTERN PyObject *_wrap_PNWaveform_Omega_totMag(PyObject *self, PyObject *arg
         _v = SWIG_CheckState(res);
       }
       if (_v) {
-        return _wrap_PNWaveform_Omega_totMag__SWIG_0(self, args);
+        return _wrap__PNWaveform_Omega_totMag__SWIG_0(self, args);
       }
     }
   }
   
 fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'PNWaveform_Omega_totMag'.\n"
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function '_PNWaveform_Omega_totMag'.\n"
     "  Possible C/C++ prototypes are:\n"
     "    GWFrames::PNWaveform::Omega_totMag(unsigned int const) const\n"
     "    GWFrames::PNWaveform::Omega_totMag() const\n");
@@ -28942,7 +28942,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_LMag__SWIG_1(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_LMag__SWIG_1(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::PNWaveform *arg1 = (GWFrames::PNWaveform *) 0 ;
   void *argp1 = 0 ;
@@ -28952,7 +28952,7 @@ SWIGINTERN PyObject *_wrap_PNWaveform_LMag__SWIG_1(PyObject *self, PyObject *arg
   if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__PNWaveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PNWaveform_LMag" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_PNWaveform_LMag" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::PNWaveform * >(argp1);
   {
@@ -28983,7 +28983,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_LMag(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_LMag(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[3];
   int ii;
@@ -29001,7 +29001,7 @@ SWIGINTERN PyObject *_wrap_PNWaveform_LMag(PyObject *self, PyObject *args) {
     int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__PNWaveform, 0);
     _v = SWIG_CheckState(res);
     if (_v) {
-      return _wrap_PNWaveform_LMag__SWIG_1(self, args);
+      return _wrap__PNWaveform_LMag__SWIG_1(self, args);
     }
   }
   if (argc == 2) {
@@ -29015,13 +29015,13 @@ SWIGINTERN PyObject *_wrap_PNWaveform_LMag(PyObject *self, PyObject *args) {
         _v = SWIG_CheckState(res);
       }
       if (_v) {
-        return _wrap_PNWaveform_LMag__SWIG_0(self, args);
+        return _wrap__PNWaveform_LMag__SWIG_0(self, args);
       }
     }
   }
   
 fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'PNWaveform_LMag'.\n"
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function '_PNWaveform_LMag'.\n"
     "  Possible C/C++ prototypes are:\n"
     "    GWFrames::PNWaveform::LMag(unsigned int const) const\n"
     "    GWFrames::PNWaveform::LMag() const\n");
@@ -29029,7 +29029,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_chiHat1__SWIG_1(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_chiHat1__SWIG_1(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::PNWaveform *arg1 = (GWFrames::PNWaveform *) 0 ;
   void *argp1 = 0 ;
@@ -29039,7 +29039,7 @@ SWIGINTERN PyObject *_wrap_PNWaveform_chiHat1__SWIG_1(PyObject *self, PyObject *
   if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__PNWaveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PNWaveform_chiHat1" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_PNWaveform_chiHat1" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::PNWaveform * >(argp1);
   {
@@ -29078,7 +29078,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_chiHat1(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_chiHat1(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[3];
   int ii;
@@ -29096,7 +29096,7 @@ SWIGINTERN PyObject *_wrap_PNWaveform_chiHat1(PyObject *self, PyObject *args) {
     int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__PNWaveform, 0);
     _v = SWIG_CheckState(res);
     if (_v) {
-      return _wrap_PNWaveform_chiHat1__SWIG_1(self, args);
+      return _wrap__PNWaveform_chiHat1__SWIG_1(self, args);
     }
   }
   if (argc == 2) {
@@ -29110,13 +29110,13 @@ SWIGINTERN PyObject *_wrap_PNWaveform_chiHat1(PyObject *self, PyObject *args) {
         _v = SWIG_CheckState(res);
       }
       if (_v) {
-        return _wrap_PNWaveform_chiHat1__SWIG_0(self, args);
+        return _wrap__PNWaveform_chiHat1__SWIG_0(self, args);
       }
     }
   }
   
 fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'PNWaveform_chiHat1'.\n"
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function '_PNWaveform_chiHat1'.\n"
     "  Possible C/C++ prototypes are:\n"
     "    GWFrames::PNWaveform::chiHat1(unsigned int const) const\n"
     "    GWFrames::PNWaveform::chiHat1() const\n");
@@ -29124,7 +29124,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_chiHat2__SWIG_1(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_chiHat2__SWIG_1(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::PNWaveform *arg1 = (GWFrames::PNWaveform *) 0 ;
   void *argp1 = 0 ;
@@ -29134,7 +29134,7 @@ SWIGINTERN PyObject *_wrap_PNWaveform_chiHat2__SWIG_1(PyObject *self, PyObject *
   if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__PNWaveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PNWaveform_chiHat2" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_PNWaveform_chiHat2" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::PNWaveform * >(argp1);
   {
@@ -29173,7 +29173,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_chiHat2(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_chiHat2(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[3];
   int ii;
@@ -29191,7 +29191,7 @@ SWIGINTERN PyObject *_wrap_PNWaveform_chiHat2(PyObject *self, PyObject *args) {
     int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__PNWaveform, 0);
     _v = SWIG_CheckState(res);
     if (_v) {
-      return _wrap_PNWaveform_chiHat2__SWIG_1(self, args);
+      return _wrap__PNWaveform_chiHat2__SWIG_1(self, args);
     }
   }
   if (argc == 2) {
@@ -29205,13 +29205,13 @@ SWIGINTERN PyObject *_wrap_PNWaveform_chiHat2(PyObject *self, PyObject *args) {
         _v = SWIG_CheckState(res);
       }
       if (_v) {
-        return _wrap_PNWaveform_chiHat2__SWIG_0(self, args);
+        return _wrap__PNWaveform_chiHat2__SWIG_0(self, args);
       }
     }
   }
   
 fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'PNWaveform_chiHat2'.\n"
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function '_PNWaveform_chiHat2'.\n"
     "  Possible C/C++ prototypes are:\n"
     "    GWFrames::PNWaveform::chiHat2(unsigned int const) const\n"
     "    GWFrames::PNWaveform::chiHat2() const\n");
@@ -29219,7 +29219,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_OmegaHat_orb__SWIG_1(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_OmegaHat_orb__SWIG_1(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::PNWaveform *arg1 = (GWFrames::PNWaveform *) 0 ;
   void *argp1 = 0 ;
@@ -29229,7 +29229,7 @@ SWIGINTERN PyObject *_wrap_PNWaveform_OmegaHat_orb__SWIG_1(PyObject *self, PyObj
   if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__PNWaveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PNWaveform_OmegaHat_orb" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_PNWaveform_OmegaHat_orb" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::PNWaveform * >(argp1);
   {
@@ -29268,7 +29268,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_OmegaHat_orb(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_OmegaHat_orb(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[3];
   int ii;
@@ -29286,7 +29286,7 @@ SWIGINTERN PyObject *_wrap_PNWaveform_OmegaHat_orb(PyObject *self, PyObject *arg
     int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__PNWaveform, 0);
     _v = SWIG_CheckState(res);
     if (_v) {
-      return _wrap_PNWaveform_OmegaHat_orb__SWIG_1(self, args);
+      return _wrap__PNWaveform_OmegaHat_orb__SWIG_1(self, args);
     }
   }
   if (argc == 2) {
@@ -29300,13 +29300,13 @@ SWIGINTERN PyObject *_wrap_PNWaveform_OmegaHat_orb(PyObject *self, PyObject *arg
         _v = SWIG_CheckState(res);
       }
       if (_v) {
-        return _wrap_PNWaveform_OmegaHat_orb__SWIG_0(self, args);
+        return _wrap__PNWaveform_OmegaHat_orb__SWIG_0(self, args);
       }
     }
   }
   
 fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'PNWaveform_OmegaHat_orb'.\n"
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function '_PNWaveform_OmegaHat_orb'.\n"
     "  Possible C/C++ prototypes are:\n"
     "    GWFrames::PNWaveform::OmegaHat_orb(unsigned int const) const\n"
     "    GWFrames::PNWaveform::OmegaHat_orb() const\n");
@@ -29314,7 +29314,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_OmegaHat_prec__SWIG_1(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_OmegaHat_prec__SWIG_1(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::PNWaveform *arg1 = (GWFrames::PNWaveform *) 0 ;
   void *argp1 = 0 ;
@@ -29324,7 +29324,7 @@ SWIGINTERN PyObject *_wrap_PNWaveform_OmegaHat_prec__SWIG_1(PyObject *self, PyOb
   if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__PNWaveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PNWaveform_OmegaHat_prec" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_PNWaveform_OmegaHat_prec" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::PNWaveform * >(argp1);
   {
@@ -29363,7 +29363,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_OmegaHat_prec(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_OmegaHat_prec(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[3];
   int ii;
@@ -29381,7 +29381,7 @@ SWIGINTERN PyObject *_wrap_PNWaveform_OmegaHat_prec(PyObject *self, PyObject *ar
     int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__PNWaveform, 0);
     _v = SWIG_CheckState(res);
     if (_v) {
-      return _wrap_PNWaveform_OmegaHat_prec__SWIG_1(self, args);
+      return _wrap__PNWaveform_OmegaHat_prec__SWIG_1(self, args);
     }
   }
   if (argc == 2) {
@@ -29395,13 +29395,13 @@ SWIGINTERN PyObject *_wrap_PNWaveform_OmegaHat_prec(PyObject *self, PyObject *ar
         _v = SWIG_CheckState(res);
       }
       if (_v) {
-        return _wrap_PNWaveform_OmegaHat_prec__SWIG_0(self, args);
+        return _wrap__PNWaveform_OmegaHat_prec__SWIG_0(self, args);
       }
     }
   }
   
 fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'PNWaveform_OmegaHat_prec'.\n"
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function '_PNWaveform_OmegaHat_prec'.\n"
     "  Possible C/C++ prototypes are:\n"
     "    GWFrames::PNWaveform::OmegaHat_prec(unsigned int const) const\n"
     "    GWFrames::PNWaveform::OmegaHat_prec() const\n");
@@ -29409,7 +29409,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_OmegaHat_tot__SWIG_1(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_OmegaHat_tot__SWIG_1(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::PNWaveform *arg1 = (GWFrames::PNWaveform *) 0 ;
   void *argp1 = 0 ;
@@ -29419,7 +29419,7 @@ SWIGINTERN PyObject *_wrap_PNWaveform_OmegaHat_tot__SWIG_1(PyObject *self, PyObj
   if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__PNWaveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PNWaveform_OmegaHat_tot" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_PNWaveform_OmegaHat_tot" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::PNWaveform * >(argp1);
   {
@@ -29458,7 +29458,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_OmegaHat_tot(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_OmegaHat_tot(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[3];
   int ii;
@@ -29476,7 +29476,7 @@ SWIGINTERN PyObject *_wrap_PNWaveform_OmegaHat_tot(PyObject *self, PyObject *arg
     int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__PNWaveform, 0);
     _v = SWIG_CheckState(res);
     if (_v) {
-      return _wrap_PNWaveform_OmegaHat_tot__SWIG_1(self, args);
+      return _wrap__PNWaveform_OmegaHat_tot__SWIG_1(self, args);
     }
   }
   if (argc == 2) {
@@ -29490,13 +29490,13 @@ SWIGINTERN PyObject *_wrap_PNWaveform_OmegaHat_tot(PyObject *self, PyObject *arg
         _v = SWIG_CheckState(res);
       }
       if (_v) {
-        return _wrap_PNWaveform_OmegaHat_tot__SWIG_0(self, args);
+        return _wrap__PNWaveform_OmegaHat_tot__SWIG_0(self, args);
       }
     }
   }
   
 fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'PNWaveform_OmegaHat_tot'.\n"
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function '_PNWaveform_OmegaHat_tot'.\n"
     "  Possible C/C++ prototypes are:\n"
     "    GWFrames::PNWaveform::OmegaHat_tot(unsigned int const) const\n"
     "    GWFrames::PNWaveform::OmegaHat_tot() const\n");
@@ -29504,7 +29504,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_LHat__SWIG_1(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_LHat__SWIG_1(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::PNWaveform *arg1 = (GWFrames::PNWaveform *) 0 ;
   void *argp1 = 0 ;
@@ -29514,7 +29514,7 @@ SWIGINTERN PyObject *_wrap_PNWaveform_LHat__SWIG_1(PyObject *self, PyObject *arg
   if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__PNWaveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PNWaveform_LHat" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_PNWaveform_LHat" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::PNWaveform * >(argp1);
   {
@@ -29553,7 +29553,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_LHat(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_LHat(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[3];
   int ii;
@@ -29571,7 +29571,7 @@ SWIGINTERN PyObject *_wrap_PNWaveform_LHat(PyObject *self, PyObject *args) {
     int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__PNWaveform, 0);
     _v = SWIG_CheckState(res);
     if (_v) {
-      return _wrap_PNWaveform_LHat__SWIG_1(self, args);
+      return _wrap__PNWaveform_LHat__SWIG_1(self, args);
     }
   }
   if (argc == 2) {
@@ -29585,13 +29585,13 @@ SWIGINTERN PyObject *_wrap_PNWaveform_LHat(PyObject *self, PyObject *args) {
         _v = SWIG_CheckState(res);
       }
       if (_v) {
-        return _wrap_PNWaveform_LHat__SWIG_0(self, args);
+        return _wrap__PNWaveform_LHat__SWIG_0(self, args);
       }
     }
   }
   
 fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'PNWaveform_LHat'.\n"
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function '_PNWaveform_LHat'.\n"
     "  Possible C/C++ prototypes are:\n"
     "    GWFrames::PNWaveform::LHat(unsigned int const) const\n"
     "    GWFrames::PNWaveform::LHat() const\n");
@@ -29599,7 +29599,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_Phi_orb__SWIG_0(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_Phi_orb__SWIG_0(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::PNWaveform *arg1 = (GWFrames::PNWaveform *) 0 ;
   unsigned int arg2 ;
@@ -29610,15 +29610,15 @@ SWIGINTERN PyObject *_wrap_PNWaveform_Phi_orb__SWIG_0(PyObject *self, PyObject *
   PyObject * obj1 = 0 ;
   double result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:PNWaveform_Phi_orb",&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:_PNWaveform_Phi_orb",&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__PNWaveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PNWaveform_Phi_orb" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_PNWaveform_Phi_orb" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::PNWaveform * >(argp1);
   ecode2 = SWIG_AsVal_unsigned_SS_int(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "PNWaveform_Phi_orb" "', argument " "2"" of type '" "unsigned int""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "_PNWaveform_Phi_orb" "', argument " "2"" of type '" "unsigned int""'");
   } 
   arg2 = static_cast< unsigned int >(val2);
   {
@@ -29643,7 +29643,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_Phi_orb__SWIG_1(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_Phi_orb__SWIG_1(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::PNWaveform *arg1 = (GWFrames::PNWaveform *) 0 ;
   void *argp1 = 0 ;
@@ -29653,7 +29653,7 @@ SWIGINTERN PyObject *_wrap_PNWaveform_Phi_orb__SWIG_1(PyObject *self, PyObject *
   if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__PNWaveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "PNWaveform_Phi_orb" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_PNWaveform_Phi_orb" "', argument " "1"" of type '" "GWFrames::PNWaveform const *""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::PNWaveform * >(argp1);
   {
@@ -29684,7 +29684,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_PNWaveform_Phi_orb(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__PNWaveform_Phi_orb(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[3];
   int ii;
@@ -29702,7 +29702,7 @@ SWIGINTERN PyObject *_wrap_PNWaveform_Phi_orb(PyObject *self, PyObject *args) {
     int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__PNWaveform, 0);
     _v = SWIG_CheckState(res);
     if (_v) {
-      return _wrap_PNWaveform_Phi_orb__SWIG_1(self, args);
+      return _wrap__PNWaveform_Phi_orb__SWIG_1(self, args);
     }
   }
   if (argc == 2) {
@@ -29716,13 +29716,13 @@ SWIGINTERN PyObject *_wrap_PNWaveform_Phi_orb(PyObject *self, PyObject *args) {
         _v = SWIG_CheckState(res);
       }
       if (_v) {
-        return _wrap_PNWaveform_Phi_orb__SWIG_0(self, args);
+        return _wrap__PNWaveform_Phi_orb__SWIG_0(self, args);
       }
     }
   }
   
 fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'PNWaveform_Phi_orb'.\n"
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function '_PNWaveform_Phi_orb'.\n"
     "  Possible C/C++ prototypes are:\n"
     "    GWFrames::PNWaveform::Phi_orb(unsigned int const) const\n"
     "    GWFrames::PNWaveform::Phi_orb() const\n");
@@ -33280,7 +33280,7 @@ static PyHeapTypeObject SwigPyBuiltin__std__vectorT_GWFrames__Waveform_t_type = 
 
 SWIGINTERN SwigPyClientData SwigPyBuiltin__std__vectorT_GWFrames__Waveform_t_clientdata = {0, 0, 0, 0, 0, 0, (PyTypeObject *)&SwigPyBuiltin__std__vectorT_GWFrames__Waveform_t_type};
 
-SWIGPY_DESTRUCTOR_CLOSURE(_wrap_delete_PNWaveform)
+SWIGPY_DESTRUCTOR_CLOSURE(_wrap_delete__PNWaveform)
 SWIGINTERN PyGetSetDef SwigPyBuiltin__GWFrames__PNWaveform_getset[] = {
     {NULL, NULL, NULL, NULL, NULL} /* Sentinel */
 };
@@ -33305,7 +33305,7 @@ SwigPyBuiltin__GWFrames__PNWaveform_richcompare(PyObject *self, PyObject *other,
 }
 
 SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__PNWaveform_methods[] = {
-  { "chi1", (PyCFunction) _wrap_PNWaveform_chi1, METH_VARARGS, (char*) "\n"
+  { "chi1", (PyCFunction) _wrap__PNWaveform_chi1, METH_VARARGS, (char*) "\n"
 		"Parameters\n"
 		"----------\n"
 		"  const unsigned int iTime\n"
@@ -33327,7 +33327,7 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__PNWaveform_methods[] = {
 		"\n"
 		"\n"
 		"" },
-  { "chi2", (PyCFunction) _wrap_PNWaveform_chi2, METH_VARARGS, (char*) "\n"
+  { "chi2", (PyCFunction) _wrap__PNWaveform_chi2, METH_VARARGS, (char*) "\n"
 		"Parameters\n"
 		"----------\n"
 		"  const unsigned int iTime\n"
@@ -33349,7 +33349,7 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__PNWaveform_methods[] = {
 		"\n"
 		"\n"
 		"" },
-  { "Omega_orb", (PyCFunction) _wrap_PNWaveform_Omega_orb, METH_VARARGS, (char*) "\n"
+  { "Omega_orb", (PyCFunction) _wrap__PNWaveform_Omega_orb, METH_VARARGS, (char*) "\n"
 		"Parameters\n"
 		"----------\n"
 		"  const unsigned int iTime\n"
@@ -33371,7 +33371,7 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__PNWaveform_methods[] = {
 		"\n"
 		"\n"
 		"" },
-  { "Omega_prec", (PyCFunction) _wrap_PNWaveform_Omega_prec, METH_VARARGS, (char*) "\n"
+  { "Omega_prec", (PyCFunction) _wrap__PNWaveform_Omega_prec, METH_VARARGS, (char*) "\n"
 		"Parameters\n"
 		"----------\n"
 		"  const unsigned int iTime\n"
@@ -33393,7 +33393,7 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__PNWaveform_methods[] = {
 		"\n"
 		"\n"
 		"" },
-  { "Omega_tot", (PyCFunction) _wrap_PNWaveform_Omega_tot, METH_VARARGS, (char*) "\n"
+  { "Omega_tot", (PyCFunction) _wrap__PNWaveform_Omega_tot, METH_VARARGS, (char*) "\n"
 		"Parameters\n"
 		"----------\n"
 		"  const unsigned int iTime\n"
@@ -33415,7 +33415,7 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__PNWaveform_methods[] = {
 		"\n"
 		"\n"
 		"" },
-  { "L", (PyCFunction) _wrap_PNWaveform_L, METH_VARARGS, (char*) "\n"
+  { "L", (PyCFunction) _wrap__PNWaveform_L, METH_VARARGS, (char*) "\n"
 		"Parameters\n"
 		"----------\n"
 		"  const unsigned int iTime\n"
@@ -33437,7 +33437,7 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__PNWaveform_methods[] = {
 		"\n"
 		"\n"
 		"" },
-  { "chi1Mag", (PyCFunction) _wrap_PNWaveform_chi1Mag, METH_VARARGS, (char*) "\n"
+  { "chi1Mag", (PyCFunction) _wrap__PNWaveform_chi1Mag, METH_VARARGS, (char*) "\n"
 		"Parameters\n"
 		"----------\n"
 		"  const unsigned int iTime\n"
@@ -33448,7 +33448,7 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__PNWaveform_methods[] = {
 		"\n"
 		"\n"
 		"" },
-  { "chi2Mag", (PyCFunction) _wrap_PNWaveform_chi2Mag, METH_VARARGS, (char*) "\n"
+  { "chi2Mag", (PyCFunction) _wrap__PNWaveform_chi2Mag, METH_VARARGS, (char*) "\n"
 		"Parameters\n"
 		"----------\n"
 		"  const unsigned int iTime\n"
@@ -33459,29 +33459,7 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__PNWaveform_methods[] = {
 		"\n"
 		"\n"
 		"" },
-  { "Omega_orbMag", (PyCFunction) _wrap_PNWaveform_Omega_orbMag, METH_VARARGS, (char*) "\n"
-		"Parameters\n"
-		"----------\n"
-		"  const unsigned int iTime\n"
-		"\n"
-		"Returns\n"
-		"-------\n"
-		"  double\n"
-		"\n"
-		"\n"
-		"\n"
-		"\n"
-		"Parameters\n"
-		"----------\n"
-		"  (none)\n"
-		"\n"
-		"Returns\n"
-		"-------\n"
-		"  vector<double>\n"
-		"\n"
-		"\n"
-		"" },
-  { "Omega_precMag", (PyCFunction) _wrap_PNWaveform_Omega_precMag, METH_VARARGS, (char*) "\n"
+  { "Omega_orbMag", (PyCFunction) _wrap__PNWaveform_Omega_orbMag, METH_VARARGS, (char*) "\n"
 		"Parameters\n"
 		"----------\n"
 		"  const unsigned int iTime\n"
@@ -33503,7 +33481,7 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__PNWaveform_methods[] = {
 		"\n"
 		"\n"
 		"" },
-  { "Omega_totMag", (PyCFunction) _wrap_PNWaveform_Omega_totMag, METH_VARARGS, (char*) "\n"
+  { "Omega_precMag", (PyCFunction) _wrap__PNWaveform_Omega_precMag, METH_VARARGS, (char*) "\n"
 		"Parameters\n"
 		"----------\n"
 		"  const unsigned int iTime\n"
@@ -33525,7 +33503,7 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__PNWaveform_methods[] = {
 		"\n"
 		"\n"
 		"" },
-  { "LMag", (PyCFunction) _wrap_PNWaveform_LMag, METH_VARARGS, (char*) "\n"
+  { "Omega_totMag", (PyCFunction) _wrap__PNWaveform_Omega_totMag, METH_VARARGS, (char*) "\n"
 		"Parameters\n"
 		"----------\n"
 		"  const unsigned int iTime\n"
@@ -33547,7 +33525,29 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__PNWaveform_methods[] = {
 		"\n"
 		"\n"
 		"" },
-  { "chiHat1", (PyCFunction) _wrap_PNWaveform_chiHat1, METH_VARARGS, (char*) "\n"
+  { "LMag", (PyCFunction) _wrap__PNWaveform_LMag, METH_VARARGS, (char*) "\n"
+		"Parameters\n"
+		"----------\n"
+		"  const unsigned int iTime\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  double\n"
+		"\n"
+		"\n"
+		"\n"
+		"\n"
+		"Parameters\n"
+		"----------\n"
+		"  (none)\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  vector<double>\n"
+		"\n"
+		"\n"
+		"" },
+  { "chiHat1", (PyCFunction) _wrap__PNWaveform_chiHat1, METH_VARARGS, (char*) "\n"
 		"Parameters\n"
 		"----------\n"
 		"  const unsigned int iTime\n"
@@ -33569,7 +33569,7 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__PNWaveform_methods[] = {
 		"\n"
 		"\n"
 		"" },
-  { "chiHat2", (PyCFunction) _wrap_PNWaveform_chiHat2, METH_VARARGS, (char*) "\n"
+  { "chiHat2", (PyCFunction) _wrap__PNWaveform_chiHat2, METH_VARARGS, (char*) "\n"
 		"Parameters\n"
 		"----------\n"
 		"  const unsigned int iTime\n"
@@ -33591,7 +33591,7 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__PNWaveform_methods[] = {
 		"\n"
 		"\n"
 		"" },
-  { "OmegaHat_orb", (PyCFunction) _wrap_PNWaveform_OmegaHat_orb, METH_VARARGS, (char*) "\n"
+  { "OmegaHat_orb", (PyCFunction) _wrap__PNWaveform_OmegaHat_orb, METH_VARARGS, (char*) "\n"
 		"Parameters\n"
 		"----------\n"
 		"  const unsigned int iTime\n"
@@ -33613,7 +33613,7 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__PNWaveform_methods[] = {
 		"\n"
 		"\n"
 		"" },
-  { "OmegaHat_prec", (PyCFunction) _wrap_PNWaveform_OmegaHat_prec, METH_VARARGS, (char*) "\n"
+  { "OmegaHat_prec", (PyCFunction) _wrap__PNWaveform_OmegaHat_prec, METH_VARARGS, (char*) "\n"
 		"Parameters\n"
 		"----------\n"
 		"  const unsigned int iTime\n"
@@ -33635,7 +33635,7 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__PNWaveform_methods[] = {
 		"\n"
 		"\n"
 		"" },
-  { "OmegaHat_tot", (PyCFunction) _wrap_PNWaveform_OmegaHat_tot, METH_VARARGS, (char*) "\n"
+  { "OmegaHat_tot", (PyCFunction) _wrap__PNWaveform_OmegaHat_tot, METH_VARARGS, (char*) "\n"
 		"Parameters\n"
 		"----------\n"
 		"  const unsigned int iTime\n"
@@ -33657,7 +33657,7 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__PNWaveform_methods[] = {
 		"\n"
 		"\n"
 		"" },
-  { "LHat", (PyCFunction) _wrap_PNWaveform_LHat, METH_VARARGS, (char*) "\n"
+  { "LHat", (PyCFunction) _wrap__PNWaveform_LHat, METH_VARARGS, (char*) "\n"
 		"Parameters\n"
 		"----------\n"
 		"  const unsigned int iTime\n"
@@ -33679,7 +33679,7 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__PNWaveform_methods[] = {
 		"\n"
 		"\n"
 		"" },
-  { "Phi_orb", (PyCFunction) _wrap_PNWaveform_Phi_orb, METH_VARARGS, (char*) "\n"
+  { "Phi_orb", (PyCFunction) _wrap__PNWaveform_Phi_orb, METH_VARARGS, (char*) "\n"
 		"Parameters\n"
 		"----------\n"
 		"  const unsigned int iTime\n"
@@ -33712,10 +33712,10 @@ static PyHeapTypeObject SwigPyBuiltin__GWFrames__PNWaveform_type = {
     PyObject_HEAD_INIT(NULL)
     0,                                        /* ob_size */
 #endif
-    "PNWaveform",                             /* tp_name */
+    "_PNWaveform",                            /* tp_name */
     sizeof(SwigPyObject),                     /* tp_basicsize */
     0,                                        /* tp_itemsize */
-    (destructor) _wrap_delete_PNWaveform_closure, /* tp_dealloc */
+    (destructor) _wrap_delete__PNWaveform_closure, /* tp_dealloc */
     (printfunc) 0,                            /* tp_print */
     (getattrfunc) 0,                          /* tp_getattr */
     (setattrfunc) 0,                          /* tp_setattr */
@@ -33754,7 +33754,7 @@ static PyHeapTypeObject SwigPyBuiltin__GWFrames__PNWaveform_type = {
     (descrgetfunc) 0,                         /* tp_descr_get */
     (descrsetfunc) 0,                         /* tp_descr_set */
     (Py_ssize_t)offsetof(SwigPyObject, dict), /* tp_dictoffset */
-    (initproc) _wrap_new_PNWaveform,          /* tp_init */
+    (initproc) _wrap_new__PNWaveform,         /* tp_init */
     (allocfunc) 0,                            /* tp_alloc */
     (newfunc) 0,                              /* tp_new */
     (freefunc) 0,                             /* tp_free */
@@ -34880,7 +34880,7 @@ SWIG_init(void) {
   if (builtin_basetype && builtin_basetype->clientdata && ((SwigPyClientData*) builtin_basetype->clientdata)->pytype) {
     builtin_bases[builtin_base_count++] = ((SwigPyClientData*) builtin_basetype->clientdata)->pytype;
   } else {
-    PyErr_SetString(PyExc_TypeError, "Could not create type 'PNWaveform' as base 'GWFrames::Waveform' has not been initialized.\n");
+    PyErr_SetString(PyExc_TypeError, "Could not create type '_PNWaveform' as base 'GWFrames::Waveform' has not been initialized.\n");
 #if PY_VERSION_HEX >= 0x03000000
     return NULL;
 #else
@@ -34892,7 +34892,7 @@ SWIG_init(void) {
   PyDict_SetItemString(d, "this", this_descr);
   PyDict_SetItemString(d, "thisown", thisown_descr);
   if (PyType_Ready(builtin_pytype) < 0) {
-    PyErr_SetString(PyExc_TypeError, "Could not create type 'PNWaveform'.");
+    PyErr_SetString(PyExc_TypeError, "Could not create type '_PNWaveform'.");
 #if PY_VERSION_HEX >= 0x03000000
     return NULL;
 #else
@@ -34900,8 +34900,8 @@ SWIG_init(void) {
 #endif
   }
   Py_INCREF(builtin_pytype);
-  PyModule_AddObject(m, "PNWaveform", (PyObject*) builtin_pytype);
-  SwigPyBuiltin_AddPublicSymbol(public_interface, "PNWaveform");
+  PyModule_AddObject(m, "_PNWaveform", (PyObject*) builtin_pytype);
+  SwigPyBuiltin_AddPublicSymbol(public_interface, "_PNWaveform");
   d = md;
 #if PY_VERSION_HEX >= 0x03000000
   return m;
