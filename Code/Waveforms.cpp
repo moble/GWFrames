@@ -76,7 +76,7 @@ std::string StringForm(const std::vector<int>& Lmodes) {
 
 /// Default constructor for an empty object
 GWFrames::Waveform::Waveform() :
-  spinweight(-2), history(""), t(0),frame(0), frameType(GWFrames::UnknownFrameType),
+  spinweight(-2), boostweight(-1), history(""), t(0),frame(0), frameType(GWFrames::UnknownFrameType),
   dataType(GWFrames::UnknownDataType), rIsScaledOut(false), mIsScaledOut(false), lm(), data()
 {
   {
@@ -99,7 +99,7 @@ GWFrames::Waveform::Waveform() :
 
 /// Copy constructor
 GWFrames::Waveform::Waveform(const GWFrames::Waveform& a) :
-  spinweight(a.spinweight), history(a.history.str()), t(a.t), frame(a.frame), frameType(a.frameType),
+  spinweight(a.spinweight), boostweight(a.boostweight), history(a.history.str()), t(a.t), frame(a.frame), frameType(a.frameType),
   dataType(a.dataType), rIsScaledOut(a.rIsScaledOut), mIsScaledOut(a.mIsScaledOut), lm(a.lm), data(a.data)
 {
   /// Simply copies all fields in the input object to the constructed
@@ -109,7 +109,7 @@ GWFrames::Waveform::Waveform(const GWFrames::Waveform& a) :
 
 /// Constructor from data file
 GWFrames::Waveform::Waveform(const std::string& FileName, const std::string& DataFormat) :
-  spinweight(-2), history(""), t(0), frame(0), frameType(GWFrames::UnknownFrameType),
+  spinweight(-2), boostweight(-1), history(""), t(0), frame(0), frameType(GWFrames::UnknownFrameType),
   dataType(GWFrames::UnknownDataType), rIsScaledOut(false), mIsScaledOut(false), lm(), data()
 {
   ///
@@ -243,6 +243,7 @@ GWFrames::Waveform::Waveform(const std::string& FileName, const std::string& Dat
 /// Assignment operator
 GWFrames::Waveform& GWFrames::Waveform::operator=(const GWFrames::Waveform& a) {
   spinweight = a.spinweight;
+  boostweight = a.boostweight;
   history.str(a.history.str());
   history.clear();
   history.seekp(0, ios_base::end);
@@ -265,6 +266,7 @@ void GWFrames::Waveform::swap(GWFrames::Waveform& b) {
   // This call should not be recorded explicitly in the history,
   // because the histories are swapped
   { const int NewSpinWeight=b.spinweight; b.spinweight=spinweight; spinweight=NewSpinWeight; }
+  { const int NewBoostWeight=b.boostweight; b.boostweight=boostweight; boostweight=NewBoostWeight; }
   { const string historyb=b.history.str(); b.history.str(history.str()); history.str(historyb); }
   history.seekp(0, ios_base::end);
   b.history.seekp(0, ios_base::end);
@@ -283,7 +285,7 @@ void GWFrames::Waveform::swap(GWFrames::Waveform& b) {
 /// Explicit constructor from data
 GWFrames::Waveform::Waveform(const std::vector<double>& T, const std::vector<std::vector<int> >& LM,
 			     const std::vector<std::vector<std::complex<double> > >& Data)
-  : spinweight(-2), history(""), t(T), frame(), frameType(GWFrames::UnknownFrameType),
+  : spinweight(-2), boostweight(-1), history(""), t(T), frame(), frameType(GWFrames::UnknownFrameType),
     dataType(GWFrames::UnknownDataType), rIsScaledOut(false), mIsScaledOut(false), lm(LM), data(Data)
 {
   /// Arguments are T, LM, Data, which consist of the explicit data.
@@ -3182,6 +3184,7 @@ GWFrames::Waveform GWFrames::Waveform::ApplySupertranslation(std::vector<std::co
   // Copy infrastructure to new Waveform
   Waveform B;
   B.spinweight = A.spinweight;
+  B.boostweight = A.boostweight;
   B.history.str(A.history.str());
   B.history.clear();
   B.history.seekp(0, ios_base::end);
@@ -3334,8 +3337,93 @@ GWFrames::Waveform GWFrames::Waveform::Boost(const std::vector<double>& v) const
   std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Not properly implemented yet." << std::endl;
   throw(GWFrames_NotYetImplemented);
 
-  return Waveform();
+  //return Waveform();
   // return B;
+}
+
+
+/// Apply a boost to a boost- and spin-weighted function
+GWFrames::Waveform& GWFrames::Waveform::Boost(const std::vector<std::vector<double> >& v) {
+  /// This function does three things.  First, it evaluates the
+  /// Waveform on what will become an equi-angular grid after
+  /// transformation by the boost.  Second, it multiplies each of
+  /// those points by the appropriate conformal factor
+  /// \f$K^b(\vartheta, \varphi)\f$, where \f$b\f$ is the boost weight
+  /// stored with the Waveform.  Finally, it transforms back to
+  /// Fourier space using that new equi-angular grid.
+
+  // Check the size of the input velocity
+  if(v.size()!=NTimes()) {
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": (v.size()=" << v.size() << ") != (NTimes()=" << NTimes() << ")" << std::endl;
+    throw(GWFrames_VectorSizeMismatch);
+  }
+  if(v[0].size()!=3) {
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": v[0].size()=" << v[0].size()
+	      << ".  Input is assumed to be a vector of three-velocities." << std::endl;
+    throw(GWFrames_VectorSizeMismatch);
+  }
+
+  // Set up storage and calculate useful constants
+  const int ellMax = this->EllMax();
+  const int n_theta= 2*ellMax+1;
+  const int n_phi = 2*ellMax+1;
+  const double dtheta = M_PI/double(n_theta-1); // theta should return to M_PI
+  const double dphi = 2*M_PI/double(n_phi); // phi should not return to 2*M_PI
+  vector<complex<double> > Grid(n_phi*n_theta);
+  SphericalFunctions::SWSH sYlm(SpinWeight());
+
+  // Main loop over time steps
+  for(unsigned int i_t=0; i_t<NTimes(); ++i_t) {
+    vector<complex<double> > Modes(N_lm(ellMax), 0.0);
+    vector<complex<double> > Modes2(N_lm(ellMax), 0.0);
+    // std::cout << "t[" << i_t << "] = " << this->T(i_t) << std::endl;
+
+    const double gamma = 1.0/std::sqrt(1.0-v[i_t][0]*v[i_t][0]-v[i_t][1]*v[i_t][1]-v[i_t][2]*v[i_t][2]);
+
+    // Fill the Modes data for this time step
+    for(int i_mode=0; i_mode<N_lm(std::abs(SpinWeight())-1); ++i_mode) {
+      Modes[i_mode] = 0.0;
+    }
+    for(int i_mode=N_lm(std::abs(SpinWeight())-1), ell=std::abs(SpinWeight()); ell<=ellMax; ++ell) {
+      for(int m=-ell; m<=ell; ++m, ++i_mode) {
+	Modes[i_mode] = this->Data(FindModeIndex(ell,m), i_t);
+      }
+    }
+
+    // Construct the data on the distorted grid
+    for(int i_g=0, i_theta=0; i_theta<n_theta; ++i_theta) {
+      for(int i_phi=0; i_phi<n_phi; ++i_phi, ++i_g) {
+	const Quaternion Rp(dtheta*i_theta, dphi*i_phi);
+	const Quaternion nHat = Rp*Quaternions::zHat*Rp.conjugate();
+	const double ConformalFactor = std::pow(gamma*(1-nHat.dot(Quaternions::Quaternion(v[i_t]))), -BoostWeight());
+	const Quaternion R_b = Quaternions::BoostRotor(-v[i_t], nHat.vec());
+	sYlm.SetRotation(R_b*Rp);
+	if(i_t%1000==0) {
+	  std::cerr << std::setprecision(16)
+		    << this->T(i_t) << " " << ConformalFactor << "  \t  " << v[i_t][0] << "," << v[i_t][1] << "," << v[i_t][2] << std::endl << std::endl;
+	}
+
+	// Evaluate the data at this point, incorporating the spin due
+	// to the boost, multiplying by the conformal factor at this
+	// point
+	Grid[i_g] = 0.3*ConformalFactor*sYlm.Evaluate(Modes);
+      }
+    }
+
+    // Decompose the data into modes
+    spinsfast_map2salm(reinterpret_cast<fftw_complex*>(&Grid[0]),
+		       reinterpret_cast<fftw_complex*>(&Modes2[0]),
+		       SpinWeight(), n_theta, n_phi, ellMax);
+
+    // Set new data at this time step
+    for(int i_mode=N_lm(std::abs(SpinWeight())-1), ell=std::abs(SpinWeight()); ell<=ellMax; ++ell) {
+      for(int m=-ell; m<=ell; ++m, ++i_mode) {
+	this->Data(FindModeIndex(ell,m),i_t) = 0.7*Modes2[i_mode];
+      }
+    }
+  }
+
+  return *this;
 }
 
 

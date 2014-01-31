@@ -1,6 +1,7 @@
 ///////////////////////////////////////
 //// Import the quantities on scri ////
 ///////////////////////////////////////
+#ifndef SWIG_BUILTIN
 %rename(__getitem__) GWFrames::DataGrid::operator [](unsigned int const) const;
 %rename(__setitem__) GWFrames::DataGrid::operator [](unsigned int const);
 %rename(__getitem__) GWFrames::Modes::operator [](unsigned int const) const;
@@ -11,6 +12,9 @@
 %rename(__setitem__) GWFrames::SliceGrid::operator [](unsigned int const);
 %rename(__getitem__) GWFrames::Scri::operator [](unsigned int const) const;
 %rename(__setitem__) GWFrames::Scri::operator [](unsigned int const);
+#endif // SWIG_BUILTIN
+typedef std::vector<double> ThreeVector;
+typedef std::vector<double> FourVector;
 %include "../Scri.hpp"
 namespace GWFrames {
   %template(SliceOfScriGrid) SliceOfScri<DataGrid>;

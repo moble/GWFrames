@@ -13,12 +13,14 @@
 namespace GWFrames {
 
   // This header defines the basic objects `Modes` and `DataGrid`.
-  // `SliceOfScri<D>` contains a set of either `Modes` or `DataGrid` objects.
-  // `SliceModes` and `SliceGrid` are specific instances of this template; `SliceModes` has some extras
+  // `SliceOfScri<D>` contains a set of either `Modes` or `DataGrid`
+  // objects.  `SliceModes` and `SliceGrid` are specific instances of
+  // this template; `SliceModes` has some extras
   //
 
   class Modes; // Forward declaration for DataGrid constructor
   class ScriFunctor { public: virtual double operator()(const Quaternions::Quaternion&) const { return 0.0; } };
+  Quaternions::Quaternion Boost(GWFrames::ThreeVector v, GWFrames::ThreeVector n);
 
   class DataGrid {
     /// This object holds complex spin-weighted data on the sphere in

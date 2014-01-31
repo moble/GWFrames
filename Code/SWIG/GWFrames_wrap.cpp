@@ -3453,37 +3453,47 @@ SwigPyBuiltin_SetMetaType (PyTypeObject *type, PyTypeObject *metatype)
 
 /* -------- TYPES TABLE (BEGIN) -------- */
 
-#define SWIGTYPE_p_GWFrames__Matrix swig_types[0]
-#define SWIGTYPE_p_GWFrames__MatrixC swig_types[1]
-#define SWIGTYPE_p_GWFrames__PNWaveform swig_types[2]
-#define SWIGTYPE_p_GWFrames__Waveform swig_types[3]
-#define SWIGTYPE_p_GWFrames__Waveforms swig_types[4]
-#define SWIGTYPE_p_Quaternions__Quaternion swig_types[5]
-#define SWIGTYPE_p_SwigPyObject swig_types[6]
-#define SWIGTYPE_p_allocator_type swig_types[7]
-#define SWIGTYPE_p_char swig_types[8]
-#define SWIGTYPE_p_difference_type swig_types[9]
-#define SWIGTYPE_p_double swig_types[10]
-#define SWIGTYPE_p_gsl_matrix swig_types[11]
-#define SWIGTYPE_p_p_PyObject swig_types[12]
-#define SWIGTYPE_p_size_type swig_types[13]
-#define SWIGTYPE_p_std__allocatorT_GWFrames__Matrix_t swig_types[14]
-#define SWIGTYPE_p_std__allocatorT_GWFrames__Waveform_t swig_types[15]
-#define SWIGTYPE_p_std__complexT_double_t swig_types[16]
-#define SWIGTYPE_p_std__invalid_argument swig_types[17]
-#define SWIGTYPE_p_std__string swig_types[18]
-#define SWIGTYPE_p_std__stringstream swig_types[19]
-#define SWIGTYPE_p_std__vectorT_GWFrames__Matrix_std__allocatorT_GWFrames__Matrix_t_t swig_types[20]
-#define SWIGTYPE_p_std__vectorT_GWFrames__Waveform_std__allocatorT_GWFrames__Waveform_t_t swig_types[21]
-#define SWIGTYPE_p_std__vectorT_Quaternions__Quaternion_std__allocatorT_Quaternions__Quaternion_t_t swig_types[22]
-#define SWIGTYPE_p_std__vectorT_double_std__allocatorT_double_t_t swig_types[23]
-#define SWIGTYPE_p_std__vectorT_int_std__allocatorT_int_t_t swig_types[24]
-#define SWIGTYPE_p_std__vectorT_std__complexT_double_t_std__allocatorT_std__complexT_double_t_t_t swig_types[25]
-#define SWIGTYPE_p_std__vectorT_std__vectorT_double_std__allocatorT_double_t_t_std__allocatorT_std__vectorT_double_std__allocatorT_double_t_t_t_t swig_types[26]
-#define SWIGTYPE_p_swig__SwigPyIterator swig_types[27]
-#define SWIGTYPE_p_value_type swig_types[28]
-static swig_type_info *swig_types[30];
-static swig_module_info swig_module = {swig_types, 29, 0, 0, 0, 0};
+#define SWIGTYPE_p_GWFrames__DataGrid swig_types[0]
+#define SWIGTYPE_p_GWFrames__Matrix swig_types[1]
+#define SWIGTYPE_p_GWFrames__MatrixC swig_types[2]
+#define SWIGTYPE_p_GWFrames__Modes swig_types[3]
+#define SWIGTYPE_p_GWFrames__PNWaveform swig_types[4]
+#define SWIGTYPE_p_GWFrames__Scri swig_types[5]
+#define SWIGTYPE_p_GWFrames__ScriFunctor swig_types[6]
+#define SWIGTYPE_p_GWFrames__SliceModes swig_types[7]
+#define SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__DataGrid_t swig_types[8]
+#define SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__Modes_t swig_types[9]
+#define SWIGTYPE_p_GWFrames__SuperMomenta swig_types[10]
+#define SWIGTYPE_p_GWFrames__Waveform swig_types[11]
+#define SWIGTYPE_p_GWFrames__Waveforms swig_types[12]
+#define SWIGTYPE_p_Quaternions__Quaternion swig_types[13]
+#define SWIGTYPE_p_SwigPyObject swig_types[14]
+#define SWIGTYPE_p_allocator_type swig_types[15]
+#define SWIGTYPE_p_char swig_types[16]
+#define SWIGTYPE_p_difference_type swig_types[17]
+#define SWIGTYPE_p_double swig_types[18]
+#define SWIGTYPE_p_gsl_matrix swig_types[19]
+#define SWIGTYPE_p_p_PyObject swig_types[20]
+#define SWIGTYPE_p_size_type swig_types[21]
+#define SWIGTYPE_p_std__allocatorT_GWFrames__Matrix_t swig_types[22]
+#define SWIGTYPE_p_std__allocatorT_GWFrames__Waveform_t swig_types[23]
+#define SWIGTYPE_p_std__complexT_double_t swig_types[24]
+#define SWIGTYPE_p_std__invalid_argument swig_types[25]
+#define SWIGTYPE_p_std__string swig_types[26]
+#define SWIGTYPE_p_std__stringstream swig_types[27]
+#define SWIGTYPE_p_std__vectorT_GWFrames__DataGrid_std__allocatorT_GWFrames__DataGrid_t_t swig_types[28]
+#define SWIGTYPE_p_std__vectorT_GWFrames__Matrix_std__allocatorT_GWFrames__Matrix_t_t swig_types[29]
+#define SWIGTYPE_p_std__vectorT_GWFrames__Modes_std__allocatorT_GWFrames__Modes_t_t swig_types[30]
+#define SWIGTYPE_p_std__vectorT_GWFrames__Waveform_std__allocatorT_GWFrames__Waveform_t_t swig_types[31]
+#define SWIGTYPE_p_std__vectorT_Quaternions__Quaternion_std__allocatorT_Quaternions__Quaternion_t_t swig_types[32]
+#define SWIGTYPE_p_std__vectorT_double_std__allocatorT_double_t_t swig_types[33]
+#define SWIGTYPE_p_std__vectorT_int_std__allocatorT_int_t_t swig_types[34]
+#define SWIGTYPE_p_std__vectorT_std__complexT_double_t_std__allocatorT_std__complexT_double_t_t_t swig_types[35]
+#define SWIGTYPE_p_std__vectorT_std__vectorT_double_std__allocatorT_double_t_t_std__allocatorT_std__vectorT_double_std__allocatorT_double_t_t_t_t swig_types[36]
+#define SWIGTYPE_p_swig__SwigPyIterator swig_types[37]
+#define SWIGTYPE_p_value_type swig_types[38]
+static swig_type_info *swig_types[40];
+static swig_module_info swig_module = {swig_types, 39, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -3588,7 +3598,7 @@ namespace swig {
   #include "../Utilities.hpp"
   #include "Quaternions.hpp"
   #include "IntegrateAngularVelocity.hpp"
-  // #include "Scri.hpp"
+  #include "../Scri.hpp"
   #include "SWSHs.hpp"
   #include "../Waveforms.hpp"
   #include "../PNWaveforms.hpp"
@@ -5357,6 +5367,27 @@ SWIGINTERN void std_vector_Sl_GWFrames_Matrix_Sg__append(std::vector< GWFrames::
       self->push_back(x);
     }
 
+SWIGINTERNINLINE PyObject*
+SWIG_From_std_complex_Sl_double_Sg_  (/*@SWIG:/usr/local/Cellar/swig/2.0.11/share/swig/2.0.11/typemaps/swigmacros.swg,104,%ifcplusplus@*/
+
+const std::complex<double>&
+
+
+
+/*@SWIG@*/ c)
+{
+  return PyComplex_FromDoubles(std::real(c), std::imag(c));
+}
+
+SWIGINTERN std::complex< double > const GWFrames_DataGrid___getitem____SWIG_1(GWFrames::DataGrid const *self,unsigned int const i){ return self->operator[](i); }
+SWIGINTERN void GWFrames_DataGrid___setitem____SWIG_1(GWFrames::DataGrid *self,unsigned int const i,std::complex< double > const &a){ self->operator[](i)=a; }
+SWIGINTERN void GWFrames_Modes___setitem____SWIG_1(GWFrames::Modes *self,unsigned int const i,std::complex< double > const &a){ self->operator[](i)=a; }
+SWIGINTERN GWFrames::Modes const &GWFrames_SliceModes___getitem__(GWFrames::SliceModes const *self,unsigned int const i){ return self->operator[](i); }
+SWIGINTERN void GWFrames_SliceModes___setitem__(GWFrames::SliceModes *self,unsigned int const i,GWFrames::Modes const &a){ self->operator[](i)=a; }
+SWIGINTERN void GWFrames_Scri___setitem____SWIG_1(GWFrames::Scri *self,unsigned int const i,GWFrames::SliceModes const &a){ self->operator[](i) = a; }
+SWIGINTERN GWFrames::Modes const GWFrames_SuperMomenta___getitem__(GWFrames::SuperMomenta const *self,unsigned int const i){ return self->operator[](i); }
+SWIGINTERN void GWFrames_SuperMomenta___setitem__(GWFrames::SuperMomenta *self,unsigned int const i,GWFrames::Modes const &a){ self->operator[](i) = a; }
+
 SWIGINTERN swig_type_info*
 SWIG_pchar_descriptor(void)
 {
@@ -5513,19 +5544,6 @@ SWIGINTERNINLINE PyObject *
 SWIG_From_std_string  (const std::string& s)
 {
   return SWIG_FromCharPtrAndSize(s.data(), s.size());
-}
-
-
-SWIGINTERNINLINE PyObject*
-SWIG_From_std_complex_Sl_double_Sg_  (/*@SWIG:/usr/local/Cellar/swig/2.0.11/share/swig/2.0.11/typemaps/swigmacros.swg,104,%ifcplusplus@*/
-
-const std::complex<double>&
-
-
-
-/*@SWIG@*/ c)
-{
-  return PyComplex_FromDoubles(std::real(c), std::imag(c));
 }
 
 SWIGINTERN std::string GWFrames_Waveform___str__(GWFrames::Waveform *self){
@@ -12818,6 +12836,6580 @@ SWIGINTERN PyObject *_wrap_delete__vectorM(PyObject *self, PyObject *args) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete__vectorM" "', argument " "1"" of type '" "std::vector< GWFrames::Matrix > *""'"); 
   }
   arg1 = reinterpret_cast< std::vector< GWFrames::Matrix > * >(argp1);
+  {
+    try {
+      delete arg1;;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ScriFunctor___call__(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::ScriFunctor *arg1 = (GWFrames::ScriFunctor *) 0 ;
+  Quaternions::Quaternion *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  Quaternions::Quaternion tmp2 ;
+  PyObject *item2 ;
+  Py_ssize_t i2 ;
+  PyObject * obj1 = 0 ;
+  double result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:ScriFunctor___call__",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__ScriFunctor, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ScriFunctor___call__" "', argument " "1"" of type '" "GWFrames::ScriFunctor const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::ScriFunctor * >(argp1);
+  {
+    if(PySequence_Check(obj1)) {
+      for(i2=0; i2<4; ++i2) {
+        item2 = PySequence_GetItem(obj1, i2);
+        if(!SWIG_IsOK(SWIG_AsVal_double (item2, &tmp2[i2]))) {
+          Py_DECREF(item2);
+          SWIG_exception(SWIG_TypeError, "expected items of sequence to be of type "\
+            "\"double\" in argument 2");
+        }
+        Py_DECREF(item2);
+      }
+      arg2 = &tmp2;
+    } else {
+      void* ptmp;
+      int res = SWIG_ConvertPtr(obj1, &ptmp, SWIGTYPE_p_Quaternions__Quaternion, 0 | 0);
+      if (!SWIG_IsOK(res)) {
+        SWIG_exception_fail(SWIG_ArgError(res), "expected argument 2 to be of type \"Quaternion\".");
+      }
+      Quaternions::Quaternion* ptmp2 = reinterpret_cast< Quaternions::Quaternion * >(ptmp);
+      tmp2[0] = (*ptmp2)[0];
+      tmp2[1] = (*ptmp2)[1];
+      tmp2[2] = (*ptmp2)[2];
+      tmp2[3] = (*ptmp2)[3];
+      arg2 = &tmp2;
+    }
+  }
+  {
+    try {
+      result = (double)((GWFrames::ScriFunctor const *)arg1)->operator ()((Quaternions::Quaternion const &)*arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_From_double(static_cast< double >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGPY_TERNARYCALLFUNC_CLOSURE(_wrap_ScriFunctor___call__)
+
+SWIGINTERN int _wrap_new_ScriFunctor(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::ScriFunctor *result = 0 ;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  {
+    try {
+      result = (GWFrames::ScriFunctor *)new GWFrames::ScriFunctor();;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__ScriFunctor, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
+fail:
+  return -1;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_ScriFunctor(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::ScriFunctor *arg1 = (GWFrames::ScriFunctor *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__ScriFunctor, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_ScriFunctor" "', argument " "1"" of type '" "GWFrames::ScriFunctor *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::ScriFunctor * >(argp1);
+  {
+    try {
+      delete arg1;;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Boost(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  SwigValueWrapper< std::vector< double,std::allocator< double > > > arg1 ;
+  SwigValueWrapper< std::vector< double,std::allocator< double > > > arg2 ;
+  void *argp1 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  Quaternions::Quaternion result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Boost",&obj0,&obj1)) SWIG_fail;
+  {
+    res1 = SWIG_ConvertPtr(obj0, &argp1, SWIGTYPE_p_std__vectorT_double_std__allocatorT_double_t_t,  0  | 0);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Boost" "', argument " "1"" of type '" "GWFrames::ThreeVector""'"); 
+    }  
+    if (!argp1) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Boost" "', argument " "1"" of type '" "GWFrames::ThreeVector""'");
+    } else {
+      GWFrames::ThreeVector * temp = reinterpret_cast< GWFrames::ThreeVector * >(argp1);
+      arg1 = *temp;
+      if (SWIG_IsNewObj(res1)) delete temp;
+    }
+  }
+  {
+    res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_std__vectorT_double_std__allocatorT_double_t_t,  0  | 0);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Boost" "', argument " "2"" of type '" "GWFrames::ThreeVector""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Boost" "', argument " "2"" of type '" "GWFrames::ThreeVector""'");
+    } else {
+      GWFrames::ThreeVector * temp = reinterpret_cast< GWFrames::ThreeVector * >(argp2);
+      arg2 = *temp;
+      if (SWIG_IsNewObj(res2)) delete temp;
+    }
+  }
+  {
+    try {
+      result = GWFrames::Boost(arg1,arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj((new Quaternions::Quaternion(static_cast< const Quaternions::Quaternion& >(result))), SWIGTYPE_p_Quaternions__Quaternion, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN int _wrap_new_DataGrid__SWIG_0(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  int arg1 ;
+  int val1 ;
+  int ecode1 = 0 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::DataGrid *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:new_DataGrid",&obj1)) SWIG_fail;
+  ecode1 = SWIG_AsVal_int(obj1, &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_DataGrid" "', argument " "1"" of type '" "int""'");
+  } 
+  arg1 = static_cast< int >(val1);
+  {
+    try {
+      result = (GWFrames::DataGrid *)new GWFrames::DataGrid(arg1);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__DataGrid, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
+fail:
+  return -1;
+}
+
+
+SWIGINTERN int _wrap_new_DataGrid__SWIG_1(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::DataGrid *result = 0 ;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  {
+    try {
+      result = (GWFrames::DataGrid *)new GWFrames::DataGrid();;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__DataGrid, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
+fail:
+  return -1;
+}
+
+
+SWIGINTERN int _wrap_new_DataGrid__SWIG_2(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::DataGrid *arg1 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::DataGrid *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:new_DataGrid",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj1, &argp1, SWIGTYPE_p_GWFrames__DataGrid,  0  | 0);
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_DataGrid" "', argument " "1"" of type '" "GWFrames::DataGrid const &""'"); 
+  }
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_DataGrid" "', argument " "1"" of type '" "GWFrames::DataGrid const &""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::DataGrid * >(argp1);
+  {
+    try {
+      result = (GWFrames::DataGrid *)new GWFrames::DataGrid((GWFrames::DataGrid const &)*arg1);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__DataGrid, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
+fail:
+  return -1;
+}
+
+
+SWIGINTERN int _wrap_new_DataGrid__SWIG_3(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  int arg1 ;
+  int arg2 ;
+  int arg3 ;
+  std::vector< std::complex< double >,std::allocator< std::complex< double > > > *arg4 = 0 ;
+  int val1 ;
+  int ecode1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  int val3 ;
+  int ecode3 = 0 ;
+  std::vector< std_complex_double > temp4 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
+  GWFrames::DataGrid *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOO:new_DataGrid",&obj1,&obj2,&obj3,&obj4)) SWIG_fail;
+  ecode1 = SWIG_AsVal_int(obj1, &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_DataGrid" "', argument " "1"" of type '" "int""'");
+  } 
+  arg1 = static_cast< int >(val1);
+  ecode2 = SWIG_AsVal_int(obj2, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new_DataGrid" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  ecode3 = SWIG_AsVal_int(obj3, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "new_DataGrid" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = static_cast< int >(val3);
+  {
+    if(PyArray_Check(obj4)) {
+      PyArrayObject *xa = reinterpret_cast<PyArrayObject*>(obj4);
+      if(PyArray_TYPE(xa) != NPY_CDOUBLE) {
+        SWIG_exception(SWIG_TypeError, "(1) numpy array of 'complex' expected."	\
+          " Make sure that the numpy array use dtype=complex.");
+      }
+      const std::size_t size = PyArray_DIM(xa, 0);
+      temp4.resize(size);
+      std_complex_double* array = static_cast<std_complex_double*>(PyArray_DATA(xa));
+      if(PyArray_ISCONTIGUOUS(xa)) {
+        std::copy(array, array + size, temp4.begin());
+      } else {
+        const npy_intp strides = PyArray_STRIDE(xa, 0)/sizeof(std_complex_double);
+        for (std::size_t i = 0; i < size; i++)
+        temp4[i] = array[i*strides];
+      }
+    } else if(PySequence_Check(obj4)) {
+      Py_ssize_t size = PySequence_Size(obj4);
+      temp4.resize(size);
+      PyObject* item;
+      for(Py_ssize_t i=0; i<size; ++i) {
+        item = PySequence_GetItem(obj4, i);
+        if(!SWIG_IsOK(SWIG_AsVal_std_complex_double (item, &temp4[i]))) {
+          Py_DECREF(item);
+          SWIG_exception(SWIG_TypeError, "expected items of sequence to be of type "\
+            "\"std_complex_double\" in argument 4");
+        }
+        Py_DECREF(item);
+      }
+    } else {
+      SWIG_exception(SWIG_TypeError, "(2) numpy array of 'complex' expected. " \
+        "Make sure that the numpy array use dtype=complex.");
+    }
+    arg4 = &temp4;
+  }
+  {
+    try {
+      result = (GWFrames::DataGrid *)new GWFrames::DataGrid(arg1,arg2,arg3,(std::vector< std::complex< double >,std::allocator< std::complex< double > > > const &)*arg4);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__DataGrid, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
+fail:
+  return -1;
+}
+
+
+SWIGINTERN int _wrap_new_DataGrid__SWIG_4(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Modes arg1 ;
+  int arg2 ;
+  int arg3 ;
+  void *argp1 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  int val3 ;
+  int ecode3 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  GWFrames::DataGrid *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOO:new_DataGrid",&obj1,&obj2,&obj3)) SWIG_fail;
+  {
+    res1 = SWIG_ConvertPtr(obj1, &argp1, SWIGTYPE_p_GWFrames__Modes,  0  | 0);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_DataGrid" "', argument " "1"" of type '" "GWFrames::Modes""'"); 
+    }  
+    if (!argp1) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_DataGrid" "', argument " "1"" of type '" "GWFrames::Modes""'");
+    } else {
+      GWFrames::Modes * temp = reinterpret_cast< GWFrames::Modes * >(argp1);
+      arg1 = *temp;
+      if (SWIG_IsNewObj(res1)) delete temp;
+    }
+  }
+  ecode2 = SWIG_AsVal_int(obj2, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new_DataGrid" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  ecode3 = SWIG_AsVal_int(obj3, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "new_DataGrid" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = static_cast< int >(val3);
+  {
+    try {
+      result = (GWFrames::DataGrid *)new GWFrames::DataGrid(arg1,arg2,arg3);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__DataGrid, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
+fail:
+  return -1;
+}
+
+
+SWIGINTERN int _wrap_new_DataGrid__SWIG_5(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Modes arg1 ;
+  int arg2 ;
+  void *argp1 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  GWFrames::DataGrid *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:new_DataGrid",&obj1,&obj2)) SWIG_fail;
+  {
+    res1 = SWIG_ConvertPtr(obj1, &argp1, SWIGTYPE_p_GWFrames__Modes,  0  | 0);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_DataGrid" "', argument " "1"" of type '" "GWFrames::Modes""'"); 
+    }  
+    if (!argp1) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_DataGrid" "', argument " "1"" of type '" "GWFrames::Modes""'");
+    } else {
+      GWFrames::Modes * temp = reinterpret_cast< GWFrames::Modes * >(argp1);
+      arg1 = *temp;
+      if (SWIG_IsNewObj(res1)) delete temp;
+    }
+  }
+  ecode2 = SWIG_AsVal_int(obj2, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new_DataGrid" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  {
+    try {
+      result = (GWFrames::DataGrid *)new GWFrames::DataGrid(arg1,arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__DataGrid, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
+fail:
+  return -1;
+}
+
+
+SWIGINTERN int _wrap_new_DataGrid__SWIG_6(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Modes arg1 ;
+  void *argp1 ;
+  int res1 = 0 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::DataGrid *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:new_DataGrid",&obj1)) SWIG_fail;
+  {
+    res1 = SWIG_ConvertPtr(obj1, &argp1, SWIGTYPE_p_GWFrames__Modes,  0  | 0);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_DataGrid" "', argument " "1"" of type '" "GWFrames::Modes""'"); 
+    }  
+    if (!argp1) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_DataGrid" "', argument " "1"" of type '" "GWFrames::Modes""'");
+    } else {
+      GWFrames::Modes * temp = reinterpret_cast< GWFrames::Modes * >(argp1);
+      arg1 = *temp;
+      if (SWIG_IsNewObj(res1)) delete temp;
+    }
+  }
+  {
+    try {
+      result = (GWFrames::DataGrid *)new GWFrames::DataGrid(arg1);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__DataGrid, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
+fail:
+  return -1;
+}
+
+
+SWIGINTERN int _wrap_new_DataGrid__SWIG_7(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Modes *arg1 = 0 ;
+  GWFrames::ThreeVector *arg2 = 0 ;
+  int arg3 ;
+  int arg4 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::vector< double > temp2 ;
+  int val3 ;
+  int ecode3 = 0 ;
+  int val4 ;
+  int ecode4 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
+  GWFrames::DataGrid *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOO:new_DataGrid",&obj1,&obj2,&obj3,&obj4)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj1, &argp1, SWIGTYPE_p_GWFrames__Modes,  0  | 0);
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_DataGrid" "', argument " "1"" of type '" "GWFrames::Modes const &""'"); 
+  }
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_DataGrid" "', argument " "1"" of type '" "GWFrames::Modes const &""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Modes * >(argp1);
+  {
+    if(PyArray_Check(obj2)) {
+      PyArrayObject *xa = reinterpret_cast<PyArrayObject*>(obj2);
+      if(PyArray_TYPE(xa) != NPY_DOUBLE) {
+        SWIG_exception(SWIG_TypeError, "(1) numpy array of 'double' expected."	\
+          " Make sure that the numpy array use dtype=double.");
+      }
+      const std::size_t size = PyArray_DIM(xa, 0);
+      temp2.resize(size);
+      double* array = static_cast<double*>(PyArray_DATA(xa));
+      if(PyArray_ISCONTIGUOUS(xa)) {
+        std::copy(array, array + size, temp2.begin());
+      } else {
+        const npy_intp strides = PyArray_STRIDE(xa, 0)/sizeof(double);
+        for (std::size_t i = 0; i < size; i++)
+        temp2[i] = array[i*strides];
+      }
+    } else if(PySequence_Check(obj2)) {
+      Py_ssize_t size = PySequence_Size(obj2);
+      temp2.resize(size);
+      PyObject* item;
+      for(Py_ssize_t i=0; i<size; ++i) {
+        item = PySequence_GetItem(obj2, i);
+        if(!SWIG_IsOK(SWIG_AsVal_double (item, &temp2[i]))) {
+          Py_DECREF(item);
+          SWIG_exception(SWIG_TypeError, "expected items of sequence to be of type "\
+            "\"double\" in argument 2");
+        }
+        Py_DECREF(item);
+      }
+    } else {
+      SWIG_exception(SWIG_TypeError, "(2) numpy array of 'double' expected. " \
+        "Make sure that the numpy array use dtype=double.");
+    }
+    arg2 = &temp2;
+  }
+  ecode3 = SWIG_AsVal_int(obj3, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "new_DataGrid" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = static_cast< int >(val3);
+  ecode4 = SWIG_AsVal_int(obj4, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "new_DataGrid" "', argument " "4"" of type '" "int""'");
+  } 
+  arg4 = static_cast< int >(val4);
+  {
+    try {
+      result = (GWFrames::DataGrid *)new GWFrames::DataGrid((GWFrames::Modes const &)*arg1,(GWFrames::ThreeVector const &)*arg2,arg3,arg4);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__DataGrid, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
+fail:
+  return -1;
+}
+
+
+SWIGINTERN int _wrap_new_DataGrid__SWIG_8(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Modes *arg1 = 0 ;
+  GWFrames::ThreeVector *arg2 = 0 ;
+  int arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::vector< double > temp2 ;
+  int val3 ;
+  int ecode3 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  GWFrames::DataGrid *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOO:new_DataGrid",&obj1,&obj2,&obj3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj1, &argp1, SWIGTYPE_p_GWFrames__Modes,  0  | 0);
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_DataGrid" "', argument " "1"" of type '" "GWFrames::Modes const &""'"); 
+  }
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_DataGrid" "', argument " "1"" of type '" "GWFrames::Modes const &""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Modes * >(argp1);
+  {
+    if(PyArray_Check(obj2)) {
+      PyArrayObject *xa = reinterpret_cast<PyArrayObject*>(obj2);
+      if(PyArray_TYPE(xa) != NPY_DOUBLE) {
+        SWIG_exception(SWIG_TypeError, "(1) numpy array of 'double' expected."	\
+          " Make sure that the numpy array use dtype=double.");
+      }
+      const std::size_t size = PyArray_DIM(xa, 0);
+      temp2.resize(size);
+      double* array = static_cast<double*>(PyArray_DATA(xa));
+      if(PyArray_ISCONTIGUOUS(xa)) {
+        std::copy(array, array + size, temp2.begin());
+      } else {
+        const npy_intp strides = PyArray_STRIDE(xa, 0)/sizeof(double);
+        for (std::size_t i = 0; i < size; i++)
+        temp2[i] = array[i*strides];
+      }
+    } else if(PySequence_Check(obj2)) {
+      Py_ssize_t size = PySequence_Size(obj2);
+      temp2.resize(size);
+      PyObject* item;
+      for(Py_ssize_t i=0; i<size; ++i) {
+        item = PySequence_GetItem(obj2, i);
+        if(!SWIG_IsOK(SWIG_AsVal_double (item, &temp2[i]))) {
+          Py_DECREF(item);
+          SWIG_exception(SWIG_TypeError, "expected items of sequence to be of type "\
+            "\"double\" in argument 2");
+        }
+        Py_DECREF(item);
+      }
+    } else {
+      SWIG_exception(SWIG_TypeError, "(2) numpy array of 'double' expected. " \
+        "Make sure that the numpy array use dtype=double.");
+    }
+    arg2 = &temp2;
+  }
+  ecode3 = SWIG_AsVal_int(obj3, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "new_DataGrid" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = static_cast< int >(val3);
+  {
+    try {
+      result = (GWFrames::DataGrid *)new GWFrames::DataGrid((GWFrames::Modes const &)*arg1,(GWFrames::ThreeVector const &)*arg2,arg3);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__DataGrid, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
+fail:
+  return -1;
+}
+
+
+SWIGINTERN int _wrap_new_DataGrid__SWIG_9(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Modes *arg1 = 0 ;
+  GWFrames::ThreeVector *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::vector< double > temp2 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  GWFrames::DataGrid *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:new_DataGrid",&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj1, &argp1, SWIGTYPE_p_GWFrames__Modes,  0  | 0);
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_DataGrid" "', argument " "1"" of type '" "GWFrames::Modes const &""'"); 
+  }
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_DataGrid" "', argument " "1"" of type '" "GWFrames::Modes const &""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Modes * >(argp1);
+  {
+    if(PyArray_Check(obj2)) {
+      PyArrayObject *xa = reinterpret_cast<PyArrayObject*>(obj2);
+      if(PyArray_TYPE(xa) != NPY_DOUBLE) {
+        SWIG_exception(SWIG_TypeError, "(1) numpy array of 'double' expected."	\
+          " Make sure that the numpy array use dtype=double.");
+      }
+      const std::size_t size = PyArray_DIM(xa, 0);
+      temp2.resize(size);
+      double* array = static_cast<double*>(PyArray_DATA(xa));
+      if(PyArray_ISCONTIGUOUS(xa)) {
+        std::copy(array, array + size, temp2.begin());
+      } else {
+        const npy_intp strides = PyArray_STRIDE(xa, 0)/sizeof(double);
+        for (std::size_t i = 0; i < size; i++)
+        temp2[i] = array[i*strides];
+      }
+    } else if(PySequence_Check(obj2)) {
+      Py_ssize_t size = PySequence_Size(obj2);
+      temp2.resize(size);
+      PyObject* item;
+      for(Py_ssize_t i=0; i<size; ++i) {
+        item = PySequence_GetItem(obj2, i);
+        if(!SWIG_IsOK(SWIG_AsVal_double (item, &temp2[i]))) {
+          Py_DECREF(item);
+          SWIG_exception(SWIG_TypeError, "expected items of sequence to be of type "\
+            "\"double\" in argument 2");
+        }
+        Py_DECREF(item);
+      }
+    } else {
+      SWIG_exception(SWIG_TypeError, "(2) numpy array of 'double' expected. " \
+        "Make sure that the numpy array use dtype=double.");
+    }
+    arg2 = &temp2;
+  }
+  {
+    try {
+      result = (GWFrames::DataGrid *)new GWFrames::DataGrid((GWFrames::Modes const &)*arg1,(GWFrames::ThreeVector const &)*arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__DataGrid, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
+fail:
+  return -1;
+}
+
+
+SWIGINTERN int _wrap_new_DataGrid__SWIG_10(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  int arg1 ;
+  int arg2 ;
+  int arg3 ;
+  GWFrames::ThreeVector *arg4 = 0 ;
+  GWFrames::ScriFunctor *arg5 = 0 ;
+  int val1 ;
+  int ecode1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  int val3 ;
+  int ecode3 = 0 ;
+  std::vector< double > temp4 ;
+  void *argp5 = 0 ;
+  int res5 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
+  PyObject * obj5 = 0 ;
+  GWFrames::DataGrid *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOOO:new_DataGrid",&obj1,&obj2,&obj3,&obj4,&obj5)) SWIG_fail;
+  ecode1 = SWIG_AsVal_int(obj1, &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_DataGrid" "', argument " "1"" of type '" "int""'");
+  } 
+  arg1 = static_cast< int >(val1);
+  ecode2 = SWIG_AsVal_int(obj2, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new_DataGrid" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  ecode3 = SWIG_AsVal_int(obj3, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "new_DataGrid" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = static_cast< int >(val3);
+  {
+    if(PyArray_Check(obj4)) {
+      PyArrayObject *xa = reinterpret_cast<PyArrayObject*>(obj4);
+      if(PyArray_TYPE(xa) != NPY_DOUBLE) {
+        SWIG_exception(SWIG_TypeError, "(1) numpy array of 'double' expected."	\
+          " Make sure that the numpy array use dtype=double.");
+      }
+      const std::size_t size = PyArray_DIM(xa, 0);
+      temp4.resize(size);
+      double* array = static_cast<double*>(PyArray_DATA(xa));
+      if(PyArray_ISCONTIGUOUS(xa)) {
+        std::copy(array, array + size, temp4.begin());
+      } else {
+        const npy_intp strides = PyArray_STRIDE(xa, 0)/sizeof(double);
+        for (std::size_t i = 0; i < size; i++)
+        temp4[i] = array[i*strides];
+      }
+    } else if(PySequence_Check(obj4)) {
+      Py_ssize_t size = PySequence_Size(obj4);
+      temp4.resize(size);
+      PyObject* item;
+      for(Py_ssize_t i=0; i<size; ++i) {
+        item = PySequence_GetItem(obj4, i);
+        if(!SWIG_IsOK(SWIG_AsVal_double (item, &temp4[i]))) {
+          Py_DECREF(item);
+          SWIG_exception(SWIG_TypeError, "expected items of sequence to be of type "\
+            "\"double\" in argument 4");
+        }
+        Py_DECREF(item);
+      }
+    } else {
+      SWIG_exception(SWIG_TypeError, "(2) numpy array of 'double' expected. " \
+        "Make sure that the numpy array use dtype=double.");
+    }
+    arg4 = &temp4;
+  }
+  res5 = SWIG_ConvertPtr(obj5, &argp5, SWIGTYPE_p_GWFrames__ScriFunctor,  0  | 0);
+  if (!SWIG_IsOK(res5)) {
+    SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "new_DataGrid" "', argument " "5"" of type '" "GWFrames::ScriFunctor const &""'"); 
+  }
+  if (!argp5) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_DataGrid" "', argument " "5"" of type '" "GWFrames::ScriFunctor const &""'"); 
+  }
+  arg5 = reinterpret_cast< GWFrames::ScriFunctor * >(argp5);
+  {
+    try {
+      result = (GWFrames::DataGrid *)new GWFrames::DataGrid(arg1,arg2,arg3,(GWFrames::ThreeVector const &)*arg4,(GWFrames::ScriFunctor const &)*arg5);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__DataGrid, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
+fail:
+  return -1;
+}
+
+
+SWIGINTERN int _wrap_new_DataGrid(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[6];
+  int ii;
+  
+  if (!PyTuple_Check(args)) SWIG_fail;
+  argc = args ? (int)PyObject_Length(args) : 0;
+  for (ii = 0; (ii < 5) && (ii < argc); ii++) {
+    argv[ii] = PyTuple_GET_ITEM(args,ii);
+  }
+  if (argc == 0) {
+    return _wrap_new_DataGrid__SWIG_1(self, args);
+  }
+  if (argc == 1) {
+    int _v;
+    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_GWFrames__DataGrid, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_new_DataGrid__SWIG_2(self, args);
+    }
+  }
+  if (argc == 1) {
+    int _v;
+    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_GWFrames__Modes, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_new_DataGrid__SWIG_6(self, args);
+    }
+  }
+  if (argc == 1) {
+    int _v;
+    {
+      int res = SWIG_AsVal_int(argv[0], NULL);
+      _v = SWIG_CheckState(res);
+    }
+    if (_v) {
+      return _wrap_new_DataGrid__SWIG_0(self, args);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_GWFrames__Modes, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_int(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap_new_DataGrid__SWIG_5(self, args);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_GWFrames__Modes, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        _v = false;
+        if(PyArray_Check(argv[1])) {
+          _v = (PyArray_NDIM(reinterpret_cast<const PyArrayObject*>(argv[1]))==1);
+        } else if(PyList_Check(argv[1])) {
+          if(PyList_Size(argv[1])==0) {
+            _v = true;
+          } else {
+            PyObject* item = PySequence_GetItem(argv[1], 0);
+            double* temp=0;
+            _v = SWIG_IsOK(SWIG_AsVal_double (item, temp));
+          }
+        }
+      }
+      if (_v) {
+        return _wrap_new_DataGrid__SWIG_9(self, args);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_GWFrames__Modes, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_int(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        {
+          int res = SWIG_AsVal_int(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          return _wrap_new_DataGrid__SWIG_4(self, args);
+        }
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_GWFrames__Modes, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        _v = false;
+        if(PyArray_Check(argv[1])) {
+          _v = (PyArray_NDIM(reinterpret_cast<const PyArrayObject*>(argv[1]))==1);
+        } else if(PyList_Check(argv[1])) {
+          if(PyList_Size(argv[1])==0) {
+            _v = true;
+          } else {
+            PyObject* item = PySequence_GetItem(argv[1], 0);
+            double* temp=0;
+            _v = SWIG_IsOK(SWIG_AsVal_double (item, temp));
+          }
+        }
+      }
+      if (_v) {
+        {
+          int res = SWIG_AsVal_int(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          return _wrap_new_DataGrid__SWIG_8(self, args);
+        }
+      }
+    }
+  }
+  if (argc == 4) {
+    int _v;
+    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_GWFrames__Modes, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        _v = false;
+        if(PyArray_Check(argv[1])) {
+          _v = (PyArray_NDIM(reinterpret_cast<const PyArrayObject*>(argv[1]))==1);
+        } else if(PyList_Check(argv[1])) {
+          if(PyList_Size(argv[1])==0) {
+            _v = true;
+          } else {
+            PyObject* item = PySequence_GetItem(argv[1], 0);
+            double* temp=0;
+            _v = SWIG_IsOK(SWIG_AsVal_double (item, temp));
+          }
+        }
+      }
+      if (_v) {
+        {
+          int res = SWIG_AsVal_int(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          {
+            int res = SWIG_AsVal_int(argv[3], NULL);
+            _v = SWIG_CheckState(res);
+          }
+          if (_v) {
+            return _wrap_new_DataGrid__SWIG_7(self, args);
+          }
+        }
+      }
+    }
+  }
+  if (argc == 4) {
+    int _v;
+    {
+      int res = SWIG_AsVal_int(argv[0], NULL);
+      _v = SWIG_CheckState(res);
+    }
+    if (_v) {
+      {
+        int res = SWIG_AsVal_int(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        {
+          int res = SWIG_AsVal_int(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          {
+            _v = false;
+            if(PyArray_Check(argv[3])) {
+              _v = (PyArray_NDIM(reinterpret_cast<const PyArrayObject*>(argv[3]))==1);
+            } else if(PyList_Check(argv[3])) {
+              if(PyList_Size(argv[3])==0) {
+                _v = true;
+              } else {
+                PyObject* item = PySequence_GetItem(argv[3], 0);
+                std_complex_double* temp=0;
+                _v = SWIG_IsOK(SWIG_AsVal_std_complex_double (item, temp));
+              }
+            }
+          }
+          if (_v) {
+            return _wrap_new_DataGrid__SWIG_3(self, args);
+          }
+        }
+      }
+    }
+  }
+  if (argc == 5) {
+    int _v;
+    {
+      int res = SWIG_AsVal_int(argv[0], NULL);
+      _v = SWIG_CheckState(res);
+    }
+    if (_v) {
+      {
+        int res = SWIG_AsVal_int(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        {
+          int res = SWIG_AsVal_int(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          {
+            _v = false;
+            if(PyArray_Check(argv[3])) {
+              _v = (PyArray_NDIM(reinterpret_cast<const PyArrayObject*>(argv[3]))==1);
+            } else if(PyList_Check(argv[3])) {
+              if(PyList_Size(argv[3])==0) {
+                _v = true;
+              } else {
+                PyObject* item = PySequence_GetItem(argv[3], 0);
+                double* temp=0;
+                _v = SWIG_IsOK(SWIG_AsVal_double (item, temp));
+              }
+            }
+          }
+          if (_v) {
+            int res = SWIG_ConvertPtr(argv[4], 0, SWIGTYPE_p_GWFrames__ScriFunctor, 0);
+            _v = SWIG_CheckState(res);
+            if (_v) {
+              return _wrap_new_DataGrid__SWIG_10(self, args);
+            }
+          }
+        }
+      }
+    }
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'new_DataGrid'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    GWFrames::DataGrid::DataGrid(int const)\n"
+    "    GWFrames::DataGrid::DataGrid()\n"
+    "    GWFrames::DataGrid::DataGrid(GWFrames::DataGrid const &)\n"
+    "    GWFrames::DataGrid::DataGrid(int const,int const,int const,std::vector< std::complex< double >,std::allocator< std::complex< double > > > const &)\n"
+    "    GWFrames::DataGrid::DataGrid(GWFrames::Modes,int const,int const)\n"
+    "    GWFrames::DataGrid::DataGrid(GWFrames::Modes,int const)\n"
+    "    GWFrames::DataGrid::DataGrid(GWFrames::Modes)\n"
+    "    GWFrames::DataGrid::DataGrid(GWFrames::Modes const &,GWFrames::ThreeVector const &,int const,int const)\n"
+    "    GWFrames::DataGrid::DataGrid(GWFrames::Modes const &,GWFrames::ThreeVector const &,int const)\n"
+    "    GWFrames::DataGrid::DataGrid(GWFrames::Modes const &,GWFrames::ThreeVector const &)\n"
+    "    GWFrames::DataGrid::DataGrid(int const,int const,int const,GWFrames::ThreeVector const &,GWFrames::ScriFunctor const &)\n");
+  return -1;
+}
+
+
+SWIGINTERN PyObject *_wrap_DataGrid_SetSpin(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::DataGrid *arg1 = (GWFrames::DataGrid *) 0 ;
+  int arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::DataGrid *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:DataGrid_SetSpin",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__DataGrid, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "DataGrid_SetSpin" "', argument " "1"" of type '" "GWFrames::DataGrid *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::DataGrid * >(argp1);
+  ecode2 = SWIG_AsVal_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "DataGrid_SetSpin" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  {
+    try {
+      result = (GWFrames::DataGrid *) &(arg1)->SetSpin(arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__DataGrid, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_DataGrid_SetNTheta(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::DataGrid *arg1 = (GWFrames::DataGrid *) 0 ;
+  int arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::DataGrid *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:DataGrid_SetNTheta",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__DataGrid, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "DataGrid_SetNTheta" "', argument " "1"" of type '" "GWFrames::DataGrid *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::DataGrid * >(argp1);
+  ecode2 = SWIG_AsVal_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "DataGrid_SetNTheta" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  {
+    try {
+      result = (GWFrames::DataGrid *) &(arg1)->SetNTheta(arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__DataGrid, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_DataGrid_SetNPhi(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::DataGrid *arg1 = (GWFrames::DataGrid *) 0 ;
+  int arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::DataGrid *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:DataGrid_SetNPhi",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__DataGrid, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "DataGrid_SetNPhi" "', argument " "1"" of type '" "GWFrames::DataGrid *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::DataGrid * >(argp1);
+  ecode2 = SWIG_AsVal_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "DataGrid_SetNPhi" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  {
+    try {
+      result = (GWFrames::DataGrid *) &(arg1)->SetNPhi(arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__DataGrid, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_DataGrid_size(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::DataGrid *arg1 = (GWFrames::DataGrid *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  unsigned int result;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__DataGrid, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "DataGrid_size" "', argument " "1"" of type '" "GWFrames::DataGrid const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::DataGrid * >(argp1);
+  {
+    try {
+      result = (unsigned int)((GWFrames::DataGrid const *)arg1)->size();;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_From_unsigned_SS_int(static_cast< unsigned int >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_DataGrid_Spin(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::DataGrid *arg1 = (GWFrames::DataGrid *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int result;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__DataGrid, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "DataGrid_Spin" "', argument " "1"" of type '" "GWFrames::DataGrid const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::DataGrid * >(argp1);
+  {
+    try {
+      result = (int)((GWFrames::DataGrid const *)arg1)->Spin();;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_From_int(static_cast< int >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_DataGrid_N_theta(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::DataGrid *arg1 = (GWFrames::DataGrid *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int result;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__DataGrid, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "DataGrid_N_theta" "', argument " "1"" of type '" "GWFrames::DataGrid const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::DataGrid * >(argp1);
+  {
+    try {
+      result = (int)((GWFrames::DataGrid const *)arg1)->N_theta();;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_From_int(static_cast< int >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_DataGrid_N_phi(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::DataGrid *arg1 = (GWFrames::DataGrid *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int result;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__DataGrid, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "DataGrid_N_phi" "', argument " "1"" of type '" "GWFrames::DataGrid const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::DataGrid * >(argp1);
+  {
+    try {
+      result = (int)((GWFrames::DataGrid const *)arg1)->N_phi();;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_From_int(static_cast< int >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_DataGrid___getitem____SWIG_0(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::DataGrid *arg1 = (GWFrames::DataGrid *) 0 ;
+  unsigned int arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  unsigned int val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj1 = 0 ;
+  std::complex< double > *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:DataGrid___getitem__",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__DataGrid, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "DataGrid___getitem__" "', argument " "1"" of type '" "GWFrames::DataGrid const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::DataGrid * >(argp1);
+  ecode2 = SWIG_AsVal_unsigned_SS_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "DataGrid___getitem__" "', argument " "2"" of type '" "unsigned int""'");
+  } 
+  arg2 = static_cast< unsigned int >(val2);
+  {
+    try {
+      result = (std::complex< double > *) &((GWFrames::DataGrid const *)arg1)->operator [](arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_From_std_complex_Sl_double_Sg_(static_cast< std::complex<double> >(*result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_DataGrid___setitem____SWIG_0(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::DataGrid *arg1 = (GWFrames::DataGrid *) 0 ;
+  unsigned int arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  unsigned int val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj1 = 0 ;
+  std::complex< double > *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:DataGrid___setitem__",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__DataGrid, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "DataGrid___setitem__" "', argument " "1"" of type '" "GWFrames::DataGrid *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::DataGrid * >(argp1);
+  ecode2 = SWIG_AsVal_unsigned_SS_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "DataGrid___setitem__" "', argument " "2"" of type '" "unsigned int""'");
+  } 
+  arg2 = static_cast< unsigned int >(val2);
+  {
+    try {
+      result = (std::complex< double > *) &(arg1)->operator [](arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_std__complexT_double_t, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_DataGrid_Data(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::DataGrid *arg1 = (GWFrames::DataGrid *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  SwigValueWrapper< std::vector< std::complex< double >,std::allocator< std::complex< double > > > > result;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__DataGrid, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "DataGrid_Data" "', argument " "1"" of type '" "GWFrames::DataGrid const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::DataGrid * >(argp1);
+  {
+    try {
+      result = ((GWFrames::DataGrid const *)arg1)->Data();;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  {
+    // RANDOMSTRING1
+    npy_intp adims = (&result)->size();
+    resultobj = PyArray_SimpleNew(1, &adims, NPY_CDOUBLE);
+    std_complex_double* data = static_cast<std_complex_double*>(PyArray_DATA(reinterpret_cast<PyArrayObject*>(resultobj)));
+    std::copy((&result)->begin(), (&result)->end(), data);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_DataGrid___mul__(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::DataGrid *arg1 = (GWFrames::DataGrid *) 0 ;
+  GWFrames::DataGrid *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::DataGrid result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:DataGrid___mul__",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__DataGrid, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "DataGrid___mul__" "', argument " "1"" of type '" "GWFrames::DataGrid const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::DataGrid * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_GWFrames__DataGrid,  0  | 0);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "DataGrid___mul__" "', argument " "2"" of type '" "GWFrames::DataGrid const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "DataGrid___mul__" "', argument " "2"" of type '" "GWFrames::DataGrid const &""'"); 
+  }
+  arg2 = reinterpret_cast< GWFrames::DataGrid * >(argp2);
+  {
+    try {
+      result = ((GWFrames::DataGrid const *)arg1)->operator *((GWFrames::DataGrid const &)*arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj((new GWFrames::DataGrid(static_cast< const GWFrames::DataGrid& >(result))), SWIGTYPE_p_GWFrames__DataGrid, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGPY_BINARYFUNC_CLOSURE(_wrap_DataGrid___mul__)
+
+SWIGINTERN PyObject *_wrap_DataGrid___div__(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::DataGrid *arg1 = (GWFrames::DataGrid *) 0 ;
+  GWFrames::DataGrid *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::DataGrid result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:DataGrid___div__",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__DataGrid, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "DataGrid___div__" "', argument " "1"" of type '" "GWFrames::DataGrid const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::DataGrid * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_GWFrames__DataGrid,  0  | 0);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "DataGrid___div__" "', argument " "2"" of type '" "GWFrames::DataGrid const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "DataGrid___div__" "', argument " "2"" of type '" "GWFrames::DataGrid const &""'"); 
+  }
+  arg2 = reinterpret_cast< GWFrames::DataGrid * >(argp2);
+  {
+    try {
+      result = ((GWFrames::DataGrid const *)arg1)->operator /((GWFrames::DataGrid const &)*arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj((new GWFrames::DataGrid(static_cast< const GWFrames::DataGrid& >(result))), SWIGTYPE_p_GWFrames__DataGrid, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGPY_BINARYFUNC_CLOSURE(_wrap_DataGrid___div__)
+
+SWIGINTERN PyObject *_wrap_DataGrid___add__(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::DataGrid *arg1 = (GWFrames::DataGrid *) 0 ;
+  GWFrames::DataGrid *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::DataGrid result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:DataGrid___add__",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__DataGrid, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "DataGrid___add__" "', argument " "1"" of type '" "GWFrames::DataGrid const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::DataGrid * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_GWFrames__DataGrid,  0  | 0);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "DataGrid___add__" "', argument " "2"" of type '" "GWFrames::DataGrid const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "DataGrid___add__" "', argument " "2"" of type '" "GWFrames::DataGrid const &""'"); 
+  }
+  arg2 = reinterpret_cast< GWFrames::DataGrid * >(argp2);
+  {
+    try {
+      result = ((GWFrames::DataGrid const *)arg1)->operator +((GWFrames::DataGrid const &)*arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj((new GWFrames::DataGrid(static_cast< const GWFrames::DataGrid& >(result))), SWIGTYPE_p_GWFrames__DataGrid, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGPY_BINARYFUNC_CLOSURE(_wrap_DataGrid___add__)
+
+SWIGINTERN PyObject *_wrap_DataGrid___sub__(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::DataGrid *arg1 = (GWFrames::DataGrid *) 0 ;
+  GWFrames::DataGrid *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::DataGrid result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:DataGrid___sub__",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__DataGrid, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "DataGrid___sub__" "', argument " "1"" of type '" "GWFrames::DataGrid const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::DataGrid * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_GWFrames__DataGrid,  0  | 0);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "DataGrid___sub__" "', argument " "2"" of type '" "GWFrames::DataGrid const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "DataGrid___sub__" "', argument " "2"" of type '" "GWFrames::DataGrid const &""'"); 
+  }
+  arg2 = reinterpret_cast< GWFrames::DataGrid * >(argp2);
+  {
+    try {
+      result = ((GWFrames::DataGrid const *)arg1)->operator -((GWFrames::DataGrid const &)*arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj((new GWFrames::DataGrid(static_cast< const GWFrames::DataGrid& >(result))), SWIGTYPE_p_GWFrames__DataGrid, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGPY_BINARYFUNC_CLOSURE(_wrap_DataGrid___sub__)
+
+SWIGINTERN PyObject *_wrap_DataGrid_pow(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::DataGrid *arg1 = (GWFrames::DataGrid *) 0 ;
+  int arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::DataGrid result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:DataGrid_pow",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__DataGrid, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "DataGrid_pow" "', argument " "1"" of type '" "GWFrames::DataGrid const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::DataGrid * >(argp1);
+  ecode2 = SWIG_AsVal_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "DataGrid_pow" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  {
+    try {
+      result = ((GWFrames::DataGrid const *)arg1)->pow(arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj((new GWFrames::DataGrid(static_cast< const GWFrames::DataGrid& >(result))), SWIGTYPE_p_GWFrames__DataGrid, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_DataGrid___getitem____SWIG_1(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::DataGrid *arg1 = (GWFrames::DataGrid *) 0 ;
+  unsigned int arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  unsigned int val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj1 = 0 ;
+  std::complex< double > result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:DataGrid___getitem__",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__DataGrid, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "DataGrid___getitem__" "', argument " "1"" of type '" "GWFrames::DataGrid const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::DataGrid * >(argp1);
+  ecode2 = SWIG_AsVal_unsigned_SS_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "DataGrid___getitem__" "', argument " "2"" of type '" "unsigned int""'");
+  } 
+  arg2 = static_cast< unsigned int >(val2);
+  {
+    try {
+      result = GWFrames_DataGrid___getitem____SWIG_1((GWFrames::DataGrid const *)arg1,arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_From_std_complex_Sl_double_Sg_(static_cast< std::complex<double> >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_DataGrid___getitem__(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[3];
+  int ii;
+  
+  if (!PyTuple_Check(args)) SWIG_fail;
+  argc = args ? (int)PyObject_Length(args) : 0;
+  argv[0] = self;
+  for (ii = 0; (ii < 1) && (ii < argc); ii++) {
+    argv[ii + 1] = PyTuple_GET_ITEM(args,ii);
+  }
+  argc++;
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__DataGrid, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_unsigned_SS_int(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap_DataGrid___getitem____SWIG_0(self, args);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__DataGrid, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_unsigned_SS_int(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap_DataGrid___getitem____SWIG_1(self, args);
+      }
+    }
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'DataGrid___getitem__'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    GWFrames::DataGrid::operator [](unsigned int const) const\n"
+    "    GWFrames::DataGrid::__getitem__(unsigned int const) const\n");
+  return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap_DataGrid___setitem____SWIG_1(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::DataGrid *arg1 = (GWFrames::DataGrid *) 0 ;
+  unsigned int arg2 ;
+  std::complex< double > *arg3 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  unsigned int val2 ;
+  int ecode2 = 0 ;
+  std::complex< double > temp3 ;
+  std::complex< double > val3 ;
+  int ecode3 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:DataGrid___setitem__",&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__DataGrid, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "DataGrid___setitem__" "', argument " "1"" of type '" "GWFrames::DataGrid *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::DataGrid * >(argp1);
+  ecode2 = SWIG_AsVal_unsigned_SS_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "DataGrid___setitem__" "', argument " "2"" of type '" "unsigned int""'");
+  } 
+  arg2 = static_cast< unsigned int >(val2);
+  ecode3 = SWIG_AsVal_std_complex_Sl_double_Sg_(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "DataGrid___setitem__" "', argument " "3"" of type '" "std::complex< double >""'");
+  } 
+  temp3 = static_cast< std::complex< double > >(val3);
+  arg3 = &temp3;
+  {
+    try {
+      GWFrames_DataGrid___setitem____SWIG_1(arg1,arg2,(std::complex< double > const &)*arg3);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_DataGrid___setitem__(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[4];
+  int ii;
+  
+  if (!PyTuple_Check(args)) SWIG_fail;
+  argc = args ? (int)PyObject_Length(args) : 0;
+  argv[0] = self;
+  for (ii = 0; (ii < 2) && (ii < argc); ii++) {
+    argv[ii + 1] = PyTuple_GET_ITEM(args,ii);
+  }
+  argc++;
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__DataGrid, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_unsigned_SS_int(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap_DataGrid___setitem____SWIG_0(self, args);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__DataGrid, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_unsigned_SS_int(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        {
+          int res = SWIG_AsVal_std_complex_Sl_double_Sg_(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          return _wrap_DataGrid___setitem____SWIG_1(self, args);
+        }
+      }
+    }
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'DataGrid___setitem__'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    GWFrames::DataGrid::operator [](unsigned int const)\n"
+    "    GWFrames::DataGrid::__setitem__(unsigned int const,std::complex< double > const &)\n");
+  return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_DataGrid(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::DataGrid *arg1 = (GWFrames::DataGrid *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__DataGrid, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_DataGrid" "', argument " "1"" of type '" "GWFrames::DataGrid *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::DataGrid * >(argp1);
+  {
+    try {
+      delete arg1;;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ConformalFactorGrid(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::ThreeVector *arg1 = 0 ;
+  int arg2 ;
+  int arg3 ;
+  std::vector< double > temp1 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  int val3 ;
+  int ecode3 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  GWFrames::DataGrid result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOO:ConformalFactorGrid",&obj0,&obj1,&obj2)) SWIG_fail;
+  {
+    if(PyArray_Check(obj0)) {
+      PyArrayObject *xa = reinterpret_cast<PyArrayObject*>(obj0);
+      if(PyArray_TYPE(xa) != NPY_DOUBLE) {
+        SWIG_exception(SWIG_TypeError, "(1) numpy array of 'double' expected."	\
+          " Make sure that the numpy array use dtype=double.");
+      }
+      const std::size_t size = PyArray_DIM(xa, 0);
+      temp1.resize(size);
+      double* array = static_cast<double*>(PyArray_DATA(xa));
+      if(PyArray_ISCONTIGUOUS(xa)) {
+        std::copy(array, array + size, temp1.begin());
+      } else {
+        const npy_intp strides = PyArray_STRIDE(xa, 0)/sizeof(double);
+        for (std::size_t i = 0; i < size; i++)
+        temp1[i] = array[i*strides];
+      }
+    } else if(PySequence_Check(obj0)) {
+      Py_ssize_t size = PySequence_Size(obj0);
+      temp1.resize(size);
+      PyObject* item;
+      for(Py_ssize_t i=0; i<size; ++i) {
+        item = PySequence_GetItem(obj0, i);
+        if(!SWIG_IsOK(SWIG_AsVal_double (item, &temp1[i]))) {
+          Py_DECREF(item);
+          SWIG_exception(SWIG_TypeError, "expected items of sequence to be of type "\
+            "\"double\" in argument 1");
+        }
+        Py_DECREF(item);
+      }
+    } else {
+      SWIG_exception(SWIG_TypeError, "(2) numpy array of 'double' expected. " \
+        "Make sure that the numpy array use dtype=double.");
+    }
+    arg1 = &temp1;
+  }
+  ecode2 = SWIG_AsVal_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "ConformalFactorGrid" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  ecode3 = SWIG_AsVal_int(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "ConformalFactorGrid" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = static_cast< int >(val3);
+  {
+    try {
+      result = GWFrames::ConformalFactorGrid((std::vector< double,std::allocator< double > > const &)*arg1,arg2,arg3);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj((new GWFrames::DataGrid(static_cast< const GWFrames::DataGrid& >(result))), SWIGTYPE_p_GWFrames__DataGrid, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_InverseConformalFactorGrid(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::ThreeVector *arg1 = 0 ;
+  int arg2 ;
+  int arg3 ;
+  std::vector< double > temp1 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  int val3 ;
+  int ecode3 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  GWFrames::DataGrid result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOO:InverseConformalFactorGrid",&obj0,&obj1,&obj2)) SWIG_fail;
+  {
+    if(PyArray_Check(obj0)) {
+      PyArrayObject *xa = reinterpret_cast<PyArrayObject*>(obj0);
+      if(PyArray_TYPE(xa) != NPY_DOUBLE) {
+        SWIG_exception(SWIG_TypeError, "(1) numpy array of 'double' expected."	\
+          " Make sure that the numpy array use dtype=double.");
+      }
+      const std::size_t size = PyArray_DIM(xa, 0);
+      temp1.resize(size);
+      double* array = static_cast<double*>(PyArray_DATA(xa));
+      if(PyArray_ISCONTIGUOUS(xa)) {
+        std::copy(array, array + size, temp1.begin());
+      } else {
+        const npy_intp strides = PyArray_STRIDE(xa, 0)/sizeof(double);
+        for (std::size_t i = 0; i < size; i++)
+        temp1[i] = array[i*strides];
+      }
+    } else if(PySequence_Check(obj0)) {
+      Py_ssize_t size = PySequence_Size(obj0);
+      temp1.resize(size);
+      PyObject* item;
+      for(Py_ssize_t i=0; i<size; ++i) {
+        item = PySequence_GetItem(obj0, i);
+        if(!SWIG_IsOK(SWIG_AsVal_double (item, &temp1[i]))) {
+          Py_DECREF(item);
+          SWIG_exception(SWIG_TypeError, "expected items of sequence to be of type "\
+            "\"double\" in argument 1");
+        }
+        Py_DECREF(item);
+      }
+    } else {
+      SWIG_exception(SWIG_TypeError, "(2) numpy array of 'double' expected. " \
+        "Make sure that the numpy array use dtype=double.");
+    }
+    arg1 = &temp1;
+  }
+  ecode2 = SWIG_AsVal_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "InverseConformalFactorGrid" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  ecode3 = SWIG_AsVal_int(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "InverseConformalFactorGrid" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = static_cast< int >(val3);
+  {
+    try {
+      result = GWFrames::InverseConformalFactorGrid((std::vector< double,std::allocator< double > > const &)*arg1,arg2,arg3);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj((new GWFrames::DataGrid(static_cast< const GWFrames::DataGrid& >(result))), SWIGTYPE_p_GWFrames__DataGrid, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_InverseConformalFactorBoostedGrid(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::ThreeVector *arg1 = 0 ;
+  int arg2 ;
+  int arg3 ;
+  std::vector< double > temp1 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  int val3 ;
+  int ecode3 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  GWFrames::DataGrid result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOO:InverseConformalFactorBoostedGrid",&obj0,&obj1,&obj2)) SWIG_fail;
+  {
+    if(PyArray_Check(obj0)) {
+      PyArrayObject *xa = reinterpret_cast<PyArrayObject*>(obj0);
+      if(PyArray_TYPE(xa) != NPY_DOUBLE) {
+        SWIG_exception(SWIG_TypeError, "(1) numpy array of 'double' expected."	\
+          " Make sure that the numpy array use dtype=double.");
+      }
+      const std::size_t size = PyArray_DIM(xa, 0);
+      temp1.resize(size);
+      double* array = static_cast<double*>(PyArray_DATA(xa));
+      if(PyArray_ISCONTIGUOUS(xa)) {
+        std::copy(array, array + size, temp1.begin());
+      } else {
+        const npy_intp strides = PyArray_STRIDE(xa, 0)/sizeof(double);
+        for (std::size_t i = 0; i < size; i++)
+        temp1[i] = array[i*strides];
+      }
+    } else if(PySequence_Check(obj0)) {
+      Py_ssize_t size = PySequence_Size(obj0);
+      temp1.resize(size);
+      PyObject* item;
+      for(Py_ssize_t i=0; i<size; ++i) {
+        item = PySequence_GetItem(obj0, i);
+        if(!SWIG_IsOK(SWIG_AsVal_double (item, &temp1[i]))) {
+          Py_DECREF(item);
+          SWIG_exception(SWIG_TypeError, "expected items of sequence to be of type "\
+            "\"double\" in argument 1");
+        }
+        Py_DECREF(item);
+      }
+    } else {
+      SWIG_exception(SWIG_TypeError, "(2) numpy array of 'double' expected. " \
+        "Make sure that the numpy array use dtype=double.");
+    }
+    arg1 = &temp1;
+  }
+  ecode2 = SWIG_AsVal_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "InverseConformalFactorBoostedGrid" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  ecode3 = SWIG_AsVal_int(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "InverseConformalFactorBoostedGrid" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = static_cast< int >(val3);
+  {
+    try {
+      result = GWFrames::InverseConformalFactorBoostedGrid((std::vector< double,std::allocator< double > > const &)*arg1,arg2,arg3);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj((new GWFrames::DataGrid(static_cast< const GWFrames::DataGrid& >(result))), SWIGTYPE_p_GWFrames__DataGrid, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN int _wrap_new_Modes__SWIG_0(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  int arg1 ;
+  int val1 ;
+  int ecode1 = 0 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::Modes *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:new_Modes",&obj1)) SWIG_fail;
+  ecode1 = SWIG_AsVal_int(obj1, &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_Modes" "', argument " "1"" of type '" "int""'");
+  } 
+  arg1 = static_cast< int >(val1);
+  {
+    try {
+      result = (GWFrames::Modes *)new GWFrames::Modes(arg1);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Modes, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
+fail:
+  return -1;
+}
+
+
+SWIGINTERN int _wrap_new_Modes__SWIG_1(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Modes *result = 0 ;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  {
+    try {
+      result = (GWFrames::Modes *)new GWFrames::Modes();;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Modes, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
+fail:
+  return -1;
+}
+
+
+SWIGINTERN int _wrap_new_Modes__SWIG_2(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Modes *arg1 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::Modes *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:new_Modes",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj1, &argp1, SWIGTYPE_p_GWFrames__Modes,  0  | 0);
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_Modes" "', argument " "1"" of type '" "GWFrames::Modes const &""'"); 
+  }
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_Modes" "', argument " "1"" of type '" "GWFrames::Modes const &""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Modes * >(argp1);
+  {
+    try {
+      result = (GWFrames::Modes *)new GWFrames::Modes((GWFrames::Modes const &)*arg1);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Modes, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
+fail:
+  return -1;
+}
+
+
+SWIGINTERN int _wrap_new_Modes__SWIG_3(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  int arg1 ;
+  std::vector< std::complex< double >,std::allocator< std::complex< double > > > *arg2 = 0 ;
+  int val1 ;
+  int ecode1 = 0 ;
+  std::vector< std_complex_double > temp2 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  GWFrames::Modes *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:new_Modes",&obj1,&obj2)) SWIG_fail;
+  ecode1 = SWIG_AsVal_int(obj1, &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_Modes" "', argument " "1"" of type '" "int""'");
+  } 
+  arg1 = static_cast< int >(val1);
+  {
+    if(PyArray_Check(obj2)) {
+      PyArrayObject *xa = reinterpret_cast<PyArrayObject*>(obj2);
+      if(PyArray_TYPE(xa) != NPY_CDOUBLE) {
+        SWIG_exception(SWIG_TypeError, "(1) numpy array of 'complex' expected."	\
+          " Make sure that the numpy array use dtype=complex.");
+      }
+      const std::size_t size = PyArray_DIM(xa, 0);
+      temp2.resize(size);
+      std_complex_double* array = static_cast<std_complex_double*>(PyArray_DATA(xa));
+      if(PyArray_ISCONTIGUOUS(xa)) {
+        std::copy(array, array + size, temp2.begin());
+      } else {
+        const npy_intp strides = PyArray_STRIDE(xa, 0)/sizeof(std_complex_double);
+        for (std::size_t i = 0; i < size; i++)
+        temp2[i] = array[i*strides];
+      }
+    } else if(PySequence_Check(obj2)) {
+      Py_ssize_t size = PySequence_Size(obj2);
+      temp2.resize(size);
+      PyObject* item;
+      for(Py_ssize_t i=0; i<size; ++i) {
+        item = PySequence_GetItem(obj2, i);
+        if(!SWIG_IsOK(SWIG_AsVal_std_complex_double (item, &temp2[i]))) {
+          Py_DECREF(item);
+          SWIG_exception(SWIG_TypeError, "expected items of sequence to be of type "\
+            "\"std_complex_double\" in argument 2");
+        }
+        Py_DECREF(item);
+      }
+    } else {
+      SWIG_exception(SWIG_TypeError, "(2) numpy array of 'complex' expected. " \
+        "Make sure that the numpy array use dtype=complex.");
+    }
+    arg2 = &temp2;
+  }
+  {
+    try {
+      result = (GWFrames::Modes *)new GWFrames::Modes(arg1,(std::vector< std::complex< double >,std::allocator< std::complex< double > > > const &)*arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Modes, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
+fail:
+  return -1;
+}
+
+
+SWIGINTERN int _wrap_new_Modes__SWIG_4(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::DataGrid arg1 ;
+  int arg2 ;
+  void *argp1 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  GWFrames::Modes *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:new_Modes",&obj1,&obj2)) SWIG_fail;
+  {
+    res1 = SWIG_ConvertPtr(obj1, &argp1, SWIGTYPE_p_GWFrames__DataGrid,  0  | 0);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_Modes" "', argument " "1"" of type '" "GWFrames::DataGrid""'"); 
+    }  
+    if (!argp1) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_Modes" "', argument " "1"" of type '" "GWFrames::DataGrid""'");
+    } else {
+      GWFrames::DataGrid * temp = reinterpret_cast< GWFrames::DataGrid * >(argp1);
+      arg1 = *temp;
+      if (SWIG_IsNewObj(res1)) delete temp;
+    }
+  }
+  ecode2 = SWIG_AsVal_int(obj2, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new_Modes" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  {
+    try {
+      result = (GWFrames::Modes *)new GWFrames::Modes(arg1,arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Modes, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
+fail:
+  return -1;
+}
+
+
+SWIGINTERN int _wrap_new_Modes__SWIG_5(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::DataGrid arg1 ;
+  void *argp1 ;
+  int res1 = 0 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::Modes *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:new_Modes",&obj1)) SWIG_fail;
+  {
+    res1 = SWIG_ConvertPtr(obj1, &argp1, SWIGTYPE_p_GWFrames__DataGrid,  0  | 0);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_Modes" "', argument " "1"" of type '" "GWFrames::DataGrid""'"); 
+    }  
+    if (!argp1) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_Modes" "', argument " "1"" of type '" "GWFrames::DataGrid""'");
+    } else {
+      GWFrames::DataGrid * temp = reinterpret_cast< GWFrames::DataGrid * >(argp1);
+      arg1 = *temp;
+      if (SWIG_IsNewObj(res1)) delete temp;
+    }
+  }
+  {
+    try {
+      result = (GWFrames::Modes *)new GWFrames::Modes(arg1);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Modes, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
+fail:
+  return -1;
+}
+
+
+SWIGINTERN int _wrap_new_Modes(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[3];
+  int ii;
+  
+  if (!PyTuple_Check(args)) SWIG_fail;
+  argc = args ? (int)PyObject_Length(args) : 0;
+  for (ii = 0; (ii < 2) && (ii < argc); ii++) {
+    argv[ii] = PyTuple_GET_ITEM(args,ii);
+  }
+  if (argc == 0) {
+    return _wrap_new_Modes__SWIG_1(self, args);
+  }
+  if (argc == 1) {
+    int _v;
+    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_GWFrames__Modes, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_new_Modes__SWIG_2(self, args);
+    }
+  }
+  if (argc == 1) {
+    int _v;
+    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_GWFrames__DataGrid, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_new_Modes__SWIG_5(self, args);
+    }
+  }
+  if (argc == 1) {
+    int _v;
+    {
+      int res = SWIG_AsVal_int(argv[0], NULL);
+      _v = SWIG_CheckState(res);
+    }
+    if (_v) {
+      return _wrap_new_Modes__SWIG_0(self, args);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_GWFrames__DataGrid, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_int(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap_new_Modes__SWIG_4(self, args);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      int res = SWIG_AsVal_int(argv[0], NULL);
+      _v = SWIG_CheckState(res);
+    }
+    if (_v) {
+      {
+        _v = false;
+        if(PyArray_Check(argv[1])) {
+          _v = (PyArray_NDIM(reinterpret_cast<const PyArrayObject*>(argv[1]))==1);
+        } else if(PyList_Check(argv[1])) {
+          if(PyList_Size(argv[1])==0) {
+            _v = true;
+          } else {
+            PyObject* item = PySequence_GetItem(argv[1], 0);
+            std_complex_double* temp=0;
+            _v = SWIG_IsOK(SWIG_AsVal_std_complex_double (item, temp));
+          }
+        }
+      }
+      if (_v) {
+        return _wrap_new_Modes__SWIG_3(self, args);
+      }
+    }
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'new_Modes'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    GWFrames::Modes::Modes(int const)\n"
+    "    GWFrames::Modes::Modes()\n"
+    "    GWFrames::Modes::Modes(GWFrames::Modes const &)\n"
+    "    GWFrames::Modes::Modes(int const,std::vector< std::complex< double >,std::allocator< std::complex< double > > > const &)\n"
+    "    GWFrames::Modes::Modes(GWFrames::DataGrid,int const)\n"
+    "    GWFrames::Modes::Modes(GWFrames::DataGrid)\n");
+  return -1;
+}
+
+
+SWIGINTERN PyObject *_wrap_Modes_SetSpin(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Modes *arg1 = (GWFrames::Modes *) 0 ;
+  int arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::Modes *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Modes_SetSpin",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Modes, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Modes_SetSpin" "', argument " "1"" of type '" "GWFrames::Modes *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Modes * >(argp1);
+  ecode2 = SWIG_AsVal_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Modes_SetSpin" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  {
+    try {
+      result = (GWFrames::Modes *) &(arg1)->SetSpin(arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Modes, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Modes_SetEllMax(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Modes *arg1 = (GWFrames::Modes *) 0 ;
+  int arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::Modes *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Modes_SetEllMax",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Modes, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Modes_SetEllMax" "', argument " "1"" of type '" "GWFrames::Modes *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Modes * >(argp1);
+  ecode2 = SWIG_AsVal_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Modes_SetEllMax" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  {
+    try {
+      result = (GWFrames::Modes *) &(arg1)->SetEllMax(arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Modes, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Modes_size(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Modes *arg1 = (GWFrames::Modes *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  unsigned int result;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Modes, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Modes_size" "', argument " "1"" of type '" "GWFrames::Modes const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Modes * >(argp1);
+  {
+    try {
+      result = (unsigned int)((GWFrames::Modes const *)arg1)->size();;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_From_unsigned_SS_int(static_cast< unsigned int >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Modes_Spin(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Modes *arg1 = (GWFrames::Modes *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int result;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Modes, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Modes_Spin" "', argument " "1"" of type '" "GWFrames::Modes const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Modes * >(argp1);
+  {
+    try {
+      result = (int)((GWFrames::Modes const *)arg1)->Spin();;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_From_int(static_cast< int >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Modes_EllMax(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Modes *arg1 = (GWFrames::Modes *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int result;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Modes, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Modes_EllMax" "', argument " "1"" of type '" "GWFrames::Modes const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Modes * >(argp1);
+  {
+    try {
+      result = (int)((GWFrames::Modes const *)arg1)->EllMax();;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_From_int(static_cast< int >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Modes___getitem__(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Modes *arg1 = (GWFrames::Modes *) 0 ;
+  unsigned int arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  unsigned int val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj1 = 0 ;
+  std::complex< double > result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Modes___getitem__",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Modes, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Modes___getitem__" "', argument " "1"" of type '" "GWFrames::Modes const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Modes * >(argp1);
+  ecode2 = SWIG_AsVal_unsigned_SS_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Modes___getitem__" "', argument " "2"" of type '" "unsigned int""'");
+  } 
+  arg2 = static_cast< unsigned int >(val2);
+  {
+    try {
+      result = ((GWFrames::Modes const *)arg1)->operator [](arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_From_std_complex_Sl_double_Sg_(static_cast< std::complex<double> >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Modes___setitem____SWIG_0(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Modes *arg1 = (GWFrames::Modes *) 0 ;
+  unsigned int arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  unsigned int val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj1 = 0 ;
+  std::complex< double > *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Modes___setitem__",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Modes, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Modes___setitem__" "', argument " "1"" of type '" "GWFrames::Modes *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Modes * >(argp1);
+  ecode2 = SWIG_AsVal_unsigned_SS_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Modes___setitem__" "', argument " "2"" of type '" "unsigned int""'");
+  } 
+  arg2 = static_cast< unsigned int >(val2);
+  {
+    try {
+      result = (std::complex< double > *) &(arg1)->operator [](arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_std__complexT_double_t, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Modes_Data(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Modes *arg1 = (GWFrames::Modes *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  SwigValueWrapper< std::vector< std::complex< double >,std::allocator< std::complex< double > > > > result;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Modes, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Modes_Data" "', argument " "1"" of type '" "GWFrames::Modes const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Modes * >(argp1);
+  {
+    try {
+      result = ((GWFrames::Modes const *)arg1)->Data();;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  {
+    // RANDOMSTRING1
+    npy_intp adims = (&result)->size();
+    resultobj = PyArray_SimpleNew(1, &adims, NPY_CDOUBLE);
+    std_complex_double* data = static_cast<std_complex_double*>(PyArray_DATA(reinterpret_cast<PyArrayObject*>(resultobj)));
+    std::copy((&result)->begin(), (&result)->end(), data);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Modes_pow(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Modes *arg1 = (GWFrames::Modes *) 0 ;
+  int arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::Modes result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Modes_pow",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Modes, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Modes_pow" "', argument " "1"" of type '" "GWFrames::Modes const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Modes * >(argp1);
+  ecode2 = SWIG_AsVal_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Modes_pow" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  {
+    try {
+      result = ((GWFrames::Modes const *)arg1)->pow(arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj((new GWFrames::Modes(static_cast< const GWFrames::Modes& >(result))), SWIGTYPE_p_GWFrames__Modes, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Modes_bar(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Modes *arg1 = (GWFrames::Modes *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  GWFrames::Modes result;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Modes, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Modes_bar" "', argument " "1"" of type '" "GWFrames::Modes const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Modes * >(argp1);
+  {
+    try {
+      result = ((GWFrames::Modes const *)arg1)->bar();;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj((new GWFrames::Modes(static_cast< const GWFrames::Modes& >(result))), SWIGTYPE_p_GWFrames__Modes, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Modes___mul__(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Modes *arg1 = (GWFrames::Modes *) 0 ;
+  GWFrames::Modes *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::Modes result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Modes___mul__",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Modes, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Modes___mul__" "', argument " "1"" of type '" "GWFrames::Modes const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Modes * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_GWFrames__Modes,  0  | 0);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Modes___mul__" "', argument " "2"" of type '" "GWFrames::Modes const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Modes___mul__" "', argument " "2"" of type '" "GWFrames::Modes const &""'"); 
+  }
+  arg2 = reinterpret_cast< GWFrames::Modes * >(argp2);
+  {
+    try {
+      result = ((GWFrames::Modes const *)arg1)->operator *((GWFrames::Modes const &)*arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj((new GWFrames::Modes(static_cast< const GWFrames::Modes& >(result))), SWIGTYPE_p_GWFrames__Modes, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGPY_BINARYFUNC_CLOSURE(_wrap_Modes___mul__)
+
+SWIGINTERN PyObject *_wrap_Modes___div__(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Modes *arg1 = (GWFrames::Modes *) 0 ;
+  GWFrames::Modes *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::Modes result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Modes___div__",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Modes, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Modes___div__" "', argument " "1"" of type '" "GWFrames::Modes const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Modes * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_GWFrames__Modes,  0  | 0);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Modes___div__" "', argument " "2"" of type '" "GWFrames::Modes const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Modes___div__" "', argument " "2"" of type '" "GWFrames::Modes const &""'"); 
+  }
+  arg2 = reinterpret_cast< GWFrames::Modes * >(argp2);
+  {
+    try {
+      result = ((GWFrames::Modes const *)arg1)->operator /((GWFrames::Modes const &)*arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj((new GWFrames::Modes(static_cast< const GWFrames::Modes& >(result))), SWIGTYPE_p_GWFrames__Modes, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGPY_BINARYFUNC_CLOSURE(_wrap_Modes___div__)
+
+SWIGINTERN PyObject *_wrap_Modes___add__(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Modes *arg1 = (GWFrames::Modes *) 0 ;
+  GWFrames::Modes *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::Modes result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Modes___add__",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Modes, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Modes___add__" "', argument " "1"" of type '" "GWFrames::Modes const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Modes * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_GWFrames__Modes,  0  | 0);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Modes___add__" "', argument " "2"" of type '" "GWFrames::Modes const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Modes___add__" "', argument " "2"" of type '" "GWFrames::Modes const &""'"); 
+  }
+  arg2 = reinterpret_cast< GWFrames::Modes * >(argp2);
+  {
+    try {
+      result = ((GWFrames::Modes const *)arg1)->operator +((GWFrames::Modes const &)*arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj((new GWFrames::Modes(static_cast< const GWFrames::Modes& >(result))), SWIGTYPE_p_GWFrames__Modes, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGPY_BINARYFUNC_CLOSURE(_wrap_Modes___add__)
+
+SWIGINTERN PyObject *_wrap_Modes___sub__(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Modes *arg1 = (GWFrames::Modes *) 0 ;
+  GWFrames::Modes *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::Modes result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Modes___sub__",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Modes, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Modes___sub__" "', argument " "1"" of type '" "GWFrames::Modes const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Modes * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_GWFrames__Modes,  0  | 0);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Modes___sub__" "', argument " "2"" of type '" "GWFrames::Modes const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Modes___sub__" "', argument " "2"" of type '" "GWFrames::Modes const &""'"); 
+  }
+  arg2 = reinterpret_cast< GWFrames::Modes * >(argp2);
+  {
+    try {
+      result = ((GWFrames::Modes const *)arg1)->operator -((GWFrames::Modes const &)*arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj((new GWFrames::Modes(static_cast< const GWFrames::Modes& >(result))), SWIGTYPE_p_GWFrames__Modes, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGPY_BINARYFUNC_CLOSURE(_wrap_Modes___sub__)
+
+SWIGINTERN PyObject *_wrap_Modes_edth(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Modes *arg1 = (GWFrames::Modes *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  GWFrames::Modes result;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Modes, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Modes_edth" "', argument " "1"" of type '" "GWFrames::Modes const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Modes * >(argp1);
+  {
+    try {
+      result = ((GWFrames::Modes const *)arg1)->edth();;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj((new GWFrames::Modes(static_cast< const GWFrames::Modes& >(result))), SWIGTYPE_p_GWFrames__Modes, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Modes_edthbar(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Modes *arg1 = (GWFrames::Modes *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  GWFrames::Modes result;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Modes, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Modes_edthbar" "', argument " "1"" of type '" "GWFrames::Modes const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Modes * >(argp1);
+  {
+    try {
+      result = ((GWFrames::Modes const *)arg1)->edthbar();;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj((new GWFrames::Modes(static_cast< const GWFrames::Modes& >(result))), SWIGTYPE_p_GWFrames__Modes, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Modes_edth2edthbar2(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Modes *arg1 = (GWFrames::Modes *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  GWFrames::Modes result;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Modes, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Modes_edth2edthbar2" "', argument " "1"" of type '" "GWFrames::Modes const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Modes * >(argp1);
+  {
+    try {
+      result = ((GWFrames::Modes const *)arg1)->edth2edthbar2();;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj((new GWFrames::Modes(static_cast< const GWFrames::Modes& >(result))), SWIGTYPE_p_GWFrames__Modes, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Modes_EvaluateAtPoint__SWIG_0(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Modes *arg1 = (GWFrames::Modes *) 0 ;
+  double arg2 ;
+  double arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  std::complex< double > result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Modes_EvaluateAtPoint",&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Modes, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Modes_EvaluateAtPoint" "', argument " "1"" of type '" "GWFrames::Modes const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Modes * >(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Modes_EvaluateAtPoint" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  ecode3 = SWIG_AsVal_double(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Modes_EvaluateAtPoint" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  {
+    try {
+      result = ((GWFrames::Modes const *)arg1)->EvaluateAtPoint(arg2,arg3);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_From_std_complex_Sl_double_Sg_(static_cast< std::complex<double> >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Modes_EvaluateAtPoint__SWIG_1(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Modes *arg1 = (GWFrames::Modes *) 0 ;
+  Quaternions::Quaternion *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  Quaternions::Quaternion tmp2 ;
+  PyObject *item2 ;
+  Py_ssize_t i2 ;
+  PyObject * obj1 = 0 ;
+  std::complex< double > result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Modes_EvaluateAtPoint",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Modes, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Modes_EvaluateAtPoint" "', argument " "1"" of type '" "GWFrames::Modes const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Modes * >(argp1);
+  {
+    if(PySequence_Check(obj1)) {
+      for(i2=0; i2<4; ++i2) {
+        item2 = PySequence_GetItem(obj1, i2);
+        if(!SWIG_IsOK(SWIG_AsVal_double (item2, &tmp2[i2]))) {
+          Py_DECREF(item2);
+          SWIG_exception(SWIG_TypeError, "expected items of sequence to be of type "\
+            "\"double\" in argument 2");
+        }
+        Py_DECREF(item2);
+      }
+      arg2 = &tmp2;
+    } else {
+      void* ptmp;
+      int res = SWIG_ConvertPtr(obj1, &ptmp, SWIGTYPE_p_Quaternions__Quaternion, 0 | 0);
+      if (!SWIG_IsOK(res)) {
+        SWIG_exception_fail(SWIG_ArgError(res), "expected argument 2 to be of type \"Quaternion\".");
+      }
+      Quaternions::Quaternion* ptmp2 = reinterpret_cast< Quaternions::Quaternion * >(ptmp);
+      tmp2[0] = (*ptmp2)[0];
+      tmp2[1] = (*ptmp2)[1];
+      tmp2[2] = (*ptmp2)[2];
+      tmp2[3] = (*ptmp2)[3];
+      arg2 = &tmp2;
+    }
+  }
+  {
+    try {
+      result = ((GWFrames::Modes const *)arg1)->EvaluateAtPoint((Quaternions::Quaternion const &)*arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_From_std_complex_Sl_double_Sg_(static_cast< std::complex<double> >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Modes_EvaluateAtPoint(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[4];
+  int ii;
+  
+  if (!PyTuple_Check(args)) SWIG_fail;
+  argc = args ? (int)PyObject_Length(args) : 0;
+  argv[0] = self;
+  for (ii = 0; (ii < 2) && (ii < argc); ii++) {
+    argv[ii + 1] = PyTuple_GET_ITEM(args,ii);
+  }
+  argc++;
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__Modes, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        void* argp1 = 0;
+        // If this is a SWIG-wrapped Quaternion, accept it
+        _v = SWIG_IsOK(SWIG_ConvertPtr(argv[1], &argp1, SWIGTYPE_p_Quaternions__Quaternion, 0 | 0 ));
+        if(!_v) {
+          // Accept it if this is a sequence of numbers with length 4
+          if(PySequence_Check(argv[1]) && PySequence_Size(argv[1])==4) {
+            PyObject* item = PySequence_GetItem(argv[1], 0);
+            _v = (PyFloat_Check(item) || PyInt_Check(item));
+          }
+        }
+      }
+      if (_v) {
+        return _wrap_Modes_EvaluateAtPoint__SWIG_1(self, args);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__Modes, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_double(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        {
+          int res = SWIG_AsVal_double(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          return _wrap_Modes_EvaluateAtPoint__SWIG_0(self, args);
+        }
+      }
+    }
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'Modes_EvaluateAtPoint'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    GWFrames::Modes::EvaluateAtPoint(double const,double const) const\n"
+    "    GWFrames::Modes::EvaluateAtPoint(Quaternions::Quaternion const &) const\n");
+  return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap_Modes___setitem____SWIG_1(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Modes *arg1 = (GWFrames::Modes *) 0 ;
+  unsigned int arg2 ;
+  std::complex< double > *arg3 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  unsigned int val2 ;
+  int ecode2 = 0 ;
+  std::complex< double > temp3 ;
+  std::complex< double > val3 ;
+  int ecode3 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Modes___setitem__",&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Modes, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Modes___setitem__" "', argument " "1"" of type '" "GWFrames::Modes *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Modes * >(argp1);
+  ecode2 = SWIG_AsVal_unsigned_SS_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Modes___setitem__" "', argument " "2"" of type '" "unsigned int""'");
+  } 
+  arg2 = static_cast< unsigned int >(val2);
+  ecode3 = SWIG_AsVal_std_complex_Sl_double_Sg_(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Modes___setitem__" "', argument " "3"" of type '" "std::complex< double >""'");
+  } 
+  temp3 = static_cast< std::complex< double > >(val3);
+  arg3 = &temp3;
+  {
+    try {
+      GWFrames_Modes___setitem____SWIG_1(arg1,arg2,(std::complex< double > const &)*arg3);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Modes___setitem__(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[4];
+  int ii;
+  
+  if (!PyTuple_Check(args)) SWIG_fail;
+  argc = args ? (int)PyObject_Length(args) : 0;
+  argv[0] = self;
+  for (ii = 0; (ii < 2) && (ii < argc); ii++) {
+    argv[ii + 1] = PyTuple_GET_ITEM(args,ii);
+  }
+  argc++;
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__Modes, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_unsigned_SS_int(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap_Modes___setitem____SWIG_0(self, args);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__Modes, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_unsigned_SS_int(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        {
+          int res = SWIG_AsVal_std_complex_Sl_double_Sg_(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          return _wrap_Modes___setitem____SWIG_1(self, args);
+        }
+      }
+    }
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'Modes___setitem__'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    GWFrames::Modes::operator [](unsigned int const)\n"
+    "    GWFrames::Modes::__setitem__(unsigned int const,std::complex< double > const &)\n");
+  return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_Modes(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Modes *arg1 = (GWFrames::Modes *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Modes, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_Modes" "', argument " "1"" of type '" "GWFrames::Modes *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Modes * >(argp1);
+  {
+    try {
+      delete arg1;;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_vFromOneOverK(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Modes *arg1 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  SwigValueWrapper< std::vector< double,std::allocator< double > > > result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:vFromOneOverK",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1, SWIGTYPE_p_GWFrames__Modes,  0  | 0);
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "vFromOneOverK" "', argument " "1"" of type '" "GWFrames::Modes const &""'"); 
+  }
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "vFromOneOverK" "', argument " "1"" of type '" "GWFrames::Modes const &""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Modes * >(argp1);
+  {
+    try {
+      result = GWFrames::vFromOneOverK((GWFrames::Modes const &)*arg1);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  {
+    // RANDOMSTRING1
+    npy_intp adims = (&result)->size();
+    resultobj = PyArray_SimpleNew(1, &adims, NPY_DOUBLE);
+    double* data = static_cast<double*>(PyArray_DATA(reinterpret_cast<PyArrayObject*>(resultobj)));
+    std::copy((&result)->begin(), (&result)->end(), data);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN int _wrap_new_SliceModes__SWIG_0(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  int arg1 ;
+  int val1 ;
+  int ecode1 = 0 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::SliceModes *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:new_SliceModes",&obj1)) SWIG_fail;
+  ecode1 = SWIG_AsVal_int(obj1, &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_SliceModes" "', argument " "1"" of type '" "int""'");
+  } 
+  arg1 = static_cast< int >(val1);
+  {
+    try {
+      result = (GWFrames::SliceModes *)new GWFrames::SliceModes(arg1);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__SliceModes, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
+fail:
+  return -1;
+}
+
+
+SWIGINTERN int _wrap_new_SliceModes__SWIG_1(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceModes *result = 0 ;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  {
+    try {
+      result = (GWFrames::SliceModes *)new GWFrames::SliceModes();;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__SliceModes, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
+fail:
+  return -1;
+}
+
+
+SWIGINTERN int _wrap_new_SliceModes__SWIG_2(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceModes *arg1 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::SliceModes *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:new_SliceModes",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj1, &argp1, SWIGTYPE_p_GWFrames__SliceModes,  0  | 0);
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_SliceModes" "', argument " "1"" of type '" "GWFrames::SliceModes const &""'"); 
+  }
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_SliceModes" "', argument " "1"" of type '" "GWFrames::SliceModes const &""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SliceModes * >(argp1);
+  {
+    try {
+      result = (GWFrames::SliceModes *)new GWFrames::SliceModes((GWFrames::SliceModes const &)*arg1);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__SliceModes, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
+fail:
+  return -1;
+}
+
+
+SWIGINTERN int _wrap_new_SliceModes(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[2];
+  int ii;
+  
+  if (!PyTuple_Check(args)) SWIG_fail;
+  argc = args ? (int)PyObject_Length(args) : 0;
+  for (ii = 0; (ii < 1) && (ii < argc); ii++) {
+    argv[ii] = PyTuple_GET_ITEM(args,ii);
+  }
+  if (argc == 0) {
+    return _wrap_new_SliceModes__SWIG_1(self, args);
+  }
+  if (argc == 1) {
+    int _v;
+    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_GWFrames__SliceModes, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_new_SliceModes__SWIG_2(self, args);
+    }
+  }
+  if (argc == 1) {
+    int _v;
+    {
+      int res = SWIG_AsVal_int(argv[0], NULL);
+      _v = SWIG_CheckState(res);
+    }
+    if (_v) {
+      return _wrap_new_SliceModes__SWIG_0(self, args);
+    }
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'new_SliceModes'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    GWFrames::SliceModes::SliceModes(int const)\n"
+    "    GWFrames::SliceModes::SliceModes()\n"
+    "    GWFrames::SliceModes::SliceModes(GWFrames::SliceModes const &)\n");
+  return -1;
+}
+
+
+SWIGINTERN PyObject *_wrap_SliceModes_EllMax(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceModes *arg1 = (GWFrames::SliceModes *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int result;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SliceModes, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SliceModes_EllMax" "', argument " "1"" of type '" "GWFrames::SliceModes const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SliceModes * >(argp1);
+  {
+    try {
+      result = (int)((GWFrames::SliceModes const *)arg1)->EllMax();;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_From_int(static_cast< int >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SliceModes_Mass(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceModes *arg1 = (GWFrames::SliceModes *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double result;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SliceModes, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SliceModes_Mass" "', argument " "1"" of type '" "GWFrames::SliceModes const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SliceModes * >(argp1);
+  {
+    try {
+      result = (double)((GWFrames::SliceModes const *)arg1)->Mass();;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_From_double(static_cast< double >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SliceModes_FourMomentum(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceModes *arg1 = (GWFrames::SliceModes *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  SwigValueWrapper< std::vector< double,std::allocator< double > > > result;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SliceModes, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SliceModes_FourMomentum" "', argument " "1"" of type '" "GWFrames::SliceModes const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SliceModes * >(argp1);
+  {
+    try {
+      result = ((GWFrames::SliceModes const *)arg1)->FourMomentum();;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  {
+    // RANDOMSTRING1
+    npy_intp adims = (&result)->size();
+    resultobj = PyArray_SimpleNew(1, &adims, NPY_DOUBLE);
+    double* data = static_cast<double*>(PyArray_DATA(reinterpret_cast<PyArrayObject*>(resultobj)));
+    std::copy((&result)->begin(), (&result)->end(), data);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SliceModes_SuperMomentum(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceModes *arg1 = (GWFrames::SliceModes *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  GWFrames::Modes result;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SliceModes, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SliceModes_SuperMomentum" "', argument " "1"" of type '" "GWFrames::SliceModes const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SliceModes * >(argp1);
+  {
+    try {
+      result = ((GWFrames::SliceModes const *)arg1)->SuperMomentum();;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj((new GWFrames::Modes(static_cast< const GWFrames::Modes& >(result))), SWIGTYPE_p_GWFrames__Modes, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SliceModes_BMSTransformationOnSlice(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceModes *arg1 = (GWFrames::SliceModes *) 0 ;
+  double arg2 ;
+  GWFrames::ThreeVector *arg3 = 0 ;
+  GWFrames::Modes *arg4 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  std::vector< double > temp3 ;
+  void *argp4 = 0 ;
+  int res4 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  GWFrames::SliceGrid result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOO:SliceModes_BMSTransformationOnSlice",&obj1,&obj2,&obj3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SliceModes, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SliceModes_BMSTransformationOnSlice" "', argument " "1"" of type '" "GWFrames::SliceModes const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SliceModes * >(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "SliceModes_BMSTransformationOnSlice" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  {
+    if(PyArray_Check(obj2)) {
+      PyArrayObject *xa = reinterpret_cast<PyArrayObject*>(obj2);
+      if(PyArray_TYPE(xa) != NPY_DOUBLE) {
+        SWIG_exception(SWIG_TypeError, "(1) numpy array of 'double' expected."	\
+          " Make sure that the numpy array use dtype=double.");
+      }
+      const std::size_t size = PyArray_DIM(xa, 0);
+      temp3.resize(size);
+      double* array = static_cast<double*>(PyArray_DATA(xa));
+      if(PyArray_ISCONTIGUOUS(xa)) {
+        std::copy(array, array + size, temp3.begin());
+      } else {
+        const npy_intp strides = PyArray_STRIDE(xa, 0)/sizeof(double);
+        for (std::size_t i = 0; i < size; i++)
+        temp3[i] = array[i*strides];
+      }
+    } else if(PySequence_Check(obj2)) {
+      Py_ssize_t size = PySequence_Size(obj2);
+      temp3.resize(size);
+      PyObject* item;
+      for(Py_ssize_t i=0; i<size; ++i) {
+        item = PySequence_GetItem(obj2, i);
+        if(!SWIG_IsOK(SWIG_AsVal_double (item, &temp3[i]))) {
+          Py_DECREF(item);
+          SWIG_exception(SWIG_TypeError, "expected items of sequence to be of type "\
+            "\"double\" in argument 3");
+        }
+        Py_DECREF(item);
+      }
+    } else {
+      SWIG_exception(SWIG_TypeError, "(2) numpy array of 'double' expected. " \
+        "Make sure that the numpy array use dtype=double.");
+    }
+    arg3 = &temp3;
+  }
+  res4 = SWIG_ConvertPtr(obj3, &argp4, SWIGTYPE_p_GWFrames__Modes,  0  | 0);
+  if (!SWIG_IsOK(res4)) {
+    SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "SliceModes_BMSTransformationOnSlice" "', argument " "4"" of type '" "GWFrames::Modes const &""'"); 
+  }
+  if (!argp4) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "SliceModes_BMSTransformationOnSlice" "', argument " "4"" of type '" "GWFrames::Modes const &""'"); 
+  }
+  arg4 = reinterpret_cast< GWFrames::Modes * >(argp4);
+  {
+    try {
+      result = ((GWFrames::SliceModes const *)arg1)->BMSTransformationOnSlice(arg2,(GWFrames::ThreeVector const &)*arg3,(GWFrames::Modes const &)*arg4);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj((new GWFrames::SliceGrid(static_cast< const GWFrames::SliceGrid& >(result))), SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__DataGrid_t, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SliceModes_MoreschiIteration(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceModes *arg1 = (GWFrames::SliceModes *) 0 ;
+  GWFrames::Modes *arg2 = 0 ;
+  GWFrames::Modes *arg3 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:SliceModes_MoreschiIteration",&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SliceModes, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SliceModes_MoreschiIteration" "', argument " "1"" of type '" "GWFrames::SliceModes const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SliceModes * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_GWFrames__Modes,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "SliceModes_MoreschiIteration" "', argument " "2"" of type '" "GWFrames::Modes &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "SliceModes_MoreschiIteration" "', argument " "2"" of type '" "GWFrames::Modes &""'"); 
+  }
+  arg2 = reinterpret_cast< GWFrames::Modes * >(argp2);
+  res3 = SWIG_ConvertPtr(obj2, &argp3, SWIGTYPE_p_GWFrames__Modes,  0 );
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "SliceModes_MoreschiIteration" "', argument " "3"" of type '" "GWFrames::Modes &""'"); 
+  }
+  if (!argp3) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "SliceModes_MoreschiIteration" "', argument " "3"" of type '" "GWFrames::Modes &""'"); 
+  }
+  arg3 = reinterpret_cast< GWFrames::Modes * >(argp3);
+  {
+    try {
+      ((GWFrames::SliceModes const *)arg1)->MoreschiIteration(*arg2,*arg3);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SliceModes___getitem__(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceModes *arg1 = (GWFrames::SliceModes *) 0 ;
+  unsigned int arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  unsigned int val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::Modes *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:SliceModes___getitem__",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SliceModes, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SliceModes___getitem__" "', argument " "1"" of type '" "GWFrames::SliceModes const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SliceModes * >(argp1);
+  ecode2 = SWIG_AsVal_unsigned_SS_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "SliceModes___getitem__" "', argument " "2"" of type '" "unsigned int""'");
+  } 
+  arg2 = static_cast< unsigned int >(val2);
+  {
+    try {
+      result = (GWFrames::Modes *) &GWFrames_SliceModes___getitem__((GWFrames::SliceModes const *)arg1,arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Modes, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SliceModes___setitem__(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceModes *arg1 = (GWFrames::SliceModes *) 0 ;
+  unsigned int arg2 ;
+  GWFrames::Modes *arg3 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  unsigned int val2 ;
+  int ecode2 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:SliceModes___setitem__",&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SliceModes, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SliceModes___setitem__" "', argument " "1"" of type '" "GWFrames::SliceModes *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SliceModes * >(argp1);
+  ecode2 = SWIG_AsVal_unsigned_SS_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "SliceModes___setitem__" "', argument " "2"" of type '" "unsigned int""'");
+  } 
+  arg2 = static_cast< unsigned int >(val2);
+  res3 = SWIG_ConvertPtr(obj2, &argp3, SWIGTYPE_p_GWFrames__Modes,  0  | 0);
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "SliceModes___setitem__" "', argument " "3"" of type '" "GWFrames::Modes const &""'"); 
+  }
+  if (!argp3) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "SliceModes___setitem__" "', argument " "3"" of type '" "GWFrames::Modes const &""'"); 
+  }
+  arg3 = reinterpret_cast< GWFrames::Modes * >(argp3);
+  {
+    try {
+      GWFrames_SliceModes___setitem__(arg1,arg2,(GWFrames::Modes const &)*arg3);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_SliceModes(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceModes *arg1 = (GWFrames::SliceModes *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SliceModes, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_SliceModes" "', argument " "1"" of type '" "GWFrames::SliceModes *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SliceModes * >(argp1);
+  {
+    try {
+      delete arg1;;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN int _wrap_new_Scri__SWIG_0(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Waveform *arg1 = 0 ;
+  GWFrames::Waveform *arg2 = 0 ;
+  GWFrames::Waveform *arg3 = 0 ;
+  GWFrames::Waveform *arg4 = 0 ;
+  GWFrames::Waveform *arg5 = 0 ;
+  GWFrames::Waveform *arg6 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  void *argp4 = 0 ;
+  int res4 = 0 ;
+  void *argp5 = 0 ;
+  int res5 = 0 ;
+  void *argp6 = 0 ;
+  int res6 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
+  PyObject * obj5 = 0 ;
+  PyObject * obj6 = 0 ;
+  GWFrames::Scri *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOO:new_Scri",&obj1,&obj2,&obj3,&obj4,&obj5,&obj6)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj1, &argp1, SWIGTYPE_p_GWFrames__Waveform,  0  | 0);
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_Scri" "', argument " "1"" of type '" "GWFrames::Waveform const &""'"); 
+  }
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_Scri" "', argument " "1"" of type '" "GWFrames::Waveform const &""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
+  res2 = SWIG_ConvertPtr(obj2, &argp2, SWIGTYPE_p_GWFrames__Waveform,  0  | 0);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "new_Scri" "', argument " "2"" of type '" "GWFrames::Waveform const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_Scri" "', argument " "2"" of type '" "GWFrames::Waveform const &""'"); 
+  }
+  arg2 = reinterpret_cast< GWFrames::Waveform * >(argp2);
+  res3 = SWIG_ConvertPtr(obj3, &argp3, SWIGTYPE_p_GWFrames__Waveform,  0  | 0);
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "new_Scri" "', argument " "3"" of type '" "GWFrames::Waveform const &""'"); 
+  }
+  if (!argp3) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_Scri" "', argument " "3"" of type '" "GWFrames::Waveform const &""'"); 
+  }
+  arg3 = reinterpret_cast< GWFrames::Waveform * >(argp3);
+  res4 = SWIG_ConvertPtr(obj4, &argp4, SWIGTYPE_p_GWFrames__Waveform,  0  | 0);
+  if (!SWIG_IsOK(res4)) {
+    SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "new_Scri" "', argument " "4"" of type '" "GWFrames::Waveform const &""'"); 
+  }
+  if (!argp4) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_Scri" "', argument " "4"" of type '" "GWFrames::Waveform const &""'"); 
+  }
+  arg4 = reinterpret_cast< GWFrames::Waveform * >(argp4);
+  res5 = SWIG_ConvertPtr(obj5, &argp5, SWIGTYPE_p_GWFrames__Waveform,  0  | 0);
+  if (!SWIG_IsOK(res5)) {
+    SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "new_Scri" "', argument " "5"" of type '" "GWFrames::Waveform const &""'"); 
+  }
+  if (!argp5) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_Scri" "', argument " "5"" of type '" "GWFrames::Waveform const &""'"); 
+  }
+  arg5 = reinterpret_cast< GWFrames::Waveform * >(argp5);
+  res6 = SWIG_ConvertPtr(obj6, &argp6, SWIGTYPE_p_GWFrames__Waveform,  0  | 0);
+  if (!SWIG_IsOK(res6)) {
+    SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "new_Scri" "', argument " "6"" of type '" "GWFrames::Waveform const &""'"); 
+  }
+  if (!argp6) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_Scri" "', argument " "6"" of type '" "GWFrames::Waveform const &""'"); 
+  }
+  arg6 = reinterpret_cast< GWFrames::Waveform * >(argp6);
+  {
+    try {
+      result = (GWFrames::Scri *)new GWFrames::Scri((GWFrames::Waveform const &)*arg1,(GWFrames::Waveform const &)*arg2,(GWFrames::Waveform const &)*arg3,(GWFrames::Waveform const &)*arg4,(GWFrames::Waveform const &)*arg5,(GWFrames::Waveform const &)*arg6);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Scri, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
+fail:
+  return -1;
+}
+
+
+SWIGINTERN int _wrap_new_Scri__SWIG_1(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Scri *arg1 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::Scri *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:new_Scri",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj1, &argp1, SWIGTYPE_p_GWFrames__Scri,  0  | 0);
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_Scri" "', argument " "1"" of type '" "GWFrames::Scri const &""'"); 
+  }
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_Scri" "', argument " "1"" of type '" "GWFrames::Scri const &""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Scri * >(argp1);
+  {
+    try {
+      result = (GWFrames::Scri *)new GWFrames::Scri((GWFrames::Scri const &)*arg1);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Scri, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
+fail:
+  return -1;
+}
+
+
+SWIGINTERN int _wrap_new_Scri(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[7];
+  int ii;
+  
+  if (!PyTuple_Check(args)) SWIG_fail;
+  argc = args ? (int)PyObject_Length(args) : 0;
+  for (ii = 0; (ii < 6) && (ii < argc); ii++) {
+    argv[ii] = PyTuple_GET_ITEM(args,ii);
+  }
+  if (argc == 1) {
+    int _v;
+    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_GWFrames__Scri, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_new_Scri__SWIG_1(self, args);
+    }
+  }
+  if (argc == 6) {
+    int _v;
+    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_GWFrames__Waveform, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      int res = SWIG_ConvertPtr(argv[1], 0, SWIGTYPE_p_GWFrames__Waveform, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        int res = SWIG_ConvertPtr(argv[2], 0, SWIGTYPE_p_GWFrames__Waveform, 0);
+        _v = SWIG_CheckState(res);
+        if (_v) {
+          int res = SWIG_ConvertPtr(argv[3], 0, SWIGTYPE_p_GWFrames__Waveform, 0);
+          _v = SWIG_CheckState(res);
+          if (_v) {
+            int res = SWIG_ConvertPtr(argv[4], 0, SWIGTYPE_p_GWFrames__Waveform, 0);
+            _v = SWIG_CheckState(res);
+            if (_v) {
+              int res = SWIG_ConvertPtr(argv[5], 0, SWIGTYPE_p_GWFrames__Waveform, 0);
+              _v = SWIG_CheckState(res);
+              if (_v) {
+                return _wrap_new_Scri__SWIG_0(self, args);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'new_Scri'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    GWFrames::Scri::Scri(GWFrames::Waveform const &,GWFrames::Waveform const &,GWFrames::Waveform const &,GWFrames::Waveform const &,GWFrames::Waveform const &,GWFrames::Waveform const &)\n"
+    "    GWFrames::Scri::Scri(GWFrames::Scri const &)\n");
+  return -1;
+}
+
+
+SWIGINTERN PyObject *_wrap_Scri_BMSTransformation(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Scri *arg1 = (GWFrames::Scri *) 0 ;
+  double *arg2 = 0 ;
+  GWFrames::ThreeVector *arg3 = 0 ;
+  GWFrames::Modes *arg4 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double temp2 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  std::vector< double > temp3 ;
+  void *argp4 = 0 ;
+  int res4 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  GWFrames::SliceModes result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOO:Scri_BMSTransformation",&obj1,&obj2,&obj3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Scri, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Scri_BMSTransformation" "', argument " "1"" of type '" "GWFrames::Scri const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Scri * >(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Scri_BMSTransformation" "', argument " "2"" of type '" "double""'");
+  } 
+  temp2 = static_cast< double >(val2);
+  arg2 = &temp2;
+  {
+    if(PyArray_Check(obj2)) {
+      PyArrayObject *xa = reinterpret_cast<PyArrayObject*>(obj2);
+      if(PyArray_TYPE(xa) != NPY_DOUBLE) {
+        SWIG_exception(SWIG_TypeError, "(1) numpy array of 'double' expected."	\
+          " Make sure that the numpy array use dtype=double.");
+      }
+      const std::size_t size = PyArray_DIM(xa, 0);
+      temp3.resize(size);
+      double* array = static_cast<double*>(PyArray_DATA(xa));
+      if(PyArray_ISCONTIGUOUS(xa)) {
+        std::copy(array, array + size, temp3.begin());
+      } else {
+        const npy_intp strides = PyArray_STRIDE(xa, 0)/sizeof(double);
+        for (std::size_t i = 0; i < size; i++)
+        temp3[i] = array[i*strides];
+      }
+    } else if(PySequence_Check(obj2)) {
+      Py_ssize_t size = PySequence_Size(obj2);
+      temp3.resize(size);
+      PyObject* item;
+      for(Py_ssize_t i=0; i<size; ++i) {
+        item = PySequence_GetItem(obj2, i);
+        if(!SWIG_IsOK(SWIG_AsVal_double (item, &temp3[i]))) {
+          Py_DECREF(item);
+          SWIG_exception(SWIG_TypeError, "expected items of sequence to be of type "\
+            "\"double\" in argument 3");
+        }
+        Py_DECREF(item);
+      }
+    } else {
+      SWIG_exception(SWIG_TypeError, "(2) numpy array of 'double' expected. " \
+        "Make sure that the numpy array use dtype=double.");
+    }
+    arg3 = &temp3;
+  }
+  res4 = SWIG_ConvertPtr(obj3, &argp4, SWIGTYPE_p_GWFrames__Modes,  0  | 0);
+  if (!SWIG_IsOK(res4)) {
+    SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "Scri_BMSTransformation" "', argument " "4"" of type '" "GWFrames::Modes const &""'"); 
+  }
+  if (!argp4) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Scri_BMSTransformation" "', argument " "4"" of type '" "GWFrames::Modes const &""'"); 
+  }
+  arg4 = reinterpret_cast< GWFrames::Modes * >(argp4);
+  {
+    try {
+      result = ((GWFrames::Scri const *)arg1)->BMSTransformation((double const &)*arg2,(GWFrames::ThreeVector const &)*arg3,(GWFrames::Modes const &)*arg4);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj((new GWFrames::SliceModes(static_cast< const GWFrames::SliceModes& >(result))), SWIGTYPE_p_GWFrames__SliceModes, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Scri_NTimes(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Scri *arg1 = (GWFrames::Scri *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int result;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Scri, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Scri_NTimes" "', argument " "1"" of type '" "GWFrames::Scri const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Scri * >(argp1);
+  {
+    try {
+      result = (int)((GWFrames::Scri const *)arg1)->NTimes();;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_From_int(static_cast< int >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Scri_T(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Scri *arg1 = (GWFrames::Scri *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  SwigValueWrapper< std::vector< double,std::allocator< double > > > result;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Scri, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Scri_T" "', argument " "1"" of type '" "GWFrames::Scri const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Scri * >(argp1);
+  {
+    try {
+      result = ((GWFrames::Scri const *)arg1)->T();;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  {
+    // RANDOMSTRING1
+    npy_intp adims = (&result)->size();
+    resultobj = PyArray_SimpleNew(1, &adims, NPY_DOUBLE);
+    double* data = static_cast<double*>(PyArray_DATA(reinterpret_cast<PyArrayObject*>(resultobj)));
+    std::copy((&result)->begin(), (&result)->end(), data);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Scri___getitem__(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Scri *arg1 = (GWFrames::Scri *) 0 ;
+  unsigned int arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  unsigned int val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::SliceModes result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Scri___getitem__",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Scri, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Scri___getitem__" "', argument " "1"" of type '" "GWFrames::Scri const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Scri * >(argp1);
+  ecode2 = SWIG_AsVal_unsigned_SS_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Scri___getitem__" "', argument " "2"" of type '" "unsigned int""'");
+  } 
+  arg2 = static_cast< unsigned int >(val2);
+  {
+    try {
+      result = ((GWFrames::Scri const *)arg1)->operator [](arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj((new GWFrames::SliceModes(static_cast< const GWFrames::SliceModes& >(result))), SWIGTYPE_p_GWFrames__SliceModes, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Scri___setitem____SWIG_0(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Scri *arg1 = (GWFrames::Scri *) 0 ;
+  unsigned int arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  unsigned int val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::SliceModes *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Scri___setitem__",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Scri, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Scri___setitem__" "', argument " "1"" of type '" "GWFrames::Scri *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Scri * >(argp1);
+  ecode2 = SWIG_AsVal_unsigned_SS_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Scri___setitem__" "', argument " "2"" of type '" "unsigned int""'");
+  } 
+  arg2 = static_cast< unsigned int >(val2);
+  {
+    try {
+      result = (GWFrames::SliceModes *) &(arg1)->operator [](arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__SliceModes, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Scri___setitem____SWIG_1(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Scri *arg1 = (GWFrames::Scri *) 0 ;
+  unsigned int arg2 ;
+  GWFrames::SliceModes *arg3 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  unsigned int val2 ;
+  int ecode2 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Scri___setitem__",&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Scri, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Scri___setitem__" "', argument " "1"" of type '" "GWFrames::Scri *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Scri * >(argp1);
+  ecode2 = SWIG_AsVal_unsigned_SS_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Scri___setitem__" "', argument " "2"" of type '" "unsigned int""'");
+  } 
+  arg2 = static_cast< unsigned int >(val2);
+  res3 = SWIG_ConvertPtr(obj2, &argp3, SWIGTYPE_p_GWFrames__SliceModes,  0  | 0);
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Scri___setitem__" "', argument " "3"" of type '" "GWFrames::SliceModes const &""'"); 
+  }
+  if (!argp3) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Scri___setitem__" "', argument " "3"" of type '" "GWFrames::SliceModes const &""'"); 
+  }
+  arg3 = reinterpret_cast< GWFrames::SliceModes * >(argp3);
+  {
+    try {
+      GWFrames_Scri___setitem____SWIG_1(arg1,arg2,(GWFrames::SliceModes const &)*arg3);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Scri___setitem__(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[4];
+  int ii;
+  
+  if (!PyTuple_Check(args)) SWIG_fail;
+  argc = args ? (int)PyObject_Length(args) : 0;
+  argv[0] = self;
+  for (ii = 0; (ii < 2) && (ii < argc); ii++) {
+    argv[ii + 1] = PyTuple_GET_ITEM(args,ii);
+  }
+  argc++;
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__Scri, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_unsigned_SS_int(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap_Scri___setitem____SWIG_0(self, args);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__Scri, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_unsigned_SS_int(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        int res = SWIG_ConvertPtr(argv[2], 0, SWIGTYPE_p_GWFrames__SliceModes, 0);
+        _v = SWIG_CheckState(res);
+        if (_v) {
+          return _wrap_Scri___setitem____SWIG_1(self, args);
+        }
+      }
+    }
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'Scri___setitem__'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    GWFrames::Scri::operator [](unsigned int const)\n"
+    "    GWFrames::Scri::__setitem__(unsigned int const,GWFrames::SliceModes const &)\n");
+  return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_Scri(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Scri *arg1 = (GWFrames::Scri *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Scri, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_Scri" "', argument " "1"" of type '" "GWFrames::Scri *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Scri * >(argp1);
+  {
+    try {
+      delete arg1;;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN int _wrap_new_SuperMomenta__SWIG_0(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  unsigned int arg1 ;
+  unsigned int val1 ;
+  int ecode1 = 0 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::SuperMomenta *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:new_SuperMomenta",&obj1)) SWIG_fail;
+  ecode1 = SWIG_AsVal_unsigned_SS_int(obj1, &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_SuperMomenta" "', argument " "1"" of type '" "unsigned int""'");
+  } 
+  arg1 = static_cast< unsigned int >(val1);
+  {
+    try {
+      result = (GWFrames::SuperMomenta *)new GWFrames::SuperMomenta(arg1);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__SuperMomenta, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
+fail:
+  return -1;
+}
+
+
+SWIGINTERN int _wrap_new_SuperMomenta__SWIG_1(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SuperMomenta *arg1 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::SuperMomenta *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:new_SuperMomenta",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj1, &argp1, SWIGTYPE_p_GWFrames__SuperMomenta,  0  | 0);
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_SuperMomenta" "', argument " "1"" of type '" "GWFrames::SuperMomenta const &""'"); 
+  }
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_SuperMomenta" "', argument " "1"" of type '" "GWFrames::SuperMomenta const &""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SuperMomenta * >(argp1);
+  {
+    try {
+      result = (GWFrames::SuperMomenta *)new GWFrames::SuperMomenta((GWFrames::SuperMomenta const &)*arg1);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__SuperMomenta, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
+fail:
+  return -1;
+}
+
+
+SWIGINTERN int _wrap_new_SuperMomenta__SWIG_2(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  std::vector< double,std::allocator< double > > *arg1 = 0 ;
+  std::vector< GWFrames::Modes,std::allocator< GWFrames::Modes > > *arg2 = 0 ;
+  std::vector< double > temp1 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  GWFrames::SuperMomenta *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:new_SuperMomenta",&obj1,&obj2)) SWIG_fail;
+  {
+    if(PyArray_Check(obj1)) {
+      PyArrayObject *xa = reinterpret_cast<PyArrayObject*>(obj1);
+      if(PyArray_TYPE(xa) != NPY_DOUBLE) {
+        SWIG_exception(SWIG_TypeError, "(1) numpy array of 'double' expected."	\
+          " Make sure that the numpy array use dtype=double.");
+      }
+      const std::size_t size = PyArray_DIM(xa, 0);
+      temp1.resize(size);
+      double* array = static_cast<double*>(PyArray_DATA(xa));
+      if(PyArray_ISCONTIGUOUS(xa)) {
+        std::copy(array, array + size, temp1.begin());
+      } else {
+        const npy_intp strides = PyArray_STRIDE(xa, 0)/sizeof(double);
+        for (std::size_t i = 0; i < size; i++)
+        temp1[i] = array[i*strides];
+      }
+    } else if(PySequence_Check(obj1)) {
+      Py_ssize_t size = PySequence_Size(obj1);
+      temp1.resize(size);
+      PyObject* item;
+      for(Py_ssize_t i=0; i<size; ++i) {
+        item = PySequence_GetItem(obj1, i);
+        if(!SWIG_IsOK(SWIG_AsVal_double (item, &temp1[i]))) {
+          Py_DECREF(item);
+          SWIG_exception(SWIG_TypeError, "expected items of sequence to be of type "\
+            "\"double\" in argument 1");
+        }
+        Py_DECREF(item);
+      }
+    } else {
+      SWIG_exception(SWIG_TypeError, "(2) numpy array of 'double' expected. " \
+        "Make sure that the numpy array use dtype=double.");
+    }
+    arg1 = &temp1;
+  }
+  res2 = SWIG_ConvertPtr(obj2, &argp2, SWIGTYPE_p_std__vectorT_GWFrames__Modes_std__allocatorT_GWFrames__Modes_t_t,  0  | 0);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "new_SuperMomenta" "', argument " "2"" of type '" "std::vector< GWFrames::Modes,std::allocator< GWFrames::Modes > > const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_SuperMomenta" "', argument " "2"" of type '" "std::vector< GWFrames::Modes,std::allocator< GWFrames::Modes > > const &""'"); 
+  }
+  arg2 = reinterpret_cast< std::vector< GWFrames::Modes,std::allocator< GWFrames::Modes > > * >(argp2);
+  {
+    try {
+      result = (GWFrames::SuperMomenta *)new GWFrames::SuperMomenta((std::vector< double,std::allocator< double > > const &)*arg1,(std::vector< GWFrames::Modes,std::allocator< GWFrames::Modes > > const &)*arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__SuperMomenta, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
+fail:
+  return -1;
+}
+
+
+SWIGINTERN int _wrap_new_SuperMomenta__SWIG_3(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Scri *arg1 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::SuperMomenta *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:new_SuperMomenta",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj1, &argp1, SWIGTYPE_p_GWFrames__Scri,  0  | 0);
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_SuperMomenta" "', argument " "1"" of type '" "GWFrames::Scri const &""'"); 
+  }
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_SuperMomenta" "', argument " "1"" of type '" "GWFrames::Scri const &""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Scri * >(argp1);
+  {
+    try {
+      result = (GWFrames::SuperMomenta *)new GWFrames::SuperMomenta((GWFrames::Scri const &)*arg1);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__SuperMomenta, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
+fail:
+  return -1;
+}
+
+
+SWIGINTERN int _wrap_new_SuperMomenta(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[3];
+  int ii;
+  
+  if (!PyTuple_Check(args)) SWIG_fail;
+  argc = args ? (int)PyObject_Length(args) : 0;
+  for (ii = 0; (ii < 2) && (ii < argc); ii++) {
+    argv[ii] = PyTuple_GET_ITEM(args,ii);
+  }
+  if (argc == 1) {
+    int _v;
+    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_GWFrames__SuperMomenta, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_new_SuperMomenta__SWIG_1(self, args);
+    }
+  }
+  if (argc == 1) {
+    int _v;
+    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_GWFrames__Scri, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_new_SuperMomenta__SWIG_3(self, args);
+    }
+  }
+  if (argc == 1) {
+    int _v;
+    {
+      int res = SWIG_AsVal_unsigned_SS_int(argv[0], NULL);
+      _v = SWIG_CheckState(res);
+    }
+    if (_v) {
+      return _wrap_new_SuperMomenta__SWIG_0(self, args);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      _v = false;
+      if(PyArray_Check(argv[0])) {
+        _v = (PyArray_NDIM(reinterpret_cast<const PyArrayObject*>(argv[0]))==1);
+      } else if(PyList_Check(argv[0])) {
+        if(PyList_Size(argv[0])==0) {
+          _v = true;
+        } else {
+          PyObject* item = PySequence_GetItem(argv[0], 0);
+          double* temp=0;
+          _v = SWIG_IsOK(SWIG_AsVal_double (item, temp));
+        }
+      }
+    }
+    if (_v) {
+      int res = SWIG_ConvertPtr(argv[1], 0, SWIGTYPE_p_std__vectorT_GWFrames__Modes_std__allocatorT_GWFrames__Modes_t_t, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap_new_SuperMomenta__SWIG_2(self, args);
+      }
+    }
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'new_SuperMomenta'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    GWFrames::SuperMomenta::SuperMomenta(unsigned int const)\n"
+    "    GWFrames::SuperMomenta::SuperMomenta(GWFrames::SuperMomenta const &)\n"
+    "    GWFrames::SuperMomenta::SuperMomenta(std::vector< double,std::allocator< double > > const &,std::vector< GWFrames::Modes,std::allocator< GWFrames::Modes > > const &)\n"
+    "    GWFrames::SuperMomenta::SuperMomenta(GWFrames::Scri const &)\n");
+  return -1;
+}
+
+
+SWIGINTERN PyObject *_wrap_SuperMomenta_NTimes(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SuperMomenta *arg1 = (GWFrames::SuperMomenta *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int result;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SuperMomenta, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SuperMomenta_NTimes" "', argument " "1"" of type '" "GWFrames::SuperMomenta const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SuperMomenta * >(argp1);
+  {
+    try {
+      result = (int)((GWFrames::SuperMomenta const *)arg1)->NTimes();;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_From_int(static_cast< int >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SuperMomenta_T(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SuperMomenta *arg1 = (GWFrames::SuperMomenta *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  SwigValueWrapper< std::vector< double,std::allocator< double > > > result;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SuperMomenta, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SuperMomenta_T" "', argument " "1"" of type '" "GWFrames::SuperMomenta const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SuperMomenta * >(argp1);
+  {
+    try {
+      result = ((GWFrames::SuperMomenta const *)arg1)->T();;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  {
+    // RANDOMSTRING1
+    npy_intp adims = (&result)->size();
+    resultobj = PyArray_SimpleNew(1, &adims, NPY_DOUBLE);
+    double* data = static_cast<double*>(PyArray_DATA(reinterpret_cast<PyArrayObject*>(resultobj)));
+    std::copy((&result)->begin(), (&result)->end(), data);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SuperMomenta_BMSTransform(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SuperMomenta *arg1 = (GWFrames::SuperMomenta *) 0 ;
+  GWFrames::Modes *arg2 = 0 ;
+  GWFrames::Modes *arg3 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  GWFrames::Modes result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:SuperMomenta_BMSTransform",&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SuperMomenta, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SuperMomenta_BMSTransform" "', argument " "1"" of type '" "GWFrames::SuperMomenta const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SuperMomenta * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_GWFrames__Modes,  0  | 0);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "SuperMomenta_BMSTransform" "', argument " "2"" of type '" "GWFrames::Modes const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "SuperMomenta_BMSTransform" "', argument " "2"" of type '" "GWFrames::Modes const &""'"); 
+  }
+  arg2 = reinterpret_cast< GWFrames::Modes * >(argp2);
+  res3 = SWIG_ConvertPtr(obj2, &argp3, SWIGTYPE_p_GWFrames__Modes,  0  | 0);
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "SuperMomenta_BMSTransform" "', argument " "3"" of type '" "GWFrames::Modes const &""'"); 
+  }
+  if (!argp3) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "SuperMomenta_BMSTransform" "', argument " "3"" of type '" "GWFrames::Modes const &""'"); 
+  }
+  arg3 = reinterpret_cast< GWFrames::Modes * >(argp3);
+  {
+    try {
+      result = ((GWFrames::SuperMomenta const *)arg1)->BMSTransform((GWFrames::Modes const &)*arg2,(GWFrames::Modes const &)*arg3);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj((new GWFrames::Modes(static_cast< const GWFrames::Modes& >(result))), SWIGTYPE_p_GWFrames__Modes, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SuperMomenta_MoreschiIteration(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SuperMomenta *arg1 = (GWFrames::SuperMomenta *) 0 ;
+  GWFrames::Modes *arg2 = 0 ;
+  GWFrames::Modes *arg3 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:SuperMomenta_MoreschiIteration",&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SuperMomenta, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SuperMomenta_MoreschiIteration" "', argument " "1"" of type '" "GWFrames::SuperMomenta const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SuperMomenta * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_GWFrames__Modes,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "SuperMomenta_MoreschiIteration" "', argument " "2"" of type '" "GWFrames::Modes &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "SuperMomenta_MoreschiIteration" "', argument " "2"" of type '" "GWFrames::Modes &""'"); 
+  }
+  arg2 = reinterpret_cast< GWFrames::Modes * >(argp2);
+  res3 = SWIG_ConvertPtr(obj2, &argp3, SWIGTYPE_p_GWFrames__Modes,  0 );
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "SuperMomenta_MoreschiIteration" "', argument " "3"" of type '" "GWFrames::Modes &""'"); 
+  }
+  if (!argp3) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "SuperMomenta_MoreschiIteration" "', argument " "3"" of type '" "GWFrames::Modes &""'"); 
+  }
+  arg3 = reinterpret_cast< GWFrames::Modes * >(argp3);
+  {
+    try {
+      ((GWFrames::SuperMomenta const *)arg1)->MoreschiIteration(*arg2,*arg3);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SuperMomenta___getitem__(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SuperMomenta *arg1 = (GWFrames::SuperMomenta *) 0 ;
+  unsigned int arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  unsigned int val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::Modes result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:SuperMomenta___getitem__",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SuperMomenta, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SuperMomenta___getitem__" "', argument " "1"" of type '" "GWFrames::SuperMomenta const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SuperMomenta * >(argp1);
+  ecode2 = SWIG_AsVal_unsigned_SS_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "SuperMomenta___getitem__" "', argument " "2"" of type '" "unsigned int""'");
+  } 
+  arg2 = static_cast< unsigned int >(val2);
+  {
+    try {
+      result = GWFrames_SuperMomenta___getitem__((GWFrames::SuperMomenta const *)arg1,arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj((new GWFrames::Modes(static_cast< const GWFrames::Modes& >(result))), SWIGTYPE_p_GWFrames__Modes, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SuperMomenta___setitem__(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SuperMomenta *arg1 = (GWFrames::SuperMomenta *) 0 ;
+  unsigned int arg2 ;
+  GWFrames::Modes *arg3 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  unsigned int val2 ;
+  int ecode2 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:SuperMomenta___setitem__",&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SuperMomenta, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SuperMomenta___setitem__" "', argument " "1"" of type '" "GWFrames::SuperMomenta *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SuperMomenta * >(argp1);
+  ecode2 = SWIG_AsVal_unsigned_SS_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "SuperMomenta___setitem__" "', argument " "2"" of type '" "unsigned int""'");
+  } 
+  arg2 = static_cast< unsigned int >(val2);
+  res3 = SWIG_ConvertPtr(obj2, &argp3, SWIGTYPE_p_GWFrames__Modes,  0  | 0);
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "SuperMomenta___setitem__" "', argument " "3"" of type '" "GWFrames::Modes const &""'"); 
+  }
+  if (!argp3) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "SuperMomenta___setitem__" "', argument " "3"" of type '" "GWFrames::Modes const &""'"); 
+  }
+  arg3 = reinterpret_cast< GWFrames::Modes * >(argp3);
+  {
+    try {
+      GWFrames_SuperMomenta___setitem__(arg1,arg2,(GWFrames::Modes const &)*arg3);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_SuperMomenta(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SuperMomenta *arg1 = (GWFrames::SuperMomenta *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SuperMomenta, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_SuperMomenta" "', argument " "1"" of type '" "GWFrames::SuperMomenta *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SuperMomenta * >(argp1);
+  {
+    try {
+      delete arg1;;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SliceOfScriGrid_psi0_set(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceOfScri< GWFrames::DataGrid > *arg1 = (GWFrames::SliceOfScri< GWFrames::DataGrid > *) 0 ;
+  GWFrames::DataGrid *arg2 = (GWFrames::DataGrid *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:SliceOfScriGrid_psi0_set",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__DataGrid_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SliceOfScriGrid_psi0_set" "', argument " "1"" of type '" "GWFrames::SliceOfScri< GWFrames::DataGrid > *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SliceOfScri< GWFrames::DataGrid > * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_GWFrames__DataGrid, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "SliceOfScriGrid_psi0_set" "', argument " "2"" of type '" "GWFrames::DataGrid *""'"); 
+  }
+  arg2 = reinterpret_cast< GWFrames::DataGrid * >(argp2);
+  if (arg1) (arg1)->psi0 = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SliceOfScriGrid_psi0_get(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceOfScri< GWFrames::DataGrid > *arg1 = (GWFrames::SliceOfScri< GWFrames::DataGrid > *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  GWFrames::DataGrid *result = 0 ;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__DataGrid_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SliceOfScriGrid_psi0_get" "', argument " "1"" of type '" "GWFrames::SliceOfScri< GWFrames::DataGrid > *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SliceOfScri< GWFrames::DataGrid > * >(argp1);
+  result = (GWFrames::DataGrid *)& ((arg1)->psi0);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__DataGrid, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SliceOfScriGrid_psi1_set(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceOfScri< GWFrames::DataGrid > *arg1 = (GWFrames::SliceOfScri< GWFrames::DataGrid > *) 0 ;
+  GWFrames::DataGrid *arg2 = (GWFrames::DataGrid *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:SliceOfScriGrid_psi1_set",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__DataGrid_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SliceOfScriGrid_psi1_set" "', argument " "1"" of type '" "GWFrames::SliceOfScri< GWFrames::DataGrid > *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SliceOfScri< GWFrames::DataGrid > * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_GWFrames__DataGrid, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "SliceOfScriGrid_psi1_set" "', argument " "2"" of type '" "GWFrames::DataGrid *""'"); 
+  }
+  arg2 = reinterpret_cast< GWFrames::DataGrid * >(argp2);
+  if (arg1) (arg1)->psi1 = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SliceOfScriGrid_psi1_get(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceOfScri< GWFrames::DataGrid > *arg1 = (GWFrames::SliceOfScri< GWFrames::DataGrid > *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  GWFrames::DataGrid *result = 0 ;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__DataGrid_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SliceOfScriGrid_psi1_get" "', argument " "1"" of type '" "GWFrames::SliceOfScri< GWFrames::DataGrid > *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SliceOfScri< GWFrames::DataGrid > * >(argp1);
+  result = (GWFrames::DataGrid *)& ((arg1)->psi1);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__DataGrid, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SliceOfScriGrid_psi2_set(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceOfScri< GWFrames::DataGrid > *arg1 = (GWFrames::SliceOfScri< GWFrames::DataGrid > *) 0 ;
+  GWFrames::DataGrid *arg2 = (GWFrames::DataGrid *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:SliceOfScriGrid_psi2_set",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__DataGrid_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SliceOfScriGrid_psi2_set" "', argument " "1"" of type '" "GWFrames::SliceOfScri< GWFrames::DataGrid > *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SliceOfScri< GWFrames::DataGrid > * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_GWFrames__DataGrid, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "SliceOfScriGrid_psi2_set" "', argument " "2"" of type '" "GWFrames::DataGrid *""'"); 
+  }
+  arg2 = reinterpret_cast< GWFrames::DataGrid * >(argp2);
+  if (arg1) (arg1)->psi2 = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SliceOfScriGrid_psi2_get(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceOfScri< GWFrames::DataGrid > *arg1 = (GWFrames::SliceOfScri< GWFrames::DataGrid > *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  GWFrames::DataGrid *result = 0 ;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__DataGrid_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SliceOfScriGrid_psi2_get" "', argument " "1"" of type '" "GWFrames::SliceOfScri< GWFrames::DataGrid > *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SliceOfScri< GWFrames::DataGrid > * >(argp1);
+  result = (GWFrames::DataGrid *)& ((arg1)->psi2);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__DataGrid, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SliceOfScriGrid_psi3_set(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceOfScri< GWFrames::DataGrid > *arg1 = (GWFrames::SliceOfScri< GWFrames::DataGrid > *) 0 ;
+  GWFrames::DataGrid *arg2 = (GWFrames::DataGrid *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:SliceOfScriGrid_psi3_set",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__DataGrid_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SliceOfScriGrid_psi3_set" "', argument " "1"" of type '" "GWFrames::SliceOfScri< GWFrames::DataGrid > *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SliceOfScri< GWFrames::DataGrid > * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_GWFrames__DataGrid, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "SliceOfScriGrid_psi3_set" "', argument " "2"" of type '" "GWFrames::DataGrid *""'"); 
+  }
+  arg2 = reinterpret_cast< GWFrames::DataGrid * >(argp2);
+  if (arg1) (arg1)->psi3 = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SliceOfScriGrid_psi3_get(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceOfScri< GWFrames::DataGrid > *arg1 = (GWFrames::SliceOfScri< GWFrames::DataGrid > *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  GWFrames::DataGrid *result = 0 ;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__DataGrid_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SliceOfScriGrid_psi3_get" "', argument " "1"" of type '" "GWFrames::SliceOfScri< GWFrames::DataGrid > *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SliceOfScri< GWFrames::DataGrid > * >(argp1);
+  result = (GWFrames::DataGrid *)& ((arg1)->psi3);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__DataGrid, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SliceOfScriGrid_psi4_set(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceOfScri< GWFrames::DataGrid > *arg1 = (GWFrames::SliceOfScri< GWFrames::DataGrid > *) 0 ;
+  GWFrames::DataGrid *arg2 = (GWFrames::DataGrid *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:SliceOfScriGrid_psi4_set",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__DataGrid_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SliceOfScriGrid_psi4_set" "', argument " "1"" of type '" "GWFrames::SliceOfScri< GWFrames::DataGrid > *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SliceOfScri< GWFrames::DataGrid > * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_GWFrames__DataGrid, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "SliceOfScriGrid_psi4_set" "', argument " "2"" of type '" "GWFrames::DataGrid *""'"); 
+  }
+  arg2 = reinterpret_cast< GWFrames::DataGrid * >(argp2);
+  if (arg1) (arg1)->psi4 = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SliceOfScriGrid_psi4_get(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceOfScri< GWFrames::DataGrid > *arg1 = (GWFrames::SliceOfScri< GWFrames::DataGrid > *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  GWFrames::DataGrid *result = 0 ;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__DataGrid_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SliceOfScriGrid_psi4_get" "', argument " "1"" of type '" "GWFrames::SliceOfScri< GWFrames::DataGrid > *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SliceOfScri< GWFrames::DataGrid > * >(argp1);
+  result = (GWFrames::DataGrid *)& ((arg1)->psi4);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__DataGrid, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SliceOfScriGrid_sigma_set(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceOfScri< GWFrames::DataGrid > *arg1 = (GWFrames::SliceOfScri< GWFrames::DataGrid > *) 0 ;
+  GWFrames::DataGrid *arg2 = (GWFrames::DataGrid *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:SliceOfScriGrid_sigma_set",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__DataGrid_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SliceOfScriGrid_sigma_set" "', argument " "1"" of type '" "GWFrames::SliceOfScri< GWFrames::DataGrid > *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SliceOfScri< GWFrames::DataGrid > * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_GWFrames__DataGrid, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "SliceOfScriGrid_sigma_set" "', argument " "2"" of type '" "GWFrames::DataGrid *""'"); 
+  }
+  arg2 = reinterpret_cast< GWFrames::DataGrid * >(argp2);
+  if (arg1) (arg1)->sigma = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SliceOfScriGrid_sigma_get(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceOfScri< GWFrames::DataGrid > *arg1 = (GWFrames::SliceOfScri< GWFrames::DataGrid > *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  GWFrames::DataGrid *result = 0 ;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__DataGrid_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SliceOfScriGrid_sigma_get" "', argument " "1"" of type '" "GWFrames::SliceOfScri< GWFrames::DataGrid > *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SliceOfScri< GWFrames::DataGrid > * >(argp1);
+  result = (GWFrames::DataGrid *)& ((arg1)->sigma);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__DataGrid, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SliceOfScriGrid_sigmadot_set(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceOfScri< GWFrames::DataGrid > *arg1 = (GWFrames::SliceOfScri< GWFrames::DataGrid > *) 0 ;
+  GWFrames::DataGrid *arg2 = (GWFrames::DataGrid *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:SliceOfScriGrid_sigmadot_set",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__DataGrid_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SliceOfScriGrid_sigmadot_set" "', argument " "1"" of type '" "GWFrames::SliceOfScri< GWFrames::DataGrid > *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SliceOfScri< GWFrames::DataGrid > * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_GWFrames__DataGrid, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "SliceOfScriGrid_sigmadot_set" "', argument " "2"" of type '" "GWFrames::DataGrid *""'"); 
+  }
+  arg2 = reinterpret_cast< GWFrames::DataGrid * >(argp2);
+  if (arg1) (arg1)->sigmadot = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SliceOfScriGrid_sigmadot_get(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceOfScri< GWFrames::DataGrid > *arg1 = (GWFrames::SliceOfScri< GWFrames::DataGrid > *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  GWFrames::DataGrid *result = 0 ;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__DataGrid_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SliceOfScriGrid_sigmadot_get" "', argument " "1"" of type '" "GWFrames::SliceOfScri< GWFrames::DataGrid > *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SliceOfScri< GWFrames::DataGrid > * >(argp1);
+  result = (GWFrames::DataGrid *)& ((arg1)->sigmadot);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__DataGrid, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN int _wrap_new_SliceOfScriGrid__SWIG_0(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  int arg1 ;
+  int val1 ;
+  int ecode1 = 0 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::SliceOfScri< GWFrames::DataGrid > *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:new_SliceOfScriGrid",&obj1)) SWIG_fail;
+  ecode1 = SWIG_AsVal_int(obj1, &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_SliceOfScriGrid" "', argument " "1"" of type '" "int""'");
+  } 
+  arg1 = static_cast< int >(val1);
+  {
+    try {
+      result = (GWFrames::SliceOfScri< GWFrames::DataGrid > *)new GWFrames::SliceOfScri< GWFrames::DataGrid >(arg1);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__DataGrid_t, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
+fail:
+  return -1;
+}
+
+
+SWIGINTERN int _wrap_new_SliceOfScriGrid__SWIG_1(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceOfScri< GWFrames::DataGrid > *result = 0 ;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  {
+    try {
+      result = (GWFrames::SliceOfScri< GWFrames::DataGrid > *)new GWFrames::SliceOfScri< GWFrames::DataGrid >();;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__DataGrid_t, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
+fail:
+  return -1;
+}
+
+
+SWIGINTERN int _wrap_new_SliceOfScriGrid__SWIG_2(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceOfScri< GWFrames::DataGrid > *arg1 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::SliceOfScri< GWFrames::DataGrid > *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:new_SliceOfScriGrid",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj1, &argp1, SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__DataGrid_t,  0  | 0);
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_SliceOfScriGrid" "', argument " "1"" of type '" "GWFrames::SliceOfScri< GWFrames::DataGrid > const &""'"); 
+  }
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_SliceOfScriGrid" "', argument " "1"" of type '" "GWFrames::SliceOfScri< GWFrames::DataGrid > const &""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SliceOfScri< GWFrames::DataGrid > * >(argp1);
+  {
+    try {
+      result = (GWFrames::SliceOfScri< GWFrames::DataGrid > *)new GWFrames::SliceOfScri< GWFrames::DataGrid >((GWFrames::SliceOfScri< GWFrames::DataGrid > const &)*arg1);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__DataGrid_t, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
+fail:
+  return -1;
+}
+
+
+SWIGINTERN int _wrap_new_SliceOfScriGrid(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[2];
+  int ii;
+  
+  if (!PyTuple_Check(args)) SWIG_fail;
+  argc = args ? (int)PyObject_Length(args) : 0;
+  for (ii = 0; (ii < 1) && (ii < argc); ii++) {
+    argv[ii] = PyTuple_GET_ITEM(args,ii);
+  }
+  if (argc == 0) {
+    return _wrap_new_SliceOfScriGrid__SWIG_1(self, args);
+  }
+  if (argc == 1) {
+    int _v;
+    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__DataGrid_t, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_new_SliceOfScriGrid__SWIG_2(self, args);
+    }
+  }
+  if (argc == 1) {
+    int _v;
+    {
+      int res = SWIG_AsVal_int(argv[0], NULL);
+      _v = SWIG_CheckState(res);
+    }
+    if (_v) {
+      return _wrap_new_SliceOfScriGrid__SWIG_0(self, args);
+    }
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'new_SliceOfScriGrid'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    GWFrames::SliceOfScri< GWFrames::DataGrid >::SliceOfScri(int const)\n"
+    "    GWFrames::SliceOfScri< GWFrames::DataGrid >::SliceOfScri()\n"
+    "    GWFrames::SliceOfScri< GWFrames::DataGrid >::SliceOfScri(GWFrames::SliceOfScri< GWFrames::DataGrid > const &)\n");
+  return -1;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_SliceOfScriGrid(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceOfScri< GWFrames::DataGrid > *arg1 = (GWFrames::SliceOfScri< GWFrames::DataGrid > *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__DataGrid_t, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_SliceOfScriGrid" "', argument " "1"" of type '" "GWFrames::SliceOfScri< GWFrames::DataGrid > *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SliceOfScri< GWFrames::DataGrid > * >(argp1);
+  {
+    try {
+      delete arg1;;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SliceOfScriModes_psi0_set(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceOfScri< GWFrames::Modes > *arg1 = (GWFrames::SliceOfScri< GWFrames::Modes > *) 0 ;
+  GWFrames::Modes *arg2 = (GWFrames::Modes *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:SliceOfScriModes_psi0_set",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__Modes_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SliceOfScriModes_psi0_set" "', argument " "1"" of type '" "GWFrames::SliceOfScri< GWFrames::Modes > *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SliceOfScri< GWFrames::Modes > * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_GWFrames__Modes, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "SliceOfScriModes_psi0_set" "', argument " "2"" of type '" "GWFrames::Modes *""'"); 
+  }
+  arg2 = reinterpret_cast< GWFrames::Modes * >(argp2);
+  if (arg1) (arg1)->psi0 = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SliceOfScriModes_psi0_get(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceOfScri< GWFrames::Modes > *arg1 = (GWFrames::SliceOfScri< GWFrames::Modes > *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  GWFrames::Modes *result = 0 ;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__Modes_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SliceOfScriModes_psi0_get" "', argument " "1"" of type '" "GWFrames::SliceOfScri< GWFrames::Modes > *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SliceOfScri< GWFrames::Modes > * >(argp1);
+  result = (GWFrames::Modes *)& ((arg1)->psi0);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Modes, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SliceOfScriModes_psi1_set(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceOfScri< GWFrames::Modes > *arg1 = (GWFrames::SliceOfScri< GWFrames::Modes > *) 0 ;
+  GWFrames::Modes *arg2 = (GWFrames::Modes *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:SliceOfScriModes_psi1_set",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__Modes_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SliceOfScriModes_psi1_set" "', argument " "1"" of type '" "GWFrames::SliceOfScri< GWFrames::Modes > *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SliceOfScri< GWFrames::Modes > * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_GWFrames__Modes, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "SliceOfScriModes_psi1_set" "', argument " "2"" of type '" "GWFrames::Modes *""'"); 
+  }
+  arg2 = reinterpret_cast< GWFrames::Modes * >(argp2);
+  if (arg1) (arg1)->psi1 = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SliceOfScriModes_psi1_get(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceOfScri< GWFrames::Modes > *arg1 = (GWFrames::SliceOfScri< GWFrames::Modes > *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  GWFrames::Modes *result = 0 ;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__Modes_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SliceOfScriModes_psi1_get" "', argument " "1"" of type '" "GWFrames::SliceOfScri< GWFrames::Modes > *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SliceOfScri< GWFrames::Modes > * >(argp1);
+  result = (GWFrames::Modes *)& ((arg1)->psi1);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Modes, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SliceOfScriModes_psi2_set(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceOfScri< GWFrames::Modes > *arg1 = (GWFrames::SliceOfScri< GWFrames::Modes > *) 0 ;
+  GWFrames::Modes *arg2 = (GWFrames::Modes *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:SliceOfScriModes_psi2_set",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__Modes_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SliceOfScriModes_psi2_set" "', argument " "1"" of type '" "GWFrames::SliceOfScri< GWFrames::Modes > *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SliceOfScri< GWFrames::Modes > * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_GWFrames__Modes, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "SliceOfScriModes_psi2_set" "', argument " "2"" of type '" "GWFrames::Modes *""'"); 
+  }
+  arg2 = reinterpret_cast< GWFrames::Modes * >(argp2);
+  if (arg1) (arg1)->psi2 = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SliceOfScriModes_psi2_get(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceOfScri< GWFrames::Modes > *arg1 = (GWFrames::SliceOfScri< GWFrames::Modes > *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  GWFrames::Modes *result = 0 ;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__Modes_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SliceOfScriModes_psi2_get" "', argument " "1"" of type '" "GWFrames::SliceOfScri< GWFrames::Modes > *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SliceOfScri< GWFrames::Modes > * >(argp1);
+  result = (GWFrames::Modes *)& ((arg1)->psi2);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Modes, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SliceOfScriModes_psi3_set(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceOfScri< GWFrames::Modes > *arg1 = (GWFrames::SliceOfScri< GWFrames::Modes > *) 0 ;
+  GWFrames::Modes *arg2 = (GWFrames::Modes *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:SliceOfScriModes_psi3_set",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__Modes_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SliceOfScriModes_psi3_set" "', argument " "1"" of type '" "GWFrames::SliceOfScri< GWFrames::Modes > *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SliceOfScri< GWFrames::Modes > * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_GWFrames__Modes, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "SliceOfScriModes_psi3_set" "', argument " "2"" of type '" "GWFrames::Modes *""'"); 
+  }
+  arg2 = reinterpret_cast< GWFrames::Modes * >(argp2);
+  if (arg1) (arg1)->psi3 = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SliceOfScriModes_psi3_get(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceOfScri< GWFrames::Modes > *arg1 = (GWFrames::SliceOfScri< GWFrames::Modes > *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  GWFrames::Modes *result = 0 ;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__Modes_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SliceOfScriModes_psi3_get" "', argument " "1"" of type '" "GWFrames::SliceOfScri< GWFrames::Modes > *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SliceOfScri< GWFrames::Modes > * >(argp1);
+  result = (GWFrames::Modes *)& ((arg1)->psi3);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Modes, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SliceOfScriModes_psi4_set(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceOfScri< GWFrames::Modes > *arg1 = (GWFrames::SliceOfScri< GWFrames::Modes > *) 0 ;
+  GWFrames::Modes *arg2 = (GWFrames::Modes *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:SliceOfScriModes_psi4_set",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__Modes_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SliceOfScriModes_psi4_set" "', argument " "1"" of type '" "GWFrames::SliceOfScri< GWFrames::Modes > *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SliceOfScri< GWFrames::Modes > * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_GWFrames__Modes, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "SliceOfScriModes_psi4_set" "', argument " "2"" of type '" "GWFrames::Modes *""'"); 
+  }
+  arg2 = reinterpret_cast< GWFrames::Modes * >(argp2);
+  if (arg1) (arg1)->psi4 = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SliceOfScriModes_psi4_get(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceOfScri< GWFrames::Modes > *arg1 = (GWFrames::SliceOfScri< GWFrames::Modes > *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  GWFrames::Modes *result = 0 ;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__Modes_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SliceOfScriModes_psi4_get" "', argument " "1"" of type '" "GWFrames::SliceOfScri< GWFrames::Modes > *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SliceOfScri< GWFrames::Modes > * >(argp1);
+  result = (GWFrames::Modes *)& ((arg1)->psi4);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Modes, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SliceOfScriModes_sigma_set(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceOfScri< GWFrames::Modes > *arg1 = (GWFrames::SliceOfScri< GWFrames::Modes > *) 0 ;
+  GWFrames::Modes *arg2 = (GWFrames::Modes *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:SliceOfScriModes_sigma_set",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__Modes_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SliceOfScriModes_sigma_set" "', argument " "1"" of type '" "GWFrames::SliceOfScri< GWFrames::Modes > *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SliceOfScri< GWFrames::Modes > * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_GWFrames__Modes, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "SliceOfScriModes_sigma_set" "', argument " "2"" of type '" "GWFrames::Modes *""'"); 
+  }
+  arg2 = reinterpret_cast< GWFrames::Modes * >(argp2);
+  if (arg1) (arg1)->sigma = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SliceOfScriModes_sigma_get(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceOfScri< GWFrames::Modes > *arg1 = (GWFrames::SliceOfScri< GWFrames::Modes > *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  GWFrames::Modes *result = 0 ;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__Modes_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SliceOfScriModes_sigma_get" "', argument " "1"" of type '" "GWFrames::SliceOfScri< GWFrames::Modes > *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SliceOfScri< GWFrames::Modes > * >(argp1);
+  result = (GWFrames::Modes *)& ((arg1)->sigma);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Modes, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SliceOfScriModes_sigmadot_set(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceOfScri< GWFrames::Modes > *arg1 = (GWFrames::SliceOfScri< GWFrames::Modes > *) 0 ;
+  GWFrames::Modes *arg2 = (GWFrames::Modes *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:SliceOfScriModes_sigmadot_set",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__Modes_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SliceOfScriModes_sigmadot_set" "', argument " "1"" of type '" "GWFrames::SliceOfScri< GWFrames::Modes > *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SliceOfScri< GWFrames::Modes > * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_GWFrames__Modes, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "SliceOfScriModes_sigmadot_set" "', argument " "2"" of type '" "GWFrames::Modes *""'"); 
+  }
+  arg2 = reinterpret_cast< GWFrames::Modes * >(argp2);
+  if (arg1) (arg1)->sigmadot = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_SliceOfScriModes_sigmadot_get(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceOfScri< GWFrames::Modes > *arg1 = (GWFrames::SliceOfScri< GWFrames::Modes > *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  GWFrames::Modes *result = 0 ;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__Modes_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SliceOfScriModes_sigmadot_get" "', argument " "1"" of type '" "GWFrames::SliceOfScri< GWFrames::Modes > *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SliceOfScri< GWFrames::Modes > * >(argp1);
+  result = (GWFrames::Modes *)& ((arg1)->sigmadot);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Modes, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN int _wrap_new_SliceOfScriModes__SWIG_0(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  int arg1 ;
+  int val1 ;
+  int ecode1 = 0 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::SliceOfScri< GWFrames::Modes > *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:new_SliceOfScriModes",&obj1)) SWIG_fail;
+  ecode1 = SWIG_AsVal_int(obj1, &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_SliceOfScriModes" "', argument " "1"" of type '" "int""'");
+  } 
+  arg1 = static_cast< int >(val1);
+  {
+    try {
+      result = (GWFrames::SliceOfScri< GWFrames::Modes > *)new GWFrames::SliceOfScri< GWFrames::Modes >(arg1);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__Modes_t, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
+fail:
+  return -1;
+}
+
+
+SWIGINTERN int _wrap_new_SliceOfScriModes__SWIG_1(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceOfScri< GWFrames::Modes > *result = 0 ;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  {
+    try {
+      result = (GWFrames::SliceOfScri< GWFrames::Modes > *)new GWFrames::SliceOfScri< GWFrames::Modes >();;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__Modes_t, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
+fail:
+  return -1;
+}
+
+
+SWIGINTERN int _wrap_new_SliceOfScriModes__SWIG_2(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceOfScri< GWFrames::Modes > *arg1 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::SliceOfScri< GWFrames::Modes > *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:new_SliceOfScriModes",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj1, &argp1, SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__Modes_t,  0  | 0);
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_SliceOfScriModes" "', argument " "1"" of type '" "GWFrames::SliceOfScri< GWFrames::Modes > const &""'"); 
+  }
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_SliceOfScriModes" "', argument " "1"" of type '" "GWFrames::SliceOfScri< GWFrames::Modes > const &""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SliceOfScri< GWFrames::Modes > * >(argp1);
+  {
+    try {
+      result = (GWFrames::SliceOfScri< GWFrames::Modes > *)new GWFrames::SliceOfScri< GWFrames::Modes >((GWFrames::SliceOfScri< GWFrames::Modes > const &)*arg1);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__Modes_t, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
+fail:
+  return -1;
+}
+
+
+SWIGINTERN int _wrap_new_SliceOfScriModes(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[2];
+  int ii;
+  
+  if (!PyTuple_Check(args)) SWIG_fail;
+  argc = args ? (int)PyObject_Length(args) : 0;
+  for (ii = 0; (ii < 1) && (ii < argc); ii++) {
+    argv[ii] = PyTuple_GET_ITEM(args,ii);
+  }
+  if (argc == 0) {
+    return _wrap_new_SliceOfScriModes__SWIG_1(self, args);
+  }
+  if (argc == 1) {
+    int _v;
+    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__Modes_t, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_new_SliceOfScriModes__SWIG_2(self, args);
+    }
+  }
+  if (argc == 1) {
+    int _v;
+    {
+      int res = SWIG_AsVal_int(argv[0], NULL);
+      _v = SWIG_CheckState(res);
+    }
+    if (_v) {
+      return _wrap_new_SliceOfScriModes__SWIG_0(self, args);
+    }
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'new_SliceOfScriModes'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    GWFrames::SliceOfScri< GWFrames::Modes >::SliceOfScri(int const)\n"
+    "    GWFrames::SliceOfScri< GWFrames::Modes >::SliceOfScri()\n"
+    "    GWFrames::SliceOfScri< GWFrames::Modes >::SliceOfScri(GWFrames::SliceOfScri< GWFrames::Modes > const &)\n");
+  return -1;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_SliceOfScriModes(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::SliceOfScri< GWFrames::Modes > *arg1 = (GWFrames::SliceOfScri< GWFrames::Modes > *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__SliceOfScriT_GWFrames__Modes_t, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_SliceOfScriModes" "', argument " "1"" of type '" "GWFrames::SliceOfScri< GWFrames::Modes > *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::SliceOfScri< GWFrames::Modes > * >(argp1);
   {
     try {
       delete arg1;;
@@ -22216,7 +28808,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap__Waveform_Boost(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__Waveform_Boost__SWIG_0(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
   std::vector< double,std::allocator< double > > *arg2 = 0 ;
@@ -22287,6 +28879,166 @@ SWIGINTERN PyObject *_wrap__Waveform_Boost(PyObject *self, PyObject *args) {
   return resultobj;
 fail:
   return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap__Waveform_Boost__SWIG_1(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
+  std::vector< std::vector< double,std::allocator< double > >,std::allocator< std::vector< double,std::allocator< double > > > > *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::vector< std::vector< double > > temp2 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::Waveform *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:_Waveform_Boost",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_Boost" "', argument " "1"" of type '" "GWFrames::Waveform *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
+  {
+    if(PyArray_Check(obj1)) {
+      PyArrayObject *xa = reinterpret_cast<PyArrayObject*>(obj1);
+      if(PyArray_TYPE(xa) != NPY_DOUBLE) {
+        SWIG_exception(SWIG_TypeError, "(2) numpy array of 'double' expected."	\
+          " Make sure that the numpy array use dtype=double.");
+      }
+      const std::size_t size0 = PyArray_DIM(xa, 0);
+      const std::size_t size1 = PyArray_DIM(xa, 1);
+      temp2.resize(size0);
+      for(unsigned int i=0; i<size0; ++i) {
+        temp2[i].resize(size1);
+      }
+      double* array = static_cast<double*>(PyArray_DATA(xa));
+      const npy_intp strides0 = PyArray_STRIDE(xa, 0)/sizeof(double);
+      const npy_intp strides1 = PyArray_STRIDE(xa, 1)/sizeof(double);
+      for (std::size_t i = 0; i < size0; ++i) {
+        for (std::size_t j = 0; j< size1; ++j) {
+          temp2[i][j] = array[i*strides0+j*strides1];
+        }
+      }
+    } else if(PySequence_Check(obj1)) {
+      Py_ssize_t size0 = PySequence_Size(obj1);
+      temp2.resize(size0);
+      PyObject* item0;
+      PyObject* item1;
+      for(Py_ssize_t i=0; i<size0; ++i) {
+        item0 = PySequence_GetItem(obj1, i);
+        Py_ssize_t size1 = PySequence_Size(item0);
+        temp2[i].resize(size1);
+        for(Py_ssize_t j=0; j<size1; ++j) {
+          item1 = PySequence_GetItem(item0, j);
+          if(!SWIG_IsOK(SWIG_AsVal_double (item1, &temp2[i][j]))) {
+            Py_DECREF(item1);
+            SWIG_exception(SWIG_TypeError, "expected items of sequence to be sequences of type " \
+              "\"double\" in argument 2");
+          }
+          Py_DECREF(item1);
+        }
+      }
+    } else {
+      SWIG_exception(SWIG_TypeError, "(1) numpy array of 'double' expected.");
+    }
+    arg2 = &temp2;
+  }
+  {
+    try {
+      result = (GWFrames::Waveform *) &(arg1)->Boost((std::vector< std::vector< double,std::allocator< double > >,std::allocator< std::vector< double,std::allocator< double > > > > const &)*arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap__Waveform_Boost(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[3];
+  int ii;
+  
+  if (!PyTuple_Check(args)) SWIG_fail;
+  argc = args ? (int)PyObject_Length(args) : 0;
+  argv[0] = self;
+  for (ii = 0; (ii < 1) && (ii < argc); ii++) {
+    argv[ii + 1] = PyTuple_GET_ITEM(args,ii);
+  }
+  argc++;
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__Waveform, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        _v = false;
+        if(PyArray_Check(argv[1])) {
+          _v = (PyArray_NDIM(reinterpret_cast<const PyArrayObject*>(argv[1]))==1);
+        } else if(PyList_Check(argv[1])) {
+          if(PyList_Size(argv[1])==0) {
+            _v = true;
+          } else {
+            PyObject* item = PySequence_GetItem(argv[1], 0);
+            double* temp=0;
+            _v = SWIG_IsOK(SWIG_AsVal_double (item, temp));
+          }
+        }
+      }
+      if (_v) {
+        return _wrap__Waveform_Boost__SWIG_0(self, args);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__Waveform, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        _v = false;
+        if(PyArray_Check(argv[1])) {
+          _v = (PyArray_NDIM(reinterpret_cast<const PyArrayObject*>(argv[1]))==2);
+        } else if(PyList_Check(argv[1])) {
+          if(PyList_Size(argv[1])==0) {
+            _v = true;
+          } else {
+            PyObject* item0 = PySequence_GetItem(argv[1], 0);
+            if(PyList_Size(item0)==0) {
+              _v = true;
+            } else {
+              PyObject* item1 = PySequence_GetItem(item0, 0);
+              double* temp=0;
+              _v = SWIG_IsOK(SWIG_AsVal_double (item1, temp));
+            }
+          }
+        }
+      }
+      if (_v) {
+        return _wrap__Waveform_Boost__SWIG_1(self, args);
+      }
+    }
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function '_Waveform_Boost'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    GWFrames::Waveform::Boost(std::vector< double,std::allocator< double > > const &) const\n"
+    "    GWFrames::Waveform::Boost(std::vector< std::vector< double,std::allocator< double > >,std::allocator< std::vector< double,std::allocator< double > > > > const &)\n");
+  return 0;
 }
 
 
@@ -29746,6 +36498,87 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"Eigenvectors", _wrap_Eigenvectors, METH_VARARGS, NULL},
 	 { (char *)"Eigensystem", _wrap_Eigensystem, METH_VARARGS, NULL},
 	 { (char *)"Determinant", _wrap_Determinant, METH_VARARGS, NULL},
+	 { (char *)"Boost", _wrap_Boost, METH_VARARGS, (char *)"\n"
+		"Return a rotor taking n into its boosted version.\n"
+		"=================================================\n"
+		"  Parameters\n"
+		"  ----------\n"
+		"    ThreeVector v\n"
+		"      Three-vector velocity of the new frame WRT this frame\n"
+		"    ThreeVector n\n"
+		"      Three-vector direction to be boosted by the rotor\n"
+		"  \n"
+		"  Returns\n"
+		"  -------\n"
+		"    Quaternion\n"
+		"  \n"
+		"  Description\n"
+		"  -----------\n"
+		"    This function returns a rotor $R_b$ that takes the input vector $\\hat{n}$\n"
+		"    (which will be normalized) on the future null sphere into its boosted\n"
+		"    version. Note that this rotor is a function of both the vector being\n"
+		"    boosted and the boost itself.\n"
+		"  \n"
+		"\n"
+		""},
+	 { (char *)"ConformalFactorGrid", _wrap_ConformalFactorGrid, METH_VARARGS, (char *)"\n"
+		"Construct a grid with the conformal factor at each point.\n"
+		"=========================================================\n"
+		"  Parameters\n"
+		"  ----------\n"
+		"    const ThreeVector& v\n"
+		"    const int n_theta\n"
+		"    const int n_phi\n"
+		"  \n"
+		"  Returns\n"
+		"  -------\n"
+		"    DataGrid\n"
+		"  \n"
+		"\n"
+		""},
+	 { (char *)"InverseConformalFactorGrid", _wrap_InverseConformalFactorGrid, METH_VARARGS, (char *)"\n"
+		"Construct a grid with the conformal factor at each point.\n"
+		"=========================================================\n"
+		"  Parameters\n"
+		"  ----------\n"
+		"    const ThreeVector& v\n"
+		"    const int n_theta\n"
+		"    const int n_phi\n"
+		"  \n"
+		"  Returns\n"
+		"  -------\n"
+		"    DataGrid\n"
+		"  \n"
+		"\n"
+		""},
+	 { (char *)"InverseConformalFactorBoostedGrid", _wrap_InverseConformalFactorBoostedGrid, METH_VARARGS, (char *)"\n"
+		"Construct a boosted grid with the conformal factor at each point.\n"
+		"=================================================================\n"
+		"  Parameters\n"
+		"  ----------\n"
+		"    const ThreeVector& v\n"
+		"    const int n_theta\n"
+		"    const int n_phi\n"
+		"  \n"
+		"  Returns\n"
+		"  -------\n"
+		"    DataGrid\n"
+		"  \n"
+		"\n"
+		""},
+	 { (char *)"vFromOneOverK", _wrap_vFromOneOverK, METH_VARARGS, (char *)"\n"
+		"Derive three-velocity from the inverse conformal metric.\n"
+		"========================================================\n"
+		"  Parameters\n"
+		"  ----------\n"
+		"    const Modes& OneOverK\n"
+		"  \n"
+		"  Returns\n"
+		"  -------\n"
+		"    ThreeVector\n"
+		"  \n"
+		"\n"
+		""},
 	 { NULL, NULL, 0, NULL }
 };
 
@@ -30579,6 +37412,2013 @@ static PyHeapTypeObject SwigPyBuiltin__std__vectorT_GWFrames__Matrix_t_type = {
 };
 
 SWIGINTERN SwigPyClientData SwigPyBuiltin__std__vectorT_GWFrames__Matrix_t_clientdata = {0, 0, 0, 0, 0, 0, (PyTypeObject *)&SwigPyBuiltin__std__vectorT_GWFrames__Matrix_t_type};
+
+SWIGPY_DESTRUCTOR_CLOSURE(_wrap_delete_ScriFunctor)
+SWIGINTERN PyGetSetDef SwigPyBuiltin__GWFrames__ScriFunctor_getset[] = {
+    {NULL, NULL, NULL, NULL, NULL} /* Sentinel */
+};
+
+SWIGINTERN PyObject *
+SwigPyBuiltin__GWFrames__ScriFunctor_richcompare(PyObject *self, PyObject *other, int op) {
+  PyObject *result = NULL;
+  PyObject *tuple = PyTuple_New(1);
+  assert(tuple);
+  PyTuple_SET_ITEM(tuple, 0, other);
+  Py_XINCREF(other);
+  if (!result) {
+    if (SwigPyObject_Check(self) && SwigPyObject_Check(other)) {
+      result = SwigPyObject_richcompare((SwigPyObject *)self, (SwigPyObject *)other, op);
+    } else {
+      result = Py_NotImplemented;
+      Py_INCREF(result);
+    }
+  }
+  Py_DECREF(tuple);
+  return result;
+}
+
+SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__ScriFunctor_methods[] = {
+  { "__call__", (PyCFunction) _wrap_ScriFunctor___call__, METH_VARARGS, (char*) "\n"
+		"Parameters\n"
+		"----------\n"
+		"  const Quaternions::Quaternion& \n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  double\n"
+		"\n"
+		"\n"
+		"" },
+  { NULL, NULL, 0, NULL } /* Sentinel */
+};
+
+static PyHeapTypeObject SwigPyBuiltin__GWFrames__ScriFunctor_type = {
+  {
+#if PY_VERSION_HEX >= 0x03000000
+    PyVarObject_HEAD_INIT(NULL, 0)
+#else
+    PyObject_HEAD_INIT(NULL)
+    0,                                        /* ob_size */
+#endif
+    "ScriFunctor",                            /* tp_name */
+    sizeof(SwigPyObject),                     /* tp_basicsize */
+    0,                                        /* tp_itemsize */
+    (destructor) _wrap_delete_ScriFunctor_closure, /* tp_dealloc */
+    (printfunc) 0,                            /* tp_print */
+    (getattrfunc) 0,                          /* tp_getattr */
+    (setattrfunc) 0,                          /* tp_setattr */
+#if PY_VERSION_HEX >= 0x03000000
+    0,                                        /* tp_compare */
+#else
+    (cmpfunc) 0,                              /* tp_compare */
+#endif
+    (reprfunc) 0,                             /* tp_repr */
+    &SwigPyBuiltin__GWFrames__ScriFunctor_type.as_number,      /* tp_as_number */
+    &SwigPyBuiltin__GWFrames__ScriFunctor_type.as_sequence,    /* tp_as_sequence */
+    &SwigPyBuiltin__GWFrames__ScriFunctor_type.as_mapping,     /* tp_as_mapping */
+    (hashfunc) 0,                             /* tp_hash */
+    (ternaryfunc) (ternarycallfunc) _wrap_ScriFunctor___call___closure, /* tp_call */
+    (reprfunc) 0,                             /* tp_str */
+    (getattrofunc) 0,                         /* tp_getattro */
+    (setattrofunc) 0,                         /* tp_setattro */
+    &SwigPyBuiltin__GWFrames__ScriFunctor_type.as_buffer,      /* tp_as_buffer */
+#if PY_VERSION_HEX >= 0x03000000
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,   /* tp_flags */
+#else
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_CHECKTYPES, /* tp_flags */
+#endif
+    "GWFrames::ScriFunctor",                  /* tp_doc */
+    (traverseproc) 0,                         /* tp_traverse */
+    (inquiry) 0,                              /* tp_clear */
+    (richcmpfunc) SwigPyBuiltin__GWFrames__ScriFunctor_richcompare, /* feature:python:tp_richcompare */
+    0,                                        /* tp_weaklistoffset */
+    (getiterfunc) 0,                          /* tp_iter */
+    (iternextfunc) 0,                         /* tp_iternext */
+    SwigPyBuiltin__GWFrames__ScriFunctor_methods, /* tp_methods */
+    0,                                        /* tp_members */
+    SwigPyBuiltin__GWFrames__ScriFunctor_getset, /* tp_getset */
+    0,                                        /* tp_base */
+    0,                                        /* tp_dict */
+    (descrgetfunc) 0,                         /* tp_descr_get */
+    (descrsetfunc) 0,                         /* tp_descr_set */
+    (Py_ssize_t)offsetof(SwigPyObject, dict), /* tp_dictoffset */
+    (initproc) _wrap_new_ScriFunctor,         /* tp_init */
+    (allocfunc) 0,                            /* tp_alloc */
+    (newfunc) 0,                              /* tp_new */
+    (freefunc) 0,                             /* tp_free */
+    (inquiry) 0,                              /* tp_is_gc */
+    (PyObject*) 0,                            /* tp_bases */
+    (PyObject*) 0,                            /* tp_mro */
+    (PyObject*) 0,                            /* tp_cache */
+    (PyObject*) 0,                            /* tp_subclasses */
+    (PyObject*) 0,                            /* tp_weaklist */
+    (destructor) 0,                           /* tp_del */
+#if PY_VERSION_HEX >= 0x02060000
+    (int) 0,                                  /* tp_version_tag */
+#endif
+  },
+  {
+    (binaryfunc) 0,                           /* nb_add */
+    (binaryfunc) 0,                           /* nb_subtract */
+    (binaryfunc) 0,                           /* nb_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_remainder */
+    (binaryfunc) 0,                           /* nb_divmod */
+    (ternaryfunc) 0,                          /* nb_power */
+    (unaryfunc) 0,                            /* nb_negative */
+    (unaryfunc) 0,                            /* nb_positive */
+    (unaryfunc) 0,                            /* nb_absolute */
+    (inquiry) 0,                              /* nb_nonzero */
+    (unaryfunc) 0,                            /* nb_invert */
+    (binaryfunc) 0,                           /* nb_lshift */
+    (binaryfunc) 0,                           /* nb_rshift */
+    (binaryfunc) 0,                           /* nb_and */
+    (binaryfunc) 0,                           /* nb_xor */
+    (binaryfunc) 0,                           /* nb_or */
+#if PY_VERSION_HEX < 0x03000000
+    (coercion) 0,                             /* nb_coerce */
+#endif
+    (unaryfunc) 0,                            /* nb_int */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* nb_reserved */
+#else
+    (unaryfunc) 0,                            /* nb_long */
+#endif
+    (unaryfunc) 0,                            /* nb_float */
+#if PY_VERSION_HEX < 0x03000000
+    (unaryfunc) 0,                            /* nb_oct */
+    (unaryfunc) 0,                            /* nb_hex */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_add */
+    (binaryfunc) 0,                           /* nb_inplace_subtract */
+    (binaryfunc) 0,                           /* nb_inplace_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_inplace_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_remainder */
+    (ternaryfunc) 0,                          /* nb_inplace_power */
+    (binaryfunc) 0,                           /* nb_inplace_lshift */
+    (binaryfunc) 0,                           /* nb_inplace_rshift */
+    (binaryfunc) 0,                           /* nb_inplace_and */
+    (binaryfunc) 0,                           /* nb_inplace_xor */
+    (binaryfunc) 0,                           /* nb_inplace_or */
+    (binaryfunc) 0,                           /* nb_floor_divide */
+    (binaryfunc) 0,                           /* nb_true_divide */
+    (binaryfunc) 0,                           /* nb_inplace_floor_divide */
+    (binaryfunc) 0,                           /* nb_inplace_true_divide */
+#if PY_VERSION_HEX >= 0x02050000
+    (unaryfunc) 0,                            /* nb_index */
+#endif
+  },
+  {
+    (lenfunc) 0,                              /* mp_length */
+    (binaryfunc) 0,                           /* mp_subscript */
+    (objobjargproc) 0,                        /* mp_ass_subscript */
+  },
+  {
+    (lenfunc) 0,                              /* sq_length */
+    (binaryfunc) 0,                           /* sq_concat */
+    (ssizeargfunc) 0,                         /* sq_repeat */
+    (ssizeargfunc) 0,                         /* sq_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_slice */
+#else
+    (ssizessizeargfunc) 0,                    /* sq_slice */
+#endif
+    (ssizeobjargproc) 0,                      /* sq_ass_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_ass_slice */
+#else
+    (ssizessizeobjargproc) 0,                 /* sq_ass_slice */
+#endif
+    (objobjproc) 0,                           /* sq_contains */
+    (binaryfunc) 0,                           /* sq_inplace_concat */
+    (ssizeargfunc) 0,                         /* sq_inplace_repeat */
+  },
+  {
+#if PY_VERSION_HEX < 0x03000000
+    (readbufferproc) 0,                       /* bf_getreadbuffer */
+    (writebufferproc) 0,                      /* bf_getwritebuffer */
+    (segcountproc) 0,                         /* bf_getsegcount */
+    (charbufferproc) 0,                       /* bf_getcharbuffer */
+#endif
+#if PY_VERSION_HEX >= 0x02060000
+    (getbufferproc) 0,                        /* bf_getbuffer */
+    (releasebufferproc) 0,                    /* bf_releasebuffer */
+#endif
+  },
+    (PyObject*) 0,                            /* ht_name */
+    (PyObject*) 0,                            /* ht_slots */
+};
+
+SWIGINTERN SwigPyClientData SwigPyBuiltin__GWFrames__ScriFunctor_clientdata = {0, 0, 0, 0, 0, 0, (PyTypeObject *)&SwigPyBuiltin__GWFrames__ScriFunctor_type};
+
+SWIGPY_DESTRUCTOR_CLOSURE(_wrap_delete_DataGrid)
+SWIGINTERN PyGetSetDef SwigPyBuiltin__GWFrames__DataGrid_getset[] = {
+    {NULL, NULL, NULL, NULL, NULL} /* Sentinel */
+};
+
+SWIGINTERN PyObject *
+SwigPyBuiltin__GWFrames__DataGrid_richcompare(PyObject *self, PyObject *other, int op) {
+  PyObject *result = NULL;
+  PyObject *tuple = PyTuple_New(1);
+  assert(tuple);
+  PyTuple_SET_ITEM(tuple, 0, other);
+  Py_XINCREF(other);
+  if (!result) {
+    if (SwigPyObject_Check(self) && SwigPyObject_Check(other)) {
+      result = SwigPyObject_richcompare((SwigPyObject *)self, (SwigPyObject *)other, op);
+    } else {
+      result = Py_NotImplemented;
+      Py_INCREF(result);
+    }
+  }
+  Py_DECREF(tuple);
+  return result;
+}
+
+SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__DataGrid_methods[] = {
+  { "SetSpin", (PyCFunction) _wrap_DataGrid_SetSpin, METH_VARARGS, (char*) "\n"
+		"Parameters\n"
+		"----------\n"
+		"  const int ess\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  DataGrid&\n"
+		"\n"
+		"\n"
+		"" },
+  { "SetNTheta", (PyCFunction) _wrap_DataGrid_SetNTheta, METH_VARARGS, (char*) "\n"
+		"Parameters\n"
+		"----------\n"
+		"  const int N_theta\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  DataGrid&\n"
+		"\n"
+		"\n"
+		"" },
+  { "SetNPhi", (PyCFunction) _wrap_DataGrid_SetNPhi, METH_VARARGS, (char*) "\n"
+		"Parameters\n"
+		"----------\n"
+		"  const int N_phi\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  DataGrid&\n"
+		"\n"
+		"\n"
+		"" },
+  { "size", (PyCFunction) _wrap_DataGrid_size, METH_VARARGS, (char*) "\n"
+		"Parameters\n"
+		"----------\n"
+		"  (none)\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  unsigned int\n"
+		"\n"
+		"\n"
+		"" },
+  { "Spin", (PyCFunction) _wrap_DataGrid_Spin, METH_VARARGS, (char*) "\n"
+		"Parameters\n"
+		"----------\n"
+		"  (none)\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  int\n"
+		"\n"
+		"\n"
+		"" },
+  { "N_theta", (PyCFunction) _wrap_DataGrid_N_theta, METH_VARARGS, (char*) "\n"
+		"Parameters\n"
+		"----------\n"
+		"  (none)\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  int\n"
+		"\n"
+		"\n"
+		"" },
+  { "N_phi", (PyCFunction) _wrap_DataGrid_N_phi, METH_VARARGS, (char*) "\n"
+		"Parameters\n"
+		"----------\n"
+		"  (none)\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  int\n"
+		"\n"
+		"\n"
+		"" },
+  { "__getitem__", (PyCFunction) _wrap_DataGrid___getitem__, METH_VARARGS, (char*) "\n"
+		"Parameters\n"
+		"----------\n"
+		"  const unsigned int i\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  const complex<double>&\n"
+		"\n"
+		"\n"
+		"\n"
+		"\n"
+		"Parameters\n"
+		"----------\n"
+		"  const unsigned int i\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  complex<double>&\n"
+		"\n"
+		"\n"
+		"" },
+  { "__setitem__", (PyCFunction) _wrap_DataGrid___setitem__, METH_VARARGS, (char*) "\n"
+		"Parameters\n"
+		"----------\n"
+		"  const unsigned int i\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  const complex<double>&\n"
+		"\n"
+		"\n"
+		"\n"
+		"\n"
+		"Parameters\n"
+		"----------\n"
+		"  const unsigned int i\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  complex<double>&\n"
+		"\n"
+		"\n"
+		"" },
+  { "Data", (PyCFunction) _wrap_DataGrid_Data, METH_VARARGS, (char*) "\n"
+		"Parameters\n"
+		"----------\n"
+		"  (none)\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  vector<complex<double>>\n"
+		"\n"
+		"\n"
+		"" },
+  { "__mul__", (PyCFunction) _wrap_DataGrid___mul__, METH_VARARGS, (char*) "" },
+  { "__div__", (PyCFunction) _wrap_DataGrid___div__, METH_VARARGS, (char*) "" },
+  { "__add__", (PyCFunction) _wrap_DataGrid___add__, METH_VARARGS, (char*) "" },
+  { "__sub__", (PyCFunction) _wrap_DataGrid___sub__, METH_VARARGS, (char*) "" },
+  { "pow", (PyCFunction) _wrap_DataGrid_pow, METH_VARARGS, (char*) "" },
+  { NULL, NULL, 0, NULL } /* Sentinel */
+};
+
+static PyHeapTypeObject SwigPyBuiltin__GWFrames__DataGrid_type = {
+  {
+#if PY_VERSION_HEX >= 0x03000000
+    PyVarObject_HEAD_INIT(NULL, 0)
+#else
+    PyObject_HEAD_INIT(NULL)
+    0,                                        /* ob_size */
+#endif
+    "DataGrid",                               /* tp_name */
+    sizeof(SwigPyObject),                     /* tp_basicsize */
+    0,                                        /* tp_itemsize */
+    (destructor) _wrap_delete_DataGrid_closure, /* tp_dealloc */
+    (printfunc) 0,                            /* tp_print */
+    (getattrfunc) 0,                          /* tp_getattr */
+    (setattrfunc) 0,                          /* tp_setattr */
+#if PY_VERSION_HEX >= 0x03000000
+    0,                                        /* tp_compare */
+#else
+    (cmpfunc) 0,                              /* tp_compare */
+#endif
+    (reprfunc) 0,                             /* tp_repr */
+    &SwigPyBuiltin__GWFrames__DataGrid_type.as_number,      /* tp_as_number */
+    &SwigPyBuiltin__GWFrames__DataGrid_type.as_sequence,    /* tp_as_sequence */
+    &SwigPyBuiltin__GWFrames__DataGrid_type.as_mapping,     /* tp_as_mapping */
+    (hashfunc) 0,                             /* tp_hash */
+    (ternaryfunc) 0,                          /* tp_call */
+    (reprfunc) 0,                             /* tp_str */
+    (getattrofunc) 0,                         /* tp_getattro */
+    (setattrofunc) 0,                         /* tp_setattro */
+    &SwigPyBuiltin__GWFrames__DataGrid_type.as_buffer,      /* tp_as_buffer */
+#if PY_VERSION_HEX >= 0x03000000
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,   /* tp_flags */
+#else
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_CHECKTYPES, /* tp_flags */
+#endif
+    "GWFrames::DataGrid",                     /* tp_doc */
+    (traverseproc) 0,                         /* tp_traverse */
+    (inquiry) 0,                              /* tp_clear */
+    (richcmpfunc) SwigPyBuiltin__GWFrames__DataGrid_richcompare, /* feature:python:tp_richcompare */
+    0,                                        /* tp_weaklistoffset */
+    (getiterfunc) 0,                          /* tp_iter */
+    (iternextfunc) 0,                         /* tp_iternext */
+    SwigPyBuiltin__GWFrames__DataGrid_methods, /* tp_methods */
+    0,                                        /* tp_members */
+    SwigPyBuiltin__GWFrames__DataGrid_getset, /* tp_getset */
+    0,                                        /* tp_base */
+    0,                                        /* tp_dict */
+    (descrgetfunc) 0,                         /* tp_descr_get */
+    (descrsetfunc) 0,                         /* tp_descr_set */
+    (Py_ssize_t)offsetof(SwigPyObject, dict), /* tp_dictoffset */
+    (initproc) _wrap_new_DataGrid,            /* tp_init */
+    (allocfunc) 0,                            /* tp_alloc */
+    (newfunc) 0,                              /* tp_new */
+    (freefunc) 0,                             /* tp_free */
+    (inquiry) 0,                              /* tp_is_gc */
+    (PyObject*) 0,                            /* tp_bases */
+    (PyObject*) 0,                            /* tp_mro */
+    (PyObject*) 0,                            /* tp_cache */
+    (PyObject*) 0,                            /* tp_subclasses */
+    (PyObject*) 0,                            /* tp_weaklist */
+    (destructor) 0,                           /* tp_del */
+#if PY_VERSION_HEX >= 0x02060000
+    (int) 0,                                  /* tp_version_tag */
+#endif
+  },
+  {
+    (binaryfunc) (binaryfunc) _wrap_DataGrid___add___closure, /* nb_add */
+    (binaryfunc) (binaryfunc) _wrap_DataGrid___sub___closure, /* nb_subtract */
+    (binaryfunc) (binaryfunc) _wrap_DataGrid___mul___closure, /* nb_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_remainder */
+    (binaryfunc) 0,                           /* nb_divmod */
+    (ternaryfunc) 0,                          /* nb_power */
+    (unaryfunc) 0,                            /* nb_negative */
+    (unaryfunc) 0,                            /* nb_positive */
+    (unaryfunc) 0,                            /* nb_absolute */
+    (inquiry) 0,                              /* nb_nonzero */
+    (unaryfunc) 0,                            /* nb_invert */
+    (binaryfunc) 0,                           /* nb_lshift */
+    (binaryfunc) 0,                           /* nb_rshift */
+    (binaryfunc) 0,                           /* nb_and */
+    (binaryfunc) 0,                           /* nb_xor */
+    (binaryfunc) 0,                           /* nb_or */
+#if PY_VERSION_HEX < 0x03000000
+    (coercion) 0,                             /* nb_coerce */
+#endif
+    (unaryfunc) 0,                            /* nb_int */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* nb_reserved */
+#else
+    (unaryfunc) 0,                            /* nb_long */
+#endif
+    (unaryfunc) 0,                            /* nb_float */
+#if PY_VERSION_HEX < 0x03000000
+    (unaryfunc) 0,                            /* nb_oct */
+    (unaryfunc) 0,                            /* nb_hex */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_add */
+    (binaryfunc) 0,                           /* nb_inplace_subtract */
+    (binaryfunc) 0,                           /* nb_inplace_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_inplace_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_remainder */
+    (ternaryfunc) 0,                          /* nb_inplace_power */
+    (binaryfunc) 0,                           /* nb_inplace_lshift */
+    (binaryfunc) 0,                           /* nb_inplace_rshift */
+    (binaryfunc) 0,                           /* nb_inplace_and */
+    (binaryfunc) 0,                           /* nb_inplace_xor */
+    (binaryfunc) 0,                           /* nb_inplace_or */
+    (binaryfunc) 0,                           /* nb_floor_divide */
+    (binaryfunc) 0,                           /* nb_true_divide */
+    (binaryfunc) 0,                           /* nb_inplace_floor_divide */
+    (binaryfunc) 0,                           /* nb_inplace_true_divide */
+#if PY_VERSION_HEX >= 0x02050000
+    (unaryfunc) 0,                            /* nb_index */
+#endif
+  },
+  {
+    (lenfunc) 0,                              /* mp_length */
+    (binaryfunc) 0,                           /* mp_subscript */
+    (objobjargproc) 0,                        /* mp_ass_subscript */
+  },
+  {
+    (lenfunc) 0,                              /* sq_length */
+    (binaryfunc) 0,                           /* sq_concat */
+    (ssizeargfunc) 0,                         /* sq_repeat */
+    (ssizeargfunc) 0,                         /* sq_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_slice */
+#else
+    (ssizessizeargfunc) 0,                    /* sq_slice */
+#endif
+    (ssizeobjargproc) 0,                      /* sq_ass_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_ass_slice */
+#else
+    (ssizessizeobjargproc) 0,                 /* sq_ass_slice */
+#endif
+    (objobjproc) 0,                           /* sq_contains */
+    (binaryfunc) 0,                           /* sq_inplace_concat */
+    (ssizeargfunc) 0,                         /* sq_inplace_repeat */
+  },
+  {
+#if PY_VERSION_HEX < 0x03000000
+    (readbufferproc) 0,                       /* bf_getreadbuffer */
+    (writebufferproc) 0,                      /* bf_getwritebuffer */
+    (segcountproc) 0,                         /* bf_getsegcount */
+    (charbufferproc) 0,                       /* bf_getcharbuffer */
+#endif
+#if PY_VERSION_HEX >= 0x02060000
+    (getbufferproc) 0,                        /* bf_getbuffer */
+    (releasebufferproc) 0,                    /* bf_releasebuffer */
+#endif
+  },
+    (PyObject*) 0,                            /* ht_name */
+    (PyObject*) 0,                            /* ht_slots */
+};
+
+SWIGINTERN SwigPyClientData SwigPyBuiltin__GWFrames__DataGrid_clientdata = {0, 0, 0, 0, 0, 0, (PyTypeObject *)&SwigPyBuiltin__GWFrames__DataGrid_type};
+
+SWIGPY_DESTRUCTOR_CLOSURE(_wrap_delete_Modes)
+SWIGINTERN PyGetSetDef SwigPyBuiltin__GWFrames__Modes_getset[] = {
+    {NULL, NULL, NULL, NULL, NULL} /* Sentinel */
+};
+
+SWIGINTERN PyObject *
+SwigPyBuiltin__GWFrames__Modes_richcompare(PyObject *self, PyObject *other, int op) {
+  PyObject *result = NULL;
+  PyObject *tuple = PyTuple_New(1);
+  assert(tuple);
+  PyTuple_SET_ITEM(tuple, 0, other);
+  Py_XINCREF(other);
+  if (!result) {
+    if (SwigPyObject_Check(self) && SwigPyObject_Check(other)) {
+      result = SwigPyObject_richcompare((SwigPyObject *)self, (SwigPyObject *)other, op);
+    } else {
+      result = Py_NotImplemented;
+      Py_INCREF(result);
+    }
+  }
+  Py_DECREF(tuple);
+  return result;
+}
+
+SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__Modes_methods[] = {
+  { "SetSpin", (PyCFunction) _wrap_Modes_SetSpin, METH_VARARGS, (char*) "\n"
+		"Parameters\n"
+		"----------\n"
+		"  const int ess\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  Modes&\n"
+		"\n"
+		"\n"
+		"" },
+  { "SetEllMax", (PyCFunction) _wrap_Modes_SetEllMax, METH_VARARGS, (char*) "\n"
+		"Parameters\n"
+		"----------\n"
+		"  const int ell\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  Modes&\n"
+		"\n"
+		"\n"
+		"" },
+  { "size", (PyCFunction) _wrap_Modes_size, METH_VARARGS, (char*) "\n"
+		"Parameters\n"
+		"----------\n"
+		"  (none)\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  unsigned int\n"
+		"\n"
+		"\n"
+		"" },
+  { "Spin", (PyCFunction) _wrap_Modes_Spin, METH_VARARGS, (char*) "\n"
+		"Parameters\n"
+		"----------\n"
+		"  (none)\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  int\n"
+		"\n"
+		"\n"
+		"" },
+  { "EllMax", (PyCFunction) _wrap_Modes_EllMax, METH_VARARGS, (char*) "\n"
+		"Parameters\n"
+		"----------\n"
+		"  (none)\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  int\n"
+		"\n"
+		"\n"
+		"" },
+  { "__getitem__", (PyCFunction) _wrap_Modes___getitem__, METH_VARARGS, (char*) "\n"
+		"Parameters\n"
+		"----------\n"
+		"  const unsigned int i\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  complex<double>\n"
+		"\n"
+		"\n"
+		"\n"
+		"\n"
+		"Parameters\n"
+		"----------\n"
+		"  const unsigned int i\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  complex<double>&\n"
+		"\n"
+		"\n"
+		"" },
+  { "__setitem__", (PyCFunction) _wrap_Modes___setitem__, METH_VARARGS, (char*) "\n"
+		"Parameters\n"
+		"----------\n"
+		"  const unsigned int i\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  complex<double>\n"
+		"\n"
+		"\n"
+		"\n"
+		"\n"
+		"Parameters\n"
+		"----------\n"
+		"  const unsigned int i\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  complex<double>&\n"
+		"\n"
+		"\n"
+		"" },
+  { "Data", (PyCFunction) _wrap_Modes_Data, METH_VARARGS, (char*) "\n"
+		"Parameters\n"
+		"----------\n"
+		"  (none)\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  vector<complex<double>>\n"
+		"\n"
+		"\n"
+		"" },
+  { "pow", (PyCFunction) _wrap_Modes_pow, METH_VARARGS, (char*) "\n"
+		"Parameters\n"
+		"----------\n"
+		"  const int p\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  Modes\n"
+		"\n"
+		"\n"
+		"" },
+  { "bar", (PyCFunction) _wrap_Modes_bar, METH_VARARGS, (char*) "" },
+  { "__mul__", (PyCFunction) _wrap_Modes___mul__, METH_VARARGS, (char*) "" },
+  { "__div__", (PyCFunction) _wrap_Modes___div__, METH_VARARGS, (char*) "" },
+  { "__add__", (PyCFunction) _wrap_Modes___add__, METH_VARARGS, (char*) "" },
+  { "__sub__", (PyCFunction) _wrap_Modes___sub__, METH_VARARGS, (char*) "" },
+  { "edth", (PyCFunction) _wrap_Modes_edth, METH_VARARGS, (char*) "" },
+  { "edthbar", (PyCFunction) _wrap_Modes_edthbar, METH_VARARGS, (char*) "" },
+  { "edth2edthbar2", (PyCFunction) _wrap_Modes_edth2edthbar2, METH_VARARGS, (char*) "" },
+  { "EvaluateAtPoint", (PyCFunction) _wrap_Modes_EvaluateAtPoint, METH_VARARGS, (char*) "" },
+  { NULL, NULL, 0, NULL } /* Sentinel */
+};
+
+static PyHeapTypeObject SwigPyBuiltin__GWFrames__Modes_type = {
+  {
+#if PY_VERSION_HEX >= 0x03000000
+    PyVarObject_HEAD_INIT(NULL, 0)
+#else
+    PyObject_HEAD_INIT(NULL)
+    0,                                        /* ob_size */
+#endif
+    "Modes",                                  /* tp_name */
+    sizeof(SwigPyObject),                     /* tp_basicsize */
+    0,                                        /* tp_itemsize */
+    (destructor) _wrap_delete_Modes_closure,  /* tp_dealloc */
+    (printfunc) 0,                            /* tp_print */
+    (getattrfunc) 0,                          /* tp_getattr */
+    (setattrfunc) 0,                          /* tp_setattr */
+#if PY_VERSION_HEX >= 0x03000000
+    0,                                        /* tp_compare */
+#else
+    (cmpfunc) 0,                              /* tp_compare */
+#endif
+    (reprfunc) 0,                             /* tp_repr */
+    &SwigPyBuiltin__GWFrames__Modes_type.as_number,      /* tp_as_number */
+    &SwigPyBuiltin__GWFrames__Modes_type.as_sequence,    /* tp_as_sequence */
+    &SwigPyBuiltin__GWFrames__Modes_type.as_mapping,     /* tp_as_mapping */
+    (hashfunc) 0,                             /* tp_hash */
+    (ternaryfunc) 0,                          /* tp_call */
+    (reprfunc) 0,                             /* tp_str */
+    (getattrofunc) 0,                         /* tp_getattro */
+    (setattrofunc) 0,                         /* tp_setattro */
+    &SwigPyBuiltin__GWFrames__Modes_type.as_buffer,      /* tp_as_buffer */
+#if PY_VERSION_HEX >= 0x03000000
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,   /* tp_flags */
+#else
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_CHECKTYPES, /* tp_flags */
+#endif
+    "GWFrames::Modes",                        /* tp_doc */
+    (traverseproc) 0,                         /* tp_traverse */
+    (inquiry) 0,                              /* tp_clear */
+    (richcmpfunc) SwigPyBuiltin__GWFrames__Modes_richcompare, /* feature:python:tp_richcompare */
+    0,                                        /* tp_weaklistoffset */
+    (getiterfunc) 0,                          /* tp_iter */
+    (iternextfunc) 0,                         /* tp_iternext */
+    SwigPyBuiltin__GWFrames__Modes_methods,   /* tp_methods */
+    0,                                        /* tp_members */
+    SwigPyBuiltin__GWFrames__Modes_getset,    /* tp_getset */
+    0,                                        /* tp_base */
+    0,                                        /* tp_dict */
+    (descrgetfunc) 0,                         /* tp_descr_get */
+    (descrsetfunc) 0,                         /* tp_descr_set */
+    (Py_ssize_t)offsetof(SwigPyObject, dict), /* tp_dictoffset */
+    (initproc) _wrap_new_Modes,               /* tp_init */
+    (allocfunc) 0,                            /* tp_alloc */
+    (newfunc) 0,                              /* tp_new */
+    (freefunc) 0,                             /* tp_free */
+    (inquiry) 0,                              /* tp_is_gc */
+    (PyObject*) 0,                            /* tp_bases */
+    (PyObject*) 0,                            /* tp_mro */
+    (PyObject*) 0,                            /* tp_cache */
+    (PyObject*) 0,                            /* tp_subclasses */
+    (PyObject*) 0,                            /* tp_weaklist */
+    (destructor) 0,                           /* tp_del */
+#if PY_VERSION_HEX >= 0x02060000
+    (int) 0,                                  /* tp_version_tag */
+#endif
+  },
+  {
+    (binaryfunc) (binaryfunc) _wrap_Modes___add___closure, /* nb_add */
+    (binaryfunc) (binaryfunc) _wrap_Modes___sub___closure, /* nb_subtract */
+    (binaryfunc) (binaryfunc) _wrap_Modes___mul___closure, /* nb_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_remainder */
+    (binaryfunc) 0,                           /* nb_divmod */
+    (ternaryfunc) 0,                          /* nb_power */
+    (unaryfunc) 0,                            /* nb_negative */
+    (unaryfunc) 0,                            /* nb_positive */
+    (unaryfunc) 0,                            /* nb_absolute */
+    (inquiry) 0,                              /* nb_nonzero */
+    (unaryfunc) 0,                            /* nb_invert */
+    (binaryfunc) 0,                           /* nb_lshift */
+    (binaryfunc) 0,                           /* nb_rshift */
+    (binaryfunc) 0,                           /* nb_and */
+    (binaryfunc) 0,                           /* nb_xor */
+    (binaryfunc) 0,                           /* nb_or */
+#if PY_VERSION_HEX < 0x03000000
+    (coercion) 0,                             /* nb_coerce */
+#endif
+    (unaryfunc) 0,                            /* nb_int */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* nb_reserved */
+#else
+    (unaryfunc) 0,                            /* nb_long */
+#endif
+    (unaryfunc) 0,                            /* nb_float */
+#if PY_VERSION_HEX < 0x03000000
+    (unaryfunc) 0,                            /* nb_oct */
+    (unaryfunc) 0,                            /* nb_hex */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_add */
+    (binaryfunc) 0,                           /* nb_inplace_subtract */
+    (binaryfunc) 0,                           /* nb_inplace_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_inplace_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_remainder */
+    (ternaryfunc) 0,                          /* nb_inplace_power */
+    (binaryfunc) 0,                           /* nb_inplace_lshift */
+    (binaryfunc) 0,                           /* nb_inplace_rshift */
+    (binaryfunc) 0,                           /* nb_inplace_and */
+    (binaryfunc) 0,                           /* nb_inplace_xor */
+    (binaryfunc) 0,                           /* nb_inplace_or */
+    (binaryfunc) 0,                           /* nb_floor_divide */
+    (binaryfunc) 0,                           /* nb_true_divide */
+    (binaryfunc) 0,                           /* nb_inplace_floor_divide */
+    (binaryfunc) 0,                           /* nb_inplace_true_divide */
+#if PY_VERSION_HEX >= 0x02050000
+    (unaryfunc) 0,                            /* nb_index */
+#endif
+  },
+  {
+    (lenfunc) 0,                              /* mp_length */
+    (binaryfunc) 0,                           /* mp_subscript */
+    (objobjargproc) 0,                        /* mp_ass_subscript */
+  },
+  {
+    (lenfunc) 0,                              /* sq_length */
+    (binaryfunc) 0,                           /* sq_concat */
+    (ssizeargfunc) 0,                         /* sq_repeat */
+    (ssizeargfunc) 0,                         /* sq_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_slice */
+#else
+    (ssizessizeargfunc) 0,                    /* sq_slice */
+#endif
+    (ssizeobjargproc) 0,                      /* sq_ass_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_ass_slice */
+#else
+    (ssizessizeobjargproc) 0,                 /* sq_ass_slice */
+#endif
+    (objobjproc) 0,                           /* sq_contains */
+    (binaryfunc) 0,                           /* sq_inplace_concat */
+    (ssizeargfunc) 0,                         /* sq_inplace_repeat */
+  },
+  {
+#if PY_VERSION_HEX < 0x03000000
+    (readbufferproc) 0,                       /* bf_getreadbuffer */
+    (writebufferproc) 0,                      /* bf_getwritebuffer */
+    (segcountproc) 0,                         /* bf_getsegcount */
+    (charbufferproc) 0,                       /* bf_getcharbuffer */
+#endif
+#if PY_VERSION_HEX >= 0x02060000
+    (getbufferproc) 0,                        /* bf_getbuffer */
+    (releasebufferproc) 0,                    /* bf_releasebuffer */
+#endif
+  },
+    (PyObject*) 0,                            /* ht_name */
+    (PyObject*) 0,                            /* ht_slots */
+};
+
+SWIGINTERN SwigPyClientData SwigPyBuiltin__GWFrames__Modes_clientdata = {0, 0, 0, 0, 0, 0, (PyTypeObject *)&SwigPyBuiltin__GWFrames__Modes_type};
+
+SWIGPY_DESTRUCTOR_CLOSURE(_wrap_delete_SliceModes)
+SWIGINTERN PyGetSetDef SwigPyBuiltin__GWFrames__SliceModes_getset[] = {
+    {NULL, NULL, NULL, NULL, NULL} /* Sentinel */
+};
+
+SWIGINTERN PyObject *
+SwigPyBuiltin__GWFrames__SliceModes_richcompare(PyObject *self, PyObject *other, int op) {
+  PyObject *result = NULL;
+  PyObject *tuple = PyTuple_New(1);
+  assert(tuple);
+  PyTuple_SET_ITEM(tuple, 0, other);
+  Py_XINCREF(other);
+  if (!result) {
+    if (SwigPyObject_Check(self) && SwigPyObject_Check(other)) {
+      result = SwigPyObject_richcompare((SwigPyObject *)self, (SwigPyObject *)other, op);
+    } else {
+      result = Py_NotImplemented;
+      Py_INCREF(result);
+    }
+  }
+  Py_DECREF(tuple);
+  return result;
+}
+
+SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__SliceModes_methods[] = {
+  { "EllMax", (PyCFunction) _wrap_SliceModes_EllMax, METH_VARARGS, (char*) "" },
+  { "Mass", (PyCFunction) _wrap_SliceModes_Mass, METH_VARARGS, (char*) "" },
+  { "FourMomentum", (PyCFunction) _wrap_SliceModes_FourMomentum, METH_VARARGS, (char*) "" },
+  { "SuperMomentum", (PyCFunction) _wrap_SliceModes_SuperMomentum, METH_VARARGS, (char*) "" },
+  { "BMSTransformationOnSlice", (PyCFunction) _wrap_SliceModes_BMSTransformationOnSlice, METH_VARARGS, (char*) "\n"
+		"Execute a BMS transformation except for the supertranslation of points.\n"
+		"=======================================================================\n"
+		"  Parameters\n"
+		"  ----------\n"
+		"    const double u\n"
+		"    const ThreeVector& v\n"
+		"    const Modes& delta\n"
+		"  \n"
+		"  Returns\n"
+		"  -------\n"
+		"    SliceGrid\n"
+		"  \n"
+		"  Description\n"
+		"  -----------\n"
+		"    A full BMS transformation is only possible using information from multiple\n"
+		"    slices due to the supertranslation moving points 'between slices'. This\n"
+		"    function simply transforms the data within the slice by accounting for the\n"
+		"    change of grid at each point, and the change of grid points themselves. The\n"
+		"    returned object is a DataGrid object, each point of which can then be used\n"
+		"    to interpolate to the supertranslated time.\n"
+		"  \n"
+		"\n"
+		"" },
+  { "MoreschiIteration", (PyCFunction) _wrap_SliceModes_MoreschiIteration, METH_VARARGS, (char*) "" },
+  { "__getitem__", (PyCFunction) _wrap_SliceModes___getitem__, METH_VARARGS, (char*) "" },
+  { "__setitem__", (PyCFunction) _wrap_SliceModes___setitem__, METH_VARARGS, (char*) "" },
+  { NULL, NULL, 0, NULL } /* Sentinel */
+};
+
+static PyHeapTypeObject SwigPyBuiltin__GWFrames__SliceModes_type = {
+  {
+#if PY_VERSION_HEX >= 0x03000000
+    PyVarObject_HEAD_INIT(NULL, 0)
+#else
+    PyObject_HEAD_INIT(NULL)
+    0,                                        /* ob_size */
+#endif
+    "SliceModes",                             /* tp_name */
+    sizeof(SwigPyObject),                     /* tp_basicsize */
+    0,                                        /* tp_itemsize */
+    (destructor) _wrap_delete_SliceModes_closure, /* tp_dealloc */
+    (printfunc) 0,                            /* tp_print */
+    (getattrfunc) 0,                          /* tp_getattr */
+    (setattrfunc) 0,                          /* tp_setattr */
+#if PY_VERSION_HEX >= 0x03000000
+    0,                                        /* tp_compare */
+#else
+    (cmpfunc) 0,                              /* tp_compare */
+#endif
+    (reprfunc) 0,                             /* tp_repr */
+    &SwigPyBuiltin__GWFrames__SliceModes_type.as_number,      /* tp_as_number */
+    &SwigPyBuiltin__GWFrames__SliceModes_type.as_sequence,    /* tp_as_sequence */
+    &SwigPyBuiltin__GWFrames__SliceModes_type.as_mapping,     /* tp_as_mapping */
+    (hashfunc) 0,                             /* tp_hash */
+    (ternaryfunc) 0,                          /* tp_call */
+    (reprfunc) 0,                             /* tp_str */
+    (getattrofunc) 0,                         /* tp_getattro */
+    (setattrofunc) 0,                         /* tp_setattro */
+    &SwigPyBuiltin__GWFrames__SliceModes_type.as_buffer,      /* tp_as_buffer */
+#if PY_VERSION_HEX >= 0x03000000
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,   /* tp_flags */
+#else
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_CHECKTYPES, /* tp_flags */
+#endif
+    "GWFrames::SliceModes",                   /* tp_doc */
+    (traverseproc) 0,                         /* tp_traverse */
+    (inquiry) 0,                              /* tp_clear */
+    (richcmpfunc) SwigPyBuiltin__GWFrames__SliceModes_richcompare, /* feature:python:tp_richcompare */
+    0,                                        /* tp_weaklistoffset */
+    (getiterfunc) 0,                          /* tp_iter */
+    (iternextfunc) 0,                         /* tp_iternext */
+    SwigPyBuiltin__GWFrames__SliceModes_methods, /* tp_methods */
+    0,                                        /* tp_members */
+    SwigPyBuiltin__GWFrames__SliceModes_getset, /* tp_getset */
+    0,                                        /* tp_base */
+    0,                                        /* tp_dict */
+    (descrgetfunc) 0,                         /* tp_descr_get */
+    (descrsetfunc) 0,                         /* tp_descr_set */
+    (Py_ssize_t)offsetof(SwigPyObject, dict), /* tp_dictoffset */
+    (initproc) _wrap_new_SliceModes,          /* tp_init */
+    (allocfunc) 0,                            /* tp_alloc */
+    (newfunc) 0,                              /* tp_new */
+    (freefunc) 0,                             /* tp_free */
+    (inquiry) 0,                              /* tp_is_gc */
+    (PyObject*) 0,                            /* tp_bases */
+    (PyObject*) 0,                            /* tp_mro */
+    (PyObject*) 0,                            /* tp_cache */
+    (PyObject*) 0,                            /* tp_subclasses */
+    (PyObject*) 0,                            /* tp_weaklist */
+    (destructor) 0,                           /* tp_del */
+#if PY_VERSION_HEX >= 0x02060000
+    (int) 0,                                  /* tp_version_tag */
+#endif
+  },
+  {
+    (binaryfunc) 0,                           /* nb_add */
+    (binaryfunc) 0,                           /* nb_subtract */
+    (binaryfunc) 0,                           /* nb_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_remainder */
+    (binaryfunc) 0,                           /* nb_divmod */
+    (ternaryfunc) 0,                          /* nb_power */
+    (unaryfunc) 0,                            /* nb_negative */
+    (unaryfunc) 0,                            /* nb_positive */
+    (unaryfunc) 0,                            /* nb_absolute */
+    (inquiry) 0,                              /* nb_nonzero */
+    (unaryfunc) 0,                            /* nb_invert */
+    (binaryfunc) 0,                           /* nb_lshift */
+    (binaryfunc) 0,                           /* nb_rshift */
+    (binaryfunc) 0,                           /* nb_and */
+    (binaryfunc) 0,                           /* nb_xor */
+    (binaryfunc) 0,                           /* nb_or */
+#if PY_VERSION_HEX < 0x03000000
+    (coercion) 0,                             /* nb_coerce */
+#endif
+    (unaryfunc) 0,                            /* nb_int */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* nb_reserved */
+#else
+    (unaryfunc) 0,                            /* nb_long */
+#endif
+    (unaryfunc) 0,                            /* nb_float */
+#if PY_VERSION_HEX < 0x03000000
+    (unaryfunc) 0,                            /* nb_oct */
+    (unaryfunc) 0,                            /* nb_hex */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_add */
+    (binaryfunc) 0,                           /* nb_inplace_subtract */
+    (binaryfunc) 0,                           /* nb_inplace_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_inplace_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_remainder */
+    (ternaryfunc) 0,                          /* nb_inplace_power */
+    (binaryfunc) 0,                           /* nb_inplace_lshift */
+    (binaryfunc) 0,                           /* nb_inplace_rshift */
+    (binaryfunc) 0,                           /* nb_inplace_and */
+    (binaryfunc) 0,                           /* nb_inplace_xor */
+    (binaryfunc) 0,                           /* nb_inplace_or */
+    (binaryfunc) 0,                           /* nb_floor_divide */
+    (binaryfunc) 0,                           /* nb_true_divide */
+    (binaryfunc) 0,                           /* nb_inplace_floor_divide */
+    (binaryfunc) 0,                           /* nb_inplace_true_divide */
+#if PY_VERSION_HEX >= 0x02050000
+    (unaryfunc) 0,                            /* nb_index */
+#endif
+  },
+  {
+    (lenfunc) 0,                              /* mp_length */
+    (binaryfunc) 0,                           /* mp_subscript */
+    (objobjargproc) 0,                        /* mp_ass_subscript */
+  },
+  {
+    (lenfunc) 0,                              /* sq_length */
+    (binaryfunc) 0,                           /* sq_concat */
+    (ssizeargfunc) 0,                         /* sq_repeat */
+    (ssizeargfunc) 0,                         /* sq_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_slice */
+#else
+    (ssizessizeargfunc) 0,                    /* sq_slice */
+#endif
+    (ssizeobjargproc) 0,                      /* sq_ass_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_ass_slice */
+#else
+    (ssizessizeobjargproc) 0,                 /* sq_ass_slice */
+#endif
+    (objobjproc) 0,                           /* sq_contains */
+    (binaryfunc) 0,                           /* sq_inplace_concat */
+    (ssizeargfunc) 0,                         /* sq_inplace_repeat */
+  },
+  {
+#if PY_VERSION_HEX < 0x03000000
+    (readbufferproc) 0,                       /* bf_getreadbuffer */
+    (writebufferproc) 0,                      /* bf_getwritebuffer */
+    (segcountproc) 0,                         /* bf_getsegcount */
+    (charbufferproc) 0,                       /* bf_getcharbuffer */
+#endif
+#if PY_VERSION_HEX >= 0x02060000
+    (getbufferproc) 0,                        /* bf_getbuffer */
+    (releasebufferproc) 0,                    /* bf_releasebuffer */
+#endif
+  },
+    (PyObject*) 0,                            /* ht_name */
+    (PyObject*) 0,                            /* ht_slots */
+};
+
+SWIGINTERN SwigPyClientData SwigPyBuiltin__GWFrames__SliceModes_clientdata = {0, 0, 0, 0, 0, 0, (PyTypeObject *)&SwigPyBuiltin__GWFrames__SliceModes_type};
+
+SWIGPY_DESTRUCTOR_CLOSURE(_wrap_delete_Scri)
+SWIGINTERN PyGetSetDef SwigPyBuiltin__GWFrames__Scri_getset[] = {
+    {NULL, NULL, NULL, NULL, NULL} /* Sentinel */
+};
+
+SWIGINTERN PyObject *
+SwigPyBuiltin__GWFrames__Scri_richcompare(PyObject *self, PyObject *other, int op) {
+  PyObject *result = NULL;
+  PyObject *tuple = PyTuple_New(1);
+  assert(tuple);
+  PyTuple_SET_ITEM(tuple, 0, other);
+  Py_XINCREF(other);
+  if (!result) {
+    if (SwigPyObject_Check(self) && SwigPyObject_Check(other)) {
+      result = SwigPyObject_richcompare((SwigPyObject *)self, (SwigPyObject *)other, op);
+    } else {
+      result = Py_NotImplemented;
+      Py_INCREF(result);
+    }
+  }
+  Py_DECREF(tuple);
+  return result;
+}
+
+SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__Scri_methods[] = {
+  { "BMSTransformation", (PyCFunction) _wrap_Scri_BMSTransformation, METH_VARARGS, (char*) "" },
+  { "NTimes", (PyCFunction) _wrap_Scri_NTimes, METH_VARARGS, (char*) "\n"
+		"Parameters\n"
+		"----------\n"
+		"  (none)\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  int\n"
+		"\n"
+		"\n"
+		"" },
+  { "T", (PyCFunction) _wrap_Scri_T, METH_VARARGS, (char*) "\n"
+		"Parameters\n"
+		"----------\n"
+		"  (none)\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  const vector<double>\n"
+		"\n"
+		"\n"
+		"" },
+  { "__getitem__", (PyCFunction) _wrap_Scri___getitem__, METH_VARARGS, (char*) "\n"
+		"Parameters\n"
+		"----------\n"
+		"  const unsigned int i\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  const SliceModes\n"
+		"\n"
+		"\n"
+		"\n"
+		"\n"
+		"Parameters\n"
+		"----------\n"
+		"  const unsigned int i\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  SliceModes&\n"
+		"\n"
+		"\n"
+		"" },
+  { "__setitem__", (PyCFunction) _wrap_Scri___setitem__, METH_VARARGS, (char*) "\n"
+		"Parameters\n"
+		"----------\n"
+		"  const unsigned int i\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  const SliceModes\n"
+		"\n"
+		"\n"
+		"\n"
+		"\n"
+		"Parameters\n"
+		"----------\n"
+		"  const unsigned int i\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  SliceModes&\n"
+		"\n"
+		"\n"
+		"" },
+  { NULL, NULL, 0, NULL } /* Sentinel */
+};
+
+static PyHeapTypeObject SwigPyBuiltin__GWFrames__Scri_type = {
+  {
+#if PY_VERSION_HEX >= 0x03000000
+    PyVarObject_HEAD_INIT(NULL, 0)
+#else
+    PyObject_HEAD_INIT(NULL)
+    0,                                        /* ob_size */
+#endif
+    "Scri",                                   /* tp_name */
+    sizeof(SwigPyObject),                     /* tp_basicsize */
+    0,                                        /* tp_itemsize */
+    (destructor) _wrap_delete_Scri_closure,   /* tp_dealloc */
+    (printfunc) 0,                            /* tp_print */
+    (getattrfunc) 0,                          /* tp_getattr */
+    (setattrfunc) 0,                          /* tp_setattr */
+#if PY_VERSION_HEX >= 0x03000000
+    0,                                        /* tp_compare */
+#else
+    (cmpfunc) 0,                              /* tp_compare */
+#endif
+    (reprfunc) 0,                             /* tp_repr */
+    &SwigPyBuiltin__GWFrames__Scri_type.as_number,      /* tp_as_number */
+    &SwigPyBuiltin__GWFrames__Scri_type.as_sequence,    /* tp_as_sequence */
+    &SwigPyBuiltin__GWFrames__Scri_type.as_mapping,     /* tp_as_mapping */
+    (hashfunc) 0,                             /* tp_hash */
+    (ternaryfunc) 0,                          /* tp_call */
+    (reprfunc) 0,                             /* tp_str */
+    (getattrofunc) 0,                         /* tp_getattro */
+    (setattrofunc) 0,                         /* tp_setattro */
+    &SwigPyBuiltin__GWFrames__Scri_type.as_buffer,      /* tp_as_buffer */
+#if PY_VERSION_HEX >= 0x03000000
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,   /* tp_flags */
+#else
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_CHECKTYPES, /* tp_flags */
+#endif
+    "GWFrames::Scri",                         /* tp_doc */
+    (traverseproc) 0,                         /* tp_traverse */
+    (inquiry) 0,                              /* tp_clear */
+    (richcmpfunc) SwigPyBuiltin__GWFrames__Scri_richcompare, /* feature:python:tp_richcompare */
+    0,                                        /* tp_weaklistoffset */
+    (getiterfunc) 0,                          /* tp_iter */
+    (iternextfunc) 0,                         /* tp_iternext */
+    SwigPyBuiltin__GWFrames__Scri_methods,    /* tp_methods */
+    0,                                        /* tp_members */
+    SwigPyBuiltin__GWFrames__Scri_getset,     /* tp_getset */
+    0,                                        /* tp_base */
+    0,                                        /* tp_dict */
+    (descrgetfunc) 0,                         /* tp_descr_get */
+    (descrsetfunc) 0,                         /* tp_descr_set */
+    (Py_ssize_t)offsetof(SwigPyObject, dict), /* tp_dictoffset */
+    (initproc) _wrap_new_Scri,                /* tp_init */
+    (allocfunc) 0,                            /* tp_alloc */
+    (newfunc) 0,                              /* tp_new */
+    (freefunc) 0,                             /* tp_free */
+    (inquiry) 0,                              /* tp_is_gc */
+    (PyObject*) 0,                            /* tp_bases */
+    (PyObject*) 0,                            /* tp_mro */
+    (PyObject*) 0,                            /* tp_cache */
+    (PyObject*) 0,                            /* tp_subclasses */
+    (PyObject*) 0,                            /* tp_weaklist */
+    (destructor) 0,                           /* tp_del */
+#if PY_VERSION_HEX >= 0x02060000
+    (int) 0,                                  /* tp_version_tag */
+#endif
+  },
+  {
+    (binaryfunc) 0,                           /* nb_add */
+    (binaryfunc) 0,                           /* nb_subtract */
+    (binaryfunc) 0,                           /* nb_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_remainder */
+    (binaryfunc) 0,                           /* nb_divmod */
+    (ternaryfunc) 0,                          /* nb_power */
+    (unaryfunc) 0,                            /* nb_negative */
+    (unaryfunc) 0,                            /* nb_positive */
+    (unaryfunc) 0,                            /* nb_absolute */
+    (inquiry) 0,                              /* nb_nonzero */
+    (unaryfunc) 0,                            /* nb_invert */
+    (binaryfunc) 0,                           /* nb_lshift */
+    (binaryfunc) 0,                           /* nb_rshift */
+    (binaryfunc) 0,                           /* nb_and */
+    (binaryfunc) 0,                           /* nb_xor */
+    (binaryfunc) 0,                           /* nb_or */
+#if PY_VERSION_HEX < 0x03000000
+    (coercion) 0,                             /* nb_coerce */
+#endif
+    (unaryfunc) 0,                            /* nb_int */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* nb_reserved */
+#else
+    (unaryfunc) 0,                            /* nb_long */
+#endif
+    (unaryfunc) 0,                            /* nb_float */
+#if PY_VERSION_HEX < 0x03000000
+    (unaryfunc) 0,                            /* nb_oct */
+    (unaryfunc) 0,                            /* nb_hex */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_add */
+    (binaryfunc) 0,                           /* nb_inplace_subtract */
+    (binaryfunc) 0,                           /* nb_inplace_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_inplace_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_remainder */
+    (ternaryfunc) 0,                          /* nb_inplace_power */
+    (binaryfunc) 0,                           /* nb_inplace_lshift */
+    (binaryfunc) 0,                           /* nb_inplace_rshift */
+    (binaryfunc) 0,                           /* nb_inplace_and */
+    (binaryfunc) 0,                           /* nb_inplace_xor */
+    (binaryfunc) 0,                           /* nb_inplace_or */
+    (binaryfunc) 0,                           /* nb_floor_divide */
+    (binaryfunc) 0,                           /* nb_true_divide */
+    (binaryfunc) 0,                           /* nb_inplace_floor_divide */
+    (binaryfunc) 0,                           /* nb_inplace_true_divide */
+#if PY_VERSION_HEX >= 0x02050000
+    (unaryfunc) 0,                            /* nb_index */
+#endif
+  },
+  {
+    (lenfunc) 0,                              /* mp_length */
+    (binaryfunc) 0,                           /* mp_subscript */
+    (objobjargproc) 0,                        /* mp_ass_subscript */
+  },
+  {
+    (lenfunc) 0,                              /* sq_length */
+    (binaryfunc) 0,                           /* sq_concat */
+    (ssizeargfunc) 0,                         /* sq_repeat */
+    (ssizeargfunc) 0,                         /* sq_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_slice */
+#else
+    (ssizessizeargfunc) 0,                    /* sq_slice */
+#endif
+    (ssizeobjargproc) 0,                      /* sq_ass_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_ass_slice */
+#else
+    (ssizessizeobjargproc) 0,                 /* sq_ass_slice */
+#endif
+    (objobjproc) 0,                           /* sq_contains */
+    (binaryfunc) 0,                           /* sq_inplace_concat */
+    (ssizeargfunc) 0,                         /* sq_inplace_repeat */
+  },
+  {
+#if PY_VERSION_HEX < 0x03000000
+    (readbufferproc) 0,                       /* bf_getreadbuffer */
+    (writebufferproc) 0,                      /* bf_getwritebuffer */
+    (segcountproc) 0,                         /* bf_getsegcount */
+    (charbufferproc) 0,                       /* bf_getcharbuffer */
+#endif
+#if PY_VERSION_HEX >= 0x02060000
+    (getbufferproc) 0,                        /* bf_getbuffer */
+    (releasebufferproc) 0,                    /* bf_releasebuffer */
+#endif
+  },
+    (PyObject*) 0,                            /* ht_name */
+    (PyObject*) 0,                            /* ht_slots */
+};
+
+SWIGINTERN SwigPyClientData SwigPyBuiltin__GWFrames__Scri_clientdata = {0, 0, 0, 0, 0, 0, (PyTypeObject *)&SwigPyBuiltin__GWFrames__Scri_type};
+
+SWIGPY_DESTRUCTOR_CLOSURE(_wrap_delete_SuperMomenta)
+SWIGINTERN PyGetSetDef SwigPyBuiltin__GWFrames__SuperMomenta_getset[] = {
+    {NULL, NULL, NULL, NULL, NULL} /* Sentinel */
+};
+
+SWIGINTERN PyObject *
+SwigPyBuiltin__GWFrames__SuperMomenta_richcompare(PyObject *self, PyObject *other, int op) {
+  PyObject *result = NULL;
+  PyObject *tuple = PyTuple_New(1);
+  assert(tuple);
+  PyTuple_SET_ITEM(tuple, 0, other);
+  Py_XINCREF(other);
+  if (!result) {
+    if (SwigPyObject_Check(self) && SwigPyObject_Check(other)) {
+      result = SwigPyObject_richcompare((SwigPyObject *)self, (SwigPyObject *)other, op);
+    } else {
+      result = Py_NotImplemented;
+      Py_INCREF(result);
+    }
+  }
+  Py_DECREF(tuple);
+  return result;
+}
+
+SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__SuperMomenta_methods[] = {
+  { "NTimes", (PyCFunction) _wrap_SuperMomenta_NTimes, METH_VARARGS, (char*) "\n"
+		"Parameters\n"
+		"----------\n"
+		"  (none)\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  int\n"
+		"\n"
+		"\n"
+		"" },
+  { "T", (PyCFunction) _wrap_SuperMomenta_T, METH_VARARGS, (char*) "\n"
+		"Parameters\n"
+		"----------\n"
+		"  (none)\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  const vector<double>\n"
+		"\n"
+		"\n"
+		"" },
+  { "BMSTransform", (PyCFunction) _wrap_SuperMomenta_BMSTransform, METH_VARARGS, (char*) "\n"
+		"Return value of Psi on u'=const slice centered at delta[0].\n"
+		"===========================================================\n"
+		"  Parameters\n"
+		"  ----------\n"
+		"    const Modes& OneOverK\n"
+		"    const Modes& delta\n"
+		"  \n"
+		"  Returns\n"
+		"  -------\n"
+		"    Modes\n"
+		"  \n"
+		"\n"
+		"" },
+  { "MoreschiIteration", (PyCFunction) _wrap_SuperMomenta_MoreschiIteration, METH_VARARGS, (char*) "\n"
+		"Transform to given slice with given BMS transformation, and return next step in Moreschi algorithm.\n"
+		"===================================================================================================\n"
+		"  Parameters\n"
+		"  ----------\n"
+		"    Modes& OneOverK\n"
+		"      Inverse conformal factor (input/output)\n"
+		"    Modes& delta\n"
+		"      Supertranslation (input/output)\n"
+		"  \n"
+		"  Returns\n"
+		"  -------\n"
+		"    void\n"
+		"  \n"
+		"  Description\n"
+		"  -----------\n"
+		"    This function first transforms Psi to a u'=constant slice centered at the\n"
+		"    value delta[0] with the given BMS transformation. It then replaces the\n"
+		"    values of that BMS transformation with the next step in the Moreschi\n"
+		"    algorithm.\n"
+		"  \n"
+		"\n"
+		"" },
+  { "__getitem__", (PyCFunction) _wrap_SuperMomenta___getitem__, METH_VARARGS, (char*) "" },
+  { "__setitem__", (PyCFunction) _wrap_SuperMomenta___setitem__, METH_VARARGS, (char*) "" },
+  { NULL, NULL, 0, NULL } /* Sentinel */
+};
+
+static PyHeapTypeObject SwigPyBuiltin__GWFrames__SuperMomenta_type = {
+  {
+#if PY_VERSION_HEX >= 0x03000000
+    PyVarObject_HEAD_INIT(NULL, 0)
+#else
+    PyObject_HEAD_INIT(NULL)
+    0,                                        /* ob_size */
+#endif
+    "SuperMomenta",                           /* tp_name */
+    sizeof(SwigPyObject),                     /* tp_basicsize */
+    0,                                        /* tp_itemsize */
+    (destructor) _wrap_delete_SuperMomenta_closure, /* tp_dealloc */
+    (printfunc) 0,                            /* tp_print */
+    (getattrfunc) 0,                          /* tp_getattr */
+    (setattrfunc) 0,                          /* tp_setattr */
+#if PY_VERSION_HEX >= 0x03000000
+    0,                                        /* tp_compare */
+#else
+    (cmpfunc) 0,                              /* tp_compare */
+#endif
+    (reprfunc) 0,                             /* tp_repr */
+    &SwigPyBuiltin__GWFrames__SuperMomenta_type.as_number,      /* tp_as_number */
+    &SwigPyBuiltin__GWFrames__SuperMomenta_type.as_sequence,    /* tp_as_sequence */
+    &SwigPyBuiltin__GWFrames__SuperMomenta_type.as_mapping,     /* tp_as_mapping */
+    (hashfunc) 0,                             /* tp_hash */
+    (ternaryfunc) 0,                          /* tp_call */
+    (reprfunc) 0,                             /* tp_str */
+    (getattrofunc) 0,                         /* tp_getattro */
+    (setattrofunc) 0,                         /* tp_setattro */
+    &SwigPyBuiltin__GWFrames__SuperMomenta_type.as_buffer,      /* tp_as_buffer */
+#if PY_VERSION_HEX >= 0x03000000
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,   /* tp_flags */
+#else
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_CHECKTYPES, /* tp_flags */
+#endif
+    "GWFrames::SuperMomenta",                 /* tp_doc */
+    (traverseproc) 0,                         /* tp_traverse */
+    (inquiry) 0,                              /* tp_clear */
+    (richcmpfunc) SwigPyBuiltin__GWFrames__SuperMomenta_richcompare, /* feature:python:tp_richcompare */
+    0,                                        /* tp_weaklistoffset */
+    (getiterfunc) 0,                          /* tp_iter */
+    (iternextfunc) 0,                         /* tp_iternext */
+    SwigPyBuiltin__GWFrames__SuperMomenta_methods, /* tp_methods */
+    0,                                        /* tp_members */
+    SwigPyBuiltin__GWFrames__SuperMomenta_getset, /* tp_getset */
+    0,                                        /* tp_base */
+    0,                                        /* tp_dict */
+    (descrgetfunc) 0,                         /* tp_descr_get */
+    (descrsetfunc) 0,                         /* tp_descr_set */
+    (Py_ssize_t)offsetof(SwigPyObject, dict), /* tp_dictoffset */
+    (initproc) _wrap_new_SuperMomenta,        /* tp_init */
+    (allocfunc) 0,                            /* tp_alloc */
+    (newfunc) 0,                              /* tp_new */
+    (freefunc) 0,                             /* tp_free */
+    (inquiry) 0,                              /* tp_is_gc */
+    (PyObject*) 0,                            /* tp_bases */
+    (PyObject*) 0,                            /* tp_mro */
+    (PyObject*) 0,                            /* tp_cache */
+    (PyObject*) 0,                            /* tp_subclasses */
+    (PyObject*) 0,                            /* tp_weaklist */
+    (destructor) 0,                           /* tp_del */
+#if PY_VERSION_HEX >= 0x02060000
+    (int) 0,                                  /* tp_version_tag */
+#endif
+  },
+  {
+    (binaryfunc) 0,                           /* nb_add */
+    (binaryfunc) 0,                           /* nb_subtract */
+    (binaryfunc) 0,                           /* nb_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_remainder */
+    (binaryfunc) 0,                           /* nb_divmod */
+    (ternaryfunc) 0,                          /* nb_power */
+    (unaryfunc) 0,                            /* nb_negative */
+    (unaryfunc) 0,                            /* nb_positive */
+    (unaryfunc) 0,                            /* nb_absolute */
+    (inquiry) 0,                              /* nb_nonzero */
+    (unaryfunc) 0,                            /* nb_invert */
+    (binaryfunc) 0,                           /* nb_lshift */
+    (binaryfunc) 0,                           /* nb_rshift */
+    (binaryfunc) 0,                           /* nb_and */
+    (binaryfunc) 0,                           /* nb_xor */
+    (binaryfunc) 0,                           /* nb_or */
+#if PY_VERSION_HEX < 0x03000000
+    (coercion) 0,                             /* nb_coerce */
+#endif
+    (unaryfunc) 0,                            /* nb_int */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* nb_reserved */
+#else
+    (unaryfunc) 0,                            /* nb_long */
+#endif
+    (unaryfunc) 0,                            /* nb_float */
+#if PY_VERSION_HEX < 0x03000000
+    (unaryfunc) 0,                            /* nb_oct */
+    (unaryfunc) 0,                            /* nb_hex */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_add */
+    (binaryfunc) 0,                           /* nb_inplace_subtract */
+    (binaryfunc) 0,                           /* nb_inplace_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_inplace_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_remainder */
+    (ternaryfunc) 0,                          /* nb_inplace_power */
+    (binaryfunc) 0,                           /* nb_inplace_lshift */
+    (binaryfunc) 0,                           /* nb_inplace_rshift */
+    (binaryfunc) 0,                           /* nb_inplace_and */
+    (binaryfunc) 0,                           /* nb_inplace_xor */
+    (binaryfunc) 0,                           /* nb_inplace_or */
+    (binaryfunc) 0,                           /* nb_floor_divide */
+    (binaryfunc) 0,                           /* nb_true_divide */
+    (binaryfunc) 0,                           /* nb_inplace_floor_divide */
+    (binaryfunc) 0,                           /* nb_inplace_true_divide */
+#if PY_VERSION_HEX >= 0x02050000
+    (unaryfunc) 0,                            /* nb_index */
+#endif
+  },
+  {
+    (lenfunc) 0,                              /* mp_length */
+    (binaryfunc) 0,                           /* mp_subscript */
+    (objobjargproc) 0,                        /* mp_ass_subscript */
+  },
+  {
+    (lenfunc) 0,                              /* sq_length */
+    (binaryfunc) 0,                           /* sq_concat */
+    (ssizeargfunc) 0,                         /* sq_repeat */
+    (ssizeargfunc) 0,                         /* sq_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_slice */
+#else
+    (ssizessizeargfunc) 0,                    /* sq_slice */
+#endif
+    (ssizeobjargproc) 0,                      /* sq_ass_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_ass_slice */
+#else
+    (ssizessizeobjargproc) 0,                 /* sq_ass_slice */
+#endif
+    (objobjproc) 0,                           /* sq_contains */
+    (binaryfunc) 0,                           /* sq_inplace_concat */
+    (ssizeargfunc) 0,                         /* sq_inplace_repeat */
+  },
+  {
+#if PY_VERSION_HEX < 0x03000000
+    (readbufferproc) 0,                       /* bf_getreadbuffer */
+    (writebufferproc) 0,                      /* bf_getwritebuffer */
+    (segcountproc) 0,                         /* bf_getsegcount */
+    (charbufferproc) 0,                       /* bf_getcharbuffer */
+#endif
+#if PY_VERSION_HEX >= 0x02060000
+    (getbufferproc) 0,                        /* bf_getbuffer */
+    (releasebufferproc) 0,                    /* bf_releasebuffer */
+#endif
+  },
+    (PyObject*) 0,                            /* ht_name */
+    (PyObject*) 0,                            /* ht_slots */
+};
+
+SWIGINTERN SwigPyClientData SwigPyBuiltin__GWFrames__SuperMomenta_clientdata = {0, 0, 0, 0, 0, 0, (PyTypeObject *)&SwigPyBuiltin__GWFrames__SuperMomenta_type};
+
+SWIGPY_DESTRUCTOR_CLOSURE(_wrap_delete_SliceOfScriGrid)
+static SwigPyGetSet SliceOfScriGrid_psi2_getset = { _wrap_SliceOfScriGrid_psi2_get, _wrap_SliceOfScriGrid_psi2_set };
+static SwigPyGetSet SliceOfScriGrid_psi3_getset = { _wrap_SliceOfScriGrid_psi3_get, _wrap_SliceOfScriGrid_psi3_set };
+static SwigPyGetSet SliceOfScriGrid_psi4_getset = { _wrap_SliceOfScriGrid_psi4_get, _wrap_SliceOfScriGrid_psi4_set };
+static SwigPyGetSet SliceOfScriGrid_sigma_getset = { _wrap_SliceOfScriGrid_sigma_get, _wrap_SliceOfScriGrid_sigma_set };
+static SwigPyGetSet SliceOfScriGrid_psi0_getset = { _wrap_SliceOfScriGrid_psi0_get, _wrap_SliceOfScriGrid_psi0_set };
+static SwigPyGetSet SliceOfScriGrid_sigmadot_getset = { _wrap_SliceOfScriGrid_sigmadot_get, _wrap_SliceOfScriGrid_sigmadot_set };
+static SwigPyGetSet SliceOfScriGrid_psi1_getset = { _wrap_SliceOfScriGrid_psi1_get, _wrap_SliceOfScriGrid_psi1_set };
+SWIGINTERN PyGetSetDef SwigPyBuiltin__GWFrames__SliceOfScriT_GWFrames__DataGrid_t_getset[] = {
+    { (char*) "psi2", (getter) SwigPyBuiltin_GetterClosure, (setter) SwigPyBuiltin_SetterClosure, (char*)"GWFrames::SliceOfScri<(GWFrames::DataGrid)>.psi2", (void*) &SliceOfScriGrid_psi2_getset }
+,
+    { (char*) "psi3", (getter) SwigPyBuiltin_GetterClosure, (setter) SwigPyBuiltin_SetterClosure, (char*)"GWFrames::SliceOfScri<(GWFrames::DataGrid)>.psi3", (void*) &SliceOfScriGrid_psi3_getset }
+,
+    { (char*) "psi4", (getter) SwigPyBuiltin_GetterClosure, (setter) SwigPyBuiltin_SetterClosure, (char*)"GWFrames::SliceOfScri<(GWFrames::DataGrid)>.psi4", (void*) &SliceOfScriGrid_psi4_getset }
+,
+    { (char*) "sigma", (getter) SwigPyBuiltin_GetterClosure, (setter) SwigPyBuiltin_SetterClosure, (char*)"GWFrames::SliceOfScri<(GWFrames::DataGrid)>.sigma", (void*) &SliceOfScriGrid_sigma_getset }
+,
+    { (char*) "psi0", (getter) SwigPyBuiltin_GetterClosure, (setter) SwigPyBuiltin_SetterClosure, (char*)"GWFrames::SliceOfScri<(GWFrames::DataGrid)>.psi0", (void*) &SliceOfScriGrid_psi0_getset }
+,
+    { (char*) "sigmadot", (getter) SwigPyBuiltin_GetterClosure, (setter) SwigPyBuiltin_SetterClosure, (char*)"GWFrames::SliceOfScri<(GWFrames::DataGrid)>.sigmadot", (void*) &SliceOfScriGrid_sigmadot_getset }
+,
+    { (char*) "psi1", (getter) SwigPyBuiltin_GetterClosure, (setter) SwigPyBuiltin_SetterClosure, (char*)"GWFrames::SliceOfScri<(GWFrames::DataGrid)>.psi1", (void*) &SliceOfScriGrid_psi1_getset }
+,
+    {NULL, NULL, NULL, NULL, NULL} /* Sentinel */
+};
+
+SWIGINTERN PyObject *
+SwigPyBuiltin__GWFrames__SliceOfScriT_GWFrames__DataGrid_t_richcompare(PyObject *self, PyObject *other, int op) {
+  PyObject *result = NULL;
+  PyObject *tuple = PyTuple_New(1);
+  assert(tuple);
+  PyTuple_SET_ITEM(tuple, 0, other);
+  Py_XINCREF(other);
+  if (!result) {
+    if (SwigPyObject_Check(self) && SwigPyObject_Check(other)) {
+      result = SwigPyObject_richcompare((SwigPyObject *)self, (SwigPyObject *)other, op);
+    } else {
+      result = Py_NotImplemented;
+      Py_INCREF(result);
+    }
+  }
+  Py_DECREF(tuple);
+  return result;
+}
+
+SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__SliceOfScriT_GWFrames__DataGrid_t_methods[] = {
+  { NULL, NULL, 0, NULL } /* Sentinel */
+};
+
+static PyHeapTypeObject SwigPyBuiltin__GWFrames__SliceOfScriT_GWFrames__DataGrid_t_type = {
+  {
+#if PY_VERSION_HEX >= 0x03000000
+    PyVarObject_HEAD_INIT(NULL, 0)
+#else
+    PyObject_HEAD_INIT(NULL)
+    0,                                        /* ob_size */
+#endif
+    "SliceOfScriGrid",                        /* tp_name */
+    sizeof(SwigPyObject),                     /* tp_basicsize */
+    0,                                        /* tp_itemsize */
+    (destructor) _wrap_delete_SliceOfScriGrid_closure, /* tp_dealloc */
+    (printfunc) 0,                            /* tp_print */
+    (getattrfunc) 0,                          /* tp_getattr */
+    (setattrfunc) 0,                          /* tp_setattr */
+#if PY_VERSION_HEX >= 0x03000000
+    0,                                        /* tp_compare */
+#else
+    (cmpfunc) 0,                              /* tp_compare */
+#endif
+    (reprfunc) 0,                             /* tp_repr */
+    &SwigPyBuiltin__GWFrames__SliceOfScriT_GWFrames__DataGrid_t_type.as_number,      /* tp_as_number */
+    &SwigPyBuiltin__GWFrames__SliceOfScriT_GWFrames__DataGrid_t_type.as_sequence,    /* tp_as_sequence */
+    &SwigPyBuiltin__GWFrames__SliceOfScriT_GWFrames__DataGrid_t_type.as_mapping,     /* tp_as_mapping */
+    (hashfunc) 0,                             /* tp_hash */
+    (ternaryfunc) 0,                          /* tp_call */
+    (reprfunc) 0,                             /* tp_str */
+    (getattrofunc) 0,                         /* tp_getattro */
+    (setattrofunc) 0,                         /* tp_setattro */
+    &SwigPyBuiltin__GWFrames__SliceOfScriT_GWFrames__DataGrid_t_type.as_buffer,      /* tp_as_buffer */
+#if PY_VERSION_HEX >= 0x03000000
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,   /* tp_flags */
+#else
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_CHECKTYPES, /* tp_flags */
+#endif
+    "GWFrames::SliceOfScri< GWFrames::DataGrid >", /* tp_doc */
+    (traverseproc) 0,                         /* tp_traverse */
+    (inquiry) 0,                              /* tp_clear */
+    (richcmpfunc) SwigPyBuiltin__GWFrames__SliceOfScriT_GWFrames__DataGrid_t_richcompare, /* feature:python:tp_richcompare */
+    0,                                        /* tp_weaklistoffset */
+    (getiterfunc) 0,                          /* tp_iter */
+    (iternextfunc) 0,                         /* tp_iternext */
+    SwigPyBuiltin__GWFrames__SliceOfScriT_GWFrames__DataGrid_t_methods, /* tp_methods */
+    0,                                        /* tp_members */
+    SwigPyBuiltin__GWFrames__SliceOfScriT_GWFrames__DataGrid_t_getset, /* tp_getset */
+    0,                                        /* tp_base */
+    0,                                        /* tp_dict */
+    (descrgetfunc) 0,                         /* tp_descr_get */
+    (descrsetfunc) 0,                         /* tp_descr_set */
+    (Py_ssize_t)offsetof(SwigPyObject, dict), /* tp_dictoffset */
+    (initproc) _wrap_new_SliceOfScriGrid,     /* tp_init */
+    (allocfunc) 0,                            /* tp_alloc */
+    (newfunc) 0,                              /* tp_new */
+    (freefunc) 0,                             /* tp_free */
+    (inquiry) 0,                              /* tp_is_gc */
+    (PyObject*) 0,                            /* tp_bases */
+    (PyObject*) 0,                            /* tp_mro */
+    (PyObject*) 0,                            /* tp_cache */
+    (PyObject*) 0,                            /* tp_subclasses */
+    (PyObject*) 0,                            /* tp_weaklist */
+    (destructor) 0,                           /* tp_del */
+#if PY_VERSION_HEX >= 0x02060000
+    (int) 0,                                  /* tp_version_tag */
+#endif
+  },
+  {
+    (binaryfunc) 0,                           /* nb_add */
+    (binaryfunc) 0,                           /* nb_subtract */
+    (binaryfunc) 0,                           /* nb_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_remainder */
+    (binaryfunc) 0,                           /* nb_divmod */
+    (ternaryfunc) 0,                          /* nb_power */
+    (unaryfunc) 0,                            /* nb_negative */
+    (unaryfunc) 0,                            /* nb_positive */
+    (unaryfunc) 0,                            /* nb_absolute */
+    (inquiry) 0,                              /* nb_nonzero */
+    (unaryfunc) 0,                            /* nb_invert */
+    (binaryfunc) 0,                           /* nb_lshift */
+    (binaryfunc) 0,                           /* nb_rshift */
+    (binaryfunc) 0,                           /* nb_and */
+    (binaryfunc) 0,                           /* nb_xor */
+    (binaryfunc) 0,                           /* nb_or */
+#if PY_VERSION_HEX < 0x03000000
+    (coercion) 0,                             /* nb_coerce */
+#endif
+    (unaryfunc) 0,                            /* nb_int */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* nb_reserved */
+#else
+    (unaryfunc) 0,                            /* nb_long */
+#endif
+    (unaryfunc) 0,                            /* nb_float */
+#if PY_VERSION_HEX < 0x03000000
+    (unaryfunc) 0,                            /* nb_oct */
+    (unaryfunc) 0,                            /* nb_hex */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_add */
+    (binaryfunc) 0,                           /* nb_inplace_subtract */
+    (binaryfunc) 0,                           /* nb_inplace_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_inplace_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_remainder */
+    (ternaryfunc) 0,                          /* nb_inplace_power */
+    (binaryfunc) 0,                           /* nb_inplace_lshift */
+    (binaryfunc) 0,                           /* nb_inplace_rshift */
+    (binaryfunc) 0,                           /* nb_inplace_and */
+    (binaryfunc) 0,                           /* nb_inplace_xor */
+    (binaryfunc) 0,                           /* nb_inplace_or */
+    (binaryfunc) 0,                           /* nb_floor_divide */
+    (binaryfunc) 0,                           /* nb_true_divide */
+    (binaryfunc) 0,                           /* nb_inplace_floor_divide */
+    (binaryfunc) 0,                           /* nb_inplace_true_divide */
+#if PY_VERSION_HEX >= 0x02050000
+    (unaryfunc) 0,                            /* nb_index */
+#endif
+  },
+  {
+    (lenfunc) 0,                              /* mp_length */
+    (binaryfunc) 0,                           /* mp_subscript */
+    (objobjargproc) 0,                        /* mp_ass_subscript */
+  },
+  {
+    (lenfunc) 0,                              /* sq_length */
+    (binaryfunc) 0,                           /* sq_concat */
+    (ssizeargfunc) 0,                         /* sq_repeat */
+    (ssizeargfunc) 0,                         /* sq_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_slice */
+#else
+    (ssizessizeargfunc) 0,                    /* sq_slice */
+#endif
+    (ssizeobjargproc) 0,                      /* sq_ass_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_ass_slice */
+#else
+    (ssizessizeobjargproc) 0,                 /* sq_ass_slice */
+#endif
+    (objobjproc) 0,                           /* sq_contains */
+    (binaryfunc) 0,                           /* sq_inplace_concat */
+    (ssizeargfunc) 0,                         /* sq_inplace_repeat */
+  },
+  {
+#if PY_VERSION_HEX < 0x03000000
+    (readbufferproc) 0,                       /* bf_getreadbuffer */
+    (writebufferproc) 0,                      /* bf_getwritebuffer */
+    (segcountproc) 0,                         /* bf_getsegcount */
+    (charbufferproc) 0,                       /* bf_getcharbuffer */
+#endif
+#if PY_VERSION_HEX >= 0x02060000
+    (getbufferproc) 0,                        /* bf_getbuffer */
+    (releasebufferproc) 0,                    /* bf_releasebuffer */
+#endif
+  },
+    (PyObject*) 0,                            /* ht_name */
+    (PyObject*) 0,                            /* ht_slots */
+};
+
+SWIGINTERN SwigPyClientData SwigPyBuiltin__GWFrames__SliceOfScriT_GWFrames__DataGrid_t_clientdata = {0, 0, 0, 0, 0, 0, (PyTypeObject *)&SwigPyBuiltin__GWFrames__SliceOfScriT_GWFrames__DataGrid_t_type};
+
+SWIGPY_DESTRUCTOR_CLOSURE(_wrap_delete_SliceOfScriModes)
+static SwigPyGetSet SliceOfScriModes_psi2_getset = { _wrap_SliceOfScriModes_psi2_get, _wrap_SliceOfScriModes_psi2_set };
+static SwigPyGetSet SliceOfScriModes_psi3_getset = { _wrap_SliceOfScriModes_psi3_get, _wrap_SliceOfScriModes_psi3_set };
+static SwigPyGetSet SliceOfScriModes_psi4_getset = { _wrap_SliceOfScriModes_psi4_get, _wrap_SliceOfScriModes_psi4_set };
+static SwigPyGetSet SliceOfScriModes_sigma_getset = { _wrap_SliceOfScriModes_sigma_get, _wrap_SliceOfScriModes_sigma_set };
+static SwigPyGetSet SliceOfScriModes_psi0_getset = { _wrap_SliceOfScriModes_psi0_get, _wrap_SliceOfScriModes_psi0_set };
+static SwigPyGetSet SliceOfScriModes_sigmadot_getset = { _wrap_SliceOfScriModes_sigmadot_get, _wrap_SliceOfScriModes_sigmadot_set };
+static SwigPyGetSet SliceOfScriModes_psi1_getset = { _wrap_SliceOfScriModes_psi1_get, _wrap_SliceOfScriModes_psi1_set };
+SWIGINTERN PyGetSetDef SwigPyBuiltin__GWFrames__SliceOfScriT_GWFrames__Modes_t_getset[] = {
+    { (char*) "psi2", (getter) SwigPyBuiltin_GetterClosure, (setter) SwigPyBuiltin_SetterClosure, (char*)"GWFrames::SliceOfScri<(GWFrames::Modes)>.psi2", (void*) &SliceOfScriModes_psi2_getset }
+,
+    { (char*) "psi3", (getter) SwigPyBuiltin_GetterClosure, (setter) SwigPyBuiltin_SetterClosure, (char*)"GWFrames::SliceOfScri<(GWFrames::Modes)>.psi3", (void*) &SliceOfScriModes_psi3_getset }
+,
+    { (char*) "psi4", (getter) SwigPyBuiltin_GetterClosure, (setter) SwigPyBuiltin_SetterClosure, (char*)"GWFrames::SliceOfScri<(GWFrames::Modes)>.psi4", (void*) &SliceOfScriModes_psi4_getset }
+,
+    { (char*) "sigma", (getter) SwigPyBuiltin_GetterClosure, (setter) SwigPyBuiltin_SetterClosure, (char*)"GWFrames::SliceOfScri<(GWFrames::Modes)>.sigma", (void*) &SliceOfScriModes_sigma_getset }
+,
+    { (char*) "psi0", (getter) SwigPyBuiltin_GetterClosure, (setter) SwigPyBuiltin_SetterClosure, (char*)"GWFrames::SliceOfScri<(GWFrames::Modes)>.psi0", (void*) &SliceOfScriModes_psi0_getset }
+,
+    { (char*) "sigmadot", (getter) SwigPyBuiltin_GetterClosure, (setter) SwigPyBuiltin_SetterClosure, (char*)"GWFrames::SliceOfScri<(GWFrames::Modes)>.sigmadot", (void*) &SliceOfScriModes_sigmadot_getset }
+,
+    { (char*) "psi1", (getter) SwigPyBuiltin_GetterClosure, (setter) SwigPyBuiltin_SetterClosure, (char*)"GWFrames::SliceOfScri<(GWFrames::Modes)>.psi1", (void*) &SliceOfScriModes_psi1_getset }
+,
+    {NULL, NULL, NULL, NULL, NULL} /* Sentinel */
+};
+
+SWIGINTERN PyObject *
+SwigPyBuiltin__GWFrames__SliceOfScriT_GWFrames__Modes_t_richcompare(PyObject *self, PyObject *other, int op) {
+  PyObject *result = NULL;
+  PyObject *tuple = PyTuple_New(1);
+  assert(tuple);
+  PyTuple_SET_ITEM(tuple, 0, other);
+  Py_XINCREF(other);
+  if (!result) {
+    if (SwigPyObject_Check(self) && SwigPyObject_Check(other)) {
+      result = SwigPyObject_richcompare((SwigPyObject *)self, (SwigPyObject *)other, op);
+    } else {
+      result = Py_NotImplemented;
+      Py_INCREF(result);
+    }
+  }
+  Py_DECREF(tuple);
+  return result;
+}
+
+SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__SliceOfScriT_GWFrames__Modes_t_methods[] = {
+  { NULL, NULL, 0, NULL } /* Sentinel */
+};
+
+static PyHeapTypeObject SwigPyBuiltin__GWFrames__SliceOfScriT_GWFrames__Modes_t_type = {
+  {
+#if PY_VERSION_HEX >= 0x03000000
+    PyVarObject_HEAD_INIT(NULL, 0)
+#else
+    PyObject_HEAD_INIT(NULL)
+    0,                                        /* ob_size */
+#endif
+    "SliceOfScriModes",                       /* tp_name */
+    sizeof(SwigPyObject),                     /* tp_basicsize */
+    0,                                        /* tp_itemsize */
+    (destructor) _wrap_delete_SliceOfScriModes_closure, /* tp_dealloc */
+    (printfunc) 0,                            /* tp_print */
+    (getattrfunc) 0,                          /* tp_getattr */
+    (setattrfunc) 0,                          /* tp_setattr */
+#if PY_VERSION_HEX >= 0x03000000
+    0,                                        /* tp_compare */
+#else
+    (cmpfunc) 0,                              /* tp_compare */
+#endif
+    (reprfunc) 0,                             /* tp_repr */
+    &SwigPyBuiltin__GWFrames__SliceOfScriT_GWFrames__Modes_t_type.as_number,      /* tp_as_number */
+    &SwigPyBuiltin__GWFrames__SliceOfScriT_GWFrames__Modes_t_type.as_sequence,    /* tp_as_sequence */
+    &SwigPyBuiltin__GWFrames__SliceOfScriT_GWFrames__Modes_t_type.as_mapping,     /* tp_as_mapping */
+    (hashfunc) 0,                             /* tp_hash */
+    (ternaryfunc) 0,                          /* tp_call */
+    (reprfunc) 0,                             /* tp_str */
+    (getattrofunc) 0,                         /* tp_getattro */
+    (setattrofunc) 0,                         /* tp_setattro */
+    &SwigPyBuiltin__GWFrames__SliceOfScriT_GWFrames__Modes_t_type.as_buffer,      /* tp_as_buffer */
+#if PY_VERSION_HEX >= 0x03000000
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,   /* tp_flags */
+#else
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_CHECKTYPES, /* tp_flags */
+#endif
+    "GWFrames::SliceOfScri< GWFrames::Modes >", /* tp_doc */
+    (traverseproc) 0,                         /* tp_traverse */
+    (inquiry) 0,                              /* tp_clear */
+    (richcmpfunc) SwigPyBuiltin__GWFrames__SliceOfScriT_GWFrames__Modes_t_richcompare, /* feature:python:tp_richcompare */
+    0,                                        /* tp_weaklistoffset */
+    (getiterfunc) 0,                          /* tp_iter */
+    (iternextfunc) 0,                         /* tp_iternext */
+    SwigPyBuiltin__GWFrames__SliceOfScriT_GWFrames__Modes_t_methods, /* tp_methods */
+    0,                                        /* tp_members */
+    SwigPyBuiltin__GWFrames__SliceOfScriT_GWFrames__Modes_t_getset, /* tp_getset */
+    0,                                        /* tp_base */
+    0,                                        /* tp_dict */
+    (descrgetfunc) 0,                         /* tp_descr_get */
+    (descrsetfunc) 0,                         /* tp_descr_set */
+    (Py_ssize_t)offsetof(SwigPyObject, dict), /* tp_dictoffset */
+    (initproc) _wrap_new_SliceOfScriModes,    /* tp_init */
+    (allocfunc) 0,                            /* tp_alloc */
+    (newfunc) 0,                              /* tp_new */
+    (freefunc) 0,                             /* tp_free */
+    (inquiry) 0,                              /* tp_is_gc */
+    (PyObject*) 0,                            /* tp_bases */
+    (PyObject*) 0,                            /* tp_mro */
+    (PyObject*) 0,                            /* tp_cache */
+    (PyObject*) 0,                            /* tp_subclasses */
+    (PyObject*) 0,                            /* tp_weaklist */
+    (destructor) 0,                           /* tp_del */
+#if PY_VERSION_HEX >= 0x02060000
+    (int) 0,                                  /* tp_version_tag */
+#endif
+  },
+  {
+    (binaryfunc) 0,                           /* nb_add */
+    (binaryfunc) 0,                           /* nb_subtract */
+    (binaryfunc) 0,                           /* nb_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_remainder */
+    (binaryfunc) 0,                           /* nb_divmod */
+    (ternaryfunc) 0,                          /* nb_power */
+    (unaryfunc) 0,                            /* nb_negative */
+    (unaryfunc) 0,                            /* nb_positive */
+    (unaryfunc) 0,                            /* nb_absolute */
+    (inquiry) 0,                              /* nb_nonzero */
+    (unaryfunc) 0,                            /* nb_invert */
+    (binaryfunc) 0,                           /* nb_lshift */
+    (binaryfunc) 0,                           /* nb_rshift */
+    (binaryfunc) 0,                           /* nb_and */
+    (binaryfunc) 0,                           /* nb_xor */
+    (binaryfunc) 0,                           /* nb_or */
+#if PY_VERSION_HEX < 0x03000000
+    (coercion) 0,                             /* nb_coerce */
+#endif
+    (unaryfunc) 0,                            /* nb_int */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* nb_reserved */
+#else
+    (unaryfunc) 0,                            /* nb_long */
+#endif
+    (unaryfunc) 0,                            /* nb_float */
+#if PY_VERSION_HEX < 0x03000000
+    (unaryfunc) 0,                            /* nb_oct */
+    (unaryfunc) 0,                            /* nb_hex */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_add */
+    (binaryfunc) 0,                           /* nb_inplace_subtract */
+    (binaryfunc) 0,                           /* nb_inplace_multiply */
+#if PY_VERSION_HEX < 0x03000000
+    (binaryfunc) 0,                           /* nb_inplace_divide */
+#endif
+    (binaryfunc) 0,                           /* nb_inplace_remainder */
+    (ternaryfunc) 0,                          /* nb_inplace_power */
+    (binaryfunc) 0,                           /* nb_inplace_lshift */
+    (binaryfunc) 0,                           /* nb_inplace_rshift */
+    (binaryfunc) 0,                           /* nb_inplace_and */
+    (binaryfunc) 0,                           /* nb_inplace_xor */
+    (binaryfunc) 0,                           /* nb_inplace_or */
+    (binaryfunc) 0,                           /* nb_floor_divide */
+    (binaryfunc) 0,                           /* nb_true_divide */
+    (binaryfunc) 0,                           /* nb_inplace_floor_divide */
+    (binaryfunc) 0,                           /* nb_inplace_true_divide */
+#if PY_VERSION_HEX >= 0x02050000
+    (unaryfunc) 0,                            /* nb_index */
+#endif
+  },
+  {
+    (lenfunc) 0,                              /* mp_length */
+    (binaryfunc) 0,                           /* mp_subscript */
+    (objobjargproc) 0,                        /* mp_ass_subscript */
+  },
+  {
+    (lenfunc) 0,                              /* sq_length */
+    (binaryfunc) 0,                           /* sq_concat */
+    (ssizeargfunc) 0,                         /* sq_repeat */
+    (ssizeargfunc) 0,                         /* sq_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_slice */
+#else
+    (ssizessizeargfunc) 0,                    /* sq_slice */
+#endif
+    (ssizeobjargproc) 0,                      /* sq_ass_item */
+#if PY_VERSION_HEX >= 0x03000000
+    (void*) 0,                                /* was_sq_ass_slice */
+#else
+    (ssizessizeobjargproc) 0,                 /* sq_ass_slice */
+#endif
+    (objobjproc) 0,                           /* sq_contains */
+    (binaryfunc) 0,                           /* sq_inplace_concat */
+    (ssizeargfunc) 0,                         /* sq_inplace_repeat */
+  },
+  {
+#if PY_VERSION_HEX < 0x03000000
+    (readbufferproc) 0,                       /* bf_getreadbuffer */
+    (writebufferproc) 0,                      /* bf_getwritebuffer */
+    (segcountproc) 0,                         /* bf_getsegcount */
+    (charbufferproc) 0,                       /* bf_getcharbuffer */
+#endif
+#if PY_VERSION_HEX >= 0x02060000
+    (getbufferproc) 0,                        /* bf_getbuffer */
+    (releasebufferproc) 0,                    /* bf_releasebuffer */
+#endif
+  },
+    (PyObject*) 0,                            /* ht_name */
+    (PyObject*) 0,                            /* ht_slots */
+};
+
+SWIGINTERN SwigPyClientData SwigPyBuiltin__GWFrames__SliceOfScriT_GWFrames__Modes_t_clientdata = {0, 0, 0, 0, 0, 0, (PyTypeObject *)&SwigPyBuiltin__GWFrames__SliceOfScriT_GWFrames__Modes_t_type};
 
 SWIGPY_DESTRUCTOR_CLOSURE(_wrap_delete__Waveform)
 SWIGINTERN PyGetSetDef SwigPyBuiltin__GWFrames__Waveform_getset[] = {
@@ -33873,9 +42713,17 @@ SWIGINTERN SwigPyClientData SwigPyBuiltin__GWFrames__PNWaveform_clientdata = {0,
 static void *_p_GWFrames__PNWaveformTo_p_GWFrames__Waveform(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((GWFrames::Waveform *)  ((GWFrames::PNWaveform *) x));
 }
+static swig_type_info _swigt__p_GWFrames__DataGrid = {"_p_GWFrames__DataGrid", "GWFrames::DataGrid *", 0, 0, (void*)&SwigPyBuiltin__GWFrames__DataGrid_clientdata, 0};
 static swig_type_info _swigt__p_GWFrames__Matrix = {"_p_GWFrames__Matrix", "std::vector< GWFrames::Matrix >::value_type *|GWFrames::Matrix *", 0, 0, (void*)&SwigPyBuiltin__GWFrames__Matrix_clientdata, 0};
 static swig_type_info _swigt__p_GWFrames__MatrixC = {"_p_GWFrames__MatrixC", "GWFrames::MatrixC *", 0, 0, (void*)&SwigPyBuiltin__GWFrames__MatrixC_clientdata, 0};
+static swig_type_info _swigt__p_GWFrames__Modes = {"_p_GWFrames__Modes", "GWFrames::Modes *", 0, 0, (void*)&SwigPyBuiltin__GWFrames__Modes_clientdata, 0};
 static swig_type_info _swigt__p_GWFrames__PNWaveform = {"_p_GWFrames__PNWaveform", "GWFrames::PNWaveform *", 0, 0, (void*)&SwigPyBuiltin__GWFrames__PNWaveform_clientdata, 0};
+static swig_type_info _swigt__p_GWFrames__Scri = {"_p_GWFrames__Scri", "GWFrames::Scri *", 0, 0, (void*)&SwigPyBuiltin__GWFrames__Scri_clientdata, 0};
+static swig_type_info _swigt__p_GWFrames__ScriFunctor = {"_p_GWFrames__ScriFunctor", "GWFrames::ScriFunctor *", 0, 0, (void*)&SwigPyBuiltin__GWFrames__ScriFunctor_clientdata, 0};
+static swig_type_info _swigt__p_GWFrames__SliceModes = {"_p_GWFrames__SliceModes", "GWFrames::SliceModes *", 0, 0, (void*)&SwigPyBuiltin__GWFrames__SliceModes_clientdata, 0};
+static swig_type_info _swigt__p_GWFrames__SliceOfScriT_GWFrames__DataGrid_t = {"_p_GWFrames__SliceOfScriT_GWFrames__DataGrid_t", "GWFrames::SliceGrid *|GWFrames::SliceOfScri< GWFrames::DataGrid > *", 0, 0, (void*)&SwigPyBuiltin__GWFrames__SliceOfScriT_GWFrames__DataGrid_t_clientdata, 0};
+static swig_type_info _swigt__p_GWFrames__SliceOfScriT_GWFrames__Modes_t = {"_p_GWFrames__SliceOfScriT_GWFrames__Modes_t", "GWFrames::SliceOfScri< GWFrames::Modes > *", 0, 0, (void*)&SwigPyBuiltin__GWFrames__SliceOfScriT_GWFrames__Modes_t_clientdata, 0};
+static swig_type_info _swigt__p_GWFrames__SuperMomenta = {"_p_GWFrames__SuperMomenta", "GWFrames::SuperMomenta *", 0, 0, (void*)&SwigPyBuiltin__GWFrames__SuperMomenta_clientdata, 0};
 static swig_type_info _swigt__p_GWFrames__Waveform = {"_p_GWFrames__Waveform", "std::vector< GWFrames::Waveform >::value_type *|GWFrames::Waveform *", 0, 0, (void*)&SwigPyBuiltin__GWFrames__Waveform_clientdata, 0};
 static swig_type_info _swigt__p_GWFrames__Waveforms = {"_p_GWFrames__Waveforms", "GWFrames::Waveforms *", 0, 0, (void*)&SwigPyBuiltin__GWFrames__Waveforms_clientdata, 0};
 static swig_type_info _swigt__p_Quaternions__Quaternion = {"_p_Quaternions__Quaternion", "Quaternions::Quaternion *", 0, 0, (void*)0, 0};
@@ -33893,10 +42741,12 @@ static swig_type_info _swigt__p_std__complexT_double_t = {"_p_std__complexT_doub
 static swig_type_info _swigt__p_std__invalid_argument = {"_p_std__invalid_argument", "std::invalid_argument *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__string = {"_p_std__string", "std::string *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__stringstream = {"_p_std__stringstream", "std::stringstream *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__vectorT_GWFrames__DataGrid_std__allocatorT_GWFrames__DataGrid_t_t = {"_p_std__vectorT_GWFrames__DataGrid_std__allocatorT_GWFrames__DataGrid_t_t", "std::vector< GWFrames::DataGrid,std::allocator< GWFrames::DataGrid > > *|GWFrames::SliceOfScriGrids *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__vectorT_GWFrames__Matrix_std__allocatorT_GWFrames__Matrix_t_t = {"_p_std__vectorT_GWFrames__Matrix_std__allocatorT_GWFrames__Matrix_t_t", "std::vector< GWFrames::Matrix,std::allocator< GWFrames::Matrix > > *|std::vector< GWFrames::Matrix > *", 0, 0, (void*)&SwigPyBuiltin__std__vectorT_GWFrames__Matrix_t_clientdata, 0};
+static swig_type_info _swigt__p_std__vectorT_GWFrames__Modes_std__allocatorT_GWFrames__Modes_t_t = {"_p_std__vectorT_GWFrames__Modes_std__allocatorT_GWFrames__Modes_t_t", "std::vector< GWFrames::Modes,std::allocator< GWFrames::Modes > > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__vectorT_GWFrames__Waveform_std__allocatorT_GWFrames__Waveform_t_t = {"_p_std__vectorT_GWFrames__Waveform_std__allocatorT_GWFrames__Waveform_t_t", "std::vector< GWFrames::Waveform > *|std::vector< GWFrames::Waveform,std::allocator< GWFrames::Waveform > > *", 0, 0, (void*)&SwigPyBuiltin__std__vectorT_GWFrames__Waveform_t_clientdata, 0};
 static swig_type_info _swigt__p_std__vectorT_Quaternions__Quaternion_std__allocatorT_Quaternions__Quaternion_t_t = {"_p_std__vectorT_Quaternions__Quaternion_std__allocatorT_Quaternions__Quaternion_t_t", "std::vector< Quaternions::Quaternion,std::allocator< Quaternions::Quaternion > > *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_std__vectorT_double_std__allocatorT_double_t_t = {"_p_std__vectorT_double_std__allocatorT_double_t_t", "std::vector< double,std::allocator< double > > *|GWFrames::FourVector *|GWFrames::ThreeVector *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__vectorT_double_std__allocatorT_double_t_t = {"_p_std__vectorT_double_std__allocatorT_double_t_t", "std::vector< double,std::allocator< double > > *|GWFrames::FourVector *|FourVector *|GWFrames::ThreeVector *|ThreeVector *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__vectorT_int_std__allocatorT_int_t_t = {"_p_std__vectorT_int_std__allocatorT_int_t_t", "std::vector< int,std::allocator< int > > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__vectorT_std__complexT_double_t_std__allocatorT_std__complexT_double_t_t_t = {"_p_std__vectorT_std__complexT_double_t_std__allocatorT_std__complexT_double_t_t_t", "std::vector< std::complex< double >,std::allocator< std::complex< double > > > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__vectorT_std__vectorT_double_std__allocatorT_double_t_t_std__allocatorT_std__vectorT_double_std__allocatorT_double_t_t_t_t = {"_p_std__vectorT_std__vectorT_double_std__allocatorT_double_t_t_std__allocatorT_std__vectorT_double_std__allocatorT_double_t_t_t_t", "std::vector< std::vector< double,std::allocator< double > >,std::allocator< std::vector< double,std::allocator< double > > > > *", 0, 0, (void*)0, 0};
@@ -33904,9 +42754,17 @@ static swig_type_info _swigt__p_swig__SwigPyIterator = {"_p_swig__SwigPyIterator
 static swig_type_info _swigt__p_value_type = {"_p_value_type", "value_type *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
+  &_swigt__p_GWFrames__DataGrid,
   &_swigt__p_GWFrames__Matrix,
   &_swigt__p_GWFrames__MatrixC,
+  &_swigt__p_GWFrames__Modes,
   &_swigt__p_GWFrames__PNWaveform,
+  &_swigt__p_GWFrames__Scri,
+  &_swigt__p_GWFrames__ScriFunctor,
+  &_swigt__p_GWFrames__SliceModes,
+  &_swigt__p_GWFrames__SliceOfScriT_GWFrames__DataGrid_t,
+  &_swigt__p_GWFrames__SliceOfScriT_GWFrames__Modes_t,
+  &_swigt__p_GWFrames__SuperMomenta,
   &_swigt__p_GWFrames__Waveform,
   &_swigt__p_GWFrames__Waveforms,
   &_swigt__p_Quaternions__Quaternion,
@@ -33924,7 +42782,9 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_std__invalid_argument,
   &_swigt__p_std__string,
   &_swigt__p_std__stringstream,
+  &_swigt__p_std__vectorT_GWFrames__DataGrid_std__allocatorT_GWFrames__DataGrid_t_t,
   &_swigt__p_std__vectorT_GWFrames__Matrix_std__allocatorT_GWFrames__Matrix_t_t,
+  &_swigt__p_std__vectorT_GWFrames__Modes_std__allocatorT_GWFrames__Modes_t_t,
   &_swigt__p_std__vectorT_GWFrames__Waveform_std__allocatorT_GWFrames__Waveform_t_t,
   &_swigt__p_std__vectorT_Quaternions__Quaternion_std__allocatorT_Quaternions__Quaternion_t_t,
   &_swigt__p_std__vectorT_double_std__allocatorT_double_t_t,
@@ -33935,9 +42795,17 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_value_type,
 };
 
+static swig_cast_info _swigc__p_GWFrames__DataGrid[] = {  {&_swigt__p_GWFrames__DataGrid, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_GWFrames__Matrix[] = {  {&_swigt__p_GWFrames__Matrix, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_GWFrames__MatrixC[] = {  {&_swigt__p_GWFrames__MatrixC, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GWFrames__Modes[] = {  {&_swigt__p_GWFrames__Modes, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_GWFrames__PNWaveform[] = {  {&_swigt__p_GWFrames__PNWaveform, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GWFrames__Scri[] = {  {&_swigt__p_GWFrames__Scri, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GWFrames__ScriFunctor[] = {  {&_swigt__p_GWFrames__ScriFunctor, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GWFrames__SliceModes[] = {  {&_swigt__p_GWFrames__SliceModes, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GWFrames__SliceOfScriT_GWFrames__DataGrid_t[] = {  {&_swigt__p_GWFrames__SliceOfScriT_GWFrames__DataGrid_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GWFrames__SliceOfScriT_GWFrames__Modes_t[] = {  {&_swigt__p_GWFrames__SliceOfScriT_GWFrames__Modes_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GWFrames__SuperMomenta[] = {  {&_swigt__p_GWFrames__SuperMomenta, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_GWFrames__Waveform[] = {  {&_swigt__p_GWFrames__Waveform, 0, 0, 0},  {&_swigt__p_GWFrames__PNWaveform, _p_GWFrames__PNWaveformTo_p_GWFrames__Waveform, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_GWFrames__Waveforms[] = {  {&_swigt__p_GWFrames__Waveforms, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Quaternions__Quaternion[] = {  {&_swigt__p_Quaternions__Quaternion, 0, 0, 0},{0, 0, 0, 0}};
@@ -33955,7 +42823,9 @@ static swig_cast_info _swigc__p_std__complexT_double_t[] = {  {&_swigt__p_std__c
 static swig_cast_info _swigc__p_std__invalid_argument[] = {  {&_swigt__p_std__invalid_argument, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__string[] = {  {&_swigt__p_std__string, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__stringstream[] = {  {&_swigt__p_std__stringstream, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__vectorT_GWFrames__DataGrid_std__allocatorT_GWFrames__DataGrid_t_t[] = {  {&_swigt__p_std__vectorT_GWFrames__DataGrid_std__allocatorT_GWFrames__DataGrid_t_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__vectorT_GWFrames__Matrix_std__allocatorT_GWFrames__Matrix_t_t[] = {  {&_swigt__p_std__vectorT_GWFrames__Matrix_std__allocatorT_GWFrames__Matrix_t_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__vectorT_GWFrames__Modes_std__allocatorT_GWFrames__Modes_t_t[] = {  {&_swigt__p_std__vectorT_GWFrames__Modes_std__allocatorT_GWFrames__Modes_t_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__vectorT_GWFrames__Waveform_std__allocatorT_GWFrames__Waveform_t_t[] = {  {&_swigt__p_std__vectorT_GWFrames__Waveform_std__allocatorT_GWFrames__Waveform_t_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__vectorT_Quaternions__Quaternion_std__allocatorT_Quaternions__Quaternion_t_t[] = {  {&_swigt__p_std__vectorT_Quaternions__Quaternion_std__allocatorT_Quaternions__Quaternion_t_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__vectorT_double_std__allocatorT_double_t_t[] = {  {&_swigt__p_std__vectorT_double_std__allocatorT_double_t_t, 0, 0, 0},{0, 0, 0, 0}};
@@ -33966,9 +42836,17 @@ static swig_cast_info _swigc__p_swig__SwigPyIterator[] = {  {&_swigt__p_swig__Sw
 static swig_cast_info _swigc__p_value_type[] = {  {&_swigt__p_value_type, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
+  _swigc__p_GWFrames__DataGrid,
   _swigc__p_GWFrames__Matrix,
   _swigc__p_GWFrames__MatrixC,
+  _swigc__p_GWFrames__Modes,
   _swigc__p_GWFrames__PNWaveform,
+  _swigc__p_GWFrames__Scri,
+  _swigc__p_GWFrames__ScriFunctor,
+  _swigc__p_GWFrames__SliceModes,
+  _swigc__p_GWFrames__SliceOfScriT_GWFrames__DataGrid_t,
+  _swigc__p_GWFrames__SliceOfScriT_GWFrames__Modes_t,
+  _swigc__p_GWFrames__SuperMomenta,
   _swigc__p_GWFrames__Waveform,
   _swigc__p_GWFrames__Waveforms,
   _swigc__p_Quaternions__Quaternion,
@@ -33986,7 +42864,9 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_std__invalid_argument,
   _swigc__p_std__string,
   _swigc__p_std__stringstream,
+  _swigc__p_std__vectorT_GWFrames__DataGrid_std__allocatorT_GWFrames__DataGrid_t_t,
   _swigc__p_std__vectorT_GWFrames__Matrix_std__allocatorT_GWFrames__Matrix_t_t,
+  _swigc__p_std__vectorT_GWFrames__Modes_std__allocatorT_GWFrames__Modes_t_t,
   _swigc__p_std__vectorT_GWFrames__Waveform_std__allocatorT_GWFrames__Waveform_t_t,
   _swigc__p_std__vectorT_Quaternions__Quaternion_std__allocatorT_Quaternions__Quaternion_t_t,
   _swigc__p_std__vectorT_double_std__allocatorT_double_t_t,
@@ -34775,6 +43655,190 @@ SWIG_init(void) {
   Py_INCREF(builtin_pytype);
   PyModule_AddObject(m, "_vectorM", (PyObject*) builtin_pytype);
   SwigPyBuiltin_AddPublicSymbol(public_interface, "_vectorM");
+  d = md;
+  
+  /* type 'GWFrames::ScriFunctor' */
+  builtin_pytype = (PyTypeObject *)&SwigPyBuiltin__GWFrames__ScriFunctor_type;
+  builtin_pytype->tp_dict = d = PyDict_New();
+  SwigPyBuiltin_SetMetaType(builtin_pytype, metatype);
+  builtin_pytype->tp_new = PyType_GenericNew;
+  builtin_base_count = 0;
+  builtin_bases[builtin_base_count] = NULL;
+  SwigPyBuiltin_InitBases(builtin_pytype, builtin_bases);
+  PyDict_SetItemString(d, "this", this_descr);
+  PyDict_SetItemString(d, "thisown", thisown_descr);
+  if (PyType_Ready(builtin_pytype) < 0) {
+    PyErr_SetString(PyExc_TypeError, "Could not create type 'ScriFunctor'.");
+#if PY_VERSION_HEX >= 0x03000000
+    return NULL;
+#else
+    return;
+#endif
+  }
+  Py_INCREF(builtin_pytype);
+  PyModule_AddObject(m, "ScriFunctor", (PyObject*) builtin_pytype);
+  SwigPyBuiltin_AddPublicSymbol(public_interface, "ScriFunctor");
+  d = md;
+  
+  /* type 'GWFrames::DataGrid' */
+  builtin_pytype = (PyTypeObject *)&SwigPyBuiltin__GWFrames__DataGrid_type;
+  builtin_pytype->tp_dict = d = PyDict_New();
+  SwigPyBuiltin_SetMetaType(builtin_pytype, metatype);
+  builtin_pytype->tp_new = PyType_GenericNew;
+  builtin_base_count = 0;
+  builtin_bases[builtin_base_count] = NULL;
+  SwigPyBuiltin_InitBases(builtin_pytype, builtin_bases);
+  PyDict_SetItemString(d, "this", this_descr);
+  PyDict_SetItemString(d, "thisown", thisown_descr);
+  if (PyType_Ready(builtin_pytype) < 0) {
+    PyErr_SetString(PyExc_TypeError, "Could not create type 'DataGrid'.");
+#if PY_VERSION_HEX >= 0x03000000
+    return NULL;
+#else
+    return;
+#endif
+  }
+  Py_INCREF(builtin_pytype);
+  PyModule_AddObject(m, "DataGrid", (PyObject*) builtin_pytype);
+  SwigPyBuiltin_AddPublicSymbol(public_interface, "DataGrid");
+  d = md;
+  
+  /* type 'GWFrames::Modes' */
+  builtin_pytype = (PyTypeObject *)&SwigPyBuiltin__GWFrames__Modes_type;
+  builtin_pytype->tp_dict = d = PyDict_New();
+  SwigPyBuiltin_SetMetaType(builtin_pytype, metatype);
+  builtin_pytype->tp_new = PyType_GenericNew;
+  builtin_base_count = 0;
+  builtin_bases[builtin_base_count] = NULL;
+  SwigPyBuiltin_InitBases(builtin_pytype, builtin_bases);
+  PyDict_SetItemString(d, "this", this_descr);
+  PyDict_SetItemString(d, "thisown", thisown_descr);
+  if (PyType_Ready(builtin_pytype) < 0) {
+    PyErr_SetString(PyExc_TypeError, "Could not create type 'Modes'.");
+#if PY_VERSION_HEX >= 0x03000000
+    return NULL;
+#else
+    return;
+#endif
+  }
+  Py_INCREF(builtin_pytype);
+  PyModule_AddObject(m, "Modes", (PyObject*) builtin_pytype);
+  SwigPyBuiltin_AddPublicSymbol(public_interface, "Modes");
+  d = md;
+  
+  /* type 'GWFrames::SliceModes' */
+  builtin_pytype = (PyTypeObject *)&SwigPyBuiltin__GWFrames__SliceModes_type;
+  builtin_pytype->tp_dict = d = PyDict_New();
+  SwigPyBuiltin_SetMetaType(builtin_pytype, metatype);
+  builtin_pytype->tp_new = PyType_GenericNew;
+  builtin_base_count = 0;
+  builtin_bases[builtin_base_count] = NULL;
+  SwigPyBuiltin_InitBases(builtin_pytype, builtin_bases);
+  PyDict_SetItemString(d, "this", this_descr);
+  PyDict_SetItemString(d, "thisown", thisown_descr);
+  if (PyType_Ready(builtin_pytype) < 0) {
+    PyErr_SetString(PyExc_TypeError, "Could not create type 'SliceModes'.");
+#if PY_VERSION_HEX >= 0x03000000
+    return NULL;
+#else
+    return;
+#endif
+  }
+  Py_INCREF(builtin_pytype);
+  PyModule_AddObject(m, "SliceModes", (PyObject*) builtin_pytype);
+  SwigPyBuiltin_AddPublicSymbol(public_interface, "SliceModes");
+  d = md;
+  
+  /* type 'GWFrames::Scri' */
+  builtin_pytype = (PyTypeObject *)&SwigPyBuiltin__GWFrames__Scri_type;
+  builtin_pytype->tp_dict = d = PyDict_New();
+  SwigPyBuiltin_SetMetaType(builtin_pytype, metatype);
+  builtin_pytype->tp_new = PyType_GenericNew;
+  builtin_base_count = 0;
+  builtin_bases[builtin_base_count] = NULL;
+  SwigPyBuiltin_InitBases(builtin_pytype, builtin_bases);
+  PyDict_SetItemString(d, "this", this_descr);
+  PyDict_SetItemString(d, "thisown", thisown_descr);
+  if (PyType_Ready(builtin_pytype) < 0) {
+    PyErr_SetString(PyExc_TypeError, "Could not create type 'Scri'.");
+#if PY_VERSION_HEX >= 0x03000000
+    return NULL;
+#else
+    return;
+#endif
+  }
+  Py_INCREF(builtin_pytype);
+  PyModule_AddObject(m, "Scri", (PyObject*) builtin_pytype);
+  SwigPyBuiltin_AddPublicSymbol(public_interface, "Scri");
+  d = md;
+  
+  /* type 'GWFrames::SuperMomenta' */
+  builtin_pytype = (PyTypeObject *)&SwigPyBuiltin__GWFrames__SuperMomenta_type;
+  builtin_pytype->tp_dict = d = PyDict_New();
+  SwigPyBuiltin_SetMetaType(builtin_pytype, metatype);
+  builtin_pytype->tp_new = PyType_GenericNew;
+  builtin_base_count = 0;
+  builtin_bases[builtin_base_count] = NULL;
+  SwigPyBuiltin_InitBases(builtin_pytype, builtin_bases);
+  PyDict_SetItemString(d, "this", this_descr);
+  PyDict_SetItemString(d, "thisown", thisown_descr);
+  if (PyType_Ready(builtin_pytype) < 0) {
+    PyErr_SetString(PyExc_TypeError, "Could not create type 'SuperMomenta'.");
+#if PY_VERSION_HEX >= 0x03000000
+    return NULL;
+#else
+    return;
+#endif
+  }
+  Py_INCREF(builtin_pytype);
+  PyModule_AddObject(m, "SuperMomenta", (PyObject*) builtin_pytype);
+  SwigPyBuiltin_AddPublicSymbol(public_interface, "SuperMomenta");
+  d = md;
+  
+  /* type 'GWFrames::SliceOfScri< GWFrames::DataGrid >' */
+  builtin_pytype = (PyTypeObject *)&SwigPyBuiltin__GWFrames__SliceOfScriT_GWFrames__DataGrid_t_type;
+  builtin_pytype->tp_dict = d = PyDict_New();
+  SwigPyBuiltin_SetMetaType(builtin_pytype, metatype);
+  builtin_pytype->tp_new = PyType_GenericNew;
+  builtin_base_count = 0;
+  builtin_bases[builtin_base_count] = NULL;
+  SwigPyBuiltin_InitBases(builtin_pytype, builtin_bases);
+  PyDict_SetItemString(d, "this", this_descr);
+  PyDict_SetItemString(d, "thisown", thisown_descr);
+  if (PyType_Ready(builtin_pytype) < 0) {
+    PyErr_SetString(PyExc_TypeError, "Could not create type 'SliceOfScriGrid'.");
+#if PY_VERSION_HEX >= 0x03000000
+    return NULL;
+#else
+    return;
+#endif
+  }
+  Py_INCREF(builtin_pytype);
+  PyModule_AddObject(m, "SliceOfScriGrid", (PyObject*) builtin_pytype);
+  SwigPyBuiltin_AddPublicSymbol(public_interface, "SliceOfScriGrid");
+  d = md;
+  
+  /* type 'GWFrames::SliceOfScri< GWFrames::Modes >' */
+  builtin_pytype = (PyTypeObject *)&SwigPyBuiltin__GWFrames__SliceOfScriT_GWFrames__Modes_t_type;
+  builtin_pytype->tp_dict = d = PyDict_New();
+  SwigPyBuiltin_SetMetaType(builtin_pytype, metatype);
+  builtin_pytype->tp_new = PyType_GenericNew;
+  builtin_base_count = 0;
+  builtin_bases[builtin_base_count] = NULL;
+  SwigPyBuiltin_InitBases(builtin_pytype, builtin_bases);
+  PyDict_SetItemString(d, "this", this_descr);
+  PyDict_SetItemString(d, "thisown", thisown_descr);
+  if (PyType_Ready(builtin_pytype) < 0) {
+    PyErr_SetString(PyExc_TypeError, "Could not create type 'SliceOfScriModes'.");
+#if PY_VERSION_HEX >= 0x03000000
+    return NULL;
+#else
+    return;
+#endif
+  }
+  Py_INCREF(builtin_pytype);
+  PyModule_AddObject(m, "SliceOfScriModes", (PyObject*) builtin_pytype);
+  SwigPyBuiltin_AddPublicSymbol(public_interface, "SliceOfScriModes");
   d = md;
   SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "UnknownFrameType",SWIG_From_int(static_cast< int >(GWFrames::UnknownFrameType)));
   SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "Inertial",SWIG_From_int(static_cast< int >(GWFrames::Inertial)));

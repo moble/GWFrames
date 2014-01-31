@@ -71,16 +71,18 @@ const double sqrt8pi = std::sqrt(8*M_PI);
 const double sqrt3 = std::sqrt(3.0);
 const double sqrt3over2 = std::sqrt(1.5);
 
-/// Returns the rapidity of a Lorentz boost with velocity three-vector v
-double Rapidity(const std::vector<double>& v) {
-  /// The vector v is expected to be the velocity three-vector of the
-  /// new frame relative to the current frame, in units where c=1.
-  const double magv = std::sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
-  return acosh(1.0/std::sqrt(1.0-magv*magv));
+namespace {
+  /// Returns the rapidity of a Lorentz boost with velocity three-vector v
+  double Rapidity(const std::vector<double>& v) {
+    /// The vector v is expected to be the velocity three-vector of the
+    /// new frame relative to the current frame, in units where c=1.
+    const double magv = std::sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
+    return acosh(1.0/std::sqrt(1.0-magv*magv));
+  }
 }
 
 /// Return a rotor taking n into its boosted version
-Quaternion Boost(ThreeVector v, ThreeVector n) {
+Quaternions::Quaternion GWFrames::Boost(ThreeVector v, ThreeVector n) {
   ///
   /// \param v Three-vector velocity of the new frame WRT this frame
   /// \param n Three-vector direction to be boosted by the rotor
@@ -91,7 +93,7 @@ Quaternion Boost(ThreeVector v, ThreeVector n) {
   /// function of both the vector being boosted and the boost itself.
   ///
 
-  const double alpha = Rapidity(v);
+  const double alpha = ::Rapidity(v);
 
   // If v is too small to make much difference, just return the identity
   const double absv = std::sqrt(v[0]*v[0]+v[1]*v[1]+v[2]*v[2]);

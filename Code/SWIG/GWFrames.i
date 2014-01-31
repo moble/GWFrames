@@ -21,7 +21,7 @@
   #include "../Utilities.hpp"
   #include "Quaternions.hpp"
   #include "IntegrateAngularVelocity.hpp"
-  // #include "Scri.hpp"
+  #include "../Scri.hpp"
   #include "SWSHs.hpp"
   #include "../Waveforms.hpp"
   #include "../PNWaveforms.hpp"
@@ -115,8 +115,8 @@ import_array();
 /////////////////////////////////////////////////////////////////////////////////
 //// Finally, include the descriptions of the actual C++ code in this module ////
 /////////////////////////////////////////////////////////////////////////////////
-//%include "Scri.i"
 %include "Utilities.i"
+%include "Scri.i"
 %include "Waveforms.i"
 %include "PNWaveforms.i"
 %include "Extensions.py"
