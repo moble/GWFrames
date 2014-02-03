@@ -1386,29 +1386,6 @@ Change this Waveform by aligning to the other at the given time.
   
 """
 
-%feature("docstring") Boost """
-Return a rotor taking n into its boosted version.
-=================================================
-  Parameters
-  ----------
-    ThreeVector v
-      Three-vector velocity of the new frame WRT this frame
-    ThreeVector n
-      Three-vector direction to be boosted by the rotor
-  
-  Returns
-  -------
-    Quaternion
-  
-  Description
-  -----------
-    This function returns a rotor $R_b$ that takes the input vector $\\hat{n}$
-    (which will be normalized) on the future null sphere into its boosted
-    version. Note that this rotor is a function of both the vector being
-    boosted and the boost itself.
-  
-"""
-
 %feature("docstring") GWFrames::Waveform::GetAlignmentOfFrame """
 Get the rotor needed to align this waveform's frame to the other's at the given time.
 =====================================================================================
@@ -1689,6 +1666,26 @@ Apply a boost to a boost-weighted function.
   Returns
   -------
     Waveform
+  
+  Description
+  -----------
+    This function does three things. First, it evaluates the Waveform on what
+    will become an equi-angular grid after transformation by the boost. Second,
+    it multiplies each of those points by the appropriate conformal factor
+    $K^b(\\vartheta, \\varphi)$, where $b$ is the boost weight stored with the
+    Waveform. Finally, it transforms back to Fourier space using that new
+    equi-angular grid.
+  
+
+Apply a boost to a boost- and spin-weighted function.
+=====================================================
+  Parameters
+  ----------
+    const vector<vector<double>>& v
+  
+  Returns
+  -------
+    Waveform&
   
   Description
   -----------
@@ -2241,6 +2238,20 @@ Transform Waveform to corotating frame.
   Returns
   -------
     void
+  
+"""
+
+%feature("docstring") GWFrames::Boost """
+
+
+  Parameters
+  ----------
+    ThreeVector v
+    ThreeVector n
+  
+  Returns
+  -------
+    Quaternions::Quaternion
   
 """
 
@@ -3259,8 +3270,8 @@ Fix the orientation of the corotating frame.
   
   Description
   -----------
-    The corotating frame is only defined up to some constant rotor R_c; if
-    R_corot is corotating, then so is R_corot*R_c. This function uses that
+    The corotating frame is only defined up to some constant rotor R_const; if
+    R_corot is corotating, then so is R_corot*R_const. This function uses that
     freedom to ensure that the frame is aligned with the Waveform modes at the
     fiducial time. In particular, it ensures that the Z axis of the frame in
     which the decomposition is done is along the dominant eigenvector of $<LL>$
@@ -4527,24 +4538,6 @@ Return a Waveform with differences between the two inputs.
     Waveform A, and finds the rotation needed to take this frame into frame A.
     Note that the waveform data are stored as complex numbers, rather than as
     modulus and phase.
-  
-"""
-
-%feature("docstring") Rapidity """
-Returns the rapidity of a Lorentz boost with velocity three-vector v.
-=====================================================================
-  Parameters
-  ----------
-    const vector<double>& v
-  
-  Returns
-  -------
-    double
-  
-  Description
-  -----------
-    The vector v is expected to be the velocity three-vector of the new frame
-    relative to the current frame, in units where c=1.
   
 """
 

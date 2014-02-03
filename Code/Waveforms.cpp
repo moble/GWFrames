@@ -1819,13 +1819,13 @@ GWFrames::Waveform& GWFrames::Waveform::AlignDecompositionFrameToModes(const dou
   /// \param Lmodes Lmodes to use in computing \f$<LL>\f$
   ///
   /// The corotating frame is only defined up to some constant rotor
-  /// R_c; if R_corot is corotating, then so is R_corot*R_c.  This
-  /// function uses that freedom to ensure that the frame is aligned
-  /// with the Waveform modes at the fiducial time.  In particular, it
-  /// ensures that the Z axis of the frame in which the decomposition
-  /// is done is along the dominant eigenvector of \f$<LL>\f$
-  /// (suggested by O'Shaughnessy et al.), and the phase of the (2,2)
-  /// mode is zero.
+  /// R_const; if R_corot is corotating, then so is R_corot*R_const.
+  /// This function uses that freedom to ensure that the frame is
+  /// aligned with the Waveform modes at the fiducial time.  In
+  /// particular, it ensures that the Z axis of the frame in which the
+  /// decomposition is done is along the dominant eigenvector of
+  /// \f$<LL>\f$ (suggested by O'Shaughnessy et al.), and the phase of
+  /// the (2,2) mode is zero.
   ///
   /// If Lmodes is empty (default), all L modes are used.  Setting
   /// Lmodes to [2] or [2,3,4], for example, restricts the range of

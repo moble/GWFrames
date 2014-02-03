@@ -71,6 +71,7 @@ const double sqrt8pi = std::sqrt(8*M_PI);
 const double sqrt3 = std::sqrt(3.0);
 const double sqrt3over2 = std::sqrt(1.5);
 
+#ifndef DOXYGEN
 namespace {
   /// Returns the rapidity of a Lorentz boost with velocity three-vector v
   double Rapidity(const std::vector<double>& v) {
@@ -80,6 +81,7 @@ namespace {
     return acosh(1.0/std::sqrt(1.0-magv*magv));
   }
 }
+#endif
 
 /// Return a rotor taking n into its boosted version
 Quaternions::Quaternion GWFrames::Boost(ThreeVector v, ThreeVector n) {
