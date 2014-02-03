@@ -146,11 +146,11 @@ def plotWaveform(this, WaveformPart='Abs', Modes=(), t_fid=None, *pyplot_args, *
     xlabel(XLabel)
     ylabel(YLabel)
 
-    draw()
+    # draw()
 
     if(WasInteractive) :
         ion()
-        gcf().show()
+        # gcf().show()
 
     # try :
     #     tight_layout(pad=0.1)
