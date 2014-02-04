@@ -3357,11 +3357,6 @@ GWFrames::Waveform& GWFrames::Waveform::Boost(const std::vector<std::vector<doub
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": (v.size()=" << v.size() << ") != (NTimes()=" << NTimes() << ")" << std::endl;
     throw(GWFrames_VectorSizeMismatch);
   }
-  if(v[0].size()!=3) {
-    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": v[0].size()=" << v[0].size()
-	      << ".  Input is assumed to be a vector of three-velocities." << std::endl;
-    throw(GWFrames_VectorSizeMismatch);
-  }
 
   // Set up storage and calculate useful constants
   const int ellMax = this->EllMax();
@@ -3374,9 +3369,14 @@ GWFrames::Waveform& GWFrames::Waveform::Boost(const std::vector<std::vector<doub
 
   // Main loop over time steps
   for(unsigned int i_t=0; i_t<NTimes(); ++i_t) {
+    if(v[i_t].size()!=3) {
+      std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": v[" << i_t << "].size()=" << v[i_t].size()
+		<< ".  Input is assumed to be a vector of three-velocities." << std::endl;
+      throw(GWFrames_VectorSizeMismatch);
+    }
+
     vector<complex<double> > Modes(N_lm(ellMax), 0.0);
     vector<complex<double> > Modes2(N_lm(ellMax), 0.0);
-    // std::cout << "t[" << i_t << "] = " << this->T(i_t) << std::endl;
 
     const double gamma = 1.0/std::sqrt(1.0-v[i_t][0]*v[i_t][0]-v[i_t][1]*v[i_t][1]-v[i_t][2]*v[i_t][2]);
 
@@ -3396,17 +3396,17 @@ GWFrames::Waveform& GWFrames::Waveform::Boost(const std::vector<std::vector<doub
 	const Quaternion Rp(dtheta*i_theta, dphi*i_phi);
 	const Quaternion nHat = Rp*Quaternions::zHat*Rp.conjugate();
 	const double ConformalFactor = std::pow(gamma*(1-nHat.dot(Quaternions::Quaternion(v[i_t]))), -BoostWeight());
-	const Quaternion R_b = Quaternions::BoostRotor(-v[i_t], nHat.vec());
-	sYlm.SetRotation(R_b*Rp);
-	if(i_t%1000==0) {
-	  std::cerr << std::setprecision(16)
-		    << this->T(i_t) << " " << ConformalFactor << "  \t  " << v[i_t][0] << "," << v[i_t][1] << "," << v[i_t][2] << std::endl << std::endl;
+	// const Quaternion R_b = Quaternions::BoostRotor(-v[i_t], nHat.vec());
+	const Quaternion R_b = Quaternions::BoostRotor(v[i_t], nHat.vec());
+	if(i_t==0 && i_theta==0 && i_phi==0) {
+	  std::cerr << __FILE__ << ":" << __LINE__ << ": Previous line is given wrong sign for testing purposes!\n\n" << std::endl;
 	}
+	sYlm.SetRotation(R_b*Rp);
 
 	// Evaluate the data at this point, incorporating the spin due
 	// to the boost, multiplying by the conformal factor at this
 	// point
-	Grid[i_g] = 0.3*ConformalFactor*sYlm.Evaluate(Modes);
+	Grid[i_g] = ConformalFactor*sYlm.Evaluate(Modes);
       }
     }
 
@@ -3418,9 +3418,16 @@ GWFrames::Waveform& GWFrames::Waveform::Boost(const std::vector<std::vector<doub
     // Set new data at this time step
     for(int i_mode=N_lm(std::abs(SpinWeight())-1), ell=std::abs(SpinWeight()); ell<=ellMax; ++ell) {
       for(int m=-ell; m<=ell; ++m, ++i_mode) {
-	this->Data(FindModeIndex(ell,m),i_t) = 0.7*Modes2[i_mode];
+	this->SetData(this->FindModeIndex(ell,m), i_t, Modes2[i_mode]);
+	// if(i_t%1000==0 && ell==2 && m==2) {
+	//   std::cerr << i_t << "/" << NTimes()
+	// 	    << "\tModes[" << i_mode << "] = " << Modes[i_mode]
+	// 	    << "\tModes2[" << i_mode << "] = " << Modes2[i_mode]
+	// 	    << "\tData((" << ell << ", " << m << "), " << i_t << ") = " << this->Data(this->FindModeIndex(ell,m),i_t) << std::endl;
+	// }
       }
     }
+
   }
 
   return *this;
