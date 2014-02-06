@@ -10,7 +10,7 @@
 #include <iostream>
 
 namespace GWFrames {
-  
+
   /// Object representing an individual quaternion
   class Quaternion {
   private:
@@ -78,13 +78,13 @@ namespace GWFrames {
   inline std::vector<double> vec(const Quaternion& Q) { return Q.vec(); }
   inline Quaternion Slerp(const double tau, const Quaternion& Qa, const Quaternion& Qb) { return ( pow((Qb/Qa), tau) * Qa ); }
   std::ostream& operator<<(std::ostream& out, const GWFrames::Quaternion& q);
-  
-  
+
+
   // Functions for arrays of Quaternion objects
   std::vector<Quaternion> DifferentiateRotorByLogarithm(const std::vector<Quaternion>& RIn, const std::vector<double>& tIn);
   std::vector<Quaternion> MinimalRotation(const std::vector<Quaternion>& R, const std::vector<double>& T, const unsigned int NIterations=5);
   std::vector<Quaternion> PrescribedRotation(const std::vector<double>& RotationRateAboutZ,
-					     const std::vector<Quaternion>& R, const std::vector<double>& T, const unsigned int NIterations=5);
+                                             const std::vector<Quaternion>& R, const std::vector<double>& T, const unsigned int NIterations=5);
   std::vector<Quaternion> FrameFromXY(const std::vector<Quaternion>& X, const std::vector<Quaternion>& Y);
   std::vector<Quaternion> FrameFromZ(const std::vector<Quaternion>& Z, const std::vector<double>& T, const unsigned int NIterations=5);
   std::vector<Quaternion> FrameFromPrescribedRotation(const std::vector<Quaternion>& omega, const std::vector<double>& T, const unsigned int NIterations=5);
@@ -92,7 +92,7 @@ namespace GWFrames {
   std::vector<Quaternion> UnflipRotors(const std::vector<Quaternion>& R, const double discont=1.4142135623730951);
   std::vector<Quaternion> RDelta(const std::vector<Quaternion>& R1, const std::vector<Quaternion>& R2, const unsigned int IndexOfFiducialTime=0);
   std::vector<Quaternion> Squad(const std::vector<Quaternion>& RIn, const std::vector<double>& tIn, const std::vector<double>& tOut);
-  
+
   std::vector<Quaternion> operator+(const double a, const std::vector<Quaternion>& Q);
   std::vector<Quaternion> operator-(const double a, const std::vector<Quaternion>& Q);
   std::vector<Quaternion> operator*(const double a, const std::vector<Quaternion>& Q);
@@ -155,9 +155,9 @@ namespace GWFrames {
   std::vector<double> Component1(const std::vector<GWFrames::Quaternion>& Q);
   std::vector<double> Component2(const std::vector<GWFrames::Quaternion>& Q);
   std::vector<double> Component3(const std::vector<GWFrames::Quaternion>& Q);
-  
+
   std::vector<Quaternion> QuaternionDerivative(const std::vector<Quaternion>& f, const std::vector<double>& t);
-  
+
 } // namespace GWFrames
 
 #endif // QUATERNIONS_HPP

@@ -51,10 +51,10 @@ GWFrames::Quaternion::Quaternion(const Quaternion& Q)
 
 /// Constructor from spherical coordinates.
 GWFrames::Quaternion::Quaternion(const double vartheta, const double varphi) {
-  /// 
+  ///
   /// \param vartheta Float representing the polar angle
   /// \param varphi Float representing the azimuthal angle
-  /// 
+  ///
   /// The unit Quaternion constructed in this way rotates the z axis
   /// onto the point given by the coordinates (vartheta, varphi).
   *this = GWFrames::exp((varphi/2.)*zHat) * GWFrames::exp((vartheta/2.)*yHat);
@@ -62,11 +62,11 @@ GWFrames::Quaternion::Quaternion(const double vartheta, const double varphi) {
 
 /// Constructor from Euler angles.
 GWFrames::Quaternion::Quaternion(const double alpha, const double beta, const double gamma) {
-  /// 
+  ///
   /// \param alpha First Euler angle
   /// \param beta Second Euler angle
   /// \param gamma Third Euler angle
-  /// 
+  ///
   /// The unit Quaternion constructed in this way corresponds to a
   /// rotation by the given Euler angles.  The convention used here is
   /// the z-y-z convention.  That is, the rotations occur about the
@@ -91,7 +91,7 @@ GWFrames::Quaternion::Quaternion(const double w0, const double x0, const double 
 GWFrames::Quaternion::Quaternion(const std::vector<double>& q) {
   ///
   /// \param q Vector containing three or four components
-  /// 
+  ///
   /// If the input vector has three components, they are assumed to
   /// represent the vector components of the Quaternion, and the
   /// scalar component is set to zero.  If the input vector has four
@@ -117,10 +117,10 @@ GWFrames::Quaternion::Quaternion(const std::vector<double>& q) {
 GWFrames::Quaternion::Quaternion(const double angle, const std::vector<double>& axis)
   : w(std::cos(angle/2.)), x(std::sin(angle/2.)*axis[0]), y(std::sin(angle/2.)*axis[1]), z(std::sin(angle/2.)*axis[2])
 {
-  /// 
+  ///
   /// \param angle Single number giving the rotation angle
   /// \param axis Three-component vector (assumed to be normalized) giving the axis
-  /// 
+  ///
   /// This constructs a rotor (assuming 'axis' is normalized)
   /// corresponding to rotation about the given axis through the given
   /// angle.
@@ -140,7 +140,7 @@ double GWFrames::Quaternion::operator[](const unsigned int i) const {
   case 3:
     return z;
   default:
-    cerr << "\n" << __FILE__ << ":" << __LINE__ << ": i=" << i << " is not a possible quaternion index" << endl; 
+    cerr << "\n" << __FILE__ << ":" << __LINE__ << ": i=" << i << " is not a possible quaternion index" << endl;
     throw(GWFrames_IndexOutOfBounds);
   }
 }
@@ -158,7 +158,7 @@ double& GWFrames::Quaternion::operator[](const unsigned int i) {
   case 3:
     return z;
   default:
-    cerr << "\n" << __FILE__ << ":" << __LINE__ << ": i=" << i << " is not a possible quaternion index" << endl; 
+    cerr << "\n" << __FILE__ << ":" << __LINE__ << ": i=" << i << " is not a possible quaternion index" << endl;
     throw(GWFrames_IndexOutOfBounds);
   }
 }
@@ -166,9 +166,9 @@ double& GWFrames::Quaternion::operator[](const unsigned int i) {
 /// Quaternion multiplication.
 Quaternion GWFrames::Quaternion::operator*(const Quaternion& Q) const {
   return Quaternion(w*Q.w - x*Q.x - y*Q.y - z*Q.z,
-		    w*Q.x + x*Q.w + y*Q.z - z*Q.y,
-		    w*Q.y - x*Q.z + y*Q.w + z*Q.x,
-		    w*Q.z + x*Q.y - y*Q.x + z*Q.w);
+                    w*Q.x + x*Q.w + y*Q.z - z*Q.y,
+                    w*Q.y - x*Q.z + y*Q.w + z*Q.x,
+                    w*Q.z + x*Q.y - y*Q.x + z*Q.w);
 }
 
 /// Return logarithm of Quaternion.
@@ -237,8 +237,8 @@ std::vector<Quaternion> GWFrames::DifferentiateRotorByLogarithm(const std::vecto
     const double absquatlogRsquared = SQR(absquatlogR);
     const double a = SQR(std::sin(absquatlogR)/absquatlogR)/2.0;
     const double b = (absquatlogR<0.001
-		      ? 0.6666666666666666 + absquatlogRsquared*(-0.13333333333333333 + absquatlogRsquared*(0.012698412698412698 + (-0.0007054673721340388 + (4*absquatlogRsquared)/155925.)*absquatlogRsquared))
-		      : (absquatlogR-std::sin(absquatlogR)*std::cos(absquatlogR))/(absquatlogRsquared*absquatlogR) ) / 4.0;
+                      ? 0.6666666666666666 + absquatlogRsquared*(-0.13333333333333333 + absquatlogRsquared*(0.012698412698412698 + (-0.0007054673721340388 + (4*absquatlogRsquared)/155925.)*absquatlogRsquared))
+                      : (absquatlogR-std::sin(absquatlogR)*std::cos(absquatlogR))/(absquatlogRsquared*absquatlogR) ) / 4.0;
     const Quaternion comm = GWFrames::commutator(logR[i],rdot[i]);
     ROut[i] = (rdot[i] + a*comm + b*GWFrames::commutator(logR[i],comm)) * RIn[i];
   }
@@ -252,7 +252,7 @@ std::vector<Quaternion> GWFrames::MinimalRotation(const std::vector<Quaternion>&
   /// \param R Vector of rotors.
   /// \param T Vector of corresponding time steps.
   /// \param NIterations Number of refinements [default: 5]
-  /// 
+  ///
   /// This function returns a copy of the input R, which takes the z
   /// axis to the same point as R, but adjusts the rotation about that
   /// new point by imposing the minimal-rotation condition.
@@ -281,19 +281,19 @@ std::vector<Quaternion> GWFrames::MinimalRotation(const std::vector<Quaternion>&
 
 /// Input frame with prescribed rate of rotation about Z axis.
 std::vector<Quaternion> GWFrames::PrescribedRotation(const std::vector<double>& RotationRateAboutZ,
-						     const std::vector<Quaternion>& R, const std::vector<double>& T, const unsigned int NIterations) {
-  /// 
+                                                     const std::vector<Quaternion>& R, const std::vector<double>& T, const unsigned int NIterations) {
+  ///
   /// \param RotationRateAboutZ Vector of rotation rates about the new frame's Z axis.
   /// \param R Vector of rotors.
   /// \param T Vector of corresponding time steps.
   /// \param NIterations Number of refinements [default: 5]
-  /// 
+  ///
   /// This function returns a copy of the input R, which takes the z
   /// axis to the same point as R, but adjusts the rotation about that
   /// new point by imposing the minimal-rotation condition, and then
   /// including an additional rotation about the new Z axis to agree
   /// with the given rotation rate.
-  
+
   if(T.size() != R.size() || T.size() != RotationRateAboutZ.size()) {
     cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": T.size()=" << T.size() << " != R.size()=" << R.size() << " != RotationRateAboutZ.size()=" << RotationRateAboutZ.size() << endl;
     throw(GWFrames_VectorSizeMismatch);
@@ -302,26 +302,26 @@ std::vector<Quaternion> GWFrames::PrescribedRotation(const std::vector<double>& 
   const Quaternion z(0,0,0,1);
   vector<double> gammaover2dot(Size);
   vector<Quaternion> Rreturn(R);
-  
+
   // Repeat the process a few times to refine the result
   for(unsigned int iteration=0; iteration<NIterations; ++iteration) {
     cout << "\t\tIteration " << iteration << endl;
     const vector<Quaternion> Rdot = GWFrames::QuaternionDerivative(Rreturn, T);
-    
+
     // Calculate \dot{\gamma}/2 at each instant in time
     for(unsigned int i=0; i<Size; ++i) {
       gammaover2dot[i] = 2*RotationRateAboutZ[i] + ( Rreturn[i].inverse() * Rdot[i] * z )[0];
     }
-    
+
     // Integrate to find \gamma/2 as a function of time
     const vector<double> gammaover2 = GWFrames::ScalarIntegral(gammaover2dot, T);
-    
+
     // Now pre-multiply the input rotor by exp(\gamma * z / 2) at each instant
     for(unsigned int i=0; i<Size; ++i) {
       Rreturn[i] = Rreturn[i] * (gammaover2[i]*z).exp();
     }
   }
-  
+
   cout << "\tFinished" << endl;
   return Rreturn;
 }
@@ -349,7 +349,7 @@ std::vector<Quaternion> GWFrames::FrameFromXY(const std::vector<Quaternion>& X, 
   for(unsigned int k=0; k<Size; ++k) {
     const Quaternion Ra = sqrtOfRotor(-X[k]*x);
     const double beta = std::atan2(GWFrames::dot(Ra*z*Ra.inverse(), Y[k]),
-				   GWFrames::dot(Ra*y*Ra.inverse(), Y[k]));
+                                   GWFrames::dot(Ra*y*Ra.inverse(), Y[k]));
     R[k] = Ra * GWFrames::exp((beta/2.0)*x);
   }
   return R;
@@ -361,7 +361,7 @@ std::vector<Quaternion> GWFrames::FrameFromZ(const std::vector<Quaternion>& Z, c
   /// \param Z Vector of Quaternions
   /// \param T Vector of corresponding times
   /// \param NIterations Number of refinements [default: 5]
-  /// 
+  ///
   /// The input vector of Quaternions, assumed to be pure unit
   /// vectors, represent the Z basis vectors of the frame at each
   /// instant of time.  The returned vector of rotors will rotate the
@@ -390,7 +390,7 @@ std::vector<Quaternion> GWFrames::FrameFromPrescribedRotation(const std::vector<
   /// \param omega Vector of Quaternions
   /// \param T Vector of corresponding times
   /// \param NIterations Number of refinements [default: 5]
-  /// 
+  ///
   /// The input vector of Quaternions represent the angular-velocity
   /// vector (omega) of the frame at each instant of time.  The
   /// returned vector of rotors will rotate the stationary frame's
@@ -441,7 +441,7 @@ int FrameFromAngularVelocity_RHS(double t, const double ri[], double drdt[], voi
   if(std::abs(std::sin(absquatlogR)) < Quaternion_Epsilon) { // If the matrix is really close to singular, it's equivalent to the identity, so return
     return GSL_SUCCESS;
   }
-  
+
   const Quaternion OmegaOver2(0., drdt[0], drdt[1], drdt[2]);
   const Quaternion rQ(0., ri[0], ri[1], ri[2]);
   const Quaternion rHat = rQ/absquatlogR;
@@ -453,17 +453,17 @@ int FrameFromAngularVelocity_RHS(double t, const double ri[], double drdt[], voi
 }
 #endif // DOXYGEN
 std::vector<Quaternion> GWFrames::FrameFromAngularVelocity(const std::vector<Quaternion>& Omega, const std::vector<double>& T) {
-  /// 
+  ///
   /// \param Omega Vector of Quaternions.
   /// \param T Vector of corresponding times.
-  /// 
+  ///
   /// Note that each element of Omega should be a pure-vector
   /// Quaternion, corresponding to the angular-velocity vector at the
   /// instant of time.
   const vector<double> OmegaX = GWFrames::Component1(Omega);
   const vector<double> OmegaY = GWFrames::Component2(Omega);
   const vector<double> OmegaZ = GWFrames::Component3(Omega);
-  
+
   // Set up the spline to interpolate Omega
   gsl_interp_accel* accX = gsl_interp_accel_alloc();
   gsl_spline* splineX = gsl_spline_alloc(gsl_interp_cspline, OmegaX.size());
@@ -474,7 +474,7 @@ std::vector<Quaternion> GWFrames::FrameFromAngularVelocity(const std::vector<Qua
   gsl_interp_accel* accZ = gsl_interp_accel_alloc();
   gsl_spline* splineZ = gsl_spline_alloc(gsl_interp_cspline, OmegaZ.size());
   gsl_spline_init(splineZ, &T[0], &OmegaZ[0], OmegaZ.size());
-  
+
   // Set up the integrator
   const double hstart = (T[1]-T[0])/10.;
   const double epsabs = 1.e-9;
@@ -491,7 +491,7 @@ std::vector<Quaternion> GWFrames::FrameFromAngularVelocity(const std::vector<Qua
   gsl_odeiv2_driver* d = gsl_odeiv2_driver_alloc_y_new(&sys, gsl_odeiv2_step_rk8pd, hstart, epsabs, epsrel);
   double t = T[0];
   double r[3] = {0.0, 0.0, 0.0};
-  
+
   // Run the integration
   vector<vector<double> > rs;
   rs.push_back(vector<double>(r, r+3));
@@ -518,7 +518,7 @@ std::vector<Quaternion> GWFrames::FrameFromAngularVelocity(const std::vector<Qua
       // cerr << "Flipping r at t=" << t << endl;
     }
   }
-  
+
   // Free the gsl storage
   gsl_spline_free(splineX);
   gsl_interp_accel_free(accX);
@@ -527,7 +527,7 @@ std::vector<Quaternion> GWFrames::FrameFromAngularVelocity(const std::vector<Qua
   gsl_spline_free(splineZ);
   gsl_interp_accel_free(accZ);
   gsl_odeiv2_driver_free(d);
-  
+
   return UnflipRotors(exp(Quaternions(rs)));
 }
 
@@ -537,7 +537,7 @@ std::vector<Quaternion> GWFrames::UnflipRotors(const std::vector<Quaternion>& R,
   ///
   /// \param R Vector of rotors
   /// \param discont Acceptable discontinuity [default: sqrt(2)]
-  /// 
+  ///
   /// Because of the two-sided nature of quaternion rotations, the
   /// sign of a rotor may be undetermined in many cases.
   /// Discontinuous flips in that sign for rotor-valued functions of
@@ -589,7 +589,7 @@ std::vector<Quaternion> GWFrames::Squad(const std::vector<Quaternion>& RIn, cons
   /// \param RIn Vector of rotors
   /// \param tIn Vector of corresponding times
   /// \param tOut Vector of times to which RIn will be interpolated
-  /// 
+  ///
   /// This function implements a version of cubic-spline interpolation
   /// designed for unit quaternions, which delivers more accurate,
   /// smooth, and physical rotations than other forms of
@@ -637,20 +637,20 @@ std::vector<Quaternion> GWFrames::Squad(const std::vector<Quaternion>& RIn, cons
       Qip2 = RIn[iIn+2];
     }
     Ai = Qi * GWFrames::exp((
-		       GWFrames::log(Qi.inverse()*Qip1)
-		       +(Dti/Dtim1)*GWFrames::log(Qim1.inverse()*Qi)
-		       -2*GWFrames::log(Qi.inverse()*Qip1)
-		       )*0.25);
+                       GWFrames::log(Qi.inverse()*Qip1)
+                       +(Dti/Dtim1)*GWFrames::log(Qim1.inverse()*Qi)
+                       -2*GWFrames::log(Qi.inverse()*Qip1)
+                       )*0.25);
     Bip1 = Qip1 * GWFrames::exp((
-			   (Dti/Dtip1)*GWFrames::log(Qip1.inverse()*Qip2)
-			   +GWFrames::log(Qi.inverse()*Qip1)
-			   -2*GWFrames::log(Qi.inverse()*Qip1)
-			   )*-0.25);
+                           (Dti/Dtip1)*GWFrames::log(Qip1.inverse()*Qip2)
+                           +GWFrames::log(Qi.inverse()*Qip1)
+                           -2*GWFrames::log(Qi.inverse()*Qip1)
+                           )*-0.25);
     while(iOut<tOut.size() && tOut[iOut]<=tIn[iIn+1]) {
       const double taui = (tOut[iOut]-tIn[iIn]) / Dti;
       ROut[iOut] = GWFrames::Slerp(2*taui*(1-taui),
-				   GWFrames::Slerp(taui, Qi, Qip1),
-				   GWFrames::Slerp(taui, Ai, Bip1));
+                                   GWFrames::Slerp(taui, Qi, Qip1),
+                                   GWFrames::Slerp(taui, Ai, Bip1));
       iOut += 1;
     }
     iIn += 1;
