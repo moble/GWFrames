@@ -2033,8 +2033,8 @@ void GWFrames::Waveform::GetAlignmentOfTimeAndFrame(const Waveform& A, const dou
 
   const unsigned int MaxIterations = 2000;
   const double MinSimplexSize = 1.0e-10;
-  const double InitialTrialTimeStep = 0.01;
-  const double InitialTrialAngleStep = 0.01;
+  const double InitialTrialTimeStep = 1.0;
+  const double InitialTrialAngleStep = 1.0;
 
   WaveformAligner Aligner(A, B, t1, t2);
   const unsigned int NDimensions = 4;
@@ -2086,9 +2086,6 @@ void GWFrames::Waveform::GetAlignmentOfTimeAndFrame(const Waveform& A, const dou
     iter++;
     status = gsl_multimin_fminimizer_iterate(s);
     // std::cout << iter
-    //	      << "\t" << gsl_vector_get(s->x,0) << "\t" << gsl_vector_get(s->x,1)
-    //	      << "\t" << gsl_vector_get(s->x,2) << "\t" << gsl_vector_get(s->x,3)
-    //	      << "\t" << s->fval << std::endl;
     if(status) break;
     size = gsl_multimin_fminimizer_size(s);
     status = gsl_multimin_test_size(size, MinSimplexSize);
