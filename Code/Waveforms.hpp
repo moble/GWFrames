@@ -159,7 +159,6 @@ namespace GWFrames {
     Waveform& AlignDecompositionFrameToModes(const double t_fid, const std::vector<int>& Lmodes=std::vector<int>(0));
     void GetAlignmentOfFrame(const Waveform& A, const double t_fid, Quaternion& R_delta) const;
     Waveform& AlignFrame(const Waveform& A, const double t_fid);
-    double GetErrorMeasureGivenTimeOffset(const Waveform& A, const double t1, const double t2, const double deltat) const;
     void GetAlignmentOfTimeAndFrame(const Waveform& A, const double t1, const double t2, double& deltat, Quaternion& R_delta) const;
     Waveform& AlignTimeAndFrame(const Waveform& A, const double t1, const double t2);
     Waveform Compare(const Waveform& B, const double MinTimeStep=0.005, const double MinTime=-3.0e300) const;
