@@ -17,6 +17,14 @@ all :
 
 
 
+# Mike likes to use python's virtual environments to build with
+# various versions and arrangements of python.  As such, he finds that
+# the following is, unfortunately, necessary for him.  This makes him
+# happy.  It is probably not necessary for most users, however.
+MikeHappy :
+	$(VIRTUAL_ENV)/bin/python setup.py install --prefix=$(VIRTUAL_ENV)
+
+
 
 
 

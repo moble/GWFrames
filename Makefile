@@ -3,12 +3,16 @@
 
 # By default, just call the python build process
 all :
-	make -C Code
+	$(MAKE) -C Code
 
 # If needed, we can also make object files to use in other C++ programs
 cpp :
-	make -C Code cpp
+	$(MAKE) -C Code cpp
 
 # This rebuilds the documentation, assuming doxygen is working
 doc :
-	make -C Docs
+	$(MAKE) -C Docs
+
+
+MikeHappy :
+	$(MAKE) -C Code MikeHappy
