@@ -1921,7 +1921,7 @@ private:
   std::vector<Quaternions::Quaternion> aFrame;
 public:
   double Multiplier;
-  WaveformAligner(const GWFrames::Waveform& A, const GWFrames::Waveform& B, const double t1, const double t2, const double M=100.0)
+  WaveformAligner(const GWFrames::Waveform& A, const GWFrames::Waveform& B, const double t1, const double t2, const double M=1.0)
     : a(A), b(B), t(a.T()), aFrame(a.Frame()), Multiplier(M)
   {
     // Check to make sure we have sufficient times before any offset.
@@ -2033,7 +2033,7 @@ void GWFrames::Waveform::GetAlignmentOfTimeAndFrame(const Waveform& A, const dou
 
   const unsigned int MaxIterations = 2000;
   const double MinSimplexSize = 1.0e-10;
-  const double InitialTrialTimeStep = 1.0;
+  const double InitialTrialTimeStep = 10.0;
   const double InitialTrialAngleStep = 1.0;
 
   WaveformAligner Aligner(A, B, t1, t2);
