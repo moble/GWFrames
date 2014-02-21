@@ -1958,6 +1958,21 @@ public:
     aFrame.erase(aFrame.begin(), aFrame.begin()+i);
   }
 
+  GWFrames::Quaternion AvgLogRatio(const double deltat, const double deltax, const double deltay, const double deltaz) const {
+    using namespace GWFrames; // Allow me to subtract a double from a vector<double> below
+    const GWFrames::Quaternion R_delta = GWFrames::exp(GWFrames::Quaternion(0, deltax, deltay, deltaz));
+    const std::vector<GWFrames::Quaternion> bFrame = GWFrames::Squad(R_delta * b.Frame(), (b.T())+Multiplier*deltat, t);
+    const unsigned int Size=bFrame.size();
+    GWFrames::Quaternion avg(0.0, 0.0, 0.0, 0.0);
+    GWFrames::Quaternion avgdot_last = GWFrames::log( aFrame[0] * GWFrames::inverse(bFrame[0]) );
+    for(unsigned int i=1; i<Size; ++i) {
+      const GWFrames::Quaternion avgdot = GWFrames::log( aFrame[i] * GWFrames::inverse(bFrame[i]) );
+      avg = avg + ((t[i]-t[i-1])/2.0)*(avgdot+avgdot_last);
+      avgdot_last = avgdot;
+    }
+    return avg;
+  }
+
   double EvaluateMinimizationQuantity(const double deltat, const double deltax, const double deltay, const double deltaz) const {
     using namespace GWFrames; // Allow me to subtract a double from a vector<double> below
     const Quaternions::Quaternion R_delta = Quaternions::exp(Quaternions::Quaternion(0, deltax, deltay, deltaz));
@@ -2037,10 +2052,20 @@ void GWFrames::Waveform::GetAlignmentOfTimeAndFrame(const Waveform& A, const dou
 
   // Set initial values
   x = gsl_vector_alloc(NDimensions);
-  gsl_vector_set(x, 0, 0.0);
-  gsl_vector_set(x, 1, 0.0);
-  gsl_vector_set(x, 2, 0.0);
-  gsl_vector_set(x, 3, 0.0);
+  if(Aligner.EvaluateMinimizationQuantity(0.,0.,0.,0.)/std::abs(t2-t1)<M_PI) {
+    // Rotors are nearly aligned
+    gsl_vector_set(x, 0, 0.0);
+    gsl_vector_set(x, 1, 0.0);
+    gsl_vector_set(x, 2, 0.0);
+    gsl_vector_set(x, 3, 0.0);
+  } else {
+    // Rotors are off by too much; start from a better spot -- the avg log of the "difference" ratio
+    const GWFrames::Quaternion avglog = Aligner.AvgLogRatio(0., 0., 0., 0.);
+    gsl_vector_set(x, 0, 0.0);
+    gsl_vector_set(x, 1, avglog[1]);
+    gsl_vector_set(x, 2, avglog[2]);
+    gsl_vector_set(x, 3, avglog[3]);
+  }
 
   // Set initial step sizes
   ss = gsl_vector_alloc(NDimensions);
