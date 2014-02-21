@@ -67,9 +67,9 @@ if isdir('/opt/local/lib'):
 ## Remove a compiler flag that doesn't belong there for C++
 import distutils.sysconfig as ds
 cfs=ds.get_config_vars()
-for key, value in cfs.iteritems() :
+for key, value in cfs.items() :
     if(type(cfs[key])==str) :
-        cfs[key] = value.replace('-Wstrict-prototypes', '')
+        cfs[key] = value.replace('-Wstrict-prototypes', '').replace('-Wshorten-64-to-32', '') #.replace('', '')
 
 ## Try to determine an automatic version number for this
 try :
@@ -87,6 +87,16 @@ try :
         License=myfile.read()
 except IOError :
     License = 'See LICENSE file in the source code for details.'
+
+## Add -py3 if this is python3
+swig_opts=['-globals', 'constants', '-c++', '-builtin', '-outdir', 'SWIG/']
+try:
+    import sys
+    python_major = sys.version_info.major
+    if(python_major==3) :
+        swig_opts += ['-py3']
+except AttributeError:
+    pass # This should probably be an error, because python is really old, but let's keep trying...
 
 ## This does the actual work
 setup(name="GWFrames",
@@ -137,8 +147,8 @@ setup(name="GWFrames",
                   libraries=['gsl', 'gslcblas', 'fftw3', 'spinsfast'],
                   define_macros = [('CodeRevision', CodeRevision)],
                   language='c++',
-                  swig_opts=['-globals', 'constants', '-c++', '-builtin', '-outdir', 'SWIG/'],# '-debug-tmsearch', '-debug-tmused'],
-                  extra_link_args=['-lgomp', '-fPIC'],
+                  swig_opts=swig_opts, #['-globals', 'constants', '-c++', '-builtin', '-outdir', 'SWIG/'],# '-debug-tmsearch', '-debug-tmused'],
+                  extra_link_args=['-fPIC'],
                   # extra_link_args=['-lgomp', '-fPIC', '-Wl,-undefined,error'], # `-undefined,error` tells the linker to fail on undefined symbols
                   extra_compile_args=['-Wno-deprecated'] #'-fopenmp',
                   # extra_compile_args=['-ffast-math'] # DON'T USE fast-math!!!  It makes it impossible to detect NANs
