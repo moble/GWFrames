@@ -164,8 +164,10 @@ namespace GWFrames {
     Waveform Compare(const Waveform& B, const double MinTimeStep=0.005, const double MinTime=-3.0e300) const;
     Waveform Hybridize(const Waveform& B, const double t1, const double t2, const double tMinStep=0.005) const;
 
-    // For a particular sky location
+    // Pointwise and mode-wise operations
     std::vector<std::complex<double> > EvaluateAtPoint(const double vartheta, const double varphi) const;
+    Waveform operator+(const Waveform& B) const;
+    Waveform operator-(const Waveform& B) const;
 
     // Output to data file
     const Waveform& Output(const std::string& FileName, const unsigned int precision=14) const;

@@ -2454,6 +2454,108 @@ std::vector<std::complex<double> > GWFrames::Waveform::EvaluateAtPoint(const dou
 }
 
 
+GWFrames::Waveform GWFrames::Waveform::operator+(const GWFrames::Waveform& B) const {
+  const Waveform& A = *this;
+
+  if(A.frameType != GWFrames::Inertial || B.frameType != GWFrames::Inertial) {
+    if(A.frameType != B.frameType) {
+      std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+		<< "\nError: Asking for the sum of Waveforms in " << GWFrames::WaveformFrameNames[A.frameType]
+		<< " and " << GWFrames::WaveformFrameNames[B.frameType] << " frames."
+		<< "\n       This should only be applied to Waveforms in the same frame.\n"
+		<< std::endl;
+      throw(GWFrames_WrongFrameType);
+    } else if(A.frame.size() != B.frame.size()) {
+      std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+		<< "\nError: Asking for the sum of Waveforms with " << A.frame.size() << " and " << B.frame.size() << " frame data points."
+		<< "\n       This should only be applied to Waveforms in the same frame.\n"
+		<< std::endl;
+      throw(GWFrames_WrongFrameType);
+    }
+  }
+
+  if(A.NTimes() != B.NTimes()) {
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+	      << "\nError: Asking for the sum of two Waveform objects with different time data."
+	      << "\n       A.NTimes()=" << A.NTimes() << "\tB.NTimes()=" << B.NTimes()
+	      << "\n       Interpolate to a common set of times first.\n"
+	      << std::endl;
+    throw(GWFrames_MatrixSizeMismatch);
+  }
+
+  // This will be the new object holding the multiplied data
+  GWFrames::Waveform C(A);
+
+  // Store both old histories in C's
+  C.history << "### *this = *this+B\n"
+	    << "#### B.history.str():\n" << B.history.str()
+	    << "#### End of old histories from `A+B`" << std::endl;
+
+  // Do the work of addition
+  const unsigned int ntimes = NTimes();
+  const unsigned int nmodes = NModes();
+  for(unsigned int i_A=0; i_A<nmodes; ++i_A) {
+    const unsigned int i_B = B.FindModeIndex(lm[i_A][0], lm[i_A][1]);
+    for(unsigned int i_t=0; i_t<ntimes; ++i_t) {
+      C.SetData(i_A, i_t, A.Data(i_A,i_t)+B.Data(i_B,i_t));
+    }
+  }
+
+  return C;
+}
+
+GWFrames::Waveform GWFrames::Waveform::operator-(const GWFrames::Waveform& B) const {
+  const Waveform& A = *this;
+
+  if(A.frameType != GWFrames::Inertial || B.frameType != GWFrames::Inertial) {
+    if(A.frameType != B.frameType) {
+      std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+		<< "\nError: Asking for the difference of Waveforms in " << GWFrames::WaveformFrameNames[A.frameType]
+		<< " and " << GWFrames::WaveformFrameNames[B.frameType] << " frames."
+		<< "\n       This should only be applied to Waveforms in the same frame.\n"
+		<< std::endl;
+      throw(GWFrames_WrongFrameType);
+    } else if(A.frame.size() != B.frame.size()) {
+      std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+		<< "\nError: Asking for the difference of Waveforms with " << A.frame.size() << " and " << B.frame.size() << " frame data points."
+		<< "\n       This should only be applied to Waveforms in the same frame.\n"
+		<< std::endl;
+      throw(GWFrames_WrongFrameType);
+    }
+  }
+
+  if(A.NTimes() != B.NTimes()) {
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+	      << "\nError: Asking for the difference of two Waveform objects with different time data."
+	      << "\n       A.NTimes()=" << A.NTimes() << "\tB.NTimes()=" << B.NTimes()
+	      << "\n       Interpolate to a common set of times first.\n"
+	      << std::endl;
+    throw(GWFrames_MatrixSizeMismatch);
+  }
+
+  // This will be the new object holding the multiplied data
+  GWFrames::Waveform C(A);
+
+  // Store both old histories in C's
+  C.history << "### *this = *this-B\n"
+	    << "#### B.history.str():\n" << B.history.str()
+	    << "#### End of old histories from `A-B`" << std::endl;
+
+  // Do the work of addition
+  const unsigned int ntimes = NTimes();
+  const unsigned int nmodes = NModes();
+  for(unsigned int i_A=0; i_A<nmodes; ++i_A) {
+    const unsigned int i_B = B.FindModeIndex(lm[i_A][0], lm[i_A][1]);
+    for(unsigned int i_t=0; i_t<ntimes; ++i_t) {
+      C.SetData(i_A, i_t, A.Data(i_A,i_t)-B.Data(i_B,i_t));
+    }
+  }
+
+  return C;
+}
+
+
+
 /// Output Waveform object to data file.
 const GWFrames::Waveform& GWFrames::Waveform::Output(const std::string& FileName, const unsigned int precision) const {
   const std::string Descriptor = DescriptorString();
