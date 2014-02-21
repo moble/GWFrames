@@ -6,10 +6,13 @@
 
 
 
-
-
 # By default, just call the python build process
-all : spinsfast SphericalFunctions
+all : install_user
+
+install : spinsfast SphericalFunctions
+	python setup.py install
+
+install_user : spinsfast SphericalFunctions
 	python setup.py install --user
 
 spinsfast :
@@ -21,14 +24,15 @@ SphericalFunctions :
 
 
 
-
-
-
-
-
-
-
-
+# Mike likes to use python's virtual environments to build with
+# various versions and arrangements of python.  As such, he finds that
+# the following is, unfortunately, necessary for him.  This makes him
+# happy.  It is probably not necessary for most users, however.
+MikeHappy :
+	cd SphericalFunctions/Quaternions && $(VIRTUAL_ENV)/bin/python setup.py install --prefix=$(VIRTUAL_ENV)
+	cd SphericalFunctions && $(VIRTUAL_ENV)/bin/python setup.py install --prefix=$(VIRTUAL_ENV)
+	build=build/config.mk $(MAKE) -C spinsfast && cp spinsfast/lib/spinsfast.so $(shell python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")
+	$(VIRTUAL_ENV)/bin/python setup.py install --prefix=$(VIRTUAL_ENV)
 
 
 
