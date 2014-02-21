@@ -115,9 +115,8 @@ setup(name="GWFrames",
                   define_macros = [('CodeRevision', CodeRevision)],
                   language='c++',
                   swig_opts=['-globals', 'constants', '-c++'],
-                  extra_link_args=['-lgomp', '-fPIC'],
+                  extra_link_args=['-fPIC'],
                   # extra_link_args=['-fPIC'], # Shouldn't be necessary...
-                  extra_compile_args=['-fopenmp']
                   # extra_compile_args=['-ffast-math'] # DON'T USE fast-math!!!  It makes it impossible to detect NANs
                   )
         ],
