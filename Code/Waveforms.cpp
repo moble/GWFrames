@@ -1994,8 +1994,8 @@ void GWFrames::Waveform::GetAlignmentOfTimeAndFrame(const Waveform& A, const dou
 
   const unsigned int MaxIterations = 20000;
   const double MinSimplexSize = 1.0e-10;
-  const double InitialTrialTimeStep = 0.01;
-  const double InitialTrialAngleStep = 0.01;
+  const double InitialTrialTimeStep = 1.0;
+  const double InitialTrialAngleStep = 1.0;
 
   WaveformAligner Aligner(A, B, t1, t2);
   const unsigned int NDimensions = 4;
@@ -2053,12 +2053,12 @@ void GWFrames::Waveform::GetAlignmentOfTimeAndFrame(const Waveform& A, const dou
     if(status) break;
     size = gsl_multimin_fminimizer_size(s);
     status = gsl_multimin_test_size(size, MinSimplexSize);
-    if(status != GSL_CONTINUE) {
-      std::cout << "GetAlignmentOfTimeAndFrame minimization is stopping because the simplex is small enough." << std::endl;
-    }
-    if(iter == MaxIterations) {
-      std::cout << "GetAlignmentOfTimeAndFrame minimization is stopping because it has gone through " << iter << " iterations." << std::endl;
-    }
+    // if(status != GSL_CONTINUE) {
+    //   std::cout << "GetAlignmentOfTimeAndFrame minimization is stopping because the simplex is small enough." << std::endl;
+    // }
+    // if(iter == MaxIterations) {
+    //   std::cout << "GetAlignmentOfTimeAndFrame minimization is stopping because it has gone through " << iter << " iterations." << std::endl;
+    // }
   }
 
   // Reset and rerun the minimization
