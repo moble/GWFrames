@@ -200,8 +200,8 @@ namespace GWFrames {
     // Output to data file
     const Waveform& Output(const std::string& FileName, const unsigned int precision=14) const;
 
-    // Correct the error in older RWZ data from SpEC
-    Waveform& HackSpECSignError();
+    // // Correct the error in older RWZ data from SpEC
+    // Waveform& HackSpECSignError();
 
   }; // class Waveform
   inline Waveform operator*(const double b, const Waveform& A) { return A*b; }

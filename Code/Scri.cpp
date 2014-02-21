@@ -3,7 +3,7 @@
 
 #include "Scri.hpp"
 
-#include <omp.h>
+// #include <omp.h>
 
 #include <algorithm>
 

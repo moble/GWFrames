@@ -108,8 +108,8 @@ GWFrames::Waveform GWFrames::Waveform::BinaryOp(const GWFrames::Waveform& B) con
   int N_theta = 2*lMax + 1;
 
   // These will be work arrays
-  const complex<double> I(0.0,1.0);
-  const complex<double> zero(0.0,0.0);
+  const std::complex<double> I(0.0,1.0);
+  const std::complex<double> zero(0.0,0.0);
   std::vector<std::complex<double> > almA(Nlm);
   std::vector<std::complex<double> > almB(Nlm);
   std::vector<std::complex<double> > almC(Nlm);

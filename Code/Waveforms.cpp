@@ -1,7 +1,7 @@
 // Copyright (c) 2014, Michael Boyle
 // See LICENSE file for details
 
-#include <omp.h>
+// #include <omp.h>
 
 #include <unistd.h>
 #include <sys/param.h>
@@ -747,7 +747,6 @@ GWFrames::Waveform& GWFrames::Waveform::TransformModesToRotatedFrame(const std::
 	}
       }
 
-      # pragma omp parallel
       {
 
 	// Construct the D matrix and data storage
@@ -763,7 +762,6 @@ GWFrames::Waveform& GWFrames::Waveform::TransformModesToRotatedFrame(const std::
 	    }
 	  }
 	  // Loop through each time step
-	  #pragma omp for
 	  for(int t=0; t<NTimes; ++t) {
 	    // Store the data for all m' modes at this time step
 	    for(int mp=-l, i=0; mp<=l; ++mp, ++i) {
@@ -779,7 +777,6 @@ GWFrames::Waveform& GWFrames::Waveform::TransformModesToRotatedFrame(const std::
 	  }
 	} else {
 	  // Loop through each time step
-	  #pragma omp for
 	  for(int t=0; t<NTimes; ++t) {
 	    // Get the Wigner D matrix data at this time step
 	    D.SetRotation(R_frame[t]);
@@ -802,7 +799,7 @@ GWFrames::Waveform& GWFrames::Waveform::TransformModesToRotatedFrame(const std::
 	  }
 	}
 
-      } // end #pragma omp parallel
+      }
 
       mode += 2*l+1;
     }
@@ -851,7 +848,6 @@ GWFrames::Waveform& GWFrames::Waveform::TransformUncertaintiesToRotatedFrame(con
 	}
       }
 
-      # pragma omp parallel
       {
 
 	// Construct the D matrix and data storage
@@ -867,7 +863,6 @@ GWFrames::Waveform& GWFrames::Waveform::TransformUncertaintiesToRotatedFrame(con
 	    }
 	  }
 	  // Loop through each time step
-	  #pragma omp for
 	  for(int t=0; t<NTimes; ++t) {
 	    // Store the data for all m' modes at this time step
 	    for(int mp=-l, i=0; mp<=l; ++mp, ++i) {
@@ -890,7 +885,6 @@ GWFrames::Waveform& GWFrames::Waveform::TransformUncertaintiesToRotatedFrame(con
 	  }
 	} else {
 	  // Loop through each time step
-	  #pragma omp for
 	  for(int t=0; t<NTimes; ++t) {
 	    // Get the Wigner D matrix data at this time step
 	    D.SetRotation(R_frame[t]);
@@ -920,7 +914,7 @@ GWFrames::Waveform& GWFrames::Waveform::TransformUncertaintiesToRotatedFrame(con
 	  }
 	}
 
-      } // end #pragma omp parallel
+      }
 
       mode += 2*l+1;
     }
@@ -1836,11 +1830,11 @@ GWFrames::Waveform& GWFrames::Waveform::AlignDecompositionFrameToModes(const dou
   Quaternion R_c;
   GetAlignmentOfDecompositionFrameToModes(t_fid, R_c, Lmodes);
 
-  // Now, apply the rotation
-  this->RotateDecompositionBasis(R_c);
-
   // Record what happened
   history << "### this->AlignDecompositionFrameToModes(" << std::setprecision(16) << t_fid << ", ...);  # R_c=" << R_c << std::endl;
+
+  // Now, apply the rotation
+  this->RotateDecompositionBasis(R_c);
 
   return *this;
 }
@@ -2437,7 +2431,6 @@ std::vector<std::complex<double> > GWFrames::Waveform::EvaluateAtPoint(const dou
     const int ell = LM(i_m)[0];
     const int m   = LM(i_m)[1];
     const complex<double> Ylm = Y(ell,m);
-    #pragma omp parallel for
     for(int i_t=0; i_t<NT; ++i_t) {
       d[i_t] += Data(i_m, i_t) * Ylm;
     }
@@ -2470,45 +2463,45 @@ const GWFrames::Waveform& GWFrames::Waveform::Output(const std::string& FileName
 }
 
 
-/// Correct the error in RWZ extraction from older SpEC files
-GWFrames::Waveform& GWFrames::Waveform::HackSpECSignError() {
-  // h(ell,m) -> (-1)^m * h(ell,-m)*
-  unsigned int i_m = 0;
-  unsigned int N_m = NModes();
-  unsigned int N_t = NTimes();
-  for(int ell=2; ; ++ell) {
-    if(i_m>=N_m) {
-      break;
-    }
-    for(int m=1; m<=ell; ++m) {
-      // First, swap the m and -m modes
-      unsigned int iPositive = FindModeIndex(ell,m);
-      unsigned int iNegative = FindModeIndex(ell,-m);
-      lm[iNegative].swap(lm[iPositive]);
-      // Next, swap the signs as appropriate
-      if(m%2==0) {
-	for(unsigned int i_t=0; i_t<N_t; ++i_t) {
-	  data[iPositive][i_t].imag() *= -1;
-	  data[iNegative][i_t].imag() *= -1;
-	}
-      } else {
-	for(unsigned int i_t=0; i_t<N_t; ++i_t) {
-	  data[iPositive][i_t].real() *= -1;
-	  data[iNegative][i_t].real() *= -1;
-	}
-      }
-      ++i_m; // For positive m
-      ++i_m; // For negative m
-    }
-    // Don't forget about m=0
-    unsigned int iZero = FindModeIndex(ell,0);
-    for(unsigned int i_t=0; i_t<N_t; ++i_t) {
-      data[iZero][i_t].imag() *= -1;
-    }
-    ++i_m; // For m=0
-  }
-  return *this;
-}
+// /// Correct the error in RWZ extraction from older SpEC files
+// GWFrames::Waveform& GWFrames::Waveform::HackSpECSignError() {
+//   // h(ell,m) -> (-1)^m * h(ell,-m)*
+//   unsigned int i_m = 0;
+//   unsigned int N_m = NModes();
+//   unsigned int N_t = NTimes();
+//   for(int ell=2; ; ++ell) {
+//     if(i_m>=N_m) {
+//       break;
+//     }
+//     for(int m=1; m<=ell; ++m) {
+//       // First, swap the m and -m modes
+//       unsigned int iPositive = FindModeIndex(ell,m);
+//       unsigned int iNegative = FindModeIndex(ell,-m);
+//       lm[iNegative].swap(lm[iPositive]);
+//       // Next, swap the signs as appropriate
+//       if(m%2==0) {
+// 	for(unsigned int i_t=0; i_t<N_t; ++i_t) {
+// 	  data[iPositive][i_t].imag() *= -1;
+// 	  data[iNegative][i_t].imag() *= -1;
+// 	}
+//       } else {
+// 	for(unsigned int i_t=0; i_t<N_t; ++i_t) {
+// 	  data[iPositive][i_t].real() *= -1;
+// 	  data[iNegative][i_t].real() *= -1;
+// 	}
+//       }
+//       ++i_m; // For positive m
+//       ++i_m; // For negative m
+//     }
+//     // Don't forget about m=0
+//     unsigned int iZero = FindModeIndex(ell,0);
+//     for(unsigned int i_t=0; i_t<N_t; ++i_t) {
+//       data[iZero][i_t].imag() *= -1;
+//     }
+//     ++i_m; // For m=0
+//   }
+//   return *this;
+// }
 
 
 // GWFrames::Waveform GWFrames::Waveform::operator+(const GWFrames::Waveform& B) const { return BinaryOp<std::plus<std::complex<double> > >(B); }
@@ -3663,7 +3656,6 @@ GWFrames::Waveforms GWFrames::Waveforms::Extrapolate(std::vector<std::vector<dou
   // }
 
   // Loop over time
-  #pragma omp parallel for
   for(int i_t=0; i_t<NTimes; ++i_t) {
 
     // Set up the gsl storage variables
@@ -3727,7 +3719,6 @@ GWFrames::Waveforms GWFrames::Waveforms::Extrapolate(std::vector<std::vector<dou
 	gsl_multifit_linear_usvd(&OneOverRadii_N.matrix, Re, SVDTol, &EffectiveRank, &FitCoefficients_N.vector, &Covariance_N.matrix, &ChiSquared, Workspace);
 	const double re = gsl_vector_get(&FitCoefficients_N.vector, 0);
 	const double re_err = std::sqrt(2*M_PI*(NFiniteRadii-EffectiveRank)*gsl_matrix_get(&Covariance_N.matrix, 0, 0));
-	// #pragma omp critical
 	// if(i_m==0) {
 	//   const string FileName = "Extrapolation_N"+NumberToString<int>(N)+"_re_l2_m2.dat";
 	//   FILE* ofp = fopen(FileName.c_str(), "a");
