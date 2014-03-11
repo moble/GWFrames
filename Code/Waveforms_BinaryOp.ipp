@@ -25,26 +25,26 @@ GWFrames::Waveform GWFrames::Waveform::BinaryOp(const GWFrames::Waveform& B) con
 
   if(A.NTimes() != B.NTimes()) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	      << "\nError: Asking for the product of two Waveform objects with different time data."
-	      << "\n       A.NTimes()=" << A.NTimes() << "\tB.NTimes()=" << B.NTimes()
-	      << "\n       Interpolate to a common set of times first.\n"
-	      << std::endl;
+              << "\nError: Asking for the product of two Waveform objects with different time data."
+              << "\n       A.NTimes()=" << A.NTimes() << "\tB.NTimes()=" << B.NTimes()
+              << "\n       Interpolate to a common set of times first.\n"
+              << std::endl;
     throw(GWFrames_MatrixSizeMismatch);
   }
 
   if(A.frameType != GWFrames::Inertial || B.frameType != GWFrames::Inertial) {
     if(A.frameType != B.frameType) {
       std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-		<< "\nError: Asking for the pointwise product of Waveforms in " << GWFrames::WaveformFrameNames[A.frameType]
-		<< " and " << GWFrames::WaveformFrameNames[B.frameType] << " frames."
-		<< "\n       This should only be applied to Waveforms in the same frame.\n"
-		<< std::endl;
+                << "\nError: Asking for the pointwise product of Waveforms in " << GWFrames::WaveformFrameNames[A.frameType]
+                << " and " << GWFrames::WaveformFrameNames[B.frameType] << " frames."
+                << "\n       This should only be applied to Waveforms in the same frame.\n"
+                << std::endl;
       throw(GWFrames_WrongFrameType);
     } else if(A.frame.size() != B.frame.size()) {
       std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-		<< "\nError: Asking for the pointwise product of Waveforms with " << A.frame.size() << " and " << B.frame.size() << " frame data points."
-		<< "\n       This should only be applied to Waveforms in the same frame.\n"
-		<< std::endl;
+                << "\nError: Asking for the pointwise product of Waveforms with " << A.frame.size() << " and " << B.frame.size() << " frame data points."
+                << "\n       This should only be applied to Waveforms in the same frame.\n"
+                << std::endl;
       throw(GWFrames_WrongFrameType);
     }
   }
@@ -57,9 +57,9 @@ GWFrames::Waveform GWFrames::Waveform::BinaryOp(const GWFrames::Waveform& B) con
 
   // Store both old histories in C's
   C.history << "### *this = A*B\n"
-	    << "#### A.history.str():\n" << A.history.str()
-	    << "#### B.history.str():\n" << B.history.str()
-	    << "#### End of old histories from `A*B`" << std::endl;
+            << "#### A.history.str():\n" << A.history.str()
+            << "#### B.history.str():\n" << B.history.str()
+            << "#### End of old histories from `A*B`" << std::endl;
 
   // Just copy other data from A
   C.t = A.t;
@@ -93,9 +93,9 @@ GWFrames::Waveform GWFrames::Waveform::BinaryOp(const GWFrames::Waveform& B) con
     unsigned int i=0;
     for(int l=lMin; l<=lMax; ++l) {
       for(int m=-l; m<=l; ++m) {
-	C.lm[i][0] = l;
-	C.lm[i][1] = m;
-	++i;
+        C.lm[i][0] = l;
+        C.lm[i][1] = m;
+        ++i;
       }
     }
   }
@@ -124,53 +124,53 @@ GWFrames::Waveform GWFrames::Waveform::BinaryOp(const GWFrames::Waveform& B) con
     { // Set the a_lm coefficients of A
       unsigned int i=0;
       for(int l=0; l<lMinA; ++l) {
-	for(int m=-l; m<=-l; ++m) {
-	  almA[i] = zero;
-	  ++i;
-	}
+        for(int m=-l; m<=-l; ++m) {
+          almA[i] = zero;
+          ++i;
+        }
       }
       for(int l=lMinA; l<=lMax; ++l) {
-	for(int m=-l; m<=-l; ++m) {
-	  const unsigned int iA = A.FindModeIndexWithoutError(l, m);
-	  almA[i] = A.Data(iA, i_t);
-	  ++i;
-	}
+        for(int m=-l; m<=-l; ++m) {
+          const unsigned int iA = A.FindModeIndexWithoutError(l, m);
+          almA[i] = A.Data(iA, i_t);
+          ++i;
+        }
       }
     }
 
     { // Set the a_lm coefficients of B
       unsigned int i=0;
       for(int l=0; l<lMinB; ++l) {
-	for(int m=-l; m<=-l; ++m) {
-	  almB[i] = zero;
-	  ++i;
-	}
+        for(int m=-l; m<=-l; ++m) {
+          almB[i] = zero;
+          ++i;
+        }
       }
       for(int l=lMinB; l<=lMax; ++l) {
-	for(int m=-l; m<=-l; ++m) {
-	  const unsigned int iB = B.FindModeIndexWithoutError(l, m);
-	  almB[i] = B.Data(iB, i_t);
-	  ++i;
-	}
+        for(int m=-l; m<=-l; ++m) {
+          const unsigned int iB = B.FindModeIndexWithoutError(l, m);
+          almB[i] = B.Data(iB, i_t);
+          ++i;
+        }
       }
     }
 
     { // Transform each and multiply pointwise
       spinsfast_salm2map(reinterpret_cast<fftw_complex*>(&almA[0]),
-			 reinterpret_cast<fftw_complex*>(&fA[0]),
-			 A.SpinWeight(), N_theta, N_phi, lMax);
+                         reinterpret_cast<fftw_complex*>(&fA[0]),
+                         A.SpinWeight(), N_theta, N_phi, lMax);
       spinsfast_salm2map(reinterpret_cast<fftw_complex*>(&almB[0]),
-			 reinterpret_cast<fftw_complex*>(&fB[0]),
-			 B.SpinWeight(), N_theta, N_phi, lMax);
+                         reinterpret_cast<fftw_complex*>(&fB[0]),
+                         B.SpinWeight(), N_theta, N_phi, lMax);
       for(int i=0; i<N_phi*N_theta; ++i) {
-	fC[i] = Op()(fA[i], fB[i]);
+        fC[i] = Op()(fA[i], fB[i]);
       }
     }
 
     // Transform back and record the new data in C
     spinsfast_map2salm(reinterpret_cast<fftw_complex*>(&fC[0]),
-		       reinterpret_cast<fftw_complex*>(&almC[0]),
-		       C.SpinWeight(), N_theta, N_phi, lMax);
+                       reinterpret_cast<fftw_complex*>(&almC[0]),
+                       C.SpinWeight(), N_theta, N_phi, lMax);
     for(unsigned int i_m=0; i_m<C.NModes(); ++i_m) {
       C.SetData(i_m, i_t, almC[i_m+lMin*lMin]);
     }

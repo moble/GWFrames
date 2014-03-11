@@ -182,8 +182,8 @@ namespace GWFrames {
     std::vector<SliceModes> slices;
   public: // Constructor
     Scri(const GWFrames::Waveform& psi0, const GWFrames::Waveform& psi1,
-	 const GWFrames::Waveform& psi2, const GWFrames::Waveform& psi3,
-	 const GWFrames::Waveform& psi4, const GWFrames::Waveform& sigma);
+         const GWFrames::Waveform& psi2, const GWFrames::Waveform& psi3,
+         const GWFrames::Waveform& psi4, const GWFrames::Waveform& sigma);
     Scri(const Scri& S) : t(S.t), slices(S.slices) { }
   public: // Member functions
     // Transformations

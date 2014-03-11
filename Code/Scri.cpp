@@ -145,9 +145,9 @@ DataGrid::DataGrid(const int Spin, const int N_theta, const int N_phi, const std
   // Check that we have the right amount of data
   if(n_theta*n_phi != int(D.size())) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	      << "\nError: (n_theta=" << n_theta << ")*(n_phi=" << n_phi << ") != (D.size()=" << D.size() << ")"
-	      << "\n       Cannot multiply data of different sizes\n"
-	      << std::endl;
+              << "\nError: (n_theta=" << n_theta << ")*(n_phi=" << n_phi << ") != (D.size()=" << D.size() << ")"
+              << "\n       Cannot multiply data of different sizes\n"
+              << std::endl;
     throw(GWFrames_VectorSizeMismatch);
   }
 }
@@ -156,8 +156,8 @@ DataGrid::DataGrid(Modes M, const int N_theta, const int N_phi)
   : s(M.Spin()), n_theta(std::max(N_theta, 2*M.EllMax()+1)), n_phi(std::max(N_phi, 2*M.EllMax()+1)), data(n_phi*n_theta, zero)
 {
   spinsfast_salm2map(reinterpret_cast<fftw_complex*>(&M[0]),
-		     reinterpret_cast<fftw_complex*>(&data[0]),
-		     M.Spin(), n_theta, n_phi, M.EllMax());
+                     reinterpret_cast<fftw_complex*>(&data[0]),
+                     M.Spin(), n_theta, n_phi, M.EllMax());
 }
 
 DataGrid::DataGrid(const Modes& M, const GWFrames::ThreeVector& v, const int N_theta, const int N_phi)
@@ -208,16 +208,16 @@ DataGrid DataGrid::operator*(const DataGrid& A) const {
   // Check that we have the same amounts of data
   if(A.n_theta != B.n_theta) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	      << "\nError: (A.n_theta=" << A.n_theta << ") != (B.n_theta=" << B.n_theta << ")"
-	      << "\n       Cannot multiply data of different sizes\n"
-	      << std::endl;
+              << "\nError: (A.n_theta=" << A.n_theta << ") != (B.n_theta=" << B.n_theta << ")"
+              << "\n       Cannot multiply data of different sizes\n"
+              << std::endl;
     throw(GWFrames_VectorSizeMismatch);
   }
   if(A.n_phi != B.n_phi) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	      << "\nError: (A.n_phi=" << A.n_phi << ") != (B.n_phi=" << B.n_phi << ")"
-	      << "\n       Cannot multiply data of different sizes\n"
-	      << std::endl;
+              << "\nError: (A.n_phi=" << A.n_phi << ") != (B.n_phi=" << B.n_phi << ")"
+              << "\n       Cannot multiply data of different sizes\n"
+              << std::endl;
     throw(GWFrames_VectorSizeMismatch);
   }
 
@@ -237,16 +237,16 @@ DataGrid DataGrid::operator/(const DataGrid& A) const {
   // Check that we have the same amounts of data
   if(A.n_theta != B.n_theta) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	      << "\nError: (A.n_theta=" << A.n_theta << ") != (B.n_theta=" << B.n_theta << ")"
-	      << "\n       Cannot divide data of different sizes\n"
-	      << std::endl;
+              << "\nError: (A.n_theta=" << A.n_theta << ") != (B.n_theta=" << B.n_theta << ")"
+              << "\n       Cannot divide data of different sizes\n"
+              << std::endl;
     throw(GWFrames_VectorSizeMismatch);
   }
   if(A.n_phi != B.n_phi) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	      << "\nError: (A.n_phi=" << A.n_phi << ") != (B.n_phi=" << B.n_phi << ")"
-	      << "\n       Cannot divide data of different sizes\n"
-	      << std::endl;
+              << "\nError: (A.n_phi=" << A.n_phi << ") != (B.n_phi=" << B.n_phi << ")"
+              << "\n       Cannot divide data of different sizes\n"
+              << std::endl;
     throw(GWFrames_VectorSizeMismatch);
   }
 
@@ -266,16 +266,16 @@ DataGrid DataGrid::operator+(const DataGrid& A) const {
   // Check that we have the same amounts of data
   if(A.n_theta != B.n_theta) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	      << "\nError: (A.n_theta=" << A.n_theta << ") != (B.n_theta=" << B.n_theta << ")"
-	      << "\n       Cannot add data of different sizes\n"
-	      << std::endl;
+              << "\nError: (A.n_theta=" << A.n_theta << ") != (B.n_theta=" << B.n_theta << ")"
+              << "\n       Cannot add data of different sizes\n"
+              << std::endl;
     throw(GWFrames_VectorSizeMismatch);
   }
   if(A.n_phi != B.n_phi) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	      << "\nError: (A.n_phi=" << A.n_phi << ") != (B.n_phi=" << B.n_phi << ")"
-	      << "\n       Cannot add data of different sizes\n"
-	      << std::endl;
+              << "\nError: (A.n_phi=" << A.n_phi << ") != (B.n_phi=" << B.n_phi << ")"
+              << "\n       Cannot add data of different sizes\n"
+              << std::endl;
     throw(GWFrames_VectorSizeMismatch);
   }
 
@@ -294,16 +294,16 @@ DataGrid DataGrid::operator-(const DataGrid& A) const {
   // Check that we have the same amounts of data
   if(A.n_theta != B.n_theta) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	      << "\nError: (A.n_theta=" << A.n_theta << ") != (B.n_theta=" << B.n_theta << ")"
-	      << "\n       Cannot subtract data of different sizes\n"
-	      << std::endl;
+              << "\nError: (A.n_theta=" << A.n_theta << ") != (B.n_theta=" << B.n_theta << ")"
+              << "\n       Cannot subtract data of different sizes\n"
+              << std::endl;
     throw(GWFrames_VectorSizeMismatch);
   }
   if(A.n_phi != B.n_phi) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	      << "\nError: (A.n_phi=" << A.n_phi << ") != (B.n_phi=" << B.n_phi << ")"
-	      << "\n       Cannot subtract data of different sizes\n"
-	      << std::endl;
+              << "\nError: (A.n_phi=" << A.n_phi << ") != (B.n_phi=" << B.n_phi << ")"
+              << "\n       Cannot subtract data of different sizes\n"
+              << std::endl;
     throw(GWFrames_VectorSizeMismatch);
   }
 
@@ -374,9 +374,9 @@ DataGrid GWFrames::ConformalFactorGrid(const GWFrames::ThreeVector& v, const int
       const double theta = dtheta*i_theta;
       const double phi = dphi*i_phi;
       D[i_g] = 1.0/(gamma*(1
-			 -v[0]*std::cos(phi)*std::sin(theta)
-			 -v[1]*std::sin(phi)*std::sin(theta)
-			 -v[2]*std::cos(theta)));
+                           -v[0]*std::cos(phi)*std::sin(theta)
+                           -v[1]*std::sin(phi)*std::sin(theta)
+                           -v[2]*std::cos(theta)));
     }
   }
   return DataGrid(0, n_theta, n_phi, D);
@@ -393,9 +393,9 @@ DataGrid GWFrames::InverseConformalFactorGrid(const GWFrames::ThreeVector& v, co
       const double theta = dtheta*i_theta;
       const double phi = dphi*i_phi;
       D[i_g] = gamma*(1
-		      -v[0]*std::cos(phi)*std::sin(theta)
-		      -v[1]*std::sin(phi)*std::sin(theta)
-		      -v[2]*std::cos(theta));
+                      -v[0]*std::cos(phi)*std::sin(theta)
+                      -v[1]*std::sin(phi)*std::sin(theta)
+                      -v[2]*std::cos(theta));
     }
   }
   return DataGrid(0, n_theta, n_phi, D);
@@ -439,9 +439,9 @@ Modes::Modes(const int spin, const std::vector<std::complex<double> >& Data)
   // Make sure Data doesn't have more ell modes than SphericalFunctions::ellMax
   if(ellMax>=SphericalFunctions::ellMax) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	      << "\nError: Input data has length " << Data.size() << "."
-	      << "\n       This is not a recognized length for spherical-harmonic data.\n"
-	      << std::endl;
+              << "\nError: Input data has length " << Data.size() << "."
+              << "\n       This is not a recognized length for spherical-harmonic data.\n"
+              << std::endl;
     throw(GWFrames_VectorSizeMismatch);
   }
 }
@@ -450,8 +450,8 @@ Modes::Modes(DataGrid D, const int L)
   : s(D.Spin()), ellMax(std::max(std::min((D.N_theta()-1)/2, (D.N_phi()-1)/2), L)), data(N_lm(ellMax))
 {
   spinsfast_map2salm(reinterpret_cast<fftw_complex*>(&D[0]),
-		     reinterpret_cast<fftw_complex*>(&data[0]),
-		     s, D.N_theta(), D.N_phi(), ellMax);
+                     reinterpret_cast<fftw_complex*>(&data[0]),
+                     s, D.N_theta(), D.N_phi(), ellMax);
 }
 
 GWFrames::Modes& GWFrames::Modes::operator=(const Modes& B) {
@@ -489,9 +489,9 @@ Modes Modes::operator+(const Modes& M) const {
   // Check that both `Modes` have the same `s` values
   if(s != M.s) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	      << "\nError: The second data set has spin M.s=" << M.s << ", which is not the same as this set's spin s=" << s << "."
-	      << "\n       This addition is not defined.\n"
-	      << std::endl;
+              << "\nError: The second data set has spin M.s=" << M.s << ", which is not the same as this set's spin s=" << s << "."
+              << "\n       This addition is not defined.\n"
+              << std::endl;
     throw(GWFrames_BadWaveformInformation);
   }
 
@@ -513,9 +513,9 @@ Modes Modes::operator-(const Modes& M) const {
   // Check that both `Modes` have the same `s` values
   if(s != M.s) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	      << "\nError: The second data set has spin M.s=" << M.s << ", which is not the same as this set's spin s=" << s << "."
-	      << "\n       This addition is not defined.\n"
-	      << std::endl;
+              << "\nError: The second data set has spin M.s=" << M.s << ", which is not the same as this set's spin s=" << s << "."
+              << "\n       This addition is not defined.\n"
+              << std::endl;
     throw(GWFrames_BadWaveformInformation);
   }
 
@@ -734,16 +734,16 @@ SliceModes::SliceModes(const int ellMax)
 /// Find largest ell value in the data on this slice
 int SliceModes::EllMax() const {
   return std::max(psi0.EllMax(),
-		  std::max(psi1.EllMax(),
-			   std::max(psi2.EllMax(),
-				    std::max(psi3.EllMax(),
-					     std::max(psi4.EllMax(),
-						      std::max(sigma.EllMax(), sigmadot.EllMax())
-						      )
-					     )
-				    )
-			   )
-		  );
+                  std::max(psi1.EllMax(),
+                           std::max(psi2.EllMax(),
+                                    std::max(psi3.EllMax(),
+                                             std::max(psi4.EllMax(),
+                                                      std::max(sigma.EllMax(), sigmadot.EllMax())
+                                                      )
+                                             )
+                                    )
+                           )
+                  );
 }
 
 /// Calculate the mass of the system from the four-momentum
@@ -794,7 +794,7 @@ GWFrames::SliceGrid SliceModes::BMSTransformationOnSlice(const double u, const T
   const DataGrid oneoverKcubed_g = oneoverK_g.pow(3);
   const DataGrid ethethdelta_g(delta.edth().edth(), v, n_theta, n_phi);
   const DataGrid ethupok_g = DataGrid(Modes((u-DataGrid(delta,n_theta,n_phi))/GWFrames::InverseConformalFactorGrid(v, n_theta, n_phi)).edth(),
-				      v, n_theta, n_phi)*oneoverK_g; // (\eth u') / K
+                                      v, n_theta, n_phi)*oneoverK_g; // (\eth u') / K
   const DataGrid psi0_g(psi0, v, n_theta, n_phi);
   const DataGrid psi1_g(psi1, v, n_theta, n_phi);
   const DataGrid psi2_g(psi2, v, n_theta, n_phi);
@@ -853,8 +853,8 @@ template class SliceOfScri<Modes>;
 // Scri //
 //////////
 Scri::Scri(const GWFrames::Waveform& psi0, const GWFrames::Waveform& psi1,
-	   const GWFrames::Waveform& psi2, const GWFrames::Waveform& psi3,
-	   const GWFrames::Waveform& psi4, const GWFrames::Waveform& sigma)
+           const GWFrames::Waveform& psi2, const GWFrames::Waveform& psi3,
+           const GWFrames::Waveform& psi4, const GWFrames::Waveform& sigma)
   : t(psi0.T()), slices(t.size(), SliceModes(psi0.EllMax()))
 {
   // Check that everyone has the same NTimes().  This is a poor man's
@@ -863,10 +863,10 @@ Scri::Scri(const GWFrames::Waveform& psi0, const GWFrames::Waveform& psi1,
   if(psi0.NTimes()!=psi1.NTimes() || psi0.NTimes()!=psi2.NTimes() ||
      psi0.NTimes()!=psi3.NTimes() || psi0.NTimes()!=psi4.NTimes() || psi0.NTimes()!=sigma.NTimes()) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	      << "\nError: psi0.NTimes()=" << psi0.NTimes() << "  psi1.NTimes()=" << psi1.NTimes() << "  psi2.NTimes()=" << psi2.NTimes()
-	      << "         psi3.NTimes()=" << psi3.NTimes() << "  psi4.NTimes()=" << psi4.NTimes() << "  sigma.NTimes()=" << sigma.NTimes()
-	      << "\n       Cannot store data on different slices.\n"
-	      << std::endl;
+              << "\nError: psi0.NTimes()=" << psi0.NTimes() << "  psi1.NTimes()=" << psi1.NTimes() << "  psi2.NTimes()=" << psi2.NTimes()
+              << "         psi3.NTimes()=" << psi3.NTimes() << "  psi4.NTimes()=" << psi4.NTimes() << "  sigma.NTimes()=" << sigma.NTimes()
+              << "\n       Cannot store data on different slices.\n"
+              << std::endl;
     throw(GWFrames_VectorSizeMismatch);
   }
 
@@ -875,10 +875,10 @@ Scri::Scri(const GWFrames::Waveform& psi0, const GWFrames::Waveform& psi1,
   if(ellMax!=psi1.EllMax() || ellMax!=psi2.EllMax() ||
      ellMax!=psi3.EllMax() || ellMax!=psi4.EllMax() || ellMax!=sigma.EllMax()) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	      << "\nError: psi0.EllMax()=" << ellMax        << "  psi1.EllMax()=" << psi1.EllMax() << "  psi2.EllMax()=" << psi2.EllMax()
-	      << "         psi3.EllMax()=" << psi3.EllMax() << "  psi4.EllMax()=" << psi4.EllMax() << "  sigma.EllMax()=" << sigma.EllMax()
-	      << "\n       Cannot store data with different EllMax values.\n"
-	      << std::endl;
+              << "\nError: psi0.EllMax()=" << ellMax        << "  psi1.EllMax()=" << psi1.EllMax() << "  psi2.EllMax()=" << psi2.EllMax()
+              << "         psi3.EllMax()=" << psi3.EllMax() << "  psi4.EllMax()=" << psi4.EllMax() << "  sigma.EllMax()=" << sigma.EllMax()
+              << "\n       Cannot store data with different EllMax values.\n"
+              << std::endl;
     throw(GWFrames_VectorSizeMismatch);
   }
 
@@ -889,12 +889,12 @@ Scri::Scri(const GWFrames::Waveform& psi0, const GWFrames::Waveform& psi1,
     int i_ellm=0;
     for(int ell=0; ell<=ellMax; ++ell) {
       for(int m=-ell; m<=ell; ++m, ++i_ellm) {
-	slice[0][i_ellm] = psi0.Data(psi0.FindModeIndex(ell,m), i_t);
-	slice[1][i_ellm] = psi1.Data(psi1.FindModeIndex(ell,m), i_t);
-	slice[2][i_ellm] = psi2.Data(psi2.FindModeIndex(ell,m), i_t);
-	slice[3][i_ellm] = psi3.Data(psi3.FindModeIndex(ell,m), i_t);
-	slice[4][i_ellm] = psi4.Data(psi4.FindModeIndex(ell,m), i_t);
-	slice[5][i_ellm] = sigma.Data(sigma.FindModeIndex(ell,m), i_t);
+        slice[0][i_ellm] = psi0.Data(psi0.FindModeIndex(ell,m), i_t);
+        slice[1][i_ellm] = psi1.Data(psi1.FindModeIndex(ell,m), i_t);
+        slice[2][i_ellm] = psi2.Data(psi2.FindModeIndex(ell,m), i_t);
+        slice[3][i_ellm] = psi3.Data(psi3.FindModeIndex(ell,m), i_t);
+        slice[4][i_ellm] = psi4.Data(psi4.FindModeIndex(ell,m), i_t);
+        slice[5][i_ellm] = sigma.Data(sigma.FindModeIndex(ell,m), i_t);
       }
     }
   }
@@ -902,7 +902,7 @@ Scri::Scri(const GWFrames::Waveform& psi0, const GWFrames::Waveform& psi1,
     for(int m=-ell; m<=ell; ++m, ++i_ellm) {
       const std::vector<std::complex<double> > sigmadot = sigma.DataDot(sigma.FindModeIndex(ell,m));
       for(unsigned int i_t=0; i_t<ntimes; ++i_t) { // Fill sigmadot
-	slices[i_t][6][i_ellm] = sigmadot[i_t];
+        slices[i_t][6][i_ellm] = sigmadot[i_t];
       }
     }
   }
@@ -960,9 +960,9 @@ SliceModes Scri::BMSTransformation(const double& u0, const ThreeVector& v, const
   }
   if(uMin<t[0] || uMax>t.back()) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	      << "\nError: (uMin=" << uMin << ") < (t[0]=" << t[0] << ") or (uMax=" << uMax << ") > (t[-1]=" << t.back() << ")"
-	      << "\n       Cannot extrapolate data.\n"
-	      << std::endl;
+              << "\nError: (uMin=" << uMin << ") < (t[0]=" << t[0] << ") or (uMax=" << uMax << ") > (t[-1]=" << t.back() << ")"
+              << "\n       Cannot extrapolate data.\n"
+              << std::endl;
     throw(GWFrames_ValueError);
   }
   int iMax = t.size()-1;
@@ -996,18 +996,18 @@ SliceModes Scri::BMSTransformation(const double& u0, const ThreeVector& v, const
     for(int i_p=0; i_p<n_phi2; ++i_p, ++i_g) { // Loop over phi points
       const double u_i = std::real(u[i_g]); // Interpolate the data at this point to u_i (measured in the current frame)
       for(int i_D=0; i_D<7; ++i_D) { // Loop over data types
-	// Fill the storage vectors for extrapolation
-	vector<double> re(Nslices);
-	vector<double> im(Nslices);
-	for(unsigned int i_s=0; i_s<Nslices; ++i_s) {
-	  re[i_s] = std::real(transformedslices[i_s][i_D][i_g]);
-	  im[i_s] = std::imag(transformedslices[i_s][i_D][i_g]);
-	}
-	// Initialize the interpolators for this data set
-	gsl_spline_init(splineRe, &(u_original)[0], &re[0], Nslices);
-	gsl_spline_init(splineIm, &(u_original)[0], &im[0], Nslices);
-	// Extrapolate real and imaginary parts and store data
-	BMStransformedGrid[i_D][i_g] = complex<double>( gsl_spline_eval(splineRe, u_i, accRe), gsl_spline_eval(splineIm, u_i, accIm) );
+        // Fill the storage vectors for extrapolation
+        vector<double> re(Nslices);
+        vector<double> im(Nslices);
+        for(unsigned int i_s=0; i_s<Nslices; ++i_s) {
+          re[i_s] = std::real(transformedslices[i_s][i_D][i_g]);
+          im[i_s] = std::imag(transformedslices[i_s][i_D][i_g]);
+        }
+        // Initialize the interpolators for this data set
+        gsl_spline_init(splineRe, &(u_original)[0], &re[0], Nslices);
+        gsl_spline_init(splineIm, &(u_original)[0], &im[0], Nslices);
+        // Extrapolate real and imaginary parts and store data
+        BMStransformedGrid[i_D][i_g] = complex<double>( gsl_spline_eval(splineRe, u_i, accRe), gsl_spline_eval(splineIm, u_i, accIm) );
       }
     }
   }
@@ -1057,9 +1057,9 @@ GWFrames::Modes GWFrames::SuperMomenta::BMSTransform(const GWFrames::Modes& OneO
   }
   if(uMin<t[0] || uMax>t.back()) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	      << "\nError: (uMin=" << uMin << ") < (t[0]=" << t[0] << ") or (uMax=" << uMax << ") > (t[-1]=" << t.back() << ")"
-	      << "\n       Cannot extrapolate data.\n"
-	      << std::endl;
+              << "\nError: (uMin=" << uMin << ") < (t[0]=" << t[0] << ") or (uMax=" << uMax << ") > (t[-1]=" << t.back() << ")"
+              << "\n       Cannot extrapolate data.\n"
+              << std::endl;
     throw(GWFrames_ValueError);
   }
   int iMax = t.size()-1;
@@ -1098,8 +1098,8 @@ GWFrames::Modes GWFrames::SuperMomenta::BMSTransform(const GWFrames::Modes& OneO
       vector<double> re(Nslices);
       vector<double> im(Nslices);
       for(unsigned int i_s=0; i_s<Nslices; ++i_s) {
-	re[i_s] = std::real(transformedslices[i_s][i_g]);
-	im[i_s] = std::imag(transformedslices[i_s][i_g]);
+        re[i_s] = std::real(transformedslices[i_s][i_g]);
+        im[i_s] = std::imag(transformedslices[i_s][i_g]);
       }
       // Initialize the interpolators for this data set
       gsl_spline_init(splineRe, &(u_original)[0], &re[0], Nslices);

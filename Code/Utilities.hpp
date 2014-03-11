@@ -40,7 +40,7 @@ namespace GWFrames {
 
   // Common-time functions
   std::vector<double> Intersection(const std::vector<double>& t1, const std::vector<double>& t2,
-				   const double MinStep=0.005, const double MinTime=-1e300, const double MaxTime=1e300);
+                                   const double MinStep=0.005, const double MinTime=-1e300, const double MaxTime=1e300);
   std::vector<double> Union(const std::vector<double>& t1, const std::vector<double>& t2, const double MinStep=0.005);
 
   /// 3x3 object wrapping GSL matrix; probably not needed directly

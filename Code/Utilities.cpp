@@ -600,7 +600,7 @@ std::vector<double> GWFrames::Intersection(const std::vector<double>& t1, const 
   double maxt = std::min(std::min(max1, max2), MaxTime);
   if(mint > max1 || mint > max2) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": t1=[" << min1 << ", ..., " << max1 << "]\tt2=[" << min2 << ", ..., " << max2 << "]"
-	      << "\nIntersection is empty." << std::endl;
+              << "\nIntersection is empty." << std::endl;
     throw(GWFrames_EmptyIntersection);
   }
   t[0] = mint;
@@ -653,8 +653,8 @@ std::vector<double> GWFrames::Union(const std::vector<double>& t1, const std::ve
   double maxt = std::max(max1, max2);
   if(min2 > max1 || min1 > max2) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Disjoint union.  Assuming this is not desired."
-	      << "\nmin(t1)=" << min1 << "\tmin(t2)=" << min2
-	      << "\nmax(t1)=" << max1 << "\tmax(t2)=" << max2 << endl;
+              << "\nmin(t1)=" << min1 << "\tmin(t2)=" << min2
+              << "\nmax(t1)=" << max1 << "\tmax(t2)=" << max2 << endl;
     throw(GWFrames_EmptyIntersection);
   }
   t[0] = mint;
@@ -741,8 +741,8 @@ Matrix& Matrix::operator=(const std::vector<std::vector<double> >& DataIn) {
 Matrix Matrix::operator-(const Matrix& rhs) {
   if(ncols() != rhs.ncols() || nrows() != rhs.nrows()) {
     cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	 << ": ncols=" << ncols() << "; rhs.ncols()=" << rhs.ncols()
-	 << "\nnrows=" << nrows() << "; rhs.nrows()=" << rhs.nrows() << endl;
+         << ": ncols=" << ncols() << "; rhs.ncols()=" << rhs.ncols()
+         << "\nnrows=" << nrows() << "; rhs.nrows()=" << rhs.nrows() << endl;
     throw(GWFrames_MatrixSizeMismatch);
   }
   Matrix M(*this);
@@ -989,8 +989,8 @@ MatrixC & MatrixC::operator=(const MatrixC &rhs) {
   if (this != &rhs) {
     if (nn != rhs.nn || mm != rhs.mm) {
       if (v != NULL) {
-	delete[] (v[0]);
-	delete[] (v);
+        delete[] (v[0]);
+        delete[] (v);
       }
       nn=rhs.nn;
       mm=rhs.mm;

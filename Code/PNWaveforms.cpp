@@ -53,10 +53,10 @@ GWFrames::PNWaveform::PNWaveform() :
     history.str("");
     history.clear();
     history << "### Code revision (`git rev-parse HEAD` or arXiv version) = " << CodeRevision << std::endl
-	    << "### pwd = " << pwd << std::endl
-	    << "### hostname = " << hostname << std::endl
-	    << "### date = " << date // comes with a newline
-	    << "### PNWaveform(); // empty constructor" << std::endl;
+            << "### pwd = " << pwd << std::endl
+            << "### hostname = " << hostname << std::endl
+            << "### date = " << date // comes with a newline
+            << "### PNWaveform(); // empty constructor" << std::endl;
   }
 }
 
@@ -72,9 +72,9 @@ GWFrames::PNWaveform::PNWaveform(const PNWaveform& a) :
 
 /// Constructor of PN waveform from parameters
 GWFrames::PNWaveform::PNWaveform(const std::string& Approximant, const double delta,
-				 const std::vector<double>& chi1_i, const std::vector<double>& chi2_i,
-				 const double Omega_orb_i, const Quaternions::Quaternion& R_frame_i,
-				 const double PNOrder, double v_0) :
+                                 const std::vector<double>& chi1_i, const std::vector<double>& chi2_i,
+                                 const double Omega_orb_i, const Quaternions::Quaternion& R_frame_i,
+                                 const double PNOrder, double v_0) :
   Waveform(), mchi1(0), mchi2(0), mOmega_orb(0), mOmega_prec(0), mL(0), mPhi_orb(0)
 {
   ///
@@ -132,17 +132,17 @@ GWFrames::PNWaveform::PNWaveform(const std::string& Approximant, const double de
     history.str("");
     history.clear();
     history << "# Code revision (`git rev-parse HEAD` or arXiv version) = " << CodeRevision << std::endl
-	    << "# pwd = " << pwd << std::endl
-	    << "# hostname = " << hostname << std::endl
-	    << "# date = " << date // comes with a newline
-	    << "W = PNWaveform(" << Approximant << ", " << delta << ", " << VectorStringForm(chi1_i) << ", " << VectorStringForm(chi2_i)
-	    << ", " << Omega_orb_i << ", " << R_frame_i << ", " << PNOrder << ", " << v_0 << ");" << std::endl;
+            << "# pwd = " << pwd << std::endl
+            << "# hostname = " << hostname << std::endl
+            << "# date = " << date // comes with a newline
+            << "W = PNWaveform(" << Approximant << ", " << delta << ", " << VectorStringForm(chi1_i) << ", " << VectorStringForm(chi2_i)
+            << ", " << Omega_orb_i << ", " << R_frame_i << ", " << PNOrder << ", " << v_0 << ");" << std::endl;
   }
 
   vector<double> v;
 
   PostNewtonian::EvolvePN_Q(Approximant, PNOrder, v_0, v_i, m1, m2, chi1_i, chi2_i, R_frame_i,
-			    t, v, mchi1, mchi2, frame, mPhi_orb, mL);
+                            t, v, mchi1, mchi2, frame, mPhi_orb, mL);
 
   mOmega_orb = pow(v,3)*PostNewtonian::ellHat(frame);
   mOmega_prec = Quaternions::vec(Quaternions::FrameAngularVelocity(frame, t)) - mOmega_orb;
@@ -163,9 +163,9 @@ GWFrames::PNWaveform::PNWaveform(const std::string& Approximant, const double de
     unsigned int i=0;
     for(int ell=2; ell<=PNWaveforms_ellMax; ++ell) {
       for(int m=-ell; m<=ell; ++m) {
-	lm[i][0] = ell;
-	lm[i][1] = m;
-	++i;
+        lm[i][0] = ell;
+        lm[i][1] = m;
+        ++i;
       }
     }
   }
@@ -181,8 +181,8 @@ GWFrames::PNWaveform::PNWaveform(const std::string& Approximant, const double de
   // co-orbital frame.  Thus, we rotate with the inverse (conjugate)
   // rotor in the following.
   data = MatrixC(PostNewtonian::WaveformModes(m1, m2, v,
-					      Quaternions::vec(Quaternions::conjugate(frame)*Quaternions::QuaternionArray(mchi1)*frame),
-					      Quaternions::vec(Quaternions::conjugate(frame)*Quaternions::QuaternionArray(mchi2)*frame)));
+                                              Quaternions::vec(Quaternions::conjugate(frame)*Quaternions::QuaternionArray(mchi1)*frame),
+                                              Quaternions::vec(Quaternions::conjugate(frame)*Quaternions::QuaternionArray(mchi2)*frame)));
 
 } // end PN constructor
 

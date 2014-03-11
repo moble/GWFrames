@@ -90,10 +90,10 @@ GWFrames::Waveform::Waveform() :
     time ( &rawtime );
     string date = asctime ( localtime ( &rawtime ) );
     history << "### Code revision (`git rev-parse HEAD` or arXiv version) = " << CodeRevision << endl
-	    << "### pwd = " << pwd << endl
-	    << "### hostname = " << hostname << endl
-	    << "### date = " << date // comes with a newline
-	    << "### Waveform(); // empty constructor" << endl;
+            << "### pwd = " << pwd << endl
+            << "### hostname = " << hostname << endl
+            << "### date = " << date // comes with a newline
+            << "### Waveform(); // empty constructor" << endl;
   }
 }
 
@@ -133,10 +133,10 @@ GWFrames::Waveform::Waveform(const std::string& FileName, const std::string& Dat
     time ( &rawtime );
     string date = asctime ( localtime ( &rawtime ) );
     history << "### Code revision (`git rev-parse HEAD` or arXiv version) = " << CodeRevision << endl
-	    << "### pwd = " << pwd << endl
-	    << "### hostname = " << hostname << endl
-	    << "### date = " << date // comes with a newline
-	    << "### Waveform(" << FileName << ", " << DataFormat << "); // Constructor from data file" << endl;
+            << "### pwd = " << pwd << endl
+            << "### hostname = " << hostname << endl
+            << "### date = " << date // comes with a newline
+            << "### Waveform(" << FileName << ", " << DataFormat << "); // Constructor from data file" << endl;
   }
 
   // Get the number of lines in the file
@@ -198,9 +198,9 @@ GWFrames::Waveform::Waveform(const std::string& FileName, const std::string& Dat
     for(unsigned int i_t=1; i_t<NTimes; ++i_t) {
       ifs >> t[i_t];
       for(unsigned int i_m=0; i_m<NModes; ++i_m) {
-	ifs >> Re;
-	ifs >> Im;
-	data[i_m][i_t] = Re + ImaginaryI*Im;
+        ifs >> Re;
+        ifs >> Im;
+        data[i_m][i_t] = Re + ImaginaryI*Im;
       }
     }
   } else if(tolower(DataFormat).find("magarg")!=string::npos) {
@@ -211,9 +211,9 @@ GWFrames::Waveform::Waveform(const std::string& FileName, const std::string& Dat
     for(unsigned int i_t=1; i_t<NTimes; ++i_t) {
       ifs >> t[i_t];
       for(unsigned int i_m=0; i_m<NModes; ++i_m) {
-	ifs >> Mag;
-	ifs >> Arg;
-	data[i_m][i_t] = Mag*std::exp(ImaginaryI*Arg);
+        ifs >> Mag;
+        ifs >> Arg;
+        data[i_m][i_t] = Mag*std::exp(ImaginaryI*Arg);
       }
     }
   } else {
@@ -231,10 +231,10 @@ GWFrames::Waveform::Waveform(const std::string& FileName, const std::string& Dat
     unsigned int i_m = 0;
     for(int ell=2; ell<10000; ++ell) { // Note ridiculous upper bound on ell to insure against infinite loops
       for(int m=-ell; m<=ell; ++m) {
-	if(i_m>=NModes) { break; }
-	lm[i_m][0] = ell;
-	lm[i_m][1] = m;
-	++i_m;
+        if(i_m>=NModes) { break; }
+        lm[i_m][0] = ell;
+        lm[i_m][1] = m;
+        ++i_m;
       }
     }
   }
@@ -284,7 +284,7 @@ void GWFrames::Waveform::swap(GWFrames::Waveform& b) {
 
 /// Explicit constructor from data
 GWFrames::Waveform::Waveform(const std::vector<double>& T, const std::vector<std::vector<int> >& LM,
-			     const std::vector<std::vector<std::complex<double> > >& Data)
+                             const std::vector<std::vector<std::complex<double> > >& Data)
   : spinweight(-2), boostweight(-1), history(""), t(T), frame(), frameType(GWFrames::UnknownFrameType),
     dataType(GWFrames::UnknownDataType), rIsScaledOut(false), mIsScaledOut(false), lm(LM), data(Data)
 {
@@ -293,8 +293,8 @@ GWFrames::Waveform::Waveform(const std::vector<double>& T, const std::vector<std
   // Check that dimensions match (though this is not an exhaustive check)
   if( Data.size()!=0 && ( (t.size() != Data[0].size()) || (Data.size() != lm.size()) ) ) {
     cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": t.size()=" << t.size()
-	 << "\nlm.shape=(" << lm.size() << "," << (lm.size()>0 ? lm[0].size() : 0) << ")"
-	 << "\nData.shape=(" << Data.size() << "," << (Data.size()>0 ? Data[0].size() : 0) << ")" << endl;
+         << "\nlm.shape=(" << lm.size() << "," << (lm.size()>0 ? lm[0].size() : 0) << ")"
+         << "\nData.shape=(" << Data.size() << "," << (Data.size()>0 ? Data[0].size() : 0) << ")" << endl;
     throw(GWFrames_MatrixSizeMismatch);
   }
 }
@@ -580,7 +580,7 @@ GWFrames::Waveform& GWFrames::Waveform::RotatePhysicalSystem(std::vector<Quatern
   ///
 
   history << "### this->RotatePhysicalSystem(R_phys); // R_phys=["
-	  << std::setprecision(16) << R_phys[0];
+          << std::setprecision(16) << R_phys[0];
   if(R_phys.size()>1) {
     history << ", " << R_phys[1] << ", ...";
   }
@@ -643,7 +643,7 @@ GWFrames::Waveform& GWFrames::Waveform::RotateDecompositionBasis(const std::vect
   ///
 
   history << "### this->RotateDecompositionBasis(R_frame); // R_frame=["
-	  << std::setprecision(16) << R_frame[0];
+          << std::setprecision(16) << R_frame[0];
   if(R_frame.size()>1) {
     history << ", " << R_frame[1] << ", ...";
   }
@@ -684,7 +684,7 @@ GWFrames::Waveform& GWFrames::Waveform::RotateDecompositionBasisOfUncertainties(
   ///
 
   history << "### this->RotateDecompositionBasisOfUncertainties(R_frame); // R_frame=["
-	  << std::setprecision(16) << R_frame[0];
+          << std::setprecision(16) << R_frame[0];
   if(R_frame.size()>1) {
     history << ", " << R_frame[1] << ", ...";
   }
@@ -739,65 +739,65 @@ GWFrames::Waveform& GWFrames::Waveform::TransformModesToRotatedFrame(const std::
       // that everything is in order.
       vector<unsigned int> ModeIndices(2*l+1);
       for(int m=-l, i=0; m<=l; ++m, ++i) {
-	try {
-	  ModeIndices[i] = FindModeIndex(l, m);
-	} catch(int thrown) {
-	  cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Incomplete mode information in Waveform; cannot rotate." << endl;
-	  throw(thrown);
-	}
+        try {
+          ModeIndices[i] = FindModeIndex(l, m);
+        } catch(int thrown) {
+          cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Incomplete mode information in Waveform; cannot rotate." << endl;
+          throw(thrown);
+        }
       }
 
       {
 
-	// Construct the D matrix and data storage
-	SphericalFunctions::WignerDMatrix D(R_frame[0]);
-	vector<vector<complex<double> > > Ds(2*l+1, vector<complex<double> >(2*l+1));
-	vector<complex<double> > Data(2*l+1);
+        // Construct the D matrix and data storage
+        SphericalFunctions::WignerDMatrix D(R_frame[0]);
+        vector<vector<complex<double> > > Ds(2*l+1, vector<complex<double> >(2*l+1));
+        vector<complex<double> > Data(2*l+1);
 
-	if(R_frame.size()==1) {
-	  // Get the Wigner D matrix data just once
-	  for(int m=-l; m<=l; ++m) {
-	    for(int mp=-l; mp<=l; ++mp) {
-	      Ds[mp+l][m+l] = D(l,mp,m);
-	    }
-	  }
-	  // Loop through each time step
-	  for(int t=0; t<NTimes; ++t) {
-	    // Store the data for all m' modes at this time step
-	    for(int mp=-l, i=0; mp<=l; ++mp, ++i) {
-	      Data[mp+l] = this->operator()(ModeIndices[i], t);
-	    }
-	    // Compute the data at this time step for each m
-	    for(int m=-l, i=0; m<=l; ++m, ++i) {
-	      data[ModeIndices[i]][t] = 0.0;
-	      for(int mp=-l; mp<=l; ++mp) { // Sum over m'
-		data[ModeIndices[i]][t] += Ds[mp+l][m+l]*Data[mp+l];
-	      }
-	    }
-	  }
-	} else {
-	  // Loop through each time step
-	  for(int t=0; t<NTimes; ++t) {
-	    // Get the Wigner D matrix data at this time step
-	    D.SetRotation(R_frame[t]);
-	    for(int m=-l; m<=l; ++m) {
-	      for(int mp=-l; mp<=l; ++mp) {
-		Ds[mp+l][m+l] = D(l,mp,m);
-	      }
-	    }
-	    // Store the data for all m' modes at this time step
-	    for(int mp=-l, i=0; mp<=l; ++mp, ++i) {
-	      Data[mp+l] = this->operator()(ModeIndices[i], t);
-	    }
-	    // Compute the data at this time step for each m
-	    for(int m=-l, i=0; m<=l; ++m, ++i) {
-	      data[ModeIndices[i]][t] = 0.0;
-	      for(int mp=-l; mp<=l; ++mp) { // Sum over m'
-		data[ModeIndices[i]][t] += Ds[mp+l][m+l]*Data[mp+l];
-	      }
-	    }
-	  }
-	}
+        if(R_frame.size()==1) {
+          // Get the Wigner D matrix data just once
+          for(int m=-l; m<=l; ++m) {
+            for(int mp=-l; mp<=l; ++mp) {
+              Ds[mp+l][m+l] = D(l,mp,m);
+            }
+          }
+          // Loop through each time step
+          for(int t=0; t<NTimes; ++t) {
+            // Store the data for all m' modes at this time step
+            for(int mp=-l, i=0; mp<=l; ++mp, ++i) {
+              Data[mp+l] = this->operator()(ModeIndices[i], t);
+            }
+            // Compute the data at this time step for each m
+            for(int m=-l, i=0; m<=l; ++m, ++i) {
+              data[ModeIndices[i]][t] = 0.0;
+              for(int mp=-l; mp<=l; ++mp) { // Sum over m'
+                data[ModeIndices[i]][t] += Ds[mp+l][m+l]*Data[mp+l];
+              }
+            }
+          }
+        } else {
+          // Loop through each time step
+          for(int t=0; t<NTimes; ++t) {
+            // Get the Wigner D matrix data at this time step
+            D.SetRotation(R_frame[t]);
+            for(int m=-l; m<=l; ++m) {
+              for(int mp=-l; mp<=l; ++mp) {
+                Ds[mp+l][m+l] = D(l,mp,m);
+              }
+            }
+            // Store the data for all m' modes at this time step
+            for(int mp=-l, i=0; mp<=l; ++mp, ++i) {
+              Data[mp+l] = this->operator()(ModeIndices[i], t);
+            }
+            // Compute the data at this time step for each m
+            for(int m=-l, i=0; m<=l; ++m, ++i) {
+              data[ModeIndices[i]][t] = 0.0;
+              for(int mp=-l; mp<=l; ++mp) { // Sum over m'
+                data[ModeIndices[i]][t] += Ds[mp+l][m+l]*Data[mp+l];
+              }
+            }
+          }
+        }
 
       }
 
@@ -840,79 +840,79 @@ GWFrames::Waveform& GWFrames::Waveform::TransformUncertaintiesToRotatedFrame(con
       // that everything is in order.
       vector<unsigned int> ModeIndices(2*l+1);
       for(int m=-l, i=0; m<=l; ++m, ++i) {
-	try {
-	  ModeIndices[i] = FindModeIndex(l, m);
-	} catch(int thrown) {
-	  cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Incomplete mode information in Waveform; cannot rotate." << endl;
-	  throw(thrown);
-	}
+        try {
+          ModeIndices[i] = FindModeIndex(l, m);
+        } catch(int thrown) {
+          cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Incomplete mode information in Waveform; cannot rotate." << endl;
+          throw(thrown);
+        }
       }
 
       {
 
-	// Construct the D matrix and data storage
-	SphericalFunctions::WignerDMatrix D(R_frame[0]);
-	vector<vector<complex<double> > > Ds(2*l+1, vector<complex<double> >(2*l+1));
-	vector<complex<double> > Data(2*l+1);
+        // Construct the D matrix and data storage
+        SphericalFunctions::WignerDMatrix D(R_frame[0]);
+        vector<vector<complex<double> > > Ds(2*l+1, vector<complex<double> >(2*l+1));
+        vector<complex<double> > Data(2*l+1);
 
-	if(R_frame.size()==1) {
-	  // Get the Wigner D matrix data just once
-	  for(int m=-l; m<=l; ++m) {
-	    for(int mp=-l; mp<=l; ++mp) {
-	      Ds[mp+l][m+l] = D(l,mp,m);
-	    }
-	  }
-	  // Loop through each time step
-	  for(int t=0; t<NTimes; ++t) {
-	    // Store the data for all m' modes at this time step
-	    for(int mp=-l, i=0; mp<=l; ++mp, ++i) {
-	      Data[mp+l] = this->operator()(ModeIndices[i], t);
-	    }
-	    // Compute the data at this time step for each m
-	    for(int m=-l, i=0; m<=l; ++m, ++i) {
-	      data[ModeIndices[i]][t] = 0.0;
-	      for(int mp=-l; mp<=l; ++mp) { // Sum over m'
-		const double dataReSqr = SQR(std::real(Data[mp+l]));
-		const double dataImSqr = SQR(std::imag(Data[mp+l]));
-		const double DReSqr = SQR(std::real(Ds[mp+l][m+l]));
-		const double DImSqr = SQR(std::imag(Ds[mp+l][m+l]));
-		data[ModeIndices[i]][t] += complex<double>(dataReSqr*DReSqr+dataImSqr*DImSqr,
-							   dataImSqr*DReSqr+dataReSqr*DImSqr);
-	      }
-	      data[ModeIndices[i]][t] = complex<double>(std::sqrt(std::real(data[ModeIndices[i]][t])),
-							std::sqrt(std::imag(data[ModeIndices[i]][t])));
-	    }
-	  }
-	} else {
-	  // Loop through each time step
-	  for(int t=0; t<NTimes; ++t) {
-	    // Get the Wigner D matrix data at this time step
-	    D.SetRotation(R_frame[t]);
-	    for(int m=-l; m<=l; ++m) {
-	      for(int mp=-l; mp<=l; ++mp) {
-		Ds[mp+l][m+l] = D(l,mp,m);
-	      }
-	    }
-	    // Store the data for all m' modes at this time step
-	    for(int mp=-l, i=0; mp<=l; ++mp, ++i) {
-	      Data[mp+l] = this->operator()(ModeIndices[i], t);
-	    }
-	    // Compute the data at this time step for each m
-	    for(int m=-l, i=0; m<=l; ++m, ++i) {
-	      data[ModeIndices[i]][t] = 0.0;
-	      for(int mp=-l; mp<=l; ++mp) { // Sum over m'
-		const double dataReSqr = SQR(std::real(Data[mp+l]));
-		const double dataImSqr = SQR(std::imag(Data[mp+l]));
-		const double DReSqr = SQR(std::real(Ds[mp+l][m+l]));
-		const double DImSqr = SQR(std::imag(Ds[mp+l][m+l]));
-		data[ModeIndices[i]][t] += complex<double>(dataReSqr*DReSqr+dataImSqr*DImSqr,
-							   dataImSqr*DReSqr+dataReSqr*DImSqr);
-	      }
-	      data[ModeIndices[i]][t] = complex<double>(std::sqrt(std::real(data[ModeIndices[i]][t])),
-							std::sqrt(std::imag(data[ModeIndices[i]][t])));
-	    }
-	  }
-	}
+        if(R_frame.size()==1) {
+          // Get the Wigner D matrix data just once
+          for(int m=-l; m<=l; ++m) {
+            for(int mp=-l; mp<=l; ++mp) {
+              Ds[mp+l][m+l] = D(l,mp,m);
+            }
+          }
+          // Loop through each time step
+          for(int t=0; t<NTimes; ++t) {
+            // Store the data for all m' modes at this time step
+            for(int mp=-l, i=0; mp<=l; ++mp, ++i) {
+              Data[mp+l] = this->operator()(ModeIndices[i], t);
+            }
+            // Compute the data at this time step for each m
+            for(int m=-l, i=0; m<=l; ++m, ++i) {
+              data[ModeIndices[i]][t] = 0.0;
+              for(int mp=-l; mp<=l; ++mp) { // Sum over m'
+                const double dataReSqr = SQR(std::real(Data[mp+l]));
+                const double dataImSqr = SQR(std::imag(Data[mp+l]));
+                const double DReSqr = SQR(std::real(Ds[mp+l][m+l]));
+                const double DImSqr = SQR(std::imag(Ds[mp+l][m+l]));
+                data[ModeIndices[i]][t] += complex<double>(dataReSqr*DReSqr+dataImSqr*DImSqr,
+                                                           dataImSqr*DReSqr+dataReSqr*DImSqr);
+              }
+              data[ModeIndices[i]][t] = complex<double>(std::sqrt(std::real(data[ModeIndices[i]][t])),
+                                                        std::sqrt(std::imag(data[ModeIndices[i]][t])));
+            }
+          }
+        } else {
+          // Loop through each time step
+          for(int t=0; t<NTimes; ++t) {
+            // Get the Wigner D matrix data at this time step
+            D.SetRotation(R_frame[t]);
+            for(int m=-l; m<=l; ++m) {
+              for(int mp=-l; mp<=l; ++mp) {
+                Ds[mp+l][m+l] = D(l,mp,m);
+              }
+            }
+            // Store the data for all m' modes at this time step
+            for(int mp=-l, i=0; mp<=l; ++mp, ++i) {
+              Data[mp+l] = this->operator()(ModeIndices[i], t);
+            }
+            // Compute the data at this time step for each m
+            for(int m=-l, i=0; m<=l; ++m, ++i) {
+              data[ModeIndices[i]][t] = 0.0;
+              for(int mp=-l; mp<=l; ++mp) { // Sum over m'
+                const double dataReSqr = SQR(std::real(Data[mp+l]));
+                const double dataImSqr = SQR(std::imag(Data[mp+l]));
+                const double DReSqr = SQR(std::real(Ds[mp+l][m+l]));
+                const double DImSqr = SQR(std::imag(Ds[mp+l][m+l]));
+                data[ModeIndices[i]][t] += complex<double>(dataReSqr*DReSqr+dataImSqr*DImSqr,
+                                                           dataImSqr*DReSqr+dataReSqr*DImSqr);
+              }
+              data[ModeIndices[i]][t] = complex<double>(std::sqrt(std::real(data[ModeIndices[i]][t])),
+                                                        std::sqrt(std::imag(data[ModeIndices[i]][t])));
+            }
+          }
+        }
 
       }
 
@@ -944,7 +944,7 @@ vector<vector<double> > GWFrames::Waveform::LdtVector(vector<int> Lmodes) const 
     Lmodes.push_back(lm[0][0]);
     for(unsigned int i_m=0; i_m<NModes(); ++i_m) {
       if(std::find(Lmodes.begin(), Lmodes.end(), lm[i_m][0]) == Lmodes.end() ) {
-	Lmodes.push_back(lm[i_m][0]);
+        Lmodes.push_back(lm[i_m][0]);
       }
     }
   }
@@ -955,28 +955,28 @@ vector<vector<double> > GWFrames::Waveform::LdtVector(vector<int> Lmodes) const 
       const int iMode = FindModeIndex(L,M);
       const vector<complex<double> > dDdt = DataDot(iMode);
       if(M+1<=L) { // L+
-	const int iModep1 = FindModeIndex(L,M+1);
-	const double c_ell_posm = LadderOperatorFactor(L, M);
-	for(unsigned int iTime=0; iTime<NTimes(); ++iTime) {
-	  const complex<double> Lplus  = c_ell_posm * conj(data[iModep1][iTime]) * dDdt[iTime];
-	  l[iTime][0] += 0.5 * imag(Lplus);
-	  l[iTime][1] -= 0.5 * real(Lplus);
-	}
+        const int iModep1 = FindModeIndex(L,M+1);
+        const double c_ell_posm = LadderOperatorFactor(L, M);
+        for(unsigned int iTime=0; iTime<NTimes(); ++iTime) {
+          const complex<double> Lplus  = c_ell_posm * conj(data[iModep1][iTime]) * dDdt[iTime];
+          l[iTime][0] += 0.5 * imag(Lplus);
+          l[iTime][1] -= 0.5 * real(Lplus);
+        }
       }
       { // Lz; always evaluate this one
-	for(unsigned int iTime=0; iTime<NTimes(); ++iTime) {
-	  const complex<double> Lz = (conj(data[iMode][iTime]) * dDdt[iTime]) * double(M);
-	  l[iTime][2] += imag(Lz);
-	}
+        for(unsigned int iTime=0; iTime<NTimes(); ++iTime) {
+          const complex<double> Lz = (conj(data[iMode][iTime]) * dDdt[iTime]) * double(M);
+          l[iTime][2] += imag(Lz);
+        }
       }
       if(M-1>=-L) { // L-
-	const int iModem1 = FindModeIndex(L,M-1);
-	const double c_ell_negm = LadderOperatorFactor(L, -M);
-	for(unsigned int iTime=0; iTime<NTimes(); ++iTime) {
-	  const complex<double> Lminus  = c_ell_negm * conj(data[iModem1][iTime]) * dDdt[iTime];
-	  l[iTime][0] += 0.5 * imag(Lminus);
-	  l[iTime][1] += 0.5 * real(Lminus);
-	}
+        const int iModem1 = FindModeIndex(L,M-1);
+        const double c_ell_negm = LadderOperatorFactor(L, -M);
+        for(unsigned int iTime=0; iTime<NTimes(); ++iTime) {
+          const complex<double> Lminus  = c_ell_negm * conj(data[iModem1][iTime]) * dDdt[iTime];
+          l[iTime][0] += 0.5 * imag(Lminus);
+          l[iTime][1] += 0.5 * real(Lminus);
+        }
       }
     }
   }
@@ -1014,7 +1014,7 @@ vector<Matrix> GWFrames::Waveform::LLMatrix(vector<int> Lmodes) const {
     Lmodes.push_back(lm[0][0]);
     for(unsigned int i_m=0; i_m<NModes(); ++i_m) {
       if(std::find(Lmodes.begin(), Lmodes.end(), lm[i_m][0]) == Lmodes.end() ) {
-	Lmodes.push_back(lm[i_m][0]);
+        Lmodes.push_back(lm[i_m][0]);
       }
     }
   }
@@ -1027,34 +1027,34 @@ vector<Matrix> GWFrames::Waveform::LLMatrix(vector<int> Lmodes) const {
       const int iMp1 = (M+1<=L ? FindModeIndex(L,M+1) : 0);
       const int iMp2 = (M+2<=L ? FindModeIndex(L,M+2) : 0);
       for(unsigned int iTime=0; iTime<NTimes(); ++iTime) {
-	const complex<double> LpLp = (M+2<=L  ? conj(data[iMp2][iTime]) * LadderOperatorFactor(L, M+1)    * LadderOperatorFactor(L, M) * data[iM][iTime] : 0.0);
-	const complex<double> LpLm = (M-1>=-L ? conj(data[iM][iTime])   * LadderOperatorFactor(L, M-1)    * LadderOperatorFactor(L, -M) * data[iM][iTime] : 0.0);
-	const complex<double> LmLp = (M+1<=L  ? conj(data[iM][iTime])   * LadderOperatorFactor(L, -(M+1)) * LadderOperatorFactor(L, M) * data[iM][iTime] : 0.0);
-	const complex<double> LmLm = (M-2>=-L ? conj(data[iMm2][iTime]) * LadderOperatorFactor(L, -(M-1)) * LadderOperatorFactor(L, -M) * data[iM][iTime] : 0.0);
-	const complex<double> LpLz = (M+1<=L  ? conj(data[iMp1][iTime]) * LadderOperatorFactor(L, M) * double(M)      * data[iM][iTime] : 0.0);
-	const complex<double> LzLp = (M+1<=L  ? conj(data[iMp1][iTime]) * double(M+1) * LadderOperatorFactor(L, M)  * data[iM][iTime] : 0.0);
-	const complex<double> LmLz = (M-1>=-L ? conj(data[iMm1][iTime]) * LadderOperatorFactor(L, -M) * double(M)     * data[iM][iTime] : 0.0);
-	const complex<double> LzLm = (M-1>=-L ? conj(data[iMm1][iTime]) * double(M-1) * LadderOperatorFactor(L, -M) * data[iM][iTime] : 0.0);
-	const complex<double> LzLz = conj(data[iM][iTime]) * double(M) * double(M) * data[iM][iTime];
-	//
-	const complex<double> LxLx = 0.25 * (LpLp + LmLm + LmLp + LpLm);
-	const complex<double> LxLy = -0.25 * I * (LpLp - LmLm + LmLp - LpLm);
-	const complex<double> LxLz = 0.5 * (LpLz + LmLz);
-	const complex<double> LyLx = -0.25 * I * (LpLp - LmLp + LpLm - LmLm);
-	const complex<double> LyLy = -0.25 * (LpLp - LmLp - LpLm + LmLm);
-	const complex<double> LyLz = -0.5 * I * (LpLz - LmLz);
-	const complex<double> LzLx = 0.5 * (LzLp + LzLm);
-	const complex<double> LzLy = -0.5 * I * (LzLp - LzLm);
-	//const complex<double> LzLz = (LzLz);
-	ll[iTime](0,0) += real( LxLx );
-	ll[iTime](0,1) += real( LxLy + LyLx )/2.0;
-	ll[iTime](0,2) += real( LxLz + LzLx )/2.0;
-	ll[iTime](1,0) += real( LyLx + LxLy )/2.0;
-	ll[iTime](1,1) += real( LyLy );
-	ll[iTime](1,2) += real( LyLz + LzLy )/2.0;
-	ll[iTime](2,0) += real( LzLx + LxLz )/2.0;
-	ll[iTime](2,1) += real( LzLy + LyLz )/2.0;
-	ll[iTime](2,2) += real( LzLz );
+        const complex<double> LpLp = (M+2<=L  ? conj(data[iMp2][iTime]) * LadderOperatorFactor(L, M+1)    * LadderOperatorFactor(L, M) * data[iM][iTime] : 0.0);
+        const complex<double> LpLm = (M-1>=-L ? conj(data[iM][iTime])   * LadderOperatorFactor(L, M-1)    * LadderOperatorFactor(L, -M) * data[iM][iTime] : 0.0);
+        const complex<double> LmLp = (M+1<=L  ? conj(data[iM][iTime])   * LadderOperatorFactor(L, -(M+1)) * LadderOperatorFactor(L, M) * data[iM][iTime] : 0.0);
+        const complex<double> LmLm = (M-2>=-L ? conj(data[iMm2][iTime]) * LadderOperatorFactor(L, -(M-1)) * LadderOperatorFactor(L, -M) * data[iM][iTime] : 0.0);
+        const complex<double> LpLz = (M+1<=L  ? conj(data[iMp1][iTime]) * LadderOperatorFactor(L, M) * double(M)      * data[iM][iTime] : 0.0);
+        const complex<double> LzLp = (M+1<=L  ? conj(data[iMp1][iTime]) * double(M+1) * LadderOperatorFactor(L, M)  * data[iM][iTime] : 0.0);
+        const complex<double> LmLz = (M-1>=-L ? conj(data[iMm1][iTime]) * LadderOperatorFactor(L, -M) * double(M)     * data[iM][iTime] : 0.0);
+        const complex<double> LzLm = (M-1>=-L ? conj(data[iMm1][iTime]) * double(M-1) * LadderOperatorFactor(L, -M) * data[iM][iTime] : 0.0);
+        const complex<double> LzLz = conj(data[iM][iTime]) * double(M) * double(M) * data[iM][iTime];
+        //
+        const complex<double> LxLx = 0.25 * (LpLp + LmLm + LmLp + LpLm);
+        const complex<double> LxLy = -0.25 * I * (LpLp - LmLm + LmLp - LpLm);
+        const complex<double> LxLz = 0.5 * (LpLz + LmLz);
+        const complex<double> LyLx = -0.25 * I * (LpLp - LmLp + LpLm - LmLm);
+        const complex<double> LyLy = -0.25 * (LpLp - LmLp - LpLm + LmLm);
+        const complex<double> LyLz = -0.5 * I * (LpLz - LmLz);
+        const complex<double> LzLx = 0.5 * (LzLp + LzLm);
+        const complex<double> LzLy = -0.5 * I * (LzLp - LzLm);
+        //const complex<double> LzLz = (LzLz);
+        ll[iTime](0,0) += real( LxLx );
+        ll[iTime](0,1) += real( LxLy + LyLx )/2.0;
+        ll[iTime](0,2) += real( LxLz + LzLx )/2.0;
+        ll[iTime](1,0) += real( LyLx + LxLy )/2.0;
+        ll[iTime](1,1) += real( LyLy );
+        ll[iTime](1,2) += real( LyLz + LzLy )/2.0;
+        ll[iTime](2,0) += real( LzLx + LxLz )/2.0;
+        ll[iTime](2,1) += real( LzLy + LyLz )/2.0;
+        ll[iTime](2,2) += real( LzLz );
       }
     }
   }
@@ -1144,10 +1144,10 @@ vector<vector<double> > GWFrames::Waveform::SchmidtEtAlVector(const double alpha
   const gsl_multimin_fdfminimizer_type* T;
   gsl_multimin_fdfminimizer* s;
   double h[10] = {this->Re(i2Neg2, 0), this->Im(i2Neg2, 0),
-		  this->Re(i2Neg1, 0), this->Im(i2Neg1, 0),
-		  this->Re(i20,    0), this->Im(i20,    0),
-		  this->Re(i2Pos1, 0), this->Im(i2Pos1, 0),
-		  this->Re(i2Pos2, 0), this->Im(i2Pos2, 0)};
+                  this->Re(i2Neg1, 0), this->Im(i2Neg1, 0),
+                  this->Re(i20,    0), this->Im(i20,    0),
+                  this->Re(i2Pos1, 0), this->Im(i2Pos1, 0),
+                  this->Re(i2Pos2, 0), this->Im(i2Pos2, 0)};
   gsl_vector* x;
   gsl_multimin_function_fdf SchmidtEtAl_func;
   SchmidtEtAl_func.n = 2;
@@ -1165,27 +1165,27 @@ vector<vector<double> > GWFrames::Waveform::SchmidtEtAlVector(const double alpha
   for(unsigned int iTime=0; iTime<NTimes(); ++iTime) {
     iter = 0;
     double h[10] = {this->Re(i2Neg2, iTime), this->Im(i2Neg2, iTime),
-		    this->Re(i2Neg1, iTime), this->Im(i2Neg1, iTime),
-		    this->Re(i20,    iTime), this->Im(i20,    iTime),
-		    this->Re(i2Pos1, iTime), this->Im(i2Pos1, iTime),
-		    this->Re(i2Pos2, iTime), this->Im(i2Pos2, iTime)};
+                    this->Re(i2Neg1, iTime), this->Im(i2Neg1, iTime),
+                    this->Re(i20,    iTime), this->Im(i20,    iTime),
+                    this->Re(i2Pos1, iTime), this->Im(i2Pos1, iTime),
+                    this->Re(i2Pos2, iTime), this->Im(i2Pos2, iTime)};
     SchmidtEtAl_func.params = h;
     gsl_multimin_fdfminimizer_set (s, &SchmidtEtAl_func, x, InitialStepSize, LineMinimizationParameter);
     do
       {
-	iter++;
-	status = gsl_multimin_fdfminimizer_iterate (s);
-	if (status) {
-	  cerr << "STATUS: " << status << endl;
-	  break;
-	}
-	status = gsl_multimin_test_gradient (s->gradient, NormOfGradientOnStop);
-	if (status == GSL_SUCCESS)
-	  printf ("Minimum found at:\n");
-	printf ("%5d %.16f %.16f %21.16f\n", int(iter),
-		gsl_vector_get (s->x, 0),
-		gsl_vector_get (s->x, 1),
-		s->f);
+        iter++;
+        status = gsl_multimin_fdfminimizer_iterate (s);
+        if (status) {
+          cerr << "STATUS: " << status << endl;
+          break;
+        }
+        status = gsl_multimin_test_gradient (s->gradient, NormOfGradientOnStop);
+        if (status == GSL_SUCCESS)
+          printf ("Minimum found at:\n");
+        printf ("%5d %.16f %.16f %21.16f\n", int(iter),
+                gsl_vector_get (s->x, 0),
+                gsl_vector_get (s->x, 1),
+                s->f);
       }
     while (status == GSL_CONTINUE && iter < iterMax);
     gsl_vector_set(x, 0, gsl_vector_get (s->x, 0)+0e-14);
@@ -1263,12 +1263,12 @@ vector<vector<double> > GWFrames::Waveform::AngularVelocityVector(const vector<i
   // If the frame is nontrivial, include its contribution
   const bool TimeDependentFrame = (frame.size()>1);
   const vector<Quaternion> Rdot = (TimeDependentFrame
-				   ? Quaternions::QuaternionDerivative(frame, t)
-				   : vector<Quaternion>(0));
+                                   ? Quaternions::QuaternionDerivative(frame, t)
+                                   : vector<Quaternion>(0));
   const bool ConstantNontrivialFrame = (frame.size()==1);
   const Quaternion R0 = (ConstantNontrivialFrame
-			 ? frame[0]
-			 : Quaternion(1,0,0,0));
+                         ? frame[0]
+                         : Quaternion(1,0,0,0));
 
   // Construct some objects for storage
   vector<vector<double> > omega(NTimes(), vector<double>(3));
@@ -1340,8 +1340,8 @@ vector<vector<double> > GWFrames::Waveform::PNEquivalentOrbitalAV(const vector<i
   const bool TimeDependentFrame = (frame.size()>1);
   const bool ConstantNontrivialFrame = (frame.size()==1);
   const Quaternion R0 = (ConstantNontrivialFrame
-			 ? frame[0]
-			 : Quaternion(1,0,0,0));
+                         ? frame[0]
+                         : Quaternion(1,0,0,0));
 
   // Get the vectors we need
   const vector<vector<double> > omega = AngularVelocityVector(Lmodes);
@@ -1468,10 +1468,10 @@ GWFrames::Waveform& GWFrames::Waveform::TransformToCorotatingFrame(const std::ve
 
   if(frameType != GWFrames::Inertial) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	      << "\nWarning: Asking to transform a Waveform in the " << GWFrames::WaveformFrameNames[frameType] << " frame into the corotating frame."
-	      << "\n         You have to think very carefully about whether or not this is what you really want.\n"
-	      << "\n         This should probably only be applied to Waveforms in the " << GWFrames::WaveformFrameNames[GWFrames::Inertial] << " frame.\n"
-	      << std::endl;
+              << "\nWarning: Asking to transform a Waveform in the " << GWFrames::WaveformFrameNames[frameType] << " frame into the corotating frame."
+              << "\n         You have to think very carefully about whether or not this is what you really want.\n"
+              << "\n         This should probably only be applied to Waveforms in the " << GWFrames::WaveformFrameNames[GWFrames::Inertial] << " frame.\n"
+              << std::endl;
   }
 
   vector<Quaternion> R_corot = this->CorotatingFrame(Lmodes);
@@ -1503,15 +1503,15 @@ GWFrames::Waveform& GWFrames::Waveform::TransformUncertaintiesToCorotatingFrame(
 
   if(frameType != GWFrames::Inertial) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	      << "\nWarning: Asking a Waveform in the " << GWFrames::WaveformFrameNames[frameType] << " frame  into the corotating frame."
-	      << "\n         You have to think very carefully about whether or not this is what you really want.\n"
-	      << "\n         This should probably only be applied to Waveforms in the " << GWFrames::WaveformFrameNames[GWFrames::Inertial] << " frame.\n"
-	      << std::endl;
+              << "\nWarning: Asking a Waveform in the " << GWFrames::WaveformFrameNames[frameType] << " frame  into the corotating frame."
+              << "\n         You have to think very carefully about whether or not this is what you really want.\n"
+              << "\n         This should probably only be applied to Waveforms in the " << GWFrames::WaveformFrameNames[GWFrames::Inertial] << " frame.\n"
+              << std::endl;
   }
   if(R_frame.size() != NTimes()) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	      << "\nError: Asking to transform uncertainties of size " << NTimes() << " by rotors of size " << R_frame.size() << "\n"
-	      << std::endl;
+              << "\nError: Asking to transform uncertainties of size " << NTimes() << " by rotors of size " << R_frame.size() << "\n"
+              << std::endl;
     throw(GWFrames_VectorSizeMismatch);
   }
 
@@ -1543,18 +1543,18 @@ GWFrames::Waveform GWFrames::Waveform::Interpolate(const std::vector<double>& Ne
   }
   if(NewTime[0]<t[0]) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Asking for extrapolation; we only do interpolation.\n"
-	      << "NewTime[0]=" << NewTime[0] << "\tt[0]=" << t[0] << std::endl;
+              << "NewTime[0]=" << NewTime[0] << "\tt[0]=" << t[0] << std::endl;
     throw(GWFrames_EmptyIntersection);
   }
   if(NewTime.back()>t.back()) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Asking for extrapolation; we only do interpolation.\n"
-	      << "NewTime.back()=" << NewTime.back() << "\tt.back()=" << t.back() << std::endl;
+              << "NewTime.back()=" << NewTime.back() << "\tt.back()=" << t.back() << std::endl;
     throw(GWFrames_EmptyIntersection);
   }
 
   Waveform C;
   C.history << HistoryStr()
-	    << "### *this = this->Interpolate(NewTime);" << std::endl;
+            << "### *this = this->Interpolate(NewTime);" << std::endl;
   C.t = NewTime;
   if(frame.size()==1) { // Assume we have just a constant non-trivial frame
     C.frame = frame;
@@ -1602,17 +1602,17 @@ GWFrames::Waveform GWFrames::Waveform::Segment(const unsigned int i1, const unsi
   ///
   if(i1>i2) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Requesting impossible segment"
-	      << "\ni1=" << i1 << "  >  i2=" << i2 << std::endl;
+              << "\ni1=" << i1 << "  >  i2=" << i2 << std::endl;
     throw(GWFrames_EmptyIntersection);
   }
   if(i2>NTimes()) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Requesting impossible segment"
-	      << "\ni2=" << i2 << "  >  NTimes()=" << NTimes() << std::endl;
+              << "\ni2=" << i2 << "  >  NTimes()=" << NTimes() << std::endl;
     throw(GWFrames_IndexOutOfBounds);
   }
   GWFrames::Waveform C;
   C.history << HistoryStr()
-	    << "### this->Segment(" << i1 << ", " << i2 << ");" << std::endl;
+            << "### this->Segment(" << i1 << ", " << i2 << ");" << std::endl;
   C.t = vector<double>(&t[i1], &t[i2]);
   if(frame.size()==1) {
     C.frame = frame;
@@ -1677,7 +1677,7 @@ void GWFrames::Waveform::GetAlignmentOfTime(const Waveform& A, const double t_fi
     while(MagAV_B[i]<MagAV_fid && i<MagAV_B.size()-1) { ++i; }
     if(i==0 || i==MagAV_B.size()) {
       std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Cannot find the appropriate angular velocity in this waveform."
-		<< "\nt_fid=" << t_fid << "\tAV_fid=" << MagAV_fid << "\tAV_B[0]=" << MagAV_B[0] << "\tAV_B[-1]=" << MagAV_B.back() << std::endl;
+                << "\nt_fid=" << t_fid << "\tAV_fid=" << MagAV_fid << "\tAV_B[0]=" << MagAV_B[0] << "\tAV_B[-1]=" << MagAV_B.back() << std::endl;
       throw(GWFrames_IndexOutOfBounds);
     }
     const unsigned int NPoints = 5;
@@ -1760,8 +1760,8 @@ void GWFrames::Waveform::GetAlignmentOfDecompositionFrameToModes(const double t_
 
   if(frameType != GWFrames::Corotating) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ":"
-	      << "\nError: GetAlignmentOfDecompositionFrameToModes only takes Waveforms in the " << GWFrames::WaveformFrameNames[GWFrames::Corotating] << " frame."
-	      << "\n       This Waveform is in the " << GWFrames::WaveformFrameNames[frameType] << " frame." << std::endl;
+              << "\nError: GetAlignmentOfDecompositionFrameToModes only takes Waveforms in the " << GWFrames::WaveformFrameNames[GWFrames::Corotating] << " frame."
+              << "\n       This Waveform is in the " << GWFrames::WaveformFrameNames[frameType] << " frame." << std::endl;
     throw(GWFrames_WrongFrameType);
   }
 
@@ -1857,13 +1857,13 @@ void GWFrames::Waveform::GetAlignmentOfFrame(const Waveform& A, const double t_f
 
   if(frameType != A.frameType && (frameType!=GWFrames::Corotating || frameType!=GWFrames::Aligned)) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	      << "\nError: GetAlignmentOfFrame assumes that the two Waveforms are in the same type of frame, and that"
-	      << "\n       that frame is physically meaningful (either " << GWFrames::WaveformFrameNames[GWFrames::Corotating]
-	      << " or " << GWFrames::WaveformFrameNames[GWFrames::Aligned] << "),"
-	      << "\n       so that it makes sense to align the frames."
-	      << "\n       This Waveform is in the " << GWFrames::WaveformFrameNames[frameType] << " frame,"
-	      << "\n       The Waveform in the argument is in the " << GWFrames::WaveformFrameNames[A.frameType] << " frame.\n"
-	      << std::endl;
+              << "\nError: GetAlignmentOfFrame assumes that the two Waveforms are in the same type of frame, and that"
+              << "\n       that frame is physically meaningful (either " << GWFrames::WaveformFrameNames[GWFrames::Corotating]
+              << " or " << GWFrames::WaveformFrameNames[GWFrames::Aligned] << "),"
+              << "\n       so that it makes sense to align the frames."
+              << "\n       This Waveform is in the " << GWFrames::WaveformFrameNames[frameType] << " frame,"
+              << "\n       The Waveform in the argument is in the " << GWFrames::WaveformFrameNames[A.frameType] << " frame.\n"
+              << std::endl;
     throw(GWFrames_WrongFrameType);
   }
 
@@ -1928,22 +1928,22 @@ public:
     // (This is necessary but not sufficient for the method to work.)
     if(t1<a.T(0)) {
       std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Alignment time t1=" << t1
-		<< " does not occur in Waveform A (which has A.T(0)=" << A.T(0) << ")." << std::endl;
+                << " does not occur in Waveform A (which has A.T(0)=" << A.T(0) << ")." << std::endl;
       throw(GWFrames_IndexOutOfBounds);
     }
     if(t1<b.T(0)) {
       std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Alignment time t1=" << t1
-		<< " does not occur in Waveform B (which has B.T(0)=" << B.T(0) << ")." << std::endl;
+                << " does not occur in Waveform B (which has B.T(0)=" << B.T(0) << ")." << std::endl;
       throw(GWFrames_IndexOutOfBounds);
     }
     if(t2>a.T().back()) {
       std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Alignment time t2=" << t2
-		<< " does not occur in Waveform A (which has A.T(-1)=" << A.T().back() << ")." << std::endl;
+                << " does not occur in Waveform A (which has A.T(-1)=" << A.T().back() << ")." << std::endl;
       throw(GWFrames_IndexOutOfBounds);
     }
     if(t2>B.T().back()) {
       std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Alignment time t2=" << t2
-		<< " does not occur in Waveform B (which has B.T(-1)=" << B.T().back() << ")." << std::endl;
+                << " does not occur in Waveform B (which has B.T(-1)=" << B.T().back() << ")." << std::endl;
       throw(GWFrames_IndexOutOfBounds);
     }
     // Store the fixed frame (A) and its set of times, to which we
@@ -1992,9 +1992,9 @@ public:
 double minfunc (const gsl_vector* delta, void* params) {
   WaveformAligner* Aligner = (WaveformAligner*) params;
   return Aligner->EvaluateMinimizationQuantity(gsl_vector_get(delta,0),
-					       gsl_vector_get(delta,1),
-					       gsl_vector_get(delta,2),
-					       gsl_vector_get(delta,3));
+                                               gsl_vector_get(delta,1),
+                                               gsl_vector_get(delta,2),
+                                               gsl_vector_get(delta,3));
 }
 #endif // DOXYGEN
 
@@ -2018,14 +2018,14 @@ void GWFrames::Waveform::GetAlignmentOfTimeAndFrame(const Waveform& A, const dou
 
   if(frameType != A.frameType || (frameType!=GWFrames::Corotating && frameType!=GWFrames::Aligned)) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	      << "\nError: GetAlignmentOfTimeAndFrame assumes that the two Waveforms are in the type of same frame, and that"
-	      << "\n       that frame is physically meaningful (either " << GWFrames::WaveformFrameNames[GWFrames::Corotating]
-	      << " or " << GWFrames::WaveformFrameNames[GWFrames::Aligned] << "),"
-	      << "\n       so that it makes sense to align the frames."
-	      << "\n       This Waveform is in the " << GWFrames::WaveformFrameNames[frameType] << " frame,"
-	      << "\n       The Waveform in the argument is in the " << GWFrames::WaveformFrameNames[A.frameType] << " frame.\n"
-	      << "\n       Also note that each waveform should have its decomposition frame aligned to its modes (see `AlignDecompositionFrameToModes`).\n"
-	      << std::endl;
+              << "\nError: GetAlignmentOfTimeAndFrame assumes that the two Waveforms are in the type of same frame, and that"
+              << "\n       that frame is physically meaningful (either " << GWFrames::WaveformFrameNames[GWFrames::Corotating]
+              << " or " << GWFrames::WaveformFrameNames[GWFrames::Aligned] << "),"
+              << "\n       so that it makes sense to align the frames."
+              << "\n       This Waveform is in the " << GWFrames::WaveformFrameNames[frameType] << " frame,"
+              << "\n       The Waveform in the argument is in the " << GWFrames::WaveformFrameNames[A.frameType] << " frame.\n"
+              << "\n       Also note that each waveform should have its decomposition frame aligned to its modes (see `AlignDecompositionFrameToModes`).\n"
+              << std::endl;
     throw(GWFrames_WrongFrameType);
   }
 
@@ -2159,26 +2159,26 @@ GWFrames::Waveform GWFrames::Waveform::Compare(const GWFrames::Waveform& A, cons
   // Check to see if the frameTypes are the same
   if(frameType != A.frameType) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	      << "\nWarning:"
-	      << "\n       This Waveform is in the " << GWFrames::WaveformFrameNames[frameType] << " frame,"
-	      << "\n       The Waveform in the argument is in the " << GWFrames::WaveformFrameNames[A.frameType] << " frame."
-	      << "\n       Comparing them probably does not make sense.\n"
-	      << std::endl;
+              << "\nWarning:"
+              << "\n       This Waveform is in the " << GWFrames::WaveformFrameNames[frameType] << " frame,"
+              << "\n       The Waveform in the argument is in the " << GWFrames::WaveformFrameNames[A.frameType] << " frame."
+              << "\n       Comparing them probably does not make sense.\n"
+              << std::endl;
   }
 
   // Make sure we have the same number of modes in the input data
   if(NModes() != B.NModes()) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Trying to Compare Waveforms with mismatched LM data."
-	      << "\nA.NModes()=" << A.NModes() << "\tB.NModes()=" << B.NModes() << std::endl;
+              << "\nA.NModes()=" << A.NModes() << "\tB.NModes()=" << B.NModes() << std::endl;
     throw(GWFrames_WaveformMissingLMIndex);
   }
   // We'll put all the data in a new Waveform C
   GWFrames::Waveform C;
   // Store both old histories in C's
   C.history << "### B.Compare(A)\n"
-	    << "#### A.history.str():\n" << A.history.str()
-	    << "#### B.history.str():\n" << B.history.str()
-	    << "#### End of old histories from `Compare`" << std::endl;
+            << "#### A.history.str():\n" << A.history.str()
+            << "#### B.history.str():\n" << B.history.str()
+            << "#### End of old histories from `Compare`" << std::endl;
   // The new time axis will be the intersection of the two old ones
   C.t = GWFrames::Intersection(A.t, B.t);
   // Copy the basics
@@ -2253,7 +2253,7 @@ GWFrames::Waveform GWFrames::Waveform::Compare(const GWFrames::Waveform& A, cons
     // Assign the data from the transition
     for(unsigned int i_t=0; i_t<C.t.size(); ++i_t) {
       C.data[Mode][i_t] = complex<double>( gsl_spline_eval(splineReA, C.t[i_t], accReA), gsl_spline_eval(splineImA, C.t[i_t], accImA) )
-	- complex<double>( gsl_spline_eval(splineReB, C.t[i_t], accReB), gsl_spline_eval(splineImB, C.t[i_t], accImB) );
+        - complex<double>( gsl_spline_eval(splineReB, C.t[i_t], accReB), gsl_spline_eval(splineImB, C.t[i_t], accImB) );
     }
   }
   gsl_interp_accel_free(accReA);
@@ -2297,17 +2297,17 @@ GWFrames::Waveform GWFrames::Waveform::Hybridize(const GWFrames::Waveform& B, co
   // Check to see if the frameTypes are the same
   if(A.frameType != B.frameType) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	      << "\nWarning:"
-	      << "\n       This Waveform is in the " << GWFrames::WaveformFrameNames[A.frameType] << " frame,"
-	      << "\n       The Waveform in the argument is in the " << GWFrames::WaveformFrameNames[B.frameType] << " frame."
-	      << "\n       Comparing them probably does not make sense.\n"
-	      << std::endl;
+              << "\nWarning:"
+              << "\n       This Waveform is in the " << GWFrames::WaveformFrameNames[A.frameType] << " frame,"
+              << "\n       The Waveform in the argument is in the " << GWFrames::WaveformFrameNames[B.frameType] << " frame."
+              << "\n       Comparing them probably does not make sense.\n"
+              << std::endl;
   }
 
   // Make sure we have the same number of modes in the input data
   if(NModes() != B.NModes()) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Trying to Align Waveforms with mismatched LM data."
-	      << "\nA.NModes()=" << A.NModes() << "\tB.NModes()=" << B.NModes() << std::endl;
+              << "\nA.NModes()=" << A.NModes() << "\tB.NModes()=" << B.NModes() << std::endl;
     throw(GWFrames_WaveformMissingLMIndex);
   }
   // Make sure we have sufficient times for the requested hybrid
@@ -2318,9 +2318,9 @@ GWFrames::Waveform GWFrames::Waveform::Hybridize(const GWFrames::Waveform& B, co
     const double t2B = B.T(B.NTimes()-1);
     if(t1<t1A || t1<t1B || t2>t2A || t2>t2B) {
       std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-		<< ": These Waveforms do not overlap on the requested range."
-		<< "\nA.T(0)=" << t1A << "\tB.T(0)" << t1B << "\tt1=" << t1
-		<< "\nA.T(-1)=" << t2A << "\tB.T(-1)" << t2B << "\tt2=" << t2 << std::endl;
+                << ": These Waveforms do not overlap on the requested range."
+                << "\nA.T(0)=" << t1A << "\tB.T(0)" << t1B << "\tt1=" << t1
+                << "\nA.T(-1)=" << t2A << "\tB.T(-1)" << t2B << "\tt2=" << t2 << std::endl;
       throw(GWFrames_EmptyIntersection);
     }
   }
@@ -2328,9 +2328,9 @@ GWFrames::Waveform GWFrames::Waveform::Hybridize(const GWFrames::Waveform& B, co
   GWFrames::Waveform C;
   // Store both old histories in C's
   C.history << "### A.Hybridize(B, " << t1 << ", " << t2 << ", " << tMinStep << ")\n"
-	    << "#### A.history.str():\n" << A.history.str()
-	    << "#### B.history.str():\n" << B.history.str()
-	    << "#### End of old histories from `Hybridize`" << std::endl;
+            << "#### A.history.str():\n" << A.history.str()
+            << "#### B.history.str():\n" << B.history.str()
+            << "#### End of old histories from `Hybridize`" << std::endl;
   // The new time axis will be the union of the two old ones
   C.t = GWFrames::Union(A.t, B.t, tMinStep);
   // We'll assume that A.lm==B.lm, though we'll account for disordering below
@@ -2395,7 +2395,7 @@ GWFrames::Waveform GWFrames::Waveform::Hybridize(const GWFrames::Waveform& B, co
     for(unsigned int j=J01; j<J12; ++j) {
       const double Transition = TransitionFunction_Smooth((C.T(j)-T01)/TransitionLength);
       C.data[Mode][j] = complex<double>( gsl_spline_eval(splineReA, C.t[j], accReA), gsl_spline_eval(splineImA, C.t[j], accImA) ) * (1.0-Transition)
-	+ complex<double>( gsl_spline_eval(splineReB, C.t[j], accReB), gsl_spline_eval(splineImB, C.t[j], accImB) ) * Transition ;
+        + complex<double>( gsl_spline_eval(splineReB, C.t[j], accReB), gsl_spline_eval(splineImB, C.t[j], accImB) ) * Transition ;
     }
     // Assign the data from the latest part
     for(unsigned int j=J12; j<C.NTimes(); ++j) {
@@ -2431,14 +2431,14 @@ std::vector<std::complex<double> > GWFrames::Waveform::EvaluateAtPoint(const dou
   if(frameType != GWFrames::Inertial) {
     if(frameType == GWFrames::UnknownFrameType) {
       std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-		<< "\nWarning: Asking for a Waveform in the " << GWFrames::WaveformFrameNames[frameType] << " frame to be evaluated at a point."
-		<< "\n         This should only be applied to Waveforms in the " << GWFrames::WaveformFrameNames[GWFrames::Inertial] << " frame.\n"
-		<< std::endl;
+                << "\nWarning: Asking for a Waveform in the " << GWFrames::WaveformFrameNames[frameType] << " frame to be evaluated at a point."
+                << "\n         This should only be applied to Waveforms in the " << GWFrames::WaveformFrameNames[GWFrames::Inertial] << " frame.\n"
+                << std::endl;
     } else {
       std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-		<< "\nError: Asking for a Waveform in the " << GWFrames::WaveformFrameNames[frameType] << " frame to be evaluated at a point."
-		<< "\n       This should only be applied to Waveforms in the " << GWFrames::WaveformFrameNames[GWFrames::Inertial] << " frame.\n"
-		<< std::endl;
+                << "\nError: Asking for a Waveform in the " << GWFrames::WaveformFrameNames[frameType] << " frame to be evaluated at a point."
+                << "\n       This should only be applied to Waveforms in the " << GWFrames::WaveformFrameNames[GWFrames::Inertial] << " frame.\n"
+                << std::endl;
       throw(GWFrames_WrongFrameType);
     }
   }
@@ -2502,15 +2502,15 @@ const GWFrames::Waveform& GWFrames::Waveform::Output(const std::string& FileName
 //       lm[iNegative].swap(lm[iPositive]);
 //       // Next, swap the signs as appropriate
 //       if(m%2==0) {
-// 	for(unsigned int i_t=0; i_t<N_t; ++i_t) {
-// 	  data[iPositive][i_t].imag() *= -1;
-// 	  data[iNegative][i_t].imag() *= -1;
-// 	}
+//         for(unsigned int i_t=0; i_t<N_t; ++i_t) {
+//           data[iPositive][i_t].imag() *= -1;
+//           data[iNegative][i_t].imag() *= -1;
+//         }
 //       } else {
-// 	for(unsigned int i_t=0; i_t<N_t; ++i_t) {
-// 	  data[iPositive][i_t].real() *= -1;
-// 	  data[iNegative][i_t].real() *= -1;
-// 	}
+//         for(unsigned int i_t=0; i_t<N_t; ++i_t) {
+//           data[iPositive][i_t].real() *= -1;
+//           data[iNegative][i_t].real() *= -1;
+//         }
 //       }
 //       ++i_m; // For positive m
 //       ++i_m; // For negative m
@@ -2534,35 +2534,35 @@ GWFrames::Waveform GWFrames::Waveform::operator+(const GWFrames::Waveform& B) co
 
   if(A.spinweight != B.spinweight) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	      << "\nError: Asking for the sum of two Waveform objects with different spin weights."
-	      << "\n       A.SpinWeight()=" << A.SpinWeight() << "\tB.SpinWeight()=" << B.SpinWeight()
-	      << std::endl;
+              << "\nError: Asking for the sum of two Waveform objects with different spin weights."
+              << "\n       A.SpinWeight()=" << A.SpinWeight() << "\tB.SpinWeight()=" << B.SpinWeight()
+              << std::endl;
     throw(GWFrames_BadWaveformInformation);
   }
 
   if(A.frameType != GWFrames::Inertial || B.frameType != GWFrames::Inertial) {
     if(A.frameType != B.frameType) {
       std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-		<< "\nError: Asking for the sum of Waveforms in " << GWFrames::WaveformFrameNames[A.frameType]
-		<< " and " << GWFrames::WaveformFrameNames[B.frameType] << " frames."
-		<< "\n       This should only be applied to Waveforms in the same frame.\n"
-		<< std::endl;
+                << "\nError: Asking for the sum of Waveforms in " << GWFrames::WaveformFrameNames[A.frameType]
+                << " and " << GWFrames::WaveformFrameNames[B.frameType] << " frames."
+                << "\n       This should only be applied to Waveforms in the same frame.\n"
+                << std::endl;
       throw(GWFrames_WrongFrameType);
     } else if(A.frame.size() != B.frame.size()) {
       std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-		<< "\nError: Asking for the sum of Waveforms with " << A.frame.size() << " and " << B.frame.size() << " frame data points."
-		<< "\n       This should only be applied to Waveforms in the same frame.\n"
-		<< std::endl;
+                << "\nError: Asking for the sum of Waveforms with " << A.frame.size() << " and " << B.frame.size() << " frame data points."
+                << "\n       This should only be applied to Waveforms in the same frame.\n"
+                << std::endl;
       throw(GWFrames_WrongFrameType);
     }
   }
 
   if(A.NTimes() != B.NTimes()) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	      << "\nError: Asking for the sum of two Waveform objects with different time data."
-	      << "\n       A.NTimes()=" << A.NTimes() << "\tB.NTimes()=" << B.NTimes()
-	      << "\n       Interpolate to a common set of times first.\n"
-	      << std::endl;
+              << "\nError: Asking for the sum of two Waveform objects with different time data."
+              << "\n       A.NTimes()=" << A.NTimes() << "\tB.NTimes()=" << B.NTimes()
+              << "\n       Interpolate to a common set of times first.\n"
+              << std::endl;
     throw(GWFrames_MatrixSizeMismatch);
   }
 
@@ -2571,8 +2571,8 @@ GWFrames::Waveform GWFrames::Waveform::operator+(const GWFrames::Waveform& B) co
 
   // Store both old histories in C's
   C.history << "### *this = *this+B\n"
-	    << "#### B.history.str():\n" << B.history.str()
-	    << "#### End of old histories from `A+B`" << std::endl;
+            << "#### B.history.str():\n" << B.history.str()
+            << "#### End of old histories from `A+B`" << std::endl;
 
   // Do the work of addition
   const unsigned int ntimes = NTimes();
@@ -2592,35 +2592,35 @@ GWFrames::Waveform GWFrames::Waveform::operator-(const GWFrames::Waveform& B) co
 
   if(A.spinweight != B.spinweight) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	      << "\nError: Asking for the difference of two Waveform objects with different spin weights."
-	      << "\n       A.SpinWeight()=" << A.SpinWeight() << "\tB.SpinWeight()=" << B.SpinWeight()
-	      << std::endl;
+              << "\nError: Asking for the difference of two Waveform objects with different spin weights."
+              << "\n       A.SpinWeight()=" << A.SpinWeight() << "\tB.SpinWeight()=" << B.SpinWeight()
+              << std::endl;
     throw(GWFrames_BadWaveformInformation);
   }
 
   if(A.frameType != GWFrames::Inertial || B.frameType != GWFrames::Inertial) {
     if(A.frameType != B.frameType) {
       std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-		<< "\nError: Asking for the difference of Waveforms in " << GWFrames::WaveformFrameNames[A.frameType]
-		<< " and " << GWFrames::WaveformFrameNames[B.frameType] << " frames."
-		<< "\n       This should only be applied to Waveforms in the same frame.\n"
-		<< std::endl;
+                << "\nError: Asking for the difference of Waveforms in " << GWFrames::WaveformFrameNames[A.frameType]
+                << " and " << GWFrames::WaveformFrameNames[B.frameType] << " frames."
+                << "\n       This should only be applied to Waveforms in the same frame.\n"
+                << std::endl;
       throw(GWFrames_WrongFrameType);
     } else if(A.frame.size() != B.frame.size()) {
       std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-		<< "\nError: Asking for the difference of Waveforms with " << A.frame.size() << " and " << B.frame.size() << " frame data points."
-		<< "\n       This should only be applied to Waveforms in the same frame.\n"
-		<< std::endl;
+                << "\nError: Asking for the difference of Waveforms with " << A.frame.size() << " and " << B.frame.size() << " frame data points."
+                << "\n       This should only be applied to Waveforms in the same frame.\n"
+                << std::endl;
       throw(GWFrames_WrongFrameType);
     }
   }
 
   if(A.NTimes() != B.NTimes()) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	      << "\nError: Asking for the difference of two Waveform objects with different time data."
-	      << "\n       A.NTimes()=" << A.NTimes() << "\tB.NTimes()=" << B.NTimes()
-	      << "\n       Interpolate to a common set of times first.\n"
-	      << std::endl;
+              << "\nError: Asking for the difference of two Waveform objects with different time data."
+              << "\n       A.NTimes()=" << A.NTimes() << "\tB.NTimes()=" << B.NTimes()
+              << "\n       Interpolate to a common set of times first.\n"
+              << std::endl;
     throw(GWFrames_MatrixSizeMismatch);
   }
 
@@ -2629,8 +2629,8 @@ GWFrames::Waveform GWFrames::Waveform::operator-(const GWFrames::Waveform& B) co
 
   // Store both old histories in C's
   C.history << "### *this = *this-B\n"
-	    << "#### B.history.str():\n" << B.history.str()
-	    << "#### End of old histories from `A-B`" << std::endl;
+            << "#### B.history.str():\n" << B.history.str()
+            << "#### End of old histories from `A-B`" << std::endl;
 
   // Do the work of addition
   const unsigned int ntimes = NTimes();
@@ -2728,12 +2728,12 @@ GWFrames::Waveform GWFrames::Waveform::NPEdth() const {
     const int l = A.LM(i_m)[0];
     if(l<lMin) {
       for(int i_t=0; i_t<NTimes; ++i_t) {
-	EdthA.SetData(i_m, i_t, 0.0);
+        EdthA.SetData(i_m, i_t, 0.0);
       }
     } else {
       const double factor = std::sqrt((l-s)*(l+s+1));
       for(int i_t=0; i_t<NTimes; ++i_t) {
-	EdthA.SetData(i_m, i_t, EdthA.Data(i_m, i_t)*factor);
+        EdthA.SetData(i_m, i_t, EdthA.Data(i_m, i_t)*factor);
       }
     }
   }
@@ -2780,12 +2780,12 @@ GWFrames::Waveform GWFrames::Waveform::NPEdthBar() const {
     const int l = A.LM(i_m)[0];
     if(l<lMin) {
       for(int i_t=0; i_t<NTimes; ++i_t) {
-	EdthBarA.SetData(i_m, i_t, 0.0);
+        EdthBarA.SetData(i_m, i_t, 0.0);
       }
     } else {
       const double factor = -std::sqrt((l+s)*(l-s+1));
       for(int i_t=0; i_t<NTimes; ++i_t) {
-	EdthBarA.SetData(i_m, i_t, EdthBarA.Data(i_m, i_t)*factor);
+        EdthBarA.SetData(i_m, i_t, EdthBarA.Data(i_m, i_t)*factor);
       }
     }
   }
@@ -2846,12 +2846,12 @@ GWFrames::Waveform GWFrames::Waveform::GHPEdth() const {
     const int l = A.LM(i_m)[0];
     if(l<lMin) {
       for(int i_t=0; i_t<NTimes; ++i_t) {
-	EdthA.SetData(i_m, i_t, 0.0);
+        EdthA.SetData(i_m, i_t, 0.0);
       }
     } else {
       const double factor = std::sqrt((l-s)*(l+s+1.)/2.);
       for(int i_t=0; i_t<NTimes; ++i_t) {
-	EdthA.SetData(i_m, i_t, EdthA.Data(i_m, i_t)*factor);
+        EdthA.SetData(i_m, i_t, EdthA.Data(i_m, i_t)*factor);
       }
     }
   }
@@ -2912,12 +2912,12 @@ GWFrames::Waveform GWFrames::Waveform::GHPEdthBar() const {
     const int l = A.LM(i_m)[0];
     if(l<lMin) {
       for(int i_t=0; i_t<NTimes; ++i_t) {
-	EdthBarA.SetData(i_m, i_t, 0.0);
+        EdthBarA.SetData(i_m, i_t, 0.0);
       }
     } else {
       const double factor = -std::sqrt((l+s)*(l-s+1.)/2.);
       for(int i_t=0; i_t<NTimes; ++i_t) {
-	EdthBarA.SetData(i_m, i_t, EdthBarA.Data(i_m, i_t)*factor);
+        EdthBarA.SetData(i_m, i_t, EdthBarA.Data(i_m, i_t)*factor);
       }
     }
   }
@@ -2966,11 +2966,11 @@ GWFrames::Waveform GWFrames::Waveform::IntegrateNPEdth() const {
     const double factor = std::sqrt((l-s)*(l+s+1));
     if(l<=lMin || factor == 0.0) {
       for(int i_t=0; i_t<NTimes; ++i_t) {
-	IntegralEdthA.SetData(i_m, i_t, 0.0);
+        IntegralEdthA.SetData(i_m, i_t, 0.0);
       }
     } else {
       for(int i_t=0; i_t<NTimes; ++i_t) {
-	IntegralEdthA.SetData(i_m, i_t, IntegralEdthA.Data(i_m, i_t)/factor);
+        IntegralEdthA.SetData(i_m, i_t, IntegralEdthA.Data(i_m, i_t)/factor);
       }
     }
   }
@@ -3017,11 +3017,11 @@ GWFrames::Waveform GWFrames::Waveform::IntegrateNPEdthBar() const {
     const double factor = -std::sqrt((l+s)*(l-s+1));
     if(l<=lMin || factor == 0.0) {
       for(int i_t=0; i_t<NTimes; ++i_t) {
-	IntegralEdthBarA.SetData(i_m, i_t, 0.0);
+        IntegralEdthBarA.SetData(i_m, i_t, 0.0);
       }
     } else {
       for(int i_t=0; i_t<NTimes; ++i_t) {
-	IntegralEdthBarA.SetData(i_m, i_t, IntegralEdthBarA.Data(i_m, i_t)/factor);
+        IntegralEdthBarA.SetData(i_m, i_t, IntegralEdthBarA.Data(i_m, i_t)/factor);
       }
     }
   }
@@ -3061,11 +3061,11 @@ GWFrames::Waveform GWFrames::Waveform::IntegrateGHPEdth() const {
     const double factor = std::sqrt((l-s)*(l+s+1.)/2.);
     if(l<=lMin || factor == 0.0) {
       for(int i_t=0; i_t<NTimes; ++i_t) {
-	IntegralEdthA.SetData(i_m, i_t, 0.0);
+        IntegralEdthA.SetData(i_m, i_t, 0.0);
       }
     } else {
       for(int i_t=0; i_t<NTimes; ++i_t) {
-	IntegralEdthA.SetData(i_m, i_t, IntegralEdthA.Data(i_m, i_t)/factor);
+        IntegralEdthA.SetData(i_m, i_t, IntegralEdthA.Data(i_m, i_t)/factor);
       }
     }
   }
@@ -3105,11 +3105,11 @@ GWFrames::Waveform GWFrames::Waveform::IntegrateGHPEdthBar() const {
     const double factor = -std::sqrt((l+s)*(l-s+1.)/2.);
     if(l<lMin || factor == 0.0) {
       for(int i_t=0; i_t<NTimes; ++i_t) {
-	IntegralEdthBarA.SetData(i_m, i_t, 0.0);
+        IntegralEdthBarA.SetData(i_m, i_t, 0.0);
       }
     } else {
       for(int i_t=0; i_t<NTimes; ++i_t) {
-	IntegralEdthBarA.SetData(i_m, i_t, IntegralEdthBarA.Data(i_m, i_t)/factor);
+        IntegralEdthBarA.SetData(i_m, i_t, IntegralEdthBarA.Data(i_m, i_t)/factor);
       }
     }
   }
@@ -3173,9 +3173,9 @@ GWFrames::Waveform GWFrames::Waveform::ApplySupertranslation(std::vector<std::co
   // Make sure gamma doesn't have more ell modes than SphericalFunctions::ellMax
   if(lMax>=SphericalFunctions::ellMax) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	      << "\nError: Input supertranslation data has length " << gamma.size() << "."
-	      << "\n       This is not a recognized length for spherical-harmonic data.\n"
-	      << std::endl;
+              << "\nError: Input supertranslation data has length " << gamma.size() << "."
+              << "\n       This is not a recognized length for spherical-harmonic data.\n"
+              << std::endl;
     throw(GWFrames_VectorSizeMismatch);
   }
   const unsigned int Nlm = N_lm(lMax);
@@ -3183,9 +3183,9 @@ GWFrames::Waveform GWFrames::Waveform::ApplySupertranslation(std::vector<std::co
   // Make sure the Waveform is in the inertial frame
   if(frameType != GWFrames::Inertial) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	      << "\nError: Asking to supertranslate a Waveform in the " << GWFrames::WaveformFrameNames[frameType] << " frame."
-	      << "\n       This only makes sense with Waveforms in the " << GWFrames::WaveformFrameNames[GWFrames::Inertial] << " frame.\n"
-	      << std::endl;
+              << "\nError: Asking to supertranslate a Waveform in the " << GWFrames::WaveformFrameNames[frameType] << " frame."
+              << "\n       This only makes sense with Waveforms in the " << GWFrames::WaveformFrameNames[GWFrames::Inertial] << " frame.\n"
+              << std::endl;
     throw(GWFrames_WrongFrameType);
   }
 
@@ -3225,8 +3225,8 @@ GWFrames::Waveform GWFrames::Waveform::ApplySupertranslation(std::vector<std::co
   // Transform times to physical space
   vector<complex<double> > DeltaT_complex(N_tot, zero);
   spinsfast_salm2map(reinterpret_cast<fftw_complex*>(&gamma[0]),
-		     reinterpret_cast<fftw_complex*>(&DeltaT_complex[0]),
-		     0, N_theta, N_phi, lMax);
+                     reinterpret_cast<fftw_complex*>(&DeltaT_complex[0]),
+                     0, N_theta, N_phi, lMax);
   vector<double> DeltaT(DeltaT_complex.size());
   for(unsigned int i=0; i<DeltaT.size(); ++i) {
     DeltaT[i] = real(DeltaT_complex[i]);
@@ -3280,8 +3280,8 @@ GWFrames::Waveform GWFrames::Waveform::ApplySupertranslation(std::vector<std::co
     }
     // Transform
     spinsfast_salm2map(reinterpret_cast<fftw_complex*>(&alm[0]),
-		       reinterpret_cast<fftw_complex*>(&mapA[0]),
-		       0, N_theta, N_phi, lMax);
+                       reinterpret_cast<fftw_complex*>(&mapA[0]),
+                       0, N_theta, N_phi, lMax);
     // Save to main storage arrays
     for(unsigned int i_p=0; i_p<N_tot; ++i_p) {
       fARe[i_p][i_t] = real(mapA[i_p]);
@@ -3326,8 +3326,8 @@ GWFrames::Waveform GWFrames::Waveform::ApplySupertranslation(std::vector<std::co
   for(unsigned int i_t=0; i_t<ntimesB; ++i_t) {
     // Transform
     spinsfast_map2salm(reinterpret_cast<fftw_complex*>(&fB[i_t][0]),
-		       reinterpret_cast<fftw_complex*>(&alm[0]),
-		       0, N_theta, N_phi, lMax);
+                       reinterpret_cast<fftw_complex*>(&alm[0]),
+                       0, N_theta, N_phi, lMax);
     // Save to main storage arrays
     for(unsigned int i_m=0; i_m<Nlm; ++i_m) {
       B.data[i_m][i_t] = alm[i_m];
@@ -3386,7 +3386,7 @@ GWFrames::Waveform& GWFrames::Waveform::Boost(const std::vector<std::vector<doub
   for(unsigned int i_t=0; i_t<NTimes(); ++i_t) {
     if(v[i_t].size()!=3) {
       std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": v[" << i_t << "].size()=" << v[i_t].size()
-		<< ".  Input is assumed to be a vector of three-velocities." << std::endl;
+                << ".  Input is assumed to be a vector of three-velocities." << std::endl;
       throw(GWFrames_VectorSizeMismatch);
     }
 
@@ -3401,45 +3401,45 @@ GWFrames::Waveform& GWFrames::Waveform::Boost(const std::vector<std::vector<doub
     }
     for(int i_mode=N_lm(std::abs(SpinWeight())-1), ell=std::abs(SpinWeight()); ell<=ellMax; ++ell) {
       for(int m=-ell; m<=ell; ++m, ++i_mode) {
-	Modes[i_mode] = this->Data(FindModeIndex(ell,m), i_t);
+        Modes[i_mode] = this->Data(FindModeIndex(ell,m), i_t);
       }
     }
 
     // Construct the data on the distorted grid
     for(int i_g=0, i_theta=0; i_theta<n_theta; ++i_theta) {
       for(int i_phi=0; i_phi<n_phi; ++i_phi, ++i_g) {
-	const Quaternion Rp(dtheta*i_theta, dphi*i_phi);
-	const Quaternion nHat = Rp*Quaternions::zHat*Rp.conjugate();
-	const double ConformalFactor = std::pow(gamma*(1-nHat.dot(Quaternions::Quaternion(v[i_t]))), -BoostWeight());
-	// const Quaternion R_b = Quaternions::BoostRotor(-v[i_t], nHat.vec());
-	const Quaternion R_b = Quaternions::BoostRotor(v[i_t], nHat.vec());
-	if(i_t==0 && i_theta==0 && i_phi==0) {
-	  std::cerr << __FILE__ << ":" << __LINE__ << ": Previous line is given wrong sign for testing purposes!\n\n" << std::endl;
-	}
-	sYlm.SetRotation(R_b*Rp);
+        const Quaternion Rp(dtheta*i_theta, dphi*i_phi);
+        const Quaternion nHat = Rp*Quaternions::zHat*Rp.conjugate();
+        const double ConformalFactor = std::pow(gamma*(1-nHat.dot(Quaternions::Quaternion(v[i_t]))), -BoostWeight());
+        // const Quaternion R_b = Quaternions::BoostRotor(-v[i_t], nHat.vec());
+        const Quaternion R_b = Quaternions::BoostRotor(v[i_t], nHat.vec());
+        if(i_t==0 && i_theta==0 && i_phi==0) {
+          std::cerr << __FILE__ << ":" << __LINE__ << ": Previous line is given wrong sign for testing purposes!\n\n" << std::endl;
+        }
+        sYlm.SetRotation(R_b*Rp);
 
-	// Evaluate the data at this point, incorporating the spin due
-	// to the boost, multiplying by the conformal factor at this
-	// point
-	Grid[i_g] = ConformalFactor*sYlm.Evaluate(Modes);
+        // Evaluate the data at this point, incorporating the spin due
+        // to the boost, multiplying by the conformal factor at this
+        // point
+        Grid[i_g] = ConformalFactor*sYlm.Evaluate(Modes);
       }
     }
 
     // Decompose the data into modes
     spinsfast_map2salm(reinterpret_cast<fftw_complex*>(&Grid[0]),
-		       reinterpret_cast<fftw_complex*>(&Modes2[0]),
-		       SpinWeight(), n_theta, n_phi, ellMax);
+                       reinterpret_cast<fftw_complex*>(&Modes2[0]),
+                       SpinWeight(), n_theta, n_phi, ellMax);
 
     // Set new data at this time step
     for(int i_mode=N_lm(std::abs(SpinWeight())-1), ell=std::abs(SpinWeight()); ell<=ellMax; ++ell) {
       for(int m=-ell; m<=ell; ++m, ++i_mode) {
-	this->SetData(this->FindModeIndex(ell,m), i_t, Modes2[i_mode]);
-	// if(i_t%1000==0 && ell==2 && m==2) {
-	//   std::cerr << i_t << "/" << NTimes()
-	// 	    << "\tModes[" << i_mode << "] = " << Modes[i_mode]
-	// 	    << "\tModes2[" << i_mode << "] = " << Modes2[i_mode]
-	// 	    << "\tData((" << ell << ", " << m << "), " << i_t << ") = " << this->Data(this->FindModeIndex(ell,m),i_t) << std::endl;
-	// }
+        this->SetData(this->FindModeIndex(ell,m), i_t, Modes2[i_mode]);
+        // if(i_t%1000==0 && ell==2 && m==2) {
+        //   std::cerr << i_t << "/" << NTimes()
+        //             << "\tModes[" << i_mode << "] = " << Modes[i_mode]
+        //             << "\tModes2[" << i_mode << "] = " << Modes2[i_mode]
+        //             << "\tData((" << ell << ", " << m << "), " << i_t << ") = " << this->Data(this->FindModeIndex(ell,m),i_t) << std::endl;
+        // }
       }
     }
 
@@ -3484,7 +3484,7 @@ GWFrames::Waveforms::Waveforms(const std::vector<Waveform>& In) : Ws(In), Common
 
 /// Interpolate to a common set of times.
 void GWFrames::Waveforms::SetCommonTime(std::vector<std::vector<double> >& Radii,
-							const double MinTimeStep, const double EarliestTime, const double LatestTime) {
+                                                        const double MinTimeStep, const double EarliestTime, const double LatestTime) {
   const unsigned int NWaveforms = Radii.size();
   vector<double> TLimits(2);
   TLimits[0] = EarliestTime;
@@ -3524,8 +3524,8 @@ string NumberToString ( T Number ) {
 
 /// Main extrapolation routine.
 GWFrames::Waveforms GWFrames::Waveforms::Extrapolate(std::vector<std::vector<double> >& Radii,
-						     const std::vector<int>& ExtrapolationOrders,
-						     const std::vector<double>& Omegas)
+                                                     const std::vector<int>& ExtrapolationOrders,
+                                                     const std::vector<double>& Omegas)
 {
   ///
   /// \param Radii Array of radii for each Waveform (first index) and each time (second index)
@@ -3568,57 +3568,57 @@ GWFrames::Waveforms GWFrames::Waveforms::Extrapolate(std::vector<std::vector<dou
   // Make sure everyone is playing with a full deck
   if((unsigned int)(std::abs(MinN))>NFiniteRadii) {
       cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	   << "\nERROR: Asking for finite-radius waveform " << MinN << ", but only got " << NFiniteRadii << " finite-radius Waveform objects."
-	   << "\n       Need at least as " << std::abs(MinN) << " finite-radius waveforms."
-	   << "\n\n" << endl;
+           << "\nERROR: Asking for finite-radius waveform " << MinN << ", but only got " << NFiniteRadii << " finite-radius Waveform objects."
+           << "\n       Need at least as " << std::abs(MinN) << " finite-radius waveforms."
+           << "\n\n" << endl;
       throw(GWFrames_IndexOutOfBounds);
   }
   if(MaxN>0 && (unsigned int)(MaxN+1)>=NFiniteRadii) {
       cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	   << "\nERROR: Asking for extrapolation up to order " << MaxN << ", but only got " << NFiniteRadii << " finite-radius Waveform objects."
-	   << "\n       Need at least " << MaxN+1 << " waveforms."
-	   << "\n\n" << endl;
+           << "\nERROR: Asking for extrapolation up to order " << MaxN << ", but only got " << NFiniteRadii << " finite-radius Waveform objects."
+           << "\n       Need at least " << MaxN+1 << " waveforms."
+           << "\n\n" << endl;
       throw(GWFrames_IndexOutOfBounds);
   }
   if(Radii.size()!=NFiniteRadii) {
       cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	   << "\nERROR: Mismatch in data to be extrapolated; there are different numbers of waveforms and radius vectors."
-	   << "\n       FiniteRadiusWaveforms.size()=" << NFiniteRadii
-	   << "\n       Radii.size()=" << Radii.size()
-	   << "\n\n" << endl;
+           << "\nERROR: Mismatch in data to be extrapolated; there are different numbers of waveforms and radius vectors."
+           << "\n       FiniteRadiusWaveforms.size()=" << NFiniteRadii
+           << "\n       Radii.size()=" << Radii.size()
+           << "\n\n" << endl;
       throw(GWFrames_VectorSizeMismatch);
   }
   if(UseOmegas && int(Omegas.size())!=NTimes) {
       cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	   << "\nERROR: NTimes mismatch in data to be extrapolated."
-	   << "\n       FiniteRadiusWaveforms[0].NTimes()=" << NTimes
-	   << "\n       Omegas.size()=" << Omegas.size()
-	   << "\n\n" << endl;
+           << "\nERROR: NTimes mismatch in data to be extrapolated."
+           << "\n       FiniteRadiusWaveforms[0].NTimes()=" << NTimes
+           << "\n       Omegas.size()=" << Omegas.size()
+           << "\n\n" << endl;
       throw(GWFrames_VectorSizeMismatch);
   }
   for(unsigned int i_W=1; i_W<NFiniteRadii; ++i_W) {
     if(int(FiniteRadiusWaveforms[i_W].NTimes()) != NTimes) {
       cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	   << "\nERROR: NTimes mismatch in data to be extrapolated."
-	   << "\n       FiniteRadiusWaveforms[0].NTimes()=" << NTimes
-	   << "\n       FiniteRadiusWaveforms[" << i_W << "].NTimes()=" << FiniteRadiusWaveforms[i_W].NTimes()
-	   << "\n\n" << endl;
+           << "\nERROR: NTimes mismatch in data to be extrapolated."
+           << "\n       FiniteRadiusWaveforms[0].NTimes()=" << NTimes
+           << "\n       FiniteRadiusWaveforms[" << i_W << "].NTimes()=" << FiniteRadiusWaveforms[i_W].NTimes()
+           << "\n\n" << endl;
       throw(GWFrames_VectorSizeMismatch);
     }
     if(FiniteRadiusWaveforms[i_W].NModes() != NModes) {
       cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	   << "\nERROR: NModes mismatch in data to be extrapolated."
-	   << "\n       FiniteRadiusWaveforms[0].NModes()=" << NModes
-	   << "\n       FiniteRadiusWaveforms[" << i_W << "].NModes()=" << FiniteRadiusWaveforms[i_W].NModes()
-	   << "\n\n" << endl;
+           << "\nERROR: NModes mismatch in data to be extrapolated."
+           << "\n       FiniteRadiusWaveforms[0].NModes()=" << NModes
+           << "\n       FiniteRadiusWaveforms[" << i_W << "].NModes()=" << FiniteRadiusWaveforms[i_W].NModes()
+           << "\n\n" << endl;
       throw(GWFrames_VectorSizeMismatch);
     }
     if(int(Radii[i_W].size()) != NTimes) {
       cerr << "\n\n" << __FILE__ << ":" << __LINE__
-	   << "\nERROR: NTimes mismatch in data to be extrapolated."
-	   << "\n       FiniteRadiusWaveforms[0].NTimes()=" << NTimes
-	   << "\n       Radii[" << i_W << "].size()=" << Radii[i_W].size()
-	   << "\n\n" << endl;
+           << "\nERROR: NTimes mismatch in data to be extrapolated."
+           << "\n       FiniteRadiusWaveforms[0].NTimes()=" << NTimes
+           << "\n       Radii[" << i_W << "].size()=" << Radii[i_W].size()
+           << "\n\n" << endl;
       throw(GWFrames_VectorSizeMismatch);
     }
   }
@@ -3694,11 +3694,11 @@ GWFrames::Waveforms GWFrames::Waveforms::Extrapolate(std::vector<std::vector<dou
     // Set up the radius data (if we're not using Omega)
     if(! UseOmegas) {
       for(unsigned int i_W=0; i_W<NFiniteRadii; ++i_W) {
-	const double OneOverRadius = 1.0/Radii[i_W][i_t];
-	gsl_matrix_set(OneOverRadii, i_W, 0, 1.0);
-	for(unsigned int i_N=1; i_N<MaxCoefficients; ++i_N) {
-	  gsl_matrix_set(OneOverRadii, i_W, i_N, OneOverRadius*gsl_matrix_get(OneOverRadii, i_W, i_N-1));
-	}
+        const double OneOverRadius = 1.0/Radii[i_W][i_t];
+        gsl_matrix_set(OneOverRadii, i_W, 0, 1.0);
+        for(unsigned int i_N=1; i_N<MaxCoefficients; ++i_N) {
+          gsl_matrix_set(OneOverRadii, i_W, i_N, OneOverRadius*gsl_matrix_get(OneOverRadii, i_W, i_N-1));
+        }
       }
     }
 
@@ -3708,55 +3708,55 @@ GWFrames::Waveforms GWFrames::Waveforms::Extrapolate(std::vector<std::vector<dou
       // Set up the radius data (if we are using Omega)
       const int M = FiniteRadiusWaveforms[0].LM(i_m)[1];
       if(UseOmegas) {
-	for(unsigned int i_W=0; i_W<NFiniteRadii; ++i_W) {
-	  const double OneOverRadius = (M!=0 ? 1.0/(Radii[i_W][i_t]*M*Omegas[i_t]) : 1.0/(Radii[i_W][i_t]));
-	  gsl_matrix_set(OneOverRadii, i_W, 0, 1.0);
-	  for(unsigned int i_N=1; i_N<MaxCoefficients; ++i_N) {
-	    gsl_matrix_set(OneOverRadii, i_W, i_N, OneOverRadius*gsl_matrix_get(OneOverRadii, i_W, i_N-1));
-	  }
-	}
+        for(unsigned int i_W=0; i_W<NFiniteRadii; ++i_W) {
+          const double OneOverRadius = (M!=0 ? 1.0/(Radii[i_W][i_t]*M*Omegas[i_t]) : 1.0/(Radii[i_W][i_t]));
+          gsl_matrix_set(OneOverRadii, i_W, 0, 1.0);
+          for(unsigned int i_N=1; i_N<MaxCoefficients; ++i_N) {
+            gsl_matrix_set(OneOverRadii, i_W, i_N, OneOverRadius*gsl_matrix_get(OneOverRadii, i_W, i_N-1));
+          }
+        }
       }
 
       // Set up the mode data
       for(unsigned int i_W=0; i_W<NFiniteRadii; ++i_W) {
-	gsl_vector_set(Re, i_W, FiniteRadiusWaveforms[i_W].Re(i_m,i_t));
-	gsl_vector_set(Im, i_W, FiniteRadiusWaveforms[i_W].Im(i_m,i_t));
+        gsl_vector_set(Re, i_W, FiniteRadiusWaveforms[i_W].Re(i_m,i_t));
+        gsl_vector_set(Im, i_W, FiniteRadiusWaveforms[i_W].Im(i_m,i_t));
       }
 
       // Loop over extrapolation orders
       for(unsigned int i_N=0; i_N<NExtrapolations; ++i_N) {
-	const int N = ExtrapolationOrders[i_N];
+        const int N = ExtrapolationOrders[i_N];
 
-	// If non-extrapolating, skip to the next one (the copying was
-	// done when ExtrapolatedWaveforms[i_N] was constructed)
-	if(N<0) {
-	  continue;
-	}
+        // If non-extrapolating, skip to the next one (the copying was
+        // done when ExtrapolatedWaveforms[i_N] was constructed)
+        if(N<0) {
+          continue;
+        }
 
-	// Do the extrapolations
-	gsl_multifit_linear_workspace* Workspace = gsl_multifit_linear_alloc(NFiniteRadii, N+1);
-	gsl_matrix_view OneOverRadii_N = gsl_matrix_submatrix(OneOverRadii, 0, 0, NFiniteRadii, N+1);
-	gsl_matrix_view Covariance_N = gsl_matrix_submatrix(Covariance, 0, 0, N+1, N+1);
-	gsl_vector_view FitCoefficients_N = gsl_vector_subvector(FitCoefficients, 0, N+1);
-	gsl_multifit_linear_usvd(&OneOverRadii_N.matrix, Re, SVDTol, &EffectiveRank, &FitCoefficients_N.vector, &Covariance_N.matrix, &ChiSquared, Workspace);
-	const double re = gsl_vector_get(&FitCoefficients_N.vector, 0);
-	const double re_err = std::sqrt(2*M_PI*(NFiniteRadii-EffectiveRank)*gsl_matrix_get(&Covariance_N.matrix, 0, 0));
-	// if(i_m==0) {
-	//   const string FileName = "Extrapolation_N"+NumberToString<int>(N)+"_re_l2_m2.dat";
-	//   FILE* ofp = fopen(FileName.c_str(), "a");
-	//   fprintf(ofp, "%g ", FiniteRadiusWaveforms[0].T(i_t));
-	//   for(int i_c=0; i_c<N+1; ++i_c) {
-	//     fprintf(ofp, "%g %g ", gsl_vector_get(&FitCoefficients_N.vector, i_c), std::sqrt(gsl_matrix_get(&Covariance_N.matrix, i_c, i_c)));
-	//   }
-	//   fprintf(ofp, "\n");
-	//   fclose(ofp);
-	// }
-	gsl_multifit_linear_usvd(&OneOverRadii_N.matrix, Im, SVDTol, &EffectiveRank, &FitCoefficients_N.vector, &Covariance_N.matrix, &ChiSquared, Workspace);
-	const double im = gsl_vector_get(&FitCoefficients_N.vector, 0);
-	const double im_err = std::sqrt(2*M_PI*(NFiniteRadii-EffectiveRank)*gsl_matrix_get(&Covariance_N.matrix, 0, 0));
-	gsl_multifit_linear_free(Workspace);
-	ExtrapolatedWaveforms[i_N].SetData(i_m, i_t, std::complex<double>(re,im));
-	ExtrapolatedWaveforms[i_N+NExtrapolations].SetData(i_m, i_t, std::complex<double>(re_err,im_err));
+        // Do the extrapolations
+        gsl_multifit_linear_workspace* Workspace = gsl_multifit_linear_alloc(NFiniteRadii, N+1);
+        gsl_matrix_view OneOverRadii_N = gsl_matrix_submatrix(OneOverRadii, 0, 0, NFiniteRadii, N+1);
+        gsl_matrix_view Covariance_N = gsl_matrix_submatrix(Covariance, 0, 0, N+1, N+1);
+        gsl_vector_view FitCoefficients_N = gsl_vector_subvector(FitCoefficients, 0, N+1);
+        gsl_multifit_linear_usvd(&OneOverRadii_N.matrix, Re, SVDTol, &EffectiveRank, &FitCoefficients_N.vector, &Covariance_N.matrix, &ChiSquared, Workspace);
+        const double re = gsl_vector_get(&FitCoefficients_N.vector, 0);
+        const double re_err = std::sqrt(2*M_PI*(NFiniteRadii-EffectiveRank)*gsl_matrix_get(&Covariance_N.matrix, 0, 0));
+        // if(i_m==0) {
+        //   const string FileName = "Extrapolation_N"+NumberToString<int>(N)+"_re_l2_m2.dat";
+        //   FILE* ofp = fopen(FileName.c_str(), "a");
+        //   fprintf(ofp, "%g ", FiniteRadiusWaveforms[0].T(i_t));
+        //   for(int i_c=0; i_c<N+1; ++i_c) {
+        //     fprintf(ofp, "%g %g ", gsl_vector_get(&FitCoefficients_N.vector, i_c), std::sqrt(gsl_matrix_get(&Covariance_N.matrix, i_c, i_c)));
+        //   }
+        //   fprintf(ofp, "\n");
+        //   fclose(ofp);
+        // }
+        gsl_multifit_linear_usvd(&OneOverRadii_N.matrix, Im, SVDTol, &EffectiveRank, &FitCoefficients_N.vector, &Covariance_N.matrix, &ChiSquared, Workspace);
+        const double im = gsl_vector_get(&FitCoefficients_N.vector, 0);
+        const double im_err = std::sqrt(2*M_PI*(NFiniteRadii-EffectiveRank)*gsl_matrix_get(&Covariance_N.matrix, 0, 0));
+        gsl_multifit_linear_free(Workspace);
+        ExtrapolatedWaveforms[i_N].SetData(i_m, i_t, std::complex<double>(re,im));
+        ExtrapolatedWaveforms[i_N+NExtrapolations].SetData(i_m, i_t, std::complex<double>(re_err,im_err));
 
       } // Loop over extrapolation orders
 
