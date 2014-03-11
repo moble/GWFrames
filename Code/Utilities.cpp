@@ -562,7 +562,7 @@ std::vector<double> GWFrames::CumulativeVectorIntegral(const std::vector<std::ve
     throw(GWFrames_VectorSizeMismatch);
   }
   if(fdot.size()==0) {
-    vector<double>(0);
+    return vector<double>(0);
   }
   const unsigned int Size1=fdot.size();
   const unsigned int Size2=fdot[0].size();
