@@ -2278,7 +2278,7 @@ GWFrames::Waveform GWFrames::Waveform::Hybridize(const GWFrames::Waveform& B, co
   ///
   /// This function simply takes two Waveforms and blends them
   /// together.  In particular, it does not align the Waveforms; that
-  /// is assumed to have been done already.  The transition function is a smooth
+  /// is assumed to have been done already.  The transition function is smooth.
   ///
   /// Note that this function does NOT operate in place; a new
   /// Waveform object is constructed and returned.
