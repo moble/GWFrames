@@ -29,10 +29,11 @@ SphericalFunctions :
 # the following is, unfortunately, necessary for him.  This makes him
 # happy.  It is probably not necessary for most users, however.
 MikeHappy :
-	cd SphericalFunctions/Quaternions && $(VIRTUAL_ENV)/bin/python setup.py install --prefix=$(VIRTUAL_ENV)
-	cd SphericalFunctions && $(VIRTUAL_ENV)/bin/python setup.py install --prefix=$(VIRTUAL_ENV)
 	build=build/config.mk $(MAKE) -C spinsfast && cp spinsfast/lib/spinsfast.so $(shell python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")
 	$(VIRTUAL_ENV)/bin/python setup.py install --prefix=$(VIRTUAL_ENV)
+
+#	cd SphericalFunctions/Quaternions && $(VIRTUAL_ENV)/bin/python setup.py install --prefix=$(VIRTUAL_ENV)
+#	cd SphericalFunctions && $(VIRTUAL_ENV)/bin/python setup.py install --prefix=$(VIRTUAL_ENV)
 
 
 

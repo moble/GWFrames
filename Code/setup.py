@@ -49,7 +49,11 @@ from os import devnull, environ
 
 # Add directories for numpy and other inclusions
 from numpy import get_include
-IncDirs = ['spinsfast/include', 'SphericalFunctions', 'SphericalFunctions/Quaternions', get_include()]
+IncDirs = ['spinsfast/include',
+           'SphericalFunctions',
+           'SphericalFunctions/Quaternions',
+           'SpacetimeAlgebra',
+           get_include()]
 LibDirs = ['spinsfast/lib']
 
 ## See if GSL_HOME is set; if so, use it
@@ -124,6 +128,7 @@ setup(name="GWFrames",
                                 'SphericalFunctions/Combinatorics.cpp',
                                 'SphericalFunctions/WignerDMatrices.cpp',
                                 'SphericalFunctions/SWSHs.cpp',
+                                'SpacetimeAlgebra/SpacetimeAlgebra.cpp',
                                 'Utilities.cpp',
                                 'Waveforms.cpp',
                                 'PNWaveforms.cpp',
@@ -136,6 +141,7 @@ setup(name="GWFrames",
                              'SphericalFunctions/Combinatorics.hpp',
                              'SphericalFunctions/WignerDMatrices.hpp',
                              'SphericalFunctions/SWSHs.hpp',
+                             'SpacetimeAlgebra/SpacetimeAlgebra.hpp',
                              'Utilities.hpp',
                              'Waveforms.hpp',
                              'PNWaveforms.hpp',
@@ -150,7 +156,7 @@ setup(name="GWFrames",
                   swig_opts=swig_opts, #['-globals', 'constants', '-c++', '-builtin', '-outdir', 'SWIG/'],# '-debug-tmsearch', '-debug-tmused'],
                   extra_link_args=['-fPIC'],
                   # extra_link_args=['-lgomp', '-fPIC', '-Wl,-undefined,error'], # `-undefined,error` tells the linker to fail on undefined symbols
-                  extra_compile_args=['-Wno-deprecated'] #'-fopenmp',
+                  extra_compile_args=['-Wno-deprecated', '-Wno-null-conversion', '-Wno-unused-variable'] #'-fopenmp',
                   # extra_compile_args=['-ffast-math'] # DON'T USE fast-math!!!  It makes it impossible to detect NANs
                   )
         ],

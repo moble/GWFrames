@@ -3470,8 +3470,6 @@ GWFrames::Waveform& GWFrames::Waveform::BoostPsi4(const std::vector<std::vector<
         const int Filler=0; // Useless constant for Gaigen code
         const SpacetimeAlgebra::vector lRotated(LorentzRotor*tPz*SpacetimeAlgebra::reverse(LorentzRotor), Filler);
         const SpacetimeAlgebra::vector nRotated(LorentzRotor*tMz*SpacetimeAlgebra::reverse(LorentzRotor), Filler);
-        // const SpacetimeAlgebra::vector mReRotated(LorentzRotor*xPiyRe*SpacetimeAlgebra::reverse(LorentzRotor), Filler);
-        // const SpacetimeAlgebra::vector mImRotated(LorentzRotor*xPiyIm*SpacetimeAlgebra::reverse(LorentzRotor), Filler);
         const SpacetimeAlgebra::vector mBarReRotated(LorentzRotor*xMiyRe*SpacetimeAlgebra::reverse(LorentzRotor), Filler);
         const SpacetimeAlgebra::vector mBarImRotated(LorentzRotor*xMiyIm*SpacetimeAlgebra::reverse(LorentzRotor), Filler);
 

@@ -26901,14 +26901,15 @@ SWIGINTERN PyObject *_wrap__Waveform_GetAlignmentOfDecompositionFrameToModes__SW
   int res1 = 0 ;
   double val2 ;
   int ecode2 = 0 ;
-  void *argp3 = 0 ;
-  int res3 = 0 ;
+  Quaternions::Quaternion quat_temp3 ;
   std::vector< int > temp4 ;
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
-  PyObject * obj3 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:_Waveform_GetAlignmentOfDecompositionFrameToModes",&obj1,&obj2,&obj3)) SWIG_fail;
+  {
+    arg3 = &quat_temp3;
+  }
+  if (!PyArg_ParseTuple(args,(char *)"OO:_Waveform_GetAlignmentOfDecompositionFrameToModes",&obj1,&obj2)) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_GetAlignmentOfDecompositionFrameToModes" "', argument " "1"" of type '" "GWFrames::Waveform const *""'"); 
@@ -26919,17 +26920,9 @@ SWIGINTERN PyObject *_wrap__Waveform_GetAlignmentOfDecompositionFrameToModes__SW
     SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "_Waveform_GetAlignmentOfDecompositionFrameToModes" "', argument " "2"" of type '" "double""'");
   } 
   arg2 = static_cast< double >(val2);
-  res3 = SWIG_ConvertPtr(obj2, &argp3, SWIGTYPE_p_Quaternions__Quaternion,  0 );
-  if (!SWIG_IsOK(res3)) {
-    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "_Waveform_GetAlignmentOfDecompositionFrameToModes" "', argument " "3"" of type '" "Quaternions::Quaternion &""'"); 
-  }
-  if (!argp3) {
-    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "_Waveform_GetAlignmentOfDecompositionFrameToModes" "', argument " "3"" of type '" "Quaternions::Quaternion &""'"); 
-  }
-  arg3 = reinterpret_cast< Quaternions::Quaternion * >(argp3);
   {
-    if(PyArray_Check(obj3)) {
-      PyArrayObject *xa = reinterpret_cast<PyArrayObject*>(obj3);
+    if(PyArray_Check(obj2)) {
+      PyArrayObject *xa = reinterpret_cast<PyArrayObject*>(obj2);
       if(PyArray_TYPE(xa) != NPY_INT) {
         SWIG_exception(SWIG_TypeError, "(1) numpy array of 'int' expected."	\
           " Make sure that the numpy array use dtype=intc.");
@@ -26944,12 +26937,12 @@ SWIGINTERN PyObject *_wrap__Waveform_GetAlignmentOfDecompositionFrameToModes__SW
         for (std::size_t i = 0; i < size; i++)
         temp4[i] = array[i*strides];
       }
-    } else if(PySequence_Check(obj3)) {
-      Py_ssize_t size = PySequence_Size(obj3);
+    } else if(PySequence_Check(obj2)) {
+      Py_ssize_t size = PySequence_Size(obj2);
       temp4.resize(size);
       PyObject* item;
       for(Py_ssize_t i=0; i<size; ++i) {
-        item = PySequence_GetItem(obj3, i);
+        item = PySequence_GetItem(obj2, i);
         if(!SWIG_IsOK(SWIG_AsVal_int (item, &temp4[i]))) {
           Py_DECREF(item);
           SWIG_exception(SWIG_TypeError, "expected items of sequence to be of type "\
@@ -26979,6 +26972,15 @@ SWIGINTERN PyObject *_wrap__Waveform_GetAlignmentOfDecompositionFrameToModes__SW
     }
   }
   resultobj = SWIG_Py_Void();
+  {
+    PyObject* qobj = SWIG_NewPointerObj((new Quaternions::Quaternion(*arg3)),
+      SWIGTYPE_p_Quaternions__Quaternion, SWIG_POINTER_OWN);
+    if(!qobj) {
+      SWIG_fail;
+    }
+    Py_INCREF(qobj);
+    resultobj = SWIG_Python_AppendOutput(resultobj, qobj);
+  }
   return resultobj;
 fail:
   return NULL;
@@ -26994,12 +26996,13 @@ SWIGINTERN PyObject *_wrap__Waveform_GetAlignmentOfDecompositionFrameToModes__SW
   int res1 = 0 ;
   double val2 ;
   int ecode2 = 0 ;
-  void *argp3 = 0 ;
-  int res3 = 0 ;
+  Quaternions::Quaternion quat_temp3 ;
   PyObject * obj1 = 0 ;
-  PyObject * obj2 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:_Waveform_GetAlignmentOfDecompositionFrameToModes",&obj1,&obj2)) SWIG_fail;
+  {
+    arg3 = &quat_temp3;
+  }
+  if (!PyArg_ParseTuple(args,(char *)"O:_Waveform_GetAlignmentOfDecompositionFrameToModes",&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_GetAlignmentOfDecompositionFrameToModes" "', argument " "1"" of type '" "GWFrames::Waveform const *""'"); 
@@ -27010,14 +27013,6 @@ SWIGINTERN PyObject *_wrap__Waveform_GetAlignmentOfDecompositionFrameToModes__SW
     SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "_Waveform_GetAlignmentOfDecompositionFrameToModes" "', argument " "2"" of type '" "double""'");
   } 
   arg2 = static_cast< double >(val2);
-  res3 = SWIG_ConvertPtr(obj2, &argp3, SWIGTYPE_p_Quaternions__Quaternion,  0 );
-  if (!SWIG_IsOK(res3)) {
-    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "_Waveform_GetAlignmentOfDecompositionFrameToModes" "', argument " "3"" of type '" "Quaternions::Quaternion &""'"); 
-  }
-  if (!argp3) {
-    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "_Waveform_GetAlignmentOfDecompositionFrameToModes" "', argument " "3"" of type '" "Quaternions::Quaternion &""'"); 
-  }
-  arg3 = reinterpret_cast< Quaternions::Quaternion * >(argp3);
   {
     try {
       ((GWFrames::Waveform const *)arg1)->GetAlignmentOfDecompositionFrameToModes(arg2,*arg3);;
@@ -27034,6 +27029,15 @@ SWIGINTERN PyObject *_wrap__Waveform_GetAlignmentOfDecompositionFrameToModes__SW
     }
   }
   resultobj = SWIG_Py_Void();
+  {
+    PyObject* qobj = SWIG_NewPointerObj((new Quaternions::Quaternion(*arg3)),
+      SWIGTYPE_p_Quaternions__Quaternion, SWIG_POINTER_OWN);
+    if(!qobj) {
+      SWIG_fail;
+    }
+    Py_INCREF(qobj);
+    resultobj = SWIG_Python_AppendOutput(resultobj, qobj);
+  }
   return resultobj;
 fail:
   return NULL;
@@ -27042,16 +27046,31 @@ fail:
 
 SWIGINTERN PyObject *_wrap__Waveform_GetAlignmentOfDecompositionFrameToModes(PyObject *self, PyObject *args) {
   int argc;
-  PyObject *argv[5];
+  PyObject *argv[4];
   int ii;
   
   if (!PyTuple_Check(args)) SWIG_fail;
   argc = args ? (int)PyObject_Length(args) : 0;
   argv[0] = self;
-  for (ii = 0; (ii < 3) && (ii < argc); ii++) {
+  for (ii = 0; (ii < 2) && (ii < argc); ii++) {
     argv[ii + 1] = PyTuple_GET_ITEM(args,ii);
   }
   argc++;
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__Waveform, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_double(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap__Waveform_GetAlignmentOfDecompositionFrameToModes__SWIG_1(self, args);
+      }
+    }
+  }
   if (argc == 3) {
     int _v;
     void *vptr = 0;
@@ -27063,47 +27082,22 @@ SWIGINTERN PyObject *_wrap__Waveform_GetAlignmentOfDecompositionFrameToModes(PyO
         _v = SWIG_CheckState(res);
       }
       if (_v) {
-        void *vptr = 0;
-        int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_Quaternions__Quaternion, 0);
-        _v = SWIG_CheckState(res);
-        if (_v) {
-          return _wrap__Waveform_GetAlignmentOfDecompositionFrameToModes__SWIG_1(self, args);
-        }
-      }
-    }
-  }
-  if (argc == 4) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__Waveform, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      {
-        int res = SWIG_AsVal_double(argv[1], NULL);
-        _v = SWIG_CheckState(res);
-      }
-      if (_v) {
-        void *vptr = 0;
-        int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_Quaternions__Quaternion, 0);
-        _v = SWIG_CheckState(res);
-        if (_v) {
-          {
-            _v = false;
-            if(PyArray_Check(argv[3])) {
-              _v = (PyArray_NDIM(reinterpret_cast<const PyArrayObject*>(argv[3]))==1);
-            } else if(PyList_Check(argv[3])) {
-              if(PyList_Size(argv[3])==0) {
-                _v = true;
-              } else {
-                PyObject* item = PySequence_GetItem(argv[3], 0);
-                int* temp=0;
-                _v = SWIG_IsOK(SWIG_AsVal_int (item, temp));
-              }
+        {
+          _v = false;
+          if(PyArray_Check(argv[2])) {
+            _v = (PyArray_NDIM(reinterpret_cast<const PyArrayObject*>(argv[2]))==1);
+          } else if(PyList_Check(argv[2])) {
+            if(PyList_Size(argv[2])==0) {
+              _v = true;
+            } else {
+              PyObject* item = PySequence_GetItem(argv[2], 0);
+              int* temp=0;
+              _v = SWIG_IsOK(SWIG_AsVal_int (item, temp));
             }
           }
-          if (_v) {
-            return _wrap__Waveform_GetAlignmentOfDecompositionFrameToModes__SWIG_0(self, args);
-          }
+        }
+        if (_v) {
+          return _wrap__Waveform_GetAlignmentOfDecompositionFrameToModes__SWIG_0(self, args);
         }
       }
     }
@@ -27325,13 +27319,14 @@ SWIGINTERN PyObject *_wrap__Waveform_GetAlignmentOfFrame(PyObject *self, PyObjec
   int res2 = 0 ;
   double val3 ;
   int ecode3 = 0 ;
-  void *argp4 = 0 ;
-  int res4 = 0 ;
+  Quaternions::Quaternion quat_temp4 ;
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
-  PyObject * obj3 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:_Waveform_GetAlignmentOfFrame",&obj1,&obj2,&obj3)) SWIG_fail;
+  {
+    arg4 = &quat_temp4;
+  }
+  if (!PyArg_ParseTuple(args,(char *)"OO:_Waveform_GetAlignmentOfFrame",&obj1,&obj2)) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_GetAlignmentOfFrame" "', argument " "1"" of type '" "GWFrames::Waveform const *""'"); 
@@ -27350,14 +27345,6 @@ SWIGINTERN PyObject *_wrap__Waveform_GetAlignmentOfFrame(PyObject *self, PyObjec
     SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "_Waveform_GetAlignmentOfFrame" "', argument " "3"" of type '" "double""'");
   } 
   arg3 = static_cast< double >(val3);
-  res4 = SWIG_ConvertPtr(obj3, &argp4, SWIGTYPE_p_Quaternions__Quaternion,  0 );
-  if (!SWIG_IsOK(res4)) {
-    SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "_Waveform_GetAlignmentOfFrame" "', argument " "4"" of type '" "Quaternions::Quaternion &""'"); 
-  }
-  if (!argp4) {
-    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "_Waveform_GetAlignmentOfFrame" "', argument " "4"" of type '" "Quaternions::Quaternion &""'"); 
-  }
-  arg4 = reinterpret_cast< Quaternions::Quaternion * >(argp4);
   {
     try {
       ((GWFrames::Waveform const *)arg1)->GetAlignmentOfFrame((GWFrames::Waveform const &)*arg2,arg3,*arg4);;
@@ -27374,6 +27361,15 @@ SWIGINTERN PyObject *_wrap__Waveform_GetAlignmentOfFrame(PyObject *self, PyObjec
     }
   }
   resultobj = SWIG_Py_Void();
+  {
+    PyObject* qobj = SWIG_NewPointerObj((new Quaternions::Quaternion(*arg4)),
+      SWIGTYPE_p_Quaternions__Quaternion, SWIG_POINTER_OWN);
+    if(!qobj) {
+      SWIG_fail;
+    }
+    Py_INCREF(qobj);
+    resultobj = SWIG_Python_AppendOutput(resultobj, qobj);
+  }
   return resultobj;
 fail:
   return NULL;
@@ -27454,15 +27450,16 @@ SWIGINTERN PyObject *_wrap__Waveform_GetAlignmentOfTimeAndFrame(PyObject *self, 
   int ecode4 = 0 ;
   double temp5 ;
   int res5 = SWIG_TMPOBJ ;
-  void *argp6 = 0 ;
-  int res6 = 0 ;
+  Quaternions::Quaternion quat_temp6 ;
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
   PyObject * obj3 = 0 ;
-  PyObject * obj4 = 0 ;
   
   arg5 = &temp5;
-  if (!PyArg_ParseTuple(args,(char *)"OOOO:_Waveform_GetAlignmentOfTimeAndFrame",&obj1,&obj2,&obj3,&obj4)) SWIG_fail;
+  {
+    arg6 = &quat_temp6;
+  }
+  if (!PyArg_ParseTuple(args,(char *)"OOO:_Waveform_GetAlignmentOfTimeAndFrame",&obj1,&obj2,&obj3)) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_GetAlignmentOfTimeAndFrame" "', argument " "1"" of type '" "GWFrames::Waveform const *""'"); 
@@ -27486,14 +27483,6 @@ SWIGINTERN PyObject *_wrap__Waveform_GetAlignmentOfTimeAndFrame(PyObject *self, 
     SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "_Waveform_GetAlignmentOfTimeAndFrame" "', argument " "4"" of type '" "double""'");
   } 
   arg4 = static_cast< double >(val4);
-  res6 = SWIG_ConvertPtr(obj4, &argp6, SWIGTYPE_p_Quaternions__Quaternion,  0 );
-  if (!SWIG_IsOK(res6)) {
-    SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "_Waveform_GetAlignmentOfTimeAndFrame" "', argument " "6"" of type '" "Quaternions::Quaternion &""'"); 
-  }
-  if (!argp6) {
-    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "_Waveform_GetAlignmentOfTimeAndFrame" "', argument " "6"" of type '" "Quaternions::Quaternion &""'"); 
-  }
-  arg6 = reinterpret_cast< Quaternions::Quaternion * >(argp6);
   {
     try {
       ((GWFrames::Waveform const *)arg1)->GetAlignmentOfTimeAndFrame((GWFrames::Waveform const &)*arg2,arg3,arg4,*arg5,*arg6);;
@@ -27515,6 +27504,15 @@ SWIGINTERN PyObject *_wrap__Waveform_GetAlignmentOfTimeAndFrame(PyObject *self, 
   } else {
     int new_flags = SWIG_IsNewObj(res5) ? (SWIG_POINTER_OWN |  0 ) :  0 ;
     resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_NewPointerObj((void*)(arg5), SWIGTYPE_p_double, new_flags));
+  }
+  {
+    PyObject* qobj = SWIG_NewPointerObj((new Quaternions::Quaternion(*arg6)),
+      SWIGTYPE_p_Quaternions__Quaternion, SWIG_POINTER_OWN);
+    if(!qobj) {
+      SWIG_fail;
+    }
+    Py_INCREF(qobj);
+    resultobj = SWIG_Python_AppendOutput(resultobj, qobj);
   }
   return resultobj;
 fail:
@@ -28816,81 +28814,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap__Waveform_Boost__SWIG_0(PyObject *self, PyObject *args) {
-  PyObject *resultobj = 0;
-  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
-  std::vector< double,std::allocator< double > > *arg2 = 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  std::vector< double > temp2 ;
-  PyObject * obj1 = 0 ;
-  GWFrames::Waveform result;
-  
-  if (!PyArg_ParseTuple(args,(char *)"O:_Waveform_Boost",&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_Boost" "', argument " "1"" of type '" "GWFrames::Waveform const *""'"); 
-  }
-  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
-  {
-    if(PyArray_Check(obj1)) {
-      PyArrayObject *xa = reinterpret_cast<PyArrayObject*>(obj1);
-      if(PyArray_TYPE(xa) != NPY_DOUBLE) {
-        SWIG_exception(SWIG_TypeError, "(1) numpy array of 'double' expected."	\
-          " Make sure that the numpy array use dtype=double.");
-      }
-      const std::size_t size = PyArray_DIM(xa, 0);
-      temp2.resize(size);
-      double* array = static_cast<double*>(PyArray_DATA(xa));
-      if(PyArray_ISCONTIGUOUS(xa)) {
-        std::copy(array, array + size, temp2.begin());
-      } else {
-        const npy_intp strides = PyArray_STRIDE(xa, 0)/sizeof(double);
-        for (std::size_t i = 0; i < size; i++)
-        temp2[i] = array[i*strides];
-      }
-    } else if(PySequence_Check(obj1)) {
-      Py_ssize_t size = PySequence_Size(obj1);
-      temp2.resize(size);
-      PyObject* item;
-      for(Py_ssize_t i=0; i<size; ++i) {
-        item = PySequence_GetItem(obj1, i);
-        if(!SWIG_IsOK(SWIG_AsVal_double (item, &temp2[i]))) {
-          Py_DECREF(item);
-          SWIG_exception(SWIG_TypeError, "expected items of sequence to be of type "\
-            "\"double\" in argument 2");
-        }
-        Py_DECREF(item);
-      }
-    } else {
-      SWIG_exception(SWIG_TypeError, "(2) numpy array of 'double' expected. " \
-        "Make sure that the numpy array use dtype=double.");
-    }
-    arg2 = &temp2;
-  }
-  {
-    try {
-      result = ((GWFrames::Waveform const *)arg1)->Boost((std::vector< double,std::allocator< double > > const &)*arg2);;
-    } catch(int i) {
-      std::stringstream s;
-      if(i>-1 && i<GWFramesNumberOfErrors) {
-        s << "GWFrames exception: " << GWFramesErrors[i]; 
-      }
-      else  {
-        s << "GWFrames: Unknown exception number {" << i << "}"; 
-      }
-      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
-      return NULL;
-    }
-  }
-  resultobj = SWIG_NewPointerObj((new GWFrames::Waveform(static_cast< const GWFrames::Waveform& >(result))), SWIGTYPE_p_GWFrames__Waveform, SWIG_POINTER_OWN |  0 );
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap__Waveform_Boost__SWIG_1(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__Waveform_BoostPsi4(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
   std::vector< std::vector< double,std::allocator< double > >,std::allocator< std::vector< double,std::allocator< double > > > > *arg2 = 0 ;
@@ -28900,10 +28824,10 @@ SWIGINTERN PyObject *_wrap__Waveform_Boost__SWIG_1(PyObject *self, PyObject *arg
   PyObject * obj1 = 0 ;
   GWFrames::Waveform *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:_Waveform_Boost",&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:_Waveform_BoostPsi4",&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_Boost" "', argument " "1"" of type '" "GWFrames::Waveform *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_BoostPsi4" "', argument " "1"" of type '" "GWFrames::Waveform *""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
   {
@@ -28953,7 +28877,7 @@ SWIGINTERN PyObject *_wrap__Waveform_Boost__SWIG_1(PyObject *self, PyObject *arg
   }
   {
     try {
-      result = (GWFrames::Waveform *) &(arg1)->Boost((std::vector< std::vector< double,std::allocator< double > >,std::allocator< std::vector< double,std::allocator< double > > > > const &)*arg2);;
+      result = (GWFrames::Waveform *) &(arg1)->BoostPsi4((std::vector< std::vector< double,std::allocator< double > >,std::allocator< std::vector< double,std::allocator< double > > > > const &)*arg2);;
     } catch(int i) {
       std::stringstream s;
       if(i>-1 && i<GWFramesNumberOfErrors) {
@@ -28970,83 +28894,6 @@ SWIGINTERN PyObject *_wrap__Waveform_Boost__SWIG_1(PyObject *self, PyObject *arg
   return resultobj;
 fail:
   return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap__Waveform_Boost(PyObject *self, PyObject *args) {
-  int argc;
-  PyObject *argv[3];
-  int ii;
-  
-  if (!PyTuple_Check(args)) SWIG_fail;
-  argc = args ? (int)PyObject_Length(args) : 0;
-  argv[0] = self;
-  for (ii = 0; (ii < 1) && (ii < argc); ii++) {
-    argv[ii + 1] = PyTuple_GET_ITEM(args,ii);
-  }
-  argc++;
-  if (argc == 2) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__Waveform, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      {
-        _v = false;
-        if(PyArray_Check(argv[1])) {
-          _v = (PyArray_NDIM(reinterpret_cast<const PyArrayObject*>(argv[1]))==1);
-        } else if(PyList_Check(argv[1])) {
-          if(PyList_Size(argv[1])==0) {
-            _v = true;
-          } else {
-            PyObject* item = PySequence_GetItem(argv[1], 0);
-            double* temp=0;
-            _v = SWIG_IsOK(SWIG_AsVal_double (item, temp));
-          }
-        }
-      }
-      if (_v) {
-        return _wrap__Waveform_Boost__SWIG_0(self, args);
-      }
-    }
-  }
-  if (argc == 2) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__Waveform, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      {
-        _v = false;
-        if(PyArray_Check(argv[1])) {
-          _v = (PyArray_NDIM(reinterpret_cast<const PyArrayObject*>(argv[1]))==2);
-        } else if(PyList_Check(argv[1])) {
-          if(PyList_Size(argv[1])==0) {
-            _v = true;
-          } else {
-            PyObject* item0 = PySequence_GetItem(argv[1], 0);
-            if(PyList_Size(item0)==0) {
-              _v = true;
-            } else {
-              PyObject* item1 = PySequence_GetItem(item0, 0);
-              double* temp=0;
-              _v = SWIG_IsOK(SWIG_AsVal_double (item1, temp));
-            }
-          }
-        }
-      }
-      if (_v) {
-        return _wrap__Waveform_Boost__SWIG_1(self, args);
-      }
-    }
-  }
-  
-fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function '_Waveform_Boost'.\n"
-    "  Possible C/C++ prototypes are:\n"
-    "    GWFrames::Waveform::Boost(std::vector< double,std::allocator< double > > const &) const\n"
-    "    GWFrames::Waveform::Boost(std::vector< std::vector< double,std::allocator< double > >,std::allocator< std::vector< double,std::allocator< double > > > > const &)\n");
-  return 0;
 }
 
 
@@ -41354,48 +41201,7 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__Waveform_methods[] = {
 		"  \n"
 		"\n"
 		"" },
-  { "Boost", (PyCFunction) _wrap__Waveform_Boost, METH_VARARGS, (char*) "\n"
-		"Apply a boost to a boost-weighted function.\n"
-		"===========================================\n"
-		"  Parameters\n"
-		"  ----------\n"
-		"    const vector<double>& v\n"
-		"  \n"
-		"  Returns\n"
-		"  -------\n"
-		"    Waveform\n"
-		"  \n"
-		"  Description\n"
-		"  -----------\n"
-		"    This function does three things. First, it evaluates the Waveform on what\n"
-		"    will become an equi-angular grid after transformation by the boost. Second,\n"
-		"    it multiplies each of those points by the appropriate conformal factor\n"
-		"    $K^b(\\vartheta, \\varphi)$, where $b$ is the boost weight stored with the\n"
-		"    Waveform. Finally, it transforms back to Fourier space using that new\n"
-		"    equi-angular grid.\n"
-		"  \n"
-		"\n"
-		"Apply a boost to a boost- and spin-weighted function.\n"
-		"=====================================================\n"
-		"  Parameters\n"
-		"  ----------\n"
-		"    const vector<vector<double>>& v\n"
-		"  \n"
-		"  Returns\n"
-		"  -------\n"
-		"    Waveform&\n"
-		"  \n"
-		"  Description\n"
-		"  -----------\n"
-		"    This function does three things. First, it evaluates the Waveform on what\n"
-		"    will become an equi-angular grid after transformation by the boost. Second,\n"
-		"    it multiplies each of those points by the appropriate conformal factor\n"
-		"    $K^b(\\vartheta, \\varphi)$, where $b$ is the boost weight stored with the\n"
-		"    Waveform. Finally, it transforms back to Fourier space using that new\n"
-		"    equi-angular grid.\n"
-		"  \n"
-		"\n"
-		"" },
+  { "BoostPsi4", (PyCFunction) _wrap__Waveform_BoostPsi4, METH_VARARGS, (char*) "" },
   { "Output", (PyCFunction) _wrap__Waveform_Output, METH_VARARGS, (char*) "\n"
 		"Output Waveform object to data file.\n"
 		"====================================\n"
