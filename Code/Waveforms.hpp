@@ -194,8 +194,8 @@ namespace GWFrames {
     Waveform IntegrateGHPEdth() const;
     Waveform IntegrateGHPEdthBar() const;
     Waveform ApplySupertranslation(std::vector<std::complex<double> >& gamma) const;
-    Waveform Boost(const std::vector<double>& v) const;
-    Waveform& Boost(const std::vector<std::vector<double> >& v);
+    // Waveform Boost(const std::vector<double>& v) const;
+    Waveform& BoostPsi4(const std::vector<std::vector<double> >& v);
 
     // Output to data file
     const Waveform& Output(const std::string& FileName, const unsigned int precision=14) const;
