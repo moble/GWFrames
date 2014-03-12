@@ -557,12 +557,16 @@ std::vector<Quaternion> GWFrames::UnflipRotors(const std::vector<Quaternion>& R,
 }
 
 /// Difference between frame rotors
-std::vector<Quaternion> GWFrames::RDelta(const std::vector<Quaternion>& R1, const std::vector<Quaternion>& R2, const unsigned int IndexOfFiducialTime) {
+std::vector<Quaternion> GWFrames::RDelta(const std::vector<Quaternion>& R1, const std::vector<Quaternion>& R2, const int IndexOfFiducialTime) {
   ///
   /// \param R1 Vector of rotors
   /// \param R2 Vector of rotors
   /// \param IndexOfFiducialTime Integer index of time at which
-  ///        difference is set to zero [default: 0]
+  ///        difference is set to zero [default: -1]
+  ///
+  /// If the optional `IndexOfFiducialTime` is given, the returned
+  /// quantity is `R1*Offset*R2.inverse()`, where `Offset` is
+  /// `R1[I].inverse()*R2[I]`, thus ensuring that `RDelta[I]`=1.
   if(R1.size() != R2.size()) {
     cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": R1.size()=" << R1.size() << " != R2.size()=" << R2.size() << endl;
     throw(GWFrames_VectorSizeMismatch);
@@ -576,6 +580,12 @@ std::vector<Quaternion> GWFrames::RDelta(const std::vector<Quaternion>& R1, cons
   }
   const unsigned int Size=R1.size();
   vector<Quaternion> Rd(Size);
+  if(IndexOfFiducialTime<0) {
+    for(unsigned int i=0; i<Size; ++i) {
+      Rd[i] = R1[i] * R2[i].inverse();
+    }
+    return Rd;
+  }
   const Quaternion Offset = R1[IndexOfFiducialTime].inverse() * R2[IndexOfFiducialTime];
   for(unsigned int i=0; i<Size; ++i) {
     Rd[i] = R1[i] * Offset * R2[i].inverse();
