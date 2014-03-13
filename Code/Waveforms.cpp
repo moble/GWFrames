@@ -698,6 +698,19 @@ GWFrames::Waveform& GWFrames::Waveform::RotateDecompositionBasis(const std::vect
   /// left to the calling function.
   ///
 
+  if(R_frame.size()==0) {
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+              << "\nWarning: You have passed an empty set of rotors to `RotateDecompositionBasis`.  I will"
+              << "\n         do nothing, and simply return the Waveform as is.  But this is most unusual!"
+              << std::endl;
+    return *this;
+  }
+  if(R_frame.size()!=NTimes()) {
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+              << "\nError: (R_frame.size()=" << R_frame.size() << ") != (NTimes()=" << NTimes() << ")" << std::endl;
+    throw(GWFrames_VectorSizeMismatch);
+  }
+
   history << "this->RotateDecompositionBasis(R_frame); // R_frame=["
           << std::setprecision(16) << R_frame[0];
   if(R_frame.size()>1) {
@@ -1544,6 +1557,24 @@ GWFrames::Waveform& GWFrames::Waveform::TransformToInertialFrame() {
   /// stationary, inertial frame.  This is the usual frame of scri^+,
   /// and is the frame in which GW observations should be made.
   ///
+
+  if(frameType == GWFrames::Inertial) {
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+              << "\nWarning: Waveform is already in the " << GWFrames::WaveformFrameNames[GWFrames::Inertial] << " frame;"
+              << " this function will have no effect."
+              << "\n         If it's not really in that frame, tell the Waveform first.\n"
+              << std::endl;
+    return *this;
+  }
+
+  if(frame.size() != NTimes()) {
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+              << "\nError: (frame.size()=" << frame.size() << ") != (NTimes()=" << NTimes() << ")."
+              << "         I don't know what to do with this data, or what the inertial frame is."
+              << std::endl;
+    throw(GWFrames_VectorSizeMismatch);
+  }
+
   history << "this->TransformToInertialFrame();\n#";
   this->frameType = GWFrames::Inertial; // Must come first
   this->RotateDecompositionBasis(Quaternions::conjugate(frame));
@@ -1559,7 +1590,7 @@ GWFrames::Waveform& GWFrames::Waveform::TransformUncertaintiesToCorotatingFrame(
 
   if(frameType != GWFrames::Inertial) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-              << "\nWarning: Asking a Waveform in the " << GWFrames::WaveformFrameNames[frameType] << " frame  into the corotating frame."
+              << "\nWarning: Asking to transform a Waveform in the " << GWFrames::WaveformFrameNames[frameType] << " frame into the corotating frame."
               << "\n         You have to think very carefully about whether or not this is what you really want.\n"
               << "\n         This should probably only be applied to Waveforms in the " << GWFrames::WaveformFrameNames[GWFrames::Inertial] << " frame.\n"
               << std::endl;
@@ -3522,7 +3553,7 @@ GWFrames::Waveform& GWFrames::Waveform::BoostPsi4(const std::vector<std::vector<
     }
 
     const double beta = std::sqrt(v_i[0]*v_i[0] + v_i[1]*v_i[1] + v_i[2]*v_i[2]);
-    if(beta<1.e-9) { continue; } // TODO: This may need to be adjusted, or other statements made smarter about using this value
+    if(beta<1.e-9) { continue; } // TODO: This may need to be adjusted, or other statements made smarter about using the value of gamma
     vector<double> vHat(3);
     vHat[0] = v_i[0]/beta;
     vHat[1] = v_i[1]/beta;
@@ -3637,32 +3668,16 @@ GWFrames::Waveform& GWFrames::Waveform::BoostPsi4(const std::vector<std::vector<
         // more quickly than we care to bother with.
         const complex<double> i_complex(0.,1.);
         const complex<double> nRotated_n = -SpacetimeAlgebra::sp(nRotated, l);
-        const complex<double> nRotated_m = SpacetimeAlgebra::sp(nRotated, mRe) - i_complex*SpacetimeAlgebra::sp(nRotated, mIm);
+        const complex<double> nRotated_m = SpacetimeAlgebra::sp(nRotated, mBarRe) + i_complex*SpacetimeAlgebra::sp(nRotated, mBarIm);
         const complex<double> nRotated_mBar = SpacetimeAlgebra::sp(nRotated, mRe) + i_complex*SpacetimeAlgebra::sp(nRotated, mIm);
         const complex<double> mBarRotated_n =
-          -SpacetimeAlgebra::sp(mBarReRotated, l) - i_complex*SpacetimeAlgebra::sp(mBarImRotated, l);
+          - ( SpacetimeAlgebra::sp(mBarReRotated, l) + i_complex*SpacetimeAlgebra::sp(mBarImRotated, l) );
         const complex<double> mBarRotated_m =
-          SpacetimeAlgebra::sp(mBarReRotated, mRe) + i_complex*SpacetimeAlgebra::sp(mBarImRotated, mRe)
-          - i_complex*SpacetimeAlgebra::sp(mBarReRotated, mIm) + SpacetimeAlgebra::sp(mBarImRotated, mIm);
+          SpacetimeAlgebra::sp(mBarReRotated, mBarRe) + i_complex*SpacetimeAlgebra::sp(mBarReRotated, mBarIm)
+          + i_complex * ( SpacetimeAlgebra::sp(mBarImRotated, mBarRe) + i_complex*SpacetimeAlgebra::sp(mBarImRotated, mBarIm) );
         const complex<double> mBarRotated_mBar =
-          SpacetimeAlgebra::sp(mBarReRotated, mRe) + i_complex*SpacetimeAlgebra::sp(mBarImRotated, mRe)
-          + i_complex*SpacetimeAlgebra::sp(mBarReRotated, mIm) - SpacetimeAlgebra::sp(mBarImRotated, mIm);
-
-        // std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ":\n\t"
-        //           << t[i_t] << " " << thetaRotated << " " << phiRotated << " " << theta << " " << phi << "\n\t"
-        //           << tPz.toString_e20() << "; " << tMz.toString_e20() << "\n\t"
-        //           << xPiyRe.toString_e20() << "; " << xPiyIm.toString_e20() << "\n\t"
-        //           << xMiyRe.toString_e20() << "; " << xMiyIm.toString_e20() << "\n\tRotors: "
-        //           << Rotor_theta.toString_e20() << "; " << Rotor_phi.toString_e20() << "\n\t"
-        //           << RotationRotor.toString_e20() << ";" << SpacetimeAlgebra::reverse(RotationRotor).toString_e20() << "\n\t"
-        //           // << l.toString_e20() << "; " << n.toString_e20() << "\n\t"
-        //           // << mRe.toString_e20() << "; " << mIm.toString_e20() << "\n\t"
-        //           // << mBarRe.toString_e20() << "; " << mBarIm.toString_e20() << "\n\t"
-        //           // << nRotated_n << " " <<  nRotated_m << " " << nRotated_mBar << "\n\t"
-        //           // << mBarRotated_n << " " <<  mBarRotated_m << " " << mBarRotated_mBar
-        //           << std::endl;
-        // throw(GWFrames_IndexOutOfBounds);
-        // // throw(GWFrames_NotYetImplemented);
+          SpacetimeAlgebra::sp(mBarReRotated, mRe) + i_complex*SpacetimeAlgebra::sp(mBarReRotated, mIm)
+          + i_complex * ( SpacetimeAlgebra::sp(mBarImRotated, mRe) + i_complex*SpacetimeAlgebra::sp(mBarImRotated, mIm) );
 
         // Evaluate the data for the boosted frame at this point
         Grid[i_g] =
@@ -3677,7 +3692,7 @@ GWFrames::Waveform& GWFrames::Waveform::BoostPsi4(const std::vector<std::vector<
 
         if(i_t%5000==0) {
           std::cerr << thetaRotated << "," << phiRotated << "; " << theta << "," << phi
-                    << "; " << Grid[i_g] << "," << Psi_4 << "," << std::conj(Psi_4) << std::endl;
+                    << "; \t" << Grid[i_g] << "," << Psi_4 << std::endl;
         }
       }
     }
@@ -3691,12 +3706,6 @@ GWFrames::Waveform& GWFrames::Waveform::BoostPsi4(const std::vector<std::vector<
     for(int i_mode=N_lm(std::abs(SpinWeight())-1), ell=std::abs(SpinWeight()); ell<=ellMax; ++ell) {
       for(int m=-ell; m<=ell; ++m, ++i_mode) {
         this->SetData(this->FindModeIndex(ell,m), i_t, Modes2[i_mode]);
-        // if(i_t%1000==0 && ell==2 && m==2) {
-        //   std::cerr << i_t << "/" << NTimes()
-        //             << "\tModes[" << i_mode << "] = " << Modes[i_mode]
-        //             << "\tModes2[" << i_mode << "] = " << Modes2[i_mode]
-        //             << "\tData((" << ell << ", " << m << "), " << i_t << ") = " << this->Data(this->FindModeIndex(ell,m),i_t) << std::endl;
-        // }
       }
     }
 
