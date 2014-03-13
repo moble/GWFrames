@@ -179,6 +179,8 @@ namespace GWFrames {
 
     // Pointwise operations and spin-weight operators
     std::vector<std::complex<double> > EvaluateAtPoint(const double vartheta, const double varphi) const;
+    std::complex<double> EvaluateAtPoint(const double vartheta, const double varphi, const unsigned int i_t) const;
+    std::complex<double> InterpolateToPoint(const double vartheta, const double varphi, const double t_i) const;
     template <typename Op> Waveform BinaryOp(const Waveform& b) const;
     Waveform operator+(const Waveform& B) const;
     Waveform operator-(const Waveform& B) const;
@@ -199,6 +201,7 @@ namespace GWFrames {
     Waveform ApplySupertranslation(std::vector<std::complex<double> >& gamma) const;
     // Waveform Boost(const std::vector<double>& v) const;
     Waveform& BoostPsi4(const std::vector<std::vector<double> >& v);
+    Waveform Translate(const std::vector<std::vector<double> >& x) const;
 
     // Output to data file
     const Waveform& Output(const std::string& FileName, const unsigned int precision=14) const;

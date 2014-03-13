@@ -28227,7 +28227,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap__Waveform_EvaluateAtPoint(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__Waveform_EvaluateAtPoint__SWIG_0(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
   double arg2 ;
@@ -28280,6 +28280,200 @@ SWIGINTERN PyObject *_wrap__Waveform_EvaluateAtPoint(PyObject *self, PyObject *a
     std_complex_double* data = static_cast<std_complex_double*>(PyArray_DATA(reinterpret_cast<PyArrayObject*>(resultobj)));
     std::copy((&result)->begin(), (&result)->end(), data);
   }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap__Waveform_EvaluateAtPoint__SWIG_1(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
+  double arg2 ;
+  double arg3 ;
+  unsigned int arg4 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  unsigned int val4 ;
+  int ecode4 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  std::complex< double > result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOO:_Waveform_EvaluateAtPoint",&obj1,&obj2,&obj3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_EvaluateAtPoint" "', argument " "1"" of type '" "GWFrames::Waveform const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "_Waveform_EvaluateAtPoint" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  ecode3 = SWIG_AsVal_double(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "_Waveform_EvaluateAtPoint" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  ecode4 = SWIG_AsVal_unsigned_SS_int(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "_Waveform_EvaluateAtPoint" "', argument " "4"" of type '" "unsigned int""'");
+  } 
+  arg4 = static_cast< unsigned int >(val4);
+  {
+    try {
+      result = ((GWFrames::Waveform const *)arg1)->EvaluateAtPoint(arg2,arg3,arg4);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_From_std_complex_Sl_double_Sg_(static_cast< std::complex<double> >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap__Waveform_EvaluateAtPoint(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[5];
+  int ii;
+  
+  if (!PyTuple_Check(args)) SWIG_fail;
+  argc = args ? (int)PyObject_Length(args) : 0;
+  argv[0] = self;
+  for (ii = 0; (ii < 3) && (ii < argc); ii++) {
+    argv[ii + 1] = PyTuple_GET_ITEM(args,ii);
+  }
+  argc++;
+  if (argc == 3) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__Waveform, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_double(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        {
+          int res = SWIG_AsVal_double(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          return _wrap__Waveform_EvaluateAtPoint__SWIG_0(self, args);
+        }
+      }
+    }
+  }
+  if (argc == 4) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__Waveform, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_double(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        {
+          int res = SWIG_AsVal_double(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          {
+            int res = SWIG_AsVal_unsigned_SS_int(argv[3], NULL);
+            _v = SWIG_CheckState(res);
+          }
+          if (_v) {
+            return _wrap__Waveform_EvaluateAtPoint__SWIG_1(self, args);
+          }
+        }
+      }
+    }
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function '_Waveform_EvaluateAtPoint'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    GWFrames::Waveform::EvaluateAtPoint(double const,double const) const\n"
+    "    GWFrames::Waveform::EvaluateAtPoint(double const,double const,unsigned int const) const\n");
+  return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap__Waveform_InterpolateToPoint(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
+  double arg2 ;
+  double arg3 ;
+  double arg4 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  double val4 ;
+  int ecode4 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  std::complex< double > result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOO:_Waveform_InterpolateToPoint",&obj1,&obj2,&obj3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_InterpolateToPoint" "', argument " "1"" of type '" "GWFrames::Waveform const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "_Waveform_InterpolateToPoint" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  ecode3 = SWIG_AsVal_double(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "_Waveform_InterpolateToPoint" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  ecode4 = SWIG_AsVal_double(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "_Waveform_InterpolateToPoint" "', argument " "4"" of type '" "double""'");
+  } 
+  arg4 = static_cast< double >(val4);
+  {
+    try {
+      result = ((GWFrames::Waveform const *)arg1)->InterpolateToPoint(arg2,arg3,arg4);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_From_std_complex_Sl_double_Sg_(static_cast< std::complex<double> >(result));
   return resultobj;
 fail:
   return NULL;
@@ -29068,6 +29262,89 @@ SWIGINTERN PyObject *_wrap__Waveform_BoostPsi4(PyObject *self, PyObject *args) {
     }
   }
   resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap__Waveform_Translate(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
+  std::vector< std::vector< double,std::allocator< double > >,std::allocator< std::vector< double,std::allocator< double > > > > *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::vector< std::vector< double > > temp2 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::Waveform result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:_Waveform_Translate",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_Translate" "', argument " "1"" of type '" "GWFrames::Waveform const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
+  {
+    if(PyArray_Check(obj1)) {
+      PyArrayObject *xa = reinterpret_cast<PyArrayObject*>(obj1);
+      if(PyArray_TYPE(xa) != NPY_DOUBLE) {
+        SWIG_exception(SWIG_TypeError, "(2) numpy array of 'double' expected."	\
+          " Make sure that the numpy array use dtype=double.");
+      }
+      const std::size_t size0 = PyArray_DIM(xa, 0);
+      const std::size_t size1 = PyArray_DIM(xa, 1);
+      temp2.resize(size0);
+      for(unsigned int i=0; i<size0; ++i) {
+        temp2[i].resize(size1);
+      }
+      double* array = static_cast<double*>(PyArray_DATA(xa));
+      const npy_intp strides0 = PyArray_STRIDE(xa, 0)/sizeof(double);
+      const npy_intp strides1 = PyArray_STRIDE(xa, 1)/sizeof(double);
+      for (std::size_t i = 0; i < size0; ++i) {
+        for (std::size_t j = 0; j< size1; ++j) {
+          temp2[i][j] = array[i*strides0+j*strides1];
+        }
+      }
+    } else if(PySequence_Check(obj1)) {
+      Py_ssize_t size0 = PySequence_Size(obj1);
+      temp2.resize(size0);
+      PyObject* item0;
+      PyObject* item1;
+      for(Py_ssize_t i=0; i<size0; ++i) {
+        item0 = PySequence_GetItem(obj1, i);
+        Py_ssize_t size1 = PySequence_Size(item0);
+        temp2[i].resize(size1);
+        for(Py_ssize_t j=0; j<size1; ++j) {
+          item1 = PySequence_GetItem(item0, j);
+          if(!SWIG_IsOK(SWIG_AsVal_double (item1, &temp2[i][j]))) {
+            Py_DECREF(item1);
+            SWIG_exception(SWIG_TypeError, "expected items of sequence to be sequences of type " \
+              "\"double\" in argument 2");
+          }
+          Py_DECREF(item1);
+        }
+      }
+    } else {
+      SWIG_exception(SWIG_TypeError, "(1) numpy array of 'double' expected.");
+    }
+    arg2 = &temp2;
+  }
+  {
+    try {
+      result = ((GWFrames::Waveform const *)arg1)->Translate((std::vector< std::vector< double,std::allocator< double > >,std::allocator< std::vector< double,std::allocator< double > > > > const &)*arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj((new GWFrames::Waveform(static_cast< const GWFrames::Waveform& >(result))), SWIGTYPE_p_GWFrames__Waveform, SWIG_POINTER_OWN |  0 );
   return resultobj;
 fail:
   return NULL;
@@ -40942,6 +41219,7 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__Waveform_methods[] = {
 		"  \n"
 		"\n"
 		"" },
+  { "InterpolateToPoint", (PyCFunction) _wrap__Waveform_InterpolateToPoint, METH_VARARGS, (char*) "" },
   { "__add__", (PyCFunction) _wrap__Waveform___add__, METH_VARARGS, (char*) "\n"
 		"Parameters\n"
 		"----------\n"
@@ -41382,6 +41660,7 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__Waveform_methods[] = {
 		"\n"
 		"" },
   { "BoostPsi4", (PyCFunction) _wrap__Waveform_BoostPsi4, METH_VARARGS, (char*) "" },
+  { "Translate", (PyCFunction) _wrap__Waveform_Translate, METH_VARARGS, (char*) "" },
   { "Output", (PyCFunction) _wrap__Waveform_Output, METH_VARARGS, (char*) "\n"
 		"Output Waveform object to data file.\n"
 		"====================================\n"
