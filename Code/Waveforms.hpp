@@ -59,21 +59,22 @@ namespace GWFrames {
     MatrixC data; // Each row (first index, nn) corresponds to a mode
 
   public: // Data alteration functions -- USE AT YOUR OWN RISK!
-    inline void SetSpinWeight(const int NewSpinWeight) { spinweight=NewSpinWeight; }
-    inline void SetBoostWeight(const int NewBoostWeight) { boostweight=NewBoostWeight; }
-    inline void AppendHistory(const std::string& Hist) { history << Hist; }
-    inline void SetHistory(const std::string& Hist) { history.str(Hist); history.seekp(0, std::ios_base::end); }
-    inline void SetT(const std::vector<double>& a) { t = a; }
-    inline void SetTime(const std::vector<double>& a) { t = a; }
-    inline void SetFrame(const std::vector<Quaternions::Quaternion>& a) { frame = a; }
-    inline void SetFrameType(const WaveformFrameType Type) { frameType = Type; }
-    inline void SetDataType(const WaveformDataType Type) { dataType = Type; }
-    inline void SetRIsScaledOut(const bool Scaled) { rIsScaledOut = Scaled; }
-    inline void SetMIsScaledOut(const bool Scaled) { mIsScaledOut = Scaled; }
-    inline void SetLM(const std::vector<std::vector<int> >& a) { lm = a; }
-    inline void SetData(const std::vector<std::vector<std::complex<double> > >& a) { data = MatrixC(a); }
-    inline void SetData(const unsigned int i_Mode, const unsigned int i_Time, const std::complex<double>& a) { data[i_Mode][i_Time] = a; }
-    inline void ResizeData(const unsigned int NModes, const unsigned int NTimes) { data.resize(NModes, NTimes); }
+    inline Waveform& SetSpinWeight(const int NewSpinWeight) { spinweight=NewSpinWeight; return *this; }
+    inline Waveform& SetBoostWeight(const int NewBoostWeight) { boostweight=NewBoostWeight; return *this; }
+    inline Waveform& AppendHistory(const std::string& Hist) { history << Hist; return *this; }
+    inline Waveform& SetHistory(const std::string& Hist) { history.str(Hist); history.seekp(0, std::ios_base::end); return *this; }
+    inline Waveform& SetT(const std::vector<double>& a) { t = a; return *this; }
+    inline Waveform& SetTime(const std::vector<double>& a) { t = a; return *this; }
+    inline Waveform& SetFrame(const std::vector<Quaternions::Quaternion>& a) { frame = a; return *this; }
+    inline Waveform& SetFrameType(const WaveformFrameType Type) { frameType = Type; return *this; }
+    inline Waveform& SetDataType(const WaveformDataType Type) { dataType = Type; return *this; }
+    inline Waveform& SetRIsScaledOut(const bool Scaled) { rIsScaledOut = Scaled; return *this; }
+    inline Waveform& SetMIsScaledOut(const bool Scaled) { mIsScaledOut = Scaled; return *this; }
+    inline Waveform& SetLM(const std::vector<std::vector<int> >& a) { lm = a; return *this; }
+    inline Waveform& SetData(const std::vector<std::vector<std::complex<double> > >& a) { data = MatrixC(a); return *this; }
+    inline Waveform& SetData(const unsigned int i_Mode, const unsigned int i_Time, const std::complex<double>& a) { data[i_Mode][i_Time] = a; return *this; }
+    inline Waveform& ResizeData(const unsigned int NModes, const unsigned int NTimes) { data.resize(NModes, NTimes); return *this; }
+    Waveform& DropTimesOutside(const double ta, const double tb);
     void swap(Waveform& b);
 
   public:  // Data access functions
@@ -120,6 +121,7 @@ namespace GWFrames {
     unsigned int FindModeIndex(const int L, const int M) const;
     unsigned int FindModeIndexWithoutError(const int L, const int M) const;
     std::vector<std::complex<double> > DataDot(const unsigned int Mode) const;
+    Waveform& Differentiate();
     std::vector<double> Norm(const bool TakeSquareRoot=false) const;
     unsigned int MaxNormIndex(const unsigned int SkipFraction=4) const;
     inline double MaxNormTime(const unsigned int SkipFraction=4) const { return T(MaxNormIndex(SkipFraction)); }
@@ -161,6 +163,7 @@ namespace GWFrames {
     Waveform& TransformUncertaintiesToInertialFrame();
 
     // Alignment, comparison, and hybridization
+    Waveform& InterpolateInPlace(const std::vector<double>& NewTime);
     Waveform Interpolate(const std::vector<double>& NewTime) const;
     Waveform Segment(const unsigned int i1, const unsigned int i2) const;
     void GetAlignmentOfTime(const Waveform& A, const double t_fid, double& deltat) const;

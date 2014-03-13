@@ -19941,6 +19941,7 @@ SWIGINTERN PyObject *_wrap__Waveform_SetSpinWeight(PyObject *self, PyObject *arg
   int val2 ;
   int ecode2 = 0 ;
   PyObject * obj1 = 0 ;
+  GWFrames::Waveform *result = 0 ;
   
   if (!PyArg_ParseTuple(args,(char *)"O:_Waveform_SetSpinWeight",&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
@@ -19955,7 +19956,7 @@ SWIGINTERN PyObject *_wrap__Waveform_SetSpinWeight(PyObject *self, PyObject *arg
   arg2 = static_cast< int >(val2);
   {
     try {
-      (arg1)->SetSpinWeight(arg2);;
+      result = (GWFrames::Waveform *) &(arg1)->SetSpinWeight(arg2);;
     } catch(int i) {
       std::stringstream s;
       if(i>-1 && i<GWFramesNumberOfErrors) {
@@ -19968,7 +19969,7 @@ SWIGINTERN PyObject *_wrap__Waveform_SetSpinWeight(PyObject *self, PyObject *arg
       return NULL;
     }
   }
-  resultobj = SWIG_Py_Void();
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
   return resultobj;
 fail:
   return NULL;
@@ -19984,6 +19985,7 @@ SWIGINTERN PyObject *_wrap__Waveform_SetBoostWeight(PyObject *self, PyObject *ar
   int val2 ;
   int ecode2 = 0 ;
   PyObject * obj1 = 0 ;
+  GWFrames::Waveform *result = 0 ;
   
   if (!PyArg_ParseTuple(args,(char *)"O:_Waveform_SetBoostWeight",&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
@@ -19998,7 +20000,7 @@ SWIGINTERN PyObject *_wrap__Waveform_SetBoostWeight(PyObject *self, PyObject *ar
   arg2 = static_cast< int >(val2);
   {
     try {
-      (arg1)->SetBoostWeight(arg2);;
+      result = (GWFrames::Waveform *) &(arg1)->SetBoostWeight(arg2);;
     } catch(int i) {
       std::stringstream s;
       if(i>-1 && i<GWFramesNumberOfErrors) {
@@ -20011,7 +20013,7 @@ SWIGINTERN PyObject *_wrap__Waveform_SetBoostWeight(PyObject *self, PyObject *ar
       return NULL;
     }
   }
-  resultobj = SWIG_Py_Void();
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
   return resultobj;
 fail:
   return NULL;
@@ -20026,6 +20028,7 @@ SWIGINTERN PyObject *_wrap__Waveform_AppendHistory(PyObject *self, PyObject *arg
   int res1 = 0 ;
   int res2 = SWIG_OLDOBJ ;
   PyObject * obj1 = 0 ;
+  GWFrames::Waveform *result = 0 ;
   
   if (!PyArg_ParseTuple(args,(char *)"O:_Waveform_AppendHistory",&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
@@ -20046,7 +20049,7 @@ SWIGINTERN PyObject *_wrap__Waveform_AppendHistory(PyObject *self, PyObject *arg
   }
   {
     try {
-      (arg1)->AppendHistory((std::string const &)*arg2);;
+      result = (GWFrames::Waveform *) &(arg1)->AppendHistory((std::string const &)*arg2);;
     } catch(int i) {
       std::stringstream s;
       if(i>-1 && i<GWFramesNumberOfErrors) {
@@ -20059,7 +20062,7 @@ SWIGINTERN PyObject *_wrap__Waveform_AppendHistory(PyObject *self, PyObject *arg
       return NULL;
     }
   }
-  resultobj = SWIG_Py_Void();
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
   if (SWIG_IsNewObj(res2)) delete arg2;
   return resultobj;
 fail:
@@ -20076,6 +20079,7 @@ SWIGINTERN PyObject *_wrap__Waveform_SetHistory(PyObject *self, PyObject *args) 
   int res1 = 0 ;
   int res2 = SWIG_OLDOBJ ;
   PyObject * obj1 = 0 ;
+  GWFrames::Waveform *result = 0 ;
   
   if (!PyArg_ParseTuple(args,(char *)"O:_Waveform_SetHistory",&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
@@ -20096,7 +20100,7 @@ SWIGINTERN PyObject *_wrap__Waveform_SetHistory(PyObject *self, PyObject *args) 
   }
   {
     try {
-      (arg1)->SetHistory((std::string const &)*arg2);;
+      result = (GWFrames::Waveform *) &(arg1)->SetHistory((std::string const &)*arg2);;
     } catch(int i) {
       std::stringstream s;
       if(i>-1 && i<GWFramesNumberOfErrors) {
@@ -20109,7 +20113,7 @@ SWIGINTERN PyObject *_wrap__Waveform_SetHistory(PyObject *self, PyObject *args) 
       return NULL;
     }
   }
-  resultobj = SWIG_Py_Void();
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
   if (SWIG_IsNewObj(res2)) delete arg2;
   return resultobj;
 fail:
@@ -20126,6 +20130,7 @@ SWIGINTERN PyObject *_wrap__Waveform_SetT(PyObject *self, PyObject *args) {
   int res1 = 0 ;
   std::vector< double > temp2 ;
   PyObject * obj1 = 0 ;
+  GWFrames::Waveform *result = 0 ;
   
   if (!PyArg_ParseTuple(args,(char *)"O:_Waveform_SetT",&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
@@ -20171,7 +20176,7 @@ SWIGINTERN PyObject *_wrap__Waveform_SetT(PyObject *self, PyObject *args) {
   }
   {
     try {
-      (arg1)->SetT((std::vector< double,std::allocator< double > > const &)*arg2);;
+      result = (GWFrames::Waveform *) &(arg1)->SetT((std::vector< double,std::allocator< double > > const &)*arg2);;
     } catch(int i) {
       std::stringstream s;
       if(i>-1 && i<GWFramesNumberOfErrors) {
@@ -20184,7 +20189,7 @@ SWIGINTERN PyObject *_wrap__Waveform_SetT(PyObject *self, PyObject *args) {
       return NULL;
     }
   }
-  resultobj = SWIG_Py_Void();
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
   return resultobj;
 fail:
   return NULL;
@@ -20199,6 +20204,7 @@ SWIGINTERN PyObject *_wrap__Waveform_SetTime(PyObject *self, PyObject *args) {
   int res1 = 0 ;
   std::vector< double > temp2 ;
   PyObject * obj1 = 0 ;
+  GWFrames::Waveform *result = 0 ;
   
   if (!PyArg_ParseTuple(args,(char *)"O:_Waveform_SetTime",&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
@@ -20244,7 +20250,7 @@ SWIGINTERN PyObject *_wrap__Waveform_SetTime(PyObject *self, PyObject *args) {
   }
   {
     try {
-      (arg1)->SetTime((std::vector< double,std::allocator< double > > const &)*arg2);;
+      result = (GWFrames::Waveform *) &(arg1)->SetTime((std::vector< double,std::allocator< double > > const &)*arg2);;
     } catch(int i) {
       std::stringstream s;
       if(i>-1 && i<GWFramesNumberOfErrors) {
@@ -20257,7 +20263,7 @@ SWIGINTERN PyObject *_wrap__Waveform_SetTime(PyObject *self, PyObject *args) {
       return NULL;
     }
   }
-  resultobj = SWIG_Py_Void();
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
   return resultobj;
 fail:
   return NULL;
@@ -20279,6 +20285,7 @@ SWIGINTERN PyObject *_wrap__Waveform_SetFrame(PyObject *self, PyObject *args) {
   Py_ssize_t j2 ;
   int res2 ;
   PyObject * obj1 = 0 ;
+  GWFrames::Waveform *result = 0 ;
   
   if (!PyArg_ParseTuple(args,(char *)"O:_Waveform_SetFrame",&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
@@ -20327,7 +20334,7 @@ SWIGINTERN PyObject *_wrap__Waveform_SetFrame(PyObject *self, PyObject *args) {
   }
   {
     try {
-      (arg1)->SetFrame((std::vector< Quaternions::Quaternion,std::allocator< Quaternions::Quaternion > > const &)*arg2);;
+      result = (GWFrames::Waveform *) &(arg1)->SetFrame((std::vector< Quaternions::Quaternion,std::allocator< Quaternions::Quaternion > > const &)*arg2);;
     } catch(int i) {
       std::stringstream s;
       if(i>-1 && i<GWFramesNumberOfErrors) {
@@ -20340,7 +20347,7 @@ SWIGINTERN PyObject *_wrap__Waveform_SetFrame(PyObject *self, PyObject *args) {
       return NULL;
     }
   }
-  resultobj = SWIG_Py_Void();
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
   return resultobj;
 fail:
   return NULL;
@@ -20356,6 +20363,7 @@ SWIGINTERN PyObject *_wrap__Waveform_SetFrameType(PyObject *self, PyObject *args
   int val2 ;
   int ecode2 = 0 ;
   PyObject * obj1 = 0 ;
+  GWFrames::Waveform *result = 0 ;
   
   if (!PyArg_ParseTuple(args,(char *)"O:_Waveform_SetFrameType",&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
@@ -20370,7 +20378,7 @@ SWIGINTERN PyObject *_wrap__Waveform_SetFrameType(PyObject *self, PyObject *args
   arg2 = static_cast< GWFrames::WaveformFrameType >(val2);
   {
     try {
-      (arg1)->SetFrameType(arg2);;
+      result = (GWFrames::Waveform *) &(arg1)->SetFrameType(arg2);;
     } catch(int i) {
       std::stringstream s;
       if(i>-1 && i<GWFramesNumberOfErrors) {
@@ -20383,7 +20391,7 @@ SWIGINTERN PyObject *_wrap__Waveform_SetFrameType(PyObject *self, PyObject *args
       return NULL;
     }
   }
-  resultobj = SWIG_Py_Void();
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
   return resultobj;
 fail:
   return NULL;
@@ -20399,6 +20407,7 @@ SWIGINTERN PyObject *_wrap__Waveform_SetDataType(PyObject *self, PyObject *args)
   int val2 ;
   int ecode2 = 0 ;
   PyObject * obj1 = 0 ;
+  GWFrames::Waveform *result = 0 ;
   
   if (!PyArg_ParseTuple(args,(char *)"O:_Waveform_SetDataType",&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
@@ -20413,7 +20422,7 @@ SWIGINTERN PyObject *_wrap__Waveform_SetDataType(PyObject *self, PyObject *args)
   arg2 = static_cast< GWFrames::WaveformDataType >(val2);
   {
     try {
-      (arg1)->SetDataType(arg2);;
+      result = (GWFrames::Waveform *) &(arg1)->SetDataType(arg2);;
     } catch(int i) {
       std::stringstream s;
       if(i>-1 && i<GWFramesNumberOfErrors) {
@@ -20426,7 +20435,7 @@ SWIGINTERN PyObject *_wrap__Waveform_SetDataType(PyObject *self, PyObject *args)
       return NULL;
     }
   }
-  resultobj = SWIG_Py_Void();
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
   return resultobj;
 fail:
   return NULL;
@@ -20442,6 +20451,7 @@ SWIGINTERN PyObject *_wrap__Waveform_SetRIsScaledOut(PyObject *self, PyObject *a
   bool val2 ;
   int ecode2 = 0 ;
   PyObject * obj1 = 0 ;
+  GWFrames::Waveform *result = 0 ;
   
   if (!PyArg_ParseTuple(args,(char *)"O:_Waveform_SetRIsScaledOut",&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
@@ -20456,7 +20466,7 @@ SWIGINTERN PyObject *_wrap__Waveform_SetRIsScaledOut(PyObject *self, PyObject *a
   arg2 = static_cast< bool >(val2);
   {
     try {
-      (arg1)->SetRIsScaledOut(arg2);;
+      result = (GWFrames::Waveform *) &(arg1)->SetRIsScaledOut(arg2);;
     } catch(int i) {
       std::stringstream s;
       if(i>-1 && i<GWFramesNumberOfErrors) {
@@ -20469,7 +20479,7 @@ SWIGINTERN PyObject *_wrap__Waveform_SetRIsScaledOut(PyObject *self, PyObject *a
       return NULL;
     }
   }
-  resultobj = SWIG_Py_Void();
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
   return resultobj;
 fail:
   return NULL;
@@ -20485,6 +20495,7 @@ SWIGINTERN PyObject *_wrap__Waveform_SetMIsScaledOut(PyObject *self, PyObject *a
   bool val2 ;
   int ecode2 = 0 ;
   PyObject * obj1 = 0 ;
+  GWFrames::Waveform *result = 0 ;
   
   if (!PyArg_ParseTuple(args,(char *)"O:_Waveform_SetMIsScaledOut",&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
@@ -20499,7 +20510,7 @@ SWIGINTERN PyObject *_wrap__Waveform_SetMIsScaledOut(PyObject *self, PyObject *a
   arg2 = static_cast< bool >(val2);
   {
     try {
-      (arg1)->SetMIsScaledOut(arg2);;
+      result = (GWFrames::Waveform *) &(arg1)->SetMIsScaledOut(arg2);;
     } catch(int i) {
       std::stringstream s;
       if(i>-1 && i<GWFramesNumberOfErrors) {
@@ -20512,7 +20523,7 @@ SWIGINTERN PyObject *_wrap__Waveform_SetMIsScaledOut(PyObject *self, PyObject *a
       return NULL;
     }
   }
-  resultobj = SWIG_Py_Void();
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
   return resultobj;
 fail:
   return NULL;
@@ -20527,6 +20538,7 @@ SWIGINTERN PyObject *_wrap__Waveform_SetLM(PyObject *self, PyObject *args) {
   int res1 = 0 ;
   std::vector< std::vector< int > > temp2 ;
   PyObject * obj1 = 0 ;
+  GWFrames::Waveform *result = 0 ;
   
   if (!PyArg_ParseTuple(args,(char *)"O:_Waveform_SetLM",&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
@@ -20581,7 +20593,7 @@ SWIGINTERN PyObject *_wrap__Waveform_SetLM(PyObject *self, PyObject *args) {
   }
   {
     try {
-      (arg1)->SetLM((std::vector< std::vector< int,std::allocator< int > >,std::allocator< std::vector< int,std::allocator< int > > > > const &)*arg2);;
+      result = (GWFrames::Waveform *) &(arg1)->SetLM((std::vector< std::vector< int,std::allocator< int > >,std::allocator< std::vector< int,std::allocator< int > > > > const &)*arg2);;
     } catch(int i) {
       std::stringstream s;
       if(i>-1 && i<GWFramesNumberOfErrors) {
@@ -20594,7 +20606,7 @@ SWIGINTERN PyObject *_wrap__Waveform_SetLM(PyObject *self, PyObject *args) {
       return NULL;
     }
   }
-  resultobj = SWIG_Py_Void();
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
   return resultobj;
 fail:
   return NULL;
@@ -20609,6 +20621,7 @@ SWIGINTERN PyObject *_wrap__Waveform_SetData__SWIG_0(PyObject *self, PyObject *a
   int res1 = 0 ;
   std::vector< std::vector< std_complex_double > > temp2 ;
   PyObject * obj1 = 0 ;
+  GWFrames::Waveform *result = 0 ;
   
   if (!PyArg_ParseTuple(args,(char *)"O:_Waveform_SetData",&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
@@ -20663,7 +20676,7 @@ SWIGINTERN PyObject *_wrap__Waveform_SetData__SWIG_0(PyObject *self, PyObject *a
   }
   {
     try {
-      (arg1)->SetData((std::vector< std::vector< std::complex< double >,std::allocator< std::complex< double > > >,std::allocator< std::vector< std::complex< double >,std::allocator< std::complex< double > > > > > const &)*arg2);;
+      result = (GWFrames::Waveform *) &(arg1)->SetData((std::vector< std::vector< std::complex< double >,std::allocator< std::complex< double > > >,std::allocator< std::vector< std::complex< double >,std::allocator< std::complex< double > > > > > const &)*arg2);;
     } catch(int i) {
       std::stringstream s;
       if(i>-1 && i<GWFramesNumberOfErrors) {
@@ -20676,7 +20689,7 @@ SWIGINTERN PyObject *_wrap__Waveform_SetData__SWIG_0(PyObject *self, PyObject *a
       return NULL;
     }
   }
-  resultobj = SWIG_Py_Void();
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
   return resultobj;
 fail:
   return NULL;
@@ -20701,6 +20714,7 @@ SWIGINTERN PyObject *_wrap__Waveform_SetData__SWIG_1(PyObject *self, PyObject *a
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
   PyObject * obj3 = 0 ;
+  GWFrames::Waveform *result = 0 ;
   
   if (!PyArg_ParseTuple(args,(char *)"OOO:_Waveform_SetData",&obj1,&obj2,&obj3)) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
@@ -20726,7 +20740,7 @@ SWIGINTERN PyObject *_wrap__Waveform_SetData__SWIG_1(PyObject *self, PyObject *a
   arg4 = &temp4;
   {
     try {
-      (arg1)->SetData(arg2,arg3,(std::complex< double > const &)*arg4);;
+      result = (GWFrames::Waveform *) &(arg1)->SetData(arg2,arg3,(std::complex< double > const &)*arg4);;
     } catch(int i) {
       std::stringstream s;
       if(i>-1 && i<GWFramesNumberOfErrors) {
@@ -20739,7 +20753,7 @@ SWIGINTERN PyObject *_wrap__Waveform_SetData__SWIG_1(PyObject *self, PyObject *a
       return NULL;
     }
   }
-  resultobj = SWIG_Py_Void();
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
   return resultobj;
 fail:
   return NULL;
@@ -20838,6 +20852,7 @@ SWIGINTERN PyObject *_wrap__Waveform_ResizeData(PyObject *self, PyObject *args) 
   int ecode3 = 0 ;
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
+  GWFrames::Waveform *result = 0 ;
   
   if (!PyArg_ParseTuple(args,(char *)"OO:_Waveform_ResizeData",&obj1,&obj2)) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
@@ -20857,7 +20872,7 @@ SWIGINTERN PyObject *_wrap__Waveform_ResizeData(PyObject *self, PyObject *args) 
   arg3 = static_cast< unsigned int >(val3);
   {
     try {
-      (arg1)->ResizeData(arg2,arg3);;
+      result = (GWFrames::Waveform *) &(arg1)->ResizeData(arg2,arg3);;
     } catch(int i) {
       std::stringstream s;
       if(i>-1 && i<GWFramesNumberOfErrors) {
@@ -20870,7 +20885,60 @@ SWIGINTERN PyObject *_wrap__Waveform_ResizeData(PyObject *self, PyObject *args) 
       return NULL;
     }
   }
-  resultobj = SWIG_Py_Void();
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap__Waveform_DropTimesOutside(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
+  double arg2 ;
+  double arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  GWFrames::Waveform *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:_Waveform_DropTimesOutside",&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_DropTimesOutside" "', argument " "1"" of type '" "GWFrames::Waveform *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "_Waveform_DropTimesOutside" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  ecode3 = SWIG_AsVal_double(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "_Waveform_DropTimesOutside" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  {
+    try {
+      result = (GWFrames::Waveform *) &(arg1)->DropTimesOutside(arg2,arg3);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
   return resultobj;
 fail:
   return NULL;
@@ -23414,6 +23482,41 @@ SWIGINTERN PyObject *_wrap__Waveform_DataDot(PyObject *self, PyObject *args) {
     std_complex_double* data = static_cast<std_complex_double*>(PyArray_DATA(reinterpret_cast<PyArrayObject*>(resultobj)));
     std::copy((&result)->begin(), (&result)->end(), data);
   }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap__Waveform_Differentiate(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  GWFrames::Waveform *result = 0 ;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_Differentiate" "', argument " "1"" of type '" "GWFrames::Waveform *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
+  {
+    try {
+      result = (GWFrames::Waveform *) &(arg1)->Differentiate();;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
   return resultobj;
 fail:
   return NULL;
@@ -26624,6 +26727,80 @@ SWIGINTERN PyObject *_wrap__Waveform_TransformUncertaintiesToInertialFrame(PyObj
   {
     try {
       result = (GWFrames::Waveform *) &(arg1)->TransformUncertaintiesToInertialFrame();;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap__Waveform_InterpolateInPlace(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
+  std::vector< double,std::allocator< double > > *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::vector< double > temp2 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::Waveform *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:_Waveform_InterpolateInPlace",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_InterpolateInPlace" "', argument " "1"" of type '" "GWFrames::Waveform *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
+  {
+    if(PyArray_Check(obj1)) {
+      PyArrayObject *xa = reinterpret_cast<PyArrayObject*>(obj1);
+      if(PyArray_TYPE(xa) != NPY_DOUBLE) {
+        SWIG_exception(SWIG_TypeError, "(1) numpy array of 'double' expected."	\
+          " Make sure that the numpy array use dtype=double.");
+      }
+      const std::size_t size = PyArray_DIM(xa, 0);
+      temp2.resize(size);
+      double* array = static_cast<double*>(PyArray_DATA(xa));
+      if(PyArray_ISCONTIGUOUS(xa)) {
+        std::copy(array, array + size, temp2.begin());
+      } else {
+        const npy_intp strides = PyArray_STRIDE(xa, 0)/sizeof(double);
+        for (std::size_t i = 0; i < size; i++)
+        temp2[i] = array[i*strides];
+      }
+    } else if(PySequence_Check(obj1)) {
+      Py_ssize_t size = PySequence_Size(obj1);
+      temp2.resize(size);
+      PyObject* item;
+      for(Py_ssize_t i=0; i<size; ++i) {
+        item = PySequence_GetItem(obj1, i);
+        if(!SWIG_IsOK(SWIG_AsVal_double (item, &temp2[i]))) {
+          Py_DECREF(item);
+          SWIG_exception(SWIG_TypeError, "expected items of sequence to be of type "\
+            "\"double\" in argument 2");
+        }
+        Py_DECREF(item);
+      }
+    } else {
+      SWIG_exception(SWIG_TypeError, "(2) numpy array of 'double' expected. " \
+        "Make sure that the numpy array use dtype=double.");
+    }
+    arg2 = &temp2;
+  }
+  {
+    try {
+      result = (GWFrames::Waveform *) &(arg1)->InterpolateInPlace((std::vector< double,std::allocator< double > > const &)*arg2);;
     } catch(int i) {
       std::stringstream s;
       if(i>-1 && i<GWFramesNumberOfErrors) {
@@ -39422,6 +39599,7 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__Waveform_methods[] = {
 		"\n"
 		"\n"
 		"" },
+  { "DropTimesOutside", (PyCFunction) _wrap__Waveform_DropTimesOutside, METH_VARARGS, (char*) "" },
   { "swap", (PyCFunction) _wrap__Waveform_swap, METH_VARARGS, (char*) "\n"
 		"Efficiently swap data between two Waveform objects.\n"
 		"===================================================\n"
@@ -39928,6 +40106,7 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__Waveform_methods[] = {
 		"  \n"
 		"\n"
 		"" },
+  { "Differentiate", (PyCFunction) _wrap__Waveform_Differentiate, METH_VARARGS, (char*) "" },
   { "Norm", (PyCFunction) _wrap__Waveform_Norm, METH_VARARGS, (char*) "\n"
 		"Return the norm (sum of squares of modes) of the waveform.\n"
 		"==========================================================\n"
@@ -40414,6 +40593,7 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__Waveform_methods[] = {
 		"  \n"
 		"\n"
 		"" },
+  { "InterpolateInPlace", (PyCFunction) _wrap__Waveform_InterpolateInPlace, METH_VARARGS, (char*) "" },
   { "Interpolate", (PyCFunction) _wrap__Waveform_Interpolate, METH_VARARGS, (char*) "\n"
 		"Interpolate the Waveform to a new set of time instants.\n"
 		"=======================================================\n"
