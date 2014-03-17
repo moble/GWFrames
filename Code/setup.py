@@ -92,15 +92,19 @@ try :
 except IOError :
     License = 'See LICENSE file in the source code for details.'
 
-## Add -py3 if this is python3
-swig_opts=['-globals', 'constants', '-c++', '-builtin', '-outdir', 'SWIG/']
+swig_opts=['-globals', 'constants', '-c++', '-builtin', '-outdir', 'SWIG/', '-DUSE_GSL']
+## Add -py3 to swig_opts if this is python3
 try:
     import sys
     python_major = sys.version_info.major
     if(python_major==3) :
         swig_opts += ['-py3']
 except AttributeError:
-    pass # This should probably be an error, because python is really old, but let's keep trying...
+    print("Your version of python is SO old.  'How old is it?'  So old I can't even tell how old it is.")
+    print("No, seriously.  You should think about upgrading your python because I don't support this version.")
+    print("You can try to make this run by removing the assertion error you're about to get, but don't")
+    print("come crying to me when print statements fail or when division gives the wrong answer.")
+    raise AssertionError("Wake up grandpa!  You were dreaming of ancient pythons again.")
 
 ## This does the actual work
 setup(name="GWFrames",
@@ -158,7 +162,7 @@ setup(name="GWFrames",
                   swig_opts=swig_opts, #['-globals', 'constants', '-c++', '-builtin', '-outdir', 'SWIG/'],# '-debug-tmsearch', '-debug-tmused'],
                   extra_link_args=['-fPIC'],
                   # extra_link_args=['-lgomp', '-fPIC', '-Wl,-undefined,error'], # `-undefined,error` tells the linker to fail on undefined symbols
-                  extra_compile_args=['-Wno-deprecated', '-Wno-null-conversion', '-Wno-unused-variable'] #'-fopenmp',
+                  extra_compile_args=['-Wno-deprecated', '-Wno-null-conversion', '-Wno-unused-variable', '-DUSE_GSL'] #'-fopenmp',
                   # extra_compile_args=['-ffast-math'] # DON'T USE fast-math!!!  It makes it impossible to detect NANs
                   )
         ],

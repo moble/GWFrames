@@ -2174,74 +2174,80 @@ void GWFrames::Waveform::GetAlignmentOfTimeAndFrame(const Waveform& A, const dou
 
   const Waveform& B = *this;
 
-  const unsigned int MaxIterations = 2000;
-  const double MinSimplexSize = 1.0e-10;
-  const double InitialTrialTimeStep = 10.0;
-  const double InitialTrialAngleStep = 1.0;
+  Quaternions::OptimalAlignment(t1, t2,
+                                A.Frame(), A.T(),
+                                B.Frame(), B.T(),
+                                deltat, R_delta);
+  return;
 
-  WaveformAligner Aligner(A, B, t1, t2);
-  const unsigned int NDimensions = 4;
+  // const unsigned int MaxIterations = 2000;
+  // const double MinSimplexSize = 1.0e-10;
+  // const double InitialTrialTimeStep = 10.0;
+  // const double InitialTrialAngleStep = 1.0;
 
-  // Use Nelder-Mead simplex minimization
-  const gsl_multimin_fminimizer_type* T =
-    gsl_multimin_fminimizer_nmsimplex2;
-  gsl_multimin_fminimizer* s = NULL;
-  gsl_vector* ss;
-  gsl_vector* x;
-  gsl_multimin_function minex_func;
-  size_t iter = 0;
-  int status = GSL_CONTINUE;
-  double size = 0.0;
+  // WaveformAligner Aligner(A, B, t1, t2);
+  // const unsigned int NDimensions = 4;
 
-  // Set initial values
-  x = gsl_vector_alloc(NDimensions);
-  if(Aligner.EvaluateMinimizationQuantity(0.,0.,0.,0.)/std::abs(t2-t1)<M_PI) {
-    // Rotors are nearly aligned
-    gsl_vector_set(x, 0, 0.0);
-    gsl_vector_set(x, 1, 0.0);
-    gsl_vector_set(x, 2, 0.0);
-    gsl_vector_set(x, 3, 0.0);
-  } else {
-    // Rotors are off by too much; start from a better spot -- the avg log of the "difference" ratio
-    const Quaternions::Quaternion avglog = Aligner.AvgLogRatio(0., 0., 0., 0.);
-    gsl_vector_set(x, 0, 0.0);
-    gsl_vector_set(x, 1, avglog[1]);
-    gsl_vector_set(x, 2, avglog[2]);
-    gsl_vector_set(x, 3, avglog[3]);
-  }
+  // // Use Nelder-Mead simplex minimization
+  // const gsl_multimin_fminimizer_type* T =
+  //   gsl_multimin_fminimizer_nmsimplex2;
+  // gsl_multimin_fminimizer* s = NULL;
+  // gsl_vector* ss;
+  // gsl_vector* x;
+  // gsl_multimin_function minex_func;
+  // size_t iter = 0;
+  // int status = GSL_CONTINUE;
+  // double size = 0.0;
 
-  // Set initial step sizes
-  ss = gsl_vector_alloc(NDimensions);
-  gsl_vector_set(ss, 0, InitialTrialTimeStep);
-  gsl_vector_set(ss, 1, InitialTrialAngleStep);
-  gsl_vector_set(ss, 2, InitialTrialAngleStep);
-  gsl_vector_set(ss, 3, InitialTrialAngleStep);
+  // // Set initial values
+  // x = gsl_vector_alloc(NDimensions);
+  // if(Aligner.EvaluateMinimizationQuantity(0.,0.,0.,0.)/std::abs(t2-t1)<M_PI) {
+  //   // Rotors are nearly aligned
+  //   gsl_vector_set(x, 0, 0.0);
+  //   gsl_vector_set(x, 1, 0.0);
+  //   gsl_vector_set(x, 2, 0.0);
+  //   gsl_vector_set(x, 3, 0.0);
+  // } else {
+  //   // Rotors are off by too much; start from a better spot -- the avg log of the "difference" ratio
+  //   const Quaternions::Quaternion avglog = Aligner.AvgLogRatio(0., 0., 0., 0.);
+  //   gsl_vector_set(x, 0, 0.0);
+  //   gsl_vector_set(x, 1, avglog[1]);
+  //   gsl_vector_set(x, 2, avglog[2]);
+  //   gsl_vector_set(x, 3, avglog[3]);
+  // }
 
-  minex_func.n = NDimensions;
-  minex_func.f = &minfunc;
-  minex_func.params = (void*) &Aligner;
+  // // Set initial step sizes
+  // ss = gsl_vector_alloc(NDimensions);
+  // gsl_vector_set(ss, 0, InitialTrialTimeStep);
+  // gsl_vector_set(ss, 1, InitialTrialAngleStep);
+  // gsl_vector_set(ss, 2, InitialTrialAngleStep);
+  // gsl_vector_set(ss, 3, InitialTrialAngleStep);
 
-  s = gsl_multimin_fminimizer_alloc(T, NDimensions);
-  gsl_multimin_fminimizer_set(s, &minex_func, x, ss);
+  // minex_func.n = NDimensions;
+  // minex_func.f = &minfunc;
+  // minex_func.params = (void*) &Aligner;
 
-  // Run the minimization
-  while(status == GSL_CONTINUE && iter < MaxIterations) {
-    iter++;
-    status = gsl_multimin_fminimizer_iterate(s);
-    // std::cout << iter
-    if(status) break;
-    size = gsl_multimin_fminimizer_size(s);
-    status = gsl_multimin_test_size(size, MinSimplexSize);
-  }
+  // s = gsl_multimin_fminimizer_alloc(T, NDimensions);
+  // gsl_multimin_fminimizer_set(s, &minex_func, x, ss);
 
-  // Apply time shift and rotation
-  deltat = gsl_vector_get(s->x, 0) * Aligner.Multiplier;
-  R_delta = Quaternions::exp(Quaternions::Quaternion(0.0, gsl_vector_get(s->x, 1), gsl_vector_get(s->x, 2), gsl_vector_get(s->x, 3)));
+  // // Run the minimization
+  // while(status == GSL_CONTINUE && iter < MaxIterations) {
+  //   iter++;
+  //   status = gsl_multimin_fminimizer_iterate(s);
+  //   // std::cout << iter
+  //   if(status) break;
+  //   size = gsl_multimin_fminimizer_size(s);
+  //   status = gsl_multimin_test_size(size, MinSimplexSize);
+  // }
 
-  // Free allocated memory
-  gsl_vector_free(x);
-  gsl_vector_free(ss);
-  gsl_multimin_fminimizer_free(s);
+  // // Apply time shift and rotation
+  // deltat = gsl_vector_get(s->x, 0) * Aligner.Multiplier;
+  // R_delta = Quaternions::exp(Quaternions::Quaternion(0.0, gsl_vector_get(s->x, 1), gsl_vector_get(s->x, 2), gsl_vector_get(s->x, 3)));
+
+  // // Free allocated memory
+  // gsl_vector_free(x);
+  // gsl_vector_free(ss);
+  // gsl_multimin_fminimizer_free(s);
 
 }
 

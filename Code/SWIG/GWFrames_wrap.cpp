@@ -44076,7 +44076,7 @@ SWIG_init(void) {
   d = md;
   SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "UnknownFrameType",SWIG_From_int(static_cast< int >(GWFrames::UnknownFrameType)));
   SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "Inertial",SWIG_From_int(static_cast< int >(GWFrames::Inertial)));
-  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "Aligned",SWIG_From_int(static_cast< int >(GWFrames::Aligned)));
+  SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "Coprecessing",SWIG_From_int(static_cast< int >(GWFrames::Coprecessing)));
   SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "Coorbital",SWIG_From_int(static_cast< int >(GWFrames::Coorbital)));
   SWIG_Python_SetConstant(d, d == md ? public_interface : NULL, "Corotating",SWIG_From_int(static_cast< int >(GWFrames::Corotating)));
   PyDict_SetItemString(md,(char*)"constants", SWIG_globals());

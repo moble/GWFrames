@@ -74,7 +74,7 @@ cpp : Utilities.o SphericalFunctions/Quaternions/Quaternions.o Waveforms.o PNWav
 
 # This is how to build those object files
 %.o : %.cpp %.hpp Errors.hpp
-	$(C++) $(OPT) -DCodeRevision=4 -c $(INCFLAGS) $< -o $@
+	$(C++) $(OPT) -DCodeRevision=4 -c $(INCFLAGS) -DUSE_GSL $< -o $@
 
 # The following are just handy targets for removing compiled stuff
 clean :
