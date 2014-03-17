@@ -26,8 +26,8 @@ namespace GWFrames {
   // To regain the dimensionful quantities, we simply need to remove
   // the relevant dimensionful elements (e.g., the r and M factors).
 
-  enum WaveformFrameType { UnknownFrameType, Inertial, Aligned, Coorbital, Corotating };
-  static const std::string WaveformFrameNames[5] = { "UnknownFrameType", "Inertial", "Aligned", "Coorbital", "Corotating" };
+  enum WaveformFrameType { UnknownFrameType, Inertial, Coprecessing, Coorbital, Corotating };
+  static const std::string WaveformFrameNames[5] = { "UnknownFrameType", "Inertial", "Coprecessing", "Coorbital", "Corotating" };
   enum WaveformDataType { UnknownDataType, h, hdot, Psi4 };
   static const std::string WaveformDataNames[4] = { "UnknownDataType", "h", "hdot", "Psi4" };
   static const std::string WaveformDataNamesLaTeX[4] = { "\\mathrm{unknown data type}", "h", "\\dot{h}", "\\Psi_4" };

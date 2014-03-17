@@ -1479,7 +1479,7 @@ GWFrames::Waveform& GWFrames::Waveform::TransformToSchmidtEtAlFrame(const double
   /// This function combines the steps required to obtain the Waveform
   /// in the Schmidt et al. frame.
   history << "this->TransformToSchmidtEtAlFrame(" << alpha0Guess << ", " << beta0Guess << ")\n#";
-  this->frameType = GWFrames::Aligned;
+  this->frameType = GWFrames::Coprecessing;
   return this->RotateDecompositionBasis(FrameFromZ(normalized(QuaternionArray(this->SchmidtEtAlVector(alpha0Guess, beta0Guess))), T()));
 }
 
@@ -1496,7 +1496,7 @@ GWFrames::Waveform& GWFrames::Waveform::TransformToOShaughnessyEtAlFrame(const s
   /// the sum.
   ///
   history << "this->TransformToOShaughnessyEtAlFrame(" << StringForm(Lmodes) << ")\n#";
-  this->frameType = GWFrames::Aligned;
+  this->frameType = GWFrames::Coprecessing;
   return this->RotateDecompositionBasis(FrameFromZ(normalized(QuaternionArray(this->OShaughnessyEtAlVector(Lmodes))), T()));
 }
 
@@ -1516,7 +1516,7 @@ GWFrames::Waveform& GWFrames::Waveform::TransformToAngularVelocityFrame(const st
   ///
   history << "this->TransformToAngularVelocityFrame(" << StringForm(Lmodes) << ")\n#";
   vector<Quaternion> R_AV = normalized(QuaternionArray(this->AngularVelocityVector(Lmodes)));
-  this->frameType = GWFrames::Aligned;
+  this->frameType = GWFrames::Coprecessing;
   return this->RotateDecompositionBasis(FrameFromZ(R_AV, T()));
 }
 
@@ -1998,11 +1998,11 @@ void GWFrames::Waveform::GetAlignmentOfFrame(const Waveform& A, const double t_f
   /// \sa AlignFrame
   ///
 
-  if(frameType != A.frameType && (frameType!=GWFrames::Corotating || frameType!=GWFrames::Aligned)) {
+  if(frameType != A.frameType && (frameType!=GWFrames::Corotating || frameType!=GWFrames::Coprecessing)) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
               << "\nError: GetAlignmentOfFrame assumes that the two Waveforms are in the same type of frame, and that"
               << "\n       that frame is physically meaningful (either " << GWFrames::WaveformFrameNames[GWFrames::Corotating]
-              << " or " << GWFrames::WaveformFrameNames[GWFrames::Aligned] << "),"
+              << " or " << GWFrames::WaveformFrameNames[GWFrames::Coprecessing] << "),"
               << "\n       so that it makes sense to align the frames."
               << "\n       This Waveform is in the " << GWFrames::WaveformFrameNames[frameType] << " frame,"
               << "\n       The Waveform in the argument is in the " << GWFrames::WaveformFrameNames[A.frameType] << " frame.\n"
@@ -2159,11 +2159,11 @@ void GWFrames::Waveform::GetAlignmentOfTimeAndFrame(const Waveform& A, const dou
   /// \sa AlignTimeAndFrame
   ///
 
-  if(frameType != A.frameType || (frameType!=GWFrames::Corotating && frameType!=GWFrames::Aligned)) {
+  if(frameType != A.frameType || (frameType!=GWFrames::Corotating && frameType!=GWFrames::Coprecessing)) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
               << "\nError: GetAlignmentOfTimeAndFrame assumes that the two Waveforms are in the type of same frame, and that"
               << "\n       that frame is physically meaningful (either " << GWFrames::WaveformFrameNames[GWFrames::Corotating]
-              << " or " << GWFrames::WaveformFrameNames[GWFrames::Aligned] << "),"
+              << " or " << GWFrames::WaveformFrameNames[GWFrames::Coprecessing] << "),"
               << "\n       so that it makes sense to align the frames."
               << "\n       This Waveform is in the " << GWFrames::WaveformFrameNames[frameType] << " frame,"
               << "\n       The Waveform in the argument is in the " << GWFrames::WaveformFrameNames[A.frameType] << " frame.\n"
