@@ -3886,7 +3886,6 @@ GWFrames::Waveform GWFrames::Waveform::Translate(const std::vector<std::vector<d
   B.mIsScaledOut = A.mIsScaledOut;
   B.lm = A.lm;
   B.t = A.t; // This will get reset later
-  std::cerr << __FILE__ << ":" << __LINE__ << ": B.lm.size()=" << B.lm.size() << " B.lm[0]=(" << B.lm[0][0] << ", " << B.lm[0][1] << ")" << std::endl;
 
   // These numbers determine the equi-angular grid on which we will do
   // the interpolation.  For best accuracy, have N_phi > 2*ellMax and
