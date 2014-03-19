@@ -596,6 +596,32 @@ unsigned int GWFrames::Waveform::FindModeIndexWithoutError(const int l, const in
   return i;
 }
 
+/// Return the contrast in the given mode pair
+std::vector<double> GWFrames::Waveform::Contrast(const int L, const int M) const {
+  /// \param L \f$ell\f$ value of the mode pair
+  /// \param M \f$m\f$ value of the mode pair
+  ///
+  /// This function just returns the value of the contrast
+  /// \f$\kappa^{\ell,m}\f$ defined by Boyle et al. (2014):
+  ///
+  /// \f{equation*}{ kappa^{\ell,m} = 2 \frac{\lvert h^{\ell,m} \rvert
+  /// - \lvert h^{\ell,-m} \rvert} {\lvert h^{\ell,m} \rvert - \lvert
+  /// h^{\ell,-m} \rvert}. \f}
+  ///
+  /// That is, the difference between mode pairs normalized by their
+  /// average.
+
+  const unsigned int Size = NTimes();
+  const unsigned int i_m1 = FindModeIndex(L,M);
+  const unsigned int i_m2 = FindModeIndex(L,-M);
+  std::vector<double> contrast(Size);
+  for(unsigned int i_t=0; i_t<Size; ++i_t) {
+    contrast[i_t] = 2 * (Abs(i_m1,i_t)-Abs(i_m2,i_t)) / (Abs(i_m1,i_t)+Abs(i_m2,i_t));
+  }
+  return contrast;
+}
+
+
 /// Rotate the physical content of the Waveform by a constant rotor.
 GWFrames::Waveform& GWFrames::Waveform::RotatePhysicalSystem(const Quaternions::Quaternion& R_phys) {
   history << "this->RotatePhysicalSystem(" << R_phys << ");" << endl;
