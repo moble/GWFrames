@@ -23438,6 +23438,65 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap__Waveform_Contrast(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
+  int arg2 ;
+  int arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  int val3 ;
+  int ecode3 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  SwigValueWrapper< std::vector< double,std::allocator< double > > > result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:_Waveform_Contrast",&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_Contrast" "', argument " "1"" of type '" "GWFrames::Waveform const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
+  ecode2 = SWIG_AsVal_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "_Waveform_Contrast" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  ecode3 = SWIG_AsVal_int(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "_Waveform_Contrast" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = static_cast< int >(val3);
+  {
+    try {
+      result = ((GWFrames::Waveform const *)arg1)->Contrast(arg2,arg3);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  {
+    // RANDOMSTRING1
+    npy_intp adims = (&result)->size();
+    resultobj = PyArray_SimpleNew(1, &adims, NPY_DOUBLE);
+    double* data = static_cast<double*>(PyArray_DATA(reinterpret_cast<PyArrayObject*>(resultobj)));
+    std::copy((&result)->begin(), (&result)->end(), data);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap__Waveform_DataDot(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
@@ -40370,6 +40429,7 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__Waveform_methods[] = {
 		"  \n"
 		"\n"
 		"" },
+  { "Contrast", (PyCFunction) _wrap__Waveform_Contrast, METH_VARARGS, (char*) "" },
   { "DataDot", (PyCFunction) _wrap__Waveform_DataDot, METH_VARARGS, (char*) "\n"
 		"Return time derivative of data.\n"
 		"===============================\n"
