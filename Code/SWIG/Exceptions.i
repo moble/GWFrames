@@ -27,9 +27,10 @@
     "Empty intersection requested.",
     "Waveform is missing requested (ell,m) component.",
     "Wrong frame type for this operation.",
-    "Bad Waveform information."
+    "Bad Waveform information.",
+    "Unknown GW detector name."
   };
-  const int GWFramesNumberOfErrors = 23;
+  const int GWFramesNumberOfErrors = 24;
   PyObject* const GWFramesExceptions[] = {
     PyExc_NotImplementedError, // Not implemented
     PyExc_SystemError, // Failed system call
@@ -54,6 +55,7 @@
     PyExc_IndexError, // Waveform missing ell,m
     PyExc_AssertionError, // Bad frame type
     PyExc_ValueError, // Bad Waveform information
+    PyExc_ValueError, // Unknown GW detector name
   };
 %}
 

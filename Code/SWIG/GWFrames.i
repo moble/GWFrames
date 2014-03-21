@@ -1,4 +1,5 @@
 // -*- c++ -*-
+// vim: filetype=cpp
 
 // Copyright (c) 2014, Michael Boyle
 // See LICENSE file for details
@@ -6,7 +7,7 @@
 %module GWFrames
 
 // Quiet warnings about overloaded operators being ignored.
- //#pragma SWIG nowarn=362,389,401,509
+//#pragma SWIG nowarn=362,389,401,509
 
 
 /////////////////////////////////////////////////
@@ -25,6 +26,7 @@
   #include "SWSHs.hpp"
   #include "../Waveforms.hpp"
   #include "../PNWaveforms.hpp"
+  #include "../WaveformsAtAPointFT.hpp"
 %}
 
 

@@ -1,8 +1,7 @@
 #include "Interpolate.hpp"
 
-#include "NumericalRecipes.hpp"
-#include "VectorFunctions.hpp"
 #include "Utilities.hpp"
+#include <string>
 
 using namespace std;
 namespace WU = WaveformUtilities;
@@ -15,6 +14,19 @@ using WU::SplineIntegral;
 using WU::SplineCumulativeIntegral;
 
 // #undef DEBUG
+
+namespace {
+  void Throw1WithMessage(const string& msg) {
+    cerr << msg << endl;
+    throw;
+  }
+
+  template<class T>
+  const T &MIN(const T &a, const T &b) {return b < a ? (b) : (a);}
+
+  template<class T>
+  const T &MAX(const T &a, const T &b) {return b > a ? (b) : (a);}
+}
 
 vector<double> WaveformUtilities::Interpolate(const vector<double>& X1, const vector<double>& Y1, const vector<double>& X2) {
   if(X1.size()==0) { Throw1WithMessage("X1.size()==0"); }
@@ -108,10 +120,10 @@ Interpolator::Interpolator(const vector<double>& x, const vector<double>& y, int
   dj = MAX(1,int(pow(double(n),0.25)));
 }
 
-Int Interpolator::locate(const Doub x) {
-  Int ju,jm,jl;
+int Interpolator::locate(const double x) {
+  int ju,jm,jl;
   if (n < 2 || mm < 2 || mm > n) Throw1WithMessage("Interpolator::locate size error");
-  Bool ascnd=(xx[n-1] >= xx[0]);
+  bool ascnd=(xx[n-1] >= xx[0]);
   jl=0;
   ju=n-1;
   while (ju-jl > 1) {
@@ -126,10 +138,10 @@ Int Interpolator::locate(const Doub x) {
   return MAX(0,MIN(n-mm,jl-((mm-2)>>1)));
 }
 
-Int Interpolator::hunt(const Doub x) {
-  Int jl=jsav, jm, ju, inc=1;
+int Interpolator::hunt(const double x) {
+  int jl=jsav, jm, ju, inc=1;
   if (n < 2 || mm < 2 || mm > n) Throw1WithMessage("Interpolator::hunt size error");
-  Bool ascnd=(xx[n-1] >= xx[0]);
+  bool ascnd=(xx[n-1] >= xx[0]);
   if (jl < 0 || jl > n-1) {
     jl=0;
     ju=n-1;
@@ -169,11 +181,11 @@ Int Interpolator::hunt(const Doub x) {
   return MAX(0,MIN(n-mm,jl-((mm-2)>>1)));
 }
 
-Doub PolynomialInterpolator::rawinterp(Int jl, Doub x) {
-  Int i,m,ns=0;
-  Doub y,den,dif,dift,ho,hp,w;
-  const Doub *xa = &xx[jl], *ya = &yy[jl];
-  VecDoub c(mm),d(mm);
+double PolynomialInterpolator::rawinterp(int jl, double x) {
+  int i,m,ns=0;
+  double y,den,dif,dift,ho,hp,w;
+  const double *xa = &xx[jl], *ya = &yy[jl];
+  vector<double> c(mm),d(mm);
   dif=abs(x-xa[0]);
   for (i=0;i<mm;i++) {
     if ((dift=abs(x-xa[i])) < dif) {
@@ -200,11 +212,10 @@ Doub PolynomialInterpolator::rawinterp(Int jl, Doub x) {
 }
 
 
-//void Spline_interp::sety2(const Doub *xv, const Doub *yv, Doub yp1, Doub ypn) <replaced />
-void SplineInterpolator::sety2(VecDoub_I &xv, VecDoub_I &yv, Doub yp1, Doub ypn) {
-  Int i,k;
-  Doub p,qn,sig,un;
-  VecDoub u(n-1);
+void SplineInterpolator::sety2(const vector<double> &xv, const vector<double> &yv, double yp1, double ypn) {
+  int i,k;
+  double p,qn,sig,un;
+  vector<double> u(n-1);
   if (yp1 > 0.99e99)
     y2[0]=u[0]=0.0;
   else {
@@ -229,10 +240,10 @@ void SplineInterpolator::sety2(VecDoub_I &xv, VecDoub_I &yv, Doub yp1, Doub ypn)
     y2[k]=y2[k]*y2[k+1]+u[k];
 }
 
-Doub SplineInterpolator::rawinterp(Int jl, Doub x)
+double SplineInterpolator::rawinterp(int jl, double x)
 {
-  Int klo=jl,khi=jl+1;
-  Doub y,h,b,a;
+  int klo=jl,khi=jl+1;
+  double y,h,b,a;
   h=xx[khi]-xx[klo];
   if (h == 0.0) Throw1WithMessage("Bad input to routine SplineInterpolator::rawinterp");
   a=(xx[khi]-x)/h;

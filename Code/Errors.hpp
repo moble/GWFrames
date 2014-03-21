@@ -30,5 +30,6 @@
 #define GWFrames_WaveformMissingLMIndex 20
 #define GWFrames_WrongFrameType 21
 #define GWFrames_BadWaveformInformation 22
+#define GWFrames_UnknownDetector 23
 
 #endif // ERRORS_HPP

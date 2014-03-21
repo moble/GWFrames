@@ -1,9 +1,9 @@
-#include "NumericalRecipes.hpp"
-
 #include "NoiseCurves.hpp"
 
-#include "VectorFunctions.hpp"
+#include "Utilities.hpp"
+#include "Errors.hpp"
 #include "Interpolate.hpp"
+#include <limits>
 
 namespace WU = WaveformUtilities;
 using std::vector;
@@ -12,6 +12,12 @@ using std::max;
 using std::min;
 using std::cerr;
 using std::endl;
+using std::numeric_limits;
+using GWFrames::fabs;
+using GWFrames::exp;
+using GWFrames::log;
+using GWFrames::pow;
+using GWFrames::operator*;
 
 vector<double> AdvLIGO_NSNSOptimal(const vector<double>& F, const bool Invert=false, const double NoiseFloor=0.0) {
   const double FMin = max(NoiseFloor, WU::AdvLIGOSeismicWall);
@@ -42,7 +48,7 @@ vector<double> AdvLIGO_NSNSOptimal(const vector<double>& F, const bool Invert=fa
 }
 
 vector<double> AdvLIGO_ZeroDet_HighP(const vector<double>& F, const bool Invert=false, const double NoiseFloor=0.0) {
-  #include "AdvLIGO_ZeroDet_HighP.ipp"
+  #include "NoiseCurves/AdvLIGO_ZeroDet_HighP.ipp"
   vector<double> LogPSD;
   LogPSD = WU::Interpolate(ZERO_DET_high_PLogF, ZERO_DET_high_PLogPSD, log(fabs(F)));
   const double MinFreq(max(NoiseFloor, WU::AdvLIGOSeismicWall));
@@ -51,7 +57,7 @@ vector<double> AdvLIGO_ZeroDet_HighP(const vector<double>& F, const bool Invert=
   return exp(LogPSD);
 }
 vector<double> AdvLIGO_ZeroDet_LowP(const vector<double>& F, const bool Invert=false, const double NoiseFloor=0.0) {
-  #include "AdvLIGO_ZeroDet_LowP.ipp"
+  #include "NoiseCurves/AdvLIGO_ZeroDet_LowP.ipp"
   vector<double> LogPSD(WU::Interpolate(ZERO_DET_low_PLogF, ZERO_DET_low_PLogPSD, log(fabs(F))));
   const double MinFreq(max(NoiseFloor, WU::AdvLIGOSeismicWall));
   for(unsigned int i=0; i<LogPSD.size(); ++i) if(fabs(F[i])<MinFreq) { LogPSD[i] = 500.0; }
@@ -88,11 +94,18 @@ vector<double> IniLIGO_Approx(const vector<double>& F, const bool Invert=false, 
 }
 
 vector<double> WU::NoiseCurve(const vector<double>& F, const string& Detector, const bool Invert, const double NoiseFloor) {
-  if(Detector.compare("AdvLIGO_NSNSOptimal")==0) { return AdvLIGO_NSNSOptimal(F, Invert, NoiseFloor); }
-  else if(Detector.compare("AdvLIGO_ZeroDet_HighP")==0) { return AdvLIGO_ZeroDet_HighP(F, Invert, NoiseFloor); }
-  else if(Detector.compare("AdvLIGO_ZeroDet_LowP")==0) { return AdvLIGO_ZeroDet_LowP(F, Invert, NoiseFloor); }
-  else if(Detector.compare("IniLIGO_Approx")==0) { return IniLIGO_Approx(F, Invert, NoiseFloor); }
-  else { cerr << "\nDetector type: '" << Detector << "'" << endl;  Throw1WithMessage("Unknown detector"); }
+  if(Detector.compare("AdvLIGO_NSNSOptimal")==0) {
+    return AdvLIGO_NSNSOptimal(F, Invert, NoiseFloor);
+  } else if(Detector.compare("AdvLIGO_ZeroDet_HighP")==0) {
+    return AdvLIGO_ZeroDet_HighP(F, Invert, NoiseFloor);
+  } else if(Detector.compare("AdvLIGO_ZeroDet_LowP")==0) {
+    return AdvLIGO_ZeroDet_LowP(F, Invert, NoiseFloor);
+  } else if(Detector.compare("IniLIGO_Approx")==0) {
+    return IniLIGO_Approx(F, Invert, NoiseFloor);
+  } else {
+    cerr << "\nUnknown Detector type: '" << Detector << "'" << endl;
+    throw(GWFrames_UnknownDetector);
+  }
 }
 
 vector<double> WU::InverseNoiseCurve(const vector<double>& F, const string& Detector, const double NoiseFloor) {

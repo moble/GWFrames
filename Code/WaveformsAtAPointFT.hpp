@@ -1,43 +1,70 @@
 #ifndef WAVEFORMATAPOINTFT_HPP
 #define WAVEFORMATAPOINTFT_HPP
 
-#include "WaveformAtAPoint.hpp"
+#include <vector>
+#include <string>
 
-namespace WaveformObjects {
-  
+namespace GWFrames {
+  class Waveform;
+}
+
+namespace GWFrames {
+
+
   /// The WaveformAtAPointFT class is a derived class, constructed
   /// from waveforms evaluated at a point, using the given complex
   /// detector response (F+ + i*Fx) -- or more particularly, its
   /// amplitude and phase.
-  class WaveformAtAPointFT : public WaveformAtAPoint {
+  class WaveformAtAPointFT {
   private:  // Member data
-    bool Normalized;
-    
-  public:  // Constructors and Destructor
-    WaveformAtAPointFT();
-    WaveformAtAPointFT(const WaveformAtAPoint& W, const unsigned int WindowNCycles=1,
-		       const double DetectorResponseAmp=1.0, const double DetectorResponsePhase=0.0);
-    ~WaveformAtAPointFT() { }
-    
-  public: // Access functions
-    inline const double F(const unsigned int i) const { return T(i); }
-    inline const std::vector<double>& F() const { return T(); }
-    
-  public:  // Member functions
-    double InnerProduct(const WaveformAtAPointFT& B, const std::vector<double>& InversePSD) const;
-    double SNR(const std::vector<double>& InversePSD) const;
-    double Match(const WaveformAtAPointFT& B, const std::vector<double>& InversePSD) const;
-    double Match(const WaveformAtAPointFT& B, const std::string& Detector="AdvLIGO_ZeroDet_HighP") const;
-    void Match(const WaveformAtAPointFT& B, const std::vector<double>& InversePSD, double& timeOffset, double& phaseOffset, double& match) const;
-    void Match(const WaveformAtAPointFT& B, double& timeOffset, double& phaseOffset, double& match, const std::string& Detector="AdvLIGO_ZeroDet_HighP") const;
-    WaveformAtAPointFT& Normalize(const std::vector<double>& InversePSD);
-    WaveformAtAPointFT& ZeroAbove(const double Frequency);
-    WaveformAtAPointFT operator-(const WaveformAtAPointFT& b) const;
-    WaveformAtAPointFT operator*(const double b) const;
-  }; // class
-  
-} // namespace WaveformObjects
+    double mDt, mVartheta, mVarphi;
+    std::vector<double> mRealF, mImagF, mFreqs;
+    bool mNormalized;
 
-std::ostream& operator<<(std::ostream& os, const WaveformObjects::WaveformAtAPointFT& a);
+  public:  // Constructors and Destructor
+    WaveformAtAPointFT(const GWFrames::Waveform& W,
+                       const double Dt,
+                       const double Vartheta,
+                       const double Varphi,
+                       const double TotalMass, // In solar masses
+                       const unsigned int WindowNCycles=1,
+                       const double DetectorResponseAmp=1.0,
+                       const double DetectorResponsePhase=0.0);
+
+  public: // Access functions
+    /// Returns the physical frequencies in Hz
+    const std::vector<double>& F() const { return mFreqs; }
+    const double& F(const unsigned int f) const { return mFreqs[f]; }
+    unsigned int NFreq() const { return mFreqs.size(); }
+    bool IsNormalized() const { return mNormalized; }
+
+    const std::vector<double>& Re() const { return mRealF; }
+    const std::vector<double>& Im() const { return mImagF; }
+    const double& Re(const unsigned int f) const { return mRealF[f]; }
+    const double& Im(const unsigned int f) const { return mImagF[f]; }
+
+  public:  // Member functions
+    std::vector<double> InversePSD(const std::string& Detector="AdvLIGO_ZeroDet_HighP") const;
+    double SNR(const std::vector<double>& InversePSD) const;
+    double SNR(const std::string& Detector="AdvLIGO_ZeroDet_HighP") const;
+    double InnerProduct(const WaveformAtAPointFT& B,
+                        const std::vector<double>& InversePSD) const;
+    double Match(const WaveformAtAPointFT& B,
+                 const std::vector<double>& InversePSD) const;
+    double Match(const WaveformAtAPointFT& B,
+                 const std::string& Detector="AdvLIGO_ZeroDet_HighP") const;
+    void Match(const WaveformAtAPointFT& B,
+               const std::vector<double>& InversePSD,
+               double& timeOffset, double& phaseOffset, double& match) const;
+    void Match(const WaveformAtAPointFT& B, double& timeOffset,
+               double& phaseOffset, double& match,
+               const std::string& Detector="AdvLIGO_ZeroDet_HighP") const;
+  public:
+    WaveformAtAPointFT& Normalize(const std::vector<double>& InversePSD);
+    WaveformAtAPointFT& Normalize(const std::string& Detector="AdvLIGO_ZeroDet_HighP");
+    WaveformAtAPointFT& ZeroAbove(const double Frequency);
+  }; // class
+
+} // namespace GWFrames
 
 #endif // WAVEFORMATAPOINTFT_HPP
