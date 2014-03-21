@@ -39,7 +39,7 @@ namespace GWFrames {
     Waveform(const Waveform& W);
     Waveform(const std::string& FileName, const std::string& DataFormat);
     Waveform(const std::vector<double>& T, const std::vector<std::vector<int> >& LM,
-	     const std::vector<std::vector<std::complex<double> > >& Data);
+             const std::vector<std::vector<std::complex<double> > >& Data);
     ~Waveform() { }
     Waveform& operator=(const Waveform&);
 
@@ -151,7 +151,7 @@ namespace GWFrames {
     Waveform& TransformUncertaintiesToInertialFrame();
 
     // Alignment, comparison, and hybridization
-    Waveform Interpolate(const std::vector<double>& NewTime) const;
+    Waveform Interpolate(const std::vector<double>& NewTime, const bool AllowTimesOutsideCurrentDomain=false) const;
     Waveform Segment(const unsigned int i1, const unsigned int i2) const;
     void GetAlignmentOfTime(const Waveform& A, const double t_fid, double& deltat) const;
     Waveform& AlignTime(const Waveform& A, const double t_fid);
@@ -200,10 +200,10 @@ namespace GWFrames {
     void clear() { Ws.clear(); }
     inline unsigned int size() const { return Ws.size(); }
     void SetCommonTime(std::vector<std::vector<double> >& Radii,
-		       const double MinTimeStep=0.005, const double EarliestTime=-3e300, const double LatestTime=3e300);
+                       const double MinTimeStep=0.005, const double EarliestTime=-3e300, const double LatestTime=3e300);
     Waveforms Extrapolate(std::vector<std::vector<double> >& Radii,
-			  const std::vector<int>& ExtrapolationOrders,
-			  const std::vector<double>& Omegas=std::vector<double>(0));
+                          const std::vector<int>& ExtrapolationOrders,
+                          const std::vector<double>& Omegas=std::vector<double>(0));
 
   }; // class Waveforms (plural!)
 

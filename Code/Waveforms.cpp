@@ -1495,30 +1495,69 @@ GWFrames::Waveform& GWFrames::Waveform::TransformUncertaintiesToInertialFrame() 
 }
 
 /// Interpolate the Waveform to a new set of time instants.
-GWFrames::Waveform GWFrames::Waveform::Interpolate(const std::vector<double>& NewTime) const {
+GWFrames::Waveform GWFrames::Waveform::Interpolate(const std::vector<double>& NewTime, const bool AllowTimesOutsideCurrentDomain) const {
+  /// \param NewTime New vector of times to which this interpolates
+  /// \param AllowTimesOutsideCurrentDomain [Default: false]
+  ///
+  /// If `AllowTimesOutsideCurrentDomain` is true, the values of all
+  /// modes will be set to 0.0 for times outside the current set of
+  /// time data.  If false, and such times are requested, an error
+  /// will be thrown.
+  ///
   if(NewTime.size()==0) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Asking for empty Waveform." << std::endl;
     throw(GWFrames_EmptyIntersection);
   }
-  if(NewTime[0]<t[0]) {
-    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Asking for extrapolation; we only do interpolation.\n"
-              << "NewTime[0]=" << NewTime[0] << "\tt[0]=" << t[0] << std::endl;
-    throw(GWFrames_EmptyIntersection);
-  }
-  if(NewTime.back()>t.back()) {
-    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Asking for extrapolation; we only do interpolation.\n"
-              << "NewTime.back()=" << NewTime.back() << "\tt.back()=" << t.back() << std::endl;
-    throw(GWFrames_EmptyIntersection);
+  unsigned int i0=0, i1=NewTime.size()-1;
+  const unsigned int i2 = NewTime.size();
+  vector<double> NewTimesInsideCurrentDomain;
+  if(AllowTimesOutsideCurrentDomain) {
+    // Set the indices in the dumbest way possible
+    while(NewTime[i0]<t[0]) { ++i0; }
+    while(NewTime[i1]>t.back() && i1>0) { --i1; }
+    ++i1;
+    // Now, i0 is the first index in NewTime for which a current time
+    // exists, and i1 is 1 beyond the last index in NewTime for which
+    // a current time exists.
+    NewTimesInsideCurrentDomain.resize(i1-i0);
+    std::copy(NewTime.begin()+i0, NewTime.begin()+i1, NewTimesInsideCurrentDomain.begin());
+  } else {
+    if(NewTime[0]<t[0]) {
+      std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Asking for extrapolation; we only do interpolation.\n"
+                << "NewTime[0]=" << NewTime[0] << "\tt[0]=" << t[0]
+                << "\nMaybe you meant to pass the `AllowTimesOutsideCurrentDomain=true` flag..." << std::endl;
+      throw(GWFrames_EmptyIntersection);
+    }
+    if(NewTime.back()>t.back()) {
+      std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Asking for extrapolation; we only do interpolation.\n"
+                << "NewTime.back()=" << NewTime.back() << "\tt.back()=" << t.back()
+                << "\nMaybe you meant to pass the `AllowTimesOutsideCurrentDomain=true` flag..."  << std::endl;
+      throw(GWFrames_EmptyIntersection);
+    }
   }
 
   Waveform C;
   C.history << HistoryStr()
-            << "### *this = this->Interpolate(NewTime);" << std::endl;
+            << "### *this = this->Interpolate(NewTime," << AllowTimesOutsideCurrentDomain << ");" << std::endl;
   C.t = NewTime;
   if(frame.size()==1) { // Assume we have just a constant non-trivial frame
     C.frame = frame;
   } else if(frame.size()>1) { // Assume we have frame data for each time step
-    C.frame = Squad(frame, t, NewTime);
+    if(AllowTimesOutsideCurrentDomain) {
+      C.frame.resize(NewTime.size());
+      const std::vector<Quaternion> NewFrame = Squad(frame, t, NewTimesInsideCurrentDomain);
+      for(unsigned int i=0; i<i0; ++i) {
+        C.frame[i] = NewFrame[0];
+      }
+      for(unsigned int i=i0; i<i1; ++i) {
+        C.frame[i] = NewFrame[i-i0];
+      }
+      for(unsigned int i=i1; i<i2; ++i) {
+        C.frame[i] = NewFrame.back();
+      }
+    } else {
+      C.frame = Squad(frame, t, NewTime);
+    }
   }
   C.frameType = frameType;
   C.dataType = dataType;
@@ -1540,8 +1579,21 @@ GWFrames::Waveform GWFrames::Waveform::Interpolate(const std::vector<double>& Ne
     gsl_spline_init(splineRe, &(t)[0], &re[0], NTimes());
     gsl_spline_init(splineIm, &(t)[0], &im[0], NTimes());
     // Assign the interpolated data
-    for(unsigned int i_t=0; i_t<C.t.size(); ++i_t) {
-      C.data[i_m][i_t] = complex<double>( gsl_spline_eval(splineRe, C.t[i_t], accRe), gsl_spline_eval(splineIm, C.t[i_t], accIm) );
+    if(AllowTimesOutsideCurrentDomain) {
+      for(unsigned int i_t=0; i_t<i0; ++i_t) {
+        C.data[i_m][i_t] = complex<double>( 0., 0. );
+      }
+      for(unsigned int i_t=i0; i_t<i1; ++i_t) {
+        C.data[i_m][i_t] = complex<double>( gsl_spline_eval(splineRe, NewTimesInsideCurrentDomain[i_t], accRe),
+                                            gsl_spline_eval(splineIm, NewTimesInsideCurrentDomain[i_t], accIm) );
+      }
+      for(unsigned int i_t=i1; i_t<i2; ++i_t) {
+        C.data[i_m][i_t] = complex<double>( 0., 0. );
+      }
+    } else {
+      for(unsigned int i_t=0; i_t<C.t.size(); ++i_t) {
+        C.data[i_m][i_t] = complex<double>( gsl_spline_eval(splineRe, C.t[i_t], accRe), gsl_spline_eval(splineIm, C.t[i_t], accIm) );
+      }
     }
   }
   // Free the interpolators

@@ -55,7 +55,7 @@ ifdef GSL_HOME
 endif
 # Set compiler name and optimization flags here, if desired
 C++ = g++
-OPT = -O3 -fopenmp -Wall
+OPT = -O3 -Wall
 ## DON'T USE -ffast-math in OPT
 
 
