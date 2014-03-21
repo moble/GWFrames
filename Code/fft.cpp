@@ -1,7 +1,5 @@
 #include "fft.hpp"
 
-#include "NumericalRecipes.hpp"
-#include "VectorFunctions.hpp"
 #include "Utilities.hpp"
 
 using namespace std;
@@ -12,7 +10,7 @@ vector<double> WU::TimeToFrequency(const vector<double>& Time) {
   const unsigned int N = Time.size();
   if(N&(N-1)) {
     cerr << "\nN=" << N << " is not a power of 2." << endl;
-    Throw1WithMessage("Bad size");
+    throw;
   }
   const double df = 1.0 / (N*(Time[1]-Time[0]));
   vector<double> Freq(N, 0.0);
@@ -30,7 +28,7 @@ vector<double> WU::TimeToPositiveFrequencies(const vector<double>& Time) {
   const unsigned int N = Time.size();
   if(N&(N-1)) {
     cerr << "\nN=" << N << " is not a power of 2." << endl;
-    Throw1WithMessage("Bad size");
+    throw;
   }
   const unsigned int n = 1 + (N/2);
   const double df = 1.0 / (N*(Time[1]-Time[0]));
@@ -44,7 +42,8 @@ vector<double> WU::TimeToPositiveFrequencies(const vector<double>& Time) {
 void WU::WrapVecDoub::validate() {
   if (n&(n-1)) {
     cerr << "\nn=" << n << endl;
-    Throw1WithMessage("vector size n must be power of 2");
+    cerr << "vector size n must be power of 2" << endl;
+    throw;
   }
 }
 
@@ -60,7 +59,7 @@ void WU::idft(vector<double>& data) {
   return;
 }
 
-void realft(VecDoub_IO &Data, const Int isign);
+void realft(vector<double> &Data, const int isign);
 
 void  WU::realdft(std::vector<double>& data) {
   realft(data, 1);
@@ -72,10 +71,18 @@ void  WU::realdft(std::vector<double>& data) {
 
 
 //// Numerical Recipes routines
-void four1(Doub *data, const Int n, const Int isign) {
-  Int nn,mmax,m,j,istep,i;
-  Doub wtemp,wr,wpr,wpi,wi,theta,tempr,tempi;
-  if (n<2 || n&(n-1)) Throw1WithMessage("n must be power of 2 in four1");
+template<class T>
+inline void SWAP(T &a, T &b) {T dum=a; a=b; b=dum;}
+template<class T>
+inline T SQR(const T a) {return a*a;}
+
+void four1(double *data, const int n, const int isign) {
+  int nn,mmax,m,j,istep,i;
+  double wtemp,wr,wpr,wpi,wi,theta,tempr,tempi;
+  if (n<2 || n&(n-1)) {
+    cerr << "n must be power of 2 in four1" << endl;
+    throw;
+  }
   nn = n << 1;
   j = 1;
   for (i=1;i<nn;i+=2) {
@@ -115,14 +122,14 @@ void four1(Doub *data, const Int n, const Int isign) {
     mmax=istep;
   }
 }
-void four1(VecDoub_IO &data, const Int isign) {
+void four1(vector<double> &data, const int isign) {
   four1(&data[0],data.size()/2,isign);
 }
 
-void realft(VecDoub_IO &data, const Int isign) {
-  Int i,i1,i2,i3,i4,n=data.size();
-  Doub c1=0.5,c2,h1r,h1i,h2r,h2i,wr,wi,wpr,wpi,wtemp;
-  Doub theta=3.141592653589793238/Doub(n>>1);
+void realft(vector<double> &data, const int isign) {
+  int i,i1,i2,i3,i4,n=data.size();
+  double c1=0.5,c2,h1r,h1i,h2r,h2i,wr,wi,wpr,wpi,wtemp;
+  double theta=3.141592653589793238/double(n>>1);
   if (isign == 1) {
     c2 = -0.5;
     four1(data,1);
@@ -159,10 +166,10 @@ void realft(VecDoub_IO &data, const Int isign) {
   }
 }
 
-void convlv(VecDoub_I &data, VecDoub_I &respns, const Int isign, VecDoub_O &ans) {
-  Int i,no2,n=data.size(),m=respns.size();
-  Doub mag2,tmp;
-  VecDoub temp(n);
+void convlv(const vector<double> &data, const vector<double> &respns, const int isign, vector<double> &ans) {
+  int i,no2,n=data.size(),m=respns.size();
+  double mag2,tmp;
+  vector<double> temp(n);
   temp[0]=respns[0];
   for (i=1;i<(m+1)/2;i++) {
     temp[i]=respns[i];
@@ -185,17 +192,24 @@ void convlv(VecDoub_I &data, VecDoub_I &respns, const Int isign, VecDoub_O &ans)
     ans[1]=ans[1]*temp[1]/no2;
   } else if (isign == -1) {
     for (i=2;i<n;i+=2) {
-      if ((mag2=SQR(temp[i])+SQR(temp[i+1])) == 0.0)
-	Throw1WithMessage("Deconvolving at response zero in convlv");
+      if ((mag2=SQR(temp[i])+SQR(temp[i+1])) == 0.0) {
+        cerr << "Deconvolving at response zero in convlv" << endl;
+        throw;
+      }
       tmp=ans[i];
       ans[i]=(ans[i]*temp[i]+ans[i+1]*temp[i+1])/mag2/no2;
       ans[i+1]=(ans[i+1]*temp[i]-tmp*temp[i+1])/mag2/no2;
     }
-    if (temp[0] == 0.0 || temp[1] == 0.0)
-      Throw1WithMessage("Deconvolving at response zero in convlv");
+    if (temp[0] == 0.0 || temp[1] == 0.0) {
+      cerr << "Deconvolving at response zero in convlv" << endl;
+      throw;
+    }
     ans[0]=ans[0]/temp[0]/no2;
     ans[1]=ans[1]/temp[1]/no2;
-  } else Throw1WithMessage("No meaning for isign in convlv");
+  } else {
+    cerr << "No meaning for isign in convlv" << endl;
+    throw;
+  }
   realft(ans,-1);
 }
 

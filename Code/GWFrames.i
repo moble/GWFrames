@@ -1,4 +1,5 @@
 // -*- c++ -*-
+// vim: filetype=cpp
 
 // Copyright (c) 2013, Michael Boyle
 // See LICENSE file for details
@@ -131,6 +132,7 @@
   #include "Utilities.hpp"
   #include "Waveforms.hpp"
   #include "PNWaveforms.hpp"
+  #include "WaveformsAtAPointFT.hpp"
 %}
 
 
@@ -324,6 +326,11 @@ namespace std {
   }
  };
 
+
+////////////////////////////////////////////
+//// Read in the WaveformAtAPoint class ////
+////////////////////////////////////////////
+%include "WaveformsAtAPointFT.hpp"
 
 //////////////////////////////////////
 //// Read in the PNWaveform class ////

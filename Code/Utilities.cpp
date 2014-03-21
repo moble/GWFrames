@@ -44,6 +44,38 @@ std::vector<double> GWFrames::abs(const std::vector<std::vector<double> >& v) {
   return n;
 }
 
+vector<double> GWFrames::fabs(const vector<double>& x) {
+  vector<double> y(x.size());
+  for(unsigned int i=0; i<y.size(); ++i) {
+    y[i] = std::fabs(x[i]);
+  }
+  return y;
+}
+
+vector<double> GWFrames::pow(const vector<double>& base, const double& exponent) {
+  vector<double> y(base.size());
+  for(unsigned int i=0; i<y.size(); ++i) {
+    y[i] = std::pow(base[i], exponent);
+  }
+  return y;
+}
+
+vector<double> GWFrames::log(const vector<double>& x) {
+  vector<double> y(x.size());
+  for(unsigned int i=0; i<y.size(); ++i) {
+    y[i] = std::log(x[i]);
+  }
+  return y;
+}
+
+vector<double> GWFrames::exp(const vector<double>& x) {
+  vector<double> y(x.size());
+  for(unsigned int i=0; i<y.size(); ++i) {
+    y[i] = std::exp(x[i]);
+  }
+  return y;
+}
+
 std::vector<double> GWFrames::operator+(const std::vector<double>& a, const std::vector<double>& b) {
   const unsigned int size = a.size();
   // if(b.size() != size) {
@@ -95,6 +127,18 @@ std::vector<double> GWFrames::operator/(const std::vector<double>& a, const doub
     c[i] /= b;
   }
   return c;
+}
+
+std::vector<double> GWFrames::operator*(const std::vector<double>& a, const double b) {
+  const unsigned int size = a.size();
+  vector<double> c(a);
+  for(unsigned int i=0; i<size; ++i) {
+    c[i] *= b;
+  }
+  return c;
+}
+std::vector<double> GWFrames::operator*(const double a, const std::vector<double>& b) {
+  return b*a;
 }
 
 std::vector<std::vector<double> > GWFrames::operator/(const std::vector<std::vector<double> >& a, const std::vector<double>& b) {

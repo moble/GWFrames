@@ -67,7 +67,7 @@ OPT = -O3 -Wall
 .PHONY : all cpp clean allclean realclean swig
 
 # If needed, we can also make object files to use in other C++ programs
-cpp : Utilities.o Quaternions.o Waveforms.o PNWaveforms.o
+cpp : Utilities.o Quaternions.o Waveforms.o PNWaveforms.o WaveformsAtAPointFT.o
 
 # This is how to build those object files
 %.o : %.cpp %.hpp Errors.hpp
