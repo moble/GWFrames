@@ -12,6 +12,9 @@
 *.la
 *.a
 
+# Compiled Python libraries
+*.pyc
+
 # Created by SWIG and python
 Code/GWFrames.py
 Code/GWFrames/__init__.py
