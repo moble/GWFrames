@@ -12,6 +12,9 @@
 *.la
 *.a
 
+# Compiled Python libraries
+*.pyc
+
 # Created by SWIG and python
 .ipynb_checkpoints
 Code/GWFrames.py
