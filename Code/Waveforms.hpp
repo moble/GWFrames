@@ -4,6 +4,7 @@
 #ifndef WAVEFORMS_HPP
 #define WAVEFORMS_HPP
 
+#include <cmath>
 #include <string>
 #include <sstream>
 #include <complex>
@@ -94,10 +95,10 @@ namespace GWFrames {
     inline bool MIsScaledOut() const { return mIsScaledOut; }
     inline double T(const unsigned int TimeIndex) const { return t[TimeIndex]; }
     inline Quaternions::Quaternion Frame(const unsigned int TimeIndex) const { return (frame.size()>1 ? frame[TimeIndex] : frame[0]); }
-    inline double Re(const unsigned int Mode, const unsigned int TimeIndex) const { return real(data[Mode][TimeIndex]); }
-    inline double Im(const unsigned int Mode, const unsigned int TimeIndex) const { return imag(data[Mode][TimeIndex]); }
-    inline double Abs(const unsigned int Mode, const unsigned int TimeIndex) const { return abs(data[Mode][TimeIndex]); }
-    inline double Arg(const unsigned int Mode, const unsigned int TimeIndex) const { return arg(data[Mode][TimeIndex]); }
+    inline double Re(const unsigned int Mode, const unsigned int TimeIndex) const { return std::real(data[Mode][TimeIndex]); }
+    inline double Im(const unsigned int Mode, const unsigned int TimeIndex) const { return std::imag(data[Mode][TimeIndex]); }
+    inline double Abs(const unsigned int Mode, const unsigned int TimeIndex) const { return std::abs(data[Mode][TimeIndex]); }
+    inline double Arg(const unsigned int Mode, const unsigned int TimeIndex) const { return std::arg(data[Mode][TimeIndex]); }
     inline std::complex<double> Data(const unsigned int Mode, const unsigned int TimeIndex) const { return data[Mode][TimeIndex]; }
     inline std::complex<double> operator()(const unsigned int Mode, const unsigned int TimeIndex) const { return data[Mode][TimeIndex]; }
     inline const std::vector<int>& LM(const unsigned int Mode) const { return lm[Mode]; }

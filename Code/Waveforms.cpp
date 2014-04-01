@@ -1593,6 +1593,23 @@ GWFrames::Waveform& GWFrames::Waveform::TransformToInertialFrame() {
     return *this;
   }
 
+  if(frameType == GWFrames::UnknownFrameType) {
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+              << "\nWarning: Waveform frame type is " << GWFrames::WaveformFrameNames[GWFrames::UnknownFrameType] << "."
+              << "\n         I assume you know what you're doing...\n"
+              << std::endl;
+    return *this;
+  }
+
+  if(frame.size() == 0) {
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+              << "\nWarning: frame.size()=" << frame.size() << ".  I will assume that this *is* the"
+              << "           inertial frame, so this function will have no effect.\n"
+              <<"            And I will continue to assume you know what you're doing...\n"
+              << std::endl;
+    return *this;
+  }
+
   if(frame.size() != NTimes()) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
               << "\nError: (frame.size()=" << frame.size() << ") != (NTimes()=" << NTimes() << ")."
@@ -1934,6 +1951,13 @@ void GWFrames::Waveform::GetAlignmentOfDecompositionFrameToModes(const double t_
     throw(GWFrames_WrongFrameType);
   }
 
+  if(t_fid<t[0] || t_fid>t.back()) {
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ":"
+              << "\nError: The requested alignment time t_fid=" << t_fid << " is outside the range of times in this waveform ("
+              << t[0] << ", " << t.back() << ")." << std::endl;
+    throw(GWFrames_EmptyIntersection);
+  }
+
   // Get direction of angular-velocity vector near t_fid
   Quaternion omegaHat;
   {
@@ -2096,6 +2120,9 @@ void GWFrames::Waveform::GetAlignmentOfTimeAndFrame(const Waveform& A, const dou
   /// `AlignTimeAndFrame` and probably does not need to be called
   /// directly; see that function's documentation for more details.
   ///
+  /// In particular, note that this function is basically just a
+  /// wrapper for the `Quaternions::OptimalAlignment` function.
+  ///
   /// \sa AlignTimeAndFrame
   ///
 
@@ -2130,11 +2157,23 @@ GWFrames::Waveform& GWFrames::Waveform::AlignTimeAndFrame(const GWFrames::Wavefo
   /// it is applied will change.  However, the modes are not altered;
   /// only the `t` and `frame` data are.
   ///
-  /// As noted above, it is implicitly assumed that both Waveforms are
-  /// in their corotating frames, with the modes appropriately aligned
-  /// to the frames at t_fid.  The assumption is that the frames
-  /// actually represent something physically meaningful, so that it
-  /// is meaningful to insist that they be the same.
+  /// The times `t1` and `t2` are measured relative to the time in
+  /// Waveform `A`, and all are left fixed; only this Waveform is
+  /// shifted (in time and orientation) to achieve alignment.
+  ///
+  /// It is implicitly assumed that both Waveforms are in their
+  /// corotating frames, with the modes appropriately aligned to the
+  /// frames using `AlignDecompositionFrameToModes` at some fiducial
+  /// time at roughly the average of `t1` and `t2`.  The assumption is
+  /// that the frames then actually represent something physically
+  /// meaningful, so that it is meaningful to insist that they be the
+  /// same.
+  ///
+  /// Also, it is assumed that the time data for the two waveforms are
+  /// fairly closely aligned.  In particular, the minimization
+  /// algorithm searches over time offsets of magnitude (t2-t1)/2.0 or
+  /// less.  So, basically, the time data for this Waveform must be
+  /// within \f$\pm (t2-t1)/2\f$ of the "correct" result.
   ///
   /// Then, this function adjust the time and orientation of this
   /// Waveform, so that the difference between the two frames is
@@ -2303,7 +2342,12 @@ GWFrames::Waveform GWFrames::Waveform::Hybridize(const GWFrames::Waveform& B, co
   ///
   /// This function simply takes two Waveforms and blends them
   /// together.  In particular, it does not align the Waveforms; that
-  /// is assumed to have been done already.  The transition function is a smooth
+  /// is assumed to have been done already.
+  ///
+  /// The transition function is a \f$C^\infty\f$ function, meaning
+  /// that the output data has exactly this Waveform's data before
+  /// `t1`, exactly Waveform `B`'s data after t2, and a smooth blend
+  /// in between.
   ///
   /// Note that this function does NOT operate in place; a new
   /// Waveform object is constructed and returned.
