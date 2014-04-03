@@ -7,17 +7,19 @@
 #include "Waveforms.hpp"
 
 namespace GWFrames {
-  
-  /// Object for calculating a post-Newtonian Waveform with (optional) precession
+
+  /// Object for calculating a post-Newtonian Waveform (NOTE:
+  /// Precession is not supported correctly; consider precessing
+  /// waveforms created by this code to be for pipeline testing only.)
   class PNWaveform : public Waveform {
-    
+
   public:  // Constructors and Destructor
     PNWaveform();
     PNWaveform(const PNWaveform& W);
     PNWaveform(const double delta, const std::vector<double>& chi1_0, const std::vector<double>& chi2_0, const double Omega_orb_0,
-	       const GWFrames::Quaternion& R_0=GWFrames::Quaternion(1,0,0,0));
+               const GWFrames::Quaternion& R_0=GWFrames::Quaternion(1,0,0,0), const unsigned int MinStepsPerOrbit=0);
     ~PNWaveform() { }
-    
+
   private:  // Member data
     // std::stringstream history;           // inherited from Waveform
     // std::vector<double> t;               // inherited from Waveform
@@ -30,7 +32,7 @@ namespace GWFrames {
     std::vector<std::vector<double> > mOmega_prec;
     std::vector<std::vector<double> > mL;
     std::vector<double> mPhi_orb;
-    
+
   public:  // Data access functions
     // Vector a specific time index
     inline const std::vector<double>& chi1(const unsigned int iTime) const { return mchi1[iTime]; }
@@ -75,9 +77,9 @@ namespace GWFrames {
     // Phase
     inline double Phi_orb(const unsigned int iTime) const { return mPhi_orb[iTime]; }
     inline const std::vector<double>& Phi_orb() const { return mPhi_orb; }
-    
+
   }; // class PNWaveform
-  
+
 } // namespace GWFrames
 
 #endif // PNWAVEFORMS_HPP

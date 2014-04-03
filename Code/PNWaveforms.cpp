@@ -50,10 +50,10 @@ GWFrames::PNWaveform::PNWaveform() :
     history.str("");
     history.clear();
     history << "### Code revision (`git rev-parse HEAD` or arXiv version) = " << CodeRevision << std::endl
-	    << "### pwd = " << pwd << std::endl
-	    << "### hostname = " << hostname << std::endl
-	    << "### date = " << date // comes with a newline
-	    << "### PNWaveform(); // empty constructor" << std::endl;
+            << "### pwd = " << pwd << std::endl
+            << "### hostname = " << hostname << std::endl
+            << "### date = " << date // comes with a newline
+            << "### PNWaveform(); // empty constructor" << std::endl;
   }
 }
 
@@ -84,22 +84,23 @@ void WaveformModes(const double delta, const double v, const double chisl, const
 
 /// Constructor of PN waveform from parameters
 GWFrames::PNWaveform::PNWaveform(const double delta,
-				 const std::vector<double>& chi1_0, const std::vector<double>& chi2_0,
-				 const double Omega_orb_0, const GWFrames::Quaternion& R_0) :
+                                 const std::vector<double>& chi1_0, const std::vector<double>& chi2_0,
+                                 const double Omega_orb_0, const GWFrames::Quaternion& R_0, const unsigned int MinStepsPerOrbit) :
   Waveform(), mchi1(0), mchi2(0), mOmega_orb(0), mOmega_prec(0), mL(0), mPhi_orb(0)
 {
-  /// 
+  ///
   /// \param delta Normalized BH mass difference (M1-M2)/(M1+M2)
   /// \param chi1_0 Initial dimensionless spin vector of BH1
   /// \param chi2_0 Initial dimensionless spin vector of BH2
   /// \param Omega_orb_0 Initial orbital angular frequency
-  /// \param R_0 Overall rotation of the system (optional)
-  /// 
+  /// \param R_0 Optional overall rotation of the system
+  /// \param MinStepsPerOrbit Optional number of time steps taken per orbit
+  ///
   /// The PN system is initialized having the BHs along the x axis,
   /// with the orbital angular velocity along the positive z axis,
   /// having magnitude Omega_orb_0.  The input spin vectors must be
   /// defined with respect to this basis.
-  /// 
+  ///
   /// The TaylorT1 system is first integrated to compute the dynamics
   /// of the binary.  The evolved spin vectors chi1 and chi2, orbital
   /// angular-velocity vector Omega_orb, and orbital phase Phi_orb are
@@ -109,19 +110,19 @@ GWFrames::PNWaveform::PNWaveform(const double delta,
   /// step is completed, the information is used to construct the
   /// waveform in the minimal-rotation frame.  (That is, the waveform
   /// will be essentially corotating.)
-  /// 
+  ///
   /// Note that, to get the PNWaveform in an inertial frame, you must
   /// first apply the method TransformToCorotatingFrame().
 
-  std::cerr << "WARNING: The precession equations for `PNWaveform` are incorrect.  Non-precessing systems"
+  std::cerr << "WARNING: The precession equations for `PNWaveform` are incorrect.  Non-precessing systems\n"
             << "         should be correct.  Otherwise, however, take these as simply test data for other code."
             << std::endl;
-  
+
   SetFrameType(GWFrames::Coorbital);
   SetDataType(GWFrames::h);
   SetRIsScaledOut(true);
   SetMIsScaledOut(true);
-  
+
   { // Overwrite the history from Waveform
     char path[MAXPATHLEN];
     getcwd(path, MAXPATHLEN);
@@ -135,13 +136,13 @@ GWFrames::PNWaveform::PNWaveform(const double delta,
     history.str("");
     history.clear();
     history << "### Code revision (`git rev-parse HEAD` or arXiv version) = " << CodeRevision << std::endl
-	    << "### pwd = " << pwd << std::endl
-	    << "### hostname = " << hostname << std::endl
-	    << "### date = " << date // comes with a newline
-	    << "### PNWaveform(" << delta << ", " << VectorStringForm(chi1_0) << ", " << VectorStringForm(chi2_0)
-	    << ", " << Omega_orb_0 << ", " << R_0 << ");" << std::endl;
+            << "### pwd = " << pwd << std::endl
+            << "### hostname = " << hostname << std::endl
+            << "### date = " << date // comes with a newline
+            << "### PNWaveform(" << delta << ", " << VectorStringForm(chi1_0) << ", " << VectorStringForm(chi2_0)
+            << ", " << Omega_orb_0 << ", " << R_0 << ");" << std::endl;
   }
-  
+
   vector<double> ystart(12);
   const GWFrames::Quaternion chi1_0Q = R_0 * GWFrames::Quaternion(chi1_0) * R_0.conjugate();
   const GWFrames::Quaternion chi2_0Q = R_0 * GWFrames::Quaternion(chi2_0) * R_0.conjugate();
@@ -159,26 +160,28 @@ GWFrames::PNWaveform::PNWaveform(const double delta,
   ystart[9] = LNHatQ[2];                              // LNHat_y
   ystart[10] = LNHatQ[3];                             // LNHat_z
   ystart[11] = GWFrames::angle(Rax.conjugate()*R_0);  // gamma
-  
+
   const unsigned int MinSteps = 100000; // This is only an approximate lower limit
-  const unsigned int MaxSteps = 10000000; // This is a hard upper limit
-  
+  const unsigned int MaxSteps = 100000000; // This is a hard upper limit
+
   const double nu = (1.0-delta*delta)/4.0;
   double time = -5.0/(256.0*nu*std::pow(ystart[0],8)); // This is the lowest-order pN time-to-merger
   double endtime = -3*time; // Give ourselves a large margin of error in case inspiral runs longer than expected
   double h = 1.0e0;
-  
+
   TaylorT1 T1(delta, chi1_0, chi2_0, ystart[0], R_0);
   T1.RecalculateValues(time, &ystart[0]);
-  const double eps_abs = 1.e-15;
-  const double eps_rel = 1.e-10;
-  const double hmin = 1.0e-3;
+  const double eps_abs = 1.e-13;
+  const double eps_rel = 1.e-13;
+  const double hmin = 1.0e-4;
   const double hmax = (endtime-time) / (2.0*MinSteps);
+  double hnext = hmax;
+
   const GWFrames::Quaternion zHat(0,0,0,1);
-  
+
   vector<double> y(ystart);
   vector<double> v;
-  
+
   // Reserve plenty of space in the vectors
   v.reserve(MinSteps);
   mchi1.reserve(MinSteps);
@@ -189,14 +192,14 @@ GWFrames::PNWaveform::PNWaveform(const double delta,
   mPhi_orb.reserve(MinSteps);
   frame.reserve(MinSteps);
   t.reserve(MinSteps);
-  
+
   // Declare and initialize the GSL ODE integrator
   const gsl_odeiv2_step_type* T = gsl_odeiv2_step_rk8pd;
   gsl_odeiv2_step* s = gsl_odeiv2_step_alloc(T, 12);
   gsl_odeiv2_control* c = gsl_odeiv2_control_y_new(eps_abs, eps_rel);
   gsl_odeiv2_evolve* e = gsl_odeiv2_evolve_alloc(12);
   gsl_odeiv2_system sys = {func, NULL, 12, (void *) &T1};
-  
+
   // Store the data at the first step
   {
     v.push_back(y[0]);
@@ -212,14 +215,14 @@ GWFrames::PNWaveform::PNWaveform(const double delta,
     frame.push_back(GWFrames::sqrtOfRotor(-GWFrames::Quaternion(mOmega_orb.back()).normalized()*zHat) * GWFrames::exp(((y[11]+y[1])/2.)*zHat));
     t.push_back(time);
   }
-  
+
   // Run the integration
   unsigned int NSteps = 0;
   while (time < endtime) {
     // Take a step
-    int status = gsl_odeiv2_evolve_apply(e, c, s, &sys, &time, time+hmax, &h, &y[0]);
+    int status = gsl_odeiv2_evolve_apply(e, c, s, &sys, &time, time+hnext, &h, &y[0]);
     ++NSteps;
-    
+
     // Check if it worked and the system is still reasonable
     if(status == GSL_ETOLF) {
       std::cout << "Velocity v has become greater than 1.0" << std::endl;
@@ -231,7 +234,7 @@ GWFrames::PNWaveform::PNWaveform(const double delta,
       std::cerr << "GSL odeiv2 error.  Return value=" << status << "\n" << std::endl;
       break;
     }
-    
+
     // If so, store the data
     v.push_back(y[0]);
     mchi1.push_back(std::vector<double>(&y[2],&y[5]));
@@ -245,38 +248,44 @@ GWFrames::PNWaveform::PNWaveform(const double delta,
     mPhi_orb.push_back(y[1]);
     frame.push_back(GWFrames::sqrtOfRotor(-GWFrames::Quaternion(mOmega_orb.back()).normalized()*zHat) * GWFrames::exp(((y[11]+y[1])/2.)*zHat));
     t.push_back(time);
-    
+
     // Check if we should stop because this has gone on suspiciously long
     if(time>=endtime) {
       std::cerr << "Time has gone on four times as long as expected.  This seems strange, so we'll stop."
-		<< "\nNote that this is unusual.  You may have a short waveform that stops before merger." << std::endl;
+                << "\nNote that this is unusual.  You may have a short waveform that stops before merger." << std::endl;
       break;
     }
-    
+
     // Check if we should stop because there have been too many steps
     if(NSteps>MaxSteps) {
       std::cerr << "\n\nThe integration has taken " << NSteps << ".  This seems excessive, so we'll stop."
-		<< "\nNote that this is unusual.  You may have a short waveform that stops before merger." << std::endl;
+                << "\nNote that this is unusual.  You may have a short waveform that stops before merger." << std::endl;
       break;
     }
-    
+
     // Check if we should stop because the step has gotten too small,
     // but make sure we at least take 10 steps.  [This is the
     // condition that we expect to stop us near merger.]
     if(NSteps>10 && h<hmin) { break; }
+
+    if(MinStepsPerOrbit!=0) {
+      // Set the next time-step size (actually just an upper limit)
+      const double OrbitalPeriod = 2*M_PI/Omega_orbMag;
+      hnext = std::min(h, std::min(hmax, OrbitalPeriod/(MinStepsPerOrbit+1.0)));
+    }
   }
-  
+
   // Free the gsl storage
   gsl_odeiv2_evolve_free(e);
   gsl_odeiv2_control_free(c);
   gsl_odeiv2_step_free(s);
-  
+
   // Make the last time = 0.0
   const double tback = t.back();
   for(unsigned int i=0; i<t.size(); ++i) {
     t[i] -= tback;
   }
-  
+
   // Set up the (ell,m) data
   // We need (2*ell+1) coefficients for each value of ell from 2 up to
   // ellMax_PNWaveforms.  That's a total of
@@ -293,13 +302,13 @@ GWFrames::PNWaveform::PNWaveform(const double delta,
     unsigned int i=0;
     for(int ell=2; ell<=ellMax_PNWaveforms; ++ell) {
       for(int m=-ell; m<=ell; ++m) {
-	lm[i][0] = ell;
-	lm[i][1] = m;
-	++i;
+        lm[i][0] = ell;
+        lm[i][1] = m;
+        ++i;
       }
     }
   }
-  
+
   // Evaluate the waveform data itself, noting that we always use the
   // frame in standard position (BHs on the x axis, with angular
   // velocity along the positive z axis).  This can then be
@@ -319,7 +328,7 @@ GWFrames::PNWaveform::PNWaveform(const double delta,
       data[i_lm][i_t] = modes[i_lm];
     }
   }
-  
+
 } // end PN constructor
 
 
