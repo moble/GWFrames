@@ -330,6 +330,10 @@ namespace std {
 ////////////////////////////////////////////
 //// Read in the WaveformAtAPoint class ////
 ////////////////////////////////////////////
+//// Parse the header file to generate wrappers
+%apply double *INOUT { double& timeOffset };
+%apply double *INOUT { double& phaseOffset };
+%apply double *INOUT { double& match };
 %include "WaveformsAtAPointFT.hpp"
 
 //////////////////////////////////////
