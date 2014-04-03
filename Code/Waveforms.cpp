@@ -2338,13 +2338,37 @@ GWFrames::Waveform GWFrames::Waveform::Hybridize(const GWFrames::Waveform& B, co
   // Make A a convenient alias
   const GWFrames::Waveform& A = *this;
 
-  // Check to see if the frameTypes are the same
+  // Check to see if the various type flags agree
   if(A.frameType != B.frameType) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
               << "\nWarning:"
-              << "\n       This Waveform is in the " << GWFrames::WaveformFrameNames[A.frameType] << " frame,"
+              << "\n       This Waveform is in the " << GWFrames::WaveformFrameNames[A.frameType] << " frame."
               << "\n       The Waveform in the argument is in the " << GWFrames::WaveformFrameNames[B.frameType] << " frame."
-              << "\n       Comparing them probably does not make sense.\n"
+              << "\n       Hybridizing them probably does not make sense.\n"
+              << std::endl;
+  }
+  if(A.dataType != B.dataType) {
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+              << "\nWarning:"
+              << "\n       This Waveform has data type " << GWFrames::WaveformDataNames[A.dataType] << "."
+              << "\n       The Waveform in the argument has data type " << GWFrames::WaveformDataNames[B.dataType] << "."
+              << "\n       Hybridizing them probably does not make sense.\n"
+              << std::endl;
+  }
+  if(A.rIsScaledOut != B.rIsScaledOut) {
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+              << "\nWarning:"
+              << "\n       This Waveform claims radius is " << (A.rIsScaledOut ? "" : "not ") << "scaled out."
+              << "\n       The Waveform in the argument claims radius is " << (B.rIsScaledOut ? "" : "not ") << "scaled out."
+              << "\n       Hybridizing them probably does not make sense.\n"
+              << std::endl;
+  }
+  if(A.mIsScaledOut != B.mIsScaledOut) {
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+              << "\nWarning:"
+              << "\n       This Waveform claims mass is " << (A.mIsScaledOut ? "" : "not ") << "scaled out."
+              << "\n       The Waveform in the argument claims mass is " << (B.mIsScaledOut ? "" : "not ") << "scaled out."
+              << "\n       Hybridizing them probably does not make sense.\n"
               << std::endl;
   }
 
@@ -2368,8 +2392,13 @@ GWFrames::Waveform GWFrames::Waveform::Hybridize(const GWFrames::Waveform& B, co
       throw(GWFrames_EmptyIntersection);
     }
   }
+
   // We'll put all the data in a new Waveform C
   GWFrames::Waveform C;
+  C.frameType = A.frameType;
+  C.dataType = A.dataType;
+  C.rIsScaledOut = A.rIsScaledOut;
+  C.mIsScaledOut = A.mIsScaledOut;
   // Store both old histories in C's
   C.history << "### A.Hybridize(B, " << t1 << ", " << t2 << ", " << tMinStep << ")\n"
             << "#### A.history.str():\n" << A.history.str()
