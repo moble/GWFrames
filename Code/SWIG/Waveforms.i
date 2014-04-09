@@ -31,7 +31,6 @@
 %feature("pythonappend") GWFrames::Waveform::LdtVector() const %{ if isinstance(val, tuple) : val = numpy.array(val) %}
 %feature("pythonappend") GWFrames::Waveform::LLMatrix() const %{ if isinstance(val, tuple) : val = numpy.array(val) %}
 %feature("pythonappend") GWFrames::Waveform::OShaughnessyEtAlVector() const %{ if isinstance(val, tuple) : val = numpy.array(val) %}
-%feature("pythonappend") GWFrames::Waveform::SchmidtEtAlVector() const %{ if isinstance(val, tuple) : val = numpy.array(val) %}
 %feature("pythonappend") GWFrames::Waveform::AngularVelocityVector() const %{ if isinstance(val, tuple) : val = numpy.array(val) %}
 %feature("pythonappend") GWFrames::Waveform::CorotatingFrame() const %{ if isinstance(val, tuple) : val = numpy.array(val) %}
 %feature("pythonappend") GWFrames::Waveform::PNEquivalentOrbitalAV() const %{ if isinstance(val, tuple) : val = numpy.array(val) %}

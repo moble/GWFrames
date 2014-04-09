@@ -212,19 +212,6 @@ The operator edth^2 bar{edth}^2.
   
 """
 
-%feature("docstring") GWFrames::Waveform::HackSpECSignError """
-Correct the error in RWZ extraction from older SpEC files.
-==========================================================
-  Parameters
-  ----------
-    (none)
-  
-  Returns
-  -------
-    Waveform&
-  
-"""
-
 %feature("docstring") GWFrames::Waveform::PNEquivalentOrbitalAV """
 Deduce PN-equivalent orbital angular velocity from Waveform.
 ============================================================
@@ -246,20 +233,6 @@ Deduce PN-equivalent orbital angular velocity from Waveform.
     
     If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
     or [2,3,4], for example, restricts the range of the sum.
-  
-"""
-
-%feature("docstring") GWFrames::Waveform::SchmidtEtAlVector """
-
-
-  Parameters
-  ----------
-    const double alpha0Guess = 0.0
-    const double beta0Guess = 0.0
-  
-  Returns
-  -------
-    vector<vector<double>>
   
 """
 
@@ -383,7 +356,7 @@ Deduce PN-equivalent orbital angular velocity from Waveform.
   
   Returns
   -------
-    void
+    Waveform&
   
 """
 
@@ -594,6 +567,19 @@ class GWFrames::Modes
   
 """
 
+%feature("docstring") GWFrames::Waveform::operator+ """
+
+
+  Parameters
+  ----------
+    const Waveform& B
+  
+  Returns
+  -------
+    Waveform
+  
+"""
+
 %feature("docstring") GWFrames::Waveform::GHPEdthBar """
 Geroch-Held-Penrose edth operator conjugate.
 ============================================
@@ -645,6 +631,44 @@ Geroch-Held-Penrose edth operator conjugate.
     IntegrateGHPEdth
     
     IntegrateGHPEdthBar
+  
+"""
+
+%feature("docstring") GWFrames::Waveforms::Extrapolate """
+Main extrapolation routine.
+===========================
+  Parameters
+  ----------
+    vector<vector<double>>& Radii
+      Array of radii for each Waveform (first index) and each time (second
+      index)
+    const vector<int>& ExtrapolationOrders
+      List of integers denote extrapolation orders
+    const vector<double>& Omegas = vector<double>(0)
+      Optional list of angular frequencies for scaling extrapolation polynomial
+  
+  Returns
+  -------
+    Waveforms
+  
+  Description
+  -----------
+    The input FiniteRadiusWaveforms are assumed to be properly scaled and
+    time-retarded, and interpolated to a uniform set of retarded times. This
+    function simply steps through the indices, fitting those data to
+    polynomials in 1/radius, and evaluating at 0 (for infinity).
+    
+    The extrapolation orders can be negative. In this case, the scaled,
+    time-retarded waveform at finite radius is given, where N=-1 is the
+    outermost Waveform, N=-2 is the second to outermost, etc.
+    
+    Note that the fitting uses gsl_multifit_linear_usvd, which is GSL's fitting
+    function that does NOT use column scaling (specified by the 'u' in front of
+    'svd' in the function name). The basic GSL fitting function uses column
+    scaling 'to improve
+the accuracy of the singular values'. However, for
+    convergent series, this scaling can make all the coefficients roughly equal
+    (just as the Omegas option does), which defeats the SVD.
   
 """
 
@@ -845,15 +869,12 @@ Integrate the Geroch-Held-Penrose edth operator conjugate.
   
 """
 
-%feature("docstring") GWFrames::Waveform::TransformToSchmidtEtAlFrame """
-Transform Waveform to Schmidt et al. frame.
-===========================================
+%feature("docstring") GWFrames::Waveform::BoostPsi4 """
+Apply a boost to Psi4 data.
+===========================
   Parameters
   ----------
-    const double alpha0Guess = 0.0
-      Initial guess for optimal direction alpha
-    const double beta0Guess = 0.0
-      Initial guess for optimal direction beta
+    const vector<vector<double>>& v
   
   Returns
   -------
@@ -861,8 +882,15 @@ Transform Waveform to Schmidt et al. frame.
   
   Description
   -----------
-    This function combines the steps required to obtain the Waveform in the
-    Schmidt et al. frame.
+    This function does three things. First, it evaluates the Waveform on what
+    will become an equi-angular grid after transformation by the boost. Second,
+    at each point of that grid, it takes the appropriate combinations of the
+    present value of Psi_4 and its conjugate to give the value of Psi_4 as
+    observed in the boosted frame. Finally, it transforms back to Fourier space
+    using that new equi-angular grid.
+    
+    The input three-velocities are assumed to give the velocities of the
+    boosted frame relative to the present frame.
   
 """
 
@@ -914,7 +942,7 @@ class GWFrames::Waveform
   
   Returns
   -------
-    void
+    Waveform&
   
 """
 
@@ -973,7 +1001,7 @@ Apply a (constant) BMS transformation to data on null infinity.
   
   Returns
   -------
-    void
+    Waveform&
   
 """
 
@@ -1079,7 +1107,7 @@ Explicit constructor from data.
   
   Returns
   -------
-    void
+    Waveform&
   
 """
 
@@ -1105,7 +1133,11 @@ Hybridize this Waveform with another.
   -----------
     This function simply takes two Waveforms and blends them together. In
     particular, it does not align the Waveforms; that is assumed to have been
-    done already. The transition function is a smooth
+    done already.
+    
+    The transition function is a $C^\\infty$ function, meaning that the output
+    data has exactly this Waveform's data before t1, exactly Waveform B's data
+    after t2, and a smooth blend in between.
     
     Note that this function does NOT operate in place; a new Waveform object is
     constructed and returned.
@@ -1164,6 +1196,19 @@ Return time derivative of data.
   Returns
   -------
     vector<complex<double>>
+  
+"""
+
+%feature("docstring") GWFrames::Waveform::Differentiate """
+Differentiate the waveform as a function of time.
+=================================================
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    Waveform&
   
 """
 
@@ -1241,6 +1286,20 @@ Execute a BMS transformation except for the supertranslation of points.
     change of grid at each point, and the change of grid points themselves. The
     returned object is a DataGrid object, each point of which can then be used
     to interpolate to the supertranslated time.
+  
+"""
+
+%feature("docstring") NumberToString """
+
+
+  Parameters
+  ----------
+    typename T 
+    T Number
+  
+  Returns
+  -------
+    typename T
   
 """
 
@@ -1562,6 +1621,9 @@ Get time and frame offset for alignment over extended region.
     This is called by AlignTimeAndFrame and probably does not need to be called
     directly; see that function's documentation for more details.
     
+    In particular, note that this function is basically just a wrapper for the
+    Quaternions::OptimalAlignment function.
+    
     AlignTimeAndFrame
   
 """
@@ -1603,41 +1665,28 @@ Empty constructor with reserved storage.
   
 """
 
-%feature("docstring") GWFrames::Waveforms::Extrapolate """
-Main extrapolation routine.
-===========================
+%feature("docstring") GWFrames::Waveform::InterpolateToPoint """
+Evaluate Waveform at a particular sky location and an instant of time.
+======================================================================
   Parameters
   ----------
-    vector<vector<double>>& Radii
-      Array of radii for each Waveform (first index) and each time (second
-      index)
-    const vector<int>& ExtrapolationOrders
-      List of integers denote extrapolation orders
-    const vector<double>& Omegas = vector<double>(0)
-      Optional list of angular frequencies for scaling extrapolation polynomial
+    const double vartheta
+      Polar angle of detector
+    const double varphi
+      Azimuthal angle of detector
+    const double t_i
+      New time to interpolate to
   
   Returns
   -------
-    Waveforms
+    complex<double>
   
   Description
   -----------
-    The input FiniteRadiusWaveforms are assumed to be properly scaled and
-    time-retarded, and interpolated to a uniform set of retarded times. This
-    function simply steps through the indices, fitting those data to
-    polynomials in 1/radius, and evaluating at 0 (for infinity).
-    
-    The extrapolation orders can be negative. In this case, the scaled,
-    time-retarded waveform at finite radius is given, where N=-1 is the
-    outermost Waveform, N=-2 is the second to outermost, etc.
-    
-    Note that the fitting uses gsl_multifit_linear_usvd, which is GSL's fitting
-    function that does NOT use column scaling (specified by the 'u' in front of
-    'svd' in the function name). The basic GSL fitting function uses column
-    scaling 'to improve
-the accuracy of the singular values'. However, for
-    convergent series, this scaling can make all the coefficients roughly equal
-    (just as the Omegas option does), which defeats the SVD.
+    Note that the input angle parameters are measured relative to the binary's
+    coordinate system. In particular, this will make no sense if the frame type
+    is something other than inertial, and will fail if the FrameType is neither
+    UnknownFrameType nor Inertial.
   
 """
 
@@ -1656,45 +1705,16 @@ Construct a grid with the conformal factor at each point.
   
 """
 
-%feature("docstring") GWFrames::Waveform::Boost """
-Apply a boost to a boost-weighted function.
-===========================================
-  Parameters
-  ----------
-    const vector<double>& v
-  
-  Returns
-  -------
-    Waveform
-  
-  Description
-  -----------
-    This function does three things. First, it evaluates the Waveform on what
-    will become an equi-angular grid after transformation by the boost. Second,
-    it multiplies each of those points by the appropriate conformal factor
-    $K^b(\\vartheta, \\varphi)$, where $b$ is the boost weight stored with the
-    Waveform. Finally, it transforms back to Fourier space using that new
-    equi-angular grid.
-  
+%feature("docstring") GWFrames::Waveforms::~Waveforms """
 
-Apply a boost to a boost- and spin-weighted function.
-=====================================================
+
   Parameters
   ----------
-    const vector<vector<double>>& v
+    (none)
   
   Returns
   -------
-    Waveform&
-  
-  Description
-  -----------
-    This function does three things. First, it evaluates the Waveform on what
-    will become an equi-angular grid after transformation by the boost. Second,
-    it multiplies each of those points by the appropriate conformal factor
-    $K^b(\\vartheta, \\varphi)$, where $b$ is the boost weight stored with the
-    Waveform. Finally, it transforms back to Fourier space using that new
-    equi-angular grid.
+    ~Waveforms
   
 """
 
@@ -1821,22 +1841,6 @@ Assignment operator.
   
 """
 
-%feature("docstring") SchmidtEtAl_fdf """
-
-
-  Parameters
-  ----------
-    const gsl_vector * v
-    void * params
-    double * f
-    gsl_vector * df
-  
-  Returns
-  -------
-    void
-  
-"""
-
 %feature("docstring") GWFrames::Waveform::Abs """
 
 
@@ -1959,11 +1963,21 @@ Align time and frame over extended region.
     applied will change. However, the modes are not altered; only the t and
     frame data are.
     
-    As noted above, it is implicitly assumed that both Waveforms are in their
-    corotating frames, with the modes appropriately aligned to the frames at
-    t_fid. The assumption is that the frames actually represent something
-    physically meaningful, so that it is meaningful to insist that they be the
-    same.
+    The times t1 and t2 are measured relative to the time in Waveform A, and
+    all are left fixed; only this Waveform is shifted (in time and orientation)
+    to achieve alignment.
+    
+    It is implicitly assumed that both Waveforms are in their corotating
+    frames, with the modes appropriately aligned to the frames using
+    AlignDecompositionFrameToModes at some fiducial time at roughly the average
+    of t1 and t2. The assumption is that the frames then actually represent
+    something physically meaningful, so that it is meaningful to insist that
+    they be the same.
+    
+    Also, it is assumed that the time data for the two waveforms are fairly
+    closely aligned. In particular, the minimization algorithm searches over
+    time offsets of magnitude (t2-t1)/2.0 or less. So, basically, the time data
+    for this Waveform must be within $\\pm (t2-t1)/2$ of the 'correct' result.
     
     Then, this function adjust the time and orientation of this Waveform, so
     that the difference between the two frames is minimized. That difference is
@@ -2121,7 +2135,7 @@ Transform Waveform to an inertial frame.
   
   Returns
   -------
-    void
+    Waveform&
   
 """
 
@@ -2177,20 +2191,6 @@ Construct a grid with the conformal factor at each point.
   
 """
 
-%feature("docstring") SchmidtEtAl_f """
-
-
-  Parameters
-  ----------
-    const gsl_vector * v
-    void * params
-  
-  Returns
-  -------
-    double
-  
-"""
-
 %feature("docstring") GWFrames::Modes::SetEllMax """
 
 
@@ -2237,7 +2237,7 @@ Transform Waveform to corotating frame.
   
   Returns
   -------
-    void
+    Waveform&
   
 """
 
@@ -2266,21 +2266,6 @@ Find index of mode with given (l,m) data.
   Returns
   -------
     unsigned int
-  
-"""
-
-%feature("docstring") SchmidtEtAl_df """
-
-
-  Parameters
-  ----------
-    const gsl_vector * v
-    void * params
-    gsl_vector * df
-  
-  Returns
-  -------
-    void
   
 """
 
@@ -2552,16 +2537,17 @@ Calculate the $<LL>$ quantity defined in the paper.
   
 """
 
-%feature("docstring") GWFrames::Waveform::operator+ """
-
-
+%feature("docstring") GWFrames::Waveform::DropTimesOutside """
+Remove all data relating to times outside of the given range.
+=============================================================
   Parameters
   ----------
-    const Waveform& B
+    const double ta
+    const double tb
   
   Returns
   -------
-    Waveform
+    Waveform&
   
 """
 
@@ -2685,7 +2671,7 @@ class GWFrames::SuperMomenta
   
   Returns
   -------
-    void
+    Waveform&
   
 """
 
@@ -2995,7 +2981,7 @@ Derive three-velocity from the inverse conformal metric.
   
   Returns
   -------
-    void
+    Waveform&
   
 
 
@@ -3008,7 +2994,7 @@ Derive three-velocity from the inverse conformal metric.
   
   Returns
   -------
-    void
+    Waveform&
   
 """
 
@@ -3065,6 +3051,19 @@ class GWFrames::ScriFunctor
 ===========================
 """
 
+%feature("docstring") GWFrames::Waveform::InterpolateInPlace """
+Interpolate the Waveform to a new set of time instants.
+=======================================================
+  Parameters
+  ----------
+    const vector<double>& NewTime
+  
+  Returns
+  -------
+    Waveform&
+  
+"""
+
 %feature("docstring") GWFrames::Waveform::ResizeData """
 
 
@@ -3075,7 +3074,7 @@ class GWFrames::ScriFunctor
   
   Returns
   -------
-    void
+    Waveform&
   
 """
 
@@ -3374,7 +3373,7 @@ class GWFrames::SliceModes
   
   Returns
   -------
-    void
+    Waveform&
   
 """
 
@@ -3547,6 +3546,29 @@ Evaluate Waveform at a particular sky location.
     is something other than inertial, and will fail if the FrameType is neither
     UnknownFrameType nor Inertial.
   
+
+Evaluate Waveform at a particular sky location and an instant of time.
+======================================================================
+  Parameters
+  ----------
+    const double vartheta
+      Polar angle of detector
+    const double varphi
+      Azimuthal angle of detector
+    const unsigned int i_t
+      Index of time at which to evaluate
+  
+  Returns
+  -------
+    complex<double>
+  
+  Description
+  -----------
+    Note that the input angle parameters are measured relative to the binary's
+    coordinate system. In particular, this will make no sense if the frame type
+    is something other than inertial, and will fail if the FrameType is neither
+    UnknownFrameType nor Inertial.
+  
 """
 
 %feature("docstring") GWFrames::Waveform::IntegrateNPEdth """
@@ -3673,17 +3695,30 @@ Frame in which the rotation is minimal.
   
 """
 
-%feature("docstring") NumberToString """
-
-
+%feature("docstring") GWFrames::Waveform::Contrast """
+Return the contrast in the given mode pair.
+===========================================
   Parameters
   ----------
-    typename T 
-    T Number
+    const int L
+      $ell$ value of the mode pair
+    const int M
+      $m$ value of the mode pair
   
   Returns
   -------
-    typename T
+    vector<double>
+  
+  Description
+  -----------
+    This function just returns the value of the contrast $\\kappa^{\\ell,m}$
+    defined by Boyle et al. (2014):
+    
+    \\begin{equation*} kappa^{\\ell,m} = 2 \\frac{\\lvert h^{\\ell,m} \\rvert -
+    \\lvert h^{\\ell,-m} \\rvert} {\\lvert h^{\\ell,m} \\rvert - \\lvert
+    h^{\\ell,-m} \\rvert}. \\end{equation*}
+    
+    That is, the difference between mode pairs normalized by their average.
   
 """
 
@@ -3771,19 +3806,6 @@ Constructor on boosted grid by means of functor.
   
 """
 
-%feature("docstring") GWFrames::Waveforms::~Waveforms """
-
-
-  Parameters
-  ----------
-    (none)
-  
-  Returns
-  -------
-    ~Waveforms
-  
-"""
-
 %feature("docstring") GWFrames::Modes::pow """
 
 
@@ -3818,6 +3840,20 @@ Constructor on boosted grid by means of functor.
   Returns
   -------
     vector<vector<double>>
+  
+"""
+
+%feature("docstring") GWFrames::Waveform::Translate """
+Translate the waveform data by some series of spatial translations.
+===================================================================
+  Parameters
+  ----------
+    const vector<vector<double>>& x
+      Array of 3-vectors by which to translate
+  
+  Returns
+  -------
+    Waveform
   
 """
 
@@ -4187,7 +4223,7 @@ Re-interpolate data to new time slices given by this supertranslation.
   
   Returns
   -------
-    void
+    Waveform&
   
 """
 
@@ -4214,7 +4250,7 @@ Transform Waveform uncertainties to corotating frame.
   
   Returns
   -------
-    void
+    Waveform&
   
 """
 
@@ -4316,7 +4352,7 @@ Find the appropriate rotation to fix the orientation of the corotating frame.
   
   Returns
   -------
-    void
+    Waveform&
   
 """
 
@@ -4406,7 +4442,7 @@ class GWFrames::DataGrid
   
   Returns
   -------
-    void
+    Waveform&
   
 """
 

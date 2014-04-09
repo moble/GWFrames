@@ -329,6 +329,8 @@ GWFrames::Waveform::Waveform(const std::vector<double>& T, const std::vector<std
 
 /// Return time derivative of data
 std::vector<std::complex<double> > GWFrames::Waveform::DataDot(const unsigned int Mode) const {
+  // TODO: Make this work properly for non-inertial systems
+  // TODO: Why did I program it like this?
   const std::complex<double>* D = this->operator()(Mode);
   return ComplexDerivative(vector<std::complex<double> >(D,D+NTimes()), T());
 }
@@ -1157,145 +1159,6 @@ vector<Matrix> GWFrames::Waveform::LLMatrix(vector<int> Lmodes) const {
 }
 
 
-double SchmidtEtAl_f(const gsl_vector *v, void *params) {
-  double *h = (double *)params;
-  const double hRe2Neg2 = h[0]; const double hIm2Neg2 = h[1];
-  const double hRe2Neg1 = h[2]; const double hIm2Neg1 = h[3];
-  const double hRe20 = h[4];    const double hIm20 = h[5];
-  const double hRe21 = h[6];    const double hIm21 = h[7];
-  const double hRe22 = h[8];    const double hIm22 = h[9];
-  const double x0 = gsl_vector_get(v, 0); const double x1 = gsl_vector_get(v, 1);
-  const double cbetao2 = cos(x1/2.0);
-  const double sbetao2 = sin(x1/2.0);
-  const double c1alpha = cos(x0);
-  const double s1alpha = sin(x0);
-  const double c2alpha = c1alpha*c1alpha-s1alpha*s1alpha;
-  const double s2alpha = 2*s1alpha*c1alpha;
-  const double c3alpha = (4*c1alpha*c1alpha-3)*c1alpha;
-  const double s3alpha = s1alpha*(3-4*s1alpha*s1alpha);
-  const double c4alpha = c2alpha*c2alpha-s2alpha*s2alpha;
-  const double s4alpha = 2*s2alpha*c2alpha;
-  return -1.*pow(cbetao2,8)*(pow(hIm22,2) + pow(hRe22,2) + pow(hRe2Neg2,2)) - 4.*pow(cbetao2,7)*(hIm22*hRe21 - 1.*hIm21*hRe22 + hIm2Neg2*hRe2Neg1 - 1.*hIm2Neg1*hRe2Neg2)*s1alpha*sbetao2 - 2.*pow(cbetao2,6)*(2.*(pow(hIm21,2) + pow(hRe21,2) + pow(hRe2Neg1,2)) + 2.4494897427831781*(c2alpha*(hIm20*(hIm22 + hIm2Neg2) + hRe20*(hRe22 + hRe2Neg2)) + ((hIm22 - 1.*hIm2Neg2)*hRe20 + hIm20*(-1.*hRe22 + hRe2Neg2))*s2alpha))*pow(sbetao2,2) - 4.*pow(cbetao2,5)*(c3alpha*(hIm22*hIm2Neg1 - 1.*hIm21*hIm2Neg2 + hRe22*hRe2Neg1 - 1.*hRe21*hRe2Neg2) + 2.4494897427831781*((hIm21 + hIm2Neg1)*hRe20 - 1.*hIm20*(hRe21 + hRe2Neg1))*s1alpha + (hIm2Neg2*hRe21 - 1.*hIm2Neg1*hRe22 + hIm22*hRe2Neg1 - 1.*hIm21*hRe2Neg2)*s3alpha)*pow(sbetao2,3) - 4.*pow(cbetao2,4)*(3.*(pow(hIm20,2) + pow(hRe20,2)) + 4.*c2alpha*(hIm21*hIm2Neg1 + hRe21*hRe2Neg1) + c4alpha*(hIm22*hIm2Neg2 + hRe22*hRe2Neg2) + 4.*(-1.*hIm2Neg1*hRe21 + hIm21*hRe2Neg1)*s2alpha + (-1.*hIm2Neg2*hRe22 + hIm22*hRe2Neg2)*s4alpha)*pow(sbetao2,4) - 4.*pow(cbetao2,3)*(c3alpha*(-1.*hIm22*hIm2Neg1 + hIm21*hIm2Neg2 - 1.*hRe22*hRe2Neg1 + hRe21*hRe2Neg2) + 2.4494897427831781*(-1.*(hIm21 + hIm2Neg1)*hRe20 + hIm20*(hRe21 + hRe2Neg1))*s1alpha + (-1.*hIm2Neg2*hRe21 + hIm2Neg1*hRe22 - 1.*hIm22*hRe2Neg1 + hIm21*hRe2Neg2)*s3alpha)*pow(sbetao2,5) - 2.*pow(cbetao2,2)*(2.*(pow(hIm21,2) + pow(hRe21,2) + pow(hRe2Neg1,2)) + 2.4494897427831781*(c2alpha*(hIm20*(hIm22 + hIm2Neg2) + hRe20*(hRe22 + hRe2Neg2)) + ((hIm22 - 1.*hIm2Neg2)*hRe20 + hIm20*(-1.*hRe22 + hRe2Neg2))*s2alpha))*pow(sbetao2,6) - 4.*cbetao2*(-1.*hIm22*hRe21 + hIm21*hRe22 - 1.*hIm2Neg2*hRe2Neg1 + hIm2Neg1*hRe2Neg2)*s1alpha*pow(sbetao2,7) - 1.*(pow(hIm22,2) + pow(hRe22,2) + pow(hRe2Neg2,2))*pow(sbetao2,8) - 4.*pow(cbetao2,2)*pow(hIm2Neg1,2)*pow(sbetao2,2)*(pow(cbetao2,4) + pow(sbetao2,4)) + 4.*c1alpha*cbetao2*(cbetao2 - 1.*sbetao2)*sbetao2*(cbetao2 + sbetao2)*(pow(cbetao2,4)*(-1.*hIm21*hIm22 + hIm2Neg1*hIm2Neg2 - 1.*hRe21*hRe22 + hRe2Neg1*hRe2Neg2) + pow(cbetao2,2)*(-1.*hIm21*(2.4494897427831781*hIm20 + hIm22) + hIm2Neg1*(2.4494897427831781*hIm20 + hIm2Neg2) - 1.*hRe21*(2.4494897427831781*hRe20 + hRe22) + hRe2Neg1*(2.4494897427831781*hRe20 + hRe2Neg2))*pow(sbetao2,2) + (-1.*hIm21*hIm22 + hIm2Neg1*hIm2Neg2 - 1.*hRe21*hRe22 + hRe2Neg1*hRe2Neg2)*pow(sbetao2,4)) - 1.*pow(hIm2Neg2,2)*(pow(cbetao2,8) + pow(sbetao2,8));
-}
-void SchmidtEtAl_df(const gsl_vector *v, void *params, gsl_vector *df) {
-  double *h = (double *)params;
-  const double hRe2Neg2 = h[0]; const double hIm2Neg2 = h[1];
-  const double hRe2Neg1 = h[2]; const double hIm2Neg1 = h[3];
-  const double hRe20 = h[4];    const double hIm20 = h[5];
-  const double hRe21 = h[6];    const double hIm21 = h[7];
-  const double hRe22 = h[8];    const double hIm22 = h[9];
-  const double x0 = gsl_vector_get(v, 0); const double x1 = gsl_vector_get(v, 1);
-  const double cbetao2 = cos(x1/2.0);
-  const double sbetao2 = sin(x1/2.0);
-  const double c1alpha = cos(x0);
-  const double s1alpha = sin(x0);
-  const double c2alpha = c1alpha*c1alpha-s1alpha*s1alpha;
-  const double s2alpha = 2*s1alpha*c1alpha;
-  const double c3alpha = (4*c1alpha*c1alpha-3)*c1alpha;
-  const double s3alpha = s1alpha*(3-4*s1alpha*s1alpha);
-  const double c4alpha = c2alpha*c2alpha-s2alpha*s2alpha;
-  const double s4alpha = 2*s2alpha*c2alpha;
-  gsl_vector_set(df, 0, -4.*cbetao2*sbetao2*(4.*c4alpha*pow(cbetao2,3)*(-1.*hIm2Neg2*hRe22 + hIm22*hRe2Neg2)*pow(sbetao2,3) - 4.*pow(cbetao2,3)*(hIm22*hIm2Neg2 + hRe22*hRe2Neg2)*s4alpha*pow(sbetao2,3) + 3.*c3alpha*pow(cbetao2,2)*(hIm2Neg2*hRe21 - 1.*hIm2Neg1*hRe22 + hIm22*hRe2Neg1 - 1.*hIm21*hRe2Neg2)*(cbetao2 - 1.*sbetao2)*pow(sbetao2,2)*(cbetao2 + sbetao2) + 3.*pow(cbetao2,2)*(-1.*hIm22*hIm2Neg1 + hIm21*hIm2Neg2 - 1.*hRe22*hRe2Neg1 + hRe21*hRe2Neg2)*s3alpha*(cbetao2 - 1.*sbetao2)*pow(sbetao2,2)*(cbetao2 + sbetao2) - 1.*c1alpha*(cbetao2 - 1.*sbetao2)*(cbetao2 + sbetao2)*(pow(cbetao2,4)*(-1.*hIm22*hRe21 + hIm21*hRe22 - 1.*hIm2Neg2*hRe2Neg1 + hIm2Neg1*hRe2Neg2) + pow(cbetao2,2)*(-1.*hIm22*hRe21 + hIm21*(-2.4494897427831781*hRe20 + hRe22) - 1.*hIm2Neg2*hRe2Neg1 + 2.4494897427831781*hIm20*(hRe21 + hRe2Neg1) + hIm2Neg1*(-2.4494897427831781*hRe20 + hRe2Neg2))*pow(sbetao2,2) + (-1.*hIm22*hRe21 + hIm21*hRe22 - 1.*hIm2Neg2*hRe2Neg1 + hIm2Neg1*hRe2Neg2)*pow(sbetao2,4)) + s1alpha*(cbetao2 - 1.*sbetao2)*(cbetao2 + sbetao2)*(pow(cbetao2,4)*(-1.*hIm21*hIm22 + hIm2Neg1*hIm2Neg2 - 1.*hRe21*hRe22 + hRe2Neg1*hRe2Neg2) + pow(cbetao2,2)*(-1.*hIm21*(2.4494897427831781*hIm20 + hIm22) + hIm2Neg1*(2.4494897427831781*hIm20 + hIm2Neg2) - 1.*hRe21*(2.4494897427831781*hRe20 + hRe22) + hRe2Neg1*(2.4494897427831781*hRe20 + hRe2Neg2))*pow(sbetao2,2) + (-1.*hIm21*hIm22 + hIm2Neg1*hIm2Neg2 - 1.*hRe21*hRe22 + hRe2Neg1*hRe2Neg2)*pow(sbetao2,4)) + c2alpha*cbetao2*sbetao2*(2.4494897427831781*pow(cbetao2,4)*((hIm22 - 1.*hIm2Neg2)*hRe20 + hIm20*(-1.*hRe22 + hRe2Neg2)) + 8.*pow(cbetao2,2)*(-1.*hIm2Neg1*hRe21 + hIm21*hRe2Neg1)*pow(sbetao2,2) + 2.4494897427831781*((hIm22 - 1.*hIm2Neg2)*hRe20 + hIm20*(-1.*hRe22 + hRe2Neg2))*pow(sbetao2,4)) + cbetao2*s2alpha*sbetao2*(-2.4494897427831781*pow(cbetao2,4)*(hIm20*(hIm22 + hIm2Neg2) + hRe20*(hRe22 + hRe2Neg2)) - 8.*pow(cbetao2,2)*(hIm21*hIm2Neg1 + hRe21*hRe2Neg1)*pow(sbetao2,2) - 2.4494897427831781*(hIm20*(hIm22 + hIm2Neg2) + hRe20*(hRe22 + hRe2Neg2))*pow(sbetao2,4))));
-  gsl_vector_set(df, 1, -2.*(4.*c4alpha*pow(cbetao2,3)*(hIm22*hIm2Neg2 + hRe22*hRe2Neg2)*(cbetao2 - 1.*sbetao2)*pow(sbetao2,3)*(cbetao2 + sbetao2) + 4.*pow(cbetao2,3)*(-1.*hIm2Neg2*hRe22 + hIm22*hRe2Neg2)*s4alpha*(cbetao2 - 1.*sbetao2)*pow(sbetao2,3)*(cbetao2 + sbetao2) - 1.*c3alpha*pow(cbetao2,2)*(-1.*hIm22*hIm2Neg1 + hIm21*hIm2Neg2 - 1.*hRe22*hRe2Neg1 + hRe21*hRe2Neg2)*pow(sbetao2,2)*(3.*pow(cbetao2,4) - 10.*pow(cbetao2,2)*pow(sbetao2,2) + 3.*pow(sbetao2,4)) + pow(cbetao2,2)*(hIm2Neg2*hRe21 - 1.*hIm2Neg1*hRe22 + hIm22*hRe2Neg1 - 1.*hIm21*hRe2Neg2)*s3alpha*pow(sbetao2,2)*(3.*pow(cbetao2,4) - 10.*pow(cbetao2,2)*pow(sbetao2,2) + 3.*pow(sbetao2,4)) + 2.*sbetao2*(-1.*pow(cbetao2,3) + cbetao2*pow(sbetao2,2))*(pow(cbetao2,4)*(-1.*pow(hIm21,2) + pow(hIm22,2) - 1.*pow(hIm2Neg1,2) + pow(hIm2Neg2,2) - 1.*pow(hRe21,2) + pow(hRe22,2) - 1.*pow(hRe2Neg1,2) + pow(hRe2Neg2,2)) + pow(cbetao2,2)*(-6.*pow(hIm20,2) + 2.*pow(hIm21,2) + pow(hIm22,2) + 2.*pow(hIm2Neg1,2) + pow(hIm2Neg2,2) + pow(hRe22,2) + 2.*(-3.*pow(hRe20,2) + pow(hRe21,2) + pow(hRe2Neg1,2)) + pow(hRe2Neg2,2))*pow(sbetao2,2) + (-1.*pow(hIm21,2) + pow(hIm22,2) - 1.*pow(hIm2Neg1,2) + pow(hIm2Neg2,2) - 1.*pow(hRe21,2) + pow(hRe22,2) - 1.*pow(hRe2Neg1,2) + pow(hRe2Neg2,2))*pow(sbetao2,4)) + cbetao2*s2alpha*(cbetao2 - 1.*sbetao2)*sbetao2*(cbetao2 + sbetao2)*(2.4494897427831781*pow(cbetao2,4)*((hIm22 - 1.*hIm2Neg2)*hRe20 + hIm20*(-1.*hRe22 + hRe2Neg2)) - 2.*pow(cbetao2,2)*(2.4494897427831781*(hIm22 - 1.*hIm2Neg2)*hRe20 + 8.*hIm2Neg1*hRe21 - 8.*hIm21*hRe2Neg1 + 2.4494897427831781*hIm20*(-1.*hRe22 + hRe2Neg2))*pow(sbetao2,2) + 2.4494897427831781*((hIm22 - 1.*hIm2Neg2)*hRe20 + hIm20*(-1.*hRe22 + hRe2Neg2))*pow(sbetao2,4)) + c2alpha*cbetao2*(cbetao2 - 1.*sbetao2)*sbetao2*(cbetao2 + sbetao2)*(2.4494897427831781*pow(cbetao2,4)*(hIm20*(hIm22 + hIm2Neg2) + hRe20*(hRe22 + hRe2Neg2)) - 2.*pow(cbetao2,2)*(-8.*hIm21*hIm2Neg1 + 2.4494897427831781*hIm20*(hIm22 + hIm2Neg2) - 8.*hRe21*hRe2Neg1 + 2.4494897427831781*hRe20*(hRe22 + hRe2Neg2))*pow(sbetao2,2) + 2.4494897427831781*(hIm20*(hIm22 + hIm2Neg2) + hRe20*(hRe22 + hRe2Neg2))*pow(sbetao2,4)) + s1alpha*(pow(cbetao2,8)*(hIm22*hRe21 - 1.*hIm21*hRe22 + hIm2Neg2*hRe2Neg1 - 1.*hIm2Neg1*hRe2Neg2) + pow(cbetao2,6)*(-7.*hIm22*hRe21 + hIm21*(7.34846922834953429*hRe20 + 7.*hRe22) - 7.*hIm2Neg2*hRe2Neg1 - 7.34846922834953429*hIm20*(hRe21 + hRe2Neg1) + hIm2Neg1*(7.34846922834953429*hRe20 + 7.*hRe2Neg2))*pow(sbetao2,2) + 24.494897427831781*pow(cbetao2,4)*(-1.*(hIm21 + hIm2Neg1)*hRe20 + hIm20*(hRe21 + hRe2Neg1))*pow(sbetao2,4) + pow(cbetao2,2)*(-7.*hIm22*hRe21 + hIm21*(7.34846922834953429*hRe20 + 7.*hRe22) - 7.*hIm2Neg2*hRe2Neg1 - 7.34846922834953429*hIm20*(hRe21 + hRe2Neg1) + hIm2Neg1*(7.34846922834953429*hRe20 + 7.*hRe2Neg2))*pow(sbetao2,6) + (hIm22*hRe21 - 1.*hIm21*hRe22 + hIm2Neg2*hRe2Neg1 - 1.*hIm2Neg1*hRe2Neg2)*pow(sbetao2,8)) + c1alpha*(pow(cbetao2,8)*(hIm21*hIm22 - 1.*hIm2Neg1*hIm2Neg2 + hRe21*hRe22 - 1.*hRe2Neg1*hRe2Neg2) + pow(cbetao2,6)*(hIm21*(7.34846922834953429*hIm20 - 7.*hIm22) + hIm2Neg1*(-7.34846922834953429*hIm20 + 7.*hIm2Neg2) + hRe21*(7.34846922834953429*hRe20 - 7.*hRe22) + hRe2Neg1*(-7.34846922834953429*hRe20 + 7.*hRe2Neg2))*pow(sbetao2,2) + 24.494897427831781*pow(cbetao2,4)*(hIm20*(-1.*hIm21 + hIm2Neg1) + hRe20*(-1.*hRe21 + hRe2Neg1))*pow(sbetao2,4) + pow(cbetao2,2)*(hIm21*(7.34846922834953429*hIm20 - 7.*hIm22) + hIm2Neg1*(-7.34846922834953429*hIm20 + 7.*hIm2Neg2) + hRe21*(7.34846922834953429*hRe20 - 7.*hRe22) + hRe2Neg1*(-7.34846922834953429*hRe20 + 7.*hRe2Neg2))*pow(sbetao2,6) + (hIm21*hIm22 - 1.*hIm2Neg1*hIm2Neg2 + hRe21*hRe22 - 1.*hRe2Neg1*hRe2Neg2)*pow(sbetao2,8))));
-  return;
-}
-void SchmidtEtAl_fdf (const gsl_vector* v, void* params, double* f, gsl_vector* df) {
-  double* h = (double*)params;
-  const double hRe2Neg2 = h[0]; const double hIm2Neg2 = h[1];
-  const double hRe2Neg1 = h[2]; const double hIm2Neg1 = h[3];
-  const double hRe20 = h[4];    const double hIm20 = h[5];
-  const double hRe21 = h[6];    const double hIm21 = h[7];
-  const double hRe22 = h[8];    const double hIm22 = h[9];
-  const double x0 = gsl_vector_get(v, 0); const double x1 = gsl_vector_get(v, 1);
-  const double cbetao2 = cos(x1/2.0);
-  const double sbetao2 = sin(x1/2.0);
-  const double c1alpha = cos(x0);
-  const double s1alpha = sin(x0);
-  const double c2alpha = c1alpha*c1alpha-s1alpha*s1alpha;
-  const double s2alpha = 2*s1alpha*c1alpha;
-  const double c3alpha = (4*c1alpha*c1alpha-3)*c1alpha;
-  const double s3alpha = s1alpha*(3-4*s1alpha*s1alpha);
-  const double c4alpha = c2alpha*c2alpha-s2alpha*s2alpha;
-  const double s4alpha = 2*s2alpha*c2alpha;
-  *f = -1.*pow(cbetao2,8)*(pow(hIm22,2) + pow(hRe22,2) + pow(hRe2Neg2,2)) - 4.*pow(cbetao2,7)*(hIm22*hRe21 - 1.*hIm21*hRe22 + hIm2Neg2*hRe2Neg1 - 1.*hIm2Neg1*hRe2Neg2)*s1alpha*sbetao2 - 2.*pow(cbetao2,6)*(2.*(pow(hIm21,2) + pow(hRe21,2) + pow(hRe2Neg1,2)) + 2.4494897427831781*(c2alpha*(hIm20*(hIm22 + hIm2Neg2) + hRe20*(hRe22 + hRe2Neg2)) + ((hIm22 - 1.*hIm2Neg2)*hRe20 + hIm20*(-1.*hRe22 + hRe2Neg2))*s2alpha))*pow(sbetao2,2) - 4.*pow(cbetao2,5)*(c3alpha*(hIm22*hIm2Neg1 - 1.*hIm21*hIm2Neg2 + hRe22*hRe2Neg1 - 1.*hRe21*hRe2Neg2) + 2.4494897427831781*((hIm21 + hIm2Neg1)*hRe20 - 1.*hIm20*(hRe21 + hRe2Neg1))*s1alpha + (hIm2Neg2*hRe21 - 1.*hIm2Neg1*hRe22 + hIm22*hRe2Neg1 - 1.*hIm21*hRe2Neg2)*s3alpha)*pow(sbetao2,3) - 4.*pow(cbetao2,4)*(3.*(pow(hIm20,2) + pow(hRe20,2)) + 4.*c2alpha*(hIm21*hIm2Neg1 + hRe21*hRe2Neg1) + c4alpha*(hIm22*hIm2Neg2 + hRe22*hRe2Neg2) + 4.*(-1.*hIm2Neg1*hRe21 + hIm21*hRe2Neg1)*s2alpha + (-1.*hIm2Neg2*hRe22 + hIm22*hRe2Neg2)*s4alpha)*pow(sbetao2,4) - 4.*pow(cbetao2,3)*(c3alpha*(-1.*hIm22*hIm2Neg1 + hIm21*hIm2Neg2 - 1.*hRe22*hRe2Neg1 + hRe21*hRe2Neg2) + 2.4494897427831781*(-1.*(hIm21 + hIm2Neg1)*hRe20 + hIm20*(hRe21 + hRe2Neg1))*s1alpha + (-1.*hIm2Neg2*hRe21 + hIm2Neg1*hRe22 - 1.*hIm22*hRe2Neg1 + hIm21*hRe2Neg2)*s3alpha)*pow(sbetao2,5) - 2.*pow(cbetao2,2)*(2.*(pow(hIm21,2) + pow(hRe21,2) + pow(hRe2Neg1,2)) + 2.4494897427831781*(c2alpha*(hIm20*(hIm22 + hIm2Neg2) + hRe20*(hRe22 + hRe2Neg2)) + ((hIm22 - 1.*hIm2Neg2)*hRe20 + hIm20*(-1.*hRe22 + hRe2Neg2))*s2alpha))*pow(sbetao2,6) - 4.*cbetao2*(-1.*hIm22*hRe21 + hIm21*hRe22 - 1.*hIm2Neg2*hRe2Neg1 + hIm2Neg1*hRe2Neg2)*s1alpha*pow(sbetao2,7) - 1.*(pow(hIm22,2) + pow(hRe22,2) + pow(hRe2Neg2,2))*pow(sbetao2,8) - 4.*pow(cbetao2,2)*pow(hIm2Neg1,2)*pow(sbetao2,2)*(pow(cbetao2,4) + pow(sbetao2,4)) + 4.*c1alpha*cbetao2*(cbetao2 - 1.*sbetao2)*sbetao2*(cbetao2 + sbetao2)*(pow(cbetao2,4)*(-1.*hIm21*hIm22 + hIm2Neg1*hIm2Neg2 - 1.*hRe21*hRe22 + hRe2Neg1*hRe2Neg2) + pow(cbetao2,2)*(-1.*hIm21*(2.4494897427831781*hIm20 + hIm22) + hIm2Neg1*(2.4494897427831781*hIm20 + hIm2Neg2) - 1.*hRe21*(2.4494897427831781*hRe20 + hRe22) + hRe2Neg1*(2.4494897427831781*hRe20 + hRe2Neg2))*pow(sbetao2,2) + (-1.*hIm21*hIm22 + hIm2Neg1*hIm2Neg2 - 1.*hRe21*hRe22 + hRe2Neg1*hRe2Neg2)*pow(sbetao2,4)) - 1.*pow(hIm2Neg2,2)*(pow(cbetao2,8) + pow(sbetao2,8));
-  gsl_vector_set(df, 0, -4.*cbetao2*sbetao2*(4.*c4alpha*pow(cbetao2,3)*(-1.*hIm2Neg2*hRe22 + hIm22*hRe2Neg2)*pow(sbetao2,3) - 4.*pow(cbetao2,3)*(hIm22*hIm2Neg2 + hRe22*hRe2Neg2)*s4alpha*pow(sbetao2,3) + 3.*c3alpha*pow(cbetao2,2)*(hIm2Neg2*hRe21 - 1.*hIm2Neg1*hRe22 + hIm22*hRe2Neg1 - 1.*hIm21*hRe2Neg2)*(cbetao2 - 1.*sbetao2)*pow(sbetao2,2)*(cbetao2 + sbetao2) + 3.*pow(cbetao2,2)*(-1.*hIm22*hIm2Neg1 + hIm21*hIm2Neg2 - 1.*hRe22*hRe2Neg1 + hRe21*hRe2Neg2)*s3alpha*(cbetao2 - 1.*sbetao2)*pow(sbetao2,2)*(cbetao2 + sbetao2) - 1.*c1alpha*(cbetao2 - 1.*sbetao2)*(cbetao2 + sbetao2)*(pow(cbetao2,4)*(-1.*hIm22*hRe21 + hIm21*hRe22 - 1.*hIm2Neg2*hRe2Neg1 + hIm2Neg1*hRe2Neg2) + pow(cbetao2,2)*(-1.*hIm22*hRe21 + hIm21*(-2.4494897427831781*hRe20 + hRe22) - 1.*hIm2Neg2*hRe2Neg1 + 2.4494897427831781*hIm20*(hRe21 + hRe2Neg1) + hIm2Neg1*(-2.4494897427831781*hRe20 + hRe2Neg2))*pow(sbetao2,2) + (-1.*hIm22*hRe21 + hIm21*hRe22 - 1.*hIm2Neg2*hRe2Neg1 + hIm2Neg1*hRe2Neg2)*pow(sbetao2,4)) + s1alpha*(cbetao2 - 1.*sbetao2)*(cbetao2 + sbetao2)*(pow(cbetao2,4)*(-1.*hIm21*hIm22 + hIm2Neg1*hIm2Neg2 - 1.*hRe21*hRe22 + hRe2Neg1*hRe2Neg2) + pow(cbetao2,2)*(-1.*hIm21*(2.4494897427831781*hIm20 + hIm22) + hIm2Neg1*(2.4494897427831781*hIm20 + hIm2Neg2) - 1.*hRe21*(2.4494897427831781*hRe20 + hRe22) + hRe2Neg1*(2.4494897427831781*hRe20 + hRe2Neg2))*pow(sbetao2,2) + (-1.*hIm21*hIm22 + hIm2Neg1*hIm2Neg2 - 1.*hRe21*hRe22 + hRe2Neg1*hRe2Neg2)*pow(sbetao2,4)) + c2alpha*cbetao2*sbetao2*(2.4494897427831781*pow(cbetao2,4)*((hIm22 - 1.*hIm2Neg2)*hRe20 + hIm20*(-1.*hRe22 + hRe2Neg2)) + 8.*pow(cbetao2,2)*(-1.*hIm2Neg1*hRe21 + hIm21*hRe2Neg1)*pow(sbetao2,2) + 2.4494897427831781*((hIm22 - 1.*hIm2Neg2)*hRe20 + hIm20*(-1.*hRe22 + hRe2Neg2))*pow(sbetao2,4)) + cbetao2*s2alpha*sbetao2*(-2.4494897427831781*pow(cbetao2,4)*(hIm20*(hIm22 + hIm2Neg2) + hRe20*(hRe22 + hRe2Neg2)) - 8.*pow(cbetao2,2)*(hIm21*hIm2Neg1 + hRe21*hRe2Neg1)*pow(sbetao2,2) - 2.4494897427831781*(hIm20*(hIm22 + hIm2Neg2) + hRe20*(hRe22 + hRe2Neg2))*pow(sbetao2,4))));
-  gsl_vector_set(df, 1, -2.*(4.*c4alpha*pow(cbetao2,3)*(hIm22*hIm2Neg2 + hRe22*hRe2Neg2)*(cbetao2 - 1.*sbetao2)*pow(sbetao2,3)*(cbetao2 + sbetao2) + 4.*pow(cbetao2,3)*(-1.*hIm2Neg2*hRe22 + hIm22*hRe2Neg2)*s4alpha*(cbetao2 - 1.*sbetao2)*pow(sbetao2,3)*(cbetao2 + sbetao2) - 1.*c3alpha*pow(cbetao2,2)*(-1.*hIm22*hIm2Neg1 + hIm21*hIm2Neg2 - 1.*hRe22*hRe2Neg1 + hRe21*hRe2Neg2)*pow(sbetao2,2)*(3.*pow(cbetao2,4) - 10.*pow(cbetao2,2)*pow(sbetao2,2) + 3.*pow(sbetao2,4)) + pow(cbetao2,2)*(hIm2Neg2*hRe21 - 1.*hIm2Neg1*hRe22 + hIm22*hRe2Neg1 - 1.*hIm21*hRe2Neg2)*s3alpha*pow(sbetao2,2)*(3.*pow(cbetao2,4) - 10.*pow(cbetao2,2)*pow(sbetao2,2) + 3.*pow(sbetao2,4)) + 2.*sbetao2*(-1.*pow(cbetao2,3) + cbetao2*pow(sbetao2,2))*(pow(cbetao2,4)*(-1.*pow(hIm21,2) + pow(hIm22,2) - 1.*pow(hIm2Neg1,2) + pow(hIm2Neg2,2) - 1.*pow(hRe21,2) + pow(hRe22,2) - 1.*pow(hRe2Neg1,2) + pow(hRe2Neg2,2)) + pow(cbetao2,2)*(-6.*pow(hIm20,2) + 2.*pow(hIm21,2) + pow(hIm22,2) + 2.*pow(hIm2Neg1,2) + pow(hIm2Neg2,2) + pow(hRe22,2) + 2.*(-3.*pow(hRe20,2) + pow(hRe21,2) + pow(hRe2Neg1,2)) + pow(hRe2Neg2,2))*pow(sbetao2,2) + (-1.*pow(hIm21,2) + pow(hIm22,2) - 1.*pow(hIm2Neg1,2) + pow(hIm2Neg2,2) - 1.*pow(hRe21,2) + pow(hRe22,2) - 1.*pow(hRe2Neg1,2) + pow(hRe2Neg2,2))*pow(sbetao2,4)) + cbetao2*s2alpha*(cbetao2 - 1.*sbetao2)*sbetao2*(cbetao2 + sbetao2)*(2.4494897427831781*pow(cbetao2,4)*((hIm22 - 1.*hIm2Neg2)*hRe20 + hIm20*(-1.*hRe22 + hRe2Neg2)) - 2.*pow(cbetao2,2)*(2.4494897427831781*(hIm22 - 1.*hIm2Neg2)*hRe20 + 8.*hIm2Neg1*hRe21 - 8.*hIm21*hRe2Neg1 + 2.4494897427831781*hIm20*(-1.*hRe22 + hRe2Neg2))*pow(sbetao2,2) + 2.4494897427831781*((hIm22 - 1.*hIm2Neg2)*hRe20 + hIm20*(-1.*hRe22 + hRe2Neg2))*pow(sbetao2,4)) + c2alpha*cbetao2*(cbetao2 - 1.*sbetao2)*sbetao2*(cbetao2 + sbetao2)*(2.4494897427831781*pow(cbetao2,4)*(hIm20*(hIm22 + hIm2Neg2) + hRe20*(hRe22 + hRe2Neg2)) - 2.*pow(cbetao2,2)*(-8.*hIm21*hIm2Neg1 + 2.4494897427831781*hIm20*(hIm22 + hIm2Neg2) - 8.*hRe21*hRe2Neg1 + 2.4494897427831781*hRe20*(hRe22 + hRe2Neg2))*pow(sbetao2,2) + 2.4494897427831781*(hIm20*(hIm22 + hIm2Neg2) + hRe20*(hRe22 + hRe2Neg2))*pow(sbetao2,4)) + s1alpha*(pow(cbetao2,8)*(hIm22*hRe21 - 1.*hIm21*hRe22 + hIm2Neg2*hRe2Neg1 - 1.*hIm2Neg1*hRe2Neg2) + pow(cbetao2,6)*(-7.*hIm22*hRe21 + hIm21*(7.34846922834953429*hRe20 + 7.*hRe22) - 7.*hIm2Neg2*hRe2Neg1 - 7.34846922834953429*hIm20*(hRe21 + hRe2Neg1) + hIm2Neg1*(7.34846922834953429*hRe20 + 7.*hRe2Neg2))*pow(sbetao2,2) + 24.494897427831781*pow(cbetao2,4)*(-1.*(hIm21 + hIm2Neg1)*hRe20 + hIm20*(hRe21 + hRe2Neg1))*pow(sbetao2,4) + pow(cbetao2,2)*(-7.*hIm22*hRe21 + hIm21*(7.34846922834953429*hRe20 + 7.*hRe22) - 7.*hIm2Neg2*hRe2Neg1 - 7.34846922834953429*hIm20*(hRe21 + hRe2Neg1) + hIm2Neg1*(7.34846922834953429*hRe20 + 7.*hRe2Neg2))*pow(sbetao2,6) + (hIm22*hRe21 - 1.*hIm21*hRe22 + hIm2Neg2*hRe2Neg1 - 1.*hIm2Neg1*hRe2Neg2)*pow(sbetao2,8)) + c1alpha*(pow(cbetao2,8)*(hIm21*hIm22 - 1.*hIm2Neg1*hIm2Neg2 + hRe21*hRe22 - 1.*hRe2Neg1*hRe2Neg2) + pow(cbetao2,6)*(hIm21*(7.34846922834953429*hIm20 - 7.*hIm22) + hIm2Neg1*(-7.34846922834953429*hIm20 + 7.*hIm2Neg2) + hRe21*(7.34846922834953429*hRe20 - 7.*hRe22) + hRe2Neg1*(-7.34846922834953429*hRe20 + 7.*hRe2Neg2))*pow(sbetao2,2) + 24.494897427831781*pow(cbetao2,4)*(hIm20*(-1.*hIm21 + hIm2Neg1) + hRe20*(-1.*hRe21 + hRe2Neg1))*pow(sbetao2,4) + pow(cbetao2,2)*(hIm21*(7.34846922834953429*hIm20 - 7.*hIm22) + hIm2Neg1*(-7.34846922834953429*hIm20 + 7.*hIm2Neg2) + hRe21*(7.34846922834953429*hRe20 - 7.*hRe22) + hRe2Neg1*(-7.34846922834953429*hRe20 + 7.*hRe2Neg2))*pow(sbetao2,6) + (hIm21*hIm22 - 1.*hIm2Neg1*hIm2Neg2 + hRe21*hRe22 - 1.*hRe2Neg1*hRe2Neg2)*pow(sbetao2,8))));
-  return;
-}
-vector<vector<double> > GWFrames::Waveform::SchmidtEtAlVector(const double alpha0Guess, const double beta0Guess) const {
-  std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Not properly implemented yet.  Need correct function (and gradients) to minimize." << std::endl;
-  throw(GWFrames_NotYetImplemented);
-  const double InitialStepSize = 0.01;
-  const double LineMinimizationParameter = 1.e-4;
-  const double NormOfGradientOnStop = 1.e-5;
-  const unsigned int i2Neg2 = FindModeIndex(2,-2);
-  const unsigned int i2Neg1 = FindModeIndex(2,-1);
-  const unsigned int i20    = FindModeIndex(2, 0);
-  const unsigned int i2Pos1 = FindModeIndex(2, 1);
-  const unsigned int i2Pos2 = FindModeIndex(2, 2);
-  size_t iterMax = 20;
-  size_t iter = 0;
-  int status = GSL_CONTINUE;
-  const gsl_multimin_fdfminimizer_type* T;
-  gsl_multimin_fdfminimizer* s;
-  double h[10] = {this->Re(i2Neg2, 0), this->Im(i2Neg2, 0),
-                  this->Re(i2Neg1, 0), this->Im(i2Neg1, 0),
-                  this->Re(i20,    0), this->Im(i20,    0),
-                  this->Re(i2Pos1, 0), this->Im(i2Pos1, 0),
-                  this->Re(i2Pos2, 0), this->Im(i2Pos2, 0)};
-  gsl_vector* x;
-  gsl_multimin_function_fdf SchmidtEtAl_func;
-  SchmidtEtAl_func.n = 2;
-  SchmidtEtAl_func.f = SchmidtEtAl_f;
-  SchmidtEtAl_func.df = SchmidtEtAl_df;
-  SchmidtEtAl_func.fdf = SchmidtEtAl_fdf;
-  SchmidtEtAl_func.params = h;
-  x = gsl_vector_alloc(2);
-  gsl_vector_set(x, 0, alpha0Guess);
-  gsl_vector_set(x, 1, beta0Guess);
-  T = gsl_multimin_fdfminimizer_conjugate_fr;
-  s = gsl_multimin_fdfminimizer_alloc (T, 2);
-
-  vector<vector<double> > v(NTimes(), vector<double>(3));
-  for(unsigned int iTime=0; iTime<NTimes(); ++iTime) {
-    iter = 0;
-    double h[10] = {this->Re(i2Neg2, iTime), this->Im(i2Neg2, iTime),
-                    this->Re(i2Neg1, iTime), this->Im(i2Neg1, iTime),
-                    this->Re(i20,    iTime), this->Im(i20,    iTime),
-                    this->Re(i2Pos1, iTime), this->Im(i2Pos1, iTime),
-                    this->Re(i2Pos2, iTime), this->Im(i2Pos2, iTime)};
-    SchmidtEtAl_func.params = h;
-    gsl_multimin_fdfminimizer_set (s, &SchmidtEtAl_func, x, InitialStepSize, LineMinimizationParameter);
-    do
-      {
-        iter++;
-        status = gsl_multimin_fdfminimizer_iterate (s);
-        if (status) {
-          cerr << "STATUS: " << status << endl;
-          break;
-        }
-        status = gsl_multimin_test_gradient (s->gradient, NormOfGradientOnStop);
-        if (status == GSL_SUCCESS)
-          printf ("Minimum found at:\n");
-        printf ("%5d %.16f %.16f %21.16f\n", int(iter),
-                gsl_vector_get (s->x, 0),
-                gsl_vector_get (s->x, 1),
-                s->f);
-      }
-    while (status == GSL_CONTINUE && iter < iterMax);
-    gsl_vector_set(x, 0, gsl_vector_get (s->x, 0)+0e-14);
-    gsl_vector_set(x, 1, gsl_vector_get (s->x, 1)+0e-15);
-    const double alpha = gsl_vector_get (s->x, 0);
-    const double beta = gsl_vector_get (s->x, 1);
-    v[iTime][0] = std::sin(beta)*std::cos(alpha);
-    v[iTime][1] = std::sin(beta)*std::sin(alpha);
-    v[iTime][2] = std::cos(beta);
-  }
-  gsl_multimin_fdfminimizer_free (s);
-  gsl_vector_free (x);
-  return v;
-}
-
 /// Calculate the principal axis of the LL matrix, as prescribed by O'Shaughnessy et al.
 std::vector<std::vector<double> > GWFrames::Waveform::OShaughnessyEtAlVector(const std::vector<int>& Lmodes) const {
   ///
@@ -1495,19 +1358,6 @@ vector<vector<double> > GWFrames::Waveform::PNEquivalentPrecessionalAV(const vec
   return omega;
 }
 
-
-/// Transform Waveform to Schmidt et al. frame.
-GWFrames::Waveform& GWFrames::Waveform::TransformToSchmidtEtAlFrame(const double alpha0Guess, const double beta0Guess) {
-  ///
-  /// \param alpha0Guess Initial guess for optimal direction alpha
-  /// \param beta0Guess  Initial guess for optimal direction beta
-  ///
-  /// This function combines the steps required to obtain the Waveform
-  /// in the Schmidt et al. frame.
-  history << "this->TransformToSchmidtEtAlFrame(" << alpha0Guess << ", " << beta0Guess << ")\n#";
-  this->frameType = GWFrames::Coprecessing;
-  return this->RotateDecompositionBasis(FrameFromZ(normalized(QuaternionArray(this->SchmidtEtAlVector(alpha0Guess, beta0Guess))), T()));
-}
 
 /// Transform Waveform to O'Shaughnessy et al. frame.
 GWFrames::Waveform& GWFrames::Waveform::TransformToOShaughnessyEtAlFrame(const std::vector<int>& Lmodes) {
@@ -1966,9 +1816,12 @@ void GWFrames::Waveform::GetAlignmentOfDecompositionFrameToModes(const double t_
     unsigned int i1 = (i_t_fid-10<0 ? 0 : i_t_fid-10);
     unsigned int i2 = (i_t_fid+11>int(t.size()) ? t.size() : i_t_fid+11);
     vector<double> tRegion(&t[i1], &t[i2]);
-    Waveform Region = this->Interpolate(tRegion);
+    const Waveform Region = (this->Interpolate(tRegion)).TransformToInertialFrame();
     omegaHat = Quaternion(Region.AngularVelocityVector()[i_t_fid-i1]).normalized();
-    // Rotate omegaHat back into this frame, if necessary
+    // omegaHat contains the components of that vector relative to the
+    // inertial frame.  To get its components in this Waveform's
+    // (possibly rotating) frame, we need to rotate it by the inverse
+    // of this Waveform's `frame` data:
     if(Region.Frame().size()>1) {
       const Quaternion& R = Region.Frame(i_t_fid-i1);
       omegaHat = R.inverse() * omegaHat * R;
@@ -2355,13 +2208,53 @@ GWFrames::Waveform GWFrames::Waveform::Hybridize(const GWFrames::Waveform& B, co
   // Make A a convenient alias
   const GWFrames::Waveform& A = *this;
 
-  // Check to see if the frameTypes are the same
+  // Check to see if the various type flags agree
+  if(A.spinweight != B.spinweight) {
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+              << "\nWarning:"
+              << "\n       This Waveform has spin weight " << A.spinweight << "."
+              << "\n       The Waveform in the argument has spin weight " << B.spinweight << "."
+              << "\n       Hybridizing them probably does not make sense.\n"
+              << std::endl;
+  }
+  if(A.boostweight != B.boostweight) {
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+              << "\nWarning:"
+              << "\n       This Waveform has boost weight " << A.boostweight << "."
+              << "\n       The Waveform in the argument has boost weight " << B.boostweight << "."
+              << "\n       Hybridizing them probably does not make sense.\n"
+              << std::endl;
+  }
   if(A.frameType != B.frameType) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
               << "\nWarning:"
-              << "\n       This Waveform is in the " << GWFrames::WaveformFrameNames[A.frameType] << " frame,"
+              << "\n       This Waveform is in the " << GWFrames::WaveformFrameNames[A.frameType] << " frame."
               << "\n       The Waveform in the argument is in the " << GWFrames::WaveformFrameNames[B.frameType] << " frame."
-              << "\n       Comparing them probably does not make sense.\n"
+              << "\n       Hybridizing them probably does not make sense.\n"
+              << std::endl;
+  }
+  if(A.dataType != B.dataType) {
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+              << "\nWarning:"
+              << "\n       This Waveform has data type " << GWFrames::WaveformDataNames[A.dataType] << "."
+              << "\n       The Waveform in the argument has data type " << GWFrames::WaveformDataNames[B.dataType] << "."
+              << "\n       Hybridizing them probably does not make sense.\n"
+              << std::endl;
+  }
+  if(A.rIsScaledOut != B.rIsScaledOut) {
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+              << "\nWarning:"
+              << "\n       This Waveform claims radius is " << (A.rIsScaledOut ? "" : "not ") << "scaled out."
+              << "\n       The Waveform in the argument claims radius is " << (B.rIsScaledOut ? "" : "not ") << "scaled out."
+              << "\n       Hybridizing them probably does not make sense.\n"
+              << std::endl;
+  }
+  if(A.mIsScaledOut != B.mIsScaledOut) {
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+              << "\nWarning:"
+              << "\n       This Waveform claims mass is " << (A.mIsScaledOut ? "" : "not ") << "scaled out."
+              << "\n       The Waveform in the argument claims mass is " << (B.mIsScaledOut ? "" : "not ") << "scaled out."
+              << "\n       Hybridizing them probably does not make sense.\n"
               << std::endl;
   }
 
@@ -2371,6 +2264,7 @@ GWFrames::Waveform GWFrames::Waveform::Hybridize(const GWFrames::Waveform& B, co
               << "\nA.NModes()=" << A.NModes() << "\tB.NModes()=" << B.NModes() << std::endl;
     throw(GWFrames_WaveformMissingLMIndex);
   }
+
   // Make sure we have sufficient times for the requested hybrid
   {
     const double t1A = A.T(0);
@@ -2385,14 +2279,19 @@ GWFrames::Waveform GWFrames::Waveform::Hybridize(const GWFrames::Waveform& B, co
       throw(GWFrames_EmptyIntersection);
     }
   }
+
   // We'll put all the data in a new Waveform C
   GWFrames::Waveform C;
-  // Store both old histories in C's
+  C.spinweight = A.spinweight;
+  C.boostweight = A.boostweight;
+  C.frameType = A.frameType;
+  C.dataType = A.dataType;
+  C.rIsScaledOut = A.rIsScaledOut;
+  C.mIsScaledOut = A.mIsScaledOut;
   C.history << "A.Hybridize(B, " << t1 << ", " << t2 << ", " << tMinStep << ")\n"
             << "#### A.history.str():\n" << A.history.str()
             << "#### B.history.str():\n" << B.history.str()
             << "#### End of old histories from `Hybridize`" << std::endl;
-  // The new time axis will be the union of the two old ones
   C.t = GWFrames::Union(A.t, B.t, tMinStep);
   // We'll assume that A.lm==B.lm, though we'll account for disordering below
   C.lm = A.lm;

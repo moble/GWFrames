@@ -187,7 +187,7 @@ def OutputToNRAR(W, FileName, FileWriteMode='w') :
         for i_m in range(W.NModes()) :
             ell,m = W.LM()[i_m]
             Data_m = G.create_dataset("Y_l{0}_m{1}.dat".format(ell, m), data=[[t, d.real, d.imag] for t,d in zip(W.T(),W.Data(i_m))],
-				      compression="gzip", shuffle=True)
+                                      compression="gzip", shuffle=True)
             Data_m.attrs['ell'] = ell
             Data_m.attrs['m'] = m
     finally : # Use `finally` to make sure this happens:
@@ -196,7 +196,7 @@ def OutputToNRAR(W, FileName, FileWriteMode='w') :
 Waveform.OutputToNRAR = OutputToNRAR
 
 
-def OutputToH5(W, FileName) :
+def OutputToH5(W, FileName, FileWriteMode='w') :
     """
     Output the Waveform with all necessary information.
 
@@ -212,7 +212,7 @@ def OutputToH5(W, FileName) :
     FileName = dirname(FileName) + '/' + W.GetFileNamePrefix() + basename(FileName)
     # Open the file for output
     try :
-        F = File(FileName, 'w')
+        F = File(FileName, FileWriteMode)
     except IOError : # If that did not work...
         print("OutputToH5 was unable to open the file '{0}'.\n\n".format(FileName))
         raise # re-raise the exception after the informative message above
@@ -233,7 +233,7 @@ def OutputToH5(W, FileName) :
         for i_m in range(W.NModes()) :
             ell,m = W.LM()[i_m]
             Data_m = Data.create_dataset("l{0}_m{1:+}".format(ell, m), data=W.Data(i_m),
-					 compression="gzip", shuffle=True)
+                                         compression="gzip", shuffle=True)
             Data_m.attrs['ell'] = ell
             Data_m.attrs['m'] = m
     finally : # Use `finally` to make sure this happens:

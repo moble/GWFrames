@@ -831,7 +831,6 @@ std::vector<double> GWFrames::operator*(const std::vector<double>& a, const Matr
   return Result;
 }
 
-
 std::vector<double> GWFrames::DominantPrincipalAxis(Matrix& M) {
   if(M.nrows()!=3 || M.ncols()!=3) {
     cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": M.nrows()=" << M.nrows() << "; M.ncols()=" << M.ncols() << endl;
