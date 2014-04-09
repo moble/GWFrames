@@ -34,10 +34,11 @@ def plotWaveform(this, WaveformPart='Abs', Modes=(), t_fid=None, *pyplot_args, *
     except :
         pass
     import matplotlib
-    try:
-        matplotlib.rcParams['axes.color_cycle'] = ['#000000', '#cc79a7', '#d55e00', '#0072b2', '#f0e442', '#56b4e9', '#e69f00', '#2b9f78']
-    except KeyError :
-        matplotlib.axes.set_default_color_cycle(['#000000', '#cc79a7', '#d55e00', '#0072b2', '#f0e442', '#56b4e9', '#e69f00', '#2b9f78'])
+    # # We probably shouldn't be overwriting people's color choices
+    # try:
+    #     matplotlib.rcParams['axes.color_cycle'] = ['#000000', '#cc79a7', '#d55e00', '#0072b2', '#f0e442', '#56b4e9', '#e69f00', '#2b9f78']
+    # except KeyError :
+    #     matplotlib.axes.set_default_color_cycle(['#000000', '#cc79a7', '#d55e00', '#0072b2', '#f0e442', '#56b4e9', '#e69f00', '#2b9f78'])
     from warnings import warn
     from numpy import array, empty, transpose, sin, cos, modf, pi
 
