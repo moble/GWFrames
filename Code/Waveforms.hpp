@@ -170,10 +170,13 @@ namespace GWFrames {
     Waveform Segment(const unsigned int i1, const unsigned int i2) const;
     void GetAlignmentOfTime(const Waveform& A, const double t_fid, double& deltat) const;
     Waveform& AlignTime(const Waveform& A, const double t_fid);
-    void GetAlignmentOfDecompositionFrameToModes(const double t_fid, Quaternions::Quaternion& R_delta, const std::vector<int>& Lmodes=std::vector<int>(0)) const;
+    void GetAlignmentOfDecompositionFrameToModes(const double t_fid, Quaternions::Quaternion& R_eps, const std::vector<int>& Lmodes=std::vector<int>(0)) const;
     Waveform& AlignDecompositionFrameToModes(const double t_fid, const std::vector<int>& Lmodes=std::vector<int>(0));
+    void GetAlignmentOfDecompositionFrameToModes(const double t_fid, const Quaternions::Quaternion& nHat_t_fid, Quaternions::Quaternion& R_eps,
+                                                 const std::vector<int>& Lmodes=std::vector<int>(0)) const;
+    Waveform& AlignDecompositionFrameToModes(const double t_fid, const Quaternions::Quaternion& nHat_t_fid, const std::vector<int>& Lmodes=std::vector<int>(0));
     void GetAlignmentOfDecompositionFrameToModes(const double t1, const double t2, const Quaternions::Quaternion& nHat_t1,
-                                                 Quaternions::Quaternion& R_delta, const std::vector<int>& Lmodes=std::vector<int>(0)) const;
+                                                 Quaternions::Quaternion& R_eps, const std::vector<int>& Lmodes=std::vector<int>(0)) const;
     Waveform& AlignDecompositionFrameToModes(const double t1, const double t2, const Quaternions::Quaternion& nHat_t1, const std::vector<int>& Lmodes=std::vector<int>(0));
     void GetAlignmentOfFrame(const Waveform& A, const double t_fid, Quaternions::Quaternion& R_delta) const;
     Waveform& AlignFrame(const Waveform& A, const double t_fid);

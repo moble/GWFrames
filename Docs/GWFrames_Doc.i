@@ -3281,6 +3281,35 @@ Fix the orientation of the corotating frame.
     or [2,3,4], for example, restricts the range of the sum.
   
 
+Fix the orientation of the corotating frame.
+============================================
+  Parameters
+  ----------
+    const double t_fid
+      Fiducial time at which the alignment should happen
+    const Quaternions::Quaternion& nHat_t_fid
+      The approximate direction of nHat at t_fid
+    const vector<int>& Lmodes = vector<int>(0)
+      Lmodes to use in computing $<LL>$
+  
+  Returns
+  -------
+    Waveform&
+  
+  Description
+  -----------
+    The corotating frame is only defined up to some constant rotor R_eps; if
+    R_corot is corotating, then so is R_corot*R_eps. This function uses that
+    freedom to ensure that the frame is aligned with the Waveform modes at the
+    fiducial time. In particular, it ensures that the Z axis of the frame in
+    which the decomposition is done is along the dominant eigenvector of $<LL>$
+    (suggested by O'Shaughnessy et al.), and the phase of the (2,2) mode is
+    zero.
+    
+    If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
+    or [2,3,4], for example, restricts the range of the sum.
+  
+
 Fix the orientation of the corotating frame by optimizing over a range of times.
 ================================================================================
   Parameters
@@ -4384,7 +4413,21 @@ Return vector of vector of imaginary parts of all modes as function of time.
   Parameters
   ----------
     const double t_fid
-    Quaternions::Quaternion& R_delta
+    Quaternions::Quaternion& R_eps
+    const vector<int>& Lmodes = vector<int>(0)
+  
+  Returns
+  -------
+    void
+  
+
+
+
+  Parameters
+  ----------
+    const double t_fid
+    const Quaternions::Quaternion& nHat_t_fid
+    Quaternions::Quaternion& R_eps
     const vector<int>& Lmodes = vector<int>(0)
   
   Returns
@@ -4402,7 +4445,8 @@ Find the appropriate rotation to fix the orientation of the corotating frame ove
       End of time range over which the alignment should happen
     const Quaternions::Quaternion& nHat_t1
       The approximate direction of nHat at t1
-    Quaternions::Quaternion& R_delta
+    Quaternions::Quaternion& R_eps
+      Returned rotor
     const vector<int>& Lmodes = vector<int>(0)
       Lmodes to use in computing $<LL>$
   
