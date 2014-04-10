@@ -3269,13 +3269,49 @@ Fix the orientation of the corotating frame.
   
   Description
   -----------
-    The corotating frame is only defined up to some constant rotor R_const; if
-    R_corot is corotating, then so is R_corot*R_const. This function uses that
+    The corotating frame is only defined up to some constant rotor R_eps; if
+    R_corot is corotating, then so is R_corot*R_eps. This function uses that
     freedom to ensure that the frame is aligned with the Waveform modes at the
     fiducial time. In particular, it ensures that the Z axis of the frame in
     which the decomposition is done is along the dominant eigenvector of $<LL>$
     (suggested by O'Shaughnessy et al.), and the phase of the (2,2) mode is
     zero.
+    
+    If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
+    or [2,3,4], for example, restricts the range of the sum.
+  
+
+Fix the orientation of the corotating frame by optimizing over a range of times.
+================================================================================
+  Parameters
+  ----------
+    const double t1
+      Beginning of time range over which the alignment should happen
+    const double t2
+      End of time range over which the alignment should happen
+    const Quaternions::Quaternion& nHat_t1
+      The approximate direction of nHat at t1
+    const vector<int>& Lmodes = vector<int>(0)
+      Lmodes to use in computing $<LL>$
+  
+  Returns
+  -------
+    Waveform&
+  
+  Description
+  -----------
+    The corotating frame is only defined up to some constant rotor R_eps; if
+    R_corot is corotating, then so is R_corot*R_eps. This function uses that
+    freedom to ensure that the frame is aligned with the Waveform modes as well
+    as possible across the given time range. In particular, it ensures that the
+    Z axis of the frame in which the decomposition is done is along the
+    dominant eigenvector of $<LL>$ (suggested by O'Shaughnessy et al.), and the
+    phase of the (2,2) mode is zero. These two conditions only give us axes,
+    but we need vectors to fully specify the frame. So we also impose the
+    condition that the eigenvector is more parallel to the angular velocity of
+    the waveform than anti-parallel, and the X axis of the rotated frame is
+    more parallel to the input nHat_t1 than anti-parallel. These conditions are
+    imposed as accurately as possible across the range of times (t1, t2).
     
     If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
     or [2,3,4], for example, restricts the range of the sum.
@@ -3679,6 +3715,19 @@ Frame in which the rotation is minimal.
   Returns
   -------
     DataGrid&
+  
+"""
+
+%feature("docstring") GWFrames::Waveform::DropEllModes """
+Remove data relating to the given ell modes.
+============================================
+  Parameters
+  ----------
+    const vector<unsigned int>& EllModesToDrop
+  
+  Returns
+  -------
+    Waveform&
   
 """
 
@@ -4214,6 +4263,19 @@ Re-interpolate data to new time slices given by this supertranslation.
   
 """
 
+%feature("docstring") GWFrames::Waveform::KeepOnlyEllModes """
+Remove data relating to all but the given ell modes.
+====================================================
+  Parameters
+  ----------
+    const vector<unsigned int>& EllModesToKeep
+  
+  Returns
+  -------
+    Waveform&
+  
+"""
+
 %feature("docstring") GWFrames::Waveform::SetSpinWeight """
 
 
@@ -4317,14 +4379,30 @@ Return vector of vector of imaginary parts of all modes as function of time.
 """
 
 %feature("docstring") GWFrames::Waveform::GetAlignmentOfDecompositionFrameToModes """
-Find the appropriate rotation to fix the orientation of the corotating frame.
-=============================================================================
+
+
   Parameters
   ----------
     const double t_fid
-      Fiducial time at which the alignment should happen
     Quaternions::Quaternion& R_delta
-      Returned rotor
+    const vector<int>& Lmodes = vector<int>(0)
+  
+  Returns
+  -------
+    void
+  
+
+Find the appropriate rotation to fix the orientation of the corotating frame over a range of time.
+==================================================================================================
+  Parameters
+  ----------
+    const double t1
+      Beginning of time range over which the alignment should happen
+    const double t2
+      End of time range over which the alignment should happen
+    const Quaternions::Quaternion& nHat_t1
+      The approximate direction of nHat at t1
+    Quaternions::Quaternion& R_delta
     const vector<int>& Lmodes = vector<int>(0)
       Lmodes to use in computing $<LL>$
   
