@@ -1967,6 +1967,7 @@ void GWFrames::Waveform::GetAlignmentOfDecompositionFrameToModes(const double t1
   W.DropTimesOutside(t1, t2);
   std::vector<Quaternion> R_zeta(W.NTimes());
   R_zeta[0] = Quaternions::One;
+  const Quaternion R_f0 = W.Frame(0);
   // First, do the naive alignment using a single time, to get us started
   this->GetAlignmentOfDecompositionFrameToModes(W.T(0), R_eps, Lmodes);
   W.RotateDecompositionBasis(R_eps);
@@ -1994,7 +1995,7 @@ void GWFrames::Waveform::GetAlignmentOfDecompositionFrameToModes(const double t1
     R_zeta[i] = (R_V_f * Quaternions::exp(Quaternion(0,0,0,(-phase_22/2)/2))).normalized();
   }
   R_eps = R_eps * Quaternions::ApproximateMeanRotor(R_zeta, W.T());
-  if(nHat_t1.dot(R_eps*Quaternions::xHat*R_eps.inverse()) < 0) {
+  if(nHat_t1.dot(R_f0*R_eps*Quaternions::xHat*R_eps.inverse()*R_f0.inverse()) < 0) {
     // std::cerr << __FILE__ << ":" << __LINE__ << ": Rotating by pi/2 about the z axis initially." << std::endl;
     R_eps = R_eps * Quaternions::exp((M_PI/2.)*Quaternions::zHat);
   }
