@@ -1061,3 +1061,28 @@ MatrixC::~MatrixC()
 
 
 ///////////////////////////////////////////////////////////////////
+
+
+std::ostream& GWFrames::operator<<(std::ostream& out, const std::vector<double>& v) {
+  for(unsigned int i=0; i<v.size()-1; ++i) {
+    out << v[i] << ", ";
+  }
+  out << v.back() << std::flush;
+  return out;
+}
+
+std::ostream& GWFrames::operator<<(std::ostream& out, const std::vector<int>& v) {
+  for(unsigned int i=0; i<v.size()-1; ++i) {
+    out << v[i] << ", ";
+  }
+  out << v.back() << std::flush;
+  return out;
+}
+
+std::ostream& GWFrames::operator<<(std::ostream& out, const std::vector<unsigned int>& v) {
+  for(unsigned int i=0; i<v.size()-1; ++i) {
+    out << v[i] << ", ";
+  }
+  out << v.back() << std::flush;
+  return out;
+}
