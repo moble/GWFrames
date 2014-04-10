@@ -76,6 +76,8 @@ namespace GWFrames {
     inline Waveform& SetData(const unsigned int i_Mode, const unsigned int i_Time, const std::complex<double>& a) { data[i_Mode][i_Time] = a; return *this; }
     inline Waveform& ResizeData(const unsigned int NModes, const unsigned int NTimes) { data.resize(NModes, NTimes); return *this; }
     Waveform& DropTimesOutside(const double ta, const double tb);
+    Waveform& DropEllModes(const std::vector<unsigned int>& EllModesToDrop);
+    Waveform& KeepOnlyEllModes(const std::vector<unsigned int>& EllModesToKeep);
     void swap(Waveform& b);
 
   public:  // Data access functions
@@ -170,6 +172,9 @@ namespace GWFrames {
     Waveform& AlignTime(const Waveform& A, const double t_fid);
     void GetAlignmentOfDecompositionFrameToModes(const double t_fid, Quaternions::Quaternion& R_delta, const std::vector<int>& Lmodes=std::vector<int>(0)) const;
     Waveform& AlignDecompositionFrameToModes(const double t_fid, const std::vector<int>& Lmodes=std::vector<int>(0));
+    void GetAlignmentOfDecompositionFrameToModes(const double t1, const double t2, const Quaternions::Quaternion& nHat_t1,
+                                                 Quaternions::Quaternion& R_delta, const std::vector<int>& Lmodes=std::vector<int>(0)) const;
+    Waveform& AlignDecompositionFrameToModes(const double t1, const double t2, const Quaternions::Quaternion& nHat_t1, const std::vector<int>& Lmodes=std::vector<int>(0));
     void GetAlignmentOfFrame(const Waveform& A, const double t_fid, Quaternions::Quaternion& R_delta) const;
     Waveform& AlignFrame(const Waveform& A, const double t_fid);
     void GetAlignmentOfTimeAndFrame(const Waveform& A, const double t1, const double t2, double& deltat, Quaternions::Quaternion& R_delta) const;
