@@ -20262,6 +20262,489 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap__Waveform_CopyWithoutData(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  GWFrames::Waveform result;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_CopyWithoutData" "', argument " "1"" of type '" "GWFrames::Waveform const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
+  {
+    try {
+      result = ((GWFrames::Waveform const *)arg1)->CopyWithoutData();;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj((new GWFrames::Waveform(static_cast< const GWFrames::Waveform& >(result))), SWIGTYPE_p_GWFrames__Waveform, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap__Waveform_SliceOfTimeIndices(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
+  unsigned int arg2 ;
+  unsigned int arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  unsigned int val2 ;
+  int ecode2 = 0 ;
+  unsigned int val3 ;
+  int ecode3 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  GWFrames::Waveform result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:_Waveform_SliceOfTimeIndices",&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_SliceOfTimeIndices" "', argument " "1"" of type '" "GWFrames::Waveform const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
+  ecode2 = SWIG_AsVal_unsigned_SS_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "_Waveform_SliceOfTimeIndices" "', argument " "2"" of type '" "unsigned int""'");
+  } 
+  arg2 = static_cast< unsigned int >(val2);
+  ecode3 = SWIG_AsVal_unsigned_SS_int(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "_Waveform_SliceOfTimeIndices" "', argument " "3"" of type '" "unsigned int""'");
+  } 
+  arg3 = static_cast< unsigned int >(val3);
+  {
+    try {
+      result = ((GWFrames::Waveform const *)arg1)->SliceOfTimeIndices(arg2,arg3);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj((new GWFrames::Waveform(static_cast< const GWFrames::Waveform& >(result))), SWIGTYPE_p_GWFrames__Waveform, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap__Waveform_SliceOfTimeIndicesWithEll2(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
+  unsigned int arg2 ;
+  unsigned int arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  unsigned int val2 ;
+  int ecode2 = 0 ;
+  unsigned int val3 ;
+  int ecode3 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  GWFrames::Waveform result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:_Waveform_SliceOfTimeIndicesWithEll2",&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_SliceOfTimeIndicesWithEll2" "', argument " "1"" of type '" "GWFrames::Waveform const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
+  ecode2 = SWIG_AsVal_unsigned_SS_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "_Waveform_SliceOfTimeIndicesWithEll2" "', argument " "2"" of type '" "unsigned int""'");
+  } 
+  arg2 = static_cast< unsigned int >(val2);
+  ecode3 = SWIG_AsVal_unsigned_SS_int(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "_Waveform_SliceOfTimeIndicesWithEll2" "', argument " "3"" of type '" "unsigned int""'");
+  } 
+  arg3 = static_cast< unsigned int >(val3);
+  {
+    try {
+      result = ((GWFrames::Waveform const *)arg1)->SliceOfTimeIndicesWithEll2(arg2,arg3);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj((new GWFrames::Waveform(static_cast< const GWFrames::Waveform& >(result))), SWIGTYPE_p_GWFrames__Waveform, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap__Waveform_SliceOfTimes(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
+  double arg2 ;
+  double arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  GWFrames::Waveform result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:_Waveform_SliceOfTimes",&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_SliceOfTimes" "', argument " "1"" of type '" "GWFrames::Waveform const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "_Waveform_SliceOfTimes" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  ecode3 = SWIG_AsVal_double(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "_Waveform_SliceOfTimes" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  {
+    try {
+      result = ((GWFrames::Waveform const *)arg1)->SliceOfTimes(arg2,arg3);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj((new GWFrames::Waveform(static_cast< const GWFrames::Waveform& >(result))), SWIGTYPE_p_GWFrames__Waveform, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap__Waveform_SliceOfTimesWithEll2(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
+  double arg2 ;
+  double arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  GWFrames::Waveform result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:_Waveform_SliceOfTimesWithEll2",&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_SliceOfTimesWithEll2" "', argument " "1"" of type '" "GWFrames::Waveform const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "_Waveform_SliceOfTimesWithEll2" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  ecode3 = SWIG_AsVal_double(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "_Waveform_SliceOfTimesWithEll2" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  {
+    try {
+      result = ((GWFrames::Waveform const *)arg1)->SliceOfTimesWithEll2(arg2,arg3);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj((new GWFrames::Waveform(static_cast< const GWFrames::Waveform& >(result))), SWIGTYPE_p_GWFrames__Waveform, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap__Waveform_DropTimesOutside(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
+  double arg2 ;
+  double arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  GWFrames::Waveform *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:_Waveform_DropTimesOutside",&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_DropTimesOutside" "', argument " "1"" of type '" "GWFrames::Waveform *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "_Waveform_DropTimesOutside" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  ecode3 = SWIG_AsVal_double(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "_Waveform_DropTimesOutside" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  {
+    try {
+      result = (GWFrames::Waveform *) &(arg1)->DropTimesOutside(arg2,arg3);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap__Waveform_DropEllModes(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
+  std::vector< unsigned int,std::allocator< unsigned int > > *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::vector< unsigned_int > temp2 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::Waveform *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:_Waveform_DropEllModes",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_DropEllModes" "', argument " "1"" of type '" "GWFrames::Waveform *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
+  {
+    if(PyArray_Check(obj1)) {
+      PyArrayObject *xa = reinterpret_cast<PyArrayObject*>(obj1);
+      if(PyArray_TYPE(xa) != NPY_UINT) {
+        SWIG_exception(SWIG_TypeError, "(1) numpy array of 'uint' expected."	\
+          " Make sure that the numpy array use dtype=uint.");
+      }
+      const std::size_t size = PyArray_DIM(xa, 0);
+      temp2.resize(size);
+      unsigned_int* array = static_cast<unsigned_int*>(PyArray_DATA(xa));
+      if(PyArray_ISCONTIGUOUS(xa)) {
+        std::copy(array, array + size, temp2.begin());
+      } else {
+        const npy_intp strides = PyArray_STRIDE(xa, 0)/sizeof(unsigned_int);
+        for (std::size_t i = 0; i < size; i++)
+        temp2[i] = array[i*strides];
+      }
+    } else if(PySequence_Check(obj1)) {
+      Py_ssize_t size = PySequence_Size(obj1);
+      temp2.resize(size);
+      PyObject* item;
+      for(Py_ssize_t i=0; i<size; ++i) {
+        item = PySequence_GetItem(obj1, i);
+        if(!SWIG_IsOK(SWIG_AsVal_unsigned_int (item, &temp2[i]))) {
+          Py_DECREF(item);
+          SWIG_exception(SWIG_TypeError, "expected items of sequence to be of type "\
+            "\"unsigned_int\" in argument 2");
+        }
+        Py_DECREF(item);
+      }
+    } else {
+      SWIG_exception(SWIG_TypeError, "(2) numpy array of 'uint' expected. " \
+        "Make sure that the numpy array use dtype=uint.");
+    }
+    arg2 = &temp2;
+  }
+  {
+    try {
+      result = (GWFrames::Waveform *) &(arg1)->DropEllModes((std::vector< unsigned int,std::allocator< unsigned int > > const &)*arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap__Waveform_KeepOnlyEllModes(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
+  std::vector< unsigned int,std::allocator< unsigned int > > *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::vector< unsigned_int > temp2 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::Waveform *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:_Waveform_KeepOnlyEllModes",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_KeepOnlyEllModes" "', argument " "1"" of type '" "GWFrames::Waveform *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
+  {
+    if(PyArray_Check(obj1)) {
+      PyArrayObject *xa = reinterpret_cast<PyArrayObject*>(obj1);
+      if(PyArray_TYPE(xa) != NPY_UINT) {
+        SWIG_exception(SWIG_TypeError, "(1) numpy array of 'uint' expected."	\
+          " Make sure that the numpy array use dtype=uint.");
+      }
+      const std::size_t size = PyArray_DIM(xa, 0);
+      temp2.resize(size);
+      unsigned_int* array = static_cast<unsigned_int*>(PyArray_DATA(xa));
+      if(PyArray_ISCONTIGUOUS(xa)) {
+        std::copy(array, array + size, temp2.begin());
+      } else {
+        const npy_intp strides = PyArray_STRIDE(xa, 0)/sizeof(unsigned_int);
+        for (std::size_t i = 0; i < size; i++)
+        temp2[i] = array[i*strides];
+      }
+    } else if(PySequence_Check(obj1)) {
+      Py_ssize_t size = PySequence_Size(obj1);
+      temp2.resize(size);
+      PyObject* item;
+      for(Py_ssize_t i=0; i<size; ++i) {
+        item = PySequence_GetItem(obj1, i);
+        if(!SWIG_IsOK(SWIG_AsVal_unsigned_int (item, &temp2[i]))) {
+          Py_DECREF(item);
+          SWIG_exception(SWIG_TypeError, "expected items of sequence to be of type "\
+            "\"unsigned_int\" in argument 2");
+        }
+        Py_DECREF(item);
+      }
+    } else {
+      SWIG_exception(SWIG_TypeError, "(2) numpy array of 'uint' expected. " \
+        "Make sure that the numpy array use dtype=uint.");
+    }
+    arg2 = &temp2;
+  }
+  {
+    try {
+      result = (GWFrames::Waveform *) &(arg1)->KeepOnlyEllModes((std::vector< unsigned int,std::allocator< unsigned int > > const &)*arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap__Waveform_KeepOnlyEll2(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  GWFrames::Waveform *result = 0 ;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_KeepOnlyEll2" "', argument " "1"" of type '" "GWFrames::Waveform *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
+  {
+    try {
+      result = (GWFrames::Waveform *) &(arg1)->KeepOnlyEll2();;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap__Waveform_SetSpinWeight(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
@@ -21203,207 +21686,6 @@ SWIGINTERN PyObject *_wrap__Waveform_ResizeData(PyObject *self, PyObject *args) 
   {
     try {
       result = (GWFrames::Waveform *) &(arg1)->ResizeData(arg2,arg3);;
-    } catch(int i) {
-      std::stringstream s;
-      if(i>-1 && i<GWFramesNumberOfErrors) {
-        s << "GWFrames exception: " << GWFramesErrors[i]; 
-      }
-      else  {
-        s << "GWFrames: Unknown exception number {" << i << "}"; 
-      }
-      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
-      return NULL;
-    }
-  }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap__Waveform_DropTimesOutside(PyObject *self, PyObject *args) {
-  PyObject *resultobj = 0;
-  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
-  double arg2 ;
-  double arg3 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  double val2 ;
-  int ecode2 = 0 ;
-  double val3 ;
-  int ecode3 = 0 ;
-  PyObject * obj1 = 0 ;
-  PyObject * obj2 = 0 ;
-  GWFrames::Waveform *result = 0 ;
-  
-  if (!PyArg_ParseTuple(args,(char *)"OO:_Waveform_DropTimesOutside",&obj1,&obj2)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_DropTimesOutside" "', argument " "1"" of type '" "GWFrames::Waveform *""'"); 
-  }
-  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
-  ecode2 = SWIG_AsVal_double(obj1, &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "_Waveform_DropTimesOutside" "', argument " "2"" of type '" "double""'");
-  } 
-  arg2 = static_cast< double >(val2);
-  ecode3 = SWIG_AsVal_double(obj2, &val3);
-  if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "_Waveform_DropTimesOutside" "', argument " "3"" of type '" "double""'");
-  } 
-  arg3 = static_cast< double >(val3);
-  {
-    try {
-      result = (GWFrames::Waveform *) &(arg1)->DropTimesOutside(arg2,arg3);;
-    } catch(int i) {
-      std::stringstream s;
-      if(i>-1 && i<GWFramesNumberOfErrors) {
-        s << "GWFrames exception: " << GWFramesErrors[i]; 
-      }
-      else  {
-        s << "GWFrames: Unknown exception number {" << i << "}"; 
-      }
-      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
-      return NULL;
-    }
-  }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap__Waveform_DropEllModes(PyObject *self, PyObject *args) {
-  PyObject *resultobj = 0;
-  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
-  std::vector< unsigned int,std::allocator< unsigned int > > *arg2 = 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  std::vector< unsigned_int > temp2 ;
-  PyObject * obj1 = 0 ;
-  GWFrames::Waveform *result = 0 ;
-  
-  if (!PyArg_ParseTuple(args,(char *)"O:_Waveform_DropEllModes",&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_DropEllModes" "', argument " "1"" of type '" "GWFrames::Waveform *""'"); 
-  }
-  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
-  {
-    if(PyArray_Check(obj1)) {
-      PyArrayObject *xa = reinterpret_cast<PyArrayObject*>(obj1);
-      if(PyArray_TYPE(xa) != NPY_UINT) {
-        SWIG_exception(SWIG_TypeError, "(1) numpy array of 'uint' expected."	\
-          " Make sure that the numpy array use dtype=uint.");
-      }
-      const std::size_t size = PyArray_DIM(xa, 0);
-      temp2.resize(size);
-      unsigned_int* array = static_cast<unsigned_int*>(PyArray_DATA(xa));
-      if(PyArray_ISCONTIGUOUS(xa)) {
-        std::copy(array, array + size, temp2.begin());
-      } else {
-        const npy_intp strides = PyArray_STRIDE(xa, 0)/sizeof(unsigned_int);
-        for (std::size_t i = 0; i < size; i++)
-        temp2[i] = array[i*strides];
-      }
-    } else if(PySequence_Check(obj1)) {
-      Py_ssize_t size = PySequence_Size(obj1);
-      temp2.resize(size);
-      PyObject* item;
-      for(Py_ssize_t i=0; i<size; ++i) {
-        item = PySequence_GetItem(obj1, i);
-        if(!SWIG_IsOK(SWIG_AsVal_unsigned_int (item, &temp2[i]))) {
-          Py_DECREF(item);
-          SWIG_exception(SWIG_TypeError, "expected items of sequence to be of type "\
-            "\"unsigned_int\" in argument 2");
-        }
-        Py_DECREF(item);
-      }
-    } else {
-      SWIG_exception(SWIG_TypeError, "(2) numpy array of 'uint' expected. " \
-        "Make sure that the numpy array use dtype=uint.");
-    }
-    arg2 = &temp2;
-  }
-  {
-    try {
-      result = (GWFrames::Waveform *) &(arg1)->DropEllModes((std::vector< unsigned int,std::allocator< unsigned int > > const &)*arg2);;
-    } catch(int i) {
-      std::stringstream s;
-      if(i>-1 && i<GWFramesNumberOfErrors) {
-        s << "GWFrames exception: " << GWFramesErrors[i]; 
-      }
-      else  {
-        s << "GWFrames: Unknown exception number {" << i << "}"; 
-      }
-      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
-      return NULL;
-    }
-  }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap__Waveform_KeepOnlyEllModes(PyObject *self, PyObject *args) {
-  PyObject *resultobj = 0;
-  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
-  std::vector< unsigned int,std::allocator< unsigned int > > *arg2 = 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  std::vector< unsigned_int > temp2 ;
-  PyObject * obj1 = 0 ;
-  GWFrames::Waveform *result = 0 ;
-  
-  if (!PyArg_ParseTuple(args,(char *)"O:_Waveform_KeepOnlyEllModes",&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_KeepOnlyEllModes" "', argument " "1"" of type '" "GWFrames::Waveform *""'"); 
-  }
-  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
-  {
-    if(PyArray_Check(obj1)) {
-      PyArrayObject *xa = reinterpret_cast<PyArrayObject*>(obj1);
-      if(PyArray_TYPE(xa) != NPY_UINT) {
-        SWIG_exception(SWIG_TypeError, "(1) numpy array of 'uint' expected."	\
-          " Make sure that the numpy array use dtype=uint.");
-      }
-      const std::size_t size = PyArray_DIM(xa, 0);
-      temp2.resize(size);
-      unsigned_int* array = static_cast<unsigned_int*>(PyArray_DATA(xa));
-      if(PyArray_ISCONTIGUOUS(xa)) {
-        std::copy(array, array + size, temp2.begin());
-      } else {
-        const npy_intp strides = PyArray_STRIDE(xa, 0)/sizeof(unsigned_int);
-        for (std::size_t i = 0; i < size; i++)
-        temp2[i] = array[i*strides];
-      }
-    } else if(PySequence_Check(obj1)) {
-      Py_ssize_t size = PySequence_Size(obj1);
-      temp2.resize(size);
-      PyObject* item;
-      for(Py_ssize_t i=0; i<size; ++i) {
-        item = PySequence_GetItem(obj1, i);
-        if(!SWIG_IsOK(SWIG_AsVal_unsigned_int (item, &temp2[i]))) {
-          Py_DECREF(item);
-          SWIG_exception(SWIG_TypeError, "expected items of sequence to be of type "\
-            "\"unsigned_int\" in argument 2");
-        }
-        Py_DECREF(item);
-      }
-    } else {
-      SWIG_exception(SWIG_TypeError, "(2) numpy array of 'uint' expected. " \
-        "Make sure that the numpy array use dtype=uint.");
-    }
-    arg2 = &temp2;
-  }
-  {
-    try {
-      result = (GWFrames::Waveform *) &(arg1)->KeepOnlyEllModes((std::vector< unsigned int,std::allocator< unsigned int > > const &)*arg2);;
     } catch(int i) {
       std::stringstream s;
       if(i>-1 && i<GWFramesNumberOfErrors) {
@@ -40994,6 +41276,52 @@ SwigPyBuiltin__GWFrames__Waveform_richcompare(PyObject *self, PyObject *other, i
 }
 
 SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__Waveform_methods[] = {
+  { "CopyWithoutData", (PyCFunction) _wrap__Waveform_CopyWithoutData, METH_VARARGS, (char*) "" },
+  { "SliceOfTimeIndices", (PyCFunction) _wrap__Waveform_SliceOfTimeIndices, METH_VARARGS, (char*) "" },
+  { "SliceOfTimeIndicesWithEll2", (PyCFunction) _wrap__Waveform_SliceOfTimeIndicesWithEll2, METH_VARARGS, (char*) "" },
+  { "SliceOfTimes", (PyCFunction) _wrap__Waveform_SliceOfTimes, METH_VARARGS, (char*) "" },
+  { "SliceOfTimesWithEll2", (PyCFunction) _wrap__Waveform_SliceOfTimesWithEll2, METH_VARARGS, (char*) "" },
+  { "DropTimesOutside", (PyCFunction) _wrap__Waveform_DropTimesOutside, METH_VARARGS, (char*) "\n"
+		"Remove all data relating to times outside of the given range.\n"
+		"=============================================================\n"
+		"  Parameters\n"
+		"  ----------\n"
+		"    const double ta\n"
+		"    const double tb\n"
+		"  \n"
+		"  Returns\n"
+		"  -------\n"
+		"    Waveform&\n"
+		"  \n"
+		"\n"
+		"" },
+  { "DropEllModes", (PyCFunction) _wrap__Waveform_DropEllModes, METH_VARARGS, (char*) "\n"
+		"Remove data relating to the given ell modes.\n"
+		"============================================\n"
+		"  Parameters\n"
+		"  ----------\n"
+		"    const vector<unsigned int>& EllModesToDrop\n"
+		"  \n"
+		"  Returns\n"
+		"  -------\n"
+		"    Waveform&\n"
+		"  \n"
+		"\n"
+		"" },
+  { "KeepOnlyEllModes", (PyCFunction) _wrap__Waveform_KeepOnlyEllModes, METH_VARARGS, (char*) "\n"
+		"Remove data relating to all but the given ell modes.\n"
+		"====================================================\n"
+		"  Parameters\n"
+		"  ----------\n"
+		"    const vector<unsigned int>& EllModesToKeep\n"
+		"  \n"
+		"  Returns\n"
+		"  -------\n"
+		"    Waveform&\n"
+		"  \n"
+		"\n"
+		"" },
+  { "KeepOnlyEll2", (PyCFunction) _wrap__Waveform_KeepOnlyEll2, METH_VARARGS, (char*) "" },
   { "SetSpinWeight", (PyCFunction) _wrap__Waveform_SetSpinWeight, METH_VARARGS, (char*) "\n"
 		"Parameters\n"
 		"----------\n"
@@ -41160,46 +41488,6 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__Waveform_methods[] = {
 		"-------\n"
 		"  Waveform&\n"
 		"\n"
-		"\n"
-		"" },
-  { "DropTimesOutside", (PyCFunction) _wrap__Waveform_DropTimesOutside, METH_VARARGS, (char*) "\n"
-		"Remove all data relating to times outside of the given range.\n"
-		"=============================================================\n"
-		"  Parameters\n"
-		"  ----------\n"
-		"    const double ta\n"
-		"    const double tb\n"
-		"  \n"
-		"  Returns\n"
-		"  -------\n"
-		"    Waveform&\n"
-		"  \n"
-		"\n"
-		"" },
-  { "DropEllModes", (PyCFunction) _wrap__Waveform_DropEllModes, METH_VARARGS, (char*) "\n"
-		"Remove data relating to the given ell modes.\n"
-		"============================================\n"
-		"  Parameters\n"
-		"  ----------\n"
-		"    const vector<unsigned int>& EllModesToDrop\n"
-		"  \n"
-		"  Returns\n"
-		"  -------\n"
-		"    Waveform&\n"
-		"  \n"
-		"\n"
-		"" },
-  { "KeepOnlyEllModes", (PyCFunction) _wrap__Waveform_KeepOnlyEllModes, METH_VARARGS, (char*) "\n"
-		"Remove data relating to all but the given ell modes.\n"
-		"====================================================\n"
-		"  Parameters\n"
-		"  ----------\n"
-		"    const vector<unsigned int>& EllModesToKeep\n"
-		"  \n"
-		"  Returns\n"
-		"  -------\n"
-		"    Waveform&\n"
-		"  \n"
 		"\n"
 		"" },
   { "swap", (PyCFunction) _wrap__Waveform_swap, METH_VARARGS, (char*) "\n"

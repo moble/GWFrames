@@ -264,24 +264,102 @@ GWFrames::Waveform& GWFrames::Waveform::operator=(const GWFrames::Waveform& a) {
   return *this;
 }
 
+/// Copy the Waveform, except for the data (t, frame, lm, data)
+GWFrames::Waveform GWFrames::Waveform::CopyWithoutData() const {
+  Waveform that;
+  that.spinweight = (*this).spinweight;
+  that.boostweight = (*this).boostweight;
+  that.history.str((*this).history.str());
+  that.history.clear();
+  that.history.seekp(0, ios_base::end);
+  that.frameType = (*this).frameType;
+  that.dataType = (*this).dataType;
+  that.rIsScaledOut = (*this).rIsScaledOut;
+  that.mIsScaledOut = (*this).mIsScaledOut;
+  // that.t = (*this).t;
+  // that.frame = (*this).frame;
+  // that.lm = (*this).lm;
+  // that.data = (*this).data;
+  that.history << "this->CopyWithoutData();" << std::endl;
+  return that;
+}
+
+/// Copy the Waveform between indices i_t_a and i_t_b
+GWFrames::Waveform GWFrames::Waveform::SliceOfTimeIndices(const unsigned int i_t_a, const unsigned int i_t_b) const {
+  /// i_t_a and i_t_b should hold the indices pointing to the first
+  /// time in `t` after `t_a`, and the first time in `t` after `t_b`
+  /// (or one-past-the-end of `t` if necessary)
+  Waveform Slice = this->CopyWithoutData();
+  Slice.lm = lm;
+  Slice.history << "this->SliceOfTimeIndices(" << i_t_a << ", " << i_t_b << ");" << std::endl;
+  const unsigned int ntimes = i_t_b-i_t_a;
+  const unsigned int nmodes = NModes();
+  Slice.data.resize(nmodes, ntimes);
+  for(unsigned int i_m=0; i_m<nmodes; ++i_m) {
+    for(unsigned int i_t=0; i_t<ntimes; ++i_t) {
+      Slice.data[i_m][i_t] = data[i_m][i_t+i_t_a];
+    }
+  }
+  Slice.frame = vector<Quaternion>(frame.begin()+i_t_a, frame.begin()+i_t_b);
+  Slice.t = vector<double>(t.begin()+i_t_a, t.begin()+i_t_b);
+  return Slice;
+}
+
+/// Copy the Waveform between t_a and t_b
+GWFrames::Waveform GWFrames::Waveform::SliceOfTimes(const double t_a, const double t_b) const {
+  const unsigned int i_t_a = Quaternions::huntRight(t, t_a);
+  const unsigned int i_t_b = Quaternions::huntRight(t, t_b, i_t_a);
+  return this->SliceOfTimeIndices(i_t_a, i_t_b);
+}
+
+/// Copy of the Waveform between indices i_t_a and i_t_b, only ell=2 modes
+GWFrames::Waveform GWFrames::Waveform::SliceOfTimeIndicesWithEll2(const unsigned int i_t_a, const unsigned int i_t_b) const {
+  /// i_t_a and i_t_b should hold the indices pointing to the first
+  /// time in `t` after `t_a`, and the first time in `t` after `t_b`
+  /// (or one-past-the-end of `t` if necessary)
+  Waveform Slice = this->CopyWithoutData();
+  Slice.history << "this->SliceOfTimeIndicesWithEll2(" << i_t_a << ", " << i_t_b << ");" << std::endl;
+  Slice.lm = vector<vector<int> >(1, vector<int>(5));
+  const unsigned int ntimes = i_t_b-i_t_a;
+  const unsigned int nmodes = 5;
+  Slice.data.resize(nmodes, ntimes);
+  for(int m=-2; m<3; ++m) {
+    Slice.lm[0][m+2] = m;
+    unsigned int i_m = FindModeIndex(2, m);
+    for(unsigned int i_t=0; i_t<ntimes; ++i_t) {
+      Slice.data[i_m][i_t] = data[i_m][i_t+i_t_a];
+    }
+  }
+  Slice.frame = vector<Quaternion>(frame.begin()+i_t_a, frame.begin()+i_t_b);
+  Slice.t = vector<double>(t.begin()+i_t_a, t.begin()+i_t_b);
+  return Slice;
+}
+
+
+/// Copy of the Waveform between t_a and t_b, only ell=2 modes
+GWFrames::Waveform GWFrames::Waveform::SliceOfTimesWithEll2(const double t_a, const double t_b) const {
+  const unsigned int i_t_a = Quaternions::huntRight(t, t_a);
+  const unsigned int i_t_b = Quaternions::huntRight(t, t_b, i_t_a);
+  return this->SliceOfTimeIndicesWithEll2(i_t_a, i_t_b);
+}
+
 /// Remove all data relating to times outside of the given range
-GWFrames::Waveform& GWFrames::Waveform::DropTimesOutside(const double ta, const double tb) {
-  history << "this->DropTimesOutside(" << ta << ", " << tb << ");" << std::endl;
-  const unsigned int i_a = Quaternions::hunt(t, ta)+1;
-  const unsigned int i_b = Quaternions::hunt(t, tb);
+GWFrames::Waveform& GWFrames::Waveform::DropTimesOutside(const double t_a, const double t_b) {
+  history << "this->DropTimesOutside(" << t_a << ", " << t_b << ");" << std::endl;
+  const unsigned int i_t_a = Quaternions::huntRight(t, t_a);
+  const unsigned int i_t_b = Quaternions::huntRight(t, t_b, i_t_a);
   vector<vector<complex<double> > > newdata(NModes(), vector<complex<double> >(t.size()));
   for(unsigned int mode=0; mode<NModes(); ++mode) {
     vector<complex<double> > ModeData = Data(mode);
-    ModeData.erase(ModeData.begin()+i_b, ModeData.end());
-    ModeData.erase(ModeData.begin(), ModeData.begin()+i_a);
+    ModeData.erase(ModeData.begin()+i_t_b, ModeData.end());
+    ModeData.erase(ModeData.begin(), ModeData.begin()+i_t_a);
     newdata[mode].swap(ModeData);
   }
   data = MatrixC(newdata);
-  frame.erase(frame.begin()+i_b, frame.end());
-  frame.erase(frame.begin(), frame.begin()+i_a);
-  t.erase(t.begin()+i_b, t.end());
-  t.erase(t.begin(), t.begin()+i_a);
-
+  frame.erase(frame.begin()+i_t_b, frame.end());
+  frame.erase(frame.begin(), frame.begin()+i_t_a);
+  t.erase(t.begin()+i_t_b, t.end());
+  t.erase(t.begin(), t.begin()+i_t_a);
   return *this;
 }
 
@@ -337,6 +415,13 @@ GWFrames::Waveform& GWFrames::Waveform::KeepOnlyEllModes(const std::vector<unsig
   }
   data = MatrixC(NewData);
   return *this;
+}
+
+/// Remove data relating to all but the ell=2 modes
+GWFrames::Waveform& GWFrames::Waveform::KeepOnlyEll2() {
+  vector<unsigned int> Two(1);
+  Two[0] = 2;
+  return this->KeepOnlyEllModes(Two);
 }
 
 /// Efficiently swap data between two Waveform objects.
@@ -1875,12 +1960,10 @@ void GWFrames::Waveform::GetAlignmentOfDecompositionFrameToModes(const double t_
   // Get direction of angular-velocity vector near t_fid
   Quaternion omegaHat;
   {
-    int i_t_fid = 0;
-    while(t[i_t_fid]<t_fid && i_t_fid<int(t.size())) { ++i_t_fid; }
+    int i_t_fid = Quaternions::huntRight(t, t_fid);
     unsigned int i1 = (i_t_fid-10<0 ? 0 : i_t_fid-10);
-    unsigned int i2 = (i_t_fid+11>int(t.size()) ? t.size() : i_t_fid+11);
-    vector<double> tRegion(&t[i1], &t[i2]);
-    const Waveform Region = (this->Interpolate(tRegion)).TransformToInertialFrame();
+    unsigned int i2 = (i1+11>int(t.size()) ? t.size() : i1+11);
+    const Waveform Region = (this->SliceOfTimeIndicesWithEll2(i1,i2)).TransformToInertialFrame();
     omegaHat = Quaternion(Region.AngularVelocityVector()[i_t_fid-i1]).normalized();
     // omegaHat contains the components of that vector relative to the
     // inertial frame.  To get its components in this Waveform's
@@ -2008,13 +2091,18 @@ void GWFrames::Waveform::GetAlignmentOfDecompositionFrameToModes(const double t_
   // Get direction of angular-velocity vector near t_fid
   Quaternion omegaHat;
   {
-    int i_t_fid = 0;
-    while(t[i_t_fid]<t_fid && i_t_fid<int(t.size())) { ++i_t_fid; }
+    int i_t_fid = Quaternions::huntRight(t, t_fid);
     unsigned int i1 = (i_t_fid-10<0 ? 0 : i_t_fid-10);
-    unsigned int i2 = (i_t_fid+11>int(t.size()) ? t.size() : i_t_fid+11);
-    vector<double> tRegion(&t[i1], &t[i2]);
-    const Waveform Region = (this->Interpolate(tRegion)).TransformToInertialFrame();
+    unsigned int i2 = (i1+11>int(t.size()) ? t.size() : i1+11);
+    const Waveform Region = (this->SliceOfTimeIndicesWithEll2(i1,i2)).TransformToInertialFrame();
     omegaHat = Quaternion(Region.AngularVelocityVector()[i_t_fid-i1]).normalized();
+    // int i_t_fid = 0;
+    // while(t[i_t_fid]<t_fid && i_t_fid<int(t.size())) { ++i_t_fid; }
+    // unsigned int i1 = (i_t_fid-10<0 ? 0 : i_t_fid-10);
+    // unsigned int i2 = (i_t_fid+11>int(t.size()) ? t.size() : i_t_fid+11);
+    // vector<double> tRegion(&t[i1], &t[i2]);
+    // const Waveform Region = (this->Interpolate(tRegion)).TransformToInertialFrame();
+    // omegaHat = Quaternion(Region.AngularVelocityVector()[i_t_fid-i1]).normalized();
     // omegaHat contains the components of that vector relative to the
     // inertial frame.  To get its components in this Waveform's
     // (possibly rotating) frame, we need to rotate it by the inverse

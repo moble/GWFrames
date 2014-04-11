@@ -37,15 +37,6 @@ namespace GWFrames {
   /// Object storing data and other information for a single waveform
   class Waveform {
 
-  public:  // Constructors and Destructor
-    Waveform();
-    Waveform(const Waveform& W);
-    Waveform(const std::string& FileName, const std::string& DataFormat);
-    Waveform(const std::vector<double>& T, const std::vector<std::vector<int> >& LM,
-             const std::vector<std::vector<std::complex<double> > >& Data);
-    ~Waveform() { }
-    Waveform& operator=(const Waveform&);
-
   protected:  // Member data
     int spinweight;
     int boostweight;
@@ -59,7 +50,27 @@ namespace GWFrames {
     std::vector<std::vector<int> > lm;
     MatrixC data; // Each row (first index, nn) corresponds to a mode
 
+  public:  // Constructors and Destructor
+    Waveform();
+    Waveform(const Waveform& W);
+    Waveform(const std::string& FileName, const std::string& DataFormat);
+    Waveform(const std::vector<double>& T, const std::vector<std::vector<int> >& LM,
+             const std::vector<std::vector<std::complex<double> > >& Data);
+    ~Waveform() { }
+    Waveform& operator=(const Waveform&);
+
+  public:  // Copy-ish constructoroids
+    Waveform CopyWithoutData() const;
+    Waveform SliceOfTimeIndices(const unsigned int i_t_a, const unsigned int t_b) const;
+    Waveform SliceOfTimeIndicesWithEll2(const unsigned int i_t_a, const unsigned int i_t_b) const;
+    Waveform SliceOfTimes(const double t_a, const double t_b) const;
+    Waveform SliceOfTimesWithEll2(const double t_a, const double t_b) const;
+
   public: // Data alteration functions -- USE AT YOUR OWN RISK!
+    Waveform& DropTimesOutside(const double ta, const double tb);
+    Waveform& DropEllModes(const std::vector<unsigned int>& EllModesToDrop);
+    Waveform& KeepOnlyEllModes(const std::vector<unsigned int>& EllModesToKeep);
+    Waveform& KeepOnlyEll2();
     inline Waveform& SetSpinWeight(const int NewSpinWeight) { spinweight=NewSpinWeight; return *this; }
     inline Waveform& SetBoostWeight(const int NewBoostWeight) { boostweight=NewBoostWeight; return *this; }
     inline Waveform& AppendHistory(const std::string& Hist) { history << Hist; return *this; }
@@ -75,9 +86,6 @@ namespace GWFrames {
     inline Waveform& SetData(const std::vector<std::vector<std::complex<double> > >& a) { data = MatrixC(a); return *this; }
     inline Waveform& SetData(const unsigned int i_Mode, const unsigned int i_Time, const std::complex<double>& a) { data[i_Mode][i_Time] = a; return *this; }
     inline Waveform& ResizeData(const unsigned int NModes, const unsigned int NTimes) { data.resize(NModes, NTimes); return *this; }
-    Waveform& DropTimesOutside(const double ta, const double tb);
-    Waveform& DropEllModes(const std::vector<unsigned int>& EllModesToDrop);
-    Waveform& KeepOnlyEllModes(const std::vector<unsigned int>& EllModesToKeep);
     void swap(Waveform& b);
 
   public:  // Data access functions

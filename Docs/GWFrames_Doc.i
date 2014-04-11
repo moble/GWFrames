@@ -212,6 +212,39 @@ The operator edth^2 bar{edth}^2.
   
 """
 
+%feature("docstring") GWFrames::Waveform::SliceOfTimeIndicesWithEll2 """
+Copy of the Waveform between indices i_t_a and i_t_b, only ell=2 modes.
+=======================================================================
+  Parameters
+  ----------
+    const unsigned int i_t_a
+    const unsigned int i_t_b
+  
+  Returns
+  -------
+    Waveform
+  
+  Description
+  -----------
+    i_t_a and i_t_b should hold the indices pointing to the first time in t
+    after t_a, and the first time in t after t_b (or one-past-the-end of t if
+    necessary)
+  
+"""
+
+%feature("docstring") GWFrames::Waveforms::~Waveforms """
+
+
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    ~Waveforms
+  
+"""
+
 %feature("docstring") GWFrames::Waveform::PNEquivalentOrbitalAV """
 Deduce PN-equivalent orbital angular velocity from Waveform.
 ============================================================
@@ -259,6 +292,20 @@ Deduce PN-equivalent orbital angular velocity from Waveform.
   Returns
   -------
     const vector<double>
+  
+"""
+
+%feature("docstring") GWFrames::Waveform::SliceOfTimesWithEll2 """
+Copy of the Waveform between t_a and t_b, only ell=2 modes.
+===========================================================
+  Parameters
+  ----------
+    const double t_a
+    const double t_b
+  
+  Returns
+  -------
+    Waveform
   
 """
 
@@ -1111,19 +1158,13 @@ Explicit constructor from data.
   
 """
 
-%feature("docstring") GWFrames::Waveform::Hybridize """
-Hybridize this Waveform with another.
-=====================================
+%feature("docstring") GWFrames::Waveform::SliceOfTimeIndices """
+Copy the Waveform between indices i_t_a and i_t_b.
+==================================================
   Parameters
   ----------
-    const Waveform& B
-      Second Waveform to hybridize with
-    const double t1
-      Beginning of time over which to transition
-    const double t2
-      End of time over which to transition
-    const double tMinStep = 0.005
-      Lower limit on time step appearing in the output
+    const unsigned int i_t_a
+    const unsigned int t_b
   
   Returns
   -------
@@ -1131,16 +1172,9 @@ Hybridize this Waveform with another.
   
   Description
   -----------
-    This function simply takes two Waveforms and blends them together. In
-    particular, it does not align the Waveforms; that is assumed to have been
-    done already.
-    
-    The transition function is a $C^\\infty$ function, meaning that the output
-    data has exactly this Waveform's data before t1, exactly Waveform B's data
-    after t2, and a smooth blend in between.
-    
-    Note that this function does NOT operate in place; a new Waveform object is
-    constructed and returned.
+    i_t_a and i_t_b should hold the indices pointing to the first time in t
+    after t_a, and the first time in t after t_b (or one-past-the-end of t if
+    necessary)
   
 """
 
@@ -1705,16 +1739,36 @@ Construct a grid with the conformal factor at each point.
   
 """
 
-%feature("docstring") GWFrames::Waveforms::~Waveforms """
-
-
+%feature("docstring") GWFrames::Waveform::Hybridize """
+Hybridize this Waveform with another.
+=====================================
   Parameters
   ----------
-    (none)
+    const Waveform& B
+      Second Waveform to hybridize with
+    const double t1
+      Beginning of time over which to transition
+    const double t2
+      End of time over which to transition
+    const double tMinStep = 0.005
+      Lower limit on time step appearing in the output
   
   Returns
   -------
-    ~Waveforms
+    Waveform
+  
+  Description
+  -----------
+    This function simply takes two Waveforms and blends them together. In
+    particular, it does not align the Waveforms; that is assumed to have been
+    done already.
+    
+    The transition function is a $C^\\infty$ function, meaning that the output
+    data has exactly this Waveform's data before t1, exactly Waveform B's data
+    after t2, and a smooth blend in between.
+    
+    Note that this function does NOT operate in place; a new Waveform object is
+    constructed and returned.
   
 """
 
@@ -2295,6 +2349,20 @@ Find index of mode with given (l,m) data.
   
 """
 
+%feature("docstring") GWFrames::Waveform::SliceOfTimes """
+Copy the Waveform between t_a and t_b.
+======================================
+  Parameters
+  ----------
+    const double t_a
+    const double t_b
+  
+  Returns
+  -------
+    Waveform
+  
+"""
+
 %feature("docstring") GWFrames::PNWaveform::chiHat2 """
 
 
@@ -2465,25 +2533,16 @@ Return vector of vector of real parts of all modes as function of time.
   
 """
 
-%feature("docstring") GWFrames::Waveform::LLMatrix """
-Calculate the $<LL>$ quantity defined in the paper.
-===================================================
+%feature("docstring") GWFrames::Waveform::KeepOnlyEll2 """
+Remove data relating to all but the ell=2 modes.
+================================================
   Parameters
   ----------
-    vector<int> Lmodes = vector<int>(0)
-      L modes to evaluate
+    (none)
   
   Returns
   -------
-    vector<Matrix>
-  
-  Description
-  -----------
-    If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
-    or [2,3,4], for example, restricts the range of the sum.
-    
-    $<LL>^{ab} = \\sum_{\\ell,m,m'} [\\bar{f}^{\\ell,m'} <\\ell,m' | L_a L_b |
-    \\ell,m> f^{\\ell,m} ]$
+    Waveform&
   
 """
 
@@ -3185,6 +3244,28 @@ Geroch-Held-Penrose edth operator.
     IntegrateGHPEdth
     
     IntegrateGHPEdthBar
+  
+"""
+
+%feature("docstring") GWFrames::Waveform::LLMatrix """
+Calculate the $<LL>$ quantity defined in the paper.
+===================================================
+  Parameters
+  ----------
+    vector<int> Lmodes = vector<int>(0)
+      L modes to evaluate
+  
+  Returns
+  -------
+    vector<Matrix>
+  
+  Description
+  -----------
+    If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
+    or [2,3,4], for example, restricts the range of the sum.
+    
+    $<LL>^{ab} = \\sum_{\\ell,m,m'} [\\bar{f}^{\\ell,m'} <\\ell,m' | L_a L_b |
+    \\ell,m> f^{\\ell,m} ]$
   
 """
 
@@ -4358,6 +4439,28 @@ Transform Waveform uncertainties to corotating frame.
   
 """
 
+%feature("docstring") GWFrames::Waveform::Compare """
+Return a Waveform with differences between the two inputs.
+==========================================================
+  Parameters
+  ----------
+    const Waveform& B
+    const double MinTimeStep = 0.005
+    const double MinTime = -3.0e300
+  
+  Returns
+  -------
+    Waveform
+  
+  Description
+  -----------
+    This function simply subtracts the data in this Waveform from the data in
+    Waveform A, and finds the rotation needed to take this frame into frame A.
+    Note that the waveform data are stored as complex numbers, rather than as
+    modulus and phase.
+  
+"""
+
 %feature("docstring") GWFrames::Waveform::Im """
 
 
@@ -4677,25 +4780,16 @@ Basic copy constructor.
   
 """
 
-%feature("docstring") GWFrames::Waveform::Compare """
-Return a Waveform with differences between the two inputs.
-==========================================================
+%feature("docstring") GWFrames::Waveform::CopyWithoutData """
+Copy the Waveform, except for the data (t, frame, lm, data)
+===========================================================
   Parameters
   ----------
-    const Waveform& B
-    const double MinTimeStep = 0.005
-    const double MinTime = -3.0e300
+    (none)
   
   Returns
   -------
     Waveform
-  
-  Description
-  -----------
-    This function simply subtracts the data in this Waveform from the data in
-    Waveform A, and finds the rotation needed to take this frame into frame A.
-    Note that the waveform data are stored as complex numbers, rather than as
-    modulus and phase.
   
 """
 
