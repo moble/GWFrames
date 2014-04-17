@@ -2030,148 +2030,6 @@ std::vector<Quaternions::Quaternion> GWFrames::Waveform::GetAlignmentsOfDecompos
   return R_eps;
 }
 
-
-// /// Find the appropriate rotation to fix the orientation of the corotating frame.
-// void GWFrames::Waveform::GetAlignmentOfDecompositionFrameToModes(const double t_fid, Quaternion& R_eps,
-//                                                                  const std::vector<int>& Lmodes) const {
-//   ///
-//   /// \param t_fid Fiducial time at which the alignment should happen
-//   /// \param R_eps Returned rotor
-//   /// \param Lmodes Lmodes to use in computing \f$<LL>\f$
-//   ///
-//   /// This function simply finds the rotation necessary to align the
-//   /// corotating frame to the waveform at the fiducial time, rather
-//   /// than applying it.  This is called by
-//   /// `AlignDecompositionFrameToModes` and probably does not need to
-//   /// be called directly; see that function's documentation for more
-//   /// details.
-//   ///
-//   /// \sa AlignDecompositionFrameToModes
-//   ///
-
-//   // We seek that R_c such that R_corot(t_fid)*R_c rotates the z axis
-//   // onto V_f.  V_f measured in this frame is given by
-//   //     V_f = R_V_f * Z * R_V_f.conjugate(),
-//   // (note Z rather than z) where R_V_f is found below.  But
-//   //     Z = R_corot * z * R_corot.conjugate(),
-//   // so in the (x,y,z) frame,
-//   //     V_f = R_V_f * R_corot * z * R_corot.conjugate() * R_V_f.conjugate().
-//   // Now, this is the standard composition for rotating physical
-//   // vectors.  However, rotation of the basis behaves oppositely, so
-//   // we want R_V_f as our constant rotation, applied as a rotation of
-//   // the decomposition basis.  We also want to rotate so that the
-//   // phase of the (2,2) mode is zero at t_fid.  This can be achieved
-//   // with an initial rotation.
-
-//   if(frameType!=GWFrames::Coprecessing && frameType!=GWFrames::Coorbital && frameType!=GWFrames::Corotating) {
-//     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ":"
-//               << "\nError: GetAlignmentOfDecompositionFrameToModes only takes Waveforms in the "
-//               << GWFrames::WaveformFrameNames[GWFrames::Coprecessing] << ", "
-//               << GWFrames::WaveformFrameNames[GWFrames::Coorbital] << ", or "
-//               << GWFrames::WaveformFrameNames[GWFrames::Corotating] << " frames."
-//               << "\n       This Waveform is in the " << GWFrames::WaveformFrameNames[frameType] << " frame." << std::endl;
-//     throw(GWFrames_WrongFrameType);
-//   }
-
-//   if(frame.size()!=NTimes()) {
-//     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ":"
-//               << "\nError: GetAlignmentOfDecompositionFrameToModes requires full information about the Waveform's frame."
-//               << "\n       This Waveform has " << NTimes() << " time steps, but only " << frame.size() << " rotors in its frame." << std::endl;
-//   }
-
-//   if(t_fid<t[0] || t_fid>t.back()) {
-//     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ":"
-//               << "\nError: The requested alignment time t_fid=" << t_fid << " is outside the range of times in this waveform ("
-//               << t[0] << ", " << t.back() << ")." << std::endl;
-//     throw(GWFrames_EmptyIntersection);
-//   }
-
-//   // Get direction of angular-velocity vector near t_fid
-//   Quaternion omegaHat;
-//   {
-//     int i_t_fid = Quaternions::huntRight(t, t_fid);
-//     cerr << __FILE__ << ":" << __LINE__ << ": " << i_t_fid << " " << t_fid << endl;
-//     unsigned int i1 = (i_t_fid-10<0 ? 0 : i_t_fid-10);
-//     unsigned int i2 = (i1+11>int(t.size()) ? t.size() : i1+11);
-//     cerr << __FILE__ << ":" << __LINE__ << ": " << i1 << " " << i2 << endl;
-//     const Waveform Region = (this->SliceOfTimeIndicesWithEll2(i1,i2)).TransformToInertialFrame();
-//     cerr << 1 << endl;
-//     omegaHat = Quaternion(Region.AngularVelocityVector()[i_t_fid-i1]).normalized();
-//     cerr << 2 << endl;
-//     // omegaHat contains the components of that vector relative to the
-//     // inertial frame.  To get its components in this Waveform's
-//     // (possibly rotating) frame, we need to rotate it by the inverse
-//     // of this Waveform's `frame` data:
-//     if(Region.Frame().size()>1) {
-//       const Quaternion& R = Region.Frame(i_t_fid-i1);
-//       omegaHat = R.inverse() * omegaHat * R;
-//    } else if(Region.Frame().size()==1) {
-//       const Quaternion& R = Region.Frame(0);
-//       omegaHat = R.inverse() * omegaHat * R;
-//     }
-//     cerr << 3 << endl;
-//   }
-
-//   // Interpolate the Waveform to t_fid
-//   Waveform Instant = this->Interpolate(vector<double>(1,t_fid));
-//     cerr << 4 << endl;
-
-//   // V_f is the dominant eigenvector of <LL>, suggested by O'Shaughnessy et al.
-//   const Quaternion V_f = Quaternions::Quaternion(Instant.OShaughnessyEtAlVector(Lmodes)[0]);
-//   const Quaternion V_f_aligned = (omegaHat.dot(V_f.normalized()) < 0 ? -V_f : V_f);
-//     cerr << 5 << endl;
-
-//   // R_V_f is the rotor taking the Z axis onto V_f
-//   const Quaternion R_V_f = Quaternions::sqrtOfRotor(-V_f_aligned*Quaternions::Quaternion(0,0,0,1));
-//     cerr << 6 << endl;
-
-//   // Now rotate Instant so that its z axis is aligned with V_f
-//   Instant.RotateDecompositionBasis(R_V_f);
-//     cerr << 7 << endl;
-
-//   // Get the phase of the (2,2) mode after rotation
-//   const unsigned int i_22 = Instant.FindModeIndex(2,2);
-//   const double phase_22 = std::atan2(Instant.Im(i_22,0),Instant.Re(i_22,0));
-//     cerr << 8 << endl;
-
-//   // R_eps is the rotation we will be applying on the right-hand side
-//   R_eps = R_V_f * Quaternions::exp(Quaternions::Quaternion(0,0,0,(-phase_22/4)));
-//     cerr << 9 << endl;
-// }
-
-// /// Fix the orientation of the corotating frame.
-// GWFrames::Waveform& GWFrames::Waveform::AlignDecompositionFrameToModes(const double t_fid, const std::vector<int>& Lmodes) {
-//   ///
-//   /// \param t_fid Fiducial time at which the alignment should happen
-//   /// \param Lmodes Lmodes to use in computing \f$<LL>\f$
-//   ///
-//   /// The corotating frame is only defined up to some constant rotor
-//   /// R_eps; if R_corot is corotating, then so is R_corot*R_eps.  This
-//   /// function uses that freedom to ensure that the frame is aligned
-//   /// with the Waveform modes at the fiducial time.  In particular, it
-//   /// ensures that the Z axis of the frame in which the decomposition
-//   /// is done is along the dominant eigenvector of \f$<LL>\f$
-//   /// (suggested by O'Shaughnessy et al.), and the phase of the (2,2)
-//   /// mode is zero.
-//   ///
-//   /// If Lmodes is empty (default), all L modes are used.  Setting
-//   /// Lmodes to [2] or [2,3,4], for example, restricts the range of
-//   /// the sum.
-//   ///
-
-//   // Find the appropriate rotation
-//   Quaternion R_eps;
-//   GetAlignmentOfDecompositionFrameToModes(t_fid, R_eps, Lmodes);
-
-//   // Record what happened
-//   history << "this->AlignDecompositionFrameToModes(" << std::setprecision(16) << t_fid << ", " << Lmodes << ");  # R_eps=" << R_eps << std::endl;
-
-//   // Now, apply the rotation
-//   this->RotateDecompositionBasis(R_eps);
-
-//   return *this;
-// }
-
 /// Find the appropriate rotation to fix the orientation of the corotating frame.
 void GWFrames::Waveform::GetAlignmentOfDecompositionFrameToModes(const double t_fid, const Quaternions::Quaternion& nHat_t_fid, Quaternion& R_eps,
                                                                  const std::vector<int>& Lmodes) const {
@@ -2230,27 +2088,25 @@ void GWFrames::Waveform::GetAlignmentOfDecompositionFrameToModes(const double t_
 
   // Get direction of angular-velocity vector near t_fid
   Quaternion omegaHat;
-  {
-    int i_t_fid = Quaternions::huntRight(t, t_fid);
-    unsigned int i1 = (i_t_fid-10<0 ? 0 : i_t_fid-10);
-    unsigned int i2 = (i1+11>int(t.size()) ? t.size() : i1+11);
-    const Waveform Region = (this->SliceOfTimeIndicesWithEll2(i1,i2)).TransformToInertialFrame();
-    omegaHat = Quaternion(Region.AngularVelocityVector()[i_t_fid-i1]).normalized();
-    // omegaHat contains the components of that vector relative to the
-    // inertial frame.  To get its components in this Waveform's
-    // (possibly rotating) frame, we need to rotate it by the inverse
-    // of this Waveform's `frame` data:
-    if(Region.Frame().size()>1) {
-      const Quaternion& R = Region.Frame(i_t_fid-i1);
-      omegaHat = R.inverse() * omegaHat * R;
-    } else if(Region.Frame().size()==1) {
-      const Quaternion& R = Region.Frame(0);
-      omegaHat = R.inverse() * omegaHat * R;
-    }
+  int i_t_fid = Quaternions::huntRight(t, t_fid);
+  unsigned int i1 = (i_t_fid-10<0 ? 0 : i_t_fid-10);
+  unsigned int i2 = (i1+11>int(t.size()) ? t.size() : i1+11);
+  const Waveform Region = (this->SliceOfTimeIndicesWithEll2(i1,i2)).TransformToInertialFrame();
+  omegaHat = Quaternion(Region.AngularVelocityVector()[i_t_fid-i1]).normalized();
+  // omegaHat contains the components of that vector relative to the
+  // inertial frame.  To get its components in this Waveform's
+  // (possibly rotating) frame, we need to rotate it by the inverse
+  // of this Waveform's `frame` data:
+  if(Region.Frame().size()>1) {
+    const Quaternion& R = Region.Frame(i_t_fid-i1);
+    omegaHat = R.inverse() * omegaHat * R;
+  } else if(Region.Frame().size()==1) {
+    const Quaternion& R = Region.Frame(0);
+    omegaHat = R.inverse() * omegaHat * R;
   }
 
   // Interpolate the Waveform to t_fid
-  Waveform Instant = this->Interpolate(vector<double>(1,t_fid));
+  Waveform Instant = this->SliceOfTimeIndices(i1,i2).Interpolate(vector<double>(1,t_fid));
   const Quaternion R_f0 = Instant.Frame(0);
 
   // V_f is the dominant eigenvector of <LL>, suggested by O'Shaughnessy et al.
@@ -2618,7 +2474,7 @@ void myGSLErrorHandler2 (const char * reason, const char * file, int line, int g
   throw(gsl_errno);
 }
 gsl_error_handler_t* defaultGSLErrorHandler2 = gsl_set_error_handler((gsl_error_handler_t*) &myGSLErrorHandler2);
-// This is a local object used by various alignment routines below
+// This is a local object used by `AlignWaveforms`
 class WaveformAligner {
 public:
   std::vector<Quaternions::Quaternion> R_fA;
@@ -2875,7 +2731,7 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B, 
   {
     const unsigned int NDimensions = 4;
     const unsigned int MaxIterations = 2000;
-    const double MinSimplexSize = 1.0e-7; // This shouldn't be much less than sqrt(machine precision)
+    const double MinSimplexSize = 2.0e-8; // This shouldn't be much less than sqrt(machine precision)
     double deltat=0.0;
 
     const double InitialTrialTimeStep = std::max(W_A.T(1)-W_A.T(0), W_B.T(1)-W_B.T(0));
@@ -3084,6 +2940,10 @@ GWFrames::Waveform GWFrames::Waveform::Compare(const GWFrames::Waveform& A, cons
       C.data[Mode][i_t] = complex<double>( gsl_spline_eval(splineReA, C.t[i_t], accReA), gsl_spline_eval(splineImA, C.t[i_t], accImA) )
         - complex<double>( gsl_spline_eval(splineReB, C.t[i_t], accReB), gsl_spline_eval(splineImB, C.t[i_t], accImB) );
     }
+    gsl_interp_accel_reset(accReA);
+    gsl_interp_accel_reset(accImA);
+    gsl_interp_accel_reset(accReB);
+    gsl_interp_accel_reset(accImB);
   }
   gsl_interp_accel_free(accReA);
   gsl_interp_accel_free(accImA);
