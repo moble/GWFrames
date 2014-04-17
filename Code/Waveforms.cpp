@@ -12,6 +12,10 @@
 #include <cstdlib>
 #include <climits>
 #include <cmath>
+
+#include <sys/time.h>
+#include <ctime>
+
 #include <functional>
 #include <algorithm>
 #include <complex>
@@ -2818,6 +2822,9 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B, 
   const std::vector<double>& t_A = Aligner.t_A;
   const std::vector<Quaternions::Quaternion>& R_fA = Aligner.R_fA;
 
+  struct timeval now;
+  gettimeofday(&now, NULL); unsigned long long tNow = now.tv_usec + (unsigned long long)now.tv_sec * 1000000;
+
   // First, minimize the dumb way, by just evaluating at every deltat
   // in W_B so that we don't have to interpolate (which takes a *lot*
   // of time).  This should get us a very good estimate of the true
@@ -2859,13 +2866,16 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B, 
     R_delta = XiIntegral[i_Xi_c_min].normalized();
   }
 
+  gettimeofday(&now, NULL); unsigned long long tThen = now.tv_usec + (unsigned long long)now.tv_sec * 1000000;
+  std::cout << __FILE__ << ":" << __LINE__ << ": First stage took " << (tThen-tNow)/1000000.0L << " seconds." << std::endl;
+
   // Next, minimize algorithmically, in four dimensions, accounting
   // for all adjustments in generality.  This is very slow, but we've
   // gotten a very good initial guess from the dumb way above.
   {
     const unsigned int NDimensions = 4;
     const unsigned int MaxIterations = 2000;
-    const double MinSimplexSize = 1.0e-10;
+    const double MinSimplexSize = 1.0e-7; // This shouldn't be much less than sqrt(machine precision)
     double deltat=0.0;
 
     const double InitialTrialTimeStep = std::max(W_A.T(1)-W_A.T(0), W_B.T(1)-W_B.T(0));
@@ -2956,8 +2966,10 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B, 
     W_B.AlignDecompositionFrameToModes(t_mid+deltat, Aligner.nHat_B(t_mid+deltat));
     W_B.SetTime(W_B.T()-deltat);
     t_nHat_B = t_nHat_B-deltat;
-    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Not properly implemented yet; apply R_delta=" << R_delta << " somehow." << std::endl;
-    // throw(GWFrames_NotYetImplemented);
+    W_B.SetFrame(R_delta*W_B.Frame());
+
+    gettimeofday(&now, NULL); unsigned long long tWhen = now.tv_usec + (unsigned long long)now.tv_sec * 1000000;
+    std::cout << __FILE__ << ":" << __LINE__ << ": Second stage took " << (tWhen-tThen)/1000000.0L << " seconds with " << iter << " iterations." << std::endl;
   }
 
   return;
