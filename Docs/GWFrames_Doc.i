@@ -585,11 +585,6 @@ Return vector of vector of complex data of all modes as function of time.
   
 """
 
-%feature("docstring") @7 """
-namespace @7
-============
-"""
-
 %feature("docstring") GWFrames::Waveform::AngularVelocityVector """
 Calculate the angular velocity of the Waveform.
 ===============================================

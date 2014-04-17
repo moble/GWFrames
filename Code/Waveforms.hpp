@@ -184,6 +184,12 @@ namespace GWFrames {
                                                                                   const std::vector<int>& Lmodes=std::vector<int>(0)) const;
     // void GetAlignmentOfDecompositionFrameToModes(const double t_fid, Quaternions::Quaternion& R_eps, const std::vector<int>& Lmodes=std::vector<int>(0)) const;
     // Waveform& AlignDecompositionFrameToModes(const double t_fid, const std::vector<int>& Lmodes=std::vector<int>(0));
+    Quaternions::Quaternion GetAlignmentOfDecompositionFrameToModes(const double t_fid, const Quaternions::Quaternion& nHat_t_fid,
+                                                                    const std::vector<int>& Lmodes=std::vector<int>(0)) const {
+      Quaternions::Quaternion R_eps;
+      GetAlignmentOfDecompositionFrameToModes(t_fid, nHat_t_fid, R_eps, Lmodes);
+      return R_eps;
+    }
     void GetAlignmentOfDecompositionFrameToModes(const double t_fid, const Quaternions::Quaternion& nHat_t_fid, Quaternions::Quaternion& R_eps,
                                                  const std::vector<int>& Lmodes=std::vector<int>(0)) const;
     Waveform& AlignDecompositionFrameToModes(const double t_fid, const Quaternions::Quaternion& nHat_t_fid, const std::vector<int>& Lmodes=std::vector<int>(0));
