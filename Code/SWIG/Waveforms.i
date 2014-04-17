@@ -38,7 +38,8 @@
 #endif
 //// Allow us to extract the outputs naturally in python
 %apply double& OUTPUT { double& deltat };
-// %apply Quaternions::Quaternion& OUTPUT { Quaternions::Quaternion& R_delta };
+%apply Quaternions::Quaternion& OUTPUT { Quaternions::Quaternion& R_delta };
+%apply Quaternions::Quaternion& OUTPUT { Quaternions::Quaternion& R_eps };
 //// Parse the header file to generate wrappers
 %include "../Waveforms.hpp"
 //// Make sure vectors of Waveform are understood

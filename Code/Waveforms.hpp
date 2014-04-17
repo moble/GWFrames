@@ -61,10 +61,12 @@ namespace GWFrames {
 
   public:  // Copy-ish constructoroids
     Waveform CopyWithoutData() const;
-    Waveform SliceOfTimeIndices(const unsigned int i_t_a, const unsigned int t_b) const;
-    Waveform SliceOfTimeIndicesWithEll2(const unsigned int i_t_a, const unsigned int i_t_b) const;
-    Waveform SliceOfTimes(const double t_a, const double t_b) const;
-    Waveform SliceOfTimesWithEll2(const double t_a, const double t_b) const;
+    Waveform SliceOfTimeIndices(const unsigned int i_t_a, unsigned int t_b=0) const;
+    Waveform SliceOfTimeIndicesWithEll2(const unsigned int i_t_a, unsigned int i_t_b=0) const;
+    Waveform SliceOfTimeIndicesWithoutModes(const unsigned int i_t_a, unsigned int i_t_b=0) const;
+    Waveform SliceOfTimes(const double t_a=-1e300, const double t_b=1e300) const;
+    Waveform SliceOfTimesWithEll2(const double t_a=-1e300, const double t_b=1e300) const;
+    Waveform SliceOfTimesWithoutModes(const double t_a=-1e300, const double t_b=1e300) const;
 
   public: // Data alteration functions -- USE AT YOUR OWN RISK!
     Waveform& DropTimesOutside(const double ta, const double tb);
@@ -178,8 +180,10 @@ namespace GWFrames {
     Waveform Segment(const unsigned int i1, const unsigned int i2) const;
     void GetAlignmentOfTime(const Waveform& A, const double t_fid, double& deltat) const;
     Waveform& AlignTime(const Waveform& A, const double t_fid);
-    void GetAlignmentOfDecompositionFrameToModes(const double t_fid, Quaternions::Quaternion& R_eps, const std::vector<int>& Lmodes=std::vector<int>(0)) const;
-    Waveform& AlignDecompositionFrameToModes(const double t_fid, const std::vector<int>& Lmodes=std::vector<int>(0));
+    std::vector<Quaternions::Quaternion> GetAlignmentsOfDecompositionFrameToModes(const std::vector<Quaternions::Quaternion>& nHat_t_fid,
+                                                                                  const std::vector<int>& Lmodes=std::vector<int>(0)) const;
+    // void GetAlignmentOfDecompositionFrameToModes(const double t_fid, Quaternions::Quaternion& R_eps, const std::vector<int>& Lmodes=std::vector<int>(0)) const;
+    // Waveform& AlignDecompositionFrameToModes(const double t_fid, const std::vector<int>& Lmodes=std::vector<int>(0));
     void GetAlignmentOfDecompositionFrameToModes(const double t_fid, const Quaternions::Quaternion& nHat_t_fid, Quaternions::Quaternion& R_eps,
                                                  const std::vector<int>& Lmodes=std::vector<int>(0)) const;
     Waveform& AlignDecompositionFrameToModes(const double t_fid, const Quaternions::Quaternion& nHat_t_fid, const std::vector<int>& Lmodes=std::vector<int>(0));
@@ -230,6 +234,8 @@ namespace GWFrames {
   inline Waveform operator/(const double b, const Waveform& A) { return A/b; }
   #include "Waveforms_BinaryOp.ipp"
 
+  void AlignWaveforms(Waveform& A, Waveform& B, const std::vector<double>& nHat_A,
+                      const std::vector<std::vector<double> >& nHat_B, const std::vector<double>& t_B, const double t_1, const double t_2);
 
   /// Object storing a collection of Waveform objects to be operated on uniformly
   class Waveforms { // (plural!)

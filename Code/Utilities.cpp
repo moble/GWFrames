@@ -1064,25 +1064,49 @@ MatrixC::~MatrixC()
 
 
 std::ostream& GWFrames::operator<<(std::ostream& out, const std::vector<double>& v) {
-  for(unsigned int i=0; i<v.size()-1; ++i) {
-    out << v[i] << ", ";
+  out << "[";
+  if(v.size()>0) {
+    for(unsigned int i=0; i<v.size()-1; ++i) {
+      out << v[i] << ", ";
+    }
+    out << v.back();
   }
-  out << v.back() << std::flush;
+  out << "]" << std::flush;
   return out;
 }
 
 std::ostream& GWFrames::operator<<(std::ostream& out, const std::vector<int>& v) {
-  for(unsigned int i=0; i<v.size()-1; ++i) {
-    out << v[i] << ", ";
+  out << "[";
+  if(v.size()>0) {
+    for(unsigned int i=0; i<v.size()-1; ++i) {
+      out << v[i] << ", ";
+    }
+    out << v.back();
   }
-  out << v.back() << std::flush;
+  out << "]" << std::flush;
+  return out;
+}
+
+std::ostream& GWFrames::operator<<(std::ostream& out, const std::vector<std::vector<int> >& vv) {
+  out << "[";
+  if(vv.size()>0) {
+    for(unsigned int i=0; i<vv.size()-1; ++i) {
+      out << vv[i] << ", ";
+    }
+    out << vv.back();
+  }
+  out << "]" << std::flush;
   return out;
 }
 
 std::ostream& GWFrames::operator<<(std::ostream& out, const std::vector<unsigned int>& v) {
-  for(unsigned int i=0; i<v.size()-1; ++i) {
-    out << v[i] << ", ";
+  out << "[";
+  if(v.size()>0) {
+    for(unsigned int i=0; i<v.size()-1; ++i) {
+      out << v[i] << ", ";
+    }
+    out << v.back();
   }
-  out << v.back() << std::flush;
+  out << "]" << std::flush;
   return out;
 }

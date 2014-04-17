@@ -110,6 +110,7 @@ namespace GWFrames {
 
   std::ostream& operator<<(std::ostream& out, const std::vector<double>& v);
   std::ostream& operator<<(std::ostream& out, const std::vector<int>& v);
+  std::ostream& operator<<(std::ostream& out, const std::vector<std::vector<int> >& vv);
   std::ostream& operator<<(std::ostream& out, const std::vector<unsigned int>& v);
 
 } // namespace GWFrames

@@ -218,7 +218,7 @@ Copy of the Waveform between indices i_t_a and i_t_b, only ell=2 modes.
   Parameters
   ----------
     const unsigned int i_t_a
-    const unsigned int i_t_b
+    unsigned int i_t_b = 0
   
   Returns
   -------
@@ -269,6 +269,68 @@ Deduce PN-equivalent orbital angular velocity from Waveform.
   
 """
 
+%feature("docstring") Rbar_fB """
+
+
+  Parameters
+  ----------
+    const Waveform& W_B
+    const vector<double>& t
+  
+  Returns
+  -------
+    vector<Quaternion>
+  
+"""
+
+%feature("docstring") GWFrames::AlignWaveforms """
+Do everything necessary to align two waveform objects.
+======================================================
+  Parameters
+  ----------
+    Waveform& A
+    Waveform& B
+    const vector<double>& nHat_A
+      Approximate nHat vector at (t_1+t_2)/2.
+    const vector<vector<double>>& nHat_B
+      Approximate nHat vectors at t_B
+    const vector<double>& t_B
+      Times corresponding to values of nHat_B
+    const double t_1
+      Beginning of alignment interval
+    const double t_2
+      End of alignment interval
+  
+  Returns
+  -------
+    void
+  
+  Description
+  -----------
+    This function aligns the frame to the waveform modes for both input
+    Waveform objects at time t_mid = (t_1+t_2)/2. It also optimizes the
+    alignment of W_B by adjusting its time and overall orientations to align
+    with W_A as well as possible. While doing so, it re-adjusts the frame
+    alignment to the modes for W_B to account for the changing meaning of t_mid.
+    
+    The input waveforms are transformed to their co-rotating frames if they are
+    in the inertial frame. Otherwise, they must already be in the co-rotating
+    frame. (E.g., the co-orbital frame is an error.)
+    
+    The nHat quantities are just approximate directions for that vector in the
+    two systems, used to set the direction of the x axis for the rotating
+    frame. For W_A only the value at t_mid is needed; for W_B, the values and
+    related times are needed, so that the appropriate value can be interpolated
+    as W_B is shifted in time.
+    
+    Note that the alignment algorithm assumes that the waveforms are already
+    reasonably well aligned in time. In particular, the final value of
+    t_mid+deltat for W_B must lie somewhere in the interval (t_1, t_2) at
+    least, and after the time shift, W_B must have data over all of that
+    interval.
+  
+"""
+
 %feature("docstring") GWFrames::Modes::Spin """
 
 
@@ -300,8 +362,8 @@ Copy of the Waveform between t_a and t_b, only ell=2 modes.
 ===========================================================
   Parameters
   ----------
-    const double t_a
-    const double t_b
+    const double t_a = -1e300
+    const double t_b = 1e300
   
   Returns
   -------
@@ -521,6 +583,11 @@ Return vector of vector of complex data of all modes as function of time.
   -------
     vector<vector<complex<double>>>
   
+"""
+
+%feature("docstring") @7 """
+namespace @7
+============
 """
 
 %feature("docstring") GWFrames::Waveform::AngularVelocityVector """
@@ -1164,7 +1231,7 @@ Copy the Waveform between indices i_t_a and i_t_b.
   Parameters
   ----------
     const unsigned int i_t_a
-    const unsigned int t_b
+    unsigned int t_b = 0
   
   Returns
   -------
@@ -1503,6 +1570,22 @@ Get the rotor needed to align this waveform's frame to the other's at the given 
     that function's documentation for more details.
     
     AlignFrame
+  
+"""
+
+%feature("docstring") Rbar_epsB """
+
+
+  Parameters
+  ----------
+    const Waveform& W_B
+    const vector<Quaternion>& R_epsB
+    const double t
+    unsigned int& Rbar_epsB_i
+  
+  Returns
+  -------
+    Quaternion
   
 """
 
@@ -2245,6 +2328,20 @@ Construct a grid with the conformal factor at each point.
   
 """
 
+%feature("docstring") GWFrames::Waveform::SliceOfTimesWithoutModes """
+Copy of the Waveform between t_a and t_b without mode data.
+===========================================================
+  Parameters
+  ----------
+    const double t_a = -1e300
+    const double t_b = 1e300
+  
+  Returns
+  -------
+    Waveform
+  
+"""
+
 %feature("docstring") GWFrames::Modes::SetEllMax """
 
 
@@ -2354,8 +2451,8 @@ Copy the Waveform between t_a and t_b.
 ======================================
   Parameters
   ----------
-    const double t_a
-    const double t_b
+    const double t_a = -1e300
+    const double t_b = 1e300
   
   Returns
   -------
@@ -3341,33 +3438,6 @@ Fix the orientation of the corotating frame.
   ----------
     const double t_fid
       Fiducial time at which the alignment should happen
-    const vector<int>& Lmodes = vector<int>(0)
-      Lmodes to use in computing $<LL>$
-  
-  Returns
-  -------
-    Waveform&
-  
-  Description
-  -----------
-    The corotating frame is only defined up to some constant rotor R_eps; if
-    R_corot is corotating, then so is R_corot*R_eps. This function uses that
-    freedom to ensure that the frame is aligned with the Waveform modes at the
-    fiducial time. In particular, it ensures that the Z axis of the frame in
-    which the decomposition is done is along the dominant eigenvector of $<LL>$
-    (suggested by O'Shaughnessy et al.), and the phase of the (2,2) mode is
-    zero.
-    
-    If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
-    or [2,3,4], for example, restricts the range of the sum.
-  
-
-Fix the orientation of the corotating frame.
-============================================
-  Parameters
-  ----------
-    const double t_fid
-      Fiducial time at which the alignment should happen
     const Quaternions::Quaternion& nHat_t_fid
       The approximate direction of nHat at t_fid
     const vector<int>& Lmodes = vector<int>(0)
@@ -4041,6 +4111,26 @@ class GWFrames::Waveforms
   
 """
 
+%feature("docstring") GWFrames::Waveform::SliceOfTimeIndicesWithoutModes """
+Copy of the Waveform between indices i_t_a and i_t_b without mode data.
+=======================================================================
+  Parameters
+  ----------
+    const unsigned int i_t_a
+    unsigned int i_t_b = 0
+  
+  Returns
+  -------
+    Waveform
+  
+  Description
+  -----------
+    i_t_a and i_t_b should hold the indices pointing to the first time in t
+    after t_a, and the first time in t after t_b (or one-past-the-end of t if
+    necessary)
+  
+"""
+
 %feature("docstring") GWFrames::Waveform::BinaryOp """
 Pointwise multiply this object by another Waveform object.
 ==========================================================
@@ -4386,6 +4476,30 @@ Remove data relating to all but the given ell modes.
   
 """
 
+%feature("docstring") GWFrames::Waveform::GetAlignmentsOfDecompositionFrameToModes """
+Find the appropriate rotations to fix the orientation of the corotating frame.
+==============================================================================
+  Parameters
+  ----------
+    const vector<Quaternions::Quaternion>& nHat_t_fid
+    const vector<int>& Lmodes = vector<int>(0)
+      Lmodes to use in computing $<LL>$
+  
+  Returns
+  -------
+    vector<Quaternions::Quaternion>
+  
+  Description
+  -----------
+    This function finds the appropriate pre-multiplied rotation
+    $R_{\\varepsilon}$ so that the decomposition frame is aligned to the
+    waveform. This particular version finds the appropriate $R_{\\varepsilon}$
+    at each time in the input Waveform. This is useful in cases where we need
+    to try many such alignments, because the setup for interpolation is very
+    slow.
+  
+"""
+
 %feature("docstring") GWFrames::Waveform::SetSpinWeight """
 
 
@@ -4396,6 +4510,22 @@ Remove data relating to all but the given ell modes.
   Returns
   -------
     Waveform&
+  
+"""
+
+%feature("docstring") nHat_B_i """
+
+
+  Parameters
+  ----------
+    const vector<vector<double>>& nHat_B
+    const vector<double>& t_B
+    const double t_i
+    unsigned int& nHat_B_i_closest
+  
+  Returns
+  -------
+    vector<double>
   
 """
 
@@ -4511,19 +4641,6 @@ Return vector of vector of imaginary parts of all modes as function of time.
 """
 
 %feature("docstring") GWFrames::Waveform::GetAlignmentOfDecompositionFrameToModes """
-
-
-  Parameters
-  ----------
-    const double t_fid
-    Quaternions::Quaternion& R_eps
-    const vector<int>& Lmodes = vector<int>(0)
-  
-  Returns
-  -------
-    void
-  
-
 
 
   Parameters
