@@ -61,6 +61,11 @@ if "GSL_HOME" in environ :
     IncDirs += [environ["GSL_HOME"]+'/include']
     LibDirs += [environ["GSL_HOME"]+'/lib']
 
+## See if FFTW3_HOME is set; if so, use it
+if "FFTW3_HOME" in environ :
+    IncDirs += [environ["FFTW3_HOME"]+'/include']
+    LibDirs += [environ["FFTW3_HOME"]+'/lib']
+
 # If /opt/local directories exist, use them
 from os.path import isdir
 if isdir('/opt/local/include'):
