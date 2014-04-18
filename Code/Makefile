@@ -6,8 +6,23 @@
 
 
 
+C_INCLUDE_PATH:='.'
+LIBRARY_PATH:='.'
+
+## See if GSL_HOME is set; if so, use it
+ifdef GSL_HOME
+	C_INCLUDE_PATH:=${C_INCLUDE_PATH}:${GSL_HOME}/include
+	LIBRARY_PATH:=${LIBRARY_PATH}:${GSL_HOME}/lib
+endif
+
+## See if FFTW3_HOME is set; if so, use it
+ifdef FFTW3_HOME
+	C_INCLUDE_PATH:=${C_INCLUDE_PATH}:${FFTW3_HOME}/include
+	LIBRARY_PATH:=${LIBRARY_PATH}:${FFTW3_HOME}/lib
+endif
+
 # By default, just call the python build process
-all : install_user
+all: install_user
 
 install : spinsfast SphericalFunctions
 	python setup.py install
@@ -17,7 +32,7 @@ install_user : spinsfast SphericalFunctions
 
 spinsfast :
 	build=build/config.mk $(MAKE) -C spinsfast
-	cp spinsfast/lib/spinsfast.so `python -m site --user-site`/
+	cp spinsfast/lib/spinsfast.so $(shell python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")/
 
 SphericalFunctions :
 	$(MAKE) -C SphericalFunctions
@@ -29,7 +44,7 @@ SphericalFunctions :
 # the following is, unfortunately, necessary for him.  This makes him
 # happy.  It is probably not necessary for most users, however.
 MikeHappy :
-	build=build/config.mk $(MAKE) -C spinsfast && cp spinsfast/lib/spinsfast.so $(shell python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")
+	build=build/config.mk $(MAKE) -C spinsfast && cp spinsfast/lib/spinsfast.so $(shell python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")/
 	$(VIRTUAL_ENV)/bin/python setup.py install --prefix=$(VIRTUAL_ENV)
 
 #	cd SphericalFunctions/Quaternions && $(VIRTUAL_ENV)/bin/python setup.py install --prefix=$(VIRTUAL_ENV)
