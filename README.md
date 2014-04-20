@@ -33,6 +33,7 @@ To use the optional—but highly recommended—Python interface:
 * [SWIG](http://www.swig.org/) v2.0 or greater
 * [Python](http://www.python.org/getit/) v2.7.4 or greater (but not v3.*), with development headers (python-dev or similar)
 * [HDF5](http://www.hdfgroup.org/HDF5/) v1.8.10 or greater, built as a shared library with development headers (libhdf5-dev or similar)
+* [FFTW](http://www.fftw.org/) v3.2 or greater, built as a shared library
 
 And the following, for which python's automatic installation utility
 [`pip`](http://www.pip-installer.org) can do all the work:
@@ -41,7 +42,7 @@ And the following, for which python's automatic installation utility
 * [h5py](http://code.google.com/p/h5py/) v2.1 or greater (`pip install --user h5py`)
 * [IPython](http://ipython.org/) v1.0 or greater, with notebook (`pip install --user ipython \[notebook\]`)
 
-N.B.: GSL, HDF5, and Python must all be compiled with the same
+N.B.: GSL, HDF5, FFTW, and Python must all be compiled with the same
 compiler.  In particular, if you are installing this on a cluster,
 check to ensure that the requirements are compiled with the same
 compiler.
@@ -50,7 +51,7 @@ All of the above are reasonably standard, and can be installed easily
 through package managers such as apt and homebrew.  The notebook
 interface for IPython provides an environment much like the
 Mathematica notebook interface.  The examples are provided in a
-notebook (*.ipynb) file.
+notebook (`.ipynb`) file.
 
 
 Getting started
