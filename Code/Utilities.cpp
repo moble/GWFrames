@@ -1,4 +1,4 @@
-// Copyright (c) 2013, Michael Boyle
+// Copyright (c) 2014, Michael Boyle
 // See LICENSE file for details
 
 #include <iostream>
@@ -8,16 +8,11 @@
 #include <gsl/gsl_eigen.h>
 #include <gsl/gsl_linalg.h>
 #include <gsl/gsl_cblas.h>
+#include "Quaternions.hpp"
 #include "Errors.hpp"
 using GWFrames::Matrix;
 using GWFrames::MatrixC;
-using GWFrames::Quaternion;
-using GWFrames::ellMax_Utilities;
-using GWFrames::FactorialFunctor;
-using GWFrames::BinomialCoefficientFunctor;
-using GWFrames::LadderOperatorFactorFunctor;
-using GWFrames::WignerCoefficientFunctor;
-using GWFrames::WignerDMatrix;
+using Quaternions::Quaternion;
 using std::vector;
 using std::complex;
 using std::cerr;
@@ -25,6 +20,8 @@ using std::endl;
 
 
 #define Utilities_Epsilon 1.0e-14
+
+const std::complex<double> ComplexI(0.0, 1.0);
 
 
 double GWFrames::abs(const std::vector<double>& v) {
@@ -97,6 +94,15 @@ std::vector<double> GWFrames::operator/(const std::vector<double>& a, const doub
   return c;
 }
 
+std::vector<double> GWFrames::operator-(const std::vector<double>& a) {
+  const unsigned int size = a.size();
+  vector<double> c(a);
+  for(unsigned int i=0; i<size; ++i) {
+    c[i] *= -1;
+  }
+  return c;
+}
+
 std::vector<std::vector<double> > GWFrames::operator/(const std::vector<std::vector<double> >& a, const std::vector<double>& b) {
   const unsigned int size1 = a.size();
   if(size1<1) { return vector<vector<double> >(0); }
@@ -110,6 +116,43 @@ std::vector<std::vector<double> > GWFrames::operator/(const std::vector<std::vec
   return c;
 }
 
+std::vector<std::vector<double> > GWFrames::operator*(const std::vector<double>& a, const std::vector<std::vector<double> >& b) {
+  const unsigned int size1 = b.size();
+  if(size1<1) { return vector<vector<double> >(0); }
+  const unsigned int size2 = b[0].size();
+  vector<vector<double> > c(b);
+  for(unsigned int i=0; i<size1; ++i) {
+    for(unsigned int j=0; j<size2; ++j) {
+      c[i][j] *= a[i];
+    }
+  }
+  return c;
+}
+
+std::vector<std::vector<double> > GWFrames::operator-(const std::vector<std::vector<double> >& a, const std::vector<std::vector<double> >& b) {
+  const unsigned int size1 = a.size();
+  if(size1==0) { return std::vector<std::vector<double> >(0); }
+  const unsigned int size2 = a[0].size();
+  // if(b.size() != size) {
+  //   cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": a.size()=" << a.size() << "; b.size()=" << b.size() << endl;
+  //   throw(GWFrames_VectorSizeMismatch);
+  // }
+  vector<vector<double> > c(size1, vector<double>(size2));
+  for(unsigned int i=0; i<size1; ++i) {
+    c[i] = a[i]-b[i];
+  }
+  return c;
+}
+
+std::vector<double> GWFrames::pow(const std::vector<double>& a, const double b) {
+  const unsigned int size = a.size();
+  vector<double> c(size);
+  for(unsigned int i=0; i<size; ++i) {
+    c[i] = std::pow(a[i], b);
+  }
+  return c;
+}
+
 /// Unwrap phase so that it is (roughly) continuous.
 std::vector<double> GWFrames::Unwrap(const std::vector<double>& Arg) {
   // Compare Matlab's unwrap.m file
@@ -117,7 +160,7 @@ std::vector<double> GWFrames::Unwrap(const std::vector<double>& Arg) {
   double Dp = 0.0;
   double Dps = 0.0;
   double CumCorr = 0.0;
-  
+
   // Dp will contain the incremental phase variations;
   // Dps will contain the equivalents, confined to [-pi,pi)
   // CumCorr will contain the incremental phase corrections
@@ -133,7 +176,7 @@ std::vector<double> GWFrames::Unwrap(const std::vector<double>& Arg) {
     CumCorr += Dps - Dp;
     ArgUnwrapped[i] += CumCorr;
   }
-  
+
   return ArgUnwrapped;
 }
 
@@ -484,6 +527,7 @@ std::vector<std::complex<double> > GWFrames::ComplexDerivative(const std::vector
 
 }
 
+
 /// Integrate vector function by simple trapezoidal rule.
 std::vector<std::vector<double> > GWFrames::VectorIntegral(const std::vector<std::vector<double> >& fdot, const std::vector<double>& t) {
   ///
@@ -518,7 +562,7 @@ std::vector<double> GWFrames::CumulativeVectorIntegral(const std::vector<std::ve
     throw(GWFrames_VectorSizeMismatch);
   }
   if(fdot.size()==0) {
-    vector<double>(0);
+    return vector<double>(0);
   }
   const unsigned int Size1=fdot.size();
   const unsigned int Size2=fdot[0].size();
@@ -537,7 +581,7 @@ std::vector<double> GWFrames::Intersection(const std::vector<double>& t1, const 
   /// t1 and t2 at that instant, or MinStep, whichever is greater.
   /// The output starts at the earliest moment common to t1 and t2, or
   /// MinTime, whichever is greater.
-  /// 
+  ///
   /// The input to this function is assumed to be strictly monotonic.
   if(t1.size()==0) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": t1 is empty.  Assuming this is not desired." << std::endl;
@@ -556,7 +600,7 @@ std::vector<double> GWFrames::Intersection(const std::vector<double>& t1, const 
   double maxt = std::min(std::min(max1, max2), MaxTime);
   if(mint > max1 || mint > max2) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": t1=[" << min1 << ", ..., " << max1 << "]\tt2=[" << min2 << ", ..., " << max2 << "]"
-	      << "\nIntersection is empty." << std::endl;
+              << "\nIntersection is empty." << std::endl;
     throw(GWFrames_EmptyIntersection);
   }
   t[0] = mint;
@@ -590,7 +634,7 @@ std::vector<double> GWFrames::Union(const std::vector<double>& t1, const std::ve
   /// On the overlap between the two sequences, the time is built up
   /// by taking the smaller time step in either of the two sequences,
   /// or MinStep if that step is smaller.
-  /// 
+  ///
   /// The input to this function is assumed to be strictly monotonic.
   if(t1.size()==0) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": t1 is empty.  Returning trivial Union." << std::endl;
@@ -609,8 +653,8 @@ std::vector<double> GWFrames::Union(const std::vector<double>& t1, const std::ve
   double maxt = std::max(max1, max2);
   if(min2 > max1 || min1 > max2) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Disjoint union.  Assuming this is not desired."
-	      << "\nmin(t1)=" << min1 << "\tmin(t2)=" << min2
-	      << "\nmax(t1)=" << max1 << "\tmax(t2)=" << max2 << endl;
+              << "\nmin(t1)=" << min1 << "\tmin(t2)=" << min2
+              << "\nmax(t1)=" << max1 << "\tmax(t2)=" << max2 << endl;
     throw(GWFrames_EmptyIntersection);
   }
   t[0] = mint;
@@ -644,7 +688,6 @@ std::vector<double> GWFrames::Union(const std::vector<double>& t1, const std::ve
   t.erase(t.begin()+I+1, t.end()); // only take the relevant part of the reserved vector
   return t;
 }
-
 
 
 Matrix::Matrix()
@@ -697,9 +740,9 @@ Matrix& Matrix::operator=(const std::vector<std::vector<double> >& DataIn) {
 
 Matrix Matrix::operator-(const Matrix& rhs) {
   if(ncols() != rhs.ncols() || nrows() != rhs.nrows()) {
-    cerr << "\n\n" << __FILE__ << ":" << __LINE__ 
-	 << ": ncols=" << ncols() << "; rhs.ncols()=" << rhs.ncols()
-	 << "\nnrows=" << nrows() << "; rhs.nrows()=" << rhs.nrows() << endl;
+    cerr << "\n\n" << __FILE__ << ":" << __LINE__
+         << ": ncols=" << ncols() << "; rhs.ncols()=" << rhs.ncols()
+         << "\nnrows=" << nrows() << "; rhs.nrows()=" << rhs.nrows() << endl;
     throw(GWFrames_MatrixSizeMismatch);
   }
   Matrix M(*this);
@@ -711,6 +754,7 @@ Matrix Matrix::operator-(const Matrix& rhs) {
   return M;
 }
 
+// / \@cond
 void Matrix::resize(unsigned int newNRows, unsigned int newNCols, const double a) {
   if(m) { gsl_matrix_free(m); }
   if(a!=0.0) {
@@ -721,6 +765,7 @@ void Matrix::resize(unsigned int newNRows, unsigned int newNCols, const double a
   }
   return;
 }
+// / \@endcond
 
 void Matrix::clear() {
   if(m) { gsl_matrix_free(m); }
@@ -750,25 +795,25 @@ std::vector<double> Matrix::operator*(const std::vector<double>& b) const {
   return Result;
 }
 
-Quaternion Matrix::operator*(const Quaternion& b) const {
-  if(ncols() != 3) {
-    cerr << "\n\nn" << __FILE__ << ":" << __LINE__ << ": cols=" << ncols() << "; Quaternions have 3 vector components" << endl;
-    throw(GWFrames_MatrixSizeMismatch);
-  }
-  if(nrows() != 3) {
-    cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": nrows=" << nrows() << "; Quaternions have 3 vector components" << endl;
-    throw(GWFrames_MatrixSizeMismatch);
-  }
-  const unsigned int C=3;
-  const unsigned int R=3;
-  Quaternion Result(0,0,0,0);
-  for(unsigned int r=0; r<R; ++r) {
-    for(unsigned int c=0; c<C; ++c) {
-      Result[r+1] += this->operator()(r,c) * b[c+1];
-    }
-  }
-  return Result;
-}
+// Quaternion Matrix::operator*(const Quaternion& b) const {
+//   if(ncols() != 3) {
+//     cerr << "\n\nn" << __FILE__ << ":" << __LINE__ << ": cols=" << ncols() << "; Quaternions have 3 vector components" << endl;
+//     throw(GWFrames_MatrixSizeMismatch);
+//   }
+//   if(nrows() != 3) {
+//     cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": nrows=" << nrows() << "; Quaternions have 3 vector components" << endl;
+//     throw(GWFrames_MatrixSizeMismatch);
+//   }
+//   const unsigned int C=3;
+//   const unsigned int R=3;
+//   Quaternion Result(0,0,0,0);
+//   for(unsigned int r=0; r<R; ++r) {
+//     for(unsigned int c=0; c<C; ++c) {
+//       Result[r+1] += this->operator()(r,c) * b[c+1];
+//     }
+//   }
+//   return Result;
+// }
 
 std::vector<double> GWFrames::operator*(const std::vector<double>& a, const Matrix& b) {
   if(b.nrows() != a.size()) {
@@ -785,28 +830,6 @@ std::vector<double> GWFrames::operator*(const std::vector<double>& a, const Matr
   }
   return Result;
 }
-
-Quaternion GWFrames::operator*(const Quaternion& a, const Matrix& b) {
-  if(b.ncols() != 3) {
-    cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": b.ncols=" << b.ncols() << "; Quaternions have 3 vector components" << endl;
-    throw(GWFrames_MatrixSizeMismatch);
-  }
-  if(b.nrows() != 3) {
-    cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": b.nrows=" << b.nrows() << "; Quaternions have 3 vector components" << endl;
-    throw(GWFrames_MatrixSizeMismatch);
-  }
-  const unsigned int C=3;
-  const unsigned int R=3;
-  Quaternion Result(0,0,0,0);
-  for(unsigned int c=0; c<C; ++c) {
-    for(unsigned int r=0; r<R; ++r) {
-      Result[c+1] += b(r,c) * a[r+1];
-    }
-  }
-  return Result;
-}
-
-
 
 std::vector<double> GWFrames::DominantPrincipalAxis(Matrix& M) {
   if(M.nrows()!=3 || M.ncols()!=3) {
@@ -965,8 +988,8 @@ MatrixC & MatrixC::operator=(const MatrixC &rhs) {
   if (this != &rhs) {
     if (nn != rhs.nn || mm != rhs.mm) {
       if (v != NULL) {
-	delete[] (v[0]);
-	delete[] (v);
+        delete[] (v[0]);
+        delete[] (v);
       }
       nn=rhs.nn;
       mm=rhs.mm;
@@ -987,6 +1010,7 @@ void MatrixC::swap(MatrixC& b) {
   return;
 }
 
+// / \@cond
 void MatrixC::resize(int newn, int newm) {
   if (newn != nn || newm != mm) {
     if (v != NULL) {
@@ -1003,6 +1027,7 @@ void MatrixC::resize(int newn, int newm) {
     }
   }
 }
+// / \@endcond
 
 void MatrixC::assign(int newn, int newm, const std::complex<double>& a) {
   if (newn != nn || newm != mm) {
@@ -1037,150 +1062,51 @@ MatrixC::~MatrixC()
 
 ///////////////////////////////////////////////////////////////////
 
-/// Class to create an object returning the factorial of an argument.
-vector<double> FactorialTableCalculator() {
-  /// Note that because a double is returned, only values up to 28!
-  /// will be exact; higher values will be accurate to machine
-  /// precision.  Values up to 170! only are allowed because higher
-  /// values overflow.
-  vector<double> FactorialTable(171);
-  FactorialTable[0] = 1.0;
-  for (int i=1;i<171;i++) {
-    FactorialTable[i] = i*FactorialTable[i-1];
-  }
-  return FactorialTable;
-}
-const std::vector<double> FactorialFunctor::FactorialTable = FactorialTableCalculator();
 
-vector<double> BinomialCoefficientCalculator() {
-  /// We need (n+1) coefficients for each value of n from 0 (for
-  /// completeness) up to 2*ellMax_Utilities (hard coded in the header file).
-  /// That's a total of
-  ///   >>> from sympy import summation, symbols
-  ///   >>> ellMax_Utilities, n, k = symbols('ellMax_Utilities n k', integer=True)
-  ///   >>> summation(n+1, (n, 0, 2*ellMax_Utilities))
-  ///  2*ellMax_Utilities**2 + 3*ellMax_Utilities + 1
-  /// With a similar calculation, we can see that the associated access
-  /// operator needs element (n*(n+1)/2 + k) of the array.
-  vector<double> BinomialCoefficientTable(2*ellMax_Utilities*ellMax_Utilities + 3*ellMax_Utilities + 1);
-  unsigned int i=0;
-  FactorialFunctor Factorial;
-  for(unsigned int n=0; n<=2*ellMax_Utilities; ++n) {
-    for(unsigned int k=0; k<=n; ++k) {
-      BinomialCoefficientTable[i++] = std::floor(0.5+Factorial(n)/(Factorial(k)*Factorial(n-k)));
+std::ostream& GWFrames::operator<<(std::ostream& out, const std::vector<double>& v) {
+  out << "[";
+  if(v.size()>0) {
+    for(unsigned int i=0; i<v.size()-1; ++i) {
+      out << v[i] << ", ";
     }
+    out << v.back();
   }
-  return BinomialCoefficientTable;
+  out << "]" << std::flush;
+  return out;
 }
-const std::vector<double> BinomialCoefficientFunctor::BinomialCoefficientTable = BinomialCoefficientCalculator();
 
-vector<double> LadderOperatorFactorCalculator() {
-  /// We need (2*ell+1) coefficients for each value of ell from 0 (for
-  /// completeness) up to ellMax_Utilities (hard coded in the header file).
-  /// That's a total of
-  ///   >>> from sympy import summation, symbols
-  ///   >>> ell, ellMax_Utilities, m, mp = symbols('ell ellMax_Utilities m mp', integer=True)
-  ///   >>> summation(2*ell+1, (ell, 0, ellMax_Utilities))
-  ///   ellMax_Utilities**2 + 2*ellMax_Utilities + 1
-  /// With a similar calculation, we can see that the associated access
-  /// operator needs element 
-  ///   >>> summation(2*ell+1, (ell, 0, ell-1)) + ell + m
-  ///   ell**2 + ell + m
-  std::vector<double> FactorTable(ellMax_Utilities*ellMax_Utilities + 2*ellMax_Utilities + 1);
-  unsigned int i=0;
-  for(int ell=0; ell<=ellMax_Utilities; ++ell) {
-    for(int m=-ell; m<=ell; ++m) {
-      FactorTable[i++] = std::sqrt(ell*(ell+1)-m*(m+1));
+std::ostream& GWFrames::operator<<(std::ostream& out, const std::vector<int>& v) {
+  out << "[";
+  if(v.size()>0) {
+    for(unsigned int i=0; i<v.size()-1; ++i) {
+      out << v[i] << ", ";
     }
+    out << v.back();
   }
-  return FactorTable;
+  out << "]" << std::flush;
+  return out;
 }
-const std::vector<double> LadderOperatorFactorFunctor::FactorTable = LadderOperatorFactorCalculator();
 
-std::vector<double> WignerCoefficientCalculator() {
-  /// We need (2*ell+1)*(2*ell+1) coefficients for each value of ell
-  /// from 0 (for completenes) up to ellMax_Utilities (hard coded in the header
-  /// file).  That's a total of
-  ///   >>> from sympy import summation, symbols, simplify
-  ///   >>> from sympy.polys.polyfuncs import horner
-  ///   >>> ell, ellMax_Utilities, m, mp = symbols('ell ellMax_Utilities m mp', integer=True)
-  ///   >>> horner(simplify(summation((2*ell+1)**2, (ell, 0, ellMax_Utilities))))
-  ///   ellMax_Utilities*(ellMax_Utilities*(4*ellMax_Utilities/3 + 4) + 11/3) + 1
-  /// With a similar calculation, we can see that the associated access
-  /// operator needs element
-  ///   >>> horner(summation((2*ell+1)**2, (ell, 0, ell-1)) + (2*ell+1)*(ell+mp) + ell + m)
-  ///   ell*(ell*(4*ell/3 + 2) + 5/3) + mp*(2*ell + 1) + m
-  /// of the array.
-  std::vector<double> CoefficientTable(int(ellMax_Utilities*(ellMax_Utilities*(1.3333333333333333*ellMax_Utilities + 4) + 3.6666666666666667) + 1 + 0.5));
-  FactorialFunctor Factorial;
-  unsigned int i=0;
-  for(int ell=0; ell<=ellMax_Utilities; ++ell) {
-    for(int mp=-ell; mp<=ell; ++mp) {
-      for(int m=-ell; m<=ell; ++m) {
-	CoefficientTable[i++] = 
-	  std::sqrt( Factorial(ell+m)*Factorial(ell-m)
-	  	     / double(Factorial(ell+mp)*Factorial(ell-mp)) );
-      }
+std::ostream& GWFrames::operator<<(std::ostream& out, const std::vector<std::vector<int> >& vv) {
+  out << "[";
+  if(vv.size()>0) {
+    for(unsigned int i=0; i<vv.size()-1; ++i) {
+      out << vv[i] << ", ";
     }
+    out << vv.back();
   }
-  return CoefficientTable;
-}
-const std::vector<double> WignerCoefficientFunctor::CoefficientTable = WignerCoefficientCalculator();
-
-
-/// Construct the D matrix object given the (optional) rotor.
-WignerDMatrix::WignerDMatrix(const Quaternion& R)
-  : BinomialCoefficient(), WignerCoefficient(),
-    Ra(R[0], R[3]), Rb(R[2], R[1]),
-    absRa(abs(Ra)), absRb(abs(Rb)), absRRatioSquared(absRb*absRb/(absRa*absRa))
-{ }
-
-/// Reset the rotor for this object to the given value.
-WignerDMatrix& WignerDMatrix::SetRotation(const Quaternion& R) {
-  Ra = std::complex<double>(R[0], R[3]);
-  Rb = std::complex<double>(R[2], R[1]);
-  absRa = abs(Ra);
-  absRb = abs(Rb);
-  absRRatioSquared = absRb*absRb/(absRa*absRa);
-  return *this;
+  out << "]" << std::flush;
+  return out;
 }
 
-/// Evaluate the D matrix element for the given (ell, mp, m) indices.
-std::complex<double> WignerDMatrix::operator()(const int ell, const int mp, const int m) const {
-  if(absRa < Utilities_Epsilon) {
-    return (mp!=-m ? 0.0 : ((ell+mp)%2==0 ? 1.0 : -1.0) * std::pow(Rb, 2*mp) );
-  }
-  if(absRb < Utilities_Epsilon) {
-    return (mp!=m ? 0.0 : std::pow(Ra, 2*mp) );
-  }
-  if(absRa < 1.e-3) { // Deal with NANs in certain cases
-    const std::complex<double> Prefactor =
-      WignerCoefficient(ell, mp, m) * std::pow(Ra, m+mp) * std::pow(Rb, m-mp);
-    const int rhoMin = std::max(0,mp-m);
-    const int rhoMax = std::min(ell+mp,ell-m);
-    const double absRaSquared = absRa*absRa;
-    const double absRbSquared = absRb*absRb;
-    double Sum = 0.0;
-    for(int rho=rhoMax; rho>=rhoMin; --rho) {
-      const double aTerm = std::pow(absRaSquared, ell-m-rho);
-      if(aTerm != aTerm || aTerm<1.e-100) { // This assumes --fast-math is off
-	Sum *= absRbSquared;
-	continue;
-      }
-      Sum = ( (rho%2==0 ? 1 : -1) * BinomialCoefficient(ell+mp,rho) * BinomialCoefficient(ell-mp, ell-rho-m) * aTerm )
-	+ ( Sum * absRbSquared );
+std::ostream& GWFrames::operator<<(std::ostream& out, const std::vector<unsigned int>& v) {
+  out << "[";
+  if(v.size()>0) {
+    for(unsigned int i=0; i<v.size()-1; ++i) {
+      out << v[i] << ", ";
     }
-    return Prefactor * Sum * std::pow(absRbSquared, rhoMin);
+    out << v.back();
   }
-  const std::complex<double> Prefactor =
-    (WignerCoefficient(ell, mp, m) * std::pow(absRa, 2*ell-2*m))
-    * std::pow(Ra, m+mp) * std::pow(Rb, m-mp);
-  const int rhoMin = std::max(0,mp-m);
-  const int rhoMax = std::min(ell+mp,ell-m);
-  double Sum = 0.0;
-  for(int rho=rhoMax; rho>=rhoMin; --rho) {
-    Sum = ( (rho%2==0 ? 1 : -1) * BinomialCoefficient(ell+mp,rho) * BinomialCoefficient(ell-mp, ell-rho-m) )
-      + ( Sum * absRRatioSquared );
-  }
-  return Prefactor * Sum * std::pow(absRRatioSquared, rhoMin);
+  out << "]" << std::flush;
+  return out;
 }

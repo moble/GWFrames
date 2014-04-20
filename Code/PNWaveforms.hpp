@@ -1,4 +1,4 @@
-// Copyright (c) 2013, Michael Boyle
+// Copyright (c) 2014, Michael Boyle
 // See LICENSE file for details
 
 #ifndef PNWAVEFORMS_HPP
@@ -6,18 +6,19 @@
 
 #include "Waveforms.hpp"
 
+#define PNWaveforms_ellMax 8
+
 namespace GWFrames {
 
-  /// Object for calculating a post-Newtonian Waveform (NOTE:
-  /// Precession is not supported correctly; consider precessing
-  /// waveforms created by this code to be for pipeline testing only.)
+  /// Object for calculating a post-Newtonian Waveform with (optional) precession
   class PNWaveform : public Waveform {
 
   public:  // Constructors and Destructor
     PNWaveform();
     PNWaveform(const PNWaveform& W);
-    PNWaveform(const double delta, const std::vector<double>& chi1_0, const std::vector<double>& chi2_0, const double Omega_orb_0,
-               const GWFrames::Quaternion& R_0=GWFrames::Quaternion(1,0,0,0), const unsigned int MinStepsPerOrbit=0);
+    PNWaveform(const std::string& Approximant, const double delta, const std::vector<double>& chi1_i, const std::vector<double>& chi2_i,
+               const double Omega_orb_i, const Quaternions::Quaternion& R_frame_i=Quaternions::Quaternion(1,0,0,0),
+               const double PNOrder=4.0, double v_0=-1.0);
     ~PNWaveform() { }
 
   private:  // Member data

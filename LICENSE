@@ -1,8 +1,15 @@
-Copyright (c) 2013, Michael Boyle
+Copyright (c) 2014, Michael Boyle
 
 If this software is used in any academic research, the author would
 very much appreciate if resulting works cite the original paper on
-which this software is based: <http://arxiv.org/abs/1302.2919>.
+which this software is based: <http://arxiv.org/abs/1302.2919>.  This
+software is covered under the open source MIT license, shown below,
+with the exception of the 'spinsfast' software package.  The
+'spinsfast' software (rev104) is included with this software without
+modification, and is covered separately under the GNU GPL license, as
+documented in its subdirectory.  See its home page:
+<http://www.physics.miami.edu/~huffenbe/research/spinsfast/>.
+
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

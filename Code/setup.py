@@ -39,27 +39,46 @@ class build_ext(_build_ext):
     """Specialized Python source builder for moving SWIG module."""
     def run(self):
         _build_ext.run(self)
-        copy_file('GWFrames.py', 'GWFrames/__init__.py')
+        copy_file('SWIG/GWFrames.py', 'GWFrames/__init__.py')
 
 ## Now import the basics
 from distutils.core import setup, Extension
 from subprocess import check_output, CalledProcessError
 from os import devnull, environ
 
+
+# Add directories for numpy and other inclusions
+from numpy import get_include
+IncDirs = ['spinsfast/include',
+           'SphericalFunctions',
+           'SphericalFunctions/Quaternions',
+           'SpacetimeAlgebra',
+           get_include()]
+LibDirs = ['spinsfast/lib']
+
 ## See if GSL_HOME is set; if so, use it
 if "GSL_HOME" in environ :
-    IncDirs = [environ["GSL_HOME"]+'/include', '/opt/local/include']
-    LibDirs = [environ["GSL_HOME"]+'/lib', '/opt/local/lib']
-else :
-    IncDirs = ['/opt/local/include']
-    LibDirs = ['/opt/local/lib']
+    IncDirs += [environ["GSL_HOME"]+'/include']
+    LibDirs += [environ["GSL_HOME"]+'/lib']
+
+## See if FFTW3_HOME is set; if so, use it
+if "FFTW3_HOME" in environ :
+    IncDirs += [environ["FFTW3_HOME"]+'/include']
+    LibDirs += [environ["FFTW3_HOME"]+'/lib']
+
+# If /opt/local directories exist, use them
+from os.path import isdir
+if isdir('/opt/local/include'):
+    IncDirs += ['/opt/local/include']
+if isdir('/opt/local/lib'):
+    LibDirs += ['/opt/local/lib']
 
 ## Remove a compiler flag that doesn't belong there for C++
 import distutils.sysconfig as ds
 cfs=ds.get_config_vars()
-for key, value in cfs.iteritems() :
+for key, value in cfs.items() :
     if(type(cfs[key])==str) :
-        cfs[key] = value.replace('-Wstrict-prototypes', '')
+        cfs[key] = value.replace('-Wstrict-prototypes', '').replace('-Wshorten-64-to-32', '') #.replace('', '')
 
 ## Try to determine an automatic version number for this
 try :
@@ -78,9 +97,23 @@ try :
 except IOError :
     License = 'See LICENSE file in the source code for details.'
 
+swig_opts=['-globals', 'constants', '-c++', '-builtin', '-outdir', 'SWIG/', '-DUSE_GSL']
+## Add -py3 to swig_opts if this is python3
+try:
+    import sys
+    python_major = sys.version_info.major
+    if(python_major==3) :
+        swig_opts += ['-py3']
+except AttributeError:
+    print("Your version of python is SO old.  'How old is it?'  So old I can't even tell how old it is.")
+    print("No, seriously.  You should think about upgrading your python because I don't support this version.")
+    print("You can try to make this run by removing the assertion error you're about to get, but don't")
+    print("come crying to me when print statements fail or when division gives the wrong answer.")
+    raise AssertionError("Wake up grandpa!  You were dreaming of ancient pythons again.")
+
 ## This does the actual work
 setup(name="GWFrames",
-      version=PackageVersion,
+      # version=PackageVersion,
       description='Angular velocity of gravitational radiation from precessing binaries and the corotating frame',
       long_description="""
       This package implements various methods described in the paper
@@ -94,29 +127,47 @@ setup(name="GWFrames",
       license=License,
       packages = ['GWFrames'],
       # py_modules = ['GWFrames'],
-      scripts = ['Scripts/RunExtrapolations.py', 'Scripts/ConvertGWDatToH5.py'],
+      scripts = ['Scripts/RunExtrapolations.py', 'Scripts/ExtrapolateAnnex.py'],
       ext_modules = [
-        Extension('_GWFrames', ['Quaternions.cpp',
+        Extension('_GWFrames', ['SphericalFunctions/Quaternions/Quaternions.cpp',
+                                'SphericalFunctions/Quaternions/IntegrateAngularVelocity.cpp',
+                                'SphericalFunctions/Quaternions/Utilities.cpp',
+                                'PostNewtonian/C++/PNEvolution.cpp',
+                                'PostNewtonian/C++/PNEvolution_Q.cpp',
+                                'PostNewtonian/C++/PNWaveformModes.cpp',
+                                'SphericalFunctions/Combinatorics.cpp',
+                                'SphericalFunctions/WignerDMatrices.cpp',
+                                'SphericalFunctions/SWSHs.cpp',
+                                'SpacetimeAlgebra/SpacetimeAlgebra.cpp',
                                 'Utilities.cpp',
                                 'Waveforms.cpp',
                                 'PNWaveforms.cpp',
-                                'GWFrames.i'],
-                  depends = ['Quaternions.hpp',
+                                'Scri.cpp',
+                                'SWIG/GWFrames.i'],
+                  depends = ['SphericalFunctions/Quaternions/Quaternions.hpp',
+                             'SphericalFunctions/Quaternions/IntegrateAngularVelocity.hpp',
+                             'SphericalFunctions/Quaternions/Utilities.hpp',
+                             'PostNewtonian/C++/PNEvolution.hpp',
+                             'PostNewtonian/C++/PNWaveformModes.hpp',
+                             'SphericalFunctions/Combinatorics.hpp',
+                             'SphericalFunctions/WignerDMatrices.hpp',
+                             'SphericalFunctions/SWSHs.hpp',
+                             'SpacetimeAlgebra/SpacetimeAlgebra.hpp',
                              'Utilities.hpp',
                              'Waveforms.hpp',
                              'PNWaveforms.hpp',
-                             'PNWaveforms_TaylorT1Spin.ipp',
-                             'PNWaveforms_PolarizationModes.ipp',
+                             'Scri.hpp',
                              'Errors.hpp',
                              'GWFrames_Doc.i'],
                   include_dirs=IncDirs,
                   library_dirs=LibDirs,
-                  libraries=['gsl', 'gslcblas'],
+                  libraries=['gsl', 'gslcblas', 'fftw3', 'spinsfast'],
                   define_macros = [('CodeRevision', CodeRevision)],
                   language='c++',
-                  swig_opts=['-globals', 'constants', '-c++'],
+                  swig_opts=swig_opts, #['-globals', 'constants', '-c++', '-builtin', '-outdir', 'SWIG/'],# '-debug-tmsearch', '-debug-tmused'],
                   extra_link_args=['-fPIC'],
-                  # extra_link_args=['-fPIC'], # Shouldn't be necessary...
+                  # extra_link_args=['-lgomp', '-fPIC', '-Wl,-undefined,error'], # `-undefined,error` tells the linker to fail on undefined symbols
+                  extra_compile_args=['-Wno-deprecated', '-Wno-unused-variable', '-DUSE_GSL'] #'-fopenmp',
                   # extra_compile_args=['-ffast-math'] # DON'T USE fast-math!!!  It makes it impossible to detect NANs
                   )
         ],
@@ -131,5 +182,5 @@ setup(name="GWFrames",
       # cmdclass = ,
       cmdclass={'build_ext': build_ext},
       # data_files = ,
-      # package_dir = 
+      # package_dir =
       )

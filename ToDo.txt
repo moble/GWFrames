@@ -1,0 +1,82 @@
+-*- mode: outline; -*-
+
+
+* Fix issue of ell in multiplication
+
+
+* Make sure the ell values in BMSTransform and MoreschiIteration are consistent
+
+
+* Clarify signs in the fixed-point iteration method
+
+
+* Try to get the iterations working
+
+
+* Rethink choices about time.  Should I be conflating the boost and translation?
+
+
+* Sort out convention for whether or not to include time in supertranslation
+
+
+* Try out the Moreschi method with
+** pure boost
+** pure translation
+** pure supertranslation
+** random BMS transformation
+
+
+* Do I really need to use OneOverK everywhere, or could I derive v?
+
+
+* Deal more carefully with multiplication/division and filtering modes
+** Rewrite constructors to require explicit sizes
+
+
+* Compare time-interpolation using modes of spherical harmonics, rather than values on grid points
+
+
+* Redo boosts
+** Check sign choices
+** Derive the conformal factor independently of Frolov
+
+
+* Clarify the tetrad conventions
+
+
+* Re-derive Wigner D functions
+** Expand polynomial differently for |R_a|<|R_b|
+** Check cases R_a and R_b
+** Implement in the code
+** Add bounds checks for ell to all relevant higher-level functions
+
+
+* Understand supertranslation behaviors of various spacetimes
+** PN
+** Our numerical simulations
+*** CF
+*** SKS
+** Will's unholy union of PN and NR
+
+
+* Implement mass-centering algorithm
+** Test on mass-centered Schwarzschild
+** Test on mass-offset Schwarzschild
+** Test on boosted mass-centered Schwarzschild
+** Test on boosted mass-offset Schwarzschild
+
+
+* Make some variable names uniform
+** alpha = rapidity
+** beta = speed (in units of c)
+** gamma = Lorentz factor
+** delta = supertranslation
+** kappa = spin coefficient [probably unused]
+** K or Kappa = conformal factor
+
+
+
+
+
+* Rewrite Waveform class in terms of Modes objects
+** Think carefully about what information each object should have

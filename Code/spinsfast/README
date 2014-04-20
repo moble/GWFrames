@@ -1,0 +1,29 @@
+Fast and exact spin-s spherical harmonic transforms, aka. "spinsfast"
+
+* Get the latest version at:
+
+	http://www.physics.miami.edu/~huffenbe/research/spinsfast/
+
+
+* Compilation instructions
+
+  1. Edit the file (or make a new file) called build/config.mk so that the proper locations for header and library files are included.
+
+
+  2. Set the environment variable "build" so that it points to that file. ie
+in bash, say
+
+	export build=build/config.mk 
+
+
+  3. Build the library and example codes with 
+
+	make
+
+
+
+* (Optional) Checking the compilation
+
+  Run the example code following the instructions at 
+
+	http://www.physics.miami.edu/~huffenbe/research/spinsfast/

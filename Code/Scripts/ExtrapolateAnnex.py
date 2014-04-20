@@ -46,16 +46,17 @@ except Exception as e : # Pass exceptions to shell as failures
 
 
 
-def SetUpDB(start_rev, db) :
+def SetUpDB(start_rev, db, subdir="") :
     """Set up the database file of extrapolations to be run."""
     import os.path
-    
+
     # Update the repository (and python error on git error)
     subprocess.check_call('git pull --rebase', shell=True)
     subprocess.check_call('git annex merge', shell=True)
-    
+
     # Get the list of changed files since the last git revision
-    ChangedFiles = subprocess.check_output('set -o pipefail; git diff --name-only {0}..HEAD | (grep _FiniteRadii_CodeUnits.h5 || true)'.format(start_rev), shell=True)
+    ChangedFiles = subprocess.check_output('set -o pipefail; git diff --name-only {0}..HEAD {1} | (grep _FiniteRadii_CodeUnits.h5 || true)'.format(start_rev, subdir),
+                                           shell=True)
     
     # If nothing changed, end here
     if(ChangedFiles=='') :
@@ -63,13 +64,13 @@ def SetUpDB(start_rev, db) :
         sys.exit(0)
     else :
         ChangedFiles = ChangedFiles.split()
-    
+
     # Get the changed data files
     for ChangedFile in ChangedFiles :
         print('Getting data:  git annex get {0} and Horizons.h5'.format(ChangedFile))
         subprocess.check_output('git annex get {0}'.format(ChangedFile), shell=True)
         subprocess.check_output('git annex get {0}'.format(os.path.dirname(ChangedFile)+'/Horizons.h5'), shell=True)
-    
+
     # Write the database file
     conn = sqlite3.connect(db, timeout=60)
     try :
@@ -80,14 +81,14 @@ def SetUpDB(start_rev, db) :
         print(textwrap.dedent(
             """
             ERROR: The database could not be locked.
-            
+
                    If you are trying to create this on an NFS file
                    system, note that NFS may be buggy with regards to
                    locking.  Try locating the database file on a
                    non-NFS partition by giving a different path to the
                    `--db` argument.  (Everything else can stay where
                    it is.)
-            
+
             """))
         conn.close()
         raise
@@ -106,13 +107,13 @@ def RunExtrapolation(DataFile, Template) :
     import os.path
     import subprocess
     from GWFrames.Extrapolation import _safe_format
-    
+
     Directory,FileName = os.path.split(DataFile)
-    
+
     # Copy the template file to Directory
     with open('{0}/Extrapolate_{1}.py'.format(Directory,FileName[:-3]), 'w') as TemplateFile :
         TemplateFile.write(_safe_format(Template, DataFile=FileName, Directory=Directory))
-    
+
     # Try to run the extrapolation
     OriginalDir = os.getcwd()
     try :
@@ -141,7 +142,7 @@ if __name__ == "__main__" :
     import sys
     import argparse
     import sqlite3
-    
+
     # Set up and run the parser
     parser = argparse.ArgumentParser(description = __doc__)
     parser.add_argument('--run', action='store_true',
@@ -153,7 +154,7 @@ if __name__ == "__main__" :
     parser.add_argument('--start_rev', default='',
                         help='hash of the git revision at which to start counting changes')
     args = vars(parser.parse_args(sys.argv[1:]))
-    
+
     # If wanted, just run the first extrapolation in the database
     if(args['run']) :
         while(True) :  # Loop until the program is killed, or we break out below
@@ -172,12 +173,12 @@ if __name__ == "__main__" :
             c.execute("""UPDATE extrapolations SET status=1 WHERE datafile='{0}'""".format(datafile))
             conn.commit()
             conn.close()
-            
+
             # Run the extrapolation
             print(datafile)
             ReturnValue = RunExtrapolation(datafile, Template)
             print("ReturnValue = {0}".format(ReturnValue))
-            
+
             # on failure, write status=-1
             if(ReturnValue) :
                 conn = sqlite3.connect(args['db'], timeout=60)
@@ -198,8 +199,8 @@ if __name__ == "__main__" :
                 conn.commit()
                 conn.close()
         sys.exit(0)
-    
-    
+
+
     # Get the initial git revision
     if(args['since_my_last_commit']) :
         GitName = subprocess.check_output('git config user.name', shell=True)
@@ -212,7 +213,6 @@ if __name__ == "__main__" :
             start_rev = args['start_rev']
         else :
             start_rev = subprocess.check_output('git rev-parse HEAD', shell=True)[:-1]
-    
+
     # Set up the database by looking at the git changes
     SetUpDB(start_rev, args['db'])
-    

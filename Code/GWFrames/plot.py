@@ -34,10 +34,11 @@ def plotWaveform(this, WaveformPart='Abs', Modes=(), t_fid=None, *pyplot_args, *
     except :
         pass
     import matplotlib
-    try:
-        matplotlib.rcParams['axes.color_cycle'] = ['#000000', '#cc79a7', '#d55e00', '#0072b2', '#f0e442', '#56b4e9', '#e69f00', '#2b9f78']
-    except KeyError :
-        matplotlib.axes.set_default_color_cycle(['#000000', '#cc79a7', '#d55e00', '#0072b2', '#f0e442', '#56b4e9', '#e69f00', '#2b9f78'])
+    # # We probably shouldn't be overwriting people's color choices
+    # try:
+    #     matplotlib.rcParams['axes.color_cycle'] = ['#000000', '#cc79a7', '#d55e00', '#0072b2', '#f0e442', '#56b4e9', '#e69f00', '#2b9f78']
+    # except KeyError :
+    #     matplotlib.axes.set_default_color_cycle(['#000000', '#cc79a7', '#d55e00', '#0072b2', '#f0e442', '#56b4e9', '#e69f00', '#2b9f78'])
     from warnings import warn
     from numpy import array, empty, transpose, sin, cos, modf, pi
 
@@ -146,16 +147,16 @@ def plotWaveform(this, WaveformPart='Abs', Modes=(), t_fid=None, *pyplot_args, *
     xlabel(XLabel)
     ylabel(YLabel)
 
-    draw()
+    # draw()
 
     if(WasInteractive) :
         ion()
-        gcf().show()
+        # gcf().show()
 
-    try :
-        tight_layout(pad=0.1)
-    except :
-        pass
+    # try :
+    #     tight_layout(pad=0.1)
+    # except :
+    #     pass
 
     for i in range(len(Lines)) :
         setp(Lines[i], label=Labels[i])
@@ -169,3 +170,4 @@ def plotWaveform(this, WaveformPart='Abs', Modes=(), t_fid=None, *pyplot_args, *
 ###   W.plot('Abs', ((2,2), (2,-2)))
 import GWFrames
 GWFrames.Waveform.plot = plotWaveform
+GWFrames.PNWaveform.plot = plotWaveform
