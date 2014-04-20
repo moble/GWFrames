@@ -40,7 +40,7 @@
 using Quaternions::Quaternion;
 using Quaternions::QuaternionArray;
 using GWFrames::Matrix;
-using SphericalFunctions::LadderOperatorFactorFunctor;
+using SphericalFunctions::LadderOperatorFactorSingleton;
 using GWFrames::abs;
 using Quaternions::PrescribedRotation;
 using Quaternions::FrameFromZ;
@@ -65,7 +65,7 @@ using std::complex;
 // This macro is useful for debugging
 #define INFOTOCERR std::cerr << __FILE__ << ":" << __LINE__ << ":" << __func__ << std::endl;
 
-const LadderOperatorFactorFunctor LadderOperatorFactor;
+const LadderOperatorFactorSingleton& LadderOperatorFactor = LadderOperatorFactorSingleton::Instance();
 
 std::string tolower(const std::string& A) {
   string B = A;
@@ -1222,7 +1222,7 @@ vector<vector<double> > GWFrames::Waveform::LdtVector(vector<int> Lmodes) const 
   // L- = Lx - i Ly      Ly = -i (L+ - L-) / 2     Im(Ly) = -( Re(L+) - Re(L-) ) / 2
   // Lz = Lz             Lz = Lz                   Im(Lz) = Im(Lz)
 
-  LadderOperatorFactorFunctor LadderOperatorFactor;
+  const LadderOperatorFactorSingleton& LadderOperatorFactor = LadderOperatorFactorSingleton::Instance();
   if(Lmodes.size()==0) {
     Lmodes.push_back(lm[0][0]);
     for(unsigned int i_m=0; i_m<NModes(); ++i_m) {
