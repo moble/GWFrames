@@ -65,11 +65,11 @@ MikeHappy :
 # Library) headers and libraries.  The following paths are the most
 # common places for these to be installed.  If compilation doesn't
 # work, correct these paths.
-INCFLAGS = -I/opt/local/include -I/usr/local/include -Ispinsfast/include -ISphericalFunctions/Quaternions -I../../SpacetimeAlgebra
+INCFLAGS = -I/opt/local/include -I/usr/local/include -Ispinsfast/include -ISphericalFunctions/Quaternions -ISpacetimeAlgebra
 LIBFLAGS = -L/opt/local/lib -L/usr/local/lib -Lspinsfast/lib
 ifdef GSL_HOME
-	INCFLAGS = -I${GSL_HOME}/include ${INCFLAGS}
-	LIBFLAGS = -L${GSL_HOME}/lib ${LIBFLAGS}
+	INCFLAGS := -I${GSL_HOME}/include ${INCFLAGS}
+	LIBFLAGS := -L${GSL_HOME}/lib ${LIBFLAGS}
 endif
 # Set compiler name and optimization flags here, if desired
 C++ = g++
@@ -85,7 +85,7 @@ OPT = -O3 -Wall -Wno-deprecated
 .PHONY : all cpp clean allclean realclean swig spinsfast SphericalFunctions
 
 # If needed, we can also make object files to use in other C++ programs
-cpp : Utilities.o SphericalFunctions/Quaternions/Quaternions.o Waveforms.o PNWaveforms.o Scri.o ../../SpacetimeAlgebra/SpacetimeAlgebra.o
+cpp : Utilities.o SphericalFunctions/Quaternions/Quaternions.o Waveforms.o PNWaveforms.o Scri.o SpacetimeAlgebra/SpacetimeAlgebra.o
 
 # This is how to build those object files
 %.o : %.cpp %.hpp Errors.hpp

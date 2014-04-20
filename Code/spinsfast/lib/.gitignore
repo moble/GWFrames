@@ -1,0 +1,2 @@
+# Allow git to keep this directory around by not ignoring this file
+!.gitignore
