@@ -453,10 +453,10 @@ def OutputToH5(W, FileName) :
 
     """
     from h5py import File
-    from os.path import basename, dirname
+    from os.path import basename, dirname, join
     from GWFrames import UnknownDataType, h, hdot, Psi4
     # Add descriptive prefix to FileName
-    FileName = dirname(FileName) + '/' + W.GetFileNamePrefix() + basename(FileName)
+    FileName = join(dirname(FileName), W.GetFileNamePrefix() + basename(FileName))
     # Open the file for output
     try :
         F = File(FileName, 'w')
