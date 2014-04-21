@@ -30,8 +30,8 @@ To build just the C++ code:
 * [GNU Scientific Library](http://www.gnu.org/software/gsl/), built as a shared library
 
 To use the optional—but highly recommended—Python interface:
-* [SWIG](http://www.swig.org/) v2.0 or greater
-* [Python](http://www.python.org/getit/) v2.7.4 or greater (but not v3.*), with development headers (python-dev or similar)
+* [SWIG](http://www.swig.org/) v3.0 or greater
+* [Python](http://www.python.org/getit/) v2.7.4 or greater (untested on `python3`+), with development headers (python-dev or similar)
 * [HDF5](http://www.hdfgroup.org/HDF5/) v1.8.10 or greater, built as a shared library with development headers (libhdf5-dev or similar)
 * [FFTW](http://www.fftw.org/) v3.2 or greater, built as a shared library
 
@@ -40,12 +40,14 @@ And the following, for which python's automatic installation utility
 * [NumPy](http://www.numpy.org/) v1.7 or greater (`pip install --user numpy`)
 * [Matplotlib](http://matplotlib.org/) v1.2 or greater (`pip install --user matplotlib`)
 * [h5py](http://code.google.com/p/h5py/) v2.1 or greater (`pip install --user h5py`)
-* [IPython](http://ipython.org/) v1.0 or greater, with notebook (`pip install --user ipython \[notebook\]`)
 
-N.B.: GSL, HDF5, FFTW, and Python must all be compiled with the same
-compiler.  In particular, if you are installing this on a cluster,
+***N.B.***: GSL, HDF5, FFTW, and Python must all be compiled *with the same
+compiler*.  In particular, if you are installing this on a cluster,
 check to ensure that the requirements are compiled with the same
 compiler.
+
+Finally, the superb but entirely optional ipython notebook is highly recommended:
+* [IPython](http://ipython.org/) v2.0 or greater, with notebook (`pip install --user 'ipython[notebook]'`)
 
 All of the above are reasonably standard, and can be installed easily
 through package managers such as apt and homebrew.  The notebook
