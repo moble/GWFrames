@@ -63,7 +63,7 @@ using std::complex;
 
 
 // This macro is useful for debugging
-#define INFOTOCERR std::cerr << __FILE__ << ":" << __LINE__ << ":" << __func__ << std::endl;
+#define INFOTOCERR std::cerr << __FILE__ << ":" << __LINE__ << ":" << __func__ << std::endl
 
 const LadderOperatorFactorSingleton& LadderOperatorFactor = LadderOperatorFactorSingleton::Instance();
 
@@ -2073,12 +2073,12 @@ std::vector<Quaternions::Quaternion> GWFrames::Waveform::GetAlignmentsOfDecompos
     // phase), make sure that the rotating frame's XHat axis is more
     // parallel to the input nHat_t_fid than anti-parallel.
     if(nHat_t[i_t].dot(Frame(i_t)*R_eps[i_t]*Quaternions::xHat*R_eps[i_t].inverse()*Frame(i_t).inverse()) < 0) {
-      // std::cerr << __FILE__ << ":" << __LINE__ << ": Rotating by pi/2 about the z axis initially." << std::endl;
+      // std::cerr << __FILE__ << ":" << __LINE__ << ": Rotating by pi about the z axis initially." << std::endl;
       R_eps[i_t] = R_eps[i_t] * Quaternions::exp((M_PI/2.)*Quaternions::zHat);
     }
   }
 
-  return R_eps;
+  return UnflipRotors(R_eps);
 }
 
 /// Find the appropriate rotation to fix the orientation of the corotating frame.
@@ -2138,21 +2138,22 @@ void GWFrames::Waveform::GetAlignmentOfDecompositionFrameToModes(const double t_
   }
 
   // Get direction of angular-velocity vector near t_fid
-  Quaternion omegaHat;
   int i_t_fid = Quaternions::huntRight(t, t_fid);
-  unsigned int i1 = (i_t_fid-10<0 ? 0 : i_t_fid-10);
+  unsigned int i1 = (i_t_fid-5<0 ? 0 : i_t_fid-5);
   unsigned int i2 = (i1+11>int(t.size()) ? t.size() : i1+11);
   const Waveform Region = (this->SliceOfTimeIndicesWithEll2(i1,i2)).TransformToInertialFrame();
-  omegaHat = Quaternion(Region.AngularVelocityVector()[i_t_fid-i1]).normalized();
+  Quaternion omegaHat = Quaternion(Region.AngularVelocityVector()[i_t_fid-i1]).normalized();
   // omegaHat contains the components of that vector relative to the
   // inertial frame.  To get its components in this Waveform's
   // (possibly rotating) frame, we need to rotate it by the inverse
   // of this Waveform's `frame` data:
-  if(Region.Frame().size()>1) {
-    const Quaternion& R = Region.Frame(i_t_fid-i1);
+  if(Frame().size()>1) {
+    const Quaternion& R = Frame(i_t_fid);
+    // INFOTOCERR << "Rotating omegaHat by " << R.inverse() << endl;
     omegaHat = R.inverse() * omegaHat * R;
-  } else if(Region.Frame().size()==1) {
-    const Quaternion& R = Region.Frame(0);
+  } else if(Frame().size()==1) {
+    const Quaternion& R = Frame(0);
+    // INFOTOCERR << "Rotating omegaHat by " << R.inverse() << endl;
     omegaHat = R.inverse() * omegaHat * R;
   }
 
@@ -2161,11 +2162,15 @@ void GWFrames::Waveform::GetAlignmentOfDecompositionFrameToModes(const double t_
   const Quaternion R_f0 = Instant.Frame(0);
 
   // V_f is the dominant eigenvector of <LL>, suggested by O'Shaughnessy et al.
-  const Quaternion V_f = Quaternions::Quaternion(Instant.OShaughnessyEtAlVector(Lmodes)[0]);
-  const Quaternion V_f_aligned = (omegaHat.dot(V_f.normalized()) < 0 ? -V_f : V_f);
+  const Quaternion V_f = Quaternions::Quaternion(Instant.OShaughnessyEtAlVector(Lmodes)[0]).normalized();
+  const Quaternion V_f_aligned = (omegaHat.dot(V_f) < 0 ? -V_f : V_f);
 
   // R_V_f is the rotor taking the Z axis onto V_f
-  const Quaternion R_V_f = Quaternions::sqrtOfRotor(-V_f_aligned*Quaternions::Quaternion(0,0,0,1));
+  const Quaternion R_V_f = Quaternions::sqrtOfRotor(-V_f_aligned*Quaternions::zHat);
+  // INFOTOCERR << omegaHat << "\n"
+  //            << V_f << "\n"
+  //            << V_f_aligned << "\n"
+  //            << R_V_f * Quaternions::zHat * R_V_f.conjugate() << "\n" << std::endl;
 
   // Now rotate Instant so that its z axis is aligned with V_f
   Instant.RotateDecompositionBasis(R_V_f);
@@ -2181,8 +2186,12 @@ void GWFrames::Waveform::GetAlignmentOfDecompositionFrameToModes(const double t_
   // phase), make sure that the rotating frame's XHat axis is more
   // parallel to the input nHat_t_fid than anti-parallel.
   if(nHat_t_fid.dot(R_f0*R_eps*Quaternions::xHat*R_eps.inverse()*R_f0.inverse()) < 0) {
-    // std::cerr << __FILE__ << ":" << __LINE__ << ": Rotating by pi/2 about the z axis initially." << std::endl;
     R_eps = R_eps * Quaternions::exp((M_PI/2.)*Quaternions::zHat);
+    // INFOTOCERR << ": Rotating by pi about the z axis initially.\n"
+    //            << nHat_t_fid << "\n"
+    //            << R_f0*R_eps*Quaternions::xHat*R_eps.inverse()*R_f0.inverse() << "\n"
+    //            << R_f0 << "\n"
+    //            << R_eps << "\n" << std::endl;
   }
 }
 
@@ -2728,6 +2737,19 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B, 
   W_A.AlignDecompositionFrameToModes(t_mid, nHat_A);
   W_B.AlignDecompositionFrameToModes(t_mid, nHat_B[Quaternions::hunt(t_nHat_B, t_mid)]);
 
+  // { // Just for debugging temporarily
+  //   vector<double> NewTime(1);
+  //   NewTime[0] = t_mid;
+  //   Waveform InstantA = W_A.Interpolate(NewTime);
+  //   Waveform InstantB = W_B.Interpolate(NewTime);
+  //   INFOTOCERR << "XHat_A" << InstantA.Frame(0) * Quaternions::xHat * InstantA.Frame(0).conjugate() << endl;
+  //   INFOTOCERR << "ZHat_A" << InstantA.Frame(0) * Quaternions::zHat * InstantA.Frame(0).conjugate() << endl;
+  //   INFOTOCERR << "XHat_B" << InstantB.Frame(0) * Quaternions::xHat * InstantB.Frame(0).conjugate() << endl;
+  //   INFOTOCERR << "ZHat_B" << InstantB.Frame(0) * Quaternions::zHat * InstantB.Frame(0).conjugate() << endl;
+  //   exit(0);
+  //   throw(GWFrames_NotYetImplemented);
+  // }
+
   WaveformAligner Aligner(W_A, W_B, nHat_B, t_nHat_B, t_1, t_2);
   const std::vector<double>& t_A = Aligner.t_A;
   const std::vector<Quaternions::Quaternion>& R_fA = Aligner.R_fA;
@@ -2755,8 +2777,9 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B, 
     vector<Quaternion> XiIntegral(deltats.size());
     for(unsigned int i=0; i<XiIntegral.size(); ++i) {
       XiIntegral[i] = Quaternions::DefiniteIntegral(R_fA*Aligner.Rbar_epsB(t_mid+deltats[i])*Aligner.Rbar_fB(t_A+deltats[i]), t_A);
-      // cout << "XiIntegral[" << i << " / " << XiIntegral.size() << "] = " << XiIntegral[i]
-      //      << "\t" << deltats[i]<< "\t\t(" << __FILE__ << ":" << __LINE__ << ")" << endl;
+      // INFOTOCERR << "XiIntegral[" << i << " / " << XiIntegral.size() << "] = " << XiIntegral[i]
+      //            << "\tabs(XiIntegral[i])=" << Quaternions::abs(XiIntegral[i])
+      //            << "\t" << deltats[i]<< "\t\t(" << __FILE__ << ":" << __LINE__ << ")" << endl;
     }
 
     // Find the best value
@@ -2777,7 +2800,7 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B, 
   }
 
   gettimeofday(&now, NULL); unsigned long long tThen = now.tv_usec + (unsigned long long)now.tv_sec * 1000000;
-  std::cout << __FILE__ << ":" << __LINE__ << ": First stage took " << (tThen-tNow)/1000000.0L << " seconds." << std::endl;
+  INFOTOCERR << "First stage took " << (tThen-tNow)/1000000.0L << " seconds." << std::endl;
 
   // Next, minimize algorithmically, in four dimensions, accounting
   // for all adjustments in generality.  This is very slow, but we've
@@ -2879,7 +2902,7 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B, 
     W_B.SetFrame(R_delta*W_B.Frame());
 
     gettimeofday(&now, NULL); unsigned long long tWhen = now.tv_usec + (unsigned long long)now.tv_sec * 1000000;
-    std::cout << __FILE__ << ":" << __LINE__ << ": Second stage took " << (tWhen-tThen)/1000000.0L << " seconds with " << iter << " iterations." << std::endl;
+    INFOTOCERR << "Second stage took " << (tWhen-tThen)/1000000.0L << " seconds with " << iter << " iterations." << std::endl;
   }
 
   return;
