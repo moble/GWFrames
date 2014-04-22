@@ -1,0 +1,142 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Gwframes by moble</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">Gwframes</h1>
+        <p class="header">Manipulate gravitational waveforms—changing frames, and so on.</p>
+
+        <ul>
+          <li class="download"><a class="buttons" href="https://github.com/moble/GWFrames/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/moble/GWFrames/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="https://github.com/moble/GWFrames">View On GitHub</a></li>
+        </ul>
+
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/moble">moble</a></p>
+
+
+      </header>
+      <section>
+        <h1>
+<a name="gwframes" class="anchor" href="#gwframes"><span class="octicon octicon-link"></span></a>GWFrames</h1>
+
+<p>Manipulate gravitational waveforms—changing frames, and so on.</p>
+
+<p>The code in this project extends code written for the paper "<a href="http://arxiv.org/abs/1302.2919">Angular
+velocity of gravitational radiation from precessing binaries and the
+corotating frame</a>", giving an explicit
+implementation of the methods discussed in it.  The first commit of
+this project is the last commit of the paper's project.</p>
+
+<p>The license for using this software is basically open (see the LICENSE
+file in this directory), though citations to the original paper are
+appreciated, where relevant.  Also, if your work depends on features
+found in this module that have not been described in a separate
+publication of mine, I would appreciate the opportunity to be a
+coauthor.</p>
+
+<p>Note that this code is not optimized.  In many cases, obvious
+optimizations were rejected in favor of clearer or simpler code, or
+code that simply reflected the discussion in the paper more directly.
+The code is generally more than fast enough for interactive use on
+individual waveforms, but there is plenty of room for improvement.  In
+particular, rotations may be painfully slow for large data sets.</p>
+
+<h1>
+<a name="build-requirements" class="anchor" href="#build-requirements"><span class="octicon octicon-link"></span></a>Build requirements</h1>
+
+<p>To build just the C++ code:</p>
+
+<ul>
+<li>C++ compiler</li>
+<li>
+<a href="http://www.gnu.org/software/gsl/">GNU Scientific Library</a>, built as a shared library</li>
+</ul><p>To use the optional—but highly recommended—Python interface:</p>
+
+<ul>
+<li>
+<a href="http://www.swig.org/">SWIG</a> v2.0 or greater</li>
+<li>
+<a href="http://www.python.org/getit/">Python</a> v2.7.4 or greater (but not v3.*), with development headers (python-dev or similar)</li>
+<li>
+<a href="http://www.hdfgroup.org/HDF5/">HDF5</a> v1.8.10 or greater, built as a shared library with development headers (libhdf5-dev or similar)</li>
+</ul><p>And the following, for which python's automatic installation utility
+<a href="http://www.pip-installer.org"><code>pip</code></a> can do all the work:</p>
+
+<ul>
+<li>
+<a href="http://www.numpy.org/">NumPy</a> v1.7 or greater (<code>pip install --user numpy</code>)</li>
+<li>
+<a href="http://matplotlib.org/">Matplotlib</a> v1.2 or greater (<code>pip install --user matplotlib</code>)</li>
+<li>
+<a href="http://code.google.com/p/h5py/">h5py</a> v2.1 or greater (<code>pip install --user h5py</code>)</li>
+<li>
+<a href="http://ipython.org/">IPython</a> v1.0 or greater, with notebook (<code>pip install --user ipython \[notebook\]</code>)</li>
+</ul><p>N.B.: GSL, HDF5, and Python must all be compiled with the same
+compiler.  In particular, if you are installing this on a cluster,
+check to ensure that the requirements are compiled with the same
+compiler.</p>
+
+<p>All of the above are reasonably standard, and can be installed easily
+through package managers such as apt and homebrew.  The notebook
+interface for IPython provides an environment much like the
+Mathematica notebook interface.  The examples are provided in a
+notebook (*.ipynb) file.</p>
+
+<h1>
+<a name="getting-started" class="anchor" href="#getting-started"><span class="octicon octicon-link"></span></a>Getting started</h1>
+
+<p>The code is mostly in the form of C++, for speed.  All functions are
+provided in the <code>GWFrames</code> namespace.  The interface is reasonably
+straightforward, and can easily be included into and compiled with
+other code.  Look for examples of how to do this in the <code>C++Example</code>
+directory.  (See below for a few more details.)</p>
+
+<p>However, it is mostly intended to be used through the interface to
+python.  With the above-listed requirements, build the code and
+install to the user directory.  To do this, run <code>make</code> or</p>
+
+<pre><code>python setup.py install --user
+</code></pre>
+
+<p>After this, you should be able to start a new python session (in any
+directory) and <code>import GWFrames</code>, which is the basic module provided
+by this code.  The primary objects are <code>Quaternion</code> and <code>Waveform</code>
+objects, with various methods defined for each.  The IPython notebook
+<code>Docs/Documentation.ipynb</code> contains extensive examples, following the outline
+of the paper.  To use it, run</p>
+
+<pre><code>ipython notebook Documentation.ipynb --pylab
+</code></pre>
+
+<p>Alternatively, this code may be used directly through its C++
+interface.  A simple example is provided in the <code>C++Example</code>
+directory, along with the Makefiles needed to build all the necessary
+code.  If it does not compile easily, make sure the various paths in
+<em>both</em> Makefiles are set properly.</p>
+
+<p>Detailed documentation of most functions may be found through python's
+<code>help</code> function, or by running <code>make</code> in the <code>Docs</code> subdirectory, and
+reading <code>Docs/html/index.html</code>.</p>
+      </section>
+      <footer>
+        <p><small>Hosted on <a href="http://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+		
+  </body>
+</html>
