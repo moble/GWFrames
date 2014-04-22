@@ -27,7 +27,7 @@
 #include "Waveforms.hpp"
 #include "Utilities.hpp"
 #include "Quaternions.hpp"
-#include "SphericalFunctions/Quaternions/Utilities.hpp"
+#include "Quaternions/Utilities.hpp"
 #include "IntegrateAngularVelocity.hpp"
 #include "SphericalFunctions/SWSHs.hpp"
 #include "Errors.hpp"

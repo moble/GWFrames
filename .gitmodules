@@ -8,3 +8,6 @@
 [submodule "Code/SpacetimeAlgebra"]
 	path = Code/SpacetimeAlgebra
 	url = git@github.com:MOBle/SpacetimeAlgebra.git
+[submodule "Code/Quaternions"]
+	path = Code/Quaternions
+	url = git@github.com:MOBle/Quaternions.git

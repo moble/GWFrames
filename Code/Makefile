@@ -47,7 +47,7 @@ MikeHappy :
 	build=build/config.mk $(MAKE) -C spinsfast && cp spinsfast/lib/spinsfast.so $(shell python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")/
 	$(VIRTUAL_ENV)/bin/python setup.py install --prefix=$(VIRTUAL_ENV)
 
-#	cd SphericalFunctions/Quaternions && $(VIRTUAL_ENV)/bin/python setup.py install --prefix=$(VIRTUAL_ENV)
+#	cd Quaternions && $(VIRTUAL_ENV)/bin/python setup.py install --prefix=$(VIRTUAL_ENV)
 #	cd SphericalFunctions && $(VIRTUAL_ENV)/bin/python setup.py install --prefix=$(VIRTUAL_ENV)
 
 
@@ -65,7 +65,7 @@ MikeHappy :
 # Library) headers and libraries.  The following paths are the most
 # common places for these to be installed.  If compilation doesn't
 # work, correct these paths.
-INCFLAGS = -I/opt/local/include -I/usr/local/include -Ispinsfast/include -ISphericalFunctions/Quaternions -ISpacetimeAlgebra
+INCFLAGS = -I/opt/local/include -I/usr/local/include -Ispinsfast/include -IQuaternions -ISpacetimeAlgebra
 LIBFLAGS = -L/opt/local/lib -L/usr/local/lib -Lspinsfast/lib
 ifdef GSL_HOME
 	INCFLAGS := -I${GSL_HOME}/include ${INCFLAGS}
@@ -85,7 +85,7 @@ OPT = -O3 -Wall -Wno-deprecated
 .PHONY : all cpp clean allclean realclean swig spinsfast SphericalFunctions
 
 # If needed, we can also make object files to use in other C++ programs
-cpp : Utilities.o SphericalFunctions/Quaternions/Quaternions.o Waveforms.o PNWaveforms.o Scri.o SpacetimeAlgebra/SpacetimeAlgebra.o
+cpp : Utilities.o Quaternions/Quaternions.o Waveforms.o PNWaveforms.o Scri.o SpacetimeAlgebra/SpacetimeAlgebra.o
 
 # This is how to build those object files
 %.o : %.cpp %.hpp Errors.hpp

@@ -5348,7 +5348,7 @@ SWIG_AsVal_unsigned_SS_int (PyObject * obj, unsigned int *val)
 
 
 SWIGINTERNINLINE PyObject*
-SWIG_From_std_complex_Sl_double_Sg_  (/*@SWIG:/home/boyle/.local/share/swig/3.0.0/typemaps/swigmacros.swg,104,%ifcplusplus@*/
+SWIG_From_std_complex_Sl_double_Sg_  (/*@SWIG:/usr/local/Cellar/swig/3.0.0/share/swig/3.0.0/typemaps/swigmacros.swg,104,%ifcplusplus@*/
 
 const std::complex<double>&
 

@@ -44,10 +44,10 @@ import_array();
 //// The following translates between c++ and python types nicely ////
 //////////////////////////////////////////////////////////////////////
 
-%import "../SphericalFunctions/Quaternions/Quaternions.i"
-%import "../SphericalFunctions/Quaternions/Quaternions_typemaps.i"
+%import "../Quaternions/Quaternions.i"
+%import "../Quaternions/Quaternions_typemaps.i"
 //%import "../SphericalFunctions/SphericalFunctions.i"
-%include "../SphericalFunctions/Quaternions/vector_typemaps.i"
+%include "../Quaternions/vector_typemaps.i"
 
 %include <typemaps.i>
 %include <stl.i>
