@@ -1,23 +1,3 @@
-#ifndef DOXYGEN
-
-#ifdef __restrict
-#define restrict __restrict
-#endif
-
-extern "C" {
-  #include <stdlib.h>
-  #include <stdio.h>
-  #include <math.h>
-  #include <complex.h>
-  #include "fftw3.h"
-  #include "alm.h"
-  #include "wigner_d_halfpi.h"
-  #include "spinsfast_forward.h"
-  #include "spinsfast_backward.h"
-}
-
-#endif // DOXYGEN
-
 /// Pointwise multiply this object by another Waveform object
 template <typename Op>
 GWFrames::Waveform GWFrames::Waveform::BinaryOp(const GWFrames::Waveform& B) const {
@@ -108,7 +88,7 @@ GWFrames::Waveform GWFrames::Waveform::BinaryOp(const GWFrames::Waveform& B) con
   int N_theta = 2*lMax + 1;
 
   // These will be work arrays
-  const std::complex<double> I(0.0,1.0);
+  // const std::complex<double> I(0.0,1.0);
   const std::complex<double> zero(0.0,0.0);
   std::vector<std::complex<double> > almA(Nlm);
   std::vector<std::complex<double> > almB(Nlm);

@@ -24,6 +24,10 @@
 #include <gsl/gsl_linalg.h>
 #include <gsl/gsl_multimin.h>
 #include <gsl/gsl_multifit.h>
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-variable"
+#include "SpacetimeAlgebra.hpp"
+#pragma clang diagnostic pop
 #include "Waveforms.hpp"
 #include "Utilities.hpp"
 #include "Quaternions.hpp"
@@ -31,11 +35,6 @@
 #include "IntegrateAngularVelocity.hpp"
 #include "SphericalFunctions/SWSHs.hpp"
 #include "Errors.hpp"
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunused-variable"
-#include "SpacetimeAlgebra.hpp"
-#pragma clang diagnostic pop
 
 using Quaternions::Quaternion;
 using Quaternions::QuaternionArray;
@@ -1292,7 +1291,7 @@ vector<Matrix> GWFrames::Waveform::LLMatrix(vector<int> Lmodes) const {
   // LzLy = -i(  Lz   )(L+ - L-) / 2
   // LzLz =   (  Lz   )(  Lz   )
   vector<Matrix> ll(NTimes(), Matrix(3,3));
-  const complex<double> I(0.0,1.0);
+  const complex<double> ImaginaryI(0.0,1.0);
   if(Lmodes.size()==0) {
     Lmodes.push_back(lm[0][0]);
     for(unsigned int i_m=0; i_m<NModes(); ++i_m) {
@@ -1321,13 +1320,13 @@ vector<Matrix> GWFrames::Waveform::LLMatrix(vector<int> Lmodes) const {
         const complex<double> LzLz = conj(data[iM][iTime]) * double(M) * double(M) * data[iM][iTime];
         //
         const complex<double> LxLx = 0.25 * (LpLp + LmLm + LmLp + LpLm);
-        const complex<double> LxLy = -0.25 * I * (LpLp - LmLm + LmLp - LpLm);
+        const complex<double> LxLy = -0.25 * ImaginaryI * (LpLp - LmLm + LmLp - LpLm);
         const complex<double> LxLz = 0.5 * (LpLz + LmLz);
-        const complex<double> LyLx = -0.25 * I * (LpLp - LmLp + LpLm - LmLm);
+        const complex<double> LyLx = -0.25 * ImaginaryI * (LpLp - LmLp + LpLm - LmLm);
         const complex<double> LyLy = -0.25 * (LpLp - LmLp - LpLm + LmLm);
-        const complex<double> LyLz = -0.5 * I * (LpLz - LmLz);
+        const complex<double> LyLz = -0.5 * ImaginaryI * (LpLz - LmLz);
         const complex<double> LzLx = 0.5 * (LzLp + LzLm);
-        const complex<double> LzLy = -0.5 * I * (LzLp - LzLm);
+        const complex<double> LzLy = -0.5 * ImaginaryI * (LzLp - LzLm);
         //const complex<double> LzLz = (LzLz);
         ll[iTime](0,0) += real( LxLx );
         ll[iTime](0,1) += real( LxLy + LyLx )/2.0;
@@ -4146,7 +4145,7 @@ GWFrames::Waveform GWFrames::Waveform::ApplySupertranslation(std::vector<std::co
   const unsigned int ntimes = A.NTimes();
   const unsigned int nmodes = A.NModes();
   const complex<double> zero(0.0,0.0);
-  const complex<double> I(0.0,1.0);
+  const complex<double> ImaginaryI(0.0,1.0);
 
   // Copy infrastructure to new Waveform
   Waveform B;

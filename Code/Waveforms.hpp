@@ -4,10 +4,24 @@
 #ifndef WAVEFORMS_HPP
 #define WAVEFORMS_HPP
 
+#include <complex>
+#ifndef DOXYGEN
+#ifdef __restrict
+#define restrict __restrict
+#endif
+extern "C" {
+  #include "fftw3.h"
+  #include "alm.h"
+  #include "wigner_d_halfpi.h"
+  #include "spinsfast_forward.h"
+  #include "spinsfast_backward.h"
+}
+#undef complex
+#endif // DOXYGEN
 #include <cmath>
 #include <string>
 #include <sstream>
-#include <complex>
+
 #include "Quaternions.hpp"
 #include "Utilities.hpp"
 #include "Errors.hpp"
