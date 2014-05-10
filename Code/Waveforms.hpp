@@ -148,6 +148,7 @@ namespace GWFrames {
     unsigned int FindModeIndex(const int L, const int M) const;
     unsigned int FindModeIndexWithoutError(const int L, const int M) const;
     std::vector<double> Contrast(const int L, const int M) const;
+    std::vector<double> NormalizedAsymmetry() const;
     std::vector<std::complex<double> > DataDot(const unsigned int Mode) const;
     Waveform& Differentiate();
     std::vector<double> Norm(const bool TakeSquareRoot=false) const;

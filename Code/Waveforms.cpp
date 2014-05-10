@@ -806,6 +806,36 @@ std::vector<double> GWFrames::Waveform::Contrast(const int L, const int M) const
   return contrast;
 }
 
+/// Return the normalized asymmetry as a function of time
+std::vector<double> GWFrames::Waveform::NormalizedAsymmetry() const {
+  ///
+  /// This function just returns the value of the normalized asymmetry
+  /// \f$\hat{\alpha}\f$ defined by Boyle et al. (2014), which is the
+  /// difference between the field at a point and its conjugate at the
+  /// antipodal point, the amplitude squared and integrated over the
+  /// sphere.  The normalization is just the `Norm` of the
+  /// waveform---its overall power at each instant.
+
+  const unsigned int ntimes = NTimes();
+  const int ellMax = EllMax();
+  std::vector<double> asymmetry(ntimes);
+  double diff,norm;
+  for(unsigned int i_t=0; i_t<ntimes; ++i_t) {
+    diff = 0.;
+    norm = 0.;
+    for(int ell=2; ell<=ellMax; ++ell) {
+      for(int m=-ell; m<=ell; ++m) {
+        const complex<double> h_ell_m = Data(FindModeIndexWithoutError(ell,m), i_t);
+        const complex<double> hbar_ell_mm = std::conj(Data(FindModeIndexWithoutError(ell,-m), i_t));
+        diff += std::norm(h_ell_m - std::pow(-1,m) * hbar_ell_mm);
+        norm += std::norm(h_ell_m);
+      }
+    }
+    asymmetry[i_t] = std::sqrt(diff/norm);
+  }
+  return asymmetry;
+}
+
 
 /// Rotate the physical content of the Waveform by a constant rotor.
 GWFrames::Waveform& GWFrames::Waveform::RotatePhysicalSystem(const Quaternions::Quaternion& R_phys) {
