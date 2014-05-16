@@ -29,6 +29,7 @@ namespace GWFrames {
   std::vector<std::vector<double> > operator-(const std::vector<std::vector<double> >& a, const std::vector<std::vector<double> >& b);
   std::vector<double> pow(const std::vector<double>& a, const double b);
   std::vector<double> Unwrap(const std::vector<double>& In);
+  bool xINy(const int x, const std::vector<int>& y);
 
   // Integrals and derivatives
   std::vector<double> ScalarIntegral(const std::vector<double>& fdot, const std::vector<double>& t);

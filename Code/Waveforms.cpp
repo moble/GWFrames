@@ -40,6 +40,7 @@ using Quaternions::Quaternion;
 using Quaternions::QuaternionArray;
 using GWFrames::Matrix;
 using SphericalFunctions::LadderOperatorFactorSingleton;
+using SphericalFunctions::Wigner3j;
 using GWFrames::abs;
 using Quaternions::PrescribedRotation;
 using Quaternions::FrameFromZ;
@@ -63,6 +64,8 @@ using std::complex;
 
 // This macro is useful for debugging
 #define INFOTOCERR std::cerr << __FILE__ << ":" << __LINE__ << ":" << __func__ << std::endl
+
+const complex<double> ImaginaryI(0.0,1.0);
 
 const LadderOperatorFactorSingleton& LadderOperatorFactor = LadderOperatorFactorSingleton::Instance();
 
@@ -807,7 +810,8 @@ std::vector<double> GWFrames::Waveform::Contrast(const int L, const int M) const
 }
 
 /// Return the normalized asymmetry as a function of time
-std::vector<double> GWFrames::Waveform::NormalizedAsymmetry() const {
+std::vector<double> GWFrames::Waveform::NormalizedAsymmetry(std::vector<int> LModesForAsymmetry) const {
+  /// \param LModesForAsymmetry \f$\ell\f$ modes to use when calculating numerator
   ///
   /// This function just returns the value of the normalized asymmetry
   /// \f$\hat{\alpha}\f$ defined by Boyle et al. (2014), which is the
@@ -815,6 +819,57 @@ std::vector<double> GWFrames::Waveform::NormalizedAsymmetry() const {
   /// antipodal point, the amplitude squared and integrated over the
   /// sphere.  The normalization is just the `Norm` of the
   /// waveform---its overall power at each instant.
+  ///
+  /// By default, all ell modes in the data are used for both the
+  /// asymmetry and the normalization factor.  If an argument is
+  /// input, only modes with ell values in that argument will be used
+  /// to calculate the asymmetry.  All modes will always be used to
+  /// calculate the normalization.
+
+  const unsigned int ntimes = NTimes();
+  const int ellMax = EllMax();
+  std::vector<double> asymmetry(ntimes);
+  double diff,norm;
+  for(unsigned int i_t=0; i_t<ntimes; ++i_t) {
+    diff = 0.;
+    norm = 0.;
+    for(int ell=2; ell<=ellMax; ++ell) {
+      if(LModesForAsymmetry.size()==0 || GWFrames::xINy(ell,LModesForAsymmetry)) {
+        for(int m=-ell; m<=ell; ++m) {
+          const complex<double> h_ell_m = Data(FindModeIndexWithoutError(ell,m), i_t);
+          const complex<double> hbar_ell_mm = std::conj(Data(FindModeIndexWithoutError(ell,-m), i_t));
+          diff += std::norm(h_ell_m - std::pow(-1,m) * hbar_ell_mm);
+          norm += std::norm(h_ell_m);
+        }
+      } else{
+        for(int m=-ell; m<=ell; ++m) {
+          const complex<double> h_ell_m = Data(FindModeIndexWithoutError(ell,m), i_t);
+          norm += std::norm(h_ell_m);
+        }
+      }
+    }
+    asymmetry[i_t] = std::sqrt(diff/norm);
+  }
+  return asymmetry;
+}
+
+
+/// Return the normalized asymmetry as a function of time
+std::vector<double> GWFrames::Waveform::FakeBadNormalizedAsymmetry(int mMode) const {
+  /// \param LModesForAsymmetry \f$\ell\f$ modes to use when calculating numerator
+  ///
+  /// This function just returns the value of the normalized asymmetry
+  /// \f$\hat{\alpha}\f$ defined by Boyle et al. (2014), which is the
+  /// difference between the field at a point and its conjugate at the
+  /// antipodal point, the amplitude squared and integrated over the
+  /// sphere.  The normalization is just the `Norm` of the
+  /// waveform---its overall power at each instant.
+  ///
+  /// By default, all ell modes in the data are used for both the
+  /// asymmetry and the normalization factor.  If an argument is
+  /// input, only modes with ell values in that argument will be used
+  /// to calculate the asymmetry.  All modes will always be used to
+  /// calculate the normalization.
 
   const unsigned int ntimes = NTimes();
   const int ellMax = EllMax();
@@ -826,14 +881,72 @@ std::vector<double> GWFrames::Waveform::NormalizedAsymmetry() const {
     for(int ell=2; ell<=ellMax; ++ell) {
       for(int m=-ell; m<=ell; ++m) {
         const complex<double> h_ell_m = Data(FindModeIndexWithoutError(ell,m), i_t);
-        const complex<double> hbar_ell_mm = std::conj(Data(FindModeIndexWithoutError(ell,-m), i_t));
-        diff += std::norm(h_ell_m - std::pow(-1,m) * hbar_ell_mm);
+        if(ell==2 && (m==-mMode || m==mMode)) {
+          const complex<double> hbar_ell_mm = std::conj(Data(FindModeIndexWithoutError(ell,-m), i_t));
+          diff += std::norm(h_ell_m - std::pow(-1,m) * hbar_ell_mm);
+        }
         norm += std::norm(h_ell_m);
       }
     }
     asymmetry[i_t] = std::sqrt(diff/norm);
   }
   return asymmetry;
+}
+
+/// Evaluate the dipole moment of the waveform
+std::vector<std::vector<double> > GWFrames::Waveform::DipoleMoment(int ellMax) const {
+  /// \param ellMax Maximum ell mode to include [default: all]
+  ///
+  /// This function evaluates the dipole moment of the waveform's
+  /// magnitude, defined as \f$\vec{d} = \int \hat{n} \lvert f
+  /// \rvert^2 d\Omega\f$.  Up to a geometric factor, this function
+  /// applied to \f$\dot{h}\f$ is the rate of emission of momentum in
+  /// gravitational waves.
+
+  if(ellMax==0) {
+    ellMax = EllMax();
+  }
+
+  vector<vector<double> > D(NTimes(), vector<double>(3));
+  vector<complex<double> > d(3);
+
+  for(int i_t=0; i_t<NTimes(); ++i_t) {
+    d[0] = 0.0;
+    d[1] = 0.0;
+    d[2] = 0.0;
+    for(int ell=2; ell<=ellMax; ++ell) {
+      for(int m=-ell; m<=ell; ++m) {
+        for(int ellPrime=std::max(ell-1,2); ellPrime<=std::min(ell+1,ellMax); ++ellPrime) {
+          const double sqrtFactor = std::sqrt((2*ell+1)*(2*ellPrime+1)/2.);
+          const double Wigner3j_A = Wigner3j(ell, ellPrime, 1, 2, -2, 0);
+          for(int mPrime=std::max(m-1,-ellPrime); mPrime<=std::min(m+1,ellPrime); ++mPrime) {
+            // This is the whole thing, except for the n_j modes
+            const complex<double> BasicFactor = Data(FindModeIndex(ell,m), i_t) * std::conj(Data(FindModeIndex(ellPrime,mPrime), i_t))
+              * std::pow(-1,mPrime) * sqrtFactor * Wigner3j(ell, ellPrime, 1, m, -mPrime, mPrime-m) * Wigner3j_A;
+            if(mPrime==m) { // This will only affect the z component
+              d[2] += std::sqrt(2) * BasicFactor;
+            } else { // This will only affect the x and y components
+              d[0] += (mPrime-m==1 ? -1. : 1.) * BasicFactor;
+              d[1] += ImaginaryI * BasicFactor;
+            }
+            // if(d[0]!=d[0] || d[1]!=d[1] || d[2]!=d[2]) { // DEBUG NANs
+            //   INFOTOCERR << i_t << ": (" << ell << "," << m << "); (" << ellPrime << "," << mPrime
+            //              << ")\n" << Data(FindModeIndex(ell,m), i_t) << " * " << std::conj(Data(FindModeIndex(ellPrime,mPrime), i_t))
+            //              << " * " << std::pow(-1,mPrime) << "*" << sqrtFactor << " * " << Wigner3j(ell, ellPrime, 1, m, -mPrime, mPrime-m)
+            //              << " * " << Wigner3j_A
+            //              << "=" << BasicFactor << "\t[" << d[0] << "," << d[1] << "," << d[2] << "]" << std::endl;
+            //   throw(GWFrames_ValueError);
+            // }
+          }
+        }
+      }
+    }
+    D[i_t][0] = d[0].real();
+    D[i_t][1] = d[1].real();
+    D[i_t][2] = d[2].real();
+  }
+
+  return D;
 }
 
 

@@ -3485,14 +3485,13 @@ SwigPyBuiltin_SetMetaType (PyTypeObject *type, PyTypeObject *metatype)
 #define SWIGTYPE_p_std__vectorT_GWFrames__Waveform_std__allocatorT_GWFrames__Waveform_t_t swig_types[29]
 #define SWIGTYPE_p_std__vectorT_Quaternions__Quaternion_std__allocatorT_Quaternions__Quaternion_t_t swig_types[30]
 #define SWIGTYPE_p_std__vectorT_double_std__allocatorT_double_t_t swig_types[31]
-#define SWIGTYPE_p_std__vectorT_int_std__allocatorT_int_t_t swig_types[32]
-#define SWIGTYPE_p_std__vectorT_std__complexT_double_t_std__allocatorT_std__complexT_double_t_t_t swig_types[33]
-#define SWIGTYPE_p_std__vectorT_std__vectorT_double_std__allocatorT_double_t_t_std__allocatorT_std__vectorT_double_std__allocatorT_double_t_t_t_t swig_types[34]
-#define SWIGTYPE_p_swig__SwigPyIterator swig_types[35]
-#define SWIGTYPE_p_unsigned_int swig_types[36]
-#define SWIGTYPE_p_value_type swig_types[37]
-static swig_type_info *swig_types[39];
-static swig_module_info swig_module = {swig_types, 38, 0, 0, 0, 0};
+#define SWIGTYPE_p_std__vectorT_std__complexT_double_t_std__allocatorT_std__complexT_double_t_t_t swig_types[32]
+#define SWIGTYPE_p_std__vectorT_std__vectorT_double_std__allocatorT_double_t_t_std__allocatorT_std__vectorT_double_std__allocatorT_double_t_t_t_t swig_types[33]
+#define SWIGTYPE_p_swig__SwigPyIterator swig_types[34]
+#define SWIGTYPE_p_unsigned_int swig_types[35]
+#define SWIGTYPE_p_value_type swig_types[36]
+static swig_type_info *swig_types[38];
+static swig_module_info swig_module = {swig_types, 37, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -9132,40 +9131,84 @@ SWIGINTERN PyObject *_wrap_Boost(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   SwigValueWrapper< std::vector< double,std::allocator< double > > > arg1 ;
   SwigValueWrapper< std::vector< double,std::allocator< double > > > arg2 ;
-  void *argp1 ;
-  int res1 = 0 ;
-  void *argp2 ;
-  int res2 = 0 ;
+  std::vector< double > temp1 ;
+  std::vector< double > temp2 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   Quaternions::Quaternion result;
   
   if (!PyArg_ParseTuple(args,(char *)"OO:Boost",&obj0,&obj1)) SWIG_fail;
   {
-    res1 = SWIG_ConvertPtr(obj0, &argp1, SWIGTYPE_p_std__vectorT_double_std__allocatorT_double_t_t,  0  | 0);
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Boost" "', argument " "1"" of type '" "GWFrames::ThreeVector""'"); 
-    }  
-    if (!argp1) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Boost" "', argument " "1"" of type '" "GWFrames::ThreeVector""'");
+    if(PyArray_Check(obj0)) {
+      PyArrayObject *xa = reinterpret_cast<PyArrayObject*>(obj0);
+      if(PyArray_TYPE(xa) != NPY_DOUBLE) {
+        SWIG_exception(SWIG_TypeError, "(1) numpy array of 'double' expected."	\
+          " Make sure that the numpy array use dtype=double.");
+      }
+      const std::size_t size = PyArray_DIM(xa, 0);
+      temp1.resize(size);
+      double* array = static_cast<double*>(PyArray_DATA(xa));
+      if(PyArray_ISCONTIGUOUS(xa)) {
+        std::copy(array, array + size, temp1.begin());
+      } else {
+        const npy_intp strides = PyArray_STRIDE(xa, 0)/sizeof(double);
+        for (std::size_t i = 0; i < size; i++)
+        temp1[i] = array[i*strides];
+      }
+    } else if(PySequence_Check(obj0)) {
+      Py_ssize_t size = PySequence_Size(obj0);
+      temp1.resize(size);
+      PyObject* item;
+      for(Py_ssize_t i=0; i<size; ++i) {
+        item = PySequence_GetItem(obj0, i);
+        if(!SWIG_IsOK(SWIG_AsVal_double (item, &temp1[i]))) {
+          Py_DECREF(item);
+          SWIG_exception(SWIG_TypeError, "expected items of sequence to be of type "\
+            "\"double\" in argument 1");
+        }
+        Py_DECREF(item);
+      }
     } else {
-      GWFrames::ThreeVector * temp = reinterpret_cast< GWFrames::ThreeVector * >(argp1);
-      arg1 = *temp;
-      if (SWIG_IsNewObj(res1)) delete temp;
+      SWIG_exception(SWIG_TypeError, "(2) numpy array of 'double' expected. " \
+        "Make sure that the numpy array use dtype=double.");
     }
+    arg1 = temp1;
   }
   {
-    res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_std__vectorT_double_std__allocatorT_double_t_t,  0  | 0);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Boost" "', argument " "2"" of type '" "GWFrames::ThreeVector""'"); 
-    }  
-    if (!argp2) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Boost" "', argument " "2"" of type '" "GWFrames::ThreeVector""'");
+    if(PyArray_Check(obj1)) {
+      PyArrayObject *xa = reinterpret_cast<PyArrayObject*>(obj1);
+      if(PyArray_TYPE(xa) != NPY_DOUBLE) {
+        SWIG_exception(SWIG_TypeError, "(1) numpy array of 'double' expected."	\
+          " Make sure that the numpy array use dtype=double.");
+      }
+      const std::size_t size = PyArray_DIM(xa, 0);
+      temp2.resize(size);
+      double* array = static_cast<double*>(PyArray_DATA(xa));
+      if(PyArray_ISCONTIGUOUS(xa)) {
+        std::copy(array, array + size, temp2.begin());
+      } else {
+        const npy_intp strides = PyArray_STRIDE(xa, 0)/sizeof(double);
+        for (std::size_t i = 0; i < size; i++)
+        temp2[i] = array[i*strides];
+      }
+    } else if(PySequence_Check(obj1)) {
+      Py_ssize_t size = PySequence_Size(obj1);
+      temp2.resize(size);
+      PyObject* item;
+      for(Py_ssize_t i=0; i<size; ++i) {
+        item = PySequence_GetItem(obj1, i);
+        if(!SWIG_IsOK(SWIG_AsVal_double (item, &temp2[i]))) {
+          Py_DECREF(item);
+          SWIG_exception(SWIG_TypeError, "expected items of sequence to be of type "\
+            "\"double\" in argument 2");
+        }
+        Py_DECREF(item);
+      }
     } else {
-      GWFrames::ThreeVector * temp = reinterpret_cast< GWFrames::ThreeVector * >(argp2);
-      arg2 = *temp;
-      if (SWIG_IsNewObj(res2)) delete temp;
+      SWIG_exception(SWIG_TypeError, "(2) numpy array of 'double' expected. " \
+        "Make sure that the numpy array use dtype=double.");
     }
+    arg2 = temp2;
   }
   {
     try {
@@ -20854,106 +20897,6 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap__Waveform_Contrast(PyObject *self, PyObject *args) {
-  PyObject *resultobj = 0;
-  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
-  int arg2 ;
-  int arg3 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  int val2 ;
-  int ecode2 = 0 ;
-  int val3 ;
-  int ecode3 = 0 ;
-  PyObject * obj1 = 0 ;
-  PyObject * obj2 = 0 ;
-  SwigValueWrapper< std::vector< double,std::allocator< double > > > result;
-  
-  if (!PyArg_ParseTuple(args,(char *)"OO:_Waveform_Contrast",&obj1,&obj2)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_Contrast" "', argument " "1"" of type '" "GWFrames::Waveform const *""'"); 
-  }
-  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
-  ecode2 = SWIG_AsVal_int(obj1, &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "_Waveform_Contrast" "', argument " "2"" of type '" "int""'");
-  } 
-  arg2 = static_cast< int >(val2);
-  ecode3 = SWIG_AsVal_int(obj2, &val3);
-  if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "_Waveform_Contrast" "', argument " "3"" of type '" "int""'");
-  } 
-  arg3 = static_cast< int >(val3);
-  {
-    try {
-      result = ((GWFrames::Waveform const *)arg1)->Contrast(arg2,arg3);;
-    } catch(int i) {
-      std::stringstream s;
-      if(i>-1 && i<GWFramesNumberOfErrors) {
-        s << "GWFrames exception: " << GWFramesErrors[i]; 
-      }
-      else  {
-        s << "GWFrames: Unknown exception number {" << i << "}"; 
-      }
-      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
-      return NULL;
-    }
-  }
-  {
-    // RANDOMSTRING1
-    npy_intp adims = (&result)->size();
-    resultobj = PyArray_SimpleNew(1, &adims, NPY_DOUBLE);
-    double* data = static_cast<double*>(PyArray_DATA(reinterpret_cast<PyArrayObject*>(resultobj)));
-    std::copy((&result)->begin(), (&result)->end(), data);
-  }
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap__Waveform_NormalizedAsymmetry(PyObject *self, PyObject *args) {
-  PyObject *resultobj = 0;
-  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  SwigValueWrapper< std::vector< double,std::allocator< double > > > result;
-  
-  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_NormalizedAsymmetry" "', argument " "1"" of type '" "GWFrames::Waveform const *""'"); 
-  }
-  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
-  {
-    try {
-      result = ((GWFrames::Waveform const *)arg1)->NormalizedAsymmetry();;
-    } catch(int i) {
-      std::stringstream s;
-      if(i>-1 && i<GWFramesNumberOfErrors) {
-        s << "GWFrames exception: " << GWFramesErrors[i]; 
-      }
-      else  {
-        s << "GWFrames: Unknown exception number {" << i << "}"; 
-      }
-      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
-      return NULL;
-    }
-  }
-  {
-    // RANDOMSTRING1
-    npy_intp adims = (&result)->size();
-    resultobj = PyArray_SimpleNew(1, &adims, NPY_DOUBLE);
-    double* data = static_cast<double*>(PyArray_DATA(reinterpret_cast<PyArrayObject*>(resultobj)));
-    std::copy((&result)->begin(), (&result)->end(), data);
-  }
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
 SWIGINTERN PyObject *_wrap__Waveform_DataDot(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
@@ -21422,6 +21365,532 @@ fail:
     "  Possible C/C++ prototypes are:\n"
     "    GWFrames::Waveform::MaxNormTime(unsigned int const) const\n"
     "    GWFrames::Waveform::MaxNormTime() const\n");
+  return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap__Waveform_Contrast(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
+  int arg2 ;
+  int arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  int val3 ;
+  int ecode3 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  SwigValueWrapper< std::vector< double,std::allocator< double > > > result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:_Waveform_Contrast",&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_Contrast" "', argument " "1"" of type '" "GWFrames::Waveform const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
+  ecode2 = SWIG_AsVal_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "_Waveform_Contrast" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  ecode3 = SWIG_AsVal_int(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "_Waveform_Contrast" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = static_cast< int >(val3);
+  {
+    try {
+      result = ((GWFrames::Waveform const *)arg1)->Contrast(arg2,arg3);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  {
+    // RANDOMSTRING1
+    npy_intp adims = (&result)->size();
+    resultobj = PyArray_SimpleNew(1, &adims, NPY_DOUBLE);
+    double* data = static_cast<double*>(PyArray_DATA(reinterpret_cast<PyArrayObject*>(resultobj)));
+    std::copy((&result)->begin(), (&result)->end(), data);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap__Waveform_NormalizedAsymmetry__SWIG_0(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
+  SwigValueWrapper< std::vector< int,std::allocator< int > > > arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::vector< int > temp2 ;
+  PyObject * obj1 = 0 ;
+  SwigValueWrapper< std::vector< double,std::allocator< double > > > result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:_Waveform_NormalizedAsymmetry",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_NormalizedAsymmetry" "', argument " "1"" of type '" "GWFrames::Waveform const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
+  {
+    if(PyArray_Check(obj1)) {
+      PyArrayObject *xa = reinterpret_cast<PyArrayObject*>(obj1);
+      if(PyArray_TYPE(xa) != NPY_INT) {
+        SWIG_exception(SWIG_TypeError, "(1) numpy array of 'int' expected."	\
+          " Make sure that the numpy array use dtype=int.");
+      }
+      const std::size_t size = PyArray_DIM(xa, 0);
+      temp2.resize(size);
+      int* array = static_cast<int*>(PyArray_DATA(xa));
+      if(PyArray_ISCONTIGUOUS(xa)) {
+        std::copy(array, array + size, temp2.begin());
+      } else {
+        const npy_intp strides = PyArray_STRIDE(xa, 0)/sizeof(int);
+        for (std::size_t i = 0; i < size; i++)
+        temp2[i] = array[i*strides];
+      }
+    } else if(PySequence_Check(obj1)) {
+      Py_ssize_t size = PySequence_Size(obj1);
+      temp2.resize(size);
+      PyObject* item;
+      for(Py_ssize_t i=0; i<size; ++i) {
+        item = PySequence_GetItem(obj1, i);
+        if(!SWIG_IsOK(SWIG_AsVal_int (item, &temp2[i]))) {
+          Py_DECREF(item);
+          SWIG_exception(SWIG_TypeError, "expected items of sequence to be of type "\
+            "\"int\" in argument 2");
+        }
+        Py_DECREF(item);
+      }
+    } else {
+      SWIG_exception(SWIG_TypeError, "(2) numpy array of 'int' expected. " \
+        "Make sure that the numpy array use dtype=int.");
+    }
+    arg2 = temp2;
+  }
+  {
+    try {
+      result = ((GWFrames::Waveform const *)arg1)->NormalizedAsymmetry(arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  {
+    // RANDOMSTRING1
+    npy_intp adims = (&result)->size();
+    resultobj = PyArray_SimpleNew(1, &adims, NPY_DOUBLE);
+    double* data = static_cast<double*>(PyArray_DATA(reinterpret_cast<PyArrayObject*>(resultobj)));
+    std::copy((&result)->begin(), (&result)->end(), data);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap__Waveform_NormalizedAsymmetry__SWIG_1(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  SwigValueWrapper< std::vector< double,std::allocator< double > > > result;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_NormalizedAsymmetry" "', argument " "1"" of type '" "GWFrames::Waveform const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
+  {
+    try {
+      result = ((GWFrames::Waveform const *)arg1)->NormalizedAsymmetry();;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  {
+    // RANDOMSTRING1
+    npy_intp adims = (&result)->size();
+    resultobj = PyArray_SimpleNew(1, &adims, NPY_DOUBLE);
+    double* data = static_cast<double*>(PyArray_DATA(reinterpret_cast<PyArrayObject*>(resultobj)));
+    std::copy((&result)->begin(), (&result)->end(), data);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap__Waveform_NormalizedAsymmetry(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[3];
+  int ii;
+  
+  if (!PyTuple_Check(args)) SWIG_fail;
+  argc = args ? (int)PyObject_Length(args) : 0;
+  argv[0] = self;
+  for (ii = 0; (ii < 1) && (ii < argc); ii++) {
+    argv[ii + 1] = PyTuple_GET_ITEM(args,ii);
+  }
+  argc++;
+  if (argc == 1) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__Waveform, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap__Waveform_NormalizedAsymmetry__SWIG_1(self, args);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__Waveform, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        _v = false;
+        if(PyArray_Check(argv[1])) {
+          _v = (PyArray_NDIM(reinterpret_cast<const PyArrayObject*>(argv[1]))==1);
+        } else if(PyList_Check(argv[1])) {
+          if(PyList_Size(argv[1])==0) {
+            _v = true;
+          } else {
+            PyObject* item = PySequence_GetItem(argv[1], 0);
+            int* temp=0;
+            _v = SWIG_IsOK(SWIG_AsVal_int (item, temp));
+          }
+        }
+      }
+      if (_v) {
+        return _wrap__Waveform_NormalizedAsymmetry__SWIG_0(self, args);
+      }
+    }
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function '_Waveform_NormalizedAsymmetry'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    GWFrames::Waveform::NormalizedAsymmetry(std::vector< int,std::allocator< int > >) const\n"
+    "    GWFrames::Waveform::NormalizedAsymmetry() const\n");
+  return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap__Waveform_FakeBadNormalizedAsymmetry__SWIG_0(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
+  int arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj1 = 0 ;
+  SwigValueWrapper< std::vector< double,std::allocator< double > > > result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:_Waveform_FakeBadNormalizedAsymmetry",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_FakeBadNormalizedAsymmetry" "', argument " "1"" of type '" "GWFrames::Waveform const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
+  ecode2 = SWIG_AsVal_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "_Waveform_FakeBadNormalizedAsymmetry" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  {
+    try {
+      result = ((GWFrames::Waveform const *)arg1)->FakeBadNormalizedAsymmetry(arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  {
+    // RANDOMSTRING1
+    npy_intp adims = (&result)->size();
+    resultobj = PyArray_SimpleNew(1, &adims, NPY_DOUBLE);
+    double* data = static_cast<double*>(PyArray_DATA(reinterpret_cast<PyArrayObject*>(resultobj)));
+    std::copy((&result)->begin(), (&result)->end(), data);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap__Waveform_FakeBadNormalizedAsymmetry__SWIG_1(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  SwigValueWrapper< std::vector< double,std::allocator< double > > > result;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_FakeBadNormalizedAsymmetry" "', argument " "1"" of type '" "GWFrames::Waveform const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
+  {
+    try {
+      result = ((GWFrames::Waveform const *)arg1)->FakeBadNormalizedAsymmetry();;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  {
+    // RANDOMSTRING1
+    npy_intp adims = (&result)->size();
+    resultobj = PyArray_SimpleNew(1, &adims, NPY_DOUBLE);
+    double* data = static_cast<double*>(PyArray_DATA(reinterpret_cast<PyArrayObject*>(resultobj)));
+    std::copy((&result)->begin(), (&result)->end(), data);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap__Waveform_FakeBadNormalizedAsymmetry(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[3];
+  int ii;
+  
+  if (!PyTuple_Check(args)) SWIG_fail;
+  argc = args ? (int)PyObject_Length(args) : 0;
+  argv[0] = self;
+  for (ii = 0; (ii < 1) && (ii < argc); ii++) {
+    argv[ii + 1] = PyTuple_GET_ITEM(args,ii);
+  }
+  argc++;
+  if (argc == 1) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__Waveform, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap__Waveform_FakeBadNormalizedAsymmetry__SWIG_1(self, args);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__Waveform, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_int(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap__Waveform_FakeBadNormalizedAsymmetry__SWIG_0(self, args);
+      }
+    }
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function '_Waveform_FakeBadNormalizedAsymmetry'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    GWFrames::Waveform::FakeBadNormalizedAsymmetry(int) const\n"
+    "    GWFrames::Waveform::FakeBadNormalizedAsymmetry() const\n");
+  return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap__Waveform_DipoleMoment__SWIG_0(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
+  int arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj1 = 0 ;
+  SwigValueWrapper< std::vector< std::vector< double,std::allocator< double > >,std::allocator< std::vector< double,std::allocator< double > > > > > result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:_Waveform_DipoleMoment",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_DipoleMoment" "', argument " "1"" of type '" "GWFrames::Waveform const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
+  ecode2 = SWIG_AsVal_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "_Waveform_DipoleMoment" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  {
+    try {
+      result = ((GWFrames::Waveform const *)arg1)->DipoleMoment(arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  {
+    // RANDOMSTRING1
+    npy_intp adim1 = (&result)->size();
+    npy_intp adim2 = (adim1>0 ? (*(&result))[0].size() : 0);
+    npy_intp adims[2] = {
+      adim1, adim2
+    };
+    resultobj = PyArray_SimpleNew(2, adims, NPY_DOUBLE);
+    double* data = static_cast<double*>(PyArray_DATA(reinterpret_cast<PyArrayObject*>(resultobj)));
+    for(npy_intp i=0; i<adim1; ++i) {
+      for(npy_intp j=0; j<adim2; ++j) {
+        data[i*adim2+j] = (*(&result))[i][j];
+      }
+    }
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap__Waveform_DipoleMoment__SWIG_1(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  SwigValueWrapper< std::vector< std::vector< double,std::allocator< double > >,std::allocator< std::vector< double,std::allocator< double > > > > > result;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_DipoleMoment" "', argument " "1"" of type '" "GWFrames::Waveform const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
+  {
+    try {
+      result = ((GWFrames::Waveform const *)arg1)->DipoleMoment();;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  {
+    // RANDOMSTRING1
+    npy_intp adim1 = (&result)->size();
+    npy_intp adim2 = (adim1>0 ? (*(&result))[0].size() : 0);
+    npy_intp adims[2] = {
+      adim1, adim2
+    };
+    resultobj = PyArray_SimpleNew(2, adims, NPY_DOUBLE);
+    double* data = static_cast<double*>(PyArray_DATA(reinterpret_cast<PyArrayObject*>(resultobj)));
+    for(npy_intp i=0; i<adim1; ++i) {
+      for(npy_intp j=0; j<adim2; ++j) {
+        data[i*adim2+j] = (*(&result))[i][j];
+      }
+    }
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap__Waveform_DipoleMoment(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[3];
+  int ii;
+  
+  if (!PyTuple_Check(args)) SWIG_fail;
+  argc = args ? (int)PyObject_Length(args) : 0;
+  argv[0] = self;
+  for (ii = 0; (ii < 1) && (ii < argc); ii++) {
+    argv[ii + 1] = PyTuple_GET_ITEM(args,ii);
+  }
+  argc++;
+  if (argc == 1) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__Waveform, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap__Waveform_DipoleMoment__SWIG_1(self, args);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__Waveform, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_int(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap__Waveform_DipoleMoment__SWIG_0(self, args);
+      }
+    }
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function '_Waveform_DipoleMoment'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    GWFrames::Waveform::DipoleMoment(int) const\n"
+    "    GWFrames::Waveform::DipoleMoment() const\n");
   return 0;
 }
 
@@ -21924,8 +22393,7 @@ SWIGINTERN PyObject *_wrap__Waveform_LdtVector__SWIG_0(PyObject *self, PyObject 
   SwigValueWrapper< std::vector< int,std::allocator< int > > > arg2 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  void *argp2 ;
-  int res2 = 0 ;
+  std::vector< int > temp2 ;
   PyObject * obj1 = 0 ;
   SwigValueWrapper< std::vector< std::vector< double,std::allocator< double > >,std::allocator< std::vector< double,std::allocator< double > > > > > result;
   
@@ -21936,17 +22404,40 @@ SWIGINTERN PyObject *_wrap__Waveform_LdtVector__SWIG_0(PyObject *self, PyObject 
   }
   arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
   {
-    res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_std__vectorT_int_std__allocatorT_int_t_t,  0  | 0);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "_Waveform_LdtVector" "', argument " "2"" of type '" "std::vector< int,std::allocator< int > >""'"); 
-    }  
-    if (!argp2) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "_Waveform_LdtVector" "', argument " "2"" of type '" "std::vector< int,std::allocator< int > >""'");
+    if(PyArray_Check(obj1)) {
+      PyArrayObject *xa = reinterpret_cast<PyArrayObject*>(obj1);
+      if(PyArray_TYPE(xa) != NPY_INT) {
+        SWIG_exception(SWIG_TypeError, "(1) numpy array of 'int' expected."	\
+          " Make sure that the numpy array use dtype=int.");
+      }
+      const std::size_t size = PyArray_DIM(xa, 0);
+      temp2.resize(size);
+      int* array = static_cast<int*>(PyArray_DATA(xa));
+      if(PyArray_ISCONTIGUOUS(xa)) {
+        std::copy(array, array + size, temp2.begin());
+      } else {
+        const npy_intp strides = PyArray_STRIDE(xa, 0)/sizeof(int);
+        for (std::size_t i = 0; i < size; i++)
+        temp2[i] = array[i*strides];
+      }
+    } else if(PySequence_Check(obj1)) {
+      Py_ssize_t size = PySequence_Size(obj1);
+      temp2.resize(size);
+      PyObject* item;
+      for(Py_ssize_t i=0; i<size; ++i) {
+        item = PySequence_GetItem(obj1, i);
+        if(!SWIG_IsOK(SWIG_AsVal_int (item, &temp2[i]))) {
+          Py_DECREF(item);
+          SWIG_exception(SWIG_TypeError, "expected items of sequence to be of type "\
+            "\"int\" in argument 2");
+        }
+        Py_DECREF(item);
+      }
     } else {
-      std::vector< int,std::allocator< int > > * temp = reinterpret_cast< std::vector< int,std::allocator< int > > * >(argp2);
-      arg2 = *temp;
-      if (SWIG_IsNewObj(res2)) delete temp;
+      SWIG_exception(SWIG_TypeError, "(2) numpy array of 'int' expected. " \
+        "Make sure that the numpy array use dtype=int.");
     }
+    arg2 = temp2;
   }
   {
     try {
@@ -22060,8 +22551,20 @@ SWIGINTERN PyObject *_wrap__Waveform_LdtVector(PyObject *self, PyObject *args) {
     int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__Waveform, 0);
     _v = SWIG_CheckState(res);
     if (_v) {
-      int res = SWIG_ConvertPtr(argv[1], 0, SWIGTYPE_p_std__vectorT_int_std__allocatorT_int_t_t, 0);
-      _v = SWIG_CheckState(res);
+      {
+        _v = false;
+        if(PyArray_Check(argv[1])) {
+          _v = (PyArray_NDIM(reinterpret_cast<const PyArrayObject*>(argv[1]))==1);
+        } else if(PyList_Check(argv[1])) {
+          if(PyList_Size(argv[1])==0) {
+            _v = true;
+          } else {
+            PyObject* item = PySequence_GetItem(argv[1], 0);
+            int* temp=0;
+            _v = SWIG_IsOK(SWIG_AsVal_int (item, temp));
+          }
+        }
+      }
       if (_v) {
         return _wrap__Waveform_LdtVector__SWIG_0(self, args);
       }
@@ -22083,8 +22586,7 @@ SWIGINTERN PyObject *_wrap__Waveform_LLMatrix__SWIG_0(PyObject *self, PyObject *
   SwigValueWrapper< std::vector< int,std::allocator< int > > > arg2 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  void *argp2 ;
-  int res2 = 0 ;
+  std::vector< int > temp2 ;
   PyObject * obj1 = 0 ;
   std::vector< GWFrames::Matrix,std::allocator< GWFrames::Matrix > > result;
   
@@ -22095,17 +22597,40 @@ SWIGINTERN PyObject *_wrap__Waveform_LLMatrix__SWIG_0(PyObject *self, PyObject *
   }
   arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
   {
-    res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_std__vectorT_int_std__allocatorT_int_t_t,  0  | 0);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "_Waveform_LLMatrix" "', argument " "2"" of type '" "std::vector< int,std::allocator< int > >""'"); 
-    }  
-    if (!argp2) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "_Waveform_LLMatrix" "', argument " "2"" of type '" "std::vector< int,std::allocator< int > >""'");
+    if(PyArray_Check(obj1)) {
+      PyArrayObject *xa = reinterpret_cast<PyArrayObject*>(obj1);
+      if(PyArray_TYPE(xa) != NPY_INT) {
+        SWIG_exception(SWIG_TypeError, "(1) numpy array of 'int' expected."	\
+          " Make sure that the numpy array use dtype=int.");
+      }
+      const std::size_t size = PyArray_DIM(xa, 0);
+      temp2.resize(size);
+      int* array = static_cast<int*>(PyArray_DATA(xa));
+      if(PyArray_ISCONTIGUOUS(xa)) {
+        std::copy(array, array + size, temp2.begin());
+      } else {
+        const npy_intp strides = PyArray_STRIDE(xa, 0)/sizeof(int);
+        for (std::size_t i = 0; i < size; i++)
+        temp2[i] = array[i*strides];
+      }
+    } else if(PySequence_Check(obj1)) {
+      Py_ssize_t size = PySequence_Size(obj1);
+      temp2.resize(size);
+      PyObject* item;
+      for(Py_ssize_t i=0; i<size; ++i) {
+        item = PySequence_GetItem(obj1, i);
+        if(!SWIG_IsOK(SWIG_AsVal_int (item, &temp2[i]))) {
+          Py_DECREF(item);
+          SWIG_exception(SWIG_TypeError, "expected items of sequence to be of type "\
+            "\"int\" in argument 2");
+        }
+        Py_DECREF(item);
+      }
     } else {
-      std::vector< int,std::allocator< int > > * temp = reinterpret_cast< std::vector< int,std::allocator< int > > * >(argp2);
-      arg2 = *temp;
-      if (SWIG_IsNewObj(res2)) delete temp;
+      SWIG_exception(SWIG_TypeError, "(2) numpy array of 'int' expected. " \
+        "Make sure that the numpy array use dtype=int.");
     }
+    arg2 = temp2;
   }
   {
     try {
@@ -22191,8 +22716,20 @@ SWIGINTERN PyObject *_wrap__Waveform_LLMatrix(PyObject *self, PyObject *args) {
     int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__Waveform, 0);
     _v = SWIG_CheckState(res);
     if (_v) {
-      int res = SWIG_ConvertPtr(argv[1], 0, SWIGTYPE_p_std__vectorT_int_std__allocatorT_int_t_t, 0);
-      _v = SWIG_CheckState(res);
+      {
+        _v = false;
+        if(PyArray_Check(argv[1])) {
+          _v = (PyArray_NDIM(reinterpret_cast<const PyArrayObject*>(argv[1]))==1);
+        } else if(PyList_Check(argv[1])) {
+          if(PyList_Size(argv[1])==0) {
+            _v = true;
+          } else {
+            PyObject* item = PySequence_GetItem(argv[1], 0);
+            int* temp=0;
+            _v = SWIG_IsOK(SWIG_AsVal_int (item, temp));
+          }
+        }
+      }
       if (_v) {
         return _wrap__Waveform_LLMatrix__SWIG_0(self, args);
       }
@@ -39021,34 +39558,6 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__Waveform_methods[] = {
 		"  \n"
 		"\n"
 		"" },
-  { "Contrast", (PyCFunction) _wrap__Waveform_Contrast, METH_VARARGS, (char*) "\n"
-		"Return the contrast in the given mode pair.\n"
-		"===========================================\n"
-		"  Parameters\n"
-		"  ----------\n"
-		"    const int L\n"
-		"      $ell$ value of the mode pair\n"
-		"    const int M\n"
-		"      $m$ value of the mode pair\n"
-		"  \n"
-		"  Returns\n"
-		"  -------\n"
-		"    vector<double>\n"
-		"  \n"
-		"  Description\n"
-		"  -----------\n"
-		"    This function just returns the value of the contrast $\\kappa^{\\ell,m}$\n"
-		"    defined by Boyle et al. (2014):\n"
-		"    \n"
-		"    \\begin{equation*} kappa^{\\ell,m} = 2 \\frac{\\lvert h^{\\ell,m} \\rvert -\n"
-		"    \\lvert h^{\\ell,-m} \\rvert} {\\lvert h^{\\ell,m} \\rvert - \\lvert\n"
-		"    h^{\\ell,-m} \\rvert}. \\end{equation*}\n"
-		"    \n"
-		"    That is, the difference between mode pairs normalized by their average.\n"
-		"  \n"
-		"\n"
-		"" },
-  { "NormalizedAsymmetry", (PyCFunction) _wrap__Waveform_NormalizedAsymmetry, METH_VARARGS, (char*) "" },
   { "DataDot", (PyCFunction) _wrap__Waveform_DataDot, METH_VARARGS, (char*) "\n"
 		"Return time derivative of data.\n"
 		"===============================\n"
@@ -39137,6 +39646,36 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__Waveform_methods[] = {
 		"\n"
 		"\n"
 		"" },
+  { "Contrast", (PyCFunction) _wrap__Waveform_Contrast, METH_VARARGS, (char*) "\n"
+		"Return the contrast in the given mode pair.\n"
+		"===========================================\n"
+		"  Parameters\n"
+		"  ----------\n"
+		"    const int L\n"
+		"      $ell$ value of the mode pair\n"
+		"    const int M\n"
+		"      $m$ value of the mode pair\n"
+		"  \n"
+		"  Returns\n"
+		"  -------\n"
+		"    vector<double>\n"
+		"  \n"
+		"  Description\n"
+		"  -----------\n"
+		"    This function just returns the value of the contrast $\\kappa^{\\ell,m}$\n"
+		"    defined by Boyle et al. (2014):\n"
+		"    \n"
+		"    \\begin{equation*} kappa^{\\ell,m} = 2 \\frac{\\lvert h^{\\ell,m} \\rvert -\n"
+		"    \\lvert h^{\\ell,-m} \\rvert} {\\lvert h^{\\ell,m} \\rvert - \\lvert\n"
+		"    h^{\\ell,-m} \\rvert}. \\end{equation*}\n"
+		"    \n"
+		"    That is, the difference between mode pairs normalized by their average.\n"
+		"  \n"
+		"\n"
+		"" },
+  { "NormalizedAsymmetry", (PyCFunction) _wrap__Waveform_NormalizedAsymmetry, METH_VARARGS, (char*) "" },
+  { "FakeBadNormalizedAsymmetry", (PyCFunction) _wrap__Waveform_FakeBadNormalizedAsymmetry, METH_VARARGS, (char*) "" },
+  { "DipoleMoment", (PyCFunction) _wrap__Waveform_DipoleMoment, METH_VARARGS, (char*) "" },
   { "RotatePhysicalSystem", (PyCFunction) _wrap__Waveform_RotatePhysicalSystem, METH_VARARGS, (char*) "\n"
 		"Rotate the physical content of the Waveform by a constant rotor.\n"
 		"================================================================\n"
@@ -41828,7 +42367,6 @@ static swig_type_info _swigt__p_std__vectorT_GWFrames__Modes_std__allocatorT_GWF
 static swig_type_info _swigt__p_std__vectorT_GWFrames__Waveform_std__allocatorT_GWFrames__Waveform_t_t = {"_p_std__vectorT_GWFrames__Waveform_std__allocatorT_GWFrames__Waveform_t_t", "std::vector< GWFrames::Waveform > *|std::vector< GWFrames::Waveform,std::allocator< GWFrames::Waveform > > *", 0, 0, (void*)&SwigPyBuiltin__std__vectorT_GWFrames__Waveform_t_clientdata, 0};
 static swig_type_info _swigt__p_std__vectorT_Quaternions__Quaternion_std__allocatorT_Quaternions__Quaternion_t_t = {"_p_std__vectorT_Quaternions__Quaternion_std__allocatorT_Quaternions__Quaternion_t_t", "std::vector< Quaternions::Quaternion,std::allocator< Quaternions::Quaternion > > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__vectorT_double_std__allocatorT_double_t_t = {"_p_std__vectorT_double_std__allocatorT_double_t_t", "std::vector< double,std::allocator< double > > *|GWFrames::FourVector *|FourVector *|GWFrames::ThreeVector *|ThreeVector *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_std__vectorT_int_std__allocatorT_int_t_t = {"_p_std__vectorT_int_std__allocatorT_int_t_t", "std::vector< int,std::allocator< int > > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__vectorT_std__complexT_double_t_std__allocatorT_std__complexT_double_t_t_t = {"_p_std__vectorT_std__complexT_double_t_std__allocatorT_std__complexT_double_t_t_t", "std::vector< std::complex< double >,std::allocator< std::complex< double > > > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__vectorT_std__vectorT_double_std__allocatorT_double_t_t_std__allocatorT_std__vectorT_double_std__allocatorT_double_t_t_t_t = {"_p_std__vectorT_std__vectorT_double_std__allocatorT_double_t_t_std__allocatorT_std__vectorT_double_std__allocatorT_double_t_t_t_t", "std::vector< std::vector< double,std::allocator< double > >,std::allocator< std::vector< double,std::allocator< double > > > > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_swig__SwigPyIterator = {"_p_swig__SwigPyIterator", "swig::SwigPyIterator *", 0, 0, (void*)&SwigPyBuiltin__swig__SwigPyIterator_clientdata, 0};
@@ -41868,7 +42406,6 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_std__vectorT_GWFrames__Waveform_std__allocatorT_GWFrames__Waveform_t_t,
   &_swigt__p_std__vectorT_Quaternions__Quaternion_std__allocatorT_Quaternions__Quaternion_t_t,
   &_swigt__p_std__vectorT_double_std__allocatorT_double_t_t,
-  &_swigt__p_std__vectorT_int_std__allocatorT_int_t_t,
   &_swigt__p_std__vectorT_std__complexT_double_t_std__allocatorT_std__complexT_double_t_t_t,
   &_swigt__p_std__vectorT_std__vectorT_double_std__allocatorT_double_t_t_std__allocatorT_std__vectorT_double_std__allocatorT_double_t_t_t_t,
   &_swigt__p_swig__SwigPyIterator,
@@ -41908,7 +42445,6 @@ static swig_cast_info _swigc__p_std__vectorT_GWFrames__Modes_std__allocatorT_GWF
 static swig_cast_info _swigc__p_std__vectorT_GWFrames__Waveform_std__allocatorT_GWFrames__Waveform_t_t[] = {  {&_swigt__p_std__vectorT_GWFrames__Waveform_std__allocatorT_GWFrames__Waveform_t_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__vectorT_Quaternions__Quaternion_std__allocatorT_Quaternions__Quaternion_t_t[] = {  {&_swigt__p_std__vectorT_Quaternions__Quaternion_std__allocatorT_Quaternions__Quaternion_t_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__vectorT_double_std__allocatorT_double_t_t[] = {  {&_swigt__p_std__vectorT_double_std__allocatorT_double_t_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_std__vectorT_int_std__allocatorT_int_t_t[] = {  {&_swigt__p_std__vectorT_int_std__allocatorT_int_t_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__vectorT_std__complexT_double_t_std__allocatorT_std__complexT_double_t_t_t[] = {  {&_swigt__p_std__vectorT_std__complexT_double_t_std__allocatorT_std__complexT_double_t_t_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__vectorT_std__vectorT_double_std__allocatorT_double_t_t_std__allocatorT_std__vectorT_double_std__allocatorT_double_t_t_t_t[] = {  {&_swigt__p_std__vectorT_std__vectorT_double_std__allocatorT_double_t_t_std__allocatorT_std__vectorT_double_std__allocatorT_double_t_t_t_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_swig__SwigPyIterator[] = {  {&_swigt__p_swig__SwigPyIterator, 0, 0, 0},{0, 0, 0, 0}};
@@ -41948,7 +42484,6 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_std__vectorT_GWFrames__Waveform_std__allocatorT_GWFrames__Waveform_t_t,
   _swigc__p_std__vectorT_Quaternions__Quaternion_std__allocatorT_Quaternions__Quaternion_t_t,
   _swigc__p_std__vectorT_double_std__allocatorT_double_t_t,
-  _swigc__p_std__vectorT_int_std__allocatorT_int_t_t,
   _swigc__p_std__vectorT_std__complexT_double_t_std__allocatorT_std__complexT_double_t_t_t,
   _swigc__p_std__vectorT_std__vectorT_double_std__allocatorT_double_t_t_std__allocatorT_std__vectorT_double_std__allocatorT_double_t_t_t_t,
   _swigc__p_swig__SwigPyIterator,

@@ -181,6 +181,17 @@ std::vector<double> GWFrames::Unwrap(const std::vector<double>& Arg) {
 }
 
 
+/// If x is in y, return true
+bool GWFrames::xINy(const int x, const std::vector<int>& y) {
+  for(std::vector<int>::const_iterator it = y.begin() ; it != y.end(); ++it) {
+    if(x==*it) {
+      return true;
+    }
+  }
+  return false;
+}
+
+
 /// Integrate scalar function by simple trapezoidal rule.
 std::vector<double> GWFrames::ScalarIntegral(const std::vector<double>& fdot, const std::vector<double>& t) {
   ///
