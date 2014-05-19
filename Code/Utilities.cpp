@@ -19,6 +19,9 @@ using std::cerr;
 using std::endl;
 
 
+// This macro is useful for debugging
+#define INFOTOCERR std::cerr << __FILE__ << ":" << __LINE__ << ":" << __func__ << std::endl
+
 #define Utilities_Epsilon 1.0e-14
 
 const std::complex<double> ComplexI(0.0, 1.0);
@@ -842,6 +845,48 @@ std::vector<double> GWFrames::operator*(const std::vector<double>& a, const Matr
   return Result;
 }
 
+std::vector<double> GWFrames::DominantPrincipalValue(std::vector<Matrix>& M) {
+  if(M.size()==0) { return vector<double>(0); }
+  if(M[0].nrows()!=3 || M[0].ncols()!=3) { // And otherwise, we're just gonna trust that that's the case
+    cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": M[0].nrows()=" << M[0].nrows() << "; M[0].ncols()=" << M[0].ncols() << endl;
+    throw(GWFrames_MatrixSizeAssumedToBeThree);
+  }
+  std::vector<double> Result(M.size());
+  gsl_vector *eval = gsl_vector_alloc (3);
+  gsl_matrix *evec = gsl_matrix_alloc (3, 3);
+  gsl_eigen_symmv_workspace * w = gsl_eigen_symmv_alloc (3);
+  for(unsigned int i=0; i<M.size(); ++i) {
+    gsl_eigen_symmv(M[i].gslobj(), eval, evec, w); // Do the work
+    gsl_eigen_symmv_free(w);
+    gsl_eigen_symmv_sort(eval, evec, GSL_EIGEN_SORT_VAL_DESC); // Sort by eigenvalue magnitude
+    Result[i] = gsl_vector_get(eval, 0);
+  }
+  gsl_vector_free(eval);
+  gsl_matrix_free(evec);
+  return Result;
+}
+
+std::vector<double> GWFrames::SubordinatePrincipalValue(std::vector<Matrix>& M) {
+  if(M.size()==0) { return vector<double>(0); }
+  if(M[0].nrows()!=3 || M[0].ncols()!=3) { // And otherwise, we're just gonna trust that that's the case
+    cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": M[0].nrows()=" << M[0].nrows() << "; M[0].ncols()=" << M[0].ncols() << endl;
+    throw(GWFrames_MatrixSizeAssumedToBeThree);
+  }
+  std::vector<double> Result(M.size());
+  gsl_vector *eval = gsl_vector_alloc (3);
+  gsl_matrix *evec = gsl_matrix_alloc (3, 3);
+  gsl_eigen_symmv_workspace * w = gsl_eigen_symmv_alloc (3);
+  for(unsigned int i=0; i<Result.size(); ++i) {
+    gsl_eigen_symmv(M[i].gslobj(), eval, evec, w); // Do the work
+    gsl_eigen_symmv_sort(eval, evec, GSL_EIGEN_SORT_VAL_ASC); // Sort by eigenvalue magnitude
+    Result[i] = gsl_vector_get(eval, 0);
+  }
+  gsl_eigen_symmv_free(w);
+  gsl_vector_free(eval);
+  gsl_matrix_free(evec);
+  return Result;
+}
+
 std::vector<double> GWFrames::DominantPrincipalAxis(Matrix& M) {
   if(M.nrows()!=3 || M.ncols()!=3) {
     cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": M.nrows()=" << M.nrows() << "; M.ncols()=" << M.ncols() << endl;
@@ -857,6 +902,27 @@ std::vector<double> GWFrames::DominantPrincipalAxis(Matrix& M) {
   vector<double> Result(3);
   for(unsigned int i=0; i<3; ++i) {
     Result[i] = gsl_vector_get(&evec_Dominant.vector, i);
+  }
+  gsl_vector_free(eval);
+  gsl_matrix_free(evec);
+  return Result;
+}
+
+std::vector<double> GWFrames::SubordinatePrincipalAxis(Matrix& M) {
+  if(M.nrows()!=3 || M.ncols()!=3) {
+    cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": M.nrows()=" << M.nrows() << "; M.ncols()=" << M.ncols() << endl;
+    throw(GWFrames_MatrixSizeAssumedToBeThree);
+  }
+  gsl_vector *eval = gsl_vector_alloc (3);
+  gsl_matrix *evec = gsl_matrix_alloc (3, 3);
+  gsl_eigen_symmv_workspace * w = gsl_eigen_symmv_alloc (3);
+  gsl_eigen_symmv(M.gslobj(), eval, evec, w); // Do the work
+  gsl_eigen_symmv_free(w);
+  gsl_eigen_symmv_sort(eval, evec, GSL_EIGEN_SORT_VAL_ASC); // Sort by eigenvalue magnitude
+  gsl_vector_const_view evec_Subordinate = gsl_matrix_const_column(evec, 0);
+  vector<double> Result(3);
+  for(unsigned int i=0; i<3; ++i) {
+    Result[i] = gsl_vector_get(&evec_Subordinate.vector, i);
   }
   gsl_vector_free(eval);
   gsl_matrix_free(evec);

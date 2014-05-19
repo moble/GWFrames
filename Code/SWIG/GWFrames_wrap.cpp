@@ -22745,6 +22745,348 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap__Waveform_PiPiMatrix__SWIG_0(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
+  SwigValueWrapper< std::vector< int,std::allocator< int > > > arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::vector< int > temp2 ;
+  PyObject * obj1 = 0 ;
+  std::vector< GWFrames::Matrix,std::allocator< GWFrames::Matrix > > result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:_Waveform_PiPiMatrix",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_PiPiMatrix" "', argument " "1"" of type '" "GWFrames::Waveform const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
+  {
+    if(PyArray_Check(obj1)) {
+      PyArrayObject *xa = reinterpret_cast<PyArrayObject*>(obj1);
+      if(PyArray_TYPE(xa) != NPY_INT) {
+        SWIG_exception(SWIG_TypeError, "(1) numpy array of 'int' expected."	\
+          " Make sure that the numpy array use dtype=int.");
+      }
+      const std::size_t size = PyArray_DIM(xa, 0);
+      temp2.resize(size);
+      int* array = static_cast<int*>(PyArray_DATA(xa));
+      if(PyArray_ISCONTIGUOUS(xa)) {
+        std::copy(array, array + size, temp2.begin());
+      } else {
+        const npy_intp strides = PyArray_STRIDE(xa, 0)/sizeof(int);
+        for (std::size_t i = 0; i < size; i++)
+        temp2[i] = array[i*strides];
+      }
+    } else if(PySequence_Check(obj1)) {
+      Py_ssize_t size = PySequence_Size(obj1);
+      temp2.resize(size);
+      PyObject* item;
+      for(Py_ssize_t i=0; i<size; ++i) {
+        item = PySequence_GetItem(obj1, i);
+        if(!SWIG_IsOK(SWIG_AsVal_int (item, &temp2[i]))) {
+          Py_DECREF(item);
+          SWIG_exception(SWIG_TypeError, "expected items of sequence to be of type "\
+            "\"int\" in argument 2");
+        }
+        Py_DECREF(item);
+      }
+    } else {
+      SWIG_exception(SWIG_TypeError, "(2) numpy array of 'int' expected. " \
+        "Make sure that the numpy array use dtype=int.");
+    }
+    arg2 = temp2;
+  }
+  {
+    try {
+      result = ((GWFrames::Waveform const *)arg1)->PiPiMatrix(arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = swig::from(static_cast< std::vector<GWFrames::Matrix,std::allocator< GWFrames::Matrix > > >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap__Waveform_PiPiMatrix__SWIG_1(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::vector< GWFrames::Matrix,std::allocator< GWFrames::Matrix > > result;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_PiPiMatrix" "', argument " "1"" of type '" "GWFrames::Waveform const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
+  {
+    try {
+      result = ((GWFrames::Waveform const *)arg1)->PiPiMatrix();;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = swig::from(static_cast< std::vector<GWFrames::Matrix,std::allocator< GWFrames::Matrix > > >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap__Waveform_PiPiMatrix(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[3];
+  int ii;
+  
+  if (!PyTuple_Check(args)) SWIG_fail;
+  argc = args ? (int)PyObject_Length(args) : 0;
+  argv[0] = self;
+  for (ii = 0; (ii < 1) && (ii < argc); ii++) {
+    argv[ii + 1] = PyTuple_GET_ITEM(args,ii);
+  }
+  argc++;
+  if (argc == 1) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__Waveform, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap__Waveform_PiPiMatrix__SWIG_1(self, args);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__Waveform, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        _v = false;
+        if(PyArray_Check(argv[1])) {
+          _v = (PyArray_NDIM(reinterpret_cast<const PyArrayObject*>(argv[1]))==1);
+        } else if(PyList_Check(argv[1])) {
+          if(PyList_Size(argv[1])==0) {
+            _v = true;
+          } else {
+            PyObject* item = PySequence_GetItem(argv[1], 0);
+            int* temp=0;
+            _v = SWIG_IsOK(SWIG_AsVal_int (item, temp));
+          }
+        }
+      }
+      if (_v) {
+        return _wrap__Waveform_PiPiMatrix__SWIG_0(self, args);
+      }
+    }
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function '_Waveform_PiPiMatrix'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    GWFrames::Waveform::PiPiMatrix(std::vector< int,std::allocator< int > >) const\n"
+    "    GWFrames::Waveform::PiPiMatrix() const\n");
+  return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap__Waveform_PiPiMinimum__SWIG_0(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
+  SwigValueWrapper< std::vector< int,std::allocator< int > > > arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::vector< int > temp2 ;
+  PyObject * obj1 = 0 ;
+  SwigValueWrapper< std::vector< double,std::allocator< double > > > result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:_Waveform_PiPiMinimum",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_PiPiMinimum" "', argument " "1"" of type '" "GWFrames::Waveform const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
+  {
+    if(PyArray_Check(obj1)) {
+      PyArrayObject *xa = reinterpret_cast<PyArrayObject*>(obj1);
+      if(PyArray_TYPE(xa) != NPY_INT) {
+        SWIG_exception(SWIG_TypeError, "(1) numpy array of 'int' expected."	\
+          " Make sure that the numpy array use dtype=int.");
+      }
+      const std::size_t size = PyArray_DIM(xa, 0);
+      temp2.resize(size);
+      int* array = static_cast<int*>(PyArray_DATA(xa));
+      if(PyArray_ISCONTIGUOUS(xa)) {
+        std::copy(array, array + size, temp2.begin());
+      } else {
+        const npy_intp strides = PyArray_STRIDE(xa, 0)/sizeof(int);
+        for (std::size_t i = 0; i < size; i++)
+        temp2[i] = array[i*strides];
+      }
+    } else if(PySequence_Check(obj1)) {
+      Py_ssize_t size = PySequence_Size(obj1);
+      temp2.resize(size);
+      PyObject* item;
+      for(Py_ssize_t i=0; i<size; ++i) {
+        item = PySequence_GetItem(obj1, i);
+        if(!SWIG_IsOK(SWIG_AsVal_int (item, &temp2[i]))) {
+          Py_DECREF(item);
+          SWIG_exception(SWIG_TypeError, "expected items of sequence to be of type "\
+            "\"int\" in argument 2");
+        }
+        Py_DECREF(item);
+      }
+    } else {
+      SWIG_exception(SWIG_TypeError, "(2) numpy array of 'int' expected. " \
+        "Make sure that the numpy array use dtype=int.");
+    }
+    arg2 = temp2;
+  }
+  {
+    try {
+      result = ((GWFrames::Waveform const *)arg1)->PiPiMinimum(arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  {
+    // RANDOMSTRING1
+    npy_intp adims = (&result)->size();
+    resultobj = PyArray_SimpleNew(1, &adims, NPY_DOUBLE);
+    double* data = static_cast<double*>(PyArray_DATA(reinterpret_cast<PyArrayObject*>(resultobj)));
+    std::copy((&result)->begin(), (&result)->end(), data);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap__Waveform_PiPiMinimum__SWIG_1(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  SwigValueWrapper< std::vector< double,std::allocator< double > > > result;
+  
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_PiPiMinimum" "', argument " "1"" of type '" "GWFrames::Waveform const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
+  {
+    try {
+      result = ((GWFrames::Waveform const *)arg1)->PiPiMinimum();;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  {
+    // RANDOMSTRING1
+    npy_intp adims = (&result)->size();
+    resultobj = PyArray_SimpleNew(1, &adims, NPY_DOUBLE);
+    double* data = static_cast<double*>(PyArray_DATA(reinterpret_cast<PyArrayObject*>(resultobj)));
+    std::copy((&result)->begin(), (&result)->end(), data);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap__Waveform_PiPiMinimum(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[3];
+  int ii;
+  
+  if (!PyTuple_Check(args)) SWIG_fail;
+  argc = args ? (int)PyObject_Length(args) : 0;
+  argv[0] = self;
+  for (ii = 0; (ii < 1) && (ii < argc); ii++) {
+    argv[ii + 1] = PyTuple_GET_ITEM(args,ii);
+  }
+  argc++;
+  if (argc == 1) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__Waveform, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap__Waveform_PiPiMinimum__SWIG_1(self, args);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__Waveform, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        _v = false;
+        if(PyArray_Check(argv[1])) {
+          _v = (PyArray_NDIM(reinterpret_cast<const PyArrayObject*>(argv[1]))==1);
+        } else if(PyList_Check(argv[1])) {
+          if(PyList_Size(argv[1])==0) {
+            _v = true;
+          } else {
+            PyObject* item = PySequence_GetItem(argv[1], 0);
+            int* temp=0;
+            _v = SWIG_IsOK(SWIG_AsVal_int (item, temp));
+          }
+        }
+      }
+      if (_v) {
+        return _wrap__Waveform_PiPiMinimum__SWIG_0(self, args);
+      }
+    }
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function '_Waveform_PiPiMinimum'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    GWFrames::Waveform::PiPiMinimum(std::vector< int,std::allocator< int > >) const\n"
+    "    GWFrames::Waveform::PiPiMinimum() const\n");
+  return 0;
+}
+
+
 SWIGINTERN PyObject *_wrap__Waveform_OShaughnessyEtAlVector__SWIG_0(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
@@ -39827,6 +40169,8 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__Waveform_methods[] = {
 		"  \n"
 		"\n"
 		"" },
+  { "PiPiMatrix", (PyCFunction) _wrap__Waveform_PiPiMatrix, METH_VARARGS, (char*) "" },
+  { "PiPiMinimum", (PyCFunction) _wrap__Waveform_PiPiMinimum, METH_VARARGS, (char*) "" },
   { "OShaughnessyEtAlVector", (PyCFunction) _wrap__Waveform_OShaughnessyEtAlVector, METH_VARARGS, (char*) "\n"
 		"Calculate the principal axis of the LL matrix, as prescribed by O'Shaughnessy et al.\n"
 		"====================================================================================\n"

@@ -77,7 +77,10 @@ namespace GWFrames {
   };
   std::vector<double> operator*(const std::vector<double>& a, const Matrix& b);
   // Quaternion operator*(const Quaternion& a, const Matrix& b);
+  std::vector<double> DominantPrincipalValue(std::vector<Matrix>& M);
+  std::vector<double> SubordinatePrincipalValue(std::vector<Matrix>& M);
   std::vector<double> DominantPrincipalAxis(Matrix& M);
+  std::vector<double> SubordinatePrincipalAxis(Matrix& M);
   std::vector<double> Eigenvalues(Matrix& M);
   std::vector<double> Eigenvectors(Matrix& M);
   std::vector<double> Eigensystem(Matrix& M);

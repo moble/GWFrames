@@ -1486,6 +1486,77 @@ vector<Matrix> GWFrames::Waveform::LLMatrix(vector<int> Lmodes) const {
   return ll;
 }
 
+/// Calculate the \f$<\Pi\Pi>\f$ quantity defined in the paper.
+vector<Matrix> GWFrames::Waveform::PiPiMatrix(vector<int> Lmodes) const {
+  ///
+  /// \param Lmodes L modes to evaluate
+  ///
+  /// If Lmodes is empty (default), all L modes are used.  Setting
+  /// Lmodes to [2] or [2,3,4], for example, restricts the range of
+  /// the sum.
+  ///
+  /// \f$<\Pi\Pi>^{ab} = \sum_{\ell,m,m'} [\bar{f}^{\ell,m'} < \ell,m'
+  /// | Pi_a Pi_b | \ell,m > f^{\ell,m} ]\f$, where $\Pi_a =
+  /// \frac{1}{2}(1-P_a)$ is the projection operator that removes the
+  /// parity-invariant part of the waveform, for a parity inversion in
+  /// the direction $a$.
+  ///
+  /// \f{align}{
+  ///   P_x h^{\ell,m} &= (-1)^m\, \bar{h}^{\ell,m} \\
+  ///   P_y h^{\ell,m} &= \bar{h}^{\ell,m} \\
+  ///   P_z h^{\ell,m} &= (-1)^\ell\, \bar{h}^{\ell,-m} \\
+  ///   P_- h^{\ell,m} &= (-1)^{\ell+m}\, \bar{h}^{\ell,-m} \\
+  /// \f}
+
+  vector<Matrix> PiPi(NTimes(), Matrix(3,3));
+  const complex<double> ImaginaryI(0.0,1.0);
+  if(Lmodes.size()==0) {
+    Lmodes.push_back(lm[0][0]);
+    for(unsigned int i_m=0; i_m<NModes(); ++i_m) {
+      if(std::find(Lmodes.begin(), Lmodes.end(), lm[i_m][0]) == Lmodes.end() ) {
+        Lmodes.push_back(lm[i_m][0]);
+      }
+    }
+  }
+  for(unsigned int iL=0; iL<Lmodes.size(); ++iL) {
+    const int L = Lmodes[iL];
+    for(int M=-L; M<=L; ++M) {
+      const int iM = FindModeIndex(L,M);
+      const int imM = FindModeIndex(L,-M);
+      for(unsigned int iTime=0; iTime<NTimes(); ++iTime) {
+        const complex<double> hLM = data[iM][iTime];
+        const complex<double> hLmM = data[imM][iTime];
+        const complex<double> hbarLM = conj(hLM);
+        const complex<double> hbarLmM = conj(hLmM);
+
+        const complex<double> Pi_x__M = (M%2==0 ? 0.5*(hLM-hbarLM) : 0.5*(hLM+hbarLM));
+        const complex<double> Pi_y__M = 0.5*(hLM-hbarLM);
+        const complex<double> Pi_z__M = (L%2==0 ? 0.5*(hLM-hbarLmM) : 0.5*(hLM+hbarLmM));
+
+        const complex<double> Pi_x__mM = (M%2==0 ? 0.5*(hLmM-hbarLmM) : 0.5*(hLmM+hbarLmM));
+        const complex<double> Pi_y__mM = 0.5*(hLmM-hbarLmM);
+        const complex<double> Pi_z__mM = (L%2==0 ? 0.5*(hLmM-hbarLM) : 0.5*(hLmM+hbarLM));
+
+        PiPi[iTime](0,0) += norm(Pi_x__M);
+        PiPi[iTime](0,1) += real( conj(Pi_x__M)*Pi_y__M + conj(Pi_y__M)*Pi_x__M )/2.0;
+        PiPi[iTime](0,2) += real( conj(Pi_x__mM)*Pi_z__M + conj(Pi_z__mM)*Pi_x__M )/2.0;
+        PiPi[iTime](1,0) += real( conj(Pi_x__M)*Pi_y__M + conj(Pi_y__M)*Pi_x__M )/2.0;
+        PiPi[iTime](1,1) += norm(Pi_y__M);
+        PiPi[iTime](1,2) += real( conj(Pi_y__mM)*Pi_z__M + conj(Pi_z__mM)*Pi_y__M )/2.0;
+        PiPi[iTime](2,0) += real( conj(Pi_x__mM)*Pi_z__M + conj(Pi_z__mM)*Pi_x__M )/2.0;
+        PiPi[iTime](2,1) += real( conj(Pi_y__mM)*Pi_z__M + conj(Pi_z__mM)*Pi_y__M )/2.0;
+        PiPi[iTime](2,2) += norm(Pi_z__M);
+      }
+    }
+  }
+  return PiPi;
+}
+
+/// Return the subordinate principal value of the PiPi matrix at each moment
+std::vector<double> GWFrames::Waveform::PiPiMinimum(std::vector<int> Lmodes) const {
+  std::vector<GWFrames::Matrix> PiPi = PiPiMatrix(Lmodes);
+  return GWFrames::SubordinatePrincipalValue(PiPi);
+}
 
 /// Calculate the principal axis of the LL matrix, as prescribed by O'Shaughnessy et al.
 std::vector<std::vector<double> > GWFrames::Waveform::OShaughnessyEtAlVector(const std::vector<int>& Lmodes) const {
