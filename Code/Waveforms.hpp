@@ -156,6 +156,7 @@ namespace GWFrames {
     std::vector<double> NormalizedAsymmetry(std::vector<int> LModesForAsymmetry=std::vector<int>(0)) const;
     std::vector<double> FakeBadNormalizedAsymmetry(int mMode=2) const;
     std::vector<std::vector<double> > DipoleMoment(int ellMax=0) const;
+    //std::vector<double> ZParityViolation(std::vector<int> Lmodes=std::vector<int>(0)) const;
 
   private: // Member function
     Waveform& TransformModesToRotatedFrame(const std::vector<Quaternions::Quaternion>& R_frame);
@@ -173,8 +174,6 @@ namespace GWFrames {
     // Radiation-frame calculations
     std::vector<std::vector<double> > LdtVector(std::vector<int> Lmodes=std::vector<int>(0)) const;
     std::vector<Matrix> LLMatrix(std::vector<int> Lmodes=std::vector<int>(0)) const;
-    std::vector<Matrix> PiPiMatrix(std::vector<int> Lmodes=std::vector<int>(0)) const;
-    std::vector<double> PiPiMinimum(std::vector<int> Lmodes=std::vector<int>(0)) const;
     std::vector<std::vector<double> > OShaughnessyEtAlVector(const std::vector<int>& Lmodes=std::vector<int>(0)) const;
     std::vector<std::vector<double> > AngularVelocityVector(const std::vector<int>& Lmodes=std::vector<int>(0)) const;
     std::vector<Quaternions::Quaternion> CorotatingFrame(const std::vector<int>& Lmodes=std::vector<int>(0)) const;
