@@ -1529,22 +1529,26 @@ vector<Matrix> GWFrames::Waveform::PiPiMatrix(vector<int> Lmodes) const {
         const complex<double> hbarLM = conj(hLM);
         const complex<double> hbarLmM = conj(hLmM);
 
-        const complex<double> Pi_x__M = (M%2==0 ? 0.5*(hLM-hbarLM) : 0.5*(hLM+hbarLM));
+        const complex<double> Pi_x__M = 0.5*(hLM-std::pow(-1.,M)*hbarLM);
         const complex<double> Pi_y__M = 0.5*(hLM-hbarLM);
-        const complex<double> Pi_z__M = (L%2==0 ? 0.5*(hLM-hbarLmM) : 0.5*(hLM+hbarLmM));
+        const complex<double> Pi_z__M = 0.5*(hLM-std::pow(-1.,L)*hbarLmM);
 
-        const complex<double> Pi_x__mM = (M%2==0 ? 0.5*(hLmM-hbarLmM) : 0.5*(hLmM+hbarLmM));
-        const complex<double> Pi_y__mM = 0.5*(hLmM-hbarLmM);
-        const complex<double> Pi_z__mM = (L%2==0 ? 0.5*(hLmM-hbarLM) : 0.5*(hLmM+hbarLM));
+        // const complex<double> Pi_x__M = (M%2==0 ? 0.5*(hLM-hbarLM) : 0.5*(hLM+hbarLM));
+        // const complex<double> Pi_y__M = 0.5*(hLM-hbarLM);
+        // const complex<double> Pi_z__M = (L%2==0 ? 0.5*(hLM-hbarLmM) : 0.5*(hLM+hbarLmM));
+
+        // const complex<double> Pi_x__mM = (M%2==0 ? 0.5*(hLmM-hbarLmM) : 0.5*(hLmM+hbarLmM));
+        // const complex<double> Pi_y__mM = 0.5*(hLmM-hbarLmM);
+        // const complex<double> Pi_z__mM = (L%2==0 ? 0.5*(hLmM-hbarLM) : 0.5*(hLmM+hbarLM));
 
         PiPi[iTime](0,0) += norm(Pi_x__M);
         PiPi[iTime](0,1) += real( conj(Pi_x__M)*Pi_y__M + conj(Pi_y__M)*Pi_x__M )/2.0;
-        PiPi[iTime](0,2) += real( conj(Pi_x__mM)*Pi_z__M + conj(Pi_z__mM)*Pi_x__M )/2.0;
+        PiPi[iTime](0,2) += real( conj(Pi_x__M)*Pi_z__M + conj(Pi_z__M)*Pi_x__M )/2.0;
         PiPi[iTime](1,0) += real( conj(Pi_x__M)*Pi_y__M + conj(Pi_y__M)*Pi_x__M )/2.0;
         PiPi[iTime](1,1) += norm(Pi_y__M);
-        PiPi[iTime](1,2) += real( conj(Pi_y__mM)*Pi_z__M + conj(Pi_z__mM)*Pi_y__M )/2.0;
-        PiPi[iTime](2,0) += real( conj(Pi_x__mM)*Pi_z__M + conj(Pi_z__mM)*Pi_x__M )/2.0;
-        PiPi[iTime](2,1) += real( conj(Pi_y__mM)*Pi_z__M + conj(Pi_z__mM)*Pi_y__M )/2.0;
+        PiPi[iTime](1,2) += real( conj(Pi_y__M)*Pi_z__M + conj(Pi_z__M)*Pi_y__M )/2.0;
+        PiPi[iTime](2,0) += real( conj(Pi_x__M)*Pi_z__M + conj(Pi_z__M)*Pi_x__M )/2.0;
+        PiPi[iTime](2,1) += real( conj(Pi_y__M)*Pi_z__M + conj(Pi_z__M)*Pi_y__M )/2.0;
         PiPi[iTime](2,2) += norm(Pi_z__M);
       }
     }
