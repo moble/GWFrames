@@ -63,7 +63,7 @@ using std::complex;
 
 
 // This macro is useful for debugging
-#define INFOTOCERR std::cerr << __FILE__ << ":" << __LINE__ << ":" << __func__ << std::endl
+#define INFOTOCERR std::cerr << __FILE__ << ":" << __LINE__ << ":" << __func__ << ":\t"
 
 const complex<double> ImaginaryI(0.0,1.0);
 
@@ -947,6 +947,249 @@ std::vector<std::vector<double> > GWFrames::Waveform::DipoleMoment(int ellMax) c
   }
 
   return D;
+}
+
+/// Measure the absolute magnitude of the violation of parity in the z direction
+std::vector<double> GWFrames::Waveform::ZParityViolationSquared(std::vector<int> Lmodes) const {
+  /// \param Lmodes L modes to evaluate
+  ///
+  /// This function measures the violation of invariance under
+  /// z-parity (reflection across the x-y plane).  Nonprecessing
+  /// systems in a suitable frame should have zero violation.
+  /// Precessing systems in any frame and nonprecessing systems in the
+  /// wrong frame will show violations.  This quantity can be
+  /// minimized over orientation to show the presence or absence of a
+  /// plane of symmetry.
+
+  if(Lmodes.size()==0) {
+    Lmodes.push_back(lm[0][0]);
+    for(unsigned int i_m=0; i_m<NModes(); ++i_m) {
+      if(std::find(Lmodes.begin(), Lmodes.end(), lm[i_m][0]) == Lmodes.end() ) {
+        Lmodes.push_back(lm[i_m][0]);
+      }
+    }
+  }
+
+  vector<double> violation(NTimes(),0.0);
+
+  for(int ell=std::abs(SpinWeight()); ell<=EllMax(); ++ell) {
+    for(int m=-ell; m<=ell; ++m) {
+      const unsigned int i_m = FindModeIndex(ell,m);
+      const unsigned int i_mm = FindModeIndex(ell,-m);
+      for(unsigned int i_t=0; i_t<NTimes(); ++i_t) {
+        violation[i_t] += 0.25 * std::norm( Data(i_m,i_t) - std::pow(-1.,ell)*std::conj(Data(i_mm,i_t)) );
+      }
+    }
+  }
+
+  return violation;
+}
+
+/// Measure the relative magnitude of the violation of parity in the z direction
+std::vector<double> GWFrames::Waveform::ZParityViolationNormalized(std::vector<int> Lmodes) const {
+  /// \param Lmodes L modes to evaluate
+  ///
+  /// This function measures the violation of invariance under
+  /// z-parity (reflection across the x-y plane).  Nonprecessing
+  /// systems in a suitable frame should have zero violation.
+  /// Precessing systems in any frame and nonprecessing systems in the
+  /// wrong frame will show violations.  This quantity can be
+  /// minimized over orientation to show the presence or absence of a
+  /// plane of symmetry.
+  ///
+  /// The quantity is normalized by the overall norm of the data at
+  /// each instant, and the square-root of that ratio is returned.
+
+  if(Lmodes.size()==0) {
+    Lmodes.push_back(lm[0][0]);
+    for(unsigned int i_m=0; i_m<NModes(); ++i_m) {
+      if(std::find(Lmodes.begin(), Lmodes.end(), lm[i_m][0]) == Lmodes.end() ) {
+        Lmodes.push_back(lm[i_m][0]);
+      }
+    }
+  }
+
+  vector<double> violation(NTimes(),0.0);
+  vector<double> norm(NTimes(),0.0);
+
+  for(int ell=std::abs(SpinWeight()); ell<=EllMax(); ++ell) {
+    for(int m=-ell; m<=ell; ++m) {
+      const unsigned int i_m = FindModeIndex(ell,m);
+      const unsigned int i_mm = FindModeIndex(ell,-m);
+      for(unsigned int i_t=0; i_t<NTimes(); ++i_t) {
+        violation[i_t] += 0.25 * std::norm( Data(i_m,i_t) - std::pow(-1.,ell)*std::conj(Data(i_mm,i_t)) );
+        norm[i_t] += std::norm( Data(i_m,i_t) );
+      }
+    }
+  }
+  for(unsigned int i_t=0; i_t<NTimes(); ++i_t) {
+    violation[i_t] = std::sqrt(violation[i_t]/norm[i_t]);
+  }
+
+  return violation;
+}
+
+
+#ifndef DOXYGEN
+#include <gsl/gsl_errno.h>
+#include <gsl/gsl_min.h>
+#include <gsl/gsl_multimin.h>
+void myGSLErrorHandler2 (const char * reason, const char * file, int line, int gsl_errno) {
+  std::cerr << "\n\n" << file << ":" << line << ": " << reason << std::endl;
+  throw(gsl_errno);
+}
+gsl_error_handler_t* defaultGSLErrorHandler3 = gsl_set_error_handler((gsl_error_handler_t*) &myGSLErrorHandler2);
+// This is a local object used by `ZParityViolationMinimized`
+double minfunc_ZParityViolation (const gsl_vector* delta, void* params);
+class ZParityViolationMinimizer {
+public:
+  const GWFrames::Waveform& Win;
+  GWFrames::Waveform W;
+  Quaternions::Quaternion R_delta_log;
+  const std::vector<int> EllEqualsTwo;
+  const int i_2, i_1, i_0, i_m1, i_m2;
+  gsl_multimin_fminimizer* s;
+  gsl_vector* ss;
+  gsl_vector* x;
+  gsl_multimin_function min_func;
+public:
+  ZParityViolationMinimizer(const GWFrames::Waveform& WIN)
+    : Win(WIN), W(Win.SliceOfTimeIndicesWithEll2(Win.NTimes()/2)), R_delta_log(), EllEqualsTwo(1,2),
+      i_2(Win.FindModeIndex(2,2)), i_1(Win.FindModeIndex(2,1)), i_0(Win.FindModeIndex(2,0)), i_m1(Win.FindModeIndex(2,-1)), i_m2(Win.FindModeIndex(2,-2))
+  {
+    min_func.n = 2;
+    min_func.f = &minfunc_ZParityViolation;
+    min_func.params = (void*) this;
+    R_delta_log = Quaternions::log(Quaternions::sqrtOfRotor(-Quaternions::zHat*Quaternions::Quaternion(W.OShaughnessyEtAlVector()[0])));
+    s = gsl_multimin_fminimizer_alloc(gsl_multimin_fminimizer_nmsimplex2, min_func.n);
+    ss = gsl_vector_alloc(min_func.n);
+    x = gsl_vector_alloc(min_func.n);
+  }
+  ~ZParityViolationMinimizer() {
+    gsl_vector_free(x);
+    gsl_vector_free(ss);
+    gsl_multimin_fminimizer_free(s);
+  }
+  void ResetToCenter() {
+    W = Win.SliceOfTimeIndicesWithEll2(Win.NTimes()/2);
+    R_delta_log = Quaternions::log(Quaternions::sqrtOfRotor(-Quaternions::zHat*Quaternions::Quaternion(W.OShaughnessyEtAlVector()[0])));
+  }
+  double EvaluateMinimizationQuantity(const double deltax, const double deltay) const {
+    const GWFrames::Waveform W2 = GWFrames::Waveform(W).RotateDecompositionBasis(Quaternions::exp(Quaternions::Quaternion(0.0,deltax,deltay,0.0)));
+    return std::sqrt (std::norm( W2.Data(i_2,0) - std::conj(W2.Data(i_m2,0)) )
+                      + std::norm( W2.Data(i_1,0) - std::conj(W2.Data(i_m1,0)) )
+                      + std::norm( W2.Data(i_0,0) - std::conj(W2.Data(i_0,0)) )
+                      + std::norm( W2.Data(i_m1,0) - std::conj(W2.Data(i_1,0)) )
+                      + std::norm( W2.Data(i_m2,0) - std::conj(W2.Data(i_2,0)) ) );
+  }
+  double Minimize(const unsigned int i) {
+    W = Win.SliceOfTimeIndicesWithEll2(i);
+    W.RotateDecompositionBasis(Quaternions::sqrtOfRotor(-Quaternions::zHat*Quaternions::Quaternion(W.OShaughnessyEtAlVector()[0])));
+    const unsigned int MaxIterations = 2000;
+    // const double MinSimplexSize = 2.0e-8; // This shouldn't be much less than sqrt(machine precision)
+    const double MinSimplexSize = 1.0e-14; // When the function is abs of a linear function, this can be small
+    const double InitialTrialAngleStep = M_PI/8.0;
+    size_t iter = 0;
+    int status = GSL_CONTINUE;
+    double size = 0.0;
+
+    // Do a stupid minimization first
+    gsl_vector_set(x, 0, 0.);
+    gsl_vector_set(x, 1, 0.);
+    double Violation=1.0e200;
+    double dalpha=0.01;
+    for(double alpha=0.0; alpha<M_PI; alpha+=dalpha) {
+      {
+        const double violation = EvaluateMinimizationQuantity(alpha/2.0,0.0);
+        if(Violation>violation) {
+          Violation = violation;
+          gsl_vector_set(x, 0, alpha/2.0);
+          gsl_vector_set(x, 1, 0.);
+        }
+      }
+      {
+        const double violation = EvaluateMinimizationQuantity(0.0,alpha/2.0);
+        if(Violation>violation) {
+          Violation = violation;
+          gsl_vector_set(x, 0, 0.);
+          gsl_vector_set(x, 1, alpha/2.0);
+        }
+      }
+    }
+    // INFOTOCERR << std::setprecision(12) << Violation << "; " << R_delta_log[1] << "," << R_delta_log[2] << endl;
+
+    // Use the result from the last block to start off an explicit optimization
+    gsl_vector_set(ss, 0, InitialTrialAngleStep);
+    gsl_vector_set(ss, 1, InitialTrialAngleStep);
+    gsl_multimin_fminimizer_set(s, &min_func, x, ss);
+    // Run the minimization
+    while(status == GSL_CONTINUE && iter < MaxIterations) {
+      iter++;
+      status = gsl_multimin_fminimizer_iterate(s);
+      if(status==GSL_EBADFUNC) {
+        std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+                  << ":\nThe iteration encountered a singular point where the function evaluated to Inf or NaN"
+                  << "\nwhile minimizing at (" << gsl_vector_get(s->x, 0) << ", " << gsl_vector_get(s->x, 1)
+                  << ")." << std::endl;
+      }
+      if(status==GSL_FAILURE) {
+        std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+                  << ":\nThe algorithm could not improve the current best approximation or bounding interval." << std::endl;
+      }
+      if(status==GSL_ENOPROG) {
+        std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+                  << ":\nThe minimizer is unable to improve on its current estimate, either due to"
+                  << "\nnumerical difficulty or because a genuine local minimum has been reached." << std::endl;
+      }
+      if(status) break;
+      size = gsl_multimin_fminimizer_size(s);
+      status = gsl_multimin_test_size(size, MinSimplexSize);
+    }
+    // Get rotation and normalized value
+    R_delta_log = Quaternions::Quaternion(0.0, gsl_vector_get(s->x, 0), gsl_vector_get(s->x, 1), 0.0);
+    // INFOTOCERR << iter << " " << s->fval << "; " << R_delta_log[1] << "," << R_delta_log[2] << endl;
+    return GWFrames::Waveform(W).RotateDecompositionBasis(Quaternions::exp(R_delta_log)).ZParityViolationNormalized(EllEqualsTwo)[0];
+  }
+};
+double minfunc_ZParityViolation (const gsl_vector* delta, void* params) {
+  ZParityViolationMinimizer* Minimizer = (ZParityViolationMinimizer*) params;
+  return Minimizer->EvaluateMinimizationQuantity(gsl_vector_get(delta,0),
+                                                 gsl_vector_get(delta,1));
+}
+#endif // DOXYGEN
+
+/// Measure the relative magnitude of the violation of parity in the z direction
+std::vector<double> GWFrames::Waveform::ZParityViolationMinimized() const {
+  /// This function measures the violation of invariance under
+  /// z-parity (reflection across the x-y plane).  Nonprecessing
+  /// systems in a suitable frame should have zero violation.
+  /// Precessing systems in any frame and nonprecessing systems in the
+  /// wrong frame will show violations.  The quantity is normalized by
+  /// the overall norm of the data at each instant, and the
+  /// square-root of that ratio is taken.
+  ///
+  /// This is performed iteratively at each time step, as the system
+  /// is rotated, and the parity violation is minimized.
+
+  const unsigned int ntimes = NTimes();
+  vector<double> violations(ntimes);
+  ZParityViolationMinimizer Minimizer(*this);
+
+  for(unsigned int i_t=0; i_t<ntimes; ++i_t) {
+    INFOTOCERR << i_t << "/" << ntimes << std::endl;
+    violations[i_t] = Minimizer.Minimize(i_t);
+  }
+  // for(unsigned int i_t=(NTimes()/2); i_t<NTimes(); ++i_t) {
+  //   INFOTOCERR << i_t << "/" << NTimes() << std::endl;
+  //   violations[i_t] = Minimizer.Minimize(i_t);
+  // }
+  // Minimizer.ResetToCenter();
+  // for(int i_t=(NTimes()/2)-1; i_t>=0; --i_t) {
+  //   INFOTOCERR << i_t << "/" << NTimes() << std::endl;
+  //   violations[i_t] = Minimizer.Minimize(i_t);
+  // }
+
+  return violations;
 }
 
 
@@ -2328,7 +2571,7 @@ void GWFrames::Waveform::GetAlignmentOfDecompositionFrameToModes(const double t_
   // parallel to the input nHat_t_fid than anti-parallel.
   if(nHat_t_fid.dot(R_f0*R_eps*Quaternions::xHat*R_eps.inverse()*R_f0.inverse()) < 0) {
     R_eps = R_eps * Quaternions::exp((M_PI/2.)*Quaternions::zHat);
-    // INFOTOCERR << ": Rotating by pi about the z axis initially.\n"
+    // INFOTOCERR << "Rotating by pi about the z axis initially.\n"
     //            << nHat_t_fid << "\n"
     //            << R_f0*R_eps*Quaternions::xHat*R_eps.inverse()*R_f0.inverse() << "\n"
     //            << R_f0 << "\n"
@@ -2673,11 +2916,6 @@ GWFrames::Waveform& GWFrames::Waveform::AlignTimeAndFrame(const GWFrames::Wavefo
 #include <gsl/gsl_errno.h>
 #include <gsl/gsl_min.h>
 #include <gsl/gsl_multimin.h>
-void myGSLErrorHandler2 (const char * reason, const char * file, int line, int gsl_errno) {
-  std::cerr << "\n\n" << file << ":" << line << ": " << reason << std::endl;
-  throw(gsl_errno);
-}
-gsl_error_handler_t* defaultGSLErrorHandler2 = gsl_set_error_handler((gsl_error_handler_t*) &myGSLErrorHandler2);
 // This is a local object used by `AlignWaveforms`
 class WaveformAligner {
 public:

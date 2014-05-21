@@ -156,7 +156,9 @@ namespace GWFrames {
     std::vector<double> NormalizedAsymmetry(std::vector<int> LModesForAsymmetry=std::vector<int>(0)) const;
     std::vector<double> FakeBadNormalizedAsymmetry(int mMode=2) const;
     std::vector<std::vector<double> > DipoleMoment(int ellMax=0) const;
-    //std::vector<double> ZParityViolation(std::vector<int> Lmodes=std::vector<int>(0)) const;
+    std::vector<double> ZParityViolationSquared(std::vector<int> Lmodes=std::vector<int>(0)) const;
+    std::vector<double> ZParityViolationNormalized(std::vector<int> Lmodes=std::vector<int>(0)) const;
+    std::vector<double> ZParityViolationMinimized() const;
 
   private: // Member function
     Waveform& TransformModesToRotatedFrame(const std::vector<Quaternions::Quaternion>& R_frame);
