@@ -21428,7 +21428,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap__Waveform_NormalizedAsymmetry__SWIG_0(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__Waveform_NormalizedAntisymmetry__SWIG_0(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
   SwigValueWrapper< std::vector< int,std::allocator< int > > > arg2 ;
@@ -21438,10 +21438,10 @@ SWIGINTERN PyObject *_wrap__Waveform_NormalizedAsymmetry__SWIG_0(PyObject *self,
   PyObject * obj1 = 0 ;
   SwigValueWrapper< std::vector< double,std::allocator< double > > > result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:_Waveform_NormalizedAsymmetry",&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:_Waveform_NormalizedAntisymmetry",&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_NormalizedAsymmetry" "', argument " "1"" of type '" "GWFrames::Waveform const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_NormalizedAntisymmetry" "', argument " "1"" of type '" "GWFrames::Waveform const *""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
   {
@@ -21482,7 +21482,7 @@ SWIGINTERN PyObject *_wrap__Waveform_NormalizedAsymmetry__SWIG_0(PyObject *self,
   }
   {
     try {
-      result = ((GWFrames::Waveform const *)arg1)->NormalizedAsymmetry(arg2);;
+      result = ((GWFrames::Waveform const *)arg1)->NormalizedAntisymmetry(arg2);;
     } catch(int i) {
       std::stringstream s;
       if(i>-1 && i<GWFramesNumberOfErrors) {
@@ -21508,7 +21508,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap__Waveform_NormalizedAsymmetry__SWIG_1(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__Waveform_NormalizedAntisymmetry__SWIG_1(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
   void *argp1 = 0 ;
@@ -21518,12 +21518,12 @@ SWIGINTERN PyObject *_wrap__Waveform_NormalizedAsymmetry__SWIG_1(PyObject *self,
   if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_NormalizedAsymmetry" "', argument " "1"" of type '" "GWFrames::Waveform const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_NormalizedAntisymmetry" "', argument " "1"" of type '" "GWFrames::Waveform const *""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
   {
     try {
-      result = ((GWFrames::Waveform const *)arg1)->NormalizedAsymmetry();;
+      result = ((GWFrames::Waveform const *)arg1)->NormalizedAntisymmetry();;
     } catch(int i) {
       std::stringstream s;
       if(i>-1 && i<GWFramesNumberOfErrors) {
@@ -21549,7 +21549,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap__Waveform_NormalizedAsymmetry(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap__Waveform_NormalizedAntisymmetry(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[3];
   int ii;
@@ -21567,7 +21567,7 @@ SWIGINTERN PyObject *_wrap__Waveform_NormalizedAsymmetry(PyObject *self, PyObjec
     int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__Waveform, 0);
     _v = SWIG_CheckState(res);
     if (_v) {
-      return _wrap__Waveform_NormalizedAsymmetry__SWIG_1(self, args);
+      return _wrap__Waveform_NormalizedAntisymmetry__SWIG_1(self, args);
     }
   }
   if (argc == 2) {
@@ -21591,16 +21591,16 @@ SWIGINTERN PyObject *_wrap__Waveform_NormalizedAsymmetry(PyObject *self, PyObjec
         }
       }
       if (_v) {
-        return _wrap__Waveform_NormalizedAsymmetry__SWIG_0(self, args);
+        return _wrap__Waveform_NormalizedAntisymmetry__SWIG_0(self, args);
       }
     }
   }
   
 fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function '_Waveform_NormalizedAsymmetry'.\n"
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function '_Waveform_NormalizedAntisymmetry'.\n"
     "  Possible C/C++ prototypes are:\n"
-    "    GWFrames::Waveform::NormalizedAsymmetry(std::vector< int,std::allocator< int > >) const\n"
-    "    GWFrames::Waveform::NormalizedAsymmetry() const\n");
+    "    GWFrames::Waveform::NormalizedAntisymmetry(std::vector< int,std::allocator< int > >) const\n"
+    "    GWFrames::Waveform::NormalizedAntisymmetry() const\n");
   return 0;
 }
 
@@ -40068,7 +40068,7 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__Waveform_methods[] = {
 		"  \n"
 		"\n"
 		"" },
-  { "NormalizedAsymmetry", (PyCFunction) _wrap__Waveform_NormalizedAsymmetry, METH_VARARGS, (char*) "" },
+  { "NormalizedAntisymmetry", (PyCFunction) _wrap__Waveform_NormalizedAntisymmetry, METH_VARARGS, (char*) "" },
   { "FakeBadNormalizedAsymmetry", (PyCFunction) _wrap__Waveform_FakeBadNormalizedAsymmetry, METH_VARARGS, (char*) "" },
   { "DipoleMoment", (PyCFunction) _wrap__Waveform_DipoleMoment, METH_VARARGS, (char*) "" },
   { "ZParityViolationSquared", (PyCFunction) _wrap__Waveform_ZParityViolationSquared, METH_VARARGS, (char*) "" },

@@ -153,7 +153,7 @@ namespace GWFrames {
     unsigned int MaxNormIndex(const unsigned int SkipFraction=4) const;
     inline double MaxNormTime(const unsigned int SkipFraction=4) const { return T(MaxNormIndex(SkipFraction)); }
     std::vector<double> Contrast(const int L, const int M) const;
-    std::vector<double> NormalizedAsymmetry(std::vector<int> LModesForAsymmetry=std::vector<int>(0)) const;
+    std::vector<double> NormalizedAntisymmetry(std::vector<int> LModesForAsymmetry=std::vector<int>(0)) const;
     std::vector<double> FakeBadNormalizedAsymmetry(int mMode=2) const;
     std::vector<std::vector<double> > DipoleMoment(int ellMax=0) const;
     std::vector<double> ZParityViolationSquared(std::vector<int> Lmodes=std::vector<int>(0)) const;

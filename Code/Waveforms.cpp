@@ -810,15 +810,15 @@ std::vector<double> GWFrames::Waveform::Contrast(const int L, const int M) const
 }
 
 /// Return the normalized asymmetry as a function of time
-std::vector<double> GWFrames::Waveform::NormalizedAsymmetry(std::vector<int> LModesForAsymmetry) const {
+std::vector<double> GWFrames::Waveform::NormalizedAntisymmetry(std::vector<int> LModesForAsymmetry) const {
   /// \param LModesForAsymmetry \f$\ell\f$ modes to use when calculating numerator
   ///
   /// This function just returns the value of the normalized asymmetry
-  /// \f$\hat{\alpha}\f$ defined by Boyle et al. (2014), which is the
-  /// difference between the field at a point and its conjugate at the
-  /// antipodal point, the amplitude squared and integrated over the
-  /// sphere.  The normalization is just the `Norm` of the
-  /// waveform---its overall power at each instant.
+  /// \f$a\f$ defined by Boyle et al. (2014), which is the difference
+  /// between the field at a point and its conjugate at the antipodal
+  /// point, the amplitude squared and integrated over the sphere.
+  /// The normalization is just the `Norm` of the waveform---its
+  /// overall power at each instant.
   ///
   /// By default, all ell modes in the data are used for both the
   /// asymmetry and the normalization factor.  If an argument is
@@ -848,7 +848,7 @@ std::vector<double> GWFrames::Waveform::NormalizedAsymmetry(std::vector<int> LMo
         }
       }
     }
-    asymmetry[i_t] = std::sqrt(diff/norm);
+    asymmetry[i_t] = std::sqrt(diff/(4*norm));
   }
   return asymmetry;
 }
@@ -1030,6 +1030,7 @@ std::vector<double> GWFrames::Waveform::ZParityViolationNormalized(std::vector<i
 }
 
 
+// The following are local objects used by `ZParityViolationMinimized`
 #ifndef DOXYGEN
 #include <gsl/gsl_errno.h>
 #include <gsl/gsl_min.h>
@@ -1039,13 +1040,12 @@ void myGSLErrorHandler2 (const char * reason, const char * file, int line, int g
   throw(gsl_errno);
 }
 gsl_error_handler_t* defaultGSLErrorHandler3 = gsl_set_error_handler((gsl_error_handler_t*) &myGSLErrorHandler2);
-// This is a local object used by `ZParityViolationMinimized`
 double minfunc_ZParityViolation (const gsl_vector* delta, void* params);
 class ZParityViolationMinimizer {
 public:
   const GWFrames::Waveform& Win;
   GWFrames::Waveform W;
-  Quaternions::Quaternion R_delta_log;
+  Quaternions::Quaternion R_last;
   const std::vector<int> EllEqualsTwo;
   const int i_2, i_1, i_0, i_m1, i_m2;
   gsl_multimin_fminimizer* s;
@@ -1054,13 +1054,13 @@ public:
   gsl_multimin_function min_func;
 public:
   ZParityViolationMinimizer(const GWFrames::Waveform& WIN)
-    : Win(WIN), W(Win.SliceOfTimeIndicesWithEll2(Win.NTimes()/2)), R_delta_log(), EllEqualsTwo(1,2),
+    : Win(WIN), W(Win.SliceOfTimeIndicesWithEll2(Win.NTimes()/2)), R_last(), EllEqualsTwo(1,2),
       i_2(Win.FindModeIndex(2,2)), i_1(Win.FindModeIndex(2,1)), i_0(Win.FindModeIndex(2,0)), i_m1(Win.FindModeIndex(2,-1)), i_m2(Win.FindModeIndex(2,-2))
   {
     min_func.n = 2;
     min_func.f = &minfunc_ZParityViolation;
     min_func.params = (void*) this;
-    R_delta_log = Quaternions::log(Quaternions::sqrtOfRotor(-Quaternions::zHat*Quaternions::Quaternion(W.OShaughnessyEtAlVector()[0])));
+    R_last = Quaternions::sqrtOfRotor(-Quaternions::zHat*Quaternions::Quaternion(W.OShaughnessyEtAlVector()[0]));
     s = gsl_multimin_fminimizer_alloc(gsl_multimin_fminimizer_nmsimplex2, min_func.n);
     ss = gsl_vector_alloc(min_func.n);
     x = gsl_vector_alloc(min_func.n);
@@ -1069,10 +1069,6 @@ public:
     gsl_vector_free(x);
     gsl_vector_free(ss);
     gsl_multimin_fminimizer_free(s);
-  }
-  void ResetToCenter() {
-    W = Win.SliceOfTimeIndicesWithEll2(Win.NTimes()/2);
-    R_delta_log = Quaternions::log(Quaternions::sqrtOfRotor(-Quaternions::zHat*Quaternions::Quaternion(W.OShaughnessyEtAlVector()[0])));
   }
   double EvaluateMinimizationQuantity(const double deltax, const double deltay) const {
     const GWFrames::Waveform W2 = GWFrames::Waveform(W).RotateDecompositionBasis(Quaternions::exp(Quaternions::Quaternion(0.0,deltax,deltay,0.0)));
@@ -1084,34 +1080,33 @@ public:
   }
   double Minimize(const unsigned int i) {
     W = Win.SliceOfTimeIndicesWithEll2(i);
-    W.RotateDecompositionBasis(Quaternions::sqrtOfRotor(-Quaternions::zHat*Quaternions::Quaternion(W.OShaughnessyEtAlVector()[0])));
+    W.RotateDecompositionBasis(R_last);
     const unsigned int MaxIterations = 2000;
-    // const double MinSimplexSize = 2.0e-8; // This shouldn't be much less than sqrt(machine precision)
-    const double MinSimplexSize = 1.0e-14; // When the function is abs of a linear function, this can be small
-    const double InitialTrialAngleStep = M_PI/8.0;
+    const double MinSimplexSize = 1.0e-15; // When the function is abs of a linear function, this can be small
+    const double InitialTrialAngleStep = M_PI/16.0;
     size_t iter = 0;
     int status = GSL_CONTINUE;
     double size = 0.0;
 
-    // Do a stupid minimization first
+    // Do a dumb minimization first
     gsl_vector_set(x, 0, 0.);
     gsl_vector_set(x, 1, 0.);
-    double Violation=1.0e200;
-    double dalpha=0.01;
-    for(double alpha=0.0; alpha<M_PI; alpha+=dalpha) {
+    double Violation=EvaluateMinimizationQuantity(0.0,0.0);
+    double dalpha=0.0005;
+    for(double alpha=dalpha; alpha<M_PI; alpha+=dalpha) {
       {
         const double violation = EvaluateMinimizationQuantity(alpha/2.0,0.0);
         if(Violation>violation) {
           Violation = violation;
           gsl_vector_set(x, 0, alpha/2.0);
-          gsl_vector_set(x, 1, 0.);
+          gsl_vector_set(x, 1, 0.0);
         }
       }
-      {
+      { // Check the opposite direction too, just in case...
         const double violation = EvaluateMinimizationQuantity(0.0,alpha/2.0);
         if(Violation>violation) {
           Violation = violation;
-          gsl_vector_set(x, 0, 0.);
+          gsl_vector_set(x, 0, 0.0);
           gsl_vector_set(x, 1, alpha/2.0);
         }
       }
@@ -1146,9 +1141,10 @@ public:
       status = gsl_multimin_test_size(size, MinSimplexSize);
     }
     // Get rotation and normalized value
-    R_delta_log = Quaternions::Quaternion(0.0, gsl_vector_get(s->x, 0), gsl_vector_get(s->x, 1), 0.0);
+    const Quaternions::Quaternion R_delta = Quaternions::exp(Quaternions::Quaternion(0.0, gsl_vector_get(s->x, 0), gsl_vector_get(s->x, 1), 0.0));
+    R_last = R_delta * R_last;
     // INFOTOCERR << iter << " " << s->fval << "; " << R_delta_log[1] << "," << R_delta_log[2] << endl;
-    return GWFrames::Waveform(W).RotateDecompositionBasis(Quaternions::exp(R_delta_log)).ZParityViolationNormalized(EllEqualsTwo)[0];
+    return GWFrames::Waveform(W).RotateDecompositionBasis(R_delta).ZParityViolationNormalized()[0];
   }
 };
 double minfunc_ZParityViolation (const gsl_vector* delta, void* params) {
@@ -1179,15 +1175,6 @@ std::vector<double> GWFrames::Waveform::ZParityViolationMinimized() const {
     INFOTOCERR << i_t << "/" << ntimes << std::endl;
     violations[i_t] = Minimizer.Minimize(i_t);
   }
-  // for(unsigned int i_t=(NTimes()/2); i_t<NTimes(); ++i_t) {
-  //   INFOTOCERR << i_t << "/" << NTimes() << std::endl;
-  //   violations[i_t] = Minimizer.Minimize(i_t);
-  // }
-  // Minimizer.ResetToCenter();
-  // for(int i_t=(NTimes()/2)-1; i_t>=0; --i_t) {
-  //   INFOTOCERR << i_t << "/" << NTimes() << std::endl;
-  //   violations[i_t] = Minimizer.Minimize(i_t);
-  // }
 
   return violations;
 }
