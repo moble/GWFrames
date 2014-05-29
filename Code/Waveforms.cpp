@@ -1092,7 +1092,7 @@ public:
     gsl_vector_set(x, 0, 0.);
     gsl_vector_set(x, 1, 0.);
     double Violation=EvaluateMinimizationQuantity(0.0,0.0);
-    double dalpha=0.0005;
+    double dalpha=0.05;
     for(double alpha=dalpha; alpha<M_PI; alpha+=dalpha) {
       {
         const double violation = EvaluateMinimizationQuantity(alpha/2.0,0.0);
