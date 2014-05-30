@@ -1060,7 +1060,7 @@ public:
     min_func.n = 2;
     min_func.f = &minfunc_ZParityViolation;
     min_func.params = (void*) this;
-    R_last = Quaternions::sqrtOfRotor(-Quaternions::zHat*Quaternions::Quaternion(W.OShaughnessyEtAlVector()[0]));
+    R_last = Quaternions::sqrtOfRotor(-Quaternions::zHat*Quaternions::Quaternion(W.LLDominantEigenvector()[0]));
     s = gsl_multimin_fminimizer_alloc(gsl_multimin_fminimizer_nmsimplex2, min_func.n);
     ss = gsl_vector_alloc(min_func.n);
     x = gsl_vector_alloc(min_func.n);
@@ -1561,7 +1561,7 @@ vector<Matrix> GWFrames::Waveform::LLMatrix(vector<int> Lmodes) const {
 }
 
 /// Calculate the principal axis of the LL matrix, as prescribed by O'Shaughnessy et al.
-std::vector<std::vector<double> > GWFrames::Waveform::OShaughnessyEtAlVector(const std::vector<int>& Lmodes) const {
+std::vector<std::vector<double> > GWFrames::Waveform::LLDominantEigenvector(const std::vector<int>& Lmodes) const {
   ///
   /// \param Lmodes L modes to evaluate
   ///
@@ -1704,7 +1704,7 @@ vector<vector<double> > GWFrames::Waveform::PNEquivalentOrbitalAV(const vector<i
 
   // Get the vectors we need
   const vector<vector<double> > omega = AngularVelocityVector(Lmodes);
-  vector<vector<double> > V_f = OShaughnessyEtAlVector(Lmodes);
+  vector<vector<double> > V_f = LLDominantEigenvector(Lmodes);
 
   // Do the calculation
   for(unsigned int i=0; i<V_f.size(); ++i) {
@@ -1759,22 +1759,24 @@ vector<vector<double> > GWFrames::Waveform::PNEquivalentPrecessionalAV(const vec
   return omega;
 }
 
-
-/// Transform Waveform to O'Shaughnessy et al. frame.
-GWFrames::Waveform& GWFrames::Waveform::TransformToOShaughnessyEtAlFrame(const std::vector<int>& Lmodes) {
+/// Transform Waveform to co-precessing frame.
+GWFrames::Waveform& GWFrames::Waveform::TransformToCoprecessingFrame(const std::vector<int>& Lmodes) {
   ///
   /// \param Lmodes L modes to evaluate
   ///
   /// This function combines the steps required to obtain the Waveform
-  /// in the O'Shaughnessy et al. frame.
+  /// in a frame with its `z` axis aligned with the vector V_h defined
+  /// by O'Shaughnessy et al. [2011], and its alignment about the `z`
+  /// axis satisfying the minimal-rotation condition, as given by
+  /// Boyle, Owen, Pfeiffer [2011].
   ///
   /// If Lmodes is empty (default), all L modes are used.  Setting
   /// Lmodes to [2] or [2,3,4], for example, restricts the range of
   /// the sum.
   ///
-  history << "this->TransformToOShaughnessyEtAlFrame(" << StringForm(Lmodes) << ")\n#";
+  history << "this->TransformToCoprecessingFrame(" << StringForm(Lmodes) << ")\n#";
   this->frameType = GWFrames::Coprecessing;
-  return this->RotateDecompositionBasis(FrameFromZ(normalized(QuaternionArray(this->OShaughnessyEtAlVector(Lmodes))), T()));
+  return this->RotateDecompositionBasis(FrameFromZ(normalized(QuaternionArray(this->LLDominantEigenvector(Lmodes))), T()));
 }
 
 /// Transform Waveform to frame aligned with angular-velocity vector.
@@ -2224,7 +2226,7 @@ std::vector<Quaternions::Quaternion> GWFrames::Waveform::GetAlignmentsOfDecompos
       * Quaternions::normalized(Quaternions::QuaternionArray(this->SliceOfTimesWithEll2().TransformToInertialFrame().AngularVelocityVector())) * frame;
 
   // V_h is the dominant eigenvector of <LL>
-  const vector<vector<double> > V_h = this->OShaughnessyEtAlVector(Lmodes);
+  const vector<vector<double> > V_h = this->LLDominantEigenvector(Lmodes);
 
   for(unsigned int i_t=0; i_t<NTimes(); ++i_t) {
     // Choose the normalized eigenvector more parallel to omegaHat than anti-parallel
@@ -2337,7 +2339,7 @@ void GWFrames::Waveform::GetAlignmentOfDecompositionFrameToModes(const double t_
   const Quaternion R_f0 = Instant.Frame(0);
 
   // V_f is the dominant eigenvector of <LL>, suggested by O'Shaughnessy et al.
-  const Quaternion V_f = Quaternions::Quaternion(Instant.OShaughnessyEtAlVector(Lmodes)[0]).normalized();
+  const Quaternion V_f = Quaternions::Quaternion(Instant.LLDominantEigenvector(Lmodes)[0]).normalized();
   const Quaternion V_f_aligned = (omegaHat.dot(V_f) < 0 ? -V_f : V_f);
 
   // R_V_f is the rotor taking the Z axis onto V_f
@@ -2463,7 +2465,7 @@ void GWFrames::Waveform::GetAlignmentOfDecompositionFrameToModes(const double t1
     vector<double> vt_fid(1);
     vt_fid[0] = t_fid;
     Waveform W_fid = W.Interpolate(vt_fid);
-    const Quaternion V_f = Quaternion(W_fid.OShaughnessyEtAlVector(Lmodes)[0]).normalized();
+    const Quaternion V_f = Quaternion(W_fid.LLDominantEigenvector(Lmodes)[0]).normalized();
     const Quaternion V_f_aligned = ( ellHat_fid.dot(V_f) < 0 ? -V_f : V_f);
     // R_V_f is the rotor taking zHat onto V_f_aligned via the previous step's ellHat
     const Quaternion R_V_f = Quaternions::sqrtOfRotor(-V_f_aligned*ellHat_fid)*R_zeta[i-1];

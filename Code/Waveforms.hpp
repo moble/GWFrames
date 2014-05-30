@@ -177,7 +177,7 @@ namespace GWFrames {
 
     std::vector<std::vector<double> > LdtVector(std::vector<int> Lmodes=std::vector<int>(0)) const;
     std::vector<Matrix> LLMatrix(std::vector<int> Lmodes=std::vector<int>(0)) const;
-    std::vector<std::vector<double> > OShaughnessyEtAlVector(const std::vector<int>& Lmodes=std::vector<int>(0)) const;
+    std::vector<std::vector<double> > LLDominantEigenvector(const std::vector<int>& Lmodes=std::vector<int>(0)) const;
     std::vector<std::vector<double> > AngularVelocityVector(const std::vector<int>& Lmodes=std::vector<int>(0)) const;
     std::vector<Quaternions::Quaternion> CorotatingFrame(const std::vector<int>& Lmodes=std::vector<int>(0)) const;
 
@@ -186,7 +186,7 @@ namespace GWFrames {
     std::vector<std::vector<double> > PNEquivalentPrecessionalAV(const std::vector<int>& Lmodes=std::vector<int>(0)) const;
 
     // Convenient transformations
-    Waveform& TransformToOShaughnessyEtAlFrame(const std::vector<int>& Lmodes=std::vector<int>(0));
+    Waveform& TransformToCoprecessingFrame(const std::vector<int>& Lmodes=std::vector<int>(0));
     Waveform& TransformToAngularVelocityFrame(const std::vector<int>& Lmodes=std::vector<int>(0));
     Waveform& TransformToCorotatingFrame(const std::vector<int>& Lmodes=std::vector<int>(0));
     Waveform& TransformToInertialFrame();

@@ -15,23 +15,39 @@ Find the Moreschi supermomentum.
   
 """
 
-%feature("docstring") GWFrames::Waveform::TransformUncertaintiesToInertialFrame """
-Transform Waveform to an inertial frame.
-========================================
+%feature("docstring") GWFrames::Waveform::Re """
+
+
+  Parameters
+  ----------
+    const unsigned int Mode
+    const unsigned int TimeIndex
+  
+  Returns
+  -------
+    double
+  
+
+Return vector of real parts of a given mode as function of time.
+================================================================
+  Parameters
+  ----------
+    const unsigned int Mode
+  
+  Returns
+  -------
+    vector<double>
+  
+
+Return vector of vector of real parts of all modes as function of time.
+=======================================================================
   Parameters
   ----------
     (none)
   
   Returns
   -------
-    Waveform&
-  
-  Description
-  -----------
-    This function uses the stored frame information to transform from whatever
-    rotating frame the waveform is currently in, to a stationary, inertial
-    frame. This is the usual frame of scri^+, and is the frame in which GW
-    observations should be made.
+    vector<vector<double>>
   
 """
 
@@ -269,20 +285,6 @@ Deduce PN-equivalent orbital angular velocity from Waveform.
   
 """
 
-%feature("docstring") Rbar_fB """
-
-
-  Parameters
-  ----------
-    const Waveform& W_B
-    const vector<double>& t
-  
-  Returns
-  -------
-    vector<Quaternion>
-  
-"""
-
 %feature("docstring") GWFrames::AlignWaveforms """
 Do everything necessary to align two waveform objects.
 ======================================================
@@ -295,7 +297,6 @@ Do everything necessary to align two waveform objects.
     const vector<vector<double>>& nHat_B
       Approximate nHat vectors at t_B
     const vector<double>& t_B
-      Times corresponding to values of nHat_B
     const double t_1
       Beginning of alignment interval
     const double t_2
@@ -470,17 +471,6 @@ Copy of the Waveform between t_a and t_b, only ell=2 modes.
 """
 
 %feature("docstring") SQR """
-
-
-  Parameters
-  ----------
-    const double a
-  
-  Returns
-  -------
-    double
-  
-
 
 
   Parameters
@@ -823,28 +813,6 @@ Newman-Penrose edth operator.
   
 """
 
-%feature("docstring") GWFrames::Waveform::TransformToOShaughnessyEtAlFrame """
-Transform Waveform to O'Shaughnessy et al. frame.
-=================================================
-  Parameters
-  ----------
-    const vector<int>& Lmodes = vector<int>(0)
-      L modes to evaluate
-  
-  Returns
-  -------
-    Waveform&
-  
-  Description
-  -----------
-    This function combines the steps required to obtain the Waveform in the
-    O'Shaughnessy et al. frame.
-    
-    If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
-    or [2,3,4], for example, restricts the range of the sum.
-  
-"""
-
 %feature("docstring") zHat """
 
 
@@ -1025,8 +993,7 @@ class GWFrames::Waveform
   Non-public member functions
   ---------------------------
     Waveform& TransformModesToRotatedFrame
-      Rotate modes of the Waveform object.    Waveform& TransformUncertaintiesToRotatedFrame
-      Rotate modes of the uncertainty of a Waveform object.  
+      Rotate modes of the Waveform object.  
 """
 
 %feature("docstring") GWFrames::PNWaveform::chi2Mag """
@@ -1335,6 +1302,32 @@ Differentiate the waveform as a function of time.
   
 """
 
+%feature("docstring") GWFrames::Waveform::ZParityViolationNormalized """
+Measure the relative magnitude of the violation of parity in the z direction.
+=============================================================================
+  Parameters
+  ----------
+    vector<int> Lmodes = vector<int>(0)
+      L modes to evaluate
+  
+  Returns
+  -------
+    vector<double>
+  
+  Description
+  -----------
+    This function measures the violation of invariance under z-parity
+    (reflection across the x-y plane). Nonprecessing systems in a suitable
+    frame should have zero violation. Precessing systems in any frame and
+    nonprecessing systems in the wrong frame will show violations. This
+    quantity can be minimized over orientation to show the presence or absence
+    of a plane of symmetry.
+    
+    The quantity is normalized by the overall norm of the data at each instant,
+    and the square-root of that ratio is returned.
+  
+"""
+
 %feature("docstring") Modes::Modes """
 
 
@@ -1565,22 +1558,6 @@ Get the rotor needed to align this waveform's frame to the other's at the given 
     that function's documentation for more details.
     
     AlignFrame
-  
-"""
-
-%feature("docstring") Rbar_epsB """
-
-
-  Parameters
-  ----------
-    const Waveform& W_B
-    const vector<Quaternion>& R_epsB
-    const double t
-    unsigned int& Rbar_epsB_i
-  
-  Returns
-  -------
-    Quaternion
   
 """
 
@@ -2174,6 +2151,39 @@ Align time and frame over extended region.
   
 """
 
+%feature("docstring") GWFrames::Waveform::ApplySupertranslation """
+Re-interpolate data to new time slices given by this supertranslation.
+======================================================================
+  Parameters
+  ----------
+    vector<complex<double>>& gamma
+  
+  Returns
+  -------
+    Waveform
+  
+  Description
+  -----------
+    This function takes the current data decomposed as spherical harmonics on a
+    given slicing, transforms to physical space, re-interpolates the data at
+    each point to a new set of time slices, and transforms back to
+    spherical-harmonic coefficients.
+    
+    The supertranslation data input gamma is a vector of complex numbers
+    representing the (scalar) spherical-harmonic components of the
+    supertranslation, stored in the order (0,0), (1,-1), (1,0), (1,1), (2,-2),
+    ... The overall time translation is given by the first component; the
+    spatial translation is given by the second through fourth componentes;
+    higher components give the proper supertranslations. In particular, a
+    proper supertranslation will have its first four coefficients equal to 0.0.
+    
+    Note that, for general spin-weighted spherical-harmonic components
+    ${}_{s}a_{l,m}$, a real function results when ${}_{-s}a_{l,-m} =
+    {}_{s}a_{l,m}^\\ast$. In particular, the input gamma data are assumed to
+    satisfy this formula with $s=0$.
+  
+"""
+
 %feature("docstring") GWFrames::Waveform::operator* """
 
 
@@ -2551,39 +2561,16 @@ Return vector of vector of arg of all modes as function of time.
   
 """
 
-%feature("docstring") GWFrames::Waveform::Re """
-
-
+%feature("docstring") GWFrames::Waveform::InterpolateInPlace """
+Interpolate the Waveform to a new set of time instants.
+=======================================================
   Parameters
   ----------
-    const unsigned int Mode
-    const unsigned int TimeIndex
+    const vector<double>& NewTime
   
   Returns
   -------
-    double
-  
-
-Return vector of real parts of a given mode as function of time.
-================================================================
-  Parameters
-  ----------
-    const unsigned int Mode
-  
-  Returns
-  -------
-    vector<double>
-  
-
-Return vector of vector of real parts of all modes as function of time.
-=======================================================================
-  Parameters
-  ----------
-    (none)
-  
-  Returns
-  -------
-    vector<vector<double>>
+    Waveform&
   
 """
 
@@ -2954,6 +2941,30 @@ Find the time offset aligning this waveform to the other at the fiducial time.
   
 """
 
+%feature("docstring") GWFrames::Waveform::TransformToCoprecessingFrame """
+Transform Waveform to co-precessing frame.
+==========================================
+  Parameters
+  ----------
+    const vector<int>& Lmodes = vector<int>(0)
+      L modes to evaluate
+  
+  Returns
+  -------
+    Waveform&
+  
+  Description
+  -----------
+    This function combines the steps required to obtain the Waveform in a frame
+    with its z axis aligned with the vector V_h defined by O'Shaughnessy et al.
+    [2011], and its alignment about the z axis satisfying the minimal-rotation
+    condition, as given by Boyle, Owen, Pfeiffer [2011].
+    
+    If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
+    or [2,3,4], for example, restricts the range of the sum.
+  
+"""
+
 %feature("docstring") InverseConformalFactorFunctor """
 class InverseConformalFactorFunctor
 ===================================
@@ -2970,10 +2981,19 @@ Interpolate the Waveform to a new set of time instants.
   Parameters
   ----------
     const vector<double>& NewTime
+      New vector of times to which this interpolates
+    const bool AllowTimesOutsideCurrentDomain = false
+      [Default: false]
   
   Returns
   -------
     Waveform
+  
+  Description
+  -----------
+    If AllowTimesOutsideCurrentDomain is true, the values of all modes will be
+    set to 0.0 for times outside the current set of time data. If false, and
+    such times are requested, an error will be thrown.
   
 """
 
@@ -3092,6 +3112,32 @@ Newman-Penrose edth operator conjugate.
   
 """
 
+%feature("docstring") GWFrames::Waveform::FakeBadNormalizedAsymmetry """
+Return the normalized asymmetry as a function of time.
+======================================================
+  Parameters
+  ----------
+    int mMode = 2
+  
+  Returns
+  -------
+    vector<double>
+  
+  Description
+  -----------
+    This function just returns the value of the normalized asymmetry
+    $\\hat{\\alpha}$ defined by Boyle et al. (2014), which is the difference
+    between the field at a point and its conjugate at the antipodal point, the
+    amplitude squared and integrated over the sphere. The normalization is just
+    the Norm of the waveformits overall power at each instant.
+    
+    By default, all ell modes in the data are used for both the asymmetry and
+    the normalization factor. If an argument is input, only modes with ell
+    values in that argument will be used to calculate the asymmetry. All modes
+    will always be used to calculate the normalization.
+  
+"""
+
 %feature("docstring") Scri::Scri """
 
 
@@ -3202,16 +3248,28 @@ class GWFrames::ScriFunctor
 ===========================
 """
 
-%feature("docstring") GWFrames::Waveform::InterpolateInPlace """
-Interpolate the Waveform to a new set of time instants.
-=======================================================
+%feature("docstring") GWFrames::Waveform::ZParityViolationMinimized """
+Measure the relative magnitude of the violation of parity in the z direction.
+=============================================================================
   Parameters
   ----------
-    const vector<double>& NewTime
+    (none)
   
   Returns
   -------
-    Waveform&
+    vector<double>
+  
+  Description
+  -----------
+    This function measures the violation of invariance under z-parity
+    (reflection across the x-y plane). Nonprecessing systems in a suitable
+    frame should have zero violation. Precessing systems in any frame and
+    nonprecessing systems in the wrong frame will show violations. The quantity
+    is normalized by the overall norm of the data at each instant, and the
+    square-root of that ratio is taken.
+    
+    This is performed iteratively at each time step, as the system is rotated,
+    and the parity violation is minimized.
   
 """
 
@@ -3426,6 +3484,33 @@ Calculate the $<LL>$ quantity defined in the paper.
   
 """
 
+%feature("docstring") GWFrames::Waveform::NormalizedAntisymmetry """
+Return the normalized asymmetry as a function of time.
+======================================================
+  Parameters
+  ----------
+    vector<int> LModesForAsymmetry = vector<int>(0)
+      $\\ell$ modes to use when calculating numerator
+  
+  Returns
+  -------
+    vector<double>
+  
+  Description
+  -----------
+    This function just returns the value of the normalized asymmetry $a$
+    defined by Boyle et al. (2014), which is the difference between the field
+    at a point and its conjugate at the antipodal point, the amplitude squared
+    and integrated over the sphere. The normalization is just the Norm of the
+    waveformits overall power at each instant.
+    
+    By default, all ell modes in the data are used for both the asymmetry and
+    the normalization factor. If an argument is input, only modes with ell
+    values in that argument will be used to calculate the asymmetry. All modes
+    will always be used to calculate the normalization.
+  
+"""
+
 %feature("docstring") GWFrames::Waveform::AlignDecompositionFrameToModes """
 Fix the orientation of the corotating frame.
 ============================================
@@ -3588,34 +3673,6 @@ class GWFrames::SliceModes
   
 """
 
-%feature("docstring") GWFrames::Waveform::RotateDecompositionBasisOfUncertainties """
-Rotate the basis in which this Waveform's uncertainties are measured.
-=====================================================================
-  Parameters
-  ----------
-    const vector<Quaternions::Quaternion>& R_frame
-      Vector of Quaternions by which to rotate
-  
-  Returns
-  -------
-    Waveform&
-  
-  Description
-  -----------
-    This rotates the coordinate basis, leaving the physical system in place.
-    
-    The Waveform's frame data records the rotors needed to rotate the standard
-    (x,y,z) basis into the (X,Y,Z) basis with respect to which the Waveform
-    modes are decomposed. If this is not the first rotation of the frame, we
-    need to be careful about how we record the total rotation. Here, we are
-    just composing rotations, so we need to store R_frame times the original
-    frame data.
-    
-    Note that this function does not change the frameType; this is left to the
-    calling function.
-  
-"""
-
 %feature("docstring") SliceModes::SliceModes """
 Constructor from ellMax.
 ========================
@@ -3707,18 +3764,6 @@ Find index of mode with given (l,m) data without the chance of throwing an excep
   Returns
   -------
     DataGrid
-  
-
-
-
-  Parameters
-  ----------
-    const double b
-    const Waveform& A
-  
-  Returns
-  -------
-    Waveform
   
 """
 
@@ -3893,6 +3938,20 @@ Frame in which the rotation is minimal.
   
 """
 
+%feature("docstring") ImaginaryI """
+
+
+  Parameters
+  ----------
+    0. 0
+    1. 0
+  
+  Returns
+  -------
+    const complex<double>
+  
+"""
+
 %feature("docstring") GWFrames::Waveform::DropEllModes """
 Remove data relating to the given ell modes.
 ============================================
@@ -3916,6 +3975,29 @@ Remove data relating to the given ell modes.
   Returns
   -------
     DataGrid&
+  
+"""
+
+%feature("docstring") GWFrames::Waveform::ZParityViolationSquared """
+Measure the absolute magnitude of the violation of parity in the z direction.
+=============================================================================
+  Parameters
+  ----------
+    vector<int> Lmodes = vector<int>(0)
+      L modes to evaluate
+  
+  Returns
+  -------
+    vector<double>
+  
+  Description
+  -----------
+    This function measures the violation of invariance under z-parity
+    (reflection across the x-y plane). Nonprecessing systems in a suitable
+    frame should have zero violation. Precessing systems in any frame and
+    nonprecessing systems in the wrong frame will show violations. This
+    quantity can be minimized over orientation to show the presence or absence
+    of a plane of symmetry.
   
 """
 
@@ -4126,6 +4208,27 @@ Copy of the Waveform between indices i_t_a and i_t_b without mode data.
   
 """
 
+%feature("docstring") GWFrames::Waveform::DipoleMoment """
+Evaluate the dipole moment of the waveform.
+===========================================
+  Parameters
+  ----------
+    int ellMax = 0
+      Maximum ell mode to include [default: all]
+  
+  Returns
+  -------
+    vector<vector<double>>
+  
+  Description
+  -----------
+    This function evaluates the dipole moment of the waveform's magnitude,
+    defined as $\\vec{d} = \\int \\hat{n} \\lvert f \\rvert^2 d\\Omega$. Up to
+    a geometric factor, this function applied to $\\dot{h}$ is the rate of
+    emission of momentum in gravitational waves.
+  
+"""
+
 %feature("docstring") GWFrames::Waveform::BinaryOp """
 Pointwise multiply this object by another Waveform object.
 ==========================================================
@@ -4274,25 +4377,6 @@ Evaluate Waveform at a particular sky location.
   
 """
 
-%feature("docstring") GWFrames::Waveform::OShaughnessyEtAlVector """
-Calculate the principal axis of the LL matrix, as prescribed by O'Shaughnessy et al.
-====================================================================================
-  Parameters
-  ----------
-    const vector<int>& Lmodes = vector<int>(0)
-      L modes to evaluate
-  
-  Returns
-  -------
-    vector<vector<double>>
-  
-  Description
-  -----------
-    If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
-    or [2,3,4], for example, restricts the range of the sum.
-  
-"""
-
 %feature("docstring") tolower """
 
 
@@ -4361,36 +4445,22 @@ Return the norm (sum of squares of modes) of the waveform.
   
 """
 
-%feature("docstring") GWFrames::Waveform::ApplySupertranslation """
-Re-interpolate data to new time slices given by this supertranslation.
-======================================================================
+%feature("docstring") GWFrames::Waveform::LLDominantEigenvector """
+Calculate the principal axis of the LL matrix, as prescribed by O'Shaughnessy et al.
+====================================================================================
   Parameters
   ----------
-    vector<complex<double>>& gamma
+    const vector<int>& Lmodes = vector<int>(0)
+      L modes to evaluate
   
   Returns
   -------
-    Waveform
+    vector<vector<double>>
   
   Description
   -----------
-    This function takes the current data decomposed as spherical harmonics on a
-    given slicing, transforms to physical space, re-interpolates the data at
-    each point to a new set of time slices, and transforms back to
-    spherical-harmonic coefficients.
-    
-    The supertranslation data input gamma is a vector of complex numbers
-    representing the (scalar) spherical-harmonic components of the
-    supertranslation, stored in the order (0,0), (1,-1), (1,0), (1,1), (2,-2),
-    ... The overall time translation is given by the first component; the
-    spatial translation is given by the second through fourth componentes;
-    higher components give the proper supertranslations. In particular, a
-    proper supertranslation will have its first four coefficients equal to 0.0.
-    
-    Note that, for general spin-weighted spherical-harmonic components
-    ${}_{s}a_{l,m}$, a real function results when ${}_{-s}a_{l,-m} =
-    {}_{s}a_{l,m}^\\ast$. In particular, the input gamma data are assumed to
-    satisfy this formula with $s=0$.
+    If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
+    or [2,3,4], for example, restricts the range of the sum.
   
 """
 
@@ -4508,36 +4578,6 @@ Find the appropriate rotations to fix the orientation of the corotating frame.
   
 """
 
-%feature("docstring") nHat_B_i """
-
-
-  Parameters
-  ----------
-    const vector<vector<double>>& nHat_B
-    const vector<double>& t_B
-    const double t_i
-    unsigned int& nHat_B_i_closest
-  
-  Returns
-  -------
-    vector<double>
-  
-"""
-
-%feature("docstring") GWFrames::Waveform::TransformUncertaintiesToCorotatingFrame """
-Transform Waveform uncertainties to corotating frame.
-=====================================================
-  Parameters
-  ----------
-    const vector<Quaternions::Quaternion>& R_frame
-      Vector of rotors giving corotating frame of the data.
-  
-  Returns
-  -------
-    Waveform&
-  
-"""
-
 %feature("docstring") GWFrames::Waveform::AppendHistory """
 
 
@@ -4636,6 +4676,19 @@ Return vector of vector of imaginary parts of all modes as function of time.
 """
 
 %feature("docstring") GWFrames::Waveform::GetAlignmentOfDecompositionFrameToModes """
+
+
+  Parameters
+  ----------
+    const double t_fid
+    const Quaternions::Quaternion& nHat_t_fid
+    const vector<int>& Lmodes = vector<int>(0)
+  
+  Returns
+  -------
+    Quaternions::Quaternion
+  
+
 
 
   Parameters
