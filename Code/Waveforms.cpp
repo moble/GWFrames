@@ -63,7 +63,7 @@ using std::complex;
 
 
 // This macro is useful for debugging
-#define INFOTOCERR std::cerr << __FILE__ << ":" << __LINE__ << ":" << __func__ << ":\t"
+#define INFOTOCERR std::cerr << __FILE__ << ":" << __LINE__ << ":" << __func__ << ": "
 
 const complex<double> ImaginaryI(0.0,1.0);
 
@@ -2916,12 +2916,13 @@ public:
   bool R_epsB_is_set;
   mutable unsigned int nHat_B_i; // Just a guess to speed up hunting for the index
   mutable unsigned int Rbar_epsB_i; // Just a guess to speed up hunting for the index
+  mutable bool Flip;
 public:
   WaveformAligner(const GWFrames::Waveform& W_A, const GWFrames::Waveform& iW_B,
                   const std::vector<std::vector<double> >& inHat_B, const std::vector<double>& it_B,
                   const double t_1, const double t_2)
     : R_fA(W_A.Frame()), t_A(W_A.T()), W_B(iW_B), t_mid((t_1+t_2)/2.),
-      nHat_B_data(inHat_B), t_B(it_B), R_epsB(0), R_epsB_is_set(false), nHat_B_i(0), Rbar_epsB_i(0)
+      nHat_B_data(inHat_B), t_B(it_B), R_epsB(0), R_epsB_is_set(false), nHat_B_i(0), Rbar_epsB_i(0), Flip(false)
   {
     // Check to make sure we have sufficient times before any offset.
     // (This is necessary but not sufficient for the method to work.)
@@ -2995,14 +2996,26 @@ public:
     const Quaternions::Quaternion R_delta = Quaternions::exp(Quaternions::Quaternion(0, deltax, deltay, deltaz));
     const std::vector<Quaternions::Quaternion> R_Bprime = Quaternions::Squad(R_delta * W_B.Frame() * R_eps, W_B.T(), t_A+deltat);
     const unsigned int Size=R_Bprime.size();
-    double f = 0.0;
-    double fdot_last = 4 * Quaternions::normsquared( Quaternions::logRotor( R_fA[0] * Quaternions::inverse(R_Bprime[0]) ) );
+    double f1 = 0.0;
+    // double f2 = 0.0;
+    double fdot_last1 = 4 * Quaternions::normsquared( Quaternions::logRotor( R_fA[0] * Quaternions::inverse(R_Bprime[0]) ) );
+    // double fdot_last2 = 4 * Quaternions::normsquared( Quaternions::logRotor( R_fA[0] * Quaternions::exp((-M_PI/2.)*Quaternions::zHat)
+    //                                                                          * Quaternions::inverse(R_Bprime[0]) ) );
     for(unsigned int i=1; i<Size; ++i) {
-      const double fdot = 4 * Quaternions::normsquared( Quaternions::logRotor( R_fA[i] * Quaternions::inverse(R_Bprime[i]) ) );
-      f += (t_A[i]-t_A[i-1])*(fdot+fdot_last)/2.0;
-      fdot_last = fdot;
+      const double fdot1 = 4 * Quaternions::normsquared( Quaternions::logRotor( R_fA[i] * Quaternions::inverse(R_Bprime[i]) ) );
+      // const double fdot2 = 4 * Quaternions::normsquared( Quaternions::logRotor( R_fA[i] * Quaternions::exp((-M_PI/2.)*Quaternions::zHat)
+      //                                                                           * Quaternions::inverse(R_Bprime[i]) ) );
+      f1 += (t_A[i]-t_A[i-1])*(fdot1+fdot_last1)/2.0;
+      // f2 += (t_A[i]-t_A[i-1])*(fdot2+fdot_last2)/2.0;
+      fdot_last1 = fdot1;
+      // fdot_last2 = fdot2;
     }
-    return f;
+    // if(f1<f2) {
+    //   Flip = true;
+    //   return f2;
+    // }
+    Flip = false;
+    return f1;
   }
 };
 double minfunc (const gsl_vector* delta, void* params) {
@@ -3103,19 +3116,6 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B, 
   W_A.AlignDecompositionFrameToModes(t_mid, nHat_A);
   W_B.AlignDecompositionFrameToModes(t_mid, nHat_B[Quaternions::hunt(t_nHat_B, t_mid)]);
 
-  // { // Just for debugging temporarily
-  //   vector<double> NewTime(1);
-  //   NewTime[0] = t_mid;
-  //   Waveform InstantA = W_A.Interpolate(NewTime);
-  //   Waveform InstantB = W_B.Interpolate(NewTime);
-  //   INFOTOCERR << "XHat_A" << InstantA.Frame(0) * Quaternions::xHat * InstantA.Frame(0).conjugate() << endl;
-  //   INFOTOCERR << "ZHat_A" << InstantA.Frame(0) * Quaternions::zHat * InstantA.Frame(0).conjugate() << endl;
-  //   INFOTOCERR << "XHat_B" << InstantB.Frame(0) * Quaternions::xHat * InstantB.Frame(0).conjugate() << endl;
-  //   INFOTOCERR << "ZHat_B" << InstantB.Frame(0) * Quaternions::zHat * InstantB.Frame(0).conjugate() << endl;
-  //   exit(0);
-  //   throw(GWFrames_NotYetImplemented);
-  // }
-
   WaveformAligner Aligner(W_A, W_B, nHat_B, t_nHat_B, t_1, t_2);
   const std::vector<double>& t_A = Aligner.t_A;
   const std::vector<Quaternions::Quaternion>& R_fA = Aligner.R_fA;
@@ -3136,11 +3136,6 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B, 
     }
     Aligner.SetR_epsB(W_B.GetAlignmentsOfDecompositionFrameToModes(nHat_BValues));
 
-    // INFOTOCERR << std::setprecision(14) << std::endl;
-    // for(unsigned int j=0; j<t_A.size(); ++j) {
-    //   std::cerr << t_A[j] << " " << Aligner.R_epsB[j][0] << " " << Aligner.R_epsB[j][1] << " " << Aligner.R_epsB[j][2] << " " << Aligner.R_epsB[j][3] << std::endl;
-    // }
-
     // Evaluate Xi_c for every deltat that won't require interpolating
     // W_B to find R_eps_B (because interpolation is really slow)
     const GWFrames::Waveform W_B_Interval = W_B.SliceOfTimesWithoutModes(t_mid+deltat_1, t_mid+deltat_2);
@@ -3152,46 +3147,45 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B, 
       XiIntegral1[i] = Quaternions::DefiniteIntegral(R_fA*Aligner.Rbar_epsB(t_mid+deltats[i])*Aligner.Rbar_fB(t_A+deltats[i]), t_A);
       XiIntegral2[i] = Quaternions::DefiniteIntegral(R_fA*Quaternions::exp((-M_PI/2.)*Quaternions::zHat)
                                                      *Aligner.Rbar_epsB(t_mid+deltats[i])*Aligner.Rbar_fB(t_A+deltats[i]), t_A);
-      // if(i==1396) {
-      //   const std::vector<Quaternions::Quaternion> R_tmp = R_fA*Aligner.Rbar_epsB(t_mid+deltats[i])*Aligner.Rbar_fB(t_A+deltats[i]);
-      //   ofstream myfile;
-      //   std::cerr << 1396 << " " << R_fA[0] << "; " << Aligner.Rbar_epsB(t_mid+deltats[i]) << "; " << Aligner.Rbar_fB(t_A+deltats[i])[0] << std::endl;
-      //   myfile.open ("/tmp/integrand_1396.dat");
-      //   for(unsigned int j=0; j<t_A.size(); ++j) {
-      //     myfile << t_A[j] << " " << R_tmp[j][0] << " " << R_tmp[j][1] << " " << R_tmp[j][2] << " " << R_tmp[j][3] << std::endl;
-      //   }
-      //   myfile.close();
-      // }
     }
 
-    {
-      ofstream myfile;
-      myfile.open ("/tmp/XiIntegral.dat");
-      for(unsigned int i=0; i<XiIntegral1.size(); ++i) {
-        myfile << deltats[i] << " " << Quaternions::abs(XiIntegral1[i]) << " " << Quaternions::abs(XiIntegral2[i]) << std::endl;
-      }
-      myfile.close();
-    }
+    // { // Just for debugging temporarily
+    //   INFOTOCERR << "\tOutput to /tmp/XiIntegral.dat" << std::endl;
+    //   ofstream myfile;
+    //   myfile.open ("/tmp/XiIntegral.dat");
+    //   for(unsigned int i=0; i<XiIntegral1.size(); ++i) {
+    //     myfile << deltats[i] << " " << Quaternions::abs(XiIntegral1[i]) << " " << Quaternions::abs(XiIntegral2[i]) << std::endl;
+    //   }
+    //   myfile.close();
+    // }
 
     // Find the best value
     double Xi_c_min = 1e300;
     unsigned int i_Xi_c_min = 0;
+    bool Flip = false;
     for(unsigned int i=0; i<XiIntegral1.size(); ++i) {
-      const double Xi_c_i = 2*(t_2 - t_1 - Quaternions::abs(XiIntegral[i]));
-      if(Xi_c_i<Xi_c_min) {
-        Xi_c_min = Xi_c_i;
+      const double Xi_c_i1 = 2*(t_2 - t_1 - Quaternions::abs(XiIntegral1[i]));
+      const double Xi_c_i2 = 2*(t_2 - t_1 - Quaternions::abs(XiIntegral2[i]));
+      if(Xi_c_i1<Xi_c_min) {
+        Xi_c_min = Xi_c_i1;
         i_Xi_c_min = i;
+        Flip = false;
+      }
+      if(Xi_c_i2<Xi_c_min) {
+        Xi_c_min = Xi_c_i2;
+        i_Xi_c_min = i;
+        Flip = true;
       }
     }
     const double deltat = deltats[i_Xi_c_min];
-    W_B.RotateDecompositionBasis(Aligner.Rbar_epsB(t_mid+deltat).conjugate());
+    W_B.RotateDecompositionBasis(Aligner.Rbar_epsB(t_mid+deltat).conjugate() * (Flip ? Quaternions::exp((M_PI/2.)*Quaternions::zHat) : Quaternions::One));
     W_B.SetTime(W_B.T()-deltat);
     t_nHat_B = t_nHat_B-deltat;
-    R_delta = XiIntegral[i_Xi_c_min].normalized();
+    R_delta = (Flip ? XiIntegral2[i_Xi_c_min].normalized() : XiIntegral1[i_Xi_c_min].normalized());
   }
 
   gettimeofday(&now, NULL); unsigned long long tThen = now.tv_usec + (unsigned long long)now.tv_sec * 1000000;
-  INFOTOCERR << "First stage took " << (tThen-tNow)/1000000.0L << " seconds." << std::endl;
+  INFOTOCERR << "\tFirst stage took " << (tThen-tNow)/1000000.0L << " seconds." << std::endl;
 
   // Next, minimize algorithmically, in four dimensions, accounting
   // for all adjustments in generality.  This is very slow, but we've
@@ -3199,7 +3193,7 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B, 
   {
     const unsigned int NDimensions = 4;
     const unsigned int MaxIterations = 2000;
-    const double MinSimplexSize = 2.0e-8; // This shouldn't be much less than sqrt(machine precision)
+    const double MinSimplexSize = 2.0e-13; // This can be less than sqrt(machine precision) because of the integral nature of our objective function
     double deltat=0.0;
 
     const double InitialTrialTimeStep = std::max(W_A.T(1)-W_A.T(0), W_B.T(1)-W_B.T(0));
@@ -3264,11 +3258,6 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B, 
       if(status) break;
       size = gsl_multimin_fminimizer_size(s);
       status = gsl_multimin_test_size(size, MinSimplexSize);
-
-      // std::cerr << iter << ": " << std::setprecision(15);
-      // for(unsigned int k=0; k<NDimensions; ++k)
-      //   std::cerr << gsl_vector_get(s->x, k) << " ";
-      // std::cerr << std::endl;
     }
 
     if(iter==MaxIterations) {
@@ -3280,6 +3269,9 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B, 
     // Get time shift and rotation
     deltat = gsl_vector_get(s->x, 0);
     R_delta = Quaternions::exp(Quaternions::Quaternion(0.0, gsl_vector_get(s->x, 1), gsl_vector_get(s->x, 2), gsl_vector_get(s->x, 3)));
+    // Aligner.EvaluateMinimizationQuantity(gsl_vector_get(s->x,0), gsl_vector_get(s->x,1), gsl_vector_get(s->x,2), gsl_vector_get(s->x,3));
+    // const bool Flip = Aligner.Flip;
+    // INFOTOCERR << "\tThe flip (" << Flip << ") needs to be implemented." << std::endl;
 
     // Free allocated memory
     gsl_vector_free(x);
@@ -3293,7 +3285,7 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B, 
     W_B.SetFrame(R_delta*W_B.Frame());
 
     gettimeofday(&now, NULL); unsigned long long tWhen = now.tv_usec + (unsigned long long)now.tv_sec * 1000000;
-    INFOTOCERR << "Second stage took " << (tWhen-tThen)/1000000.0L << " seconds with " << iter << " iterations." << std::endl;
+    INFOTOCERR << "\tSecond stage took " << (tWhen-tThen)/1000000.0L << " seconds with " << iter << " iterations." << std::endl;
   }
 
   return;
