@@ -228,8 +228,7 @@ def ReadFiniteRadiusData(ChMass=0.0, filename='rh_FiniteRadii_CodeUnits.h5', Coo
 
 
 def Extrapolate(**kwargs) :
-    """
-    Perform extrapolations from finite-radius data
+    """Perform extrapolations from finite-radius data
     ==============================================
       Parameters
       ----------
@@ -278,14 +277,13 @@ def Extrapolate(**kwargs) :
           Transform to this frame before comparison and output.
 
         ExtrapolatedFiles        'Extrapolated_N{N}.h5'
-        ExtrapolationUncertaintyFiles  'ExtrapolationUncertainty_N{N}.h5'
         DifferenceFiles          'ExtrapConvergence_N{N}-N{Nm1}.h5'
           These are python-formatted output file names, where the
           extrapolation order N is substituted for '{N}', and the
-          previous extrapolation order is substituted for {Nm1}.  The
-          data-type inferred from the DataFile name is prepended.  If
-          ExtrapolationUncertaintyFiles or DifferenceFiles are empty,
-          the corresponding files are not output.
+          previous extrapolation order is substituted for '{Nm1}'.
+          The data-type inferred from the DataFile name is prepended.
+          If DifferenceFiles is empty, the corresponding file is not
+          output.
 
         UseStupidNRARFormat      False
           If True (and `ExtrapolatedFiles` does not end in '.dat'),
@@ -340,7 +338,6 @@ def Extrapolate(**kwargs) :
     UseOmega = kwargs.pop('UseOmega', False)
     OutputFrame = kwargs.pop('OutputFrame', Inertial)
     ExtrapolatedFiles = kwargs.pop('ExtrapolatedFiles', 'Extrapolated_N{N}.h5')
-    ExtrapolationUncertaintyFiles = kwargs.pop('ExtrapolationUncertaintyFiles', 'ExtrapolationUncertainty_N{N}.h5')
     DifferenceFiles = kwargs.pop('DifferenceFiles', 'ExtrapConvergence_N{N}-N{Nm1}.h5')
     UseStupidNRARFormat = kwargs.pop('UseStupidNRARFormat', False)
     PlotFormat = kwargs.pop('PlotFormat', 'pdf')
@@ -418,7 +415,6 @@ def Extrapolate(**kwargs) :
         D['UseOmega'] = {UseOmega}
         D['OutputFrame'] = {OutputFrame}
         D['ExtrapolatedFiles'] = {ExtrapolatedFiles}
-        D['ExtrapolationUncertaintyFiles'] = {ExtrapolationUncertaintyFiles}
         D['DifferenceFiles'] = {DifferenceFiles}
         D['UseStupidNRARFormat'] = {UseStupidNRARFormat}
         D['PlotFormat'] = {PlotFormat}
@@ -438,7 +434,6 @@ def Extrapolate(**kwargs) :
                    UseOmega = UseOmega,
                    OutputFrame = OutputFrame,
                    ExtrapolatedFiles = ExtrapolatedFiles,
-                   ExtrapolationUncertaintyFiles = ExtrapolationUncertaintyFiles,
                    DifferenceFiles = DifferenceFiles,
                    UseStupidNRARFormat = UseStupidNRARFormat,
                    PlotFormat = PlotFormat,
@@ -489,8 +484,6 @@ def Extrapolate(**kwargs) :
         if(OutputFrame==Corotating) :
             stdout.write("N={0}: Rotating into corotating frame...".format(ExtrapolationOrder)); stdout.flush()
             ExtrapolatedWaveforms[i].TransformToCorotatingFrame()
-            if(ExtrapolationOrder>=0) :
-                ExtrapolatedWaveforms[i+NExtrapolations].TransformUncertaintiesToCorotatingFrame(ExtrapolatedWaveforms[i].Frame())
             print("☺"); stdout.flush()
 
         # Append the relevant information to the history
@@ -510,14 +503,6 @@ def Extrapolate(**kwargs) :
                 ExtrapolatedWaveforms[i].OutputToNRAR(ExtrapolatedFile, 'a')
             else :
                 ExtrapolatedWaveforms[i].OutputToH5(ExtrapolatedFile)
-        if(ExtrapolationOrder>=0 and ExtrapolationUncertaintyFiles) :
-            ExtrapolationUncertaintyFile = OutputDirectory+ExtrapolationUncertaintyFiles.format(N=ExtrapolationOrder)
-            if(ExtrapolationUncertaintyFile.endswith('.dat')) :
-                ExtrapolatedWaveforms[i+NExtrapolations].Output(dirname(ExtrapolationUncertaintyFile)+'/'
-                                                                +ExtrapolatedWaveforms[i+NExtrapolations].GetFileNamePrefix()
-                                                                +basename(ExtrapolationUncertaintyFile))
-            else :
-                ExtrapolatedWaveforms[i+NExtrapolations].OutputToH5(ExtrapolationUncertaintyFile)
         print("☺"); stdout.flush()
 
     MaxNormTime = ExtrapolatedWaveforms[0].MaxNormTime()

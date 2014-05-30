@@ -165,9 +165,8 @@ namespace GWFrames {
     std::vector<double> ZParityViolationNormalized(std::vector<int> Lmodes=std::vector<int>(0)) const;
     std::vector<double> ZParityViolationMinimized() const;
 
-  private: // Private functions for use in public rotation methods
+  private: // Private function for use in public rotation methods
     Waveform& TransformModesToRotatedFrame(const std::vector<Quaternions::Quaternion>& R_frame);
-    Waveform& TransformUncertaintiesToRotatedFrame(const std::vector<Quaternions::Quaternion>& R_frame);
 
   public:  // Member functions
     // Rotate by the given Quaternion(s)
@@ -175,9 +174,7 @@ namespace GWFrames {
     Waveform& RotatePhysicalSystem(std::vector<Quaternions::Quaternion> R_phys);
     Waveform& RotateDecompositionBasis(const Quaternions::Quaternion& R_frame);
     Waveform& RotateDecompositionBasis(const std::vector<Quaternions::Quaternion>& R_frame);
-    Waveform& RotateDecompositionBasisOfUncertainties(const std::vector<Quaternions::Quaternion>& R_frame);
 
-    // Radiation-frame calculations
     std::vector<std::vector<double> > LdtVector(std::vector<int> Lmodes=std::vector<int>(0)) const;
     std::vector<Matrix> LLMatrix(std::vector<int> Lmodes=std::vector<int>(0)) const;
     std::vector<std::vector<double> > OShaughnessyEtAlVector(const std::vector<int>& Lmodes=std::vector<int>(0)) const;
@@ -193,10 +190,6 @@ namespace GWFrames {
     Waveform& TransformToAngularVelocityFrame(const std::vector<int>& Lmodes=std::vector<int>(0));
     Waveform& TransformToCorotatingFrame(const std::vector<int>& Lmodes=std::vector<int>(0));
     Waveform& TransformToInertialFrame();
-
-    // Transformations for Waveforms representing uncertainty
-    Waveform& TransformUncertaintiesToCorotatingFrame(const std::vector<Quaternions::Quaternion>& R_frame);
-    Waveform& TransformUncertaintiesToInertialFrame();
 
     // Alignment, comparison, and hybridization
     void GetAlignmentOfTime(const Waveform& A, const double t_fid, double& deltat) const;

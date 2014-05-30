@@ -1318,46 +1318,6 @@ GWFrames::Waveform& GWFrames::Waveform::RotateDecompositionBasis(const std::vect
   return *this;
 }
 
-/// Rotate the basis in which this Waveform's uncertainties are measured.
-GWFrames::Waveform& GWFrames::Waveform::RotateDecompositionBasisOfUncertainties(const std::vector<Quaternions::Quaternion>& R_frame) {
-  ///
-  /// \param R_frame Vector of Quaternions by which to rotate
-  ///
-  /// This rotates the coordinate basis, leaving the physical system
-  /// in place.
-  ///
-  /// The Waveform's `frame` data records the rotors needed to rotate
-  /// the standard (x,y,z) basis into the (X,Y,Z) basis with respect
-  /// to which the Waveform modes are decomposed.  If this is not the
-  /// first rotation of the frame, we need to be careful about how we
-  /// record the total rotation.  Here, we are just composing
-  /// rotations, so we need to store R_frame times the original frame
-  /// data.
-  ///
-  /// Note that this function does not change the `frameType`; this is
-  /// left to the calling function.
-  ///
-
-  history << "this->RotateDecompositionBasisOfUncertainties(R_frame); // R_frame=["
-          << std::setprecision(16) << R_frame[0];
-  if(R_frame.size()>1) {
-    history << ", " << R_frame[1] << ", ...";
-  }
-  history << "]" << endl;
-
-  this->TransformUncertaintiesToRotatedFrame(R_frame);
-
-  // Record the change of frame
-  if(frame.size()==0) { // set frame data equal to input data
-    frame = R_frame;
-  } else if(frame.size()==1) { // multiply frame constant by input rotation
-    frame = frame[0] * R_frame;
-  } else { // multiply frame data by input rotation
-    frame = frame * R_frame;
-  }
-
-  return *this;
-}
 
 /// Rotate modes of the Waveform object.
 GWFrames::Waveform& GWFrames::Waveform::TransformModesToRotatedFrame(const std::vector<Quaternion>& R_frame) {
@@ -1462,122 +1422,6 @@ GWFrames::Waveform& GWFrames::Waveform::TransformModesToRotatedFrame(const std::
 
   return *this;
 }
-
-inline double SQR(const double a) { return a*a; }
-
-/// Rotate modes of the uncertainty of a Waveform object.
-GWFrames::Waveform& GWFrames::Waveform::TransformUncertaintiesToRotatedFrame(const std::vector<Quaternion>& R_frame) {
-  ///
-  /// Assuming the data stored in the Waveform represent uncertainties
-  /// (square-root of sigma), rotate those uncertainties, using the
-  /// standard method of combining by quadrature.
-  ///
-  /// \sa TransformModesToRotatedFrame
-  ///
-
-  const int NModes = this->NModes();
-  const int NTimes = this->NTimes();
-
-  if(int(R_frame.size())!=NTimes && R_frame.size()!=1) {
-    cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": R_frame.size()=" << R_frame.size() << "; NTimes()=" << NTimes << endl;
-    throw(GWFrames_VectorSizeMismatch);
-  }
-
-  // Loop through each mode and do the rotation
-  {
-    int mode=1;
-    for(int l=2; l<NModes; ++l) {
-      if(NModes<mode) { break; }
-
-      // Use a vector of mode indices, in case the modes are out of
-      // order.  This still assumes that we have each l from l=2 up to
-      // some l_max, but it's better than assuming that, plus assuming
-      // that everything is in order.
-      vector<unsigned int> ModeIndices(2*l+1);
-      for(int m=-l, i=0; m<=l; ++m, ++i) {
-        try {
-          ModeIndices[i] = FindModeIndex(l, m);
-        } catch(int thrown) {
-          cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Incomplete mode information in Waveform; cannot rotate." << endl;
-          throw(thrown);
-        }
-      }
-
-      {
-
-        // Construct the D matrix and data storage
-        SphericalFunctions::WignerDMatrix D(R_frame[0]);
-        vector<vector<complex<double> > > Ds(2*l+1, vector<complex<double> >(2*l+1));
-        vector<complex<double> > Data(2*l+1);
-
-        if(R_frame.size()==1) {
-          // Get the Wigner D matrix data just once
-          for(int m=-l; m<=l; ++m) {
-            for(int mp=-l; mp<=l; ++mp) {
-              Ds[mp+l][m+l] = D(l,mp,m);
-            }
-          }
-          // Loop through each time step
-          for(int t=0; t<NTimes; ++t) {
-            // Store the data for all m' modes at this time step
-            for(int mp=-l, i=0; mp<=l; ++mp, ++i) {
-              Data[mp+l] = this->operator()(ModeIndices[i], t);
-            }
-            // Compute the data at this time step for each m
-            for(int m=-l, i=0; m<=l; ++m, ++i) {
-              data[ModeIndices[i]][t] = 0.0;
-              for(int mp=-l; mp<=l; ++mp) { // Sum over m'
-                const double dataReSqr = SQR(std::real(Data[mp+l]));
-                const double dataImSqr = SQR(std::imag(Data[mp+l]));
-                const double DReSqr = SQR(std::real(Ds[mp+l][m+l]));
-                const double DImSqr = SQR(std::imag(Ds[mp+l][m+l]));
-                data[ModeIndices[i]][t] += complex<double>(dataReSqr*DReSqr+dataImSqr*DImSqr,
-                                                           dataImSqr*DReSqr+dataReSqr*DImSqr);
-              }
-              data[ModeIndices[i]][t] = complex<double>(std::sqrt(std::real(data[ModeIndices[i]][t])),
-                                                        std::sqrt(std::imag(data[ModeIndices[i]][t])));
-            }
-          }
-        } else {
-          // Loop through each time step
-          for(int t=0; t<NTimes; ++t) {
-            // Get the Wigner D matrix data at this time step
-            D.SetRotation(R_frame[t]);
-            for(int m=-l; m<=l; ++m) {
-              for(int mp=-l; mp<=l; ++mp) {
-                Ds[mp+l][m+l] = D(l,mp,m);
-              }
-            }
-            // Store the data for all m' modes at this time step
-            for(int mp=-l, i=0; mp<=l; ++mp, ++i) {
-              Data[mp+l] = this->operator()(ModeIndices[i], t);
-            }
-            // Compute the data at this time step for each m
-            for(int m=-l, i=0; m<=l; ++m, ++i) {
-              data[ModeIndices[i]][t] = 0.0;
-              for(int mp=-l; mp<=l; ++mp) { // Sum over m'
-                const double dataReSqr = SQR(std::real(Data[mp+l]));
-                const double dataImSqr = SQR(std::imag(Data[mp+l]));
-                const double DReSqr = SQR(std::real(Ds[mp+l][m+l]));
-                const double DImSqr = SQR(std::imag(Ds[mp+l][m+l]));
-                data[ModeIndices[i]][t] += complex<double>(dataReSqr*DReSqr+dataImSqr*DImSqr,
-                                                           dataImSqr*DReSqr+dataReSqr*DImSqr);
-              }
-              data[ModeIndices[i]][t] = complex<double>(std::sqrt(std::real(data[ModeIndices[i]][t])),
-                                                        std::sqrt(std::imag(data[ModeIndices[i]][t])));
-            }
-          }
-        }
-
-      }
-
-      mode += 2*l+1;
-    }
-  }
-
-  return *this;
-}
-
 
 /// Calculate the \f$<L \partial_t>\f$ quantity defined in the paper.
 vector<vector<double> > GWFrames::Waveform::LdtVector(vector<int> Lmodes) const {
@@ -2028,46 +1872,6 @@ GWFrames::Waveform& GWFrames::Waveform::TransformToInertialFrame() {
   history << "this->TransformToInertialFrame();\n#";
   this->frameType = GWFrames::Inertial; // Must come first
   this->RotateDecompositionBasis(Quaternions::conjugate(frame));
-  this->SetFrame(vector<Quaternion>(0));
-  return *this;
-}
-
-/// Transform Waveform uncertainties to corotating frame.
-GWFrames::Waveform& GWFrames::Waveform::TransformUncertaintiesToCorotatingFrame(const std::vector<Quaternions::Quaternion>& R_frame) {
-  ///
-  /// \param R_frame Vector of rotors giving corotating frame of the data.
-  ///
-
-  if(frameType != GWFrames::Inertial) {
-    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-              << "\nWarning: Asking to transform a Waveform in the " << GWFrames::WaveformFrameNames[frameType] << " frame into the corotating frame."
-              << "\n         You have to think very carefully about whether or not this is what you really want.\n"
-              << "\n         This should probably only be applied to Waveforms in the " << GWFrames::WaveformFrameNames[GWFrames::Inertial] << " frame.\n"
-              << std::endl;
-  }
-  if(R_frame.size() != NTimes()) {
-    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-              << "\nError: Asking to transform uncertainties of size " << NTimes() << " by rotors of size " << R_frame.size() << "\n"
-              << std::endl;
-    throw(GWFrames_VectorSizeMismatch);
-  }
-
-  this->frameType = GWFrames::Corotating;
-  history << "this->TransformUncertaintiesToCorotatingFrame(R_frame); // R_frame=[" << setprecision(16) << R_frame[0] << ", " << R_frame[1] << ", ...]\n#";
-  return this->RotateDecompositionBasisOfUncertainties(R_frame);
-}
-
-/// Transform Waveform to an inertial frame.
-GWFrames::Waveform& GWFrames::Waveform::TransformUncertaintiesToInertialFrame() {
-  ///
-  /// This function uses the stored frame information to transform
-  /// from whatever rotating frame the waveform is currently in, to a
-  /// stationary, inertial frame.  This is the usual frame of scri^+,
-  /// and is the frame in which GW observations should be made.
-  ///
-  history << "this->TransformUncertaintiesToInertialFrame();\n#";
-  this->frameType = GWFrames::Inertial; // Must come first
-  this->RotateDecompositionBasisOfUncertainties(Quaternions::conjugate(frame));
   this->SetFrame(vector<Quaternion>(0));
   return *this;
 }
@@ -5212,7 +5016,7 @@ GWFrames::Waveforms GWFrames::Waveforms::Extrapolate(std::vector<std::vector<dou
   }
 
   // Set up the output data, recording everything but the mode data
-  GWFrames::Waveforms ExtrapolatedWaveforms(2*NExtrapolations);
+  GWFrames::Waveforms ExtrapolatedWaveforms(NExtrapolations);
   for(unsigned int i_N=0; i_N<NExtrapolations; ++i_N) {
     const int N = ExtrapolationOrders[i_N];
     if(N<0) {
@@ -5231,39 +5035,11 @@ GWFrames::Waveforms GWFrames::Waveforms::Extrapolate(std::vector<std::vector<dou
       ExtrapolatedWaveforms[i_N].SetMIsScaledOut(FiniteRadiusWaveforms[NFiniteRadii-1].MIsScaledOut());
       ExtrapolatedWaveforms[i_N].SetLM(FiniteRadiusWaveforms[NFiniteRadii-1].LM());
       ExtrapolatedWaveforms[i_N].ResizeData(NModes, NTimes);
-      // Set up the waveforms for sigma
-      ExtrapolatedWaveforms[i_N+NExtrapolations].HistoryStream() << "### Extrapolating with N=" << N << "\n";
-      ExtrapolatedWaveforms[i_N+NExtrapolations].AppendHistory("######## Begin old history ########\n");
-      ExtrapolatedWaveforms[i_N+NExtrapolations].AppendHistory(FiniteRadiusWaveforms[NFiniteRadii-1].HistoryStr());
-      ExtrapolatedWaveforms[i_N+NExtrapolations].AppendHistory("######## End old history ########\n");
-      ExtrapolatedWaveforms[i_N+NExtrapolations].AppendHistory("### # This Waveform stores the uncertainty estimate for this extrapolation.\n");
-      ExtrapolatedWaveforms[i_N+NExtrapolations].SetT(FiniteRadiusWaveforms[NFiniteRadii-1].T());
-      ExtrapolatedWaveforms[i_N+NExtrapolations].SetFrame(FiniteRadiusWaveforms[NFiniteRadii-1].Frame());
-      ExtrapolatedWaveforms[i_N+NExtrapolations].SetFrameType(WaveformFrameType(FiniteRadiusWaveforms[NFiniteRadii-1].FrameType()));
-      ExtrapolatedWaveforms[i_N+NExtrapolations].SetDataType(WaveformDataType(FiniteRadiusWaveforms[NFiniteRadii-1].DataType()));
-      ExtrapolatedWaveforms[i_N+NExtrapolations].SetRIsScaledOut(FiniteRadiusWaveforms[NFiniteRadii-1].RIsScaledOut());
-      ExtrapolatedWaveforms[i_N+NExtrapolations].SetMIsScaledOut(FiniteRadiusWaveforms[NFiniteRadii-1].MIsScaledOut());
-      ExtrapolatedWaveforms[i_N+NExtrapolations].SetLM(FiniteRadiusWaveforms[NFiniteRadii-1].LM());
-      ExtrapolatedWaveforms[i_N+NExtrapolations].ResizeData(NModes, NTimes);
     }
   }
 
   if(MaxN<0) { return ExtrapolatedWaveforms; }
   const unsigned int MaxCoefficients = (unsigned int)(MaxN+1);
-
-  // // Clear the extrapolation-coefficient files and write the headers
-  // for(unsigned int i_N=0; i_N<NExtrapolations; ++i_N) {
-  //   const int N = ExtrapolationOrders[i_N];
-  //   if(N<0) { continue; }
-  //   const string FileName = "Extrapolation_N"+NumberToString<int>(N)+"_re_l2_m2.dat";
-  //   FILE* ofp = fopen(FileName.c_str(), "w");
-  //   fprintf(ofp, "# [1] = t\n");
-  //   for(int i_c=0; i_c<N+1; ++i_c) {
-  //     fprintf(ofp, "# [%d] = i%d\n", 2*i_c+2, i_c);
-  //     fprintf(ofp, "# [%d] = sigma%d\n", 2*i_c+3, i_c);
-  //   }
-  //   fclose(ofp);
-  // }
 
   // Loop over time
   for(int i_t=0; i_t<NTimes; ++i_t) {
@@ -5328,23 +5104,10 @@ GWFrames::Waveforms GWFrames::Waveforms::Extrapolate(std::vector<std::vector<dou
         gsl_vector_view FitCoefficients_N = gsl_vector_subvector(FitCoefficients, 0, N+1);
         gsl_multifit_linear_usvd(&OneOverRadii_N.matrix, Re, SVDTol, &EffectiveRank, &FitCoefficients_N.vector, &Covariance_N.matrix, &ChiSquared, Workspace);
         const double re = gsl_vector_get(&FitCoefficients_N.vector, 0);
-        const double re_err = std::sqrt(2*M_PI*(NFiniteRadii-EffectiveRank)*gsl_matrix_get(&Covariance_N.matrix, 0, 0));
-        // if(i_m==0) {
-        //   const string FileName = "Extrapolation_N"+NumberToString<int>(N)+"_re_l2_m2.dat";
-        //   FILE* ofp = fopen(FileName.c_str(), "a");
-        //   fprintf(ofp, "%g ", FiniteRadiusWaveforms[0].T(i_t));
-        //   for(int i_c=0; i_c<N+1; ++i_c) {
-        //     fprintf(ofp, "%g %g ", gsl_vector_get(&FitCoefficients_N.vector, i_c), std::sqrt(gsl_matrix_get(&Covariance_N.matrix, i_c, i_c)));
-        //   }
-        //   fprintf(ofp, "\n");
-        //   fclose(ofp);
-        // }
         gsl_multifit_linear_usvd(&OneOverRadii_N.matrix, Im, SVDTol, &EffectiveRank, &FitCoefficients_N.vector, &Covariance_N.matrix, &ChiSquared, Workspace);
         const double im = gsl_vector_get(&FitCoefficients_N.vector, 0);
-        const double im_err = std::sqrt(2*M_PI*(NFiniteRadii-EffectiveRank)*gsl_matrix_get(&Covariance_N.matrix, 0, 0));
         gsl_multifit_linear_free(Workspace);
         ExtrapolatedWaveforms[i_N].SetData(i_m, i_t, std::complex<double>(re,im));
-        ExtrapolatedWaveforms[i_N+NExtrapolations].SetData(i_m, i_t, std::complex<double>(re_err,im_err));
 
       } // Loop over extrapolation orders
 
