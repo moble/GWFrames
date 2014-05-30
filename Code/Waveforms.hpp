@@ -186,33 +186,16 @@ namespace GWFrames {
     Waveform& TransformToInertialFrame();
 
     // Alignment, comparison, and hybridization
-    void GetAlignmentOfTime(const Waveform& A, const double t_fid, double& deltat) const;
-    Waveform& AlignTime(const Waveform& A, const double t_fid);
     std::vector<Quaternions::Quaternion> GetAlignmentsOfDecompositionFrameToModes(const std::vector<Quaternions::Quaternion>& nHat_t_fid,
                                                                                   const std::vector<int>& Lmodes=std::vector<int>(0)) const;
-    // void GetAlignmentOfDecompositionFrameToModes(const double t_fid, Quaternions::Quaternion& R_eps, const std::vector<int>& Lmodes=std::vector<int>(0)) const;
-    // Waveform& AlignDecompositionFrameToModes(const double t_fid, const std::vector<int>& Lmodes=std::vector<int>(0));
     Quaternions::Quaternion GetAlignmentOfDecompositionFrameToModes(const double t_fid, const Quaternions::Quaternion& nHat_t_fid,
-                                                                    const std::vector<int>& Lmodes=std::vector<int>(0)) const {
-      Quaternions::Quaternion R_eps;
-      GetAlignmentOfDecompositionFrameToModes(t_fid, nHat_t_fid, R_eps, Lmodes);
-      return R_eps;
-    }
-    void GetAlignmentOfDecompositionFrameToModes(const double t_fid, const Quaternions::Quaternion& nHat_t_fid, Quaternions::Quaternion& R_eps,
-                                                 const std::vector<int>& Lmodes=std::vector<int>(0)) const;
+                                                                    const std::vector<int>& Lmodes=std::vector<int>(0)) const;
     Waveform& AlignDecompositionFrameToModes(const double t_fid, const Quaternions::Quaternion& nHat_t_fid, const std::vector<int>& Lmodes=std::vector<int>(0));
-    void GetAlignmentOfDecompositionFrameToModes(const double t1, const double t2, const Quaternions::Quaternion& nHat_t1,
-                                                 Quaternions::Quaternion& R_eps, const std::vector<int>& Lmodes=std::vector<int>(0)) const;
-    Waveform& AlignDecompositionFrameToModes(const double t1, const double t2, const Quaternions::Quaternion& nHat_t1, const std::vector<int>& Lmodes=std::vector<int>(0));
-    void GetAlignmentOfFrame(const Waveform& A, const double t_fid, Quaternions::Quaternion& R_delta) const;
-    Waveform& AlignFrame(const Waveform& A, const double t_fid);
-    void GetAlignmentOfTimeAndFrame(const Waveform& A, const double t1, const double t2, double& deltat, Quaternions::Quaternion& R_delta) const;
-    Waveform& AlignTimeAndFrame(const Waveform& A, const double t1, const double t2);
-    Waveform Compare(const Waveform& B, const double MinTimeStep=0.005, const double MinTime=-3.0e300) const;
-    Waveform Hybridize(const Waveform& B, const double t1, const double t2, const double tMinStep=0.005) const;
     // See also GWFrames::AlignWaveforms below; that is not a member
     // of this class, to make clear that both waveforms will be
     // altered inside that function.
+    Waveform Compare(const Waveform& B, const double MinTimeStep=0.005, const double MinTime=-3.0e300) const;
+    Waveform Hybridize(const Waveform& B, const double t1, const double t2, const double tMinStep=0.005) const;
 
     // Pointwise operations and spin-weight operators
     std::vector<std::complex<double> > EvaluateAtPoint(const double vartheta, const double varphi) const;
@@ -223,8 +206,6 @@ namespace GWFrames {
     Waveform operator-(const Waveform& B) const;
     Waveform operator*(const Waveform& B) const;
     Waveform operator/(const Waveform& B) const;
-    // Waveform operator+(const double b) const;
-    // Waveform operator-(const double b) const;
     Waveform operator*(const double b) const;
     Waveform operator/(const double b) const;
     Waveform NPEdth() const;
@@ -243,16 +224,12 @@ namespace GWFrames {
     // Output to data file
     const Waveform& Output(const std::string& FileName, const unsigned int precision=14) const;
 
-    // // Correct the error in older RWZ data from SpEC
-    // Waveform& HackSpECSignError();
-
   }; // class Waveform
   inline Waveform operator*(const double b, const Waveform& A) { return A*b; }
   #include "Waveforms_BinaryOp.ipp"
 
   void AlignWaveforms(Waveform& A, Waveform& B, const std::vector<double>& nHat_A,
                       const std::vector<std::vector<double> >& nHat_B, const std::vector<double>& t_B, const double t_1, const double t_2);
-
 
 
   /// Object storing a collection of Waveform objects to be operated on uniformly
