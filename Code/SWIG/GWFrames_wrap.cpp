@@ -17208,6 +17208,368 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap__Waveform_Segment(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
+  unsigned int arg2 ;
+  unsigned int arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  unsigned int val2 ;
+  int ecode2 = 0 ;
+  unsigned int val3 ;
+  int ecode3 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  GWFrames::Waveform result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:_Waveform_Segment",&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_Segment" "', argument " "1"" of type '" "GWFrames::Waveform const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
+  ecode2 = SWIG_AsVal_unsigned_SS_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "_Waveform_Segment" "', argument " "2"" of type '" "unsigned int""'");
+  } 
+  arg2 = static_cast< unsigned int >(val2);
+  ecode3 = SWIG_AsVal_unsigned_SS_int(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "_Waveform_Segment" "', argument " "3"" of type '" "unsigned int""'");
+  } 
+  arg3 = static_cast< unsigned int >(val3);
+  {
+    try {
+      result = ((GWFrames::Waveform const *)arg1)->Segment(arg2,arg3);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj((new GWFrames::Waveform(static_cast< const GWFrames::Waveform& >(result))), SWIGTYPE_p_GWFrames__Waveform, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap__Waveform_Interpolate__SWIG_0(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
+  std::vector< double,std::allocator< double > > *arg2 = 0 ;
+  bool arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::vector< double > temp2 ;
+  bool val3 ;
+  int ecode3 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  GWFrames::Waveform result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:_Waveform_Interpolate",&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_Interpolate" "', argument " "1"" of type '" "GWFrames::Waveform const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
+  {
+    if(PyArray_Check(obj1)) {
+      PyArrayObject *xa = reinterpret_cast<PyArrayObject*>(obj1);
+      if(PyArray_TYPE(xa) != NPY_DOUBLE) {
+        SWIG_exception(SWIG_TypeError, "(1) numpy array of 'double' expected."	\
+          " Make sure that the numpy array use dtype=double.");
+      }
+      const std::size_t size = PyArray_DIM(xa, 0);
+      temp2.resize(size);
+      double* array = static_cast<double*>(PyArray_DATA(xa));
+      if(PyArray_ISCONTIGUOUS(xa)) {
+        std::copy(array, array + size, temp2.begin());
+      } else {
+        const npy_intp strides = PyArray_STRIDE(xa, 0)/sizeof(double);
+        for (std::size_t i = 0; i < size; i++)
+        temp2[i] = array[i*strides];
+      }
+    } else if(PySequence_Check(obj1)) {
+      Py_ssize_t size = PySequence_Size(obj1);
+      temp2.resize(size);
+      PyObject* item;
+      for(Py_ssize_t i=0; i<size; ++i) {
+        item = PySequence_GetItem(obj1, i);
+        if(!SWIG_IsOK(SWIG_AsVal_double (item, &temp2[i]))) {
+          Py_DECREF(item);
+          SWIG_exception(SWIG_TypeError, "expected items of sequence to be of type "\
+            "\"double\" in argument 2");
+        }
+        Py_DECREF(item);
+      }
+    } else {
+      SWIG_exception(SWIG_TypeError, "(2) numpy array of 'double' expected. " \
+        "Make sure that the numpy array use dtype=double.");
+    }
+    arg2 = &temp2;
+  }
+  ecode3 = SWIG_AsVal_bool(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "_Waveform_Interpolate" "', argument " "3"" of type '" "bool""'");
+  } 
+  arg3 = static_cast< bool >(val3);
+  {
+    try {
+      result = ((GWFrames::Waveform const *)arg1)->Interpolate((std::vector< double,std::allocator< double > > const &)*arg2,arg3);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj((new GWFrames::Waveform(static_cast< const GWFrames::Waveform& >(result))), SWIGTYPE_p_GWFrames__Waveform, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap__Waveform_Interpolate__SWIG_1(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
+  std::vector< double,std::allocator< double > > *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::vector< double > temp2 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::Waveform result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:_Waveform_Interpolate",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_Interpolate" "', argument " "1"" of type '" "GWFrames::Waveform const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
+  {
+    if(PyArray_Check(obj1)) {
+      PyArrayObject *xa = reinterpret_cast<PyArrayObject*>(obj1);
+      if(PyArray_TYPE(xa) != NPY_DOUBLE) {
+        SWIG_exception(SWIG_TypeError, "(1) numpy array of 'double' expected."	\
+          " Make sure that the numpy array use dtype=double.");
+      }
+      const std::size_t size = PyArray_DIM(xa, 0);
+      temp2.resize(size);
+      double* array = static_cast<double*>(PyArray_DATA(xa));
+      if(PyArray_ISCONTIGUOUS(xa)) {
+        std::copy(array, array + size, temp2.begin());
+      } else {
+        const npy_intp strides = PyArray_STRIDE(xa, 0)/sizeof(double);
+        for (std::size_t i = 0; i < size; i++)
+        temp2[i] = array[i*strides];
+      }
+    } else if(PySequence_Check(obj1)) {
+      Py_ssize_t size = PySequence_Size(obj1);
+      temp2.resize(size);
+      PyObject* item;
+      for(Py_ssize_t i=0; i<size; ++i) {
+        item = PySequence_GetItem(obj1, i);
+        if(!SWIG_IsOK(SWIG_AsVal_double (item, &temp2[i]))) {
+          Py_DECREF(item);
+          SWIG_exception(SWIG_TypeError, "expected items of sequence to be of type "\
+            "\"double\" in argument 2");
+        }
+        Py_DECREF(item);
+      }
+    } else {
+      SWIG_exception(SWIG_TypeError, "(2) numpy array of 'double' expected. " \
+        "Make sure that the numpy array use dtype=double.");
+    }
+    arg2 = &temp2;
+  }
+  {
+    try {
+      result = ((GWFrames::Waveform const *)arg1)->Interpolate((std::vector< double,std::allocator< double > > const &)*arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj((new GWFrames::Waveform(static_cast< const GWFrames::Waveform& >(result))), SWIGTYPE_p_GWFrames__Waveform, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap__Waveform_Interpolate(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[4];
+  int ii;
+  
+  if (!PyTuple_Check(args)) SWIG_fail;
+  argc = args ? (int)PyObject_Length(args) : 0;
+  argv[0] = self;
+  for (ii = 0; (ii < 2) && (ii < argc); ii++) {
+    argv[ii + 1] = PyTuple_GET_ITEM(args,ii);
+  }
+  argc++;
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__Waveform, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        _v = false;
+        if(PyArray_Check(argv[1])) {
+          _v = (PyArray_NDIM(reinterpret_cast<const PyArrayObject*>(argv[1]))==1);
+        } else if(PyList_Check(argv[1])) {
+          if(PyList_Size(argv[1])==0) {
+            _v = true;
+          } else {
+            PyObject* item = PySequence_GetItem(argv[1], 0);
+            double* temp=0;
+            _v = SWIG_IsOK(SWIG_AsVal_double (item, temp));
+          }
+        }
+      }
+      if (_v) {
+        return _wrap__Waveform_Interpolate__SWIG_1(self, args);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__Waveform, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        _v = false;
+        if(PyArray_Check(argv[1])) {
+          _v = (PyArray_NDIM(reinterpret_cast<const PyArrayObject*>(argv[1]))==1);
+        } else if(PyList_Check(argv[1])) {
+          if(PyList_Size(argv[1])==0) {
+            _v = true;
+          } else {
+            PyObject* item = PySequence_GetItem(argv[1], 0);
+            double* temp=0;
+            _v = SWIG_IsOK(SWIG_AsVal_double (item, temp));
+          }
+        }
+      }
+      if (_v) {
+        {
+          int res = SWIG_AsVal_bool(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          return _wrap__Waveform_Interpolate__SWIG_0(self, args);
+        }
+      }
+    }
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function '_Waveform_Interpolate'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    GWFrames::Waveform::Interpolate(std::vector< double,std::allocator< double > > const &,bool const) const\n"
+    "    GWFrames::Waveform::Interpolate(std::vector< double,std::allocator< double > > const &) const\n");
+  return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap__Waveform_InterpolateInPlace(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
+  std::vector< double,std::allocator< double > > *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::vector< double > temp2 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::Waveform *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:_Waveform_InterpolateInPlace",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_InterpolateInPlace" "', argument " "1"" of type '" "GWFrames::Waveform *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
+  {
+    if(PyArray_Check(obj1)) {
+      PyArrayObject *xa = reinterpret_cast<PyArrayObject*>(obj1);
+      if(PyArray_TYPE(xa) != NPY_DOUBLE) {
+        SWIG_exception(SWIG_TypeError, "(1) numpy array of 'double' expected."	\
+          " Make sure that the numpy array use dtype=double.");
+      }
+      const std::size_t size = PyArray_DIM(xa, 0);
+      temp2.resize(size);
+      double* array = static_cast<double*>(PyArray_DATA(xa));
+      if(PyArray_ISCONTIGUOUS(xa)) {
+        std::copy(array, array + size, temp2.begin());
+      } else {
+        const npy_intp strides = PyArray_STRIDE(xa, 0)/sizeof(double);
+        for (std::size_t i = 0; i < size; i++)
+        temp2[i] = array[i*strides];
+      }
+    } else if(PySequence_Check(obj1)) {
+      Py_ssize_t size = PySequence_Size(obj1);
+      temp2.resize(size);
+      PyObject* item;
+      for(Py_ssize_t i=0; i<size; ++i) {
+        item = PySequence_GetItem(obj1, i);
+        if(!SWIG_IsOK(SWIG_AsVal_double (item, &temp2[i]))) {
+          Py_DECREF(item);
+          SWIG_exception(SWIG_TypeError, "expected items of sequence to be of type "\
+            "\"double\" in argument 2");
+        }
+        Py_DECREF(item);
+      }
+    } else {
+      SWIG_exception(SWIG_TypeError, "(2) numpy array of 'double' expected. " \
+        "Make sure that the numpy array use dtype=double.");
+    }
+    arg2 = &temp2;
+  }
+  {
+    try {
+      result = (GWFrames::Waveform *) &(arg1)->InterpolateInPlace((std::vector< double,std::allocator< double > > const &)*arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap__Waveform_DropTimesOutside(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
@@ -24746,368 +25108,6 @@ SWIGINTERN PyObject *_wrap__Waveform_TransformUncertaintiesToInertialFrame(PyObj
     }
   }
   resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap__Waveform_Interpolate__SWIG_0(PyObject *self, PyObject *args) {
-  PyObject *resultobj = 0;
-  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
-  std::vector< double,std::allocator< double > > *arg2 = 0 ;
-  bool arg3 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  std::vector< double > temp2 ;
-  bool val3 ;
-  int ecode3 = 0 ;
-  PyObject * obj1 = 0 ;
-  PyObject * obj2 = 0 ;
-  GWFrames::Waveform result;
-  
-  if (!PyArg_ParseTuple(args,(char *)"OO:_Waveform_Interpolate",&obj1,&obj2)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_Interpolate" "', argument " "1"" of type '" "GWFrames::Waveform const *""'"); 
-  }
-  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
-  {
-    if(PyArray_Check(obj1)) {
-      PyArrayObject *xa = reinterpret_cast<PyArrayObject*>(obj1);
-      if(PyArray_TYPE(xa) != NPY_DOUBLE) {
-        SWIG_exception(SWIG_TypeError, "(1) numpy array of 'double' expected."	\
-          " Make sure that the numpy array use dtype=double.");
-      }
-      const std::size_t size = PyArray_DIM(xa, 0);
-      temp2.resize(size);
-      double* array = static_cast<double*>(PyArray_DATA(xa));
-      if(PyArray_ISCONTIGUOUS(xa)) {
-        std::copy(array, array + size, temp2.begin());
-      } else {
-        const npy_intp strides = PyArray_STRIDE(xa, 0)/sizeof(double);
-        for (std::size_t i = 0; i < size; i++)
-        temp2[i] = array[i*strides];
-      }
-    } else if(PySequence_Check(obj1)) {
-      Py_ssize_t size = PySequence_Size(obj1);
-      temp2.resize(size);
-      PyObject* item;
-      for(Py_ssize_t i=0; i<size; ++i) {
-        item = PySequence_GetItem(obj1, i);
-        if(!SWIG_IsOK(SWIG_AsVal_double (item, &temp2[i]))) {
-          Py_DECREF(item);
-          SWIG_exception(SWIG_TypeError, "expected items of sequence to be of type "\
-            "\"double\" in argument 2");
-        }
-        Py_DECREF(item);
-      }
-    } else {
-      SWIG_exception(SWIG_TypeError, "(2) numpy array of 'double' expected. " \
-        "Make sure that the numpy array use dtype=double.");
-    }
-    arg2 = &temp2;
-  }
-  ecode3 = SWIG_AsVal_bool(obj2, &val3);
-  if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "_Waveform_Interpolate" "', argument " "3"" of type '" "bool""'");
-  } 
-  arg3 = static_cast< bool >(val3);
-  {
-    try {
-      result = ((GWFrames::Waveform const *)arg1)->Interpolate((std::vector< double,std::allocator< double > > const &)*arg2,arg3);;
-    } catch(int i) {
-      std::stringstream s;
-      if(i>-1 && i<GWFramesNumberOfErrors) {
-        s << "GWFrames exception: " << GWFramesErrors[i]; 
-      }
-      else  {
-        s << "GWFrames: Unknown exception number {" << i << "}"; 
-      }
-      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
-      return NULL;
-    }
-  }
-  resultobj = SWIG_NewPointerObj((new GWFrames::Waveform(static_cast< const GWFrames::Waveform& >(result))), SWIGTYPE_p_GWFrames__Waveform, SWIG_POINTER_OWN |  0 );
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap__Waveform_Interpolate__SWIG_1(PyObject *self, PyObject *args) {
-  PyObject *resultobj = 0;
-  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
-  std::vector< double,std::allocator< double > > *arg2 = 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  std::vector< double > temp2 ;
-  PyObject * obj1 = 0 ;
-  GWFrames::Waveform result;
-  
-  if (!PyArg_ParseTuple(args,(char *)"O:_Waveform_Interpolate",&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_Interpolate" "', argument " "1"" of type '" "GWFrames::Waveform const *""'"); 
-  }
-  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
-  {
-    if(PyArray_Check(obj1)) {
-      PyArrayObject *xa = reinterpret_cast<PyArrayObject*>(obj1);
-      if(PyArray_TYPE(xa) != NPY_DOUBLE) {
-        SWIG_exception(SWIG_TypeError, "(1) numpy array of 'double' expected."	\
-          " Make sure that the numpy array use dtype=double.");
-      }
-      const std::size_t size = PyArray_DIM(xa, 0);
-      temp2.resize(size);
-      double* array = static_cast<double*>(PyArray_DATA(xa));
-      if(PyArray_ISCONTIGUOUS(xa)) {
-        std::copy(array, array + size, temp2.begin());
-      } else {
-        const npy_intp strides = PyArray_STRIDE(xa, 0)/sizeof(double);
-        for (std::size_t i = 0; i < size; i++)
-        temp2[i] = array[i*strides];
-      }
-    } else if(PySequence_Check(obj1)) {
-      Py_ssize_t size = PySequence_Size(obj1);
-      temp2.resize(size);
-      PyObject* item;
-      for(Py_ssize_t i=0; i<size; ++i) {
-        item = PySequence_GetItem(obj1, i);
-        if(!SWIG_IsOK(SWIG_AsVal_double (item, &temp2[i]))) {
-          Py_DECREF(item);
-          SWIG_exception(SWIG_TypeError, "expected items of sequence to be of type "\
-            "\"double\" in argument 2");
-        }
-        Py_DECREF(item);
-      }
-    } else {
-      SWIG_exception(SWIG_TypeError, "(2) numpy array of 'double' expected. " \
-        "Make sure that the numpy array use dtype=double.");
-    }
-    arg2 = &temp2;
-  }
-  {
-    try {
-      result = ((GWFrames::Waveform const *)arg1)->Interpolate((std::vector< double,std::allocator< double > > const &)*arg2);;
-    } catch(int i) {
-      std::stringstream s;
-      if(i>-1 && i<GWFramesNumberOfErrors) {
-        s << "GWFrames exception: " << GWFramesErrors[i]; 
-      }
-      else  {
-        s << "GWFrames: Unknown exception number {" << i << "}"; 
-      }
-      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
-      return NULL;
-    }
-  }
-  resultobj = SWIG_NewPointerObj((new GWFrames::Waveform(static_cast< const GWFrames::Waveform& >(result))), SWIGTYPE_p_GWFrames__Waveform, SWIG_POINTER_OWN |  0 );
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap__Waveform_Interpolate(PyObject *self, PyObject *args) {
-  int argc;
-  PyObject *argv[4];
-  int ii;
-  
-  if (!PyTuple_Check(args)) SWIG_fail;
-  argc = args ? (int)PyObject_Length(args) : 0;
-  argv[0] = self;
-  for (ii = 0; (ii < 2) && (ii < argc); ii++) {
-    argv[ii + 1] = PyTuple_GET_ITEM(args,ii);
-  }
-  argc++;
-  if (argc == 2) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__Waveform, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      {
-        _v = false;
-        if(PyArray_Check(argv[1])) {
-          _v = (PyArray_NDIM(reinterpret_cast<const PyArrayObject*>(argv[1]))==1);
-        } else if(PyList_Check(argv[1])) {
-          if(PyList_Size(argv[1])==0) {
-            _v = true;
-          } else {
-            PyObject* item = PySequence_GetItem(argv[1], 0);
-            double* temp=0;
-            _v = SWIG_IsOK(SWIG_AsVal_double (item, temp));
-          }
-        }
-      }
-      if (_v) {
-        return _wrap__Waveform_Interpolate__SWIG_1(self, args);
-      }
-    }
-  }
-  if (argc == 3) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__Waveform, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      {
-        _v = false;
-        if(PyArray_Check(argv[1])) {
-          _v = (PyArray_NDIM(reinterpret_cast<const PyArrayObject*>(argv[1]))==1);
-        } else if(PyList_Check(argv[1])) {
-          if(PyList_Size(argv[1])==0) {
-            _v = true;
-          } else {
-            PyObject* item = PySequence_GetItem(argv[1], 0);
-            double* temp=0;
-            _v = SWIG_IsOK(SWIG_AsVal_double (item, temp));
-          }
-        }
-      }
-      if (_v) {
-        {
-          int res = SWIG_AsVal_bool(argv[2], NULL);
-          _v = SWIG_CheckState(res);
-        }
-        if (_v) {
-          return _wrap__Waveform_Interpolate__SWIG_0(self, args);
-        }
-      }
-    }
-  }
-  
-fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function '_Waveform_Interpolate'.\n"
-    "  Possible C/C++ prototypes are:\n"
-    "    GWFrames::Waveform::Interpolate(std::vector< double,std::allocator< double > > const &,bool const) const\n"
-    "    GWFrames::Waveform::Interpolate(std::vector< double,std::allocator< double > > const &) const\n");
-  return 0;
-}
-
-
-SWIGINTERN PyObject *_wrap__Waveform_InterpolateInPlace(PyObject *self, PyObject *args) {
-  PyObject *resultobj = 0;
-  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
-  std::vector< double,std::allocator< double > > *arg2 = 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  std::vector< double > temp2 ;
-  PyObject * obj1 = 0 ;
-  GWFrames::Waveform *result = 0 ;
-  
-  if (!PyArg_ParseTuple(args,(char *)"O:_Waveform_InterpolateInPlace",&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_InterpolateInPlace" "', argument " "1"" of type '" "GWFrames::Waveform *""'"); 
-  }
-  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
-  {
-    if(PyArray_Check(obj1)) {
-      PyArrayObject *xa = reinterpret_cast<PyArrayObject*>(obj1);
-      if(PyArray_TYPE(xa) != NPY_DOUBLE) {
-        SWIG_exception(SWIG_TypeError, "(1) numpy array of 'double' expected."	\
-          " Make sure that the numpy array use dtype=double.");
-      }
-      const std::size_t size = PyArray_DIM(xa, 0);
-      temp2.resize(size);
-      double* array = static_cast<double*>(PyArray_DATA(xa));
-      if(PyArray_ISCONTIGUOUS(xa)) {
-        std::copy(array, array + size, temp2.begin());
-      } else {
-        const npy_intp strides = PyArray_STRIDE(xa, 0)/sizeof(double);
-        for (std::size_t i = 0; i < size; i++)
-        temp2[i] = array[i*strides];
-      }
-    } else if(PySequence_Check(obj1)) {
-      Py_ssize_t size = PySequence_Size(obj1);
-      temp2.resize(size);
-      PyObject* item;
-      for(Py_ssize_t i=0; i<size; ++i) {
-        item = PySequence_GetItem(obj1, i);
-        if(!SWIG_IsOK(SWIG_AsVal_double (item, &temp2[i]))) {
-          Py_DECREF(item);
-          SWIG_exception(SWIG_TypeError, "expected items of sequence to be of type "\
-            "\"double\" in argument 2");
-        }
-        Py_DECREF(item);
-      }
-    } else {
-      SWIG_exception(SWIG_TypeError, "(2) numpy array of 'double' expected. " \
-        "Make sure that the numpy array use dtype=double.");
-    }
-    arg2 = &temp2;
-  }
-  {
-    try {
-      result = (GWFrames::Waveform *) &(arg1)->InterpolateInPlace((std::vector< double,std::allocator< double > > const &)*arg2);;
-    } catch(int i) {
-      std::stringstream s;
-      if(i>-1 && i<GWFramesNumberOfErrors) {
-        s << "GWFrames exception: " << GWFramesErrors[i]; 
-      }
-      else  {
-        s << "GWFrames: Unknown exception number {" << i << "}"; 
-      }
-      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
-      return NULL;
-    }
-  }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap__Waveform_Segment(PyObject *self, PyObject *args) {
-  PyObject *resultobj = 0;
-  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
-  unsigned int arg2 ;
-  unsigned int arg3 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  unsigned int val2 ;
-  int ecode2 = 0 ;
-  unsigned int val3 ;
-  int ecode3 = 0 ;
-  PyObject * obj1 = 0 ;
-  PyObject * obj2 = 0 ;
-  GWFrames::Waveform result;
-  
-  if (!PyArg_ParseTuple(args,(char *)"OO:_Waveform_Segment",&obj1,&obj2)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_Segment" "', argument " "1"" of type '" "GWFrames::Waveform const *""'"); 
-  }
-  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
-  ecode2 = SWIG_AsVal_unsigned_SS_int(obj1, &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "_Waveform_Segment" "', argument " "2"" of type '" "unsigned int""'");
-  } 
-  arg2 = static_cast< unsigned int >(val2);
-  ecode3 = SWIG_AsVal_unsigned_SS_int(obj2, &val3);
-  if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "_Waveform_Segment" "', argument " "3"" of type '" "unsigned int""'");
-  } 
-  arg3 = static_cast< unsigned int >(val3);
-  {
-    try {
-      result = ((GWFrames::Waveform const *)arg1)->Segment(arg2,arg3);;
-    } catch(int i) {
-      std::stringstream s;
-      if(i>-1 && i<GWFramesNumberOfErrors) {
-        s << "GWFrames exception: " << GWFramesErrors[i]; 
-      }
-      else  {
-        s << "GWFrames: Unknown exception number {" << i << "}"; 
-      }
-      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
-      return NULL;
-    }
-  }
-  resultobj = SWIG_NewPointerObj((new GWFrames::Waveform(static_cast< const GWFrames::Waveform& >(result))), SWIGTYPE_p_GWFrames__Waveform, SWIG_POINTER_OWN |  0 );
   return resultobj;
 fail:
   return NULL;
@@ -39239,6 +39239,48 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__Waveform_methods[] = {
 		"  \n"
 		"\n"
 		"" },
+  { "Segment", (PyCFunction) _wrap__Waveform_Segment, METH_VARARGS, (char*) "\n"
+		"Extract a segment of a Waveform.\n"
+		"================================\n"
+		"  Parameters\n"
+		"  ----------\n"
+		"    const unsigned int i1\n"
+		"      Index of initial time\n"
+		"    const unsigned int i2\n"
+		"      Index just beyond final time\n"
+		"  \n"
+		"  Returns\n"
+		"  -------\n"
+		"    Waveform\n"
+		"  \n"
+		"\n"
+		"" },
+  { "Interpolate", (PyCFunction) _wrap__Waveform_Interpolate, METH_VARARGS, (char*) "\n"
+		"Interpolate the Waveform to a new set of time instants.\n"
+		"=======================================================\n"
+		"  Parameters\n"
+		"  ----------\n"
+		"    const vector<double>& NewTime\n"
+		"  \n"
+		"  Returns\n"
+		"  -------\n"
+		"    Waveform\n"
+		"  \n"
+		"\n"
+		"" },
+  { "InterpolateInPlace", (PyCFunction) _wrap__Waveform_InterpolateInPlace, METH_VARARGS, (char*) "\n"
+		"Interpolate the Waveform to a new set of time instants.\n"
+		"=======================================================\n"
+		"  Parameters\n"
+		"  ----------\n"
+		"    const vector<double>& NewTime\n"
+		"  \n"
+		"  Returns\n"
+		"  -------\n"
+		"    Waveform&\n"
+		"  \n"
+		"\n"
+		"" },
   { "DropTimesOutside", (PyCFunction) _wrap__Waveform_DropTimesOutside, METH_VARARGS, (char*) "\n"
 		"Remove all data relating to times outside of the given range.\n"
 		"=============================================================\n"
@@ -40462,48 +40504,6 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__Waveform_methods[] = {
 		"    rotating frame the waveform is currently in, to a stationary, inertial\n"
 		"    frame. This is the usual frame of scri^+, and is the frame in which GW\n"
 		"    observations should be made.\n"
-		"  \n"
-		"\n"
-		"" },
-  { "Interpolate", (PyCFunction) _wrap__Waveform_Interpolate, METH_VARARGS, (char*) "\n"
-		"Interpolate the Waveform to a new set of time instants.\n"
-		"=======================================================\n"
-		"  Parameters\n"
-		"  ----------\n"
-		"    const vector<double>& NewTime\n"
-		"  \n"
-		"  Returns\n"
-		"  -------\n"
-		"    Waveform\n"
-		"  \n"
-		"\n"
-		"" },
-  { "InterpolateInPlace", (PyCFunction) _wrap__Waveform_InterpolateInPlace, METH_VARARGS, (char*) "\n"
-		"Interpolate the Waveform to a new set of time instants.\n"
-		"=======================================================\n"
-		"  Parameters\n"
-		"  ----------\n"
-		"    const vector<double>& NewTime\n"
-		"  \n"
-		"  Returns\n"
-		"  -------\n"
-		"    Waveform&\n"
-		"  \n"
-		"\n"
-		"" },
-  { "Segment", (PyCFunction) _wrap__Waveform_Segment, METH_VARARGS, (char*) "\n"
-		"Extract a segment of a Waveform.\n"
-		"================================\n"
-		"  Parameters\n"
-		"  ----------\n"
-		"    const unsigned int i1\n"
-		"      Index of initial time\n"
-		"    const unsigned int i2\n"
-		"      Index just beyond final time\n"
-		"  \n"
-		"  Returns\n"
-		"  -------\n"
-		"    Waveform\n"
 		"  \n"
 		"\n"
 		"" },

@@ -3136,22 +3136,47 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B, 
     }
     Aligner.SetR_epsB(W_B.GetAlignmentsOfDecompositionFrameToModes(nHat_BValues));
 
-    // Evaluate Xi_c for every deltat that won't require interpolating W_B to find R_eps_B
+    // INFOTOCERR << std::setprecision(14) << std::endl;
+    // for(unsigned int j=0; j<t_A.size(); ++j) {
+    //   std::cerr << t_A[j] << " " << Aligner.R_epsB[j][0] << " " << Aligner.R_epsB[j][1] << " " << Aligner.R_epsB[j][2] << " " << Aligner.R_epsB[j][3] << std::endl;
+    // }
+
+    // Evaluate Xi_c for every deltat that won't require interpolating
+    // W_B to find R_eps_B (because interpolation is really slow)
     const GWFrames::Waveform W_B_Interval = W_B.SliceOfTimesWithoutModes(t_mid+deltat_1, t_mid+deltat_2);
     using namespace GWFrames; // To subtract double from vector<double> below
     vector<double> deltats = W_B_Interval.T()-t_mid;
-    vector<Quaternion> XiIntegral(deltats.size());
-    for(unsigned int i=0; i<XiIntegral.size(); ++i) {
-      XiIntegral[i] = Quaternions::DefiniteIntegral(R_fA*Aligner.Rbar_epsB(t_mid+deltats[i])*Aligner.Rbar_fB(t_A+deltats[i]), t_A);
-      // INFOTOCERR << "XiIntegral[" << i << " / " << XiIntegral.size() << "] = " << XiIntegral[i]
-      //            << "\tabs(XiIntegral[i])=" << Quaternions::abs(XiIntegral[i])
-      //            << "\t" << deltats[i]<< "\t\t(" << __FILE__ << ":" << __LINE__ << ")" << endl;
+    vector<Quaternion> XiIntegral1(deltats.size());
+    vector<Quaternion> XiIntegral2(deltats.size());
+    for(unsigned int i=0; i<XiIntegral1.size(); ++i) {
+      XiIntegral1[i] = Quaternions::DefiniteIntegral(R_fA*Aligner.Rbar_epsB(t_mid+deltats[i])*Aligner.Rbar_fB(t_A+deltats[i]), t_A);
+      XiIntegral2[i] = Quaternions::DefiniteIntegral(R_fA*Quaternions::exp((-M_PI/2.)*Quaternions::zHat)
+                                                     *Aligner.Rbar_epsB(t_mid+deltats[i])*Aligner.Rbar_fB(t_A+deltats[i]), t_A);
+      // if(i==1396) {
+      //   const std::vector<Quaternions::Quaternion> R_tmp = R_fA*Aligner.Rbar_epsB(t_mid+deltats[i])*Aligner.Rbar_fB(t_A+deltats[i]);
+      //   ofstream myfile;
+      //   std::cerr << 1396 << " " << R_fA[0] << "; " << Aligner.Rbar_epsB(t_mid+deltats[i]) << "; " << Aligner.Rbar_fB(t_A+deltats[i])[0] << std::endl;
+      //   myfile.open ("/tmp/integrand_1396.dat");
+      //   for(unsigned int j=0; j<t_A.size(); ++j) {
+      //     myfile << t_A[j] << " " << R_tmp[j][0] << " " << R_tmp[j][1] << " " << R_tmp[j][2] << " " << R_tmp[j][3] << std::endl;
+      //   }
+      //   myfile.close();
+      // }
+    }
+
+    {
+      ofstream myfile;
+      myfile.open ("/tmp/XiIntegral.dat");
+      for(unsigned int i=0; i<XiIntegral1.size(); ++i) {
+        myfile << deltats[i] << " " << Quaternions::abs(XiIntegral1[i]) << " " << Quaternions::abs(XiIntegral2[i]) << std::endl;
+      }
+      myfile.close();
     }
 
     // Find the best value
     double Xi_c_min = 1e300;
     unsigned int i_Xi_c_min = 0;
-    for(unsigned int i=0; i<XiIntegral.size(); ++i) {
+    for(unsigned int i=0; i<XiIntegral1.size(); ++i) {
       const double Xi_c_i = 2*(t_2 - t_1 - Quaternions::abs(XiIntegral[i]));
       if(Xi_c_i<Xi_c_min) {
         Xi_c_min = Xi_c_i;

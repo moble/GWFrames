@@ -81,6 +81,9 @@ namespace GWFrames {
     Waveform SliceOfTimes(const double t_a=-1e300, const double t_b=1e300) const;
     Waveform SliceOfTimesWithEll2(const double t_a=-1e300, const double t_b=1e300) const;
     Waveform SliceOfTimesWithoutModes(const double t_a=-1e300, const double t_b=1e300) const;
+    Waveform Segment(const unsigned int i1, const unsigned int i2) const;
+    Waveform Interpolate(const std::vector<double>& NewTime, const bool AllowTimesOutsideCurrentDomain=false) const;
+    Waveform& InterpolateInPlace(const std::vector<double>& NewTime);
 
   public: // Data alteration functions -- USE AT YOUR OWN RISK!
     Waveform& DropTimesOutside(const double ta, const double tb);
@@ -144,6 +147,8 @@ namespace GWFrames {
     std::vector<std::vector<double> > Arg() const;
     std::vector<std::vector<double> > ArgUnwrapped() const;
     std::vector<std::vector<std::complex<double> > > Data() const;
+
+  public: // Data characterization
     int EllMax() const;
     unsigned int FindModeIndex(const int L, const int M) const;
     unsigned int FindModeIndexWithoutError(const int L, const int M) const;
@@ -160,7 +165,7 @@ namespace GWFrames {
     std::vector<double> ZParityViolationNormalized(std::vector<int> Lmodes=std::vector<int>(0)) const;
     std::vector<double> ZParityViolationMinimized() const;
 
-  private: // Member function
+  private: // Private functions for use in public rotation methods
     Waveform& TransformModesToRotatedFrame(const std::vector<Quaternions::Quaternion>& R_frame);
     Waveform& TransformUncertaintiesToRotatedFrame(const std::vector<Quaternions::Quaternion>& R_frame);
 
@@ -170,7 +175,6 @@ namespace GWFrames {
     Waveform& RotatePhysicalSystem(std::vector<Quaternions::Quaternion> R_phys);
     Waveform& RotateDecompositionBasis(const Quaternions::Quaternion& R_frame);
     Waveform& RotateDecompositionBasis(const std::vector<Quaternions::Quaternion>& R_frame);
-
     Waveform& RotateDecompositionBasisOfUncertainties(const std::vector<Quaternions::Quaternion>& R_frame);
 
     // Radiation-frame calculations
@@ -195,9 +199,6 @@ namespace GWFrames {
     Waveform& TransformUncertaintiesToInertialFrame();
 
     // Alignment, comparison, and hybridization
-    Waveform Interpolate(const std::vector<double>& NewTime, const bool AllowTimesOutsideCurrentDomain=false) const;
-    Waveform& InterpolateInPlace(const std::vector<double>& NewTime);
-    Waveform Segment(const unsigned int i1, const unsigned int i2) const;
     void GetAlignmentOfTime(const Waveform& A, const double t_fid, double& deltat) const;
     Waveform& AlignTime(const Waveform& A, const double t_fid);
     std::vector<Quaternions::Quaternion> GetAlignmentsOfDecompositionFrameToModes(const std::vector<Quaternions::Quaternion>& nHat_t_fid,
@@ -222,6 +223,9 @@ namespace GWFrames {
     Waveform& AlignTimeAndFrame(const Waveform& A, const double t1, const double t2);
     Waveform Compare(const Waveform& B, const double MinTimeStep=0.005, const double MinTime=-3.0e300) const;
     Waveform Hybridize(const Waveform& B, const double t1, const double t2, const double tMinStep=0.005) const;
+    // See also GWFrames::AlignWaveforms below; that is not a member
+    // of this class, to make clear that both waveforms will be
+    // altered inside that function.
 
     // Pointwise operations and spin-weight operators
     std::vector<std::complex<double> > EvaluateAtPoint(const double vartheta, const double varphi) const;
@@ -257,11 +261,12 @@ namespace GWFrames {
 
   }; // class Waveform
   inline Waveform operator*(const double b, const Waveform& A) { return A*b; }
-  inline Waveform operator/(const double b, const Waveform& A) { return A/b; }
   #include "Waveforms_BinaryOp.ipp"
 
   void AlignWaveforms(Waveform& A, Waveform& B, const std::vector<double>& nHat_A,
                       const std::vector<std::vector<double> >& nHat_B, const std::vector<double>& t_B, const double t_1, const double t_2);
+
+
 
   /// Object storing a collection of Waveform objects to be operated on uniformly
   class Waveforms { // (plural!)
