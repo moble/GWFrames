@@ -24331,95 +24331,46 @@ fail:
 SWIGINTERN PyObject *_wrap__Waveform_GetAlignmentsOfDecompositionFrameToModes__SWIG_0(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
-  std::vector< Quaternions::Quaternion,std::allocator< Quaternions::Quaternion > > *arg2 = 0 ;
-  std::vector< int,std::allocator< int > > *arg3 = 0 ;
+  std::vector< int,std::allocator< int > > *arg2 = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  std::vector< Quaternions::Quaternion > tmp2 ;
-  PyObject *itemi2 ;
-  PyObject *itemij2 ;
-  void *p2 ;
-  Py_ssize_t size2 ;
-  Py_ssize_t i2 ;
-  Py_ssize_t j2 ;
-  int res2 ;
-  std::vector< int > temp3 ;
+  std::vector< int > temp2 ;
   PyObject * obj1 = 0 ;
-  PyObject * obj2 = 0 ;
   SwigValueWrapper< std::vector< Quaternions::Quaternion,std::allocator< Quaternions::Quaternion > > > result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:_Waveform_GetAlignmentsOfDecompositionFrameToModes",&obj1,&obj2)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:_Waveform_GetAlignmentsOfDecompositionFrameToModes",&obj1)) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_GetAlignmentsOfDecompositionFrameToModes" "', argument " "1"" of type '" "GWFrames::Waveform const *""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
   {
-    if(PySequence_Check(obj1)) {
-      // If this is a python sequence...
-      if(PySequence_Size(obj1)==0) {
-        // and has zero length...
-        tmp2 = std::vector<Quaternions::Quaternion>(0);
-      } else {
-        // otherwise...
-        size2 = PySequence_Size(obj1);
-        tmp2 = std::vector<Quaternions::Quaternion>(size2);
-        for(i2=0; i2<size2; ++i2) {
-          itemi2 = PySequence_GetItem(obj1, i2);
-          if(PySequence_Check(itemi2) && PySequence_Size(itemi2)==4) {
-            // Accept if it's a sequence of sequences with length 4
-            for(j2=0; j2<4; ++j2) {
-              itemij2 = PySequence_GetItem(itemi2, j2);
-              SWIG_AsVal_double (itemij2, &(tmp2[i2][j2]));
-            }
-          } else {
-            // Accept if it's a sequence of SWIG-wrapped Quaternions
-            p2 = 0;
-            res2 = SWIG_IsOK(SWIG_ConvertPtr(itemi2, &p2, SWIGTYPE_p_Quaternions__Quaternion, 0 | 0 ));
-            if(!res2) {
-              SWIG_exception_fail(SWIG_ArgError(res2), "expected argument 2 to be a sequence of objects of type \"Quaternion\".");
-            }
-            tmp2[i2] = *((Quaternions::Quaternion*)p2);
-          }
-        }
-      }
-    } else {
-      // Accept if it's a SWIG-wrapped vector<Quaternion>
-      void* p2 = &tmp2;
-      res2 = SWIG_IsOK(SWIG_ConvertPtr(obj1, &p2, SWIGTYPE_p_std__vectorT_Quaternions__Quaternion_std__allocatorT_Quaternions__Quaternion_t_t, 0 | 0 ));
-      if(!res2) {
-        SWIG_exception_fail(SWIG_ArgError(res2), "expected argument 2 to be of type \"vector<Quaternion>\".");
-      }
-    }
-    arg2 = &tmp2;
-  }
-  {
-    if(PyArray_Check(obj2)) {
-      PyArrayObject *xa = reinterpret_cast<PyArrayObject*>(obj2);
+    if(PyArray_Check(obj1)) {
+      PyArrayObject *xa = reinterpret_cast<PyArrayObject*>(obj1);
       if(PyArray_TYPE(xa) != NPY_INT) {
         SWIG_exception(SWIG_TypeError, "(1) numpy array of 'int' expected."	\
           " Make sure that the numpy array use dtype=int.");
       }
       const std::size_t size = PyArray_DIM(xa, 0);
-      temp3.resize(size);
+      temp2.resize(size);
       int* array = static_cast<int*>(PyArray_DATA(xa));
       if(PyArray_ISCONTIGUOUS(xa)) {
-        std::copy(array, array + size, temp3.begin());
+        std::copy(array, array + size, temp2.begin());
       } else {
         const npy_intp strides = PyArray_STRIDE(xa, 0)/sizeof(int);
         for (std::size_t i = 0; i < size; i++)
-        temp3[i] = array[i*strides];
+        temp2[i] = array[i*strides];
       }
-    } else if(PySequence_Check(obj2)) {
-      Py_ssize_t size = PySequence_Size(obj2);
-      temp3.resize(size);
+    } else if(PySequence_Check(obj1)) {
+      Py_ssize_t size = PySequence_Size(obj1);
+      temp2.resize(size);
       PyObject* item;
       for(Py_ssize_t i=0; i<size; ++i) {
-        item = PySequence_GetItem(obj2, i);
-        if(!SWIG_IsOK(SWIG_AsVal_int (item, &temp3[i]))) {
+        item = PySequence_GetItem(obj1, i);
+        if(!SWIG_IsOK(SWIG_AsVal_int (item, &temp2[i]))) {
           Py_DECREF(item);
           SWIG_exception(SWIG_TypeError, "expected items of sequence to be of type "\
-            "\"int\" in argument 3");
+            "\"int\" in argument 2");
         }
         Py_DECREF(item);
       }
@@ -24427,11 +24378,11 @@ SWIGINTERN PyObject *_wrap__Waveform_GetAlignmentsOfDecompositionFrameToModes__S
       SWIG_exception(SWIG_TypeError, "(2) numpy array of 'int' expected. " \
         "Make sure that the numpy array use dtype=int.");
     }
-    arg3 = &temp3;
+    arg2 = &temp2;
   }
   {
     try {
-      result = ((GWFrames::Waveform const *)arg1)->GetAlignmentsOfDecompositionFrameToModes((std::vector< Quaternions::Quaternion,std::allocator< Quaternions::Quaternion > > const &)*arg2,(std::vector< int,std::allocator< int > > const &)*arg3);;
+      result = ((GWFrames::Waveform const *)arg1)->GetAlignmentsOfDecompositionFrameToModes((std::vector< int,std::allocator< int > > const &)*arg2);;
     } catch(int i) {
       std::stringstream s;
       if(i>-1 && i<GWFramesNumberOfErrors) {
@@ -24467,68 +24418,19 @@ fail:
 SWIGINTERN PyObject *_wrap__Waveform_GetAlignmentsOfDecompositionFrameToModes__SWIG_1(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
-  std::vector< Quaternions::Quaternion,std::allocator< Quaternions::Quaternion > > *arg2 = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  std::vector< Quaternions::Quaternion > tmp2 ;
-  PyObject *itemi2 ;
-  PyObject *itemij2 ;
-  void *p2 ;
-  Py_ssize_t size2 ;
-  Py_ssize_t i2 ;
-  Py_ssize_t j2 ;
-  int res2 ;
-  PyObject * obj1 = 0 ;
   SwigValueWrapper< std::vector< Quaternions::Quaternion,std::allocator< Quaternions::Quaternion > > > result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:_Waveform_GetAlignmentsOfDecompositionFrameToModes",&obj1)) SWIG_fail;
+  if (args && PyTuple_Check(args) && PyTuple_GET_SIZE(args) > 0) SWIG_fail;
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_GetAlignmentsOfDecompositionFrameToModes" "', argument " "1"" of type '" "GWFrames::Waveform const *""'"); 
   }
   arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
   {
-    if(PySequence_Check(obj1)) {
-      // If this is a python sequence...
-      if(PySequence_Size(obj1)==0) {
-        // and has zero length...
-        tmp2 = std::vector<Quaternions::Quaternion>(0);
-      } else {
-        // otherwise...
-        size2 = PySequence_Size(obj1);
-        tmp2 = std::vector<Quaternions::Quaternion>(size2);
-        for(i2=0; i2<size2; ++i2) {
-          itemi2 = PySequence_GetItem(obj1, i2);
-          if(PySequence_Check(itemi2) && PySequence_Size(itemi2)==4) {
-            // Accept if it's a sequence of sequences with length 4
-            for(j2=0; j2<4; ++j2) {
-              itemij2 = PySequence_GetItem(itemi2, j2);
-              SWIG_AsVal_double (itemij2, &(tmp2[i2][j2]));
-            }
-          } else {
-            // Accept if it's a sequence of SWIG-wrapped Quaternions
-            p2 = 0;
-            res2 = SWIG_IsOK(SWIG_ConvertPtr(itemi2, &p2, SWIGTYPE_p_Quaternions__Quaternion, 0 | 0 ));
-            if(!res2) {
-              SWIG_exception_fail(SWIG_ArgError(res2), "expected argument 2 to be a sequence of objects of type \"Quaternion\".");
-            }
-            tmp2[i2] = *((Quaternions::Quaternion*)p2);
-          }
-        }
-      }
-    } else {
-      // Accept if it's a SWIG-wrapped vector<Quaternion>
-      void* p2 = &tmp2;
-      res2 = SWIG_IsOK(SWIG_ConvertPtr(obj1, &p2, SWIGTYPE_p_std__vectorT_Quaternions__Quaternion_std__allocatorT_Quaternions__Quaternion_t_t, 0 | 0 ));
-      if(!res2) {
-        SWIG_exception_fail(SWIG_ArgError(res2), "expected argument 2 to be of type \"vector<Quaternion>\".");
-      }
-    }
-    arg2 = &tmp2;
-  }
-  {
     try {
-      result = ((GWFrames::Waveform const *)arg1)->GetAlignmentsOfDecompositionFrameToModes((std::vector< Quaternions::Quaternion,std::allocator< Quaternions::Quaternion > > const &)*arg2);;
+      result = ((GWFrames::Waveform const *)arg1)->GetAlignmentsOfDecompositionFrameToModes();;
     } catch(int i) {
       std::stringstream s;
       if(i>-1 && i<GWFramesNumberOfErrors) {
@@ -24563,16 +24465,25 @@ fail:
 
 SWIGINTERN PyObject *_wrap__Waveform_GetAlignmentsOfDecompositionFrameToModes(PyObject *self, PyObject *args) {
   int argc;
-  PyObject *argv[4];
+  PyObject *argv[3];
   int ii;
   
   if (!PyTuple_Check(args)) SWIG_fail;
   argc = args ? (int)PyObject_Length(args) : 0;
   argv[0] = self;
-  for (ii = 0; (ii < 2) && (ii < argc); ii++) {
+  for (ii = 0; (ii < 1) && (ii < argc); ii++) {
     argv[ii + 1] = PyTuple_GET_ITEM(args,ii);
   }
   argc++;
+  if (argc == 1) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__Waveform, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap__Waveform_GetAlignmentsOfDecompositionFrameToModes__SWIG_1(self, args);
+    }
+  }
   if (argc == 2) {
     int _v;
     void *vptr = 0;
@@ -24581,85 +24492,20 @@ SWIGINTERN PyObject *_wrap__Waveform_GetAlignmentsOfDecompositionFrameToModes(Py
     if (_v) {
       {
         _v = false;
-        if(PySequence_Check(argv[1])) {
-          // If this is a python sequence...
-          if(PySequence_Size(argv[1])==0) {
-            // and has zero length, accept
+        if(PyArray_Check(argv[1])) {
+          _v = (PyArray_NDIM(reinterpret_cast<const PyArrayObject*>(argv[1]))==1);
+        } else if(PyList_Check(argv[1])) {
+          if(PyList_Size(argv[1])==0) {
             _v = true;
           } else {
-            // otherwise...
-            PyObject* item0 = PySequence_GetItem(argv[1], 0);
-            if(PySequence_Check(item0) && PySequence_Size(item0)==4) {
-              // Accept if it's a sequence of sequences with length 4
-              PyObject* item00 = PySequence_GetItem(item0, 0);
-              _v = (PyFloat_Check(item00) || PyInt_Check(item00));
-            } else {
-              // Accept if it's a sequence of SWIG-wrapped Quaternions
-              void* p = 0;
-              _v = SWIG_IsOK(SWIG_ConvertPtr(item0, &p, SWIGTYPE_p_Quaternions__Quaternion, 0 | 0 ));
-            }
+            PyObject* item = PySequence_GetItem(argv[1], 0);
+            int* temp=0;
+            _v = SWIG_IsOK(SWIG_AsVal_int (item, temp));
           }
-        } else {
-          // Accept if it's a SWIG-wrapped vector<Quaternion>
-          void* p = 0;
-          _v = SWIG_IsOK(SWIG_ConvertPtr(argv[1], &p, SWIGTYPE_p_std__vectorT_Quaternions__Quaternion_std__allocatorT_Quaternions__Quaternion_t_t, 0 | 0 ));
         }
       }
       if (_v) {
-        return _wrap__Waveform_GetAlignmentsOfDecompositionFrameToModes__SWIG_1(self, args);
-      }
-    }
-  }
-  if (argc == 3) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__Waveform, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      {
-        _v = false;
-        if(PySequence_Check(argv[1])) {
-          // If this is a python sequence...
-          if(PySequence_Size(argv[1])==0) {
-            // and has zero length, accept
-            _v = true;
-          } else {
-            // otherwise...
-            PyObject* item0 = PySequence_GetItem(argv[1], 0);
-            if(PySequence_Check(item0) && PySequence_Size(item0)==4) {
-              // Accept if it's a sequence of sequences with length 4
-              PyObject* item00 = PySequence_GetItem(item0, 0);
-              _v = (PyFloat_Check(item00) || PyInt_Check(item00));
-            } else {
-              // Accept if it's a sequence of SWIG-wrapped Quaternions
-              void* p = 0;
-              _v = SWIG_IsOK(SWIG_ConvertPtr(item0, &p, SWIGTYPE_p_Quaternions__Quaternion, 0 | 0 ));
-            }
-          }
-        } else {
-          // Accept if it's a SWIG-wrapped vector<Quaternion>
-          void* p = 0;
-          _v = SWIG_IsOK(SWIG_ConvertPtr(argv[1], &p, SWIGTYPE_p_std__vectorT_Quaternions__Quaternion_std__allocatorT_Quaternions__Quaternion_t_t, 0 | 0 ));
-        }
-      }
-      if (_v) {
-        {
-          _v = false;
-          if(PyArray_Check(argv[2])) {
-            _v = (PyArray_NDIM(reinterpret_cast<const PyArrayObject*>(argv[2]))==1);
-          } else if(PyList_Check(argv[2])) {
-            if(PyList_Size(argv[2])==0) {
-              _v = true;
-            } else {
-              PyObject* item = PySequence_GetItem(argv[2], 0);
-              int* temp=0;
-              _v = SWIG_IsOK(SWIG_AsVal_int (item, temp));
-            }
-          }
-        }
-        if (_v) {
-          return _wrap__Waveform_GetAlignmentsOfDecompositionFrameToModes__SWIG_0(self, args);
-        }
+        return _wrap__Waveform_GetAlignmentsOfDecompositionFrameToModes__SWIG_0(self, args);
       }
     }
   }
@@ -24667,8 +24513,8 @@ SWIGINTERN PyObject *_wrap__Waveform_GetAlignmentsOfDecompositionFrameToModes(Py
 fail:
   SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function '_Waveform_GetAlignmentsOfDecompositionFrameToModes'.\n"
     "  Possible C/C++ prototypes are:\n"
-    "    GWFrames::Waveform::GetAlignmentsOfDecompositionFrameToModes(std::vector< Quaternions::Quaternion,std::allocator< Quaternions::Quaternion > > const &,std::vector< int,std::allocator< int > > const &) const\n"
-    "    GWFrames::Waveform::GetAlignmentsOfDecompositionFrameToModes(std::vector< Quaternions::Quaternion,std::allocator< Quaternions::Quaternion > > const &) const\n");
+    "    GWFrames::Waveform::GetAlignmentsOfDecompositionFrameToModes(std::vector< int,std::allocator< int > > const &) const\n"
+    "    GWFrames::Waveform::GetAlignmentsOfDecompositionFrameToModes() const\n");
   return 0;
 }
 
@@ -24862,6 +24708,50 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap__Waveform_GetAlignmentOfDecompositionFrameToModes__SWIG_2(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj1 = 0 ;
+  Quaternions::Quaternion result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:_Waveform_GetAlignmentOfDecompositionFrameToModes",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_GetAlignmentOfDecompositionFrameToModes" "', argument " "1"" of type '" "GWFrames::Waveform const *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "_Waveform_GetAlignmentOfDecompositionFrameToModes" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  {
+    try {
+      result = ((GWFrames::Waveform const *)arg1)->GetAlignmentOfDecompositionFrameToModes(arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj((new Quaternions::Quaternion(static_cast< const Quaternions::Quaternion& >(result))), SWIGTYPE_p_Quaternions__Quaternion, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap__Waveform_GetAlignmentOfDecompositionFrameToModes(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[5];
@@ -24874,6 +24764,21 @@ SWIGINTERN PyObject *_wrap__Waveform_GetAlignmentOfDecompositionFrameToModes(PyO
     argv[ii + 1] = PyTuple_GET_ITEM(args,ii);
   }
   argc++;
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__Waveform, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_double(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap__Waveform_GetAlignmentOfDecompositionFrameToModes__SWIG_2(self, args);
+      }
+    }
+  }
   if (argc == 3) {
     int _v;
     void *vptr = 0;
@@ -24953,7 +24858,8 @@ fail:
   SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function '_Waveform_GetAlignmentOfDecompositionFrameToModes'.\n"
     "  Possible C/C++ prototypes are:\n"
     "    GWFrames::Waveform::GetAlignmentOfDecompositionFrameToModes(double const,Quaternions::Quaternion const &,std::vector< int,std::allocator< int > > const &) const\n"
-    "    GWFrames::Waveform::GetAlignmentOfDecompositionFrameToModes(double const,Quaternions::Quaternion const &) const\n");
+    "    GWFrames::Waveform::GetAlignmentOfDecompositionFrameToModes(double const,Quaternions::Quaternion const &) const\n"
+    "    GWFrames::Waveform::GetAlignmentOfDecompositionFrameToModes(double const) const\n");
   return 0;
 }
 
@@ -25147,6 +25053,50 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap__Waveform_AlignDecompositionFrameToModes__SWIG_2(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Waveform *arg1 = (GWFrames::Waveform *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj1 = 0 ;
+  GWFrames::Waveform *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:_Waveform_AlignDecompositionFrameToModes",&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Waveform_AlignDecompositionFrameToModes" "', argument " "1"" of type '" "GWFrames::Waveform *""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "_Waveform_AlignDecompositionFrameToModes" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  {
+    try {
+      result = (GWFrames::Waveform *) &(arg1)->AlignDecompositionFrameToModes(arg2);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GWFrames__Waveform, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap__Waveform_AlignDecompositionFrameToModes(PyObject *self, PyObject *args) {
   int argc;
   PyObject *argv[5];
@@ -25159,6 +25109,21 @@ SWIGINTERN PyObject *_wrap__Waveform_AlignDecompositionFrameToModes(PyObject *se
     argv[ii + 1] = PyTuple_GET_ITEM(args,ii);
   }
   argc++;
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__Waveform, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_double(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap__Waveform_AlignDecompositionFrameToModes__SWIG_2(self, args);
+      }
+    }
+  }
   if (argc == 3) {
     int _v;
     void *vptr = 0;
@@ -25238,7 +25203,8 @@ fail:
   SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function '_Waveform_AlignDecompositionFrameToModes'.\n"
     "  Possible C/C++ prototypes are:\n"
     "    GWFrames::Waveform::AlignDecompositionFrameToModes(double const,Quaternions::Quaternion const &,std::vector< int,std::allocator< int > > const &)\n"
-    "    GWFrames::Waveform::AlignDecompositionFrameToModes(double const,Quaternions::Quaternion const &)\n");
+    "    GWFrames::Waveform::AlignDecompositionFrameToModes(double const,Quaternions::Quaternion const &)\n"
+    "    GWFrames::Waveform::AlignDecompositionFrameToModes(double const)\n");
   return 0;
 }
 
@@ -27037,30 +27003,24 @@ SWIGINTERN PyObject *_wrap_AlignWaveforms(PyObject *self, PyObject *args) {
   GWFrames::Waveform *arg1 = 0 ;
   GWFrames::Waveform *arg2 = 0 ;
   std::vector< double,std::allocator< double > > *arg3 = 0 ;
-  std::vector< std::vector< double,std::allocator< double > >,std::allocator< std::vector< double,std::allocator< double > > > > *arg4 = 0 ;
-  std::vector< double,std::allocator< double > > *arg5 = 0 ;
-  double arg6 ;
-  double arg7 ;
+  double arg4 ;
+  double arg5 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   void *argp2 = 0 ;
   int res2 = 0 ;
   std::vector< double > temp3 ;
-  std::vector< std::vector< double > > temp4 ;
-  std::vector< double > temp5 ;
-  double val6 ;
-  int ecode6 = 0 ;
-  double val7 ;
-  int ecode7 = 0 ;
+  double val4 ;
+  int ecode4 = 0 ;
+  double val5 ;
+  int ecode5 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
   PyObject * obj3 = 0 ;
   PyObject * obj4 = 0 ;
-  PyObject * obj5 = 0 ;
-  PyObject * obj6 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOOOOOO:AlignWaveforms",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5,&obj6)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOOOO:AlignWaveforms",&obj0,&obj1,&obj2,&obj3,&obj4)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1, SWIGTYPE_p_GWFrames__Waveform,  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "AlignWaveforms" "', argument " "1"" of type '" "GWFrames::Waveform &""'"); 
@@ -27113,100 +27073,19 @@ SWIGINTERN PyObject *_wrap_AlignWaveforms(PyObject *self, PyObject *args) {
     }
     arg3 = &temp3;
   }
-  {
-    if(PyArray_Check(obj3)) {
-      PyArrayObject *xa = reinterpret_cast<PyArrayObject*>(obj3);
-      if(PyArray_TYPE(xa) != NPY_DOUBLE) {
-        SWIG_exception(SWIG_TypeError, "(2) numpy array of 'double' expected."	\
-          " Make sure that the numpy array use dtype=double.");
-      }
-      const std::size_t size0 = PyArray_DIM(xa, 0);
-      const std::size_t size1 = PyArray_DIM(xa, 1);
-      temp4.resize(size0);
-      for(unsigned int i=0; i<size0; ++i) {
-        temp4[i].resize(size1);
-      }
-      double* array = static_cast<double*>(PyArray_DATA(xa));
-      const npy_intp strides0 = PyArray_STRIDE(xa, 0)/sizeof(double);
-      const npy_intp strides1 = PyArray_STRIDE(xa, 1)/sizeof(double);
-      for (std::size_t i = 0; i < size0; ++i) {
-        for (std::size_t j = 0; j< size1; ++j) {
-          temp4[i][j] = array[i*strides0+j*strides1];
-        }
-      }
-    } else if(PySequence_Check(obj3)) {
-      Py_ssize_t size0 = PySequence_Size(obj3);
-      temp4.resize(size0);
-      PyObject* item0;
-      PyObject* item1;
-      for(Py_ssize_t i=0; i<size0; ++i) {
-        item0 = PySequence_GetItem(obj3, i);
-        Py_ssize_t size1 = PySequence_Size(item0);
-        temp4[i].resize(size1);
-        for(Py_ssize_t j=0; j<size1; ++j) {
-          item1 = PySequence_GetItem(item0, j);
-          if(!SWIG_IsOK(SWIG_AsVal_double (item1, &temp4[i][j]))) {
-            Py_DECREF(item1);
-            SWIG_exception(SWIG_TypeError, "expected items of sequence to be sequences of type " \
-              "\"double\" in argument 4");
-          }
-          Py_DECREF(item1);
-        }
-      }
-    } else {
-      SWIG_exception(SWIG_TypeError, "(1) numpy array of 'double' expected.");
-    }
-    arg4 = &temp4;
-  }
-  {
-    if(PyArray_Check(obj4)) {
-      PyArrayObject *xa = reinterpret_cast<PyArrayObject*>(obj4);
-      if(PyArray_TYPE(xa) != NPY_DOUBLE) {
-        SWIG_exception(SWIG_TypeError, "(1) numpy array of 'double' expected."	\
-          " Make sure that the numpy array use dtype=double.");
-      }
-      const std::size_t size = PyArray_DIM(xa, 0);
-      temp5.resize(size);
-      double* array = static_cast<double*>(PyArray_DATA(xa));
-      if(PyArray_ISCONTIGUOUS(xa)) {
-        std::copy(array, array + size, temp5.begin());
-      } else {
-        const npy_intp strides = PyArray_STRIDE(xa, 0)/sizeof(double);
-        for (std::size_t i = 0; i < size; i++)
-        temp5[i] = array[i*strides];
-      }
-    } else if(PySequence_Check(obj4)) {
-      Py_ssize_t size = PySequence_Size(obj4);
-      temp5.resize(size);
-      PyObject* item;
-      for(Py_ssize_t i=0; i<size; ++i) {
-        item = PySequence_GetItem(obj4, i);
-        if(!SWIG_IsOK(SWIG_AsVal_double (item, &temp5[i]))) {
-          Py_DECREF(item);
-          SWIG_exception(SWIG_TypeError, "expected items of sequence to be of type "\
-            "\"double\" in argument 5");
-        }
-        Py_DECREF(item);
-      }
-    } else {
-      SWIG_exception(SWIG_TypeError, "(2) numpy array of 'double' expected. " \
-        "Make sure that the numpy array use dtype=double.");
-    }
-    arg5 = &temp5;
-  }
-  ecode6 = SWIG_AsVal_double(obj5, &val6);
-  if (!SWIG_IsOK(ecode6)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "AlignWaveforms" "', argument " "6"" of type '" "double""'");
+  ecode4 = SWIG_AsVal_double(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "AlignWaveforms" "', argument " "4"" of type '" "double""'");
   } 
-  arg6 = static_cast< double >(val6);
-  ecode7 = SWIG_AsVal_double(obj6, &val7);
-  if (!SWIG_IsOK(ecode7)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "AlignWaveforms" "', argument " "7"" of type '" "double""'");
+  arg4 = static_cast< double >(val4);
+  ecode5 = SWIG_AsVal_double(obj4, &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "AlignWaveforms" "', argument " "5"" of type '" "double""'");
   } 
-  arg7 = static_cast< double >(val7);
+  arg5 = static_cast< double >(val5);
   {
     try {
-      GWFrames::AlignWaveforms(*arg1,*arg2,(std::vector< double,std::allocator< double > > const &)*arg3,(std::vector< std::vector< double,std::allocator< double > >,std::allocator< std::vector< double,std::allocator< double > > > > const &)*arg4,(std::vector< double,std::allocator< double > > const &)*arg5,arg6,arg7);;
+      GWFrames::AlignWaveforms(*arg1,*arg2,(std::vector< double,std::allocator< double > > const &)*arg3,arg4,arg5);;
     } catch(int i) {
       std::stringstream s;
       if(i>-1 && i<GWFramesNumberOfErrors) {

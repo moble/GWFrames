@@ -186,11 +186,11 @@ namespace GWFrames {
     Waveform& TransformToInertialFrame();
 
     // Alignment, comparison, and hybridization
-    std::vector<Quaternions::Quaternion> GetAlignmentsOfDecompositionFrameToModes(const std::vector<Quaternions::Quaternion>& nHat_t_fid,
-                                                                                  const std::vector<int>& Lmodes=std::vector<int>(0)) const;
-    Quaternions::Quaternion GetAlignmentOfDecompositionFrameToModes(const double t_fid, const Quaternions::Quaternion& nHat_t_fid,
+    std::vector<Quaternions::Quaternion> GetAlignmentsOfDecompositionFrameToModes(const std::vector<int>& Lmodes=std::vector<int>(0)) const;
+    Quaternions::Quaternion GetAlignmentOfDecompositionFrameToModes(const double t_fid, const Quaternions::Quaternion& nHat_t_fid=Quaternions::xHat,
                                                                     const std::vector<int>& Lmodes=std::vector<int>(0)) const;
-    Waveform& AlignDecompositionFrameToModes(const double t_fid, const Quaternions::Quaternion& nHat_t_fid, const std::vector<int>& Lmodes=std::vector<int>(0));
+    Waveform& AlignDecompositionFrameToModes(const double t_fid, const Quaternions::Quaternion& nHat_t_fid=Quaternions::xHat,
+                                             const std::vector<int>& Lmodes=std::vector<int>(0));
     // See also GWFrames::AlignWaveforms below; that is not a member
     // of this class, to make clear that both waveforms will be
     // altered inside that function.
@@ -228,8 +228,7 @@ namespace GWFrames {
   inline Waveform operator*(const double b, const Waveform& A) { return A*b; }
   #include "Waveforms_BinaryOp.ipp"
 
-  void AlignWaveforms(Waveform& A, Waveform& B, const std::vector<double>& nHat_A,
-                      const std::vector<std::vector<double> >& nHat_B, const std::vector<double>& t_B, const double t_1, const double t_2);
+  void AlignWaveforms(Waveform& A, Waveform& B, const std::vector<double>& nHat_A, const double t_1, const double t_2);
 
 
   /// Object storing a collection of Waveform objects to be operated on uniformly
