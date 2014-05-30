@@ -784,31 +784,6 @@ unsigned int GWFrames::Waveform::FindModeIndexWithoutError(const int l, const in
   return i;
 }
 
-/// Return the contrast in the given mode pair
-std::vector<double> GWFrames::Waveform::Contrast(const int L, const int M) const {
-  /// \param L \f$ell\f$ value of the mode pair
-  /// \param M \f$m\f$ value of the mode pair
-  ///
-  /// This function just returns the value of the contrast
-  /// \f$\kappa^{\ell,m}\f$ defined by Boyle et al. (2014):
-  ///
-  /// \f{equation*}{ kappa^{\ell,m} = 2 \frac{\lvert h^{\ell,m} \rvert
-  /// - \lvert h^{\ell,-m} \rvert} {\lvert h^{\ell,m} \rvert - \lvert
-  /// h^{\ell,-m} \rvert}. \f}
-  ///
-  /// That is, the difference between mode pairs normalized by their
-  /// average.
-
-  const unsigned int Size = NTimes();
-  const unsigned int i_m1 = FindModeIndex(L,M);
-  const unsigned int i_m2 = FindModeIndex(L,-M);
-  std::vector<double> contrast(Size);
-  for(unsigned int i_t=0; i_t<Size; ++i_t) {
-    contrast[i_t] = 2 * (Abs(i_m1,i_t)-Abs(i_m2,i_t)) / (Abs(i_m1,i_t)+Abs(i_m2,i_t));
-  }
-  return contrast;
-}
-
 /// Return the normalized asymmetry as a function of time
 std::vector<double> GWFrames::Waveform::NormalizedAntisymmetry(std::vector<int> LModesForAsymmetry) const {
   /// \param LModesForAsymmetry \f$\ell\f$ modes to use when calculating numerator
@@ -849,46 +824,6 @@ std::vector<double> GWFrames::Waveform::NormalizedAntisymmetry(std::vector<int> 
       }
     }
     asymmetry[i_t] = std::sqrt(diff/(4*norm));
-  }
-  return asymmetry;
-}
-
-
-/// Return the normalized asymmetry as a function of time
-std::vector<double> GWFrames::Waveform::FakeBadNormalizedAsymmetry(int mMode) const {
-  /// \param LModesForAsymmetry \f$\ell\f$ modes to use when calculating numerator
-  ///
-  /// This function just returns the value of the normalized asymmetry
-  /// \f$\hat{\alpha}\f$ defined by Boyle et al. (2014), which is the
-  /// difference between the field at a point and its conjugate at the
-  /// antipodal point, the amplitude squared and integrated over the
-  /// sphere.  The normalization is just the `Norm` of the
-  /// waveform---its overall power at each instant.
-  ///
-  /// By default, all ell modes in the data are used for both the
-  /// asymmetry and the normalization factor.  If an argument is
-  /// input, only modes with ell values in that argument will be used
-  /// to calculate the asymmetry.  All modes will always be used to
-  /// calculate the normalization.
-
-  const unsigned int ntimes = NTimes();
-  const int ellMax = EllMax();
-  std::vector<double> asymmetry(ntimes);
-  double diff,norm;
-  for(unsigned int i_t=0; i_t<ntimes; ++i_t) {
-    diff = 0.;
-    norm = 0.;
-    for(int ell=2; ell<=ellMax; ++ell) {
-      for(int m=-ell; m<=ell; ++m) {
-        const complex<double> h_ell_m = Data(FindModeIndexWithoutError(ell,m), i_t);
-        if(ell==2 && (m==-mMode || m==mMode)) {
-          const complex<double> hbar_ell_mm = std::conj(Data(FindModeIndexWithoutError(ell,-m), i_t));
-          diff += std::norm(h_ell_m - std::pow(-1,m) * hbar_ell_mm);
-        }
-        norm += std::norm(h_ell_m);
-      }
-    }
-    asymmetry[i_t] = std::sqrt(diff/norm);
   }
   return asymmetry;
 }
