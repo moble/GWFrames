@@ -1597,7 +1597,6 @@ vector<vector<double> > GWFrames::Waveform::AngularVelocityVector(const vector<i
   return omega;
 }
 
-
 /// Frame in which the rotation is minimal.
 std::vector<Quaternions::Quaternion> GWFrames::Waveform::CorotatingFrame(const std::vector<int>& Lmodes) const {
   ///
@@ -1612,86 +1611,6 @@ std::vector<Quaternions::Quaternion> GWFrames::Waveform::CorotatingFrame(const s
   ///
 
   return Quaternions::FrameFromAngularVelocity(QuaternionArray(AngularVelocityVector(Lmodes)), T());
-}
-
-/// Deduce PN-equivalent orbital angular velocity from Waveform
-vector<vector<double> > GWFrames::Waveform::PNEquivalentOrbitalAV(const vector<int>& Lmodes) const {
-  ///
-  /// \param Lmodes L modes to evaluate
-  ///
-  /// This function simply takes the projection of the field's
-  /// angular-velocity vector \f$\vec{\omega}\f$ along the dominant
-  /// eigenvector \f$\hat{V}_f\f$ of \f$<LL>\f$.  This should be
-  /// equivalent to the orbital angular velocity of the PN system.
-  /// Note that the returned vector is relative to the inertial frame.
-  ///
-  /// If Lmodes is empty (default), all L modes are used.  Setting
-  /// Lmodes to [2] or [2,3,4], for example, restricts the range of
-  /// the sum.
-  ///
-
-  // If the frame is nontrivial, include its contribution
-  const bool TimeDependentFrame = (frame.size()>1);
-  const bool ConstantNontrivialFrame = (frame.size()==1);
-  const Quaternion R0 = (ConstantNontrivialFrame
-                         ? frame[0]
-                         : Quaternion(1,0,0,0));
-
-  // Get the vectors we need
-  const vector<vector<double> > omega = AngularVelocityVector(Lmodes);
-  vector<vector<double> > V_f = LLDominantEigenvector(Lmodes);
-
-  // Do the calculation
-  for(unsigned int i=0; i<V_f.size(); ++i) {
-    // Rotate V_f[i] into the inertial frame, if necessary
-    if(TimeDependentFrame) {
-      const Quaternion& R = frame[i];
-      V_f[i] = (R*Quaternion(V_f[i])*R.conjugate()).vec();
-    } else if(ConstantNontrivialFrame) {
-      V_f[i] = (R0*Quaternion(V_f[i])*R0.conjugate()).vec();
-    }
-    // Calculate the dot product between V_f and omega
-    double dotproduct = 0.0;
-    for(unsigned int j=0; j<3; ++j) {
-      dotproduct += V_f[i][j]*omega[i][j];
-    }
-    // Apply the rescaling
-    for(unsigned int j=0; j<3; ++j) {
-      V_f[i][j] *= dotproduct;
-    }
-  }
-  return V_f; // [which is now V_f * (V_f \cdot omega)]
-}
-
-/// Deduce PN-equivalent precessional angular velocity from Waveform
-vector<vector<double> > GWFrames::Waveform::PNEquivalentPrecessionalAV(const vector<int>& Lmodes) const {
-  ///
-  /// \param Lmodes L modes to evaluate
-  ///
-  /// This function subtracts the PN-equivalent *orbital* angular
-  /// velocity (given by PNEquivalentOrbitalAV) from the field's
-  /// angular velocity.  This should be equivalent to the precessional
-  /// angular velocity of the PN system.  Note that the returned
-  /// vector is relative to the inertial frame.
-  ///
-  /// This may be essentially numerical noise if there is no
-  /// precession, or if precession has oscillated to zero.
-  ///
-  /// If Lmodes is empty (default), all L modes are used.  Setting
-  /// Lmodes to [2] or [2,3,4], for example, restricts the range of
-  /// the sum.
-  ///
-  /// \sa PNEquivalentOrbitalAV
-  ///
-
-  vector<vector<double> > omega = AngularVelocityVector(Lmodes);
-  const vector<vector<double> > Omega_orb = PNEquivalentOrbitalAV(Lmodes);
-  for(unsigned int i=0; i<Omega_orb.size(); ++i) {
-    for(unsigned int j=0; j<3; ++j) {
-      omega[i][j] -= Omega_orb[i][j];
-    }
-  }
-  return omega;
 }
 
 /// Transform Waveform to co-precessing frame.
