@@ -295,9 +295,23 @@ GWFrames::Waveform GWFrames::Waveform::CopyWithoutData() const {
 
 /// Copy the Waveform between indices i_t_a and i_t_b
 GWFrames::Waveform GWFrames::Waveform::SliceOfTimeIndices(const unsigned int i_t_a, unsigned int i_t_b) const {
+  ///
+  /// \param i_t_a Index of initial time
+  /// \param i_t_b Index just beyond final time
+  ///
   /// i_t_a and i_t_b should hold the indices pointing to the first
   /// time in `t` after `t_a`, and the first time in `t` after `t_b`
   /// (or one-past-the-end of `t` if necessary)
+  if(i_t_a>i_t_b) {
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Requesting impossible slice"
+              << "\ni_t_a=" << i_t_a << "  >  i_t_b=" << i_t_b << std::endl;
+    throw(GWFrames_EmptyIntersection);
+  }
+  if(i_t_b>NTimes()) {
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Requesting impossible slice"
+              << "\ni_t_b=" << i_t_b << "  >  NTimes()=" << NTimes() << std::endl;
+    throw(GWFrames_IndexOutOfBounds);
+  }
   Waveform Slice = this->CopyWithoutData();
   Slice.lm = lm;
   Slice.history << "this->SliceOfTimeIndices(" << i_t_a << ", " << i_t_b << ");" << std::endl;
@@ -314,6 +328,11 @@ GWFrames::Waveform GWFrames::Waveform::SliceOfTimeIndices(const unsigned int i_t
   }
   if(frame.size() == NTimes()) {
     Slice.frame = vector<Quaternion>(frame.begin()+i_t_a, frame.begin()+i_t_b);
+  } else if(frame.size()==1) {
+    Slice.frame = frame;
+  } else {
+    INFOTOCERR << " I don't understand what to do with frame data of length " << frame.size() << " in a Waveform with " << NTimes() << " times." << std::endl;
+    throw(GWFrames_VectorSizeMismatch);
   }
   Slice.t = vector<double>(t.begin()+i_t_a, t.begin()+i_t_b);
   return Slice;
@@ -1842,6 +1861,7 @@ GWFrames::Waveform GWFrames::Waveform::Interpolate(const std::vector<double>& Ne
 
   return C;
 }
+
 /// Interpolate the Waveform to a new set of time instants.
 GWFrames::Waveform& GWFrames::Waveform::InterpolateInPlace(const std::vector<double>& NewTime) {
   if(NewTime.size()==0) {
@@ -1896,45 +1916,6 @@ GWFrames::Waveform& GWFrames::Waveform::InterpolateInPlace(const std::vector<dou
   gsl_spline_free(splineIm);
 
   return *this;
-}
-
-/// Extract a segment of a Waveform.
-GWFrames::Waveform GWFrames::Waveform::Segment(const unsigned int i1, const unsigned int i2) const {
-  ///
-  /// \param i1 Index of initial time
-  /// \param i2 Index just beyond final time
-  ///
-  if(i1>i2) {
-    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Requesting impossible segment"
-              << "\ni1=" << i1 << "  >  i2=" << i2 << std::endl;
-    throw(GWFrames_EmptyIntersection);
-  }
-  if(i2>NTimes()) {
-    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Requesting impossible segment"
-              << "\ni2=" << i2 << "  >  NTimes()=" << NTimes() << std::endl;
-    throw(GWFrames_IndexOutOfBounds);
-  }
-  GWFrames::Waveform C;
-  C.history << HistoryStr()
-            << "this->Segment(" << i1 << ", " << i2 << ");" << std::endl;
-  C.t = vector<double>(&t[i1], &t[i2]);
-  if(frame.size()==1) {
-    C.frame = frame;
-  } else if(frame.size()>1) {
-    C.frame = vector<Quaternions::Quaternion>(&frame[i1], &frame[i2]);
-  }
-  C.frameType = frameType;
-  C.dataType = dataType;
-  C.rIsScaledOut = rIsScaledOut;
-  C.mIsScaledOut = mIsScaledOut;
-  C.lm = lm;
-  C.data.resize(NModes(), i2-i1);
-  for(unsigned int i_m=0; i_m<NModes(); ++i_m) {
-    for(unsigned int i_t=i1; i_t<i2; ++i_t) {
-      C.data[i_m][i_t-i1] = data[i_m][i_t];
-    }
-  }
-  return C;
 }
 
 /// Find the appropriate rotations to fix the orientation of the corotating frame.

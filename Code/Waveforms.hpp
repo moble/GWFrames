@@ -81,7 +81,6 @@ namespace GWFrames {
     Waveform SliceOfTimes(const double t_a=-1e300, const double t_b=1e300) const;
     Waveform SliceOfTimesWithEll2(const double t_a=-1e300, const double t_b=1e300) const;
     Waveform SliceOfTimesWithoutModes(const double t_a=-1e300, const double t_b=1e300) const;
-    Waveform Segment(const unsigned int i1, const unsigned int i2) const;
     Waveform Interpolate(const std::vector<double>& NewTime, const bool AllowTimesOutsideCurrentDomain=false) const;
     Waveform& InterpolateInPlace(const std::vector<double>& NewTime);
 
