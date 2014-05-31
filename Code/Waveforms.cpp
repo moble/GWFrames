@@ -2209,6 +2209,13 @@ public:
     while(i<t_A.size() && t_A[i]<t_1) { ++i; }
     t_A.erase(t_A.begin(), t_A.begin()+i);
     R_fA.erase(R_fA.begin(), R_fA.begin()+i);
+
+    { // Just for debugging temporarily
+      INFOTOCERR << "\tOutput to /tmp/XiIntegral.dat" << std::endl;
+      ofstream myfile;
+      myfile.open ("/tmp/XiIntegralPoints.dat");
+      myfile.close();
+    }
   }
 
   void SetR_epsB(const std::vector<Quaternion>& iR_epsB) {
@@ -2240,25 +2247,28 @@ public:
     const Quaternions::Quaternion R_eps = W_B.GetAlignmentOfDecompositionFrameToModes(t_mid+deltat, Quaternions::xHat);
     const Quaternions::Quaternion R_delta = Quaternions::exp(Quaternions::Quaternion(0, deltax, deltay, deltaz));
     const std::vector<Quaternions::Quaternion> R_Bprime = Quaternions::Squad(R_delta * W_B.Frame() * R_eps, W_B.T(), t_A+deltat);
-    const std::vector<Quaternions::Quaternion> R_Bprime2 = Quaternions::Squad(R_delta * W_B.Frame() * (R_eps * Quaternions::exp((M_PI/2.)*Quaternions::zHat)), W_B.T(), t_A+deltat);
     const unsigned int Size=R_Bprime.size();
     double f1 = 0.0;
     double f2 = 0.0;
     double fdot_last1 = 4 * Quaternions::normsquared( Quaternions::logRotor( R_fA[0] * Quaternions::inverse(R_Bprime[0]) ) );
-    double fdot_last2 = 4 * Quaternions::normsquared( Quaternions::logRotor( R_fA[0] * Quaternions::inverse(R_Bprime2[0]) ) );
+    double fdot_last2 = 4 * Quaternions::normsquared( Quaternions::logRotor( R_fA[0] * Quaternions::inverse(R_Bprime[0]*Quaternions::zHat) ) );
     for(unsigned int i=1; i<Size; ++i) {
       const double fdot1 = 4 * Quaternions::normsquared( Quaternions::logRotor( R_fA[i] * Quaternions::inverse(R_Bprime[i]) ) );
-      const double fdot2 = 4 * Quaternions::normsquared( Quaternions::logRotor( R_fA[i] * Quaternions::inverse(R_Bprime2[i]) ) );
+      const double fdot2 = 4 * Quaternions::normsquared( Quaternions::logRotor( R_fA[i] * Quaternions::inverse(R_Bprime[i]*Quaternions::zHat) ) );
       f1 += (t_A[i]-t_A[i-1])*(fdot1+fdot_last1)/2.0;
       f2 += (t_A[i]-t_A[i-1])*(fdot2+fdot_last2)/2.0;
       fdot_last1 = fdot1;
       fdot_last2 = fdot2;
     }
-    Flip = (f2<f1);
-    if(Flip) {
-      return f2;
+    { // Just for debugging temporarily
+      // INFOTOCERR << "\tOutput to /tmp/XiIntegralPoints.dat" << std::endl;
+      ofstream myfile;
+      myfile.open ("/tmp/XiIntegralPoints.dat", std::ofstream::app);
+      myfile << deltat << " " << f1 << " " << f2 << std::endl;
+      myfile.close();
     }
-    return f1;
+    Flip = (f2<f1);
+    return std::min(f1,f2);
   }
 };
 double minfunc (const gsl_vector* delta, void* params) {
@@ -2372,8 +2382,7 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B, 
     vector<Quaternion> XiIntegral2(deltats.size());
     for(unsigned int i=0; i<XiIntegral1.size(); ++i) {
       XiIntegral1[i] = Quaternions::DefiniteIntegral(R_fA*Aligner.Rbar_epsB(t_mid+deltats[i])*Aligner.Rbar_fB(t_A+deltats[i]), t_A);
-      XiIntegral2[i] = Quaternions::DefiniteIntegral(R_fA*Quaternions::exp((-M_PI/2.)*Quaternions::zHat)
-                                                     *Aligner.Rbar_epsB(t_mid+deltats[i])*Aligner.Rbar_fB(t_A+deltats[i]), t_A);
+      XiIntegral2[i] = Quaternions::DefiniteIntegral(R_fA*(-Quaternions::zHat)*Aligner.Rbar_epsB(t_mid+deltats[i])*Aligner.Rbar_fB(t_A+deltats[i]), t_A);
     }
 
     { // Just for debugging temporarily
@@ -2381,7 +2390,9 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B, 
       ofstream myfile;
       myfile.open ("/tmp/XiIntegral.dat");
       for(unsigned int i=0; i<XiIntegral1.size(); ++i) {
-        myfile << deltats[i] << " " << Quaternions::abs(XiIntegral1[i]) << " " << Quaternions::abs(XiIntegral2[i]) << std::endl;
+        myfile << deltats[i] << " "
+               << 2*(t_2 - t_1 - Quaternions::abs(XiIntegral1[i])) << " "
+               << 2*(t_2 - t_1 - Quaternions::abs(XiIntegral2[i])) << std::endl;
       }
       myfile.close();
     }
@@ -2405,11 +2416,11 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B, 
       }
     }
     const double deltat = deltats[i_Xi_c_min];
-    W_B.RotateDecompositionBasis(Aligner.Rbar_epsB(t_mid+deltat).conjugate() * (Flip ? Quaternions::exp((M_PI/2.)*Quaternions::zHat) : Quaternions::One));
+    // W_B.RotateDecompositionBasis(Aligner.Rbar_epsB(t_mid+deltat).conjugate() * (Flip ? Quaternions::zHat : Quaternions::One));
     W_B.SetTime(W_B.T()-deltat);
     R_delta = (Flip ? XiIntegral2[i_Xi_c_min].normalized() : XiIntegral1[i_Xi_c_min].normalized());
 
-    INFOTOCERR << "Objective function=" << Xi_c_min << " at " << deltat << std::endl;
+    INFOTOCERR << "Objective function=" << Xi_c_min << " at " << deltat << " with" << (Flip ? " " : " no ") << "flip." << std::endl;
   }
 
   gettimeofday(&now, NULL); unsigned long long tThen = now.tv_usec + (unsigned long long)now.tv_sec * 1000000;
@@ -2424,8 +2435,8 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B, 
     const double MinSimplexSize = 2.0e-13; // This can be less than sqrt(machine precision) because of the integral nature of our objective function
     double deltat=0.0;
 
-    const double InitialTrialTimeStep = std::max(W_A.T(1)-W_A.T(0), W_B.T(1)-W_B.T(0));
-    const double InitialTrialAngleStep = 0.1;
+    const double InitialTrialTimeStep = std::max(W_A.T(1)-W_A.T(0), W_B.T(1)-W_B.T(0))/2.;
+    const double InitialTrialAngleStep = 1.0/(t_2-t_1);
 
     // Use Nelder-Mead simplex minimization
     const gsl_multimin_fminimizer_type* T =
@@ -2499,7 +2510,6 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B, 
     R_delta = Quaternions::exp(Quaternions::Quaternion(0.0, gsl_vector_get(s->x, 1), gsl_vector_get(s->x, 2), gsl_vector_get(s->x, 3)));
     Aligner.EvaluateMinimizationQuantity(gsl_vector_get(s->x,0), gsl_vector_get(s->x,1), gsl_vector_get(s->x,2), gsl_vector_get(s->x,3));
     const bool Flip = Aligner.Flip;
-    INFOTOCERR << "\tThe flip (" << Flip << ") needs to be implemented." << std::endl;
 
     INFOTOCERR << "Objective function=" << s->fval << " at " << deltat << std::endl;
 
@@ -2509,7 +2519,8 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B, 
     gsl_multimin_fminimizer_free(s);
 
     // Now, apply the transformations
-    W_B.AlignDecompositionFrameToModes(t_mid+deltat, Quaternions::xHat);
+    INFOTOCERR << "\tThe flip implmentation (" << Flip << ") needs to be checked." << std::endl;
+    W_B.AlignDecompositionFrameToModes(t_mid+deltat, (Flip ? -Quaternions::xHat : Quaternions::xHat));
     W_B.SetTime(W_B.T()-deltat);
     W_B.SetFrame(R_delta*W_B.Frame());
 
@@ -2546,15 +2557,19 @@ GWFrames::Waveform GWFrames::Waveform::Compare(const GWFrames::Waveform& A, cons
               << "\nA.NModes()=" << A.NModes() << "\tB.NModes()=" << B.NModes() << std::endl;
     throw(GWFrames_WaveformMissingLMIndex);
   }
+
   // We'll put all the data in a new Waveform C
   GWFrames::Waveform C;
+
   // Store both old histories in C's
   C.history << "B.Compare(A)\n"
             << "#### A.history.str():\n" << A.history.str()
             << "#### B.history.str():\n" << B.history.str()
             << "#### End of old histories from `Compare`" << std::endl;
+
   // The new time axis will be the intersection of the two old ones
   C.t = GWFrames::Intersection(A.t, B.t);
+
   // Copy the basics
   C.frameType = frameType;
   C.dataType = dataType;
@@ -2563,6 +2578,7 @@ GWFrames::Waveform GWFrames::Waveform::Compare(const GWFrames::Waveform& A, cons
   // We'll assume that {A.lm}=={B.lm} as sets, and account for
   // disordering below
   C.lm = A.lm;
+
   // Process the frame, depending on the sizes of the input frames
   if(A.Frame().size()>1 && B.Frame().size()>1) {
     // Find the frames interpolated to the appropriate times
@@ -2599,6 +2615,21 @@ GWFrames::Waveform GWFrames::Waveform::Compare(const GWFrames::Waveform& A, cons
     // Assign the data
     C.frame = vector<Quaternion>(1,A.Frame(0));
   } // else, leave the frame data empty
+
+  // If the average frame rotor is closer to -1 than to 1, flip the sign
+  if(C.frame.size()==C.NTimes()) {
+    const Quaternions::Quaternion R_m = Quaternions::ApproximateMeanRotor(C.frame, C.t);
+    if( Quaternions::ChordalDistance(R_m, -Quaternions::One) < Quaternions::ChordalDistance(R_m, Quaternions::One) ) {
+      for(unsigned int i_t=0; i_t<C.NTimes(); ++i_t) {
+        C.frame[i_t] = -C.frame[i_t];
+      }
+    }
+  } else if(C.frame.size()==1) {
+    if( Quaternions::ChordalDistance(C.frame[0], -Quaternions::One) < Quaternions::ChordalDistance(C.frame[0], Quaternions::One) ) {
+      C.frame[0] = -C.frame[0];
+    }
+  }
+
   // Reserve space for the data
   C.data.resize(C.lm.size(), C.t.size());
   // Construct the GSL interpolators for the data
@@ -2610,6 +2641,7 @@ GWFrames::Waveform GWFrames::Waveform::Compare(const GWFrames::Waveform& A, cons
   gsl_spline* splineImA = gsl_spline_alloc(gsl_interp_cspline, A.NTimes());
   gsl_spline* splineReB = gsl_spline_alloc(gsl_interp_cspline, B.NTimes());
   gsl_spline* splineImB = gsl_spline_alloc(gsl_interp_cspline, B.NTimes());
+
   // Now loop over each mode filling in the waveform data
   for(unsigned int Mode=0; Mode<A.NModes(); ++Mode) {
     // Assume that all the ell,m data are the same, but not necessarily in the same order
@@ -2634,6 +2666,7 @@ GWFrames::Waveform GWFrames::Waveform::Compare(const GWFrames::Waveform& A, cons
     gsl_interp_accel_reset(accReB);
     gsl_interp_accel_reset(accImB);
   }
+
   gsl_interp_accel_free(accReA);
   gsl_interp_accel_free(accImA);
   gsl_interp_accel_free(accReB);
