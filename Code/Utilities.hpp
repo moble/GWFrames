@@ -19,7 +19,7 @@ namespace GWFrames {
   double abs(const std::vector<double>& v);
   std::vector<double> abs(const std::vector<std::vector<double> >& v);
   std::vector<double> fabs(const std::vector<double>& x);
-  std::vector<double> pow(const std::vector<double>& base, const double& exponent);
+  std::vector<double> pow(const std::vector<double>& base, const double exponent);
   std::vector<double> log(const std::vector<double>& x);
   std::vector<double> exp(const std::vector<double>& x);
   std::vector<double> operator+(const std::vector<double>& a, const std::vector<double>& b);
@@ -33,7 +33,6 @@ namespace GWFrames {
   std::vector<std::vector<double> > operator/(const std::vector<std::vector<double> > & a, const std::vector<double>& b);
   std::vector<std::vector<double> > operator*(const std::vector<double> & a, const std::vector<std::vector<double> >& b);
   std::vector<std::vector<double> > operator-(const std::vector<std::vector<double> >& a, const std::vector<std::vector<double> >& b);
-  std::vector<double> pow(const std::vector<double>& a, const double b);
   std::vector<double> Unwrap(const std::vector<double>& In);
   bool xINy(const int x, const std::vector<int>& y);
 

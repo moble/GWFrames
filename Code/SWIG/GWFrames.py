@@ -97,6 +97,7 @@ except ImportError :
 
 
 
+
 # The following are necessary to allow us to attach new attributes
 # (methods) to `Waveform` objects.  This is required because we are
 # calling SWIG with the `-builtin` option, which makes it a little

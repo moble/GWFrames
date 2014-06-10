@@ -144,7 +144,7 @@ GWFrames::PNWaveform::PNWaveform(const std::string& Approximant, const double de
   PostNewtonian::EvolvePN_Q(Approximant, PNOrder, v_0, v_i, m1, m2, chi1_i, chi2_i, R_frame_i,
                             t, v, mchi1, mchi2, frame, mPhi_orb, mL);
 
-  mOmega_orb = pow(v,3)*PostNewtonian::ellHat(frame);
+  mOmega_orb = GWFrames::pow(v,3)*PostNewtonian::ellHat(frame);
   mOmega_prec = Quaternions::vec(Quaternions::FrameAngularVelocity(frame, t)) - mOmega_orb;
 
   // Set up the (ell,m) data

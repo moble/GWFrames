@@ -52,7 +52,7 @@ vector<double> GWFrames::fabs(const vector<double>& x) {
   return y;
 }
 
-vector<double> GWFrames::pow(const vector<double>& base, const double& exponent) {
+vector<double> GWFrames::pow(const vector<double>& base, const double exponent) {
   vector<double> y(base.size());
   for(unsigned int i=0; i<y.size(); ++i) {
     y[i] = std::pow(base[i], exponent);
@@ -188,15 +188,6 @@ std::vector<std::vector<double> > GWFrames::operator-(const std::vector<std::vec
   vector<vector<double> > c(size1, vector<double>(size2));
   for(unsigned int i=0; i<size1; ++i) {
     c[i] = a[i]-b[i];
-  }
-  return c;
-}
-
-std::vector<double> GWFrames::pow(const std::vector<double>& a, const double b) {
-  const unsigned int size = a.size();
-  vector<double> c(size);
-  for(unsigned int i=0; i<size; ++i) {
-    c[i] = std::pow(a[i], b);
   }
   return c;
 }
