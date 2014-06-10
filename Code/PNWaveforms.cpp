@@ -74,7 +74,7 @@ GWFrames::PNWaveform::PNWaveform(const PNWaveform& a) :
 GWFrames::PNWaveform::PNWaveform(const std::string& Approximant, const double delta,
                                  const std::vector<double>& chi1_i, const std::vector<double>& chi2_i,
                                  const double Omega_orb_i, const Quaternions::Quaternion& R_frame_i,
-                                 const double PNOrder, double v_0) :
+                                 const double PNOrder, double Omega_orb_0) :
   Waveform(), mchi1(0), mchi2(0), mOmega_orb(0), mOmega_prec(0), mL(0), mPhi_orb(0)
 {
   ///
@@ -85,14 +85,14 @@ GWFrames::PNWaveform::PNWaveform(const std::string& Approximant, const double de
   /// \param Omega_orb_i Initial orbital angular frequency
   /// \param R_frame_i Overall rotation of the system (optional)
   /// \param PNOrder PN order at which to compute all quantities (default: 4.0)
-  /// \param v_0 Initial velocity to compute (optional)
+  /// \param Omega_orb_0 Initial velocity to compute (optional)
   ///
   /// The PN system is initialized having the BHs along the x axis,
   /// with the orbital angular velocity along the positive z axis,
   /// having magnitude Omega_orb_i.  The input spin vectors must be
   /// defined with respect to this basis.  Note that the optional
-  /// parameter `v_0` may be given, in which case the PN system is
-  /// also evolved backwards to that point.
+  /// parameter `Omega_orb_0` may be given, in which case the PN
+  /// system is also evolved backwards to that point.
   ///
   /// The TaylorTn system is first integrated to compute the dynamics
   /// of the binary.  The evolved spin vectors chi1 and chi2, orbital
@@ -110,9 +110,7 @@ GWFrames::PNWaveform::PNWaveform(const std::string& Approximant, const double de
   const double v_i = std::pow(Omega_orb_i, 1./3.);
   const double m1 = (1.0+delta)/2.0;
   const double m2 = (1.0-delta)/2.0;
-  if(v_0<=0.0) {
-    v_0 = v_i;
-  }
+  const double v_0 = ( Omega_orb_0<=0.0 ? v_i : std::pow(Omega_orb_0, 1./3.) );
 
   SetFrameType(GWFrames::Coorbital);
   SetDataType(GWFrames::h);
@@ -136,7 +134,7 @@ GWFrames::PNWaveform::PNWaveform(const std::string& Approximant, const double de
             << "# hostname = " << hostname << std::endl
             << "# date = " << date // comes with a newline
             << "W = PNWaveform(" << Approximant << ", " << delta << ", " << VectorStringForm(chi1_i) << ", " << VectorStringForm(chi2_i)
-            << ", " << Omega_orb_i << ", " << R_frame_i << ", " << PNOrder << ", " << v_0 << ");" << std::endl;
+            << ", " << Omega_orb_i << ", " << R_frame_i << ", " << PNOrder << ", " << Omega_orb_0 << ");" << std::endl;
   }
 
   vector<double> v;
