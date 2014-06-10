@@ -96,3 +96,18 @@ _both_ Makefiles are set properly.
 Detailed documentation of most functions may be found through python's
 `help` function, or by running `make` in the `Docs` subdirectory, and
 reading `Docs/html/index.html`.
+
+
+Contributions
+=============
+The code is primarily written by me (Mike Boyle).  Dan Hemberger helped
+by porting older code from [Triton](https://github.com/moble/Triton) to
+perform noise-weighted overlap code.  Serguei Ossokine also helped
+substantially by cross-checking the post-Newtonian formulas and results.
+
+Other contributions are entirely welcome.  The preferred method is via
+github's excellent interface.  If you have a bug report, just go to the
+[issues](https://github.com/moble/GWFrames/issues) page for this repo,
+check for related issues, and if this is new click "New Issue".  If you
+want to contribute code, use the [fork & pull method described here]
+(https://help.github.com/articles/using-pull-requests).
