@@ -58,12 +58,19 @@ notebook (`.ipynb`) file.
 
 Getting started
 ===============
+The first step is to clone the git repo and its submodules:
+```
+git clone https://github.com/moble/GWFrames.git
+cd GWFrames
+git submodule init
+git submodule update
+```
+
 The code is mostly in the form of C++, for speed.  All functions are
 provided in the `GWFrames` namespace.  The interface is reasonably
 straightforward, and can easily be included into and compiled with
 other code.  Look for examples of how to do this in the `C++Example`
 directory.  (See below for a few more details.)
-
 
 However, it is mostly intended to be used through the interface to
 python.  With the above-listed requirements, build the code and
