@@ -1711,13 +1711,13 @@ GWFrames::Waveform& GWFrames::Waveform::TransformToCorotatingFrame(const std::ve
   /// the sum.
   ///
 
-  // if(frameType != GWFrames::Inertial) {
-  //   std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-  //             << "\nWarning: Asking to transform a Waveform in the " << GWFrames::WaveformFrameNames[frameType] << " frame into the corotating frame."
-  //             << "\n         You have to think very carefully about whether or not this is what you really want.\n"
-  //             << "\n         This should probably only be applied to Waveforms in the " << GWFrames::WaveformFrameNames[GWFrames::Inertial] << " frame.\n"
-  //             << std::endl;
-  // }
+  if(frameType != GWFrames::Inertial) {
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+              << "\nWarning: Asking to transform a Waveform in the " << GWFrames::WaveformFrameNames[frameType] << " frame into the corotating frame."
+              << "\n         You have to think very carefully about whether or not this is what you really want.\n"
+              << "\n         This should probably only be applied to Waveforms in the " << GWFrames::WaveformFrameNames[GWFrames::Inertial] << " frame.\n"
+              << std::endl;
+  }
 
   vector<Quaternion> R_corot = this->CorotatingFrame(Lmodes);
   this->frameType = GWFrames::Corotating;
