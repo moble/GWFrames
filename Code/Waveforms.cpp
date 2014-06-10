@@ -1535,26 +1535,42 @@ std::vector<std::vector<double> > GWFrames::Waveform::LLDominantEigenvector(cons
   // Calculate the LL matrix at each instant
   vector<Matrix> ll = LLMatrix(Lmodes);
 
-  // Calculate the dominant principal axis of LL at each instant
+  // Calculate the dominant principal axis (dpa) of LL at each instant
   vector<vector<double> > dpa(NTimes(), vector<double>(3));
   for(unsigned int i=0; i<ll.size(); ++i) {
     dpa[i] = GWFrames::DominantPrincipalAxis(ll[i]);
   }
 
   // Now, go through and make the vectors reasonably continuous.
-  for(unsigned int i=1; i<dpa.size(); ++i) {
-    const double x=dpa[i][0];
-    const double y=dpa[i][1];
-    const double z=dpa[i][2];
-    const double dx=x-dpa[i-1][0];
-    const double dy=y-dpa[i-1][1];
-    const double dz=z-dpa[i-1][2];
-    const double Norm = std::sqrt(x*x+y*y+z*z);
-    const double dNorm = std::sqrt(dx*dx+dy*dy+dz*dz);
-    if(dNorm>Norm) {
-      dpa[i][0] = -dpa[i][0];
-      dpa[i][1] = -dpa[i][1];
-      dpa[i][2] = -dpa[i][2];
+  if(dpa.size()>0) {
+    double LastNorm = std::sqrt(dpa[0][0]*dpa[0][0]+dpa[0][1]*dpa[0][1]+dpa[0][2]*dpa[0][2]);
+    for(unsigned int i=1; i<dpa.size(); ++i) {
+      const double x=dpa[i][0];
+      const double y=dpa[i][1];
+      const double z=dpa[i][2];
+      const double dx=x-dpa[i-1][0];
+      const double dy=y-dpa[i-1][1];
+      const double dz=z-dpa[i-1][2];
+      const double Norm = std::sqrt(x*x+y*y+z*z);
+      const double dNorm = std::sqrt(dx*dx+dy*dy+dz*dz);
+      if(dNorm>Norm) {
+        dpa[i][0] = -dpa[i][0];
+        dpa[i][1] = -dpa[i][1];
+        dpa[i][2] = -dpa[i][2];
+      }
+      // While we're here, let's just normalize that last one
+      if(LastNorm!=0.0) {
+        dpa[i-1][0] = dpa[i-1][0] / LastNorm;
+        dpa[i-1][1] = dpa[i-1][1] / LastNorm;
+        dpa[i-1][2] = dpa[i-1][2] / LastNorm;
+      }
+      LastNorm = Norm;
+    }
+    if(LastNorm!=0.0) {
+      const unsigned int i=dpa.size();
+      dpa[i-1][0] = dpa[i-1][0] / LastNorm;
+      dpa[i-1][1] = dpa[i-1][1] / LastNorm;
+      dpa[i-1][2] = dpa[i-1][2] / LastNorm;
     }
   }
 
@@ -1695,13 +1711,13 @@ GWFrames::Waveform& GWFrames::Waveform::TransformToCorotatingFrame(const std::ve
   /// the sum.
   ///
 
-  if(frameType != GWFrames::Inertial) {
-    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-              << "\nWarning: Asking to transform a Waveform in the " << GWFrames::WaveformFrameNames[frameType] << " frame into the corotating frame."
-              << "\n         You have to think very carefully about whether or not this is what you really want.\n"
-              << "\n         This should probably only be applied to Waveforms in the " << GWFrames::WaveformFrameNames[GWFrames::Inertial] << " frame.\n"
-              << std::endl;
-  }
+  // if(frameType != GWFrames::Inertial) {
+  //   std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+  //             << "\nWarning: Asking to transform a Waveform in the " << GWFrames::WaveformFrameNames[frameType] << " frame into the corotating frame."
+  //             << "\n         You have to think very carefully about whether or not this is what you really want.\n"
+  //             << "\n         This should probably only be applied to Waveforms in the " << GWFrames::WaveformFrameNames[GWFrames::Inertial] << " frame.\n"
+  //             << std::endl;
+  // }
 
   vector<Quaternion> R_corot = this->CorotatingFrame(Lmodes);
   this->frameType = GWFrames::Corotating;
