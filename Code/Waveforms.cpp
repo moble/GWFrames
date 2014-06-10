@@ -96,7 +96,11 @@ GWFrames::Waveform::Waveform() :
 {
   {
     char path[MAXPATHLEN];
-    getcwd(path, MAXPATHLEN);
+    char* result = getcwd(path, MAXPATHLEN);
+    if(!result) {
+      cerr << "\n" << __FILE__ << ":" << __LINE__ << ": getcwd error." << endl;
+      throw(GWFrames_FailedSystemCall);
+    }
     string pwd = path;
     char host[MAXHOSTNAMELEN];
     gethostname(host, MAXHOSTNAMELEN);
@@ -139,7 +143,11 @@ GWFrames::Waveform::Waveform(const std::string& FileName, const std::string& Dat
   /// vector or rotate the waveform.
   {
     char path[MAXPATHLEN];
-    getcwd(path, MAXPATHLEN);
+    char* result = getcwd(path, MAXPATHLEN);
+    if(!result) {
+      cerr << "\n" << __FILE__ << ":" << __LINE__ << ": getcwd error." << endl;
+      throw(GWFrames_FailedSystemCall);
+    }
     string pwd = path;
     char host[MAXHOSTNAMELEN];
     gethostname(host, MAXHOSTNAMELEN);

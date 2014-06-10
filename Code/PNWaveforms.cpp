@@ -17,6 +17,8 @@
 using std::vector;
 using std::string;
 using Quaternions::Quaternion;
+using std::cerr;
+using std::endl;
 
 // Local utility functions
 std::string VectorStringForm(const std::vector<double>& V) {
@@ -42,7 +44,11 @@ GWFrames::PNWaveform::PNWaveform() :
   SetMIsScaledOut(true);
   { // Overwrite the history from Waveform
     char path[MAXPATHLEN];
-    getcwd(path, MAXPATHLEN);
+    char* result = getcwd(path, MAXPATHLEN);
+    if(!result) {
+      cerr << "\n" << __FILE__ << ":" << __LINE__ << ": getcwd error." << endl;
+      throw(GWFrames_FailedSystemCall);
+    }
     string pwd = path;
     char host[MAXHOSTNAMELEN];
     gethostname(host, MAXHOSTNAMELEN);
@@ -119,7 +125,11 @@ GWFrames::PNWaveform::PNWaveform(const std::string& Approximant, const double de
 
   { // Overwrite the history from Waveform
     char path[MAXPATHLEN];
-    getcwd(path, MAXPATHLEN);
+    char* result = getcwd(path, MAXPATHLEN);
+    if(!result) {
+      cerr << "\n" << __FILE__ << ":" << __LINE__ << ": getcwd error." << endl;
+      throw(GWFrames_FailedSystemCall);
+    }
     string pwd = path;
     char host[MAXHOSTNAMELEN];
     gethostname(host, MAXHOSTNAMELEN);
