@@ -330,7 +330,7 @@ GWFrames::Waveform GWFrames::Waveform::SliceOfTimeIndices(const unsigned int i_t
     Slice.frame = vector<Quaternion>(frame.begin()+i_t_a, frame.begin()+i_t_b);
   } else if(frame.size()==1) {
     Slice.frame = frame;
-  } else {
+  } else if(frame.size()!=0) {
     INFOTOCERR << " I don't understand what to do with frame data of length " << frame.size() << " in a Waveform with " << NTimes() << " times." << std::endl;
     throw(GWFrames_VectorSizeMismatch);
   }
