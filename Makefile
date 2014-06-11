@@ -1,21 +1,19 @@
+# Make targets in ./Code
+# build_message: prints helpful build documentation
+# install_user:  just call the python user build process
+# cpp:           make object files to use in other C++ programs
+# clean:         cleans out the builds, etc., in Code
+# MikeHappy:     self-explanatory
+CODE_TARGETS := build_message install_user cpp clean MikeHappy
+
 # Tell 'make' not to look for files with the following names
-.PHONY : all cpp doc clean
+.PHONY : $(CODE_TARGETS) doc
 
-# By default, just call the python build process
-all :
-	$(MAKE) -C Code
+.DEFAULT_GOAL := build_message
 
-# If needed, we can also $(MAKE) object files to use in other C++ programs
-cpp :
-	$(MAKE) -C Code cpp
+$(CODE_TARGETS):
+	$(MAKE) -C Code $@
 
 # This rebuilds the documentation, assuming doxygen is working
 doc :
 	$(MAKE) -C Docs
-
-# This just cleans out the builds, etc., in Code
-clean :
-	$(MAKE) -C Code clean
-
-MikeHappy :
-	$(MAKE) -C Code MikeHappy

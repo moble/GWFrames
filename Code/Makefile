@@ -21,12 +21,12 @@ ifdef FFTW3_HOME
 	LIBRARY_PATH:=${LIBRARY_PATH}:${FFTW3_HOME}/lib
 endif
 
-# By default, just call the python build process
-all:
-	@echo "The default build process has changed, and this Makefile is just for useful hints in unusual cases."
-	@echo ""
-	@echo "You probably want to run the following to build and install the code:"
-	@echo "  python setup.py install --user"
+.DEFAULT_GOAL := build_message
+build_message:
+	@echo "The default make target has changed. If you want to build and install"
+	@echo "the code, you should run:"
+	@echo "  make install_user"
+	@echo "This calls 'python setup.py install --user' in the Code directory."
 
 install :
 	python setup.py install
