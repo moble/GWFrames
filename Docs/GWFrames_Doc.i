@@ -51,6 +51,44 @@ Return vector of vector of real parts of all modes as function of time.
   
 """
 
+%feature("docstring") WaveformUtilities::SplineCumulativeIntegral """
+
+
+  Parameters
+  ----------
+    const vector<double>& X1
+    const vector<double>& Y1
+  
+  Returns
+  -------
+    double
+  
+"""
+
+%feature("docstring") GWFrames::DataGrid::operator[] """
+
+
+  Parameters
+  ----------
+    const unsigned int i
+  
+  Returns
+  -------
+    const complex<double>&
+  
+
+
+
+  Parameters
+  ----------
+    const unsigned int i
+  
+  Returns
+  -------
+    complex<double>&
+  
+"""
+
 %feature("docstring") GWFrames::SuperMomenta::BMSTransform """
 Return value of Psi on u'=const slice centered at delta[0].
 ===========================================================
@@ -75,6 +113,19 @@ Return value of Psi on u'=const slice centered at delta[0].
   Returns
   -------
     InverseConformalFactorFunctor
+  
+"""
+
+%feature("docstring") WaveformUtilities::TimeToFrequency """
+This function creates a frequency vector in (0 -> positives -> negatives -> 0) order.
+=====================================================================================
+  Parameters
+  ----------
+    const vector<double>& Time
+  
+  Returns
+  -------
+    vector<double>
   
 """
 
@@ -125,6 +176,34 @@ Transform Waveform to frame aligned with angular-velocity vector.
     
     If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
     or [2,3,4], for example, restricts the range of the sum.
+  
+"""
+
+%feature("docstring") GWFrames::Waveform::EllMax """
+Return greatest ell value present in the data.
+==============================================
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    int
+  
+"""
+
+%feature("docstring") AdvLIGO_ZeroDet_HighP """
+
+
+  Parameters
+  ----------
+    const vector<double>& F
+    const bool Invert = false
+    const double NoiseFloor = 0.0
+  
+  Returns
+  -------
+    vector<double>
   
 """
 
@@ -203,8 +282,8 @@ The operator edth^2 bar{edth}^2.
     double
   
 
-
-
+Vector of magnitudes of Omega_prec at each instant of time.
+===========================================================
   Parameters
   ----------
     (none)
@@ -248,6 +327,22 @@ Copy of the Waveform between indices i_t_a and i_t_b, only ell=2 modes.
   
 """
 
+%feature("docstring") SplineInterpolator::sety2 """
+
+
+  Parameters
+  ----------
+    const vector<double>& xv
+    const vector<double>& yv
+    double yp1
+    double ypn
+  
+  Returns
+  -------
+    void
+  
+"""
+
 %feature("docstring") GWFrames::Waveforms::~Waveforms """
 
 
@@ -261,27 +356,27 @@ Copy of the Waveform between indices i_t_a and i_t_b, only ell=2 modes.
   
 """
 
-%feature("docstring") GWFrames::Waveform::PNEquivalentOrbitalAV """
-Deduce PN-equivalent orbital angular velocity from Waveform.
-============================================================
+%feature("docstring") GWFrames::WaveformAtAPointFT::Re """
+
+
   Parameters
   ----------
-    const vector<int>& Lmodes = vector<int>(0)
-      L modes to evaluate
+    (none)
   
   Returns
   -------
-    vector<vector<double>>
+    const vector<double>&
   
-  Description
-  -----------
-    This function simply takes the projection of the field's angular-velocity
-    vector $\\vec{\\omega}$ along the dominant eigenvector $\\hat{V}_f$ of
-    $<LL>$. This should be equivalent to the orbital angular velocity of the PN
-    system. Note that the returned vector is relative to the inertial frame.
-    
-    If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
-    or [2,3,4], for example, restricts the range of the sum.
+
+
+
+  Parameters
+  ----------
+    const unsigned int f
+  
+  Returns
+  -------
+    const double&
   
 """
 
@@ -292,15 +387,12 @@ Do everything necessary to align two waveform objects.
   ----------
     Waveform& A
     Waveform& B
-    const vector<double>& nHat_A
-      Approximate nHat vector at (t_1+t_2)/2.
-    const vector<vector<double>>& nHat_B
-      Approximate nHat vectors at t_B
-    const vector<double>& t_B
     const double t_1
       Beginning of alignment interval
     const double t_2
       End of alignment interval
+    vector<double> nHat_A = vector<double>(0)
+      Approximate nHat vector at (t_1+t_2)/2. [optional]
   
   Returns
   -------
@@ -318,11 +410,9 @@ Do everything necessary to align two waveform objects.
     in the inertial frame. Otherwise, they must already be in the co-rotating
     frame. (E.g., the co-orbital frame is an error.)
     
-    The nHat quantities are just approximate directions for that vector in the
-    two systems, used to set the direction of the x axis for the rotating
-    frame. For W_A only the value at t_mid is needed; for W_B, the values and
-    related times are needed, so that the appropriate value can be interpolated
-    as W_B is shifted in time.
+    The nHat quantity is just the approximate direction for that vector in the
+    systems, used to set the direction of the x axis for the rotating frame.
+    Only the value at t_mid for W_A is needed.
     
     Note that the alignment algorithm assumes that the waveforms are already
     reasonably well aligned in time. In particular, the final value of
@@ -369,6 +459,19 @@ Copy of the Waveform between t_a and t_b, only ell=2 modes.
   Returns
   -------
     Waveform
+  
+"""
+
+%feature("docstring") GWFrames::WaveformAtAPointFT::NFreq """
+
+
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    unsigned int
   
 """
 
@@ -445,8 +548,8 @@ Copy of the Waveform between t_a and t_b, only ell=2 modes.
     double
   
 
-
-
+Vector of magnitudes of Omega_orb at each instant of time.
+==========================================================
   Parameters
   ----------
     (none)
@@ -454,6 +557,22 @@ Copy of the Waveform between t_a and t_b, only ell=2 modes.
   Returns
   -------
     vector<double>
+  
+"""
+
+%feature("docstring") WaveformUtilities::SplineIntegrator::SplineIntegrator """
+
+
+  Parameters
+  ----------
+    const vector<double>& xv
+    const vector<double>& yv
+    double yp1 = 1.e99
+    double ypn = 1.e99
+  
+  Returns
+  -------
+    SplineIntegrator
   
 """
 
@@ -575,6 +694,32 @@ Return vector of vector of complex data of all modes as function of time.
   
 """
 
+%feature("docstring") GWFrames::WaveformAtAPointFT::SNR """
+
+
+  Parameters
+  ----------
+    const vector<double>& InversePSD
+      Noise spectrum
+  
+  Returns
+  -------
+    double
+  
+
+
+
+  Parameters
+  ----------
+    const string& Detector = 'AdvLIGO_ZeroDet_HighP'
+      Noise spectrum from this detector
+  
+  Returns
+  -------
+    double
+  
+"""
+
 %feature("docstring") GWFrames::Waveform::AngularVelocityVector """
 Calculate the angular velocity of the Waveform.
 ===============================================
@@ -666,16 +811,16 @@ class GWFrames::Modes
   
 """
 
-%feature("docstring") GWFrames::Waveform::operator+ """
+%feature("docstring") Interpolator::locate """
 
 
   Parameters
   ----------
-    const Waveform& B
+    const double x
   
   Returns
   -------
-    Waveform
+    int
   
 """
 
@@ -813,6 +958,25 @@ Newman-Penrose edth operator.
   
 """
 
+%feature("docstring") TransitionFunction_Smooth """
+Local utility function.
+=======================
+  Parameters
+  ----------
+    const double x
+  
+  Returns
+  -------
+    double
+  
+  Description
+  -----------
+    This smoothly transitions from 0.0 for x<=0.0 to 1.0 for x>=1.0. The
+    function is just the usual transition function based on the familiar smooth
+    but non-analytic function.
+  
+"""
+
 %feature("docstring") zHat """
 
 
@@ -946,6 +1110,24 @@ Integrate the Geroch-Held-Penrose edth operator conjugate.
   
 """
 
+%feature("docstring") GWFrames::WaveformAtAPointFT::IsNormalized """
+
+
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    bool
+  
+"""
+
+%feature("docstring") WaveformUtilities """
+namespace WaveformUtilities
+===========================
+"""
+
 %feature("docstring") GWFrames::Waveform::BoostPsi4 """
 Apply a boost to Psi4 data.
 ===========================
@@ -968,6 +1150,21 @@ Apply a boost to Psi4 data.
     
     The input three-velocities are assumed to give the velocities of the
     boosted frame relative to the present frame.
+  
+"""
+
+%feature("docstring") AdvLIGO_ZeroDet_LowP """
+
+
+  Parameters
+  ----------
+    const vector<double>& F
+    const bool Invert = false
+    const double NoiseFloor = 0.0
+  
+  Returns
+  -------
+    vector<double>
   
 """
 
@@ -1106,6 +1303,41 @@ Return the data index corresponding to the time of the largest norm.
   
 """
 
+%feature("docstring") SplineIntegrator::operator() """
+
+
+  Parameters
+  ----------
+    const vector<double>& x
+  
+  Returns
+  -------
+    vector<double>
+  
+
+
+
+  Parameters
+  ----------
+    const double x
+  
+  Returns
+  -------
+    double
+  
+
+
+
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    vector<double>
+  
+"""
+
 %feature("docstring") GWFrames::Waveform::Waveform """
 Default constructor for an empty object.
 ========================================
@@ -1193,6 +1425,7 @@ Copy the Waveform between indices i_t_a and i_t_b.
   Parameters
   ----------
     const unsigned int i_t_a
+      Index of initial time
     unsigned int t_b = 0
   
   Returns
@@ -1207,22 +1440,16 @@ Copy the Waveform between indices i_t_a and i_t_b.
   
 """
 
-%feature("docstring") TransitionFunction_Smooth """
-Local utility function.
-=======================
+%feature("docstring") WaveformUtilities::TimeToPositiveFrequencies """
+This function returns the positive half of the frequencies, so returned size is 1/2 input size + 1.
+===================================================================================================
   Parameters
   ----------
-    const double x
+    const vector<double>& Time
   
   Returns
   -------
-    double
-  
-  Description
-  -----------
-    This smoothly transitions from 0.0 for x<=0.0 to 1.0 for x>=1.0. The
-    function is just the usual transition function based on the familiar smooth
-    but non-analytic function.
+    vector<double>
   
 """
 
@@ -1288,17 +1515,27 @@ Differentiate the waveform as a function of time.
   
 """
 
-%feature("docstring") complexi """
+%feature("docstring") GWFrames::WaveformAtAPointFT::F """
+Returns the physical frequencies in Hz.
+=======================================
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    const vector<double>&
+  
+
 
 
   Parameters
   ----------
-    0. 0
-    1. 0
+    const unsigned int f
   
   Returns
   -------
-    const complex<double>
+    const double&
   
 """
 
@@ -1378,20 +1615,6 @@ Execute a BMS transformation except for the supertranslation of points.
   
 """
 
-%feature("docstring") NumberToString """
-
-
-  Parameters
-  ----------
-    typename T 
-    T Number
-  
-  Returns
-  -------
-    typename T
-  
-"""
-
 %feature("docstring") GWFrames::Waveform::BinaryOp """
 
 
@@ -1468,6 +1691,19 @@ Find the next iteration of the BMS transformation via Moreschi's algorithm.
   
 """
 
+%feature("docstring") SplineIntegrator::CumulativeIntegral """
+
+
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    double
+  
+"""
+
 %feature("docstring") GWFrames::Modes::Modes """
 
 
@@ -1492,35 +1728,6 @@ Find the next iteration of the BMS transformation via Moreschi's algorithm.
   
 """
 
-%feature("docstring") GWFrames::Waveform::AlignTime """
-Change this Waveform by aligning to the other at the given time.
-================================================================
-  Parameters
-  ----------
-    const Waveform& A
-      Fixed Waveform in inertial frame to which this Waveform is aligned
-    const double t_fid
-      Note that this function operates in place; the Waveform to which it is
-      applied will change.
-  
-  Returns
-  -------
-    Waveform&
-  
-  Description
-  -----------
-    As noted above, it is implicitly assumed that both Waveforms are in an
-    inertial frame, so that the magnitude of the angular velocity may be
-    properly measured. This could be adjusted to account for the angular
-    velocity of the frame, but hasn't been yet.
-    
-    To improve accuracy, the angular velocity of A is interpolated to t_fid.
-    The time of B is then interpolated to the interpolated angular velocity.
-    This assumes that B's angular velocity is strictly monotonic for roughly 5
-    data points to either side.
-  
-"""
-
 %feature("docstring") StringForm """
 
 
@@ -1534,36 +1741,79 @@ Change this Waveform by aligning to the other at the given time.
   
 """
 
-%feature("docstring") GWFrames::Waveform::GetAlignmentOfFrame """
-Get the rotor needed to align this waveform's frame to the other's at the given time.
-=====================================================================================
+%feature("docstring") tolower """
+
+
   Parameters
   ----------
-    const Waveform& A
-      Fixed Waveform in corotating frame to which this Waveform is aligned
-    const double t_fid
-      Fiducial time at which to equate frames
-    Quaternions::Quaternion& R_delta
-      Returned rotor
+    const string& A
+  
+  Returns
+  -------
+    string
+  
+"""
+
+%feature("docstring") GWFrames::WaveformAtAPointFT::Im """
+
+
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    const vector<double>&
+  
+
+
+
+  Parameters
+  ----------
+    const unsigned int f
+  
+  Returns
+  -------
+    const double&
+  
+"""
+
+%feature("docstring") GWFrames::WaveformAtAPointFT::WaveformAtAPointFT """
+
+
+  Parameters
+  ----------
+    const Waveform& W
+    const double Dt
+    const double Vartheta
+    const double Varphi
+    const double TotalMass
+    const unsigned int WindowNCycles = 1
+    const double DetectorResponseAmp = 1.0
+    const double DetectorResponsePhase = 0.0
+  
+  Returns
+  -------
+    WaveformAtAPointFT
+  
+"""
+
+%feature("docstring") WaveformUtilities::realdft """
+
+
+  Parameters
+  ----------
+    vector<double>& data
   
   Returns
   -------
     void
   
-  Description
-  -----------
-    This function simply finds the rotation necessary to align this waveform's
-    frame to the other at the fiducial time, rather than applying it. This is
-    called by AlignFrame and probably does not need to be called directly; see
-    that function's documentation for more details.
-    
-    AlignFrame
-  
 """
 
 %feature("docstring") GWFrames::PNWaveform::PNWaveform """
-
-
+Default constructor for an empty object.
+========================================
   Parameters
   ----------
     (none)
@@ -1573,8 +1823,8 @@ Get the rotor needed to align this waveform's frame to the other's at the given 
     PNWaveform
   
 
-
-
+Copy constructor.
+=================
   Parameters
   ----------
     const PNWaveform& W
@@ -1583,23 +1833,56 @@ Get the rotor needed to align this waveform's frame to the other's at the given 
   -------
     PNWaveform
   
+  Description
+  -----------
+    Simply copies all fields in the input object to the constructed object,
+    including history
+  
 
-
-
+Constructor of PN waveform from parameters.
+===========================================
   Parameters
   ----------
     const string& Approximant
+      'TaylorT1'|'TaylorT4'|'TaylorT5'
     const double delta
+      Normalized BH mass difference (M1-M2)/(M1+M2)
     const vector<double>& chi1_i
+      Initial dimensionless spin vector of BH1
     const vector<double>& chi2_i
+      Initial dimensionless spin vector of BH2
     const double Omega_orb_i
+      Initial orbital angular frequency
     const Quaternions::Quaternion& R_frame_i = Quaternions::Quaternion(1, 0, 0, 0)
+      Overall rotation of the system (optional)
     const double PNOrder = 4.0
-    double v_0 = -1.0
+      PN order at which to compute all quantities (default: 4.0)
+    double Omega_orb_0 = -1.0
+      Initial velocity to compute (optional)
   
   Returns
   -------
     PNWaveform
+  
+  Description
+  -----------
+    The PN system is initialized having the BHs along the x axis, with the
+    orbital angular velocity along the positive z axis, having magnitude
+    Omega_orb_i. The input spin vectors must be defined with respect to this
+    basis. Note that the optional parameter Omega_orb_0 may be given, in which
+    case the PN system is also evolved backwards to that point.
+    
+    The TaylorTn system is first integrated to compute the dynamics of the
+    binary. The evolved spin vectors chi1 and chi2, orbital angular-velocity
+    vector Omega_orb, and orbital phase Phi_orb are stored. Simultaneously, the
+    minimal-rotation frame of the angular-velocity vector is computed, then
+    rotated about the z' axis by Phi_orb, resulting in the binary's frame. Once
+    this step is completed, the information is used to construct the waveform
+    in the minimal-rotation frame. (That is, the waveform will be essentially
+    corotating.)
+    
+    Note that, to get the PNWaveform in an inertial frame, you must first apply
+    the method TransformToInertialFrame().
   
 """
 
@@ -1680,40 +1963,6 @@ Find largest ell value in the data on this slice.
   Returns
   -------
     int
-  
-"""
-
-%feature("docstring") GWFrames::Waveform::GetAlignmentOfTimeAndFrame """
-Get time and frame offset for alignment over extended region.
-=============================================================
-  Parameters
-  ----------
-    const Waveform& A
-      Fixed Waveform in corotating frame to which this Waveform is aligned
-    const double t1
-      Initial time of region over which differences are minimized
-    const double t2
-      Final time of region over which differences are minimized
-    double& deltat
-      Returned time offset
-    Quaternions::Quaternion& R_delta
-      Returned rotation offset
-  
-  Returns
-  -------
-    void
-  
-  Description
-  -----------
-    This function simply finds the time and rotation shifts necessary to align
-    this waveform to the other at the fiducial time, rather than applying it.
-    This is called by AlignTimeAndFrame and probably does not need to be called
-    directly; see that function's documentation for more details.
-    
-    In particular, note that this function is basically just a wrapper for the
-    Quaternions::OptimalAlignment function.
-    
-    AlignTimeAndFrame
   
 """
 
@@ -1840,6 +2089,30 @@ Hybridize this Waveform with another.
   
 """
 
+%feature("docstring") WaveformUtilities::NoiseCurve """
+
+
+  Parameters
+  ----------
+    const vector<double>& F
+    const string& Detector = 'AdvLIGO_ZeroDet_HighP'
+    const bool Invert = false
+    const double NoiseFloor = 0.0
+  
+  Returns
+  -------
+    vector<double>
+  
+  Description
+  -----------
+    These functions return various noise curves as described e.g., in
+    LIGO-T0900288-v3, and fit by Collin Capano. Noise curves implemented thus
+    far are: IniLIGO_Approx  The Initial LIGO design goal AdvLIGO_ZeroDet_HighP
+     LIGO-T0900288-v3 AdvLIGO_ZeroDet_LowP  LIGO-T0900288-v3
+    AdvLIGO_NSNSOptimal  Collin Capano's fit for the NS-NS optimized noise curve
+  
+"""
+
 %feature("docstring") GWFrames::PNWaveform::LMag """
 
 
@@ -1852,8 +2125,8 @@ Hybridize this Waveform with another.
     double
   
 
-
-
+Vector of magnitudes of angular momentum L at each instant of time.
+===================================================================
   Parameters
   ----------
     (none)
@@ -1947,6 +2220,50 @@ Assignment operator.
   Returns
   -------
     int
+  
+"""
+
+%feature("docstring") WaveformUtilities::Interpolate """
+
+
+  Parameters
+  ----------
+    const vector<double>& X1
+    const vector<double>& Y1
+    const vector<double>& X2
+    vector<double>& Y2
+  
+  Returns
+  -------
+    void
+  
+
+
+
+  Parameters
+  ----------
+    const vector<double>& X1
+    const vector<double>& Y1
+    const vector<double>& X2
+    vector<double>& Y2
+    const double ExtrapVal
+  
+  Returns
+  -------
+    void
+  
+
+
+
+  Parameters
+  ----------
+    const vector<double>& X1
+    const vector<double>& Y1
+    const double& X2
+  
+  Returns
+  -------
+    double
   
 """
 
@@ -2050,54 +2367,18 @@ Integrate the Geroch-Held-Penrose edth operator.
   
 """
 
-%feature("docstring") GWFrames::Waveform::AlignTimeAndFrame """
-Align time and frame over extended region.
-==========================================
+%feature("docstring") Interpolator::Interpolator """
+
+
   Parameters
   ----------
-    const Waveform& A
-      Fixed Waveform in corotating frame to which this Waveform is aligned
-    const double t1
-      Initial time of region over which differences are minimized
-    const double t2
-      Final time of region over which differences are minimized
+    const vector<double>& x
+    const vector<double>& y
+    int m
   
   Returns
   -------
-    Waveform&
-  
-  Description
-  -----------
-    Note that this function operates in place; the Waveform to which it is
-    applied will change. However, the modes are not altered; only the t and
-    frame data are.
-    
-    The times t1 and t2 are measured relative to the time in Waveform A, and
-    all are left fixed; only this Waveform is shifted (in time and orientation)
-    to achieve alignment.
-    
-    It is implicitly assumed that both Waveforms are in their corotating
-    frames, with the modes appropriately aligned to the frames using
-    AlignDecompositionFrameToModes at some fiducial time at roughly the average
-    of t1 and t2. The assumption is that the frames then actually represent
-    something physically meaningful, so that it is meaningful to insist that
-    they be the same.
-    
-    Also, it is assumed that the time data for the two waveforms are fairly
-    closely aligned. In particular, the minimization algorithm searches over
-    time offsets of magnitude (t2-t1)/2.0 or less. So, basically, the time data
-    for this Waveform must be within $\\pm (t2-t1)/2$ of the 'correct' result.
-    
-    Then, this function adjust the time and orientation of this Waveform, so
-    that the difference between the two frames is minimized. That difference is
-    measured by finding the rotor R_Delta required to rotate one frame into the
-    other, taking the angle of that rotor, and integrating over the region [t1,
-    t2].
-    
-    Relative to the inertial basis, the physical measurables (angular-velocity
-    vector and dominant eigenvector of $<LL>$) of this Waveform are rotated.
-    
-    AlignDecompositionFrameToModes
+    Interpolator
   
 """
 
@@ -2228,6 +2509,34 @@ Transform Waveform to an inertial frame.
   
 """
 
+%feature("docstring") GWFrames::Waveform::operator+ """
+
+
+  Parameters
+  ----------
+    const Waveform& B
+  
+  Returns
+  -------
+    Waveform
+  
+"""
+
+%feature("docstring") WaveformUtilities::Interpolator """
+class WaveformUtilities::Interpolator
+=====================================
+  Member variables
+  ----------------
+    int n
+    int mm
+    int jsav
+    int cor
+    int dj
+    const vector<double>& xx
+    const vector<double>& yy
+  
+"""
+
 %feature("docstring") Modes::edthbar """
 
 
@@ -2265,6 +2574,25 @@ Transform Waveform to an inertial frame.
     $\\Psi_i$ by $r^{5-i}$ to get nonzero values at scri, which adds $i-5$ to
     the boost weight, so that the asymptotic NP scalars all have boost weight
     -3.
+  
+"""
+
+%feature("docstring") GWFrames::WaveformAtAPointFT """
+class GWFrames::WaveformAtAPointFT
+==================================
+  The WaveformAtAPointFT class is a derived class, constructed from waveforms
+  evaluated at a point, using the given complex detector response (F+ + i*Fx) 
+  or more particularly, its amplitude and phase.
+  
+  Member variables
+  ----------------
+    double mDt
+    double mVartheta
+    double mVarphi
+    vector<double> mRealF
+    vector<double> mImagF
+    vector<double> mFreqs
+    bool mNormalized
   
 """
 
@@ -2333,6 +2661,25 @@ Construct a grid with the conformal factor at each point.
   
 """
 
+%feature("docstring") WaveformUtilities::dft """
+
+
+  Parameters
+  ----------
+    vector<double>& data
+  
+  Returns
+  -------
+    void
+  
+  Description
+  -----------
+    The following call the Numerical Recipes fft routines (from fourier.h) Note
+    that the returned quantities represent the bare fft sum, with no
+    normalization constants
+  
+"""
+
 %feature("docstring") GWFrames::Waveform::SliceOfTimesWithoutModes """
 Copy of the Waveform between t_a and t_b without mode data.
 ===========================================================
@@ -2344,6 +2691,20 @@ Copy of the Waveform between t_a and t_b without mode data.
   Returns
   -------
     Waveform
+  
+"""
+
+%feature("docstring") WaveformUtilities::WrapVecDoub """
+class WaveformUtilities::WrapVecDoub
+====================================
+  This helper class is useful for untangling NR's fft routines.
+  
+  Member variables
+  ----------------
+    vector<double> vvec
+    vector<double>& v
+    int n
+    int mask
   
 """
 
@@ -2411,6 +2772,75 @@ Transform Waveform to corotating frame.
   
 """
 
+%feature("docstring") GWFrames::WaveformAtAPointFT::Match """
+Compute the match between two WaveformAtAPointFT.
+=================================================
+  Parameters
+  ----------
+    const WaveformAtAPointFT& B
+    const vector<double>& InversePSD
+  
+  Returns
+  -------
+    double
+  
+
+Compute the match between two WaveformAtAPointFT.
+=================================================
+  Parameters
+  ----------
+    const WaveformAtAPointFT& B
+    const string& Detector = 'AdvLIGO_ZeroDet_HighP'
+  
+  Returns
+  -------
+    double
+  
+
+Compute the match between two WaveformAtAPointFT.
+=================================================
+  Parameters
+  ----------
+    const WaveformAtAPointFT& B
+      WaveformAtAPointFT to compute match with
+    const vector<double>& InversePSD
+      Spectrum used to weight contributions by frequencies to match
+    double& timeOffset
+      Time offset used between the waveforms
+    double& phaseOffset
+      Phase offset used between the waveforms
+    double& match
+      Match between the two waveforms
+  
+  Returns
+  -------
+    void
+  
+  Description
+  -----------
+    The return from ifft is just the bare FFT sum, so we multiply by df to get
+    the continuum-analog FT. This is correct because the input data (re,im) are
+    the continuum-analog data, rather than just the return from the bare FFT
+    sum. See, e.g., Eq. (A.33) [rather than Eq. (A.35)] of
+    http://etd.caltech.edu/etd/available/etd-01122009-143851/
+  
+
+Compute the match between two WaveformAtAPointFT.
+=================================================
+  Parameters
+  ----------
+    const WaveformAtAPointFT& B
+    double& timeOffset
+    double& phaseOffset
+    double& match
+    const string& Detector = 'AdvLIGO_ZeroDet_HighP'
+  
+  Returns
+  -------
+    void
+  
+"""
+
 %feature("docstring") GWFrames::Waveform::FindModeIndex """
 Find index of mode with given (l,m) data.
 =========================================
@@ -2422,6 +2852,19 @@ Find index of mode with given (l,m) data.
   Returns
   -------
     unsigned int
+  
+"""
+
+%feature("docstring") WaveformUtilities::WrapVecDoub::imag """
+
+
+  Parameters
+  ----------
+    int i
+  
+  Returns
+  -------
+    double&
   
 """
 
@@ -2451,17 +2894,30 @@ Find index of mode with given (l,m) data.
   
 """
 
-%feature("docstring") GWFrames::Waveform::SliceOfTimes """
-Copy the Waveform between t_a and t_b.
-======================================
+%feature("docstring") PolynomialInterpolator::rawinterp """
+
+
   Parameters
   ----------
-    const double t_a = -1e300
-    const double t_b = 1e300
+    int jl
+    double x
   
   Returns
   -------
-    Waveform
+    double
+  
+"""
+
+%feature("docstring") WaveformUtilities::idft """
+
+
+  Parameters
+  ----------
+    vector<double>& data
+  
+  Returns
+  -------
+    void
   
 """
 
@@ -2625,6 +3081,20 @@ Remove data relating to all but the ell=2 modes.
   
 """
 
+%feature("docstring") GWFrames::Waveform::operator() """
+
+
+  Parameters
+  ----------
+    const unsigned int Mode
+    const unsigned int TimeIndex
+  
+  Returns
+  -------
+    complex<double>
+  
+"""
+
 %feature("docstring") GWFrames::SliceOfScri<D>::operator[] """
 
 
@@ -2753,9 +3223,24 @@ Integrate the Newman-Penrose edth operator conjugate.
   
 """
 
+%feature("docstring") AdvLIGO_NSNSOptimal """
+
+
+  Parameters
+  ----------
+    const vector<double>& F
+    const bool Invert = false
+    const double NoiseFloor = 0.0
+  
+  Returns
+  -------
+    vector<double>
+  
+"""
+
 %feature("docstring") GWFrames::PNWaveform::Omega_tot """
-
-
+Total angular velocity of PN binary at an instant of time.
+==========================================================
   Parameters
   ----------
     const unsigned int iTime
@@ -2765,8 +3250,8 @@ Integrate the Newman-Penrose edth operator conjugate.
     vector<double>
   
 
-
-
+Total angular velocity of PN binary at each instant of time.
+============================================================
   Parameters
   ----------
     (none)
@@ -2829,6 +3314,21 @@ Interpolate to a common set of times.
   
 """
 
+%feature("docstring") WaveformUtilities::InverseNoiseCurve """
+
+
+  Parameters
+  ----------
+    const vector<double>& F
+    const string& Detector = 'AdvLIGO_ZeroDet_HighP'
+    const double NoiseFloor = 0.0
+  
+  Returns
+  -------
+    vector<double>
+  
+"""
+
 %feature("docstring") GWFrames::Waveform::LdtVector """
 Calculate the $<L \\partial_t>$ quantity defined in the paper.
 ==============================================================
@@ -2851,31 +3351,6 @@ Calculate the $<L \\partial_t>$ quantity defined in the paper.
   
 """
 
-%feature("docstring") GWFrames::Waveform::GetAlignmentOfTime """
-Find the time offset aligning this waveform to the other at the fiducial time.
-==============================================================================
-  Parameters
-  ----------
-    const Waveform& A
-      Fixed Waveform in inertial frame to which this Waveform is aligned
-    const double t_fid
-    double& deltat
-      The value to be returned
-  
-  Returns
-  -------
-    void
-  
-  Description
-  -----------
-    This function simply finds the appropriate time offset, rather than
-    applying it. This is called by AlignTime and probably does not need to be
-    called directly; see that function's documentation for more details.
-    
-    AlignTime
-  
-"""
-
 %feature("docstring") DataGrid::operator/ """
 
 
@@ -2886,6 +3361,33 @@ Find the time offset aligning this waveform to the other at the fiducial time.
   Returns
   -------
     DataGrid
+  
+"""
+
+%feature("docstring") WaveformUtilities::SplineIntegral """
+
+
+  Parameters
+  ----------
+    const vector<double>& X1
+    const vector<double>& Y1
+  
+  Returns
+  -------
+    vector<double>
+  
+
+
+
+  Parameters
+  ----------
+    const vector<double>& X1
+    const vector<double>& Y1
+    const vector<double>& X2
+  
+  Returns
+  -------
+    vector<double>
   
 """
 
@@ -2965,6 +3467,19 @@ Transform Waveform to co-precessing frame.
   
 """
 
+%feature("docstring") WaveformUtilities::WrapVecDoub::validate """
+
+
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    void
+  
+"""
+
 %feature("docstring") InverseConformalFactorFunctor """
 class InverseConformalFactorFunctor
 ===================================
@@ -3010,39 +3525,16 @@ Interpolate the Waveform to a new set of time instants.
   
 """
 
-%feature("docstring") GWFrames::Waveform::AlignFrame """
-Change this Waveform by aligning the frame to the other's at the given time.
-============================================================================
+%feature("docstring") WaveformUtilities::WrapVecDoub::operator[] """
+
+
   Parameters
   ----------
-    const Waveform& A
-      Fixed Waveform in corotating frame to which this Waveform is aligned
-    const double t_fid
-      Fiducial time at which to equate frames
+    int i
   
   Returns
   -------
-    Waveform&
-  
-  Description
-  -----------
-    Note that this function operates in place; the Waveform to which it is
-    applied will change. However, the modes are not altered; only the frame
-    data is.
-    
-    As noted above, it is implicitly assumed that both Waveforms are in their
-    corotating frames, with the modes appropriately aligned to the frames at
-    t_fid. The assumption is that the frames actually represent something
-    physically meaningful, so that it is meaningful to insist that they be the
-    same.
-    
-    Then, this function aligns the frames at t_fid by multiplying this->frame
-    on the left by a constant rotor such that this->frame at t_fid is exactly
-    A.frame at t_fid. The resulting frame is now corotating with an
-    angular-velocity vector that has been rotated by that constant rotor,
-    relative to the inertial basis.
-    
-    AlignDecompositionFrameToModes
+    complex<double>&
   
 """
 
@@ -3112,32 +3604,6 @@ Newman-Penrose edth operator conjugate.
   
 """
 
-%feature("docstring") GWFrames::Waveform::FakeBadNormalizedAsymmetry """
-Return the normalized asymmetry as a function of time.
-======================================================
-  Parameters
-  ----------
-    int mMode = 2
-  
-  Returns
-  -------
-    vector<double>
-  
-  Description
-  -----------
-    This function just returns the value of the normalized asymmetry
-    $\\hat{\\alpha}$ defined by Boyle et al. (2014), which is the difference
-    between the field at a point and its conjugate at the antipodal point, the
-    amplitude squared and integrated over the sphere. The normalization is just
-    the Norm of the waveformits overall power at each instant.
-    
-    By default, all ell modes in the data are used for both the asymmetry and
-    the normalization factor. If an argument is input, only modes with ell
-    values in that argument will be used to calculate the asymmetry. All modes
-    will always be used to calculate the normalization.
-  
-"""
-
 %feature("docstring") Scri::Scri """
 
 
@@ -3195,27 +3661,44 @@ Derive three-velocity from the inverse conformal metric.
   
 """
 
-%feature("docstring") GWFrames::DataGrid::operator[] """
+%feature("docstring") complexi """
 
 
   Parameters
   ----------
-    const unsigned int i
+    0. 0
+    1. 0
   
   Returns
   -------
-    const complex<double>&
+    const complex<double>
   
+"""
 
+%feature("docstring") GWFrames::WaveformAtAPointFT::InnerProduct """
 
 
   Parameters
   ----------
-    const unsigned int i
+    const WaveformAtAPointFT& B
+    const vector<double>& InversePSD
   
   Returns
   -------
-    complex<double>&
+    double
+  
+"""
+
+%feature("docstring") Interpolator::hunt """
+
+
+  Parameters
+  ----------
+    const double x
+  
+  Returns
+  -------
+    int
   
 """
 
@@ -3240,6 +3723,37 @@ Derive three-velocity from the inverse conformal metric.
   Returns
   -------
     Waveform&
+  
+"""
+
+%feature("docstring") WaveformUtilities::SplineIntegrator """
+class WaveformUtilities::SplineIntegrator
+=========================================
+  Member variables
+  ----------------
+    vector<double> IntegrationConstants
+    vector<double> IntegrationCoefficients1
+    vector<double> IntegrationCoefficients2
+    vector<double> IntegrationCoefficients3
+    vector<double> IntegrationCoefficients4
+  
+  Non-public member functions
+  ---------------------------
+    void SetUpIntegrationCoefficients
+    void SetUpIntegrationConstants
+  
+"""
+
+%feature("docstring") WaveformUtilities::WrapVecDoub::real """
+
+
+  Parameters
+  ----------
+    int i
+  
+  Returns
+  -------
+    double&
   
 """
 
@@ -3287,32 +3801,10 @@ Measure the relative magnitude of the violation of parity in the z direction.
   
 """
 
-%feature("docstring") GWFrames::Waveform::PNEquivalentPrecessionalAV """
-Deduce PN-equivalent precessional angular velocity from Waveform.
-=================================================================
-  Parameters
-  ----------
-    const vector<int>& Lmodes = vector<int>(0)
-      L modes to evaluate
-  
-  Returns
-  -------
-    vector<vector<double>>
-  
-  Description
-  -----------
-    This function subtracts the PN-equivalent orbital angular velocity (given
-    by PNEquivalentOrbitalAV) from the field's angular velocity. This should be
-    equivalent to the precessional angular velocity of the PN system. Note that
-    the returned vector is relative to the inertial frame.
-    
-    This may be essentially numerical noise if there is no precession, or if
-    precession has oscillated to zero.
-    
-    If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
-    or [2,3,4], for example, restricts the range of the sum.
-    
-    PNEquivalentOrbitalAV
+%feature("docstring") std """
+namespace std
+=============
+  STL namespace.
   
 """
 
@@ -3397,25 +3889,44 @@ Geroch-Held-Penrose edth operator.
   
 """
 
-%feature("docstring") GWFrames::Waveform::LLMatrix """
-Calculate the $<LL>$ quantity defined in the paper.
-===================================================
+%feature("docstring") virtualWaveformUtilities::Interpolator::~Interpolator """
+
+
   Parameters
   ----------
-    vector<int> Lmodes = vector<int>(0)
-      L modes to evaluate
+    (none)
   
   Returns
   -------
-    vector<Matrix>
+    ~Interpolator
   
-  Description
-  -----------
-    If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
-    or [2,3,4], for example, restricts the range of the sum.
-    
-    $<LL>^{ab} = \\sum_{\\ell,m,m'} [\\bar{f}^{\\ell,m'} <\\ell,m' | L_a L_b |
-    \\ell,m> f^{\\ell,m} ]$
+"""
+
+%feature("docstring") IniLIGO_Approx """
+
+
+  Parameters
+  ----------
+    const vector<double>& F
+    const bool Invert = false
+    const double NoiseFloor = 0.0
+  
+  Returns
+  -------
+    vector<double>
+  
+"""
+
+%feature("docstring") GWFrames::WaveformAtAPointFT::ZeroAbove """
+
+
+  Parameters
+  ----------
+    const double Frequency
+  
+  Returns
+  -------
+    WaveformAtAPointFT&
   
 """
 
@@ -3518,7 +4029,7 @@ Fix the orientation of the corotating frame.
   ----------
     const double t_fid
       Fiducial time at which the alignment should happen
-    const Quaternions::Quaternion& nHat_t_fid
+    const Quaternions::Quaternion& nHat_t_fid = Quaternions::xHat
       The approximate direction of nHat at t_fid
     const vector<int>& Lmodes = vector<int>(0)
       Lmodes to use in computing $<LL>$
@@ -3536,42 +4047,6 @@ Fix the orientation of the corotating frame.
     which the decomposition is done is along the dominant eigenvector of $<LL>$
     (suggested by O'Shaughnessy et al.), and the phase of the (2,2) mode is
     zero.
-    
-    If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
-    or [2,3,4], for example, restricts the range of the sum.
-  
-
-Fix the orientation of the corotating frame by optimizing over a range of times.
-================================================================================
-  Parameters
-  ----------
-    const double t1
-      Beginning of time range over which the alignment should happen
-    const double t2
-      End of time range over which the alignment should happen
-    const Quaternions::Quaternion& nHat_t1
-      The approximate direction of nHat at t1
-    const vector<int>& Lmodes = vector<int>(0)
-      Lmodes to use in computing $<LL>$
-  
-  Returns
-  -------
-    Waveform&
-  
-  Description
-  -----------
-    The corotating frame is only defined up to some constant rotor R_eps; if
-    R_corot is corotating, then so is R_corot*R_eps. This function uses that
-    freedom to ensure that the frame is aligned with the Waveform modes as well
-    as possible across the given time range. In particular, it ensures that the
-    Z axis of the frame in which the decomposition is done is along the
-    dominant eigenvector of $<LL>$ (suggested by O'Shaughnessy et al.), and the
-    phase of the (2,2) mode is zero. These two conditions only give us axes,
-    but we need vectors to fully specify the frame. So we also impose the
-    condition that the eigenvector is more parallel to the angular velocity of
-    the waveform than anti-parallel, and the X axis of the rotated frame is
-    more parallel to the input nHat_t1 than anti-parallel. These conditions are
-    imposed as accurately as possible across the range of times (t1, t2).
     
     If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
     or [2,3,4], for example, restricts the range of the sum.
@@ -3631,13 +4106,6 @@ Output Waveform object to data file.
   
 """
 
-%feature("docstring") std """
-namespace std
-=============
-  STL namespace.
-  
-"""
-
 %feature("docstring") GWFrames::SliceOfScri """
 class GWFrames::SliceOfScri
 ===========================
@@ -3660,6 +4128,33 @@ class GWFrames::SliceModes
 ==========================
 """
 
+%feature("docstring") GWFrames::WaveformAtAPointFT::InversePSD """
+
+
+  Parameters
+  ----------
+    const string& Detector = 'AdvLIGO_ZeroDet_HighP'
+  
+  Returns
+  -------
+    vector<double>
+  
+"""
+
+%feature("docstring") dotproduct """
+
+
+  Parameters
+  ----------
+    const double * a
+    const double * b
+  
+  Returns
+  -------
+    double
+  
+"""
+
 %feature("docstring") GWFrames::Waveform::SetBoostWeight """
 
 
@@ -3670,6 +4165,20 @@ class GWFrames::SliceModes
   Returns
   -------
     Waveform&
+  
+"""
+
+%feature("docstring") SplineInterpolator::rawinterp """
+
+
+  Parameters
+  ----------
+    int jl
+    double xv
+  
+  Returns
+  -------
+    double
   
 """
 
@@ -3781,6 +4290,35 @@ Find index of mode with given (l,m) data without the chance of throwing an excep
   
 """
 
+%feature("docstring") WaveformUtilities::Interpolate """
+
+
+  Parameters
+  ----------
+    const vector<double>& X1
+    const vector<double>& Y1
+    const vector<double>& X2
+  
+  Returns
+  -------
+    vector<double>
+  
+
+
+
+  Parameters
+  ----------
+    const vector<double>& X1
+    const vector<double>& Y1
+    const vector<double>& X2
+    const double ExtrapVal
+  
+  Returns
+  -------
+    vector<double>
+  
+"""
+
 %feature("docstring") GWFrames::Waveform::EvaluateAtPoint """
 Evaluate Waveform at a particular sky location.
 ===============================================
@@ -3879,8 +4417,8 @@ Integrate the Newman-Penrose edth operator.
     double
   
 
-
-
+Vector of magnitudes of Omega_tot at each instant of time.
+==========================================================
   Parameters
   ----------
     (none)
@@ -3901,6 +4439,21 @@ Integrate the Newman-Penrose edth operator.
   Returns
   -------
     int
+  
+"""
+
+%feature("docstring") WaveformUtilities::convlv """
+
+
+  Parameters
+  ----------
+    const vector<double>& data
+    const vector<double>& respns
+    const int isign
+  
+  Returns
+  -------
+    vector<double>
   
 """
 
@@ -3938,6 +4491,19 @@ Frame in which the rotation is minimal.
   
 """
 
+%feature("docstring") VectorStringForm """
+
+
+  Parameters
+  ----------
+    const vector<double>& V
+  
+  Returns
+  -------
+    string
+  
+"""
+
 %feature("docstring") ImaginaryI """
 
 
@@ -3962,6 +4528,20 @@ Remove data relating to the given ell modes.
   Returns
   -------
     Waveform&
+  
+"""
+
+%feature("docstring") WaveformUtilities::Interpolator::rawinterp """
+
+
+  Parameters
+  ----------
+    int jlo
+    double x
+  
+  Returns
+  -------
+    double
   
 """
 
@@ -4001,43 +4581,45 @@ Measure the absolute magnitude of the violation of parity in the z direction.
   
 """
 
-%feature("docstring") GWFrames::Waveform::Contrast """
-Return the contrast in the given mode pair.
-===========================================
+%feature("docstring") WaveformUtilities::PolynomialInterpolator::PolynomialInterpolator """
+
+
   Parameters
   ----------
-    const int L
-      $ell$ value of the mode pair
-    const int M
-      $m$ value of the mode pair
+    const vector<double>& xv
+    const vector<double>& yv
+    int m
   
   Returns
   -------
-    vector<double>
-  
-  Description
-  -----------
-    This function just returns the value of the contrast $\\kappa^{\\ell,m}$
-    defined by Boyle et al. (2014):
-    
-    \\begin{equation*} kappa^{\\ell,m} = 2 \\frac{\\lvert h^{\\ell,m} \\rvert -
-    \\lvert h^{\\ell,-m} \\rvert} {\\lvert h^{\\ell,m} \\rvert - \\lvert
-    h^{\\ell,-m} \\rvert}. \\end{equation*}
-    
-    That is, the difference between mode pairs normalized by their average.
+    PolynomialInterpolator
   
 """
 
-%feature("docstring") GWFrames::Waveform::EllMax """
-Return greatest ell value present in the data.
-==============================================
+%feature("docstring") NumberToString """
+
+
   Parameters
   ----------
-    (none)
+    typename T 
+    T Number
   
   Returns
   -------
-    int
+    typename T
+  
+"""
+
+%feature("docstring") WaveformUtilities::Interpolator::interp """
+
+
+  Parameters
+  ----------
+    double x
+  
+  Returns
+  -------
+    double
   
 """
 
@@ -4377,16 +4959,39 @@ Evaluate Waveform at a particular sky location.
   
 """
 
-%feature("docstring") tolower """
-
-
+%feature("docstring") GWFrames::Waveform::SliceOfTimes """
+Copy the Waveform between t_a and t_b.
+======================================
   Parameters
   ----------
-    const string& A
+    const double t_a = -1e300
+    const double t_b = 1e300
   
   Returns
   -------
-    string
+    Waveform
+  
+"""
+
+%feature("docstring") GWFrames::Waveform::LLMatrix """
+Calculate the $<LL>$ quantity defined in the paper.
+===================================================
+  Parameters
+  ----------
+    vector<int> Lmodes = vector<int>(0)
+      L modes to evaluate
+  
+  Returns
+  -------
+    vector<Matrix>
+  
+  Description
+  -----------
+    If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
+    or [2,3,4], for example, restricts the range of the sum.
+    
+    $<LL>^{ab} = \\sum_{\\ell,m,m'} [\\bar{f}^{\\ell,m'} <\\ell,m' | L_a L_b |
+    \\ell,m> f^{\\ell,m} ]$
   
 """
 
@@ -4442,6 +5047,30 @@ Return the norm (sum of squares of modes) of the waveform.
     MaxNormIndex
     
     MaxNormTime
+  
+"""
+
+%feature("docstring") GWFrames::WaveformAtAPointFT::Normalize """
+
+
+  Parameters
+  ----------
+    const vector<double>& InversePSD
+  
+  Returns
+  -------
+    WaveformAtAPointFT&
+  
+
+
+
+  Parameters
+  ----------
+    const string& Detector = 'AdvLIGO_ZeroDet_HighP'
+  
+  Returns
+  -------
+    WaveformAtAPointFT&
   
 """
 
@@ -4514,17 +5143,12 @@ Calculate the principal axis of the LL matrix, as prescribed by O'Shaughnessy et
   
 """
 
-%feature("docstring") GWFrames::Waveform::operator() """
-
-
-  Parameters
-  ----------
-    const unsigned int Mode
-    const unsigned int TimeIndex
-  
-  Returns
-  -------
-    complex<double>
+%feature("docstring") WaveformUtilities::SplineInterpolator """
+class WaveformUtilities::SplineInterpolator
+===========================================
+  Member variables
+  ----------------
+    vector<double> y2
   
 """
 
@@ -4541,27 +5165,27 @@ Remove data relating to all but the given ell modes.
   
 """
 
-%feature("docstring") GWFrames::Waveform::GetAlignmentsOfDecompositionFrameToModes """
-Find the appropriate rotations to fix the orientation of the corotating frame.
-==============================================================================
+%feature("docstring") WaveformUtilities::WrapVecDoub::WrapVecDoub """
+
+
   Parameters
   ----------
-    const vector<Quaternions::Quaternion>& nHat_t_fid
-    const vector<int>& Lmodes = vector<int>(0)
-      Lmodes to use in computing $<LL>$
+    const int nn
   
   Returns
   -------
-    vector<Quaternions::Quaternion>
+    WrapVecDoub
   
-  Description
-  -----------
-    This function finds the appropriate pre-multiplied rotation
-    $R_{\\varepsilon}$ so that the decomposition frame is aligned to the
-    waveform. This particular version finds the appropriate $R_{\\varepsilon}$
-    at each time in the input Waveform. This is useful in cases where we need
-    to try many such alignments, because the setup for interpolation is very
-    slow.
+
+
+
+  Parameters
+  ----------
+    vector<double>& vec
+  
+  Returns
+  -------
+    WrapVecDoub
   
 """
 
@@ -4676,51 +5300,20 @@ Return vector of vector of imaginary parts of all modes as function of time.
 """
 
 %feature("docstring") GWFrames::Waveform::GetAlignmentOfDecompositionFrameToModes """
-
-
+Find the appropriate rotation to fix the orientation of the corotating frame.
+=============================================================================
   Parameters
   ----------
     const double t_fid
-    const Quaternions::Quaternion& nHat_t_fid
-    const vector<int>& Lmodes = vector<int>(0)
-  
-  Returns
-  -------
-    Quaternions::Quaternion
-  
-
-
-
-  Parameters
-  ----------
-    const double t_fid
-    const Quaternions::Quaternion& nHat_t_fid
-    Quaternions::Quaternion& R_eps
-    const vector<int>& Lmodes = vector<int>(0)
-  
-  Returns
-  -------
-    void
-  
-
-Find the appropriate rotation to fix the orientation of the corotating frame over a range of time.
-==================================================================================================
-  Parameters
-  ----------
-    const double t1
-      Beginning of time range over which the alignment should happen
-    const double t2
-      End of time range over which the alignment should happen
-    const Quaternions::Quaternion& nHat_t1
-      The approximate direction of nHat at t1
-    Quaternions::Quaternion& R_eps
-      Returned rotor
+      Fiducial time at which the alignment should happen
+    const Quaternions::Quaternion& nHat_t_fid = Quaternions::xHat
+      The approximate direction of nHat at t_fid
     const vector<int>& Lmodes = vector<int>(0)
       Lmodes to use in computing $<LL>$
   
   Returns
   -------
-    void
+    Quaternions::Quaternion
   
   Description
   -----------
@@ -4743,6 +5336,15 @@ Find the appropriate rotation to fix the orientation of the corotating frame ove
   Returns
   -------
     Waveform&
+  
+"""
+
+%feature("docstring") WaveformUtilities::PolynomialInterpolator """
+class WaveformUtilities::PolynomialInterpolator
+===============================================
+  Member variables
+  ----------------
+    double dy
   
 """
 
@@ -4890,19 +5492,30 @@ Construct a boosted grid with the conformal factor at each point.
   
 """
 
-%feature("docstring") GWFrames::Waveform::Segment """
-Extract a segment of a Waveform.
-================================
+%feature("docstring") GWFrames::Waveform::GetAlignmentsOfDecompositionFrameToModes """
+Find the appropriate rotations to fix the orientation of the corotating frame.
+==============================================================================
   Parameters
   ----------
-    const unsigned int i1
-      Index of initial time
-    const unsigned int i2
-      Index just beyond final time
+    const vector<int>& Lmodes = vector<int>(0)
+      Lmodes to use in computing $<LL>$
   
   Returns
   -------
-    Waveform
+    vector<Quaternions::Quaternion>
+  
+  Description
+  -----------
+    This function finds the appropriate pre-multiplied rotation
+    $R_{\\varepsilon}$ so that the decomposition frame is aligned to the
+    waveform. This particular version finds the appropriate $R_{\\varepsilon}$
+    at each time in the input Waveform. This is useful in cases where we need
+    to try many such alignments, because the setup for interpolation is very
+    slow.
+    
+    Note that this function has no option to choose the direction of X based on
+    some nHat vector, as other similar functions have. That issue is assumed to
+    be handled elsewhere.
   
 """
 
@@ -4955,6 +5568,22 @@ Copy the Waveform, except for the data (t, frame, lm, data)
   Returns
   -------
     Waveform
+  
+"""
+
+%feature("docstring") WaveformUtilities::SplineInterpolator::SplineInterpolator """
+
+
+  Parameters
+  ----------
+    const vector<double>& xv
+    const vector<double>& yv
+    double yp1 = 1.e99
+    double ypn = 1.e99
+  
+  Returns
+  -------
+    SplineInterpolator
   
 """
 

@@ -227,7 +227,7 @@ namespace GWFrames {
   inline Waveform operator*(const double b, const Waveform& A) { return A*b; }
   #include "Waveforms_BinaryOp.ipp"
 
-  void AlignWaveforms(Waveform& A, Waveform& B, const std::vector<double>& nHat_A, const double t_1, const double t_2);
+  void AlignWaveforms(Waveform& A, Waveform& B, const double t_1, const double t_2, std::vector<double> nHat_A=std::vector<double>(0));
 
 
   /// Object storing a collection of Waveform objects to be operated on uniformly

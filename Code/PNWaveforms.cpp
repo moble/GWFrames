@@ -111,7 +111,7 @@ GWFrames::PNWaveform::PNWaveform(const std::string& Approximant, const double de
   /// will be essentially corotating.)
   ///
   /// Note that, to get the PNWaveform in an inertial frame, you must
-  /// first apply the method TransformToCorotatingFrame().
+  /// first apply the method TransformToInertialFrame().
 
   const double v_i = std::pow(Omega_orb_i, 1./3.);
   const double m1 = (1.0+delta)/2.0;

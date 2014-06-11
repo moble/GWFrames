@@ -2286,14 +2286,14 @@ double minfunc (const gsl_vector* delta, void* params) {
 #endif // DOXYGEN
 
 /// Do everything necessary to align two waveform objects
-void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B, const std::vector<double>& nHat_A,
-                              const double t_1, const double t_2)
+void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
+                              const double t_1, const double t_2, std::vector<double> nHat_A)
 {
   /// \param W_A Fixed waveform (though modes are re-aligned)
   /// \param W_B Adjusted waveform (modes are re-aligned and frame and time are offset)
-  /// \param nHat_A Approximate nHat vector at (t_1+t_2)/2.
   /// \param t_1 Beginning of alignment interval
   /// \param t_2 End of alignment interval
+  /// \param nHat_A Approximate nHat vector at (t_1+t_2)/2. [optional]
   ///
   /// This function aligns the frame to the waveform modes for both
   /// input Waveform objects at time t_mid = (t_1+t_2)/2.  It also
@@ -2317,6 +2317,10 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B, 
   /// final value of t_mid+deltat for `W_B` must lie somewhere in the
   /// interval (t_1, t_2) at least, and after the time shift, `W_B`
   /// must have data over all of that interval.
+
+  if(nHat_A.size()==0) {
+    nHat_A = Quaternions::xHat.vec();
+  }
 
   // Make sure W_A and W_B are in their co-rotating frames
   if(W_A.FrameType()==GWFrames::Inertial) {

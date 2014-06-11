@@ -26950,22 +26950,22 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_AlignWaveforms(PyObject *self, PyObject *args) {
+SWIGINTERN PyObject *_wrap_AlignWaveforms__SWIG_0(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   GWFrames::Waveform *arg1 = 0 ;
   GWFrames::Waveform *arg2 = 0 ;
-  std::vector< double,std::allocator< double > > *arg3 = 0 ;
+  double arg3 ;
   double arg4 ;
-  double arg5 ;
+  SwigValueWrapper< std::vector< double,std::allocator< double > > > arg5 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   void *argp2 = 0 ;
   int res2 = 0 ;
-  std::vector< double > temp3 ;
+  double val3 ;
+  int ecode3 = 0 ;
   double val4 ;
   int ecode4 = 0 ;
-  double val5 ;
-  int ecode5 = 0 ;
+  std::vector< double > temp5 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
@@ -26989,33 +26989,43 @@ SWIGINTERN PyObject *_wrap_AlignWaveforms(PyObject *self, PyObject *args) {
     SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "AlignWaveforms" "', argument " "2"" of type '" "GWFrames::Waveform &""'"); 
   }
   arg2 = reinterpret_cast< GWFrames::Waveform * >(argp2);
+  ecode3 = SWIG_AsVal_double(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "AlignWaveforms" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  ecode4 = SWIG_AsVal_double(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "AlignWaveforms" "', argument " "4"" of type '" "double""'");
+  } 
+  arg4 = static_cast< double >(val4);
   {
-    if(PyArray_Check(obj2)) {
-      PyArrayObject *xa = reinterpret_cast<PyArrayObject*>(obj2);
+    if(PyArray_Check(obj4)) {
+      PyArrayObject *xa = reinterpret_cast<PyArrayObject*>(obj4);
       if(PyArray_TYPE(xa) != NPY_DOUBLE) {
         SWIG_exception(SWIG_TypeError, "(1) numpy array of 'double' expected."	\
           " Make sure that the numpy array use dtype=double.");
       }
       const std::size_t size = PyArray_DIM(xa, 0);
-      temp3.resize(size);
+      temp5.resize(size);
       double* array = static_cast<double*>(PyArray_DATA(xa));
       if(PyArray_ISCONTIGUOUS(xa)) {
-        std::copy(array, array + size, temp3.begin());
+        std::copy(array, array + size, temp5.begin());
       } else {
         const npy_intp strides = PyArray_STRIDE(xa, 0)/sizeof(double);
         for (std::size_t i = 0; i < size; i++)
-        temp3[i] = array[i*strides];
+        temp5[i] = array[i*strides];
       }
-    } else if(PySequence_Check(obj2)) {
-      Py_ssize_t size = PySequence_Size(obj2);
-      temp3.resize(size);
+    } else if(PySequence_Check(obj4)) {
+      Py_ssize_t size = PySequence_Size(obj4);
+      temp5.resize(size);
       PyObject* item;
       for(Py_ssize_t i=0; i<size; ++i) {
-        item = PySequence_GetItem(obj2, i);
-        if(!SWIG_IsOK(SWIG_AsVal_double (item, &temp3[i]))) {
+        item = PySequence_GetItem(obj4, i);
+        if(!SWIG_IsOK(SWIG_AsVal_double (item, &temp5[i]))) {
           Py_DECREF(item);
           SWIG_exception(SWIG_TypeError, "expected items of sequence to be of type "\
-            "\"double\" in argument 3");
+            "\"double\" in argument 5");
         }
         Py_DECREF(item);
       }
@@ -27023,21 +27033,11 @@ SWIGINTERN PyObject *_wrap_AlignWaveforms(PyObject *self, PyObject *args) {
       SWIG_exception(SWIG_TypeError, "(2) numpy array of 'double' expected. " \
         "Make sure that the numpy array use dtype=double.");
     }
-    arg3 = &temp3;
+    arg5 = temp5;
   }
-  ecode4 = SWIG_AsVal_double(obj3, &val4);
-  if (!SWIG_IsOK(ecode4)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "AlignWaveforms" "', argument " "4"" of type '" "double""'");
-  } 
-  arg4 = static_cast< double >(val4);
-  ecode5 = SWIG_AsVal_double(obj4, &val5);
-  if (!SWIG_IsOK(ecode5)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "AlignWaveforms" "', argument " "5"" of type '" "double""'");
-  } 
-  arg5 = static_cast< double >(val5);
   {
     try {
-      GWFrames::AlignWaveforms(*arg1,*arg2,(std::vector< double,std::allocator< double > > const &)*arg3,arg4,arg5);;
+      GWFrames::AlignWaveforms(*arg1,*arg2,arg3,arg4,arg5);;
     } catch(int i) {
       std::stringstream s;
       if(i>-1 && i<GWFramesNumberOfErrors) {
@@ -27054,6 +27054,162 @@ SWIGINTERN PyObject *_wrap_AlignWaveforms(PyObject *self, PyObject *args) {
   return resultobj;
 fail:
   return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_AlignWaveforms__SWIG_1(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  GWFrames::Waveform *arg1 = 0 ;
+  GWFrames::Waveform *arg2 = 0 ;
+  double arg3 ;
+  double arg4 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  double val4 ;
+  int ecode4 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOO:AlignWaveforms",&obj0,&obj1,&obj2,&obj3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1, SWIGTYPE_p_GWFrames__Waveform,  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "AlignWaveforms" "', argument " "1"" of type '" "GWFrames::Waveform &""'"); 
+  }
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "AlignWaveforms" "', argument " "1"" of type '" "GWFrames::Waveform &""'"); 
+  }
+  arg1 = reinterpret_cast< GWFrames::Waveform * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_GWFrames__Waveform,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "AlignWaveforms" "', argument " "2"" of type '" "GWFrames::Waveform &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "AlignWaveforms" "', argument " "2"" of type '" "GWFrames::Waveform &""'"); 
+  }
+  arg2 = reinterpret_cast< GWFrames::Waveform * >(argp2);
+  ecode3 = SWIG_AsVal_double(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "AlignWaveforms" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  ecode4 = SWIG_AsVal_double(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "AlignWaveforms" "', argument " "4"" of type '" "double""'");
+  } 
+  arg4 = static_cast< double >(val4);
+  {
+    try {
+      GWFrames::AlignWaveforms(*arg1,*arg2,arg3,arg4);;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) {
+        s << "GWFrames exception: " << GWFramesErrors[i]; 
+      }
+      else  {
+        s << "GWFrames: Unknown exception number {" << i << "}"; 
+      }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return NULL;
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_AlignWaveforms(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[6];
+  int ii;
+  
+  if (!PyTuple_Check(args)) SWIG_fail;
+  argc = args ? (int)PyObject_Length(args) : 0;
+  for (ii = 0; (ii < 5) && (ii < argc); ii++) {
+    argv[ii] = PyTuple_GET_ITEM(args,ii);
+  }
+  if (argc == 4) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__Waveform, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_GWFrames__Waveform, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        {
+          int res = SWIG_AsVal_double(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          {
+            int res = SWIG_AsVal_double(argv[3], NULL);
+            _v = SWIG_CheckState(res);
+          }
+          if (_v) {
+            return _wrap_AlignWaveforms__SWIG_1(self, args);
+          }
+        }
+      }
+    }
+  }
+  if (argc == 5) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GWFrames__Waveform, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_GWFrames__Waveform, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        {
+          int res = SWIG_AsVal_double(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          {
+            int res = SWIG_AsVal_double(argv[3], NULL);
+            _v = SWIG_CheckState(res);
+          }
+          if (_v) {
+            {
+              _v = false;
+              if(PyArray_Check(argv[4])) {
+                _v = (PyArray_NDIM(reinterpret_cast<const PyArrayObject*>(argv[4]))==1);
+              } else if(PyList_Check(argv[4])) {
+                if(PyList_Size(argv[4])==0) {
+                  _v = true;
+                } else {
+                  PyObject* item = PySequence_GetItem(argv[4], 0);
+                  double* temp=0;
+                  _v = SWIG_IsOK(SWIG_AsVal_double (item, temp));
+                }
+              }
+            }
+            if (_v) {
+              return _wrap_AlignWaveforms__SWIG_0(self, args);
+            }
+          }
+        }
+      }
+    }
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'AlignWaveforms'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    GWFrames::AlignWaveforms(GWFrames::Waveform &,GWFrames::Waveform &,double const,double const,std::vector< double,std::allocator< double > >)\n"
+    "    GWFrames::AlignWaveforms(GWFrames::Waveform &,GWFrames::Waveform &,double const,double const)\n");
+  return 0;
 }
 
 
@@ -36895,15 +37051,12 @@ static PyMethodDef SwigMethods[] = {
 		"  ----------\n"
 		"    Waveform& A\n"
 		"    Waveform& B\n"
-		"    const vector<double>& nHat_A\n"
-		"      Approximate nHat vector at (t_1+t_2)/2.\n"
-		"    const vector<vector<double>>& nHat_B\n"
-		"      Approximate nHat vectors at t_B\n"
-		"    const vector<double>& t_B\n"
 		"    const double t_1\n"
 		"      Beginning of alignment interval\n"
 		"    const double t_2\n"
 		"      End of alignment interval\n"
+		"    vector<double> nHat_A = vector<double>(0)\n"
+		"      Approximate nHat vector at (t_1+t_2)/2. [optional]\n"
 		"  \n"
 		"  Returns\n"
 		"  -------\n"
@@ -36921,11 +37074,9 @@ static PyMethodDef SwigMethods[] = {
 		"    in the inertial frame. Otherwise, they must already be in the co-rotating\n"
 		"    frame. (E.g., the co-orbital frame is an error.)\n"
 		"    \n"
-		"    The nHat quantities are just approximate directions for that vector in the\n"
-		"    two systems, used to set the direction of the x axis for the rotating\n"
-		"    frame. For W_A only the value at t_mid is needed; for W_B, the values and\n"
-		"    related times are needed, so that the appropriate value can be interpolated\n"
-		"    as W_B is shifted in time.\n"
+		"    The nHat quantity is just the approximate direction for that vector in the\n"
+		"    systems, used to set the direction of the x axis for the rotating frame.\n"
+		"    Only the value at t_mid for W_A is needed.\n"
 		"    \n"
 		"    Note that the alignment algorithm assumes that the waveforms are already\n"
 		"    reasonably well aligned in time. In particular, the final value of\n"
@@ -39423,6 +39574,7 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__Waveform_methods[] = {
 		"  Parameters\n"
 		"  ----------\n"
 		"    const unsigned int i_t_a\n"
+		"      Index of initial time\n"
 		"    unsigned int t_b = 0\n"
 		"  \n"
 		"  Returns\n"
@@ -40761,7 +40913,6 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__Waveform_methods[] = {
 		"==============================================================================\n"
 		"  Parameters\n"
 		"  ----------\n"
-		"    const vector<Quaternions::Quaternion>& nHat_t_fid\n"
 		"    const vector<int>& Lmodes = vector<int>(0)\n"
 		"      Lmodes to use in computing $<LL>$\n"
 		"  \n"
@@ -40777,63 +40928,38 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__Waveform_methods[] = {
 		"    at each time in the input Waveform. This is useful in cases where we need\n"
 		"    to try many such alignments, because the setup for interpolation is very\n"
 		"    slow.\n"
+		"    \n"
+		"    Note that this function has no option to choose the direction of X based on\n"
+		"    some nHat vector, as other similar functions have. That issue is assumed to\n"
+		"    be handled elsewhere.\n"
 		"  \n"
 		"\n"
 		"" },
   { "GetAlignmentOfDecompositionFrameToModes", (PyCFunction) _wrap__Waveform_GetAlignmentOfDecompositionFrameToModes, METH_VARARGS, (char*) "\n"
-		"Parameters\n"
-		"----------\n"
-		"  const double t_fid\n"
-		"  const Quaternions::Quaternion& nHat_t_fid\n"
-		"  const vector<int>& Lmodes = vector<int>(0)\n"
-		"\n"
-		"Returns\n"
-		"-------\n"
-		"  Quaternions::Quaternion\n"
-		"\n"
-		"\n"
-		"\n"
-		"\n"
-		"Parameters\n"
-		"----------\n"
-		"  const double t_fid\n"
-		"  const Quaternions::Quaternion& nHat_t_fid\n"
-		"  Quaternions::Quaternion& R_eps\n"
-		"  const vector<int>& Lmodes = vector<int>(0)\n"
-		"\n"
-		"Returns\n"
-		"-------\n"
-		"  void\n"
-		"\n"
-		"\n"
-		"nd the appropriate rotation to fix the orientation of the corotating frame over a range of time.\n"
-		"================================================================================================\n"
-		"Parameters\n"
-		"----------\n"
-		"  const double t1\n"
-		"    Beginning of time range over which the alignment should happen\n"
-		"  const double t2\n"
-		"    End of time range over which the alignment should happen\n"
-		"  const Quaternions::Quaternion& nHat_t1\n"
-		"    The approximate direction of nHat at t1\n"
-		"  Quaternions::Quaternion& R_eps\n"
-		"    Returned rotor\n"
-		"  const vector<int>& Lmodes = vector<int>(0)\n"
-		"    Lmodes to use in computing $<LL>$\n"
-		"\n"
-		"Returns\n"
-		"-------\n"
-		"  void\n"
-		"\n"
-		"Description\n"
-		"-----------\n"
-		"  This function simply finds the rotation necessary to align the corotating\n"
-		"  frame to the waveform at the fiducial time, rather than applying it. This\n"
-		"  is called by AlignDecompositionFrameToModes and probably does not need to\n"
-		"  be called directly; see that function's documentation for more details.\n"
+		"Find the appropriate rotation to fix the orientation of the corotating frame.\n"
+		"=============================================================================\n"
+		"  Parameters\n"
+		"  ----------\n"
+		"    const double t_fid\n"
+		"      Fiducial time at which the alignment should happen\n"
+		"    const Quaternions::Quaternion& nHat_t_fid = Quaternions::xHat\n"
+		"      The approximate direction of nHat at t_fid\n"
+		"    const vector<int>& Lmodes = vector<int>(0)\n"
+		"      Lmodes to use in computing $<LL>$\n"
 		"  \n"
-		"  AlignDecompositionFrameToModes\n"
-		"\n"
+		"  Returns\n"
+		"  -------\n"
+		"    Quaternions::Quaternion\n"
+		"  \n"
+		"  Description\n"
+		"  -----------\n"
+		"    This function simply finds the rotation necessary to align the corotating\n"
+		"    frame to the waveform at the fiducial time, rather than applying it. This\n"
+		"    is called by AlignDecompositionFrameToModes and probably does not need to\n"
+		"    be called directly; see that function's documentation for more details.\n"
+		"    \n"
+		"    AlignDecompositionFrameToModes\n"
+		"  \n"
 		"\n"
 		"" },
   { "AlignDecompositionFrameToModes", (PyCFunction) _wrap__Waveform_AlignDecompositionFrameToModes, METH_VARARGS, (char*) "\n"
@@ -40843,7 +40969,7 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__Waveform_methods[] = {
 		"  ----------\n"
 		"    const double t_fid\n"
 		"      Fiducial time at which the alignment should happen\n"
-		"    const Quaternions::Quaternion& nHat_t_fid\n"
+		"    const Quaternions::Quaternion& nHat_t_fid = Quaternions::xHat\n"
 		"      The approximate direction of nHat at t_fid\n"
 		"    const vector<int>& Lmodes = vector<int>(0)\n"
 		"      Lmodes to use in computing $<LL>$\n"
@@ -40861,42 +40987,6 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__Waveform_methods[] = {
 		"    which the decomposition is done is along the dominant eigenvector of $<LL>$\n"
 		"    (suggested by O'Shaughnessy et al.), and the phase of the (2,2) mode is\n"
 		"    zero.\n"
-		"    \n"
-		"    If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]\n"
-		"    or [2,3,4], for example, restricts the range of the sum.\n"
-		"  \n"
-		"\n"
-		"Fix the orientation of the corotating frame by optimizing over a range of times.\n"
-		"================================================================================\n"
-		"  Parameters\n"
-		"  ----------\n"
-		"    const double t1\n"
-		"      Beginning of time range over which the alignment should happen\n"
-		"    const double t2\n"
-		"      End of time range over which the alignment should happen\n"
-		"    const Quaternions::Quaternion& nHat_t1\n"
-		"      The approximate direction of nHat at t1\n"
-		"    const vector<int>& Lmodes = vector<int>(0)\n"
-		"      Lmodes to use in computing $<LL>$\n"
-		"  \n"
-		"  Returns\n"
-		"  -------\n"
-		"    Waveform&\n"
-		"  \n"
-		"  Description\n"
-		"  -----------\n"
-		"    The corotating frame is only defined up to some constant rotor R_eps; if\n"
-		"    R_corot is corotating, then so is R_corot*R_eps. This function uses that\n"
-		"    freedom to ensure that the frame is aligned with the Waveform modes as well\n"
-		"    as possible across the given time range. In particular, it ensures that the\n"
-		"    Z axis of the frame in which the decomposition is done is along the\n"
-		"    dominant eigenvector of $<LL>$ (suggested by O'Shaughnessy et al.), and the\n"
-		"    phase of the (2,2) mode is zero. These two conditions only give us axes,\n"
-		"    but we need vectors to fully specify the frame. So we also impose the\n"
-		"    condition that the eigenvector is more parallel to the angular velocity of\n"
-		"    the waveform than anti-parallel, and the X axis of the rotated frame is\n"
-		"    more parallel to the input nHat_t1 than anti-parallel. These conditions are\n"
-		"    imposed as accurately as possible across the range of times (t1, t2).\n"
 		"    \n"
 		"    If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]\n"
 		"    or [2,3,4], for example, restricts the range of the sum.\n"
@@ -42225,17 +42315,245 @@ SwigPyBuiltin__GWFrames__WaveformAtAPointFT_richcompare(PyObject *self, PyObject
 }
 
 SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__WaveformAtAPointFT_methods[] = {
-  { "F", (PyCFunction) _wrap_WaveformAtAPointFT_F, METH_VARARGS, (char*) "" },
-  { "NFreq", (PyCFunction) _wrap_WaveformAtAPointFT_NFreq, METH_VARARGS, (char*) "" },
-  { "IsNormalized", (PyCFunction) _wrap_WaveformAtAPointFT_IsNormalized, METH_VARARGS, (char*) "" },
-  { "Re", (PyCFunction) _wrap_WaveformAtAPointFT_Re, METH_VARARGS, (char*) "" },
-  { "Im", (PyCFunction) _wrap_WaveformAtAPointFT_Im, METH_VARARGS, (char*) "" },
-  { "InversePSD", (PyCFunction) _wrap_WaveformAtAPointFT_InversePSD, METH_VARARGS, (char*) "" },
-  { "SNR", (PyCFunction) _wrap_WaveformAtAPointFT_SNR, METH_VARARGS, (char*) "" },
-  { "InnerProduct", (PyCFunction) _wrap_WaveformAtAPointFT_InnerProduct, METH_VARARGS, (char*) "" },
-  { "Match", (PyCFunction) _wrap_WaveformAtAPointFT_Match, METH_VARARGS, (char*) "" },
-  { "Normalize", (PyCFunction) _wrap_WaveformAtAPointFT_Normalize, METH_VARARGS, (char*) "" },
-  { "ZeroAbove", (PyCFunction) _wrap_WaveformAtAPointFT_ZeroAbove, METH_VARARGS, (char*) "" },
+  { "F", (PyCFunction) _wrap_WaveformAtAPointFT_F, METH_VARARGS, (char*) "\n"
+		"Returns the physical frequencies in Hz.\n"
+		"=======================================\n"
+		"  Parameters\n"
+		"  ----------\n"
+		"    (none)\n"
+		"  \n"
+		"  Returns\n"
+		"  -------\n"
+		"    const vector<double>&\n"
+		"  \n"
+		"\n"
+		"\n"
+		"\n"
+		"  Parameters\n"
+		"  ----------\n"
+		"    const unsigned int f\n"
+		"  \n"
+		"  Returns\n"
+		"  -------\n"
+		"    const double&\n"
+		"  \n"
+		"\n"
+		"" },
+  { "NFreq", (PyCFunction) _wrap_WaveformAtAPointFT_NFreq, METH_VARARGS, (char*) "\n"
+		"Parameters\n"
+		"----------\n"
+		"  (none)\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  unsigned int\n"
+		"\n"
+		"\n"
+		"" },
+  { "IsNormalized", (PyCFunction) _wrap_WaveformAtAPointFT_IsNormalized, METH_VARARGS, (char*) "\n"
+		"Parameters\n"
+		"----------\n"
+		"  (none)\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  bool\n"
+		"\n"
+		"\n"
+		"" },
+  { "Re", (PyCFunction) _wrap_WaveformAtAPointFT_Re, METH_VARARGS, (char*) "\n"
+		"Parameters\n"
+		"----------\n"
+		"  (none)\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  const vector<double>&\n"
+		"\n"
+		"\n"
+		"\n"
+		"\n"
+		"Parameters\n"
+		"----------\n"
+		"  const unsigned int f\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  const double&\n"
+		"\n"
+		"\n"
+		"" },
+  { "Im", (PyCFunction) _wrap_WaveformAtAPointFT_Im, METH_VARARGS, (char*) "\n"
+		"Parameters\n"
+		"----------\n"
+		"  (none)\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  const vector<double>&\n"
+		"\n"
+		"\n"
+		"\n"
+		"\n"
+		"Parameters\n"
+		"----------\n"
+		"  const unsigned int f\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  const double&\n"
+		"\n"
+		"\n"
+		"" },
+  { "InversePSD", (PyCFunction) _wrap_WaveformAtAPointFT_InversePSD, METH_VARARGS, (char*) "\n"
+		"Parameters\n"
+		"----------\n"
+		"  const string& Detector = 'AdvLIGO_ZeroDet_HighP'\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  vector<double>\n"
+		"\n"
+		"\n"
+		"" },
+  { "SNR", (PyCFunction) _wrap_WaveformAtAPointFT_SNR, METH_VARARGS, (char*) "\n"
+		"Parameters\n"
+		"----------\n"
+		"  const vector<double>& InversePSD\n"
+		"    Noise spectrum\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  double\n"
+		"\n"
+		"\n"
+		"\n"
+		"\n"
+		"Parameters\n"
+		"----------\n"
+		"  const string& Detector = 'AdvLIGO_ZeroDet_HighP'\n"
+		"    Noise spectrum from this detector\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  double\n"
+		"\n"
+		"\n"
+		"" },
+  { "InnerProduct", (PyCFunction) _wrap_WaveformAtAPointFT_InnerProduct, METH_VARARGS, (char*) "\n"
+		"Parameters\n"
+		"----------\n"
+		"  const WaveformAtAPointFT& B\n"
+		"  const vector<double>& InversePSD\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  double\n"
+		"\n"
+		"\n"
+		"" },
+  { "Match", (PyCFunction) _wrap_WaveformAtAPointFT_Match, METH_VARARGS, (char*) "\n"
+		"Compute the match between two WaveformAtAPointFT.\n"
+		"=================================================\n"
+		"  Parameters\n"
+		"  ----------\n"
+		"    const WaveformAtAPointFT& B\n"
+		"    const vector<double>& InversePSD\n"
+		"  \n"
+		"  Returns\n"
+		"  -------\n"
+		"    double\n"
+		"  \n"
+		"\n"
+		"Compute the match between two WaveformAtAPointFT.\n"
+		"=================================================\n"
+		"  Parameters\n"
+		"  ----------\n"
+		"    const WaveformAtAPointFT& B\n"
+		"    const string& Detector = 'AdvLIGO_ZeroDet_HighP'\n"
+		"  \n"
+		"  Returns\n"
+		"  -------\n"
+		"    double\n"
+		"  \n"
+		"\n"
+		"Compute the match between two WaveformAtAPointFT.\n"
+		"=================================================\n"
+		"  Parameters\n"
+		"  ----------\n"
+		"    const WaveformAtAPointFT& B\n"
+		"      WaveformAtAPointFT to compute match with\n"
+		"    const vector<double>& InversePSD\n"
+		"      Spectrum used to weight contributions by frequencies to match\n"
+		"    double& timeOffset\n"
+		"      Time offset used between the waveforms\n"
+		"    double& phaseOffset\n"
+		"      Phase offset used between the waveforms\n"
+		"    double& match\n"
+		"      Match between the two waveforms\n"
+		"  \n"
+		"  Returns\n"
+		"  -------\n"
+		"    void\n"
+		"  \n"
+		"  Description\n"
+		"  -----------\n"
+		"    The return from ifft is just the bare FFT sum, so we multiply by df to get\n"
+		"    the continuum-analog FT. This is correct because the input data (re,im) are\n"
+		"    the continuum-analog data, rather than just the return from the bare FFT\n"
+		"    sum. See, e.g., Eq. (A.33) [rather than Eq. (A.35)] of\n"
+		"    http://etd.caltech.edu/etd/available/etd-01122009-143851/\n"
+		"  \n"
+		"\n"
+		"Compute the match between two WaveformAtAPointFT.\n"
+		"=================================================\n"
+		"  Parameters\n"
+		"  ----------\n"
+		"    const WaveformAtAPointFT& B\n"
+		"    double& timeOffset\n"
+		"    double& phaseOffset\n"
+		"    double& match\n"
+		"    const string& Detector = 'AdvLIGO_ZeroDet_HighP'\n"
+		"  \n"
+		"  Returns\n"
+		"  -------\n"
+		"    void\n"
+		"  \n"
+		"\n"
+		"" },
+  { "Normalize", (PyCFunction) _wrap_WaveformAtAPointFT_Normalize, METH_VARARGS, (char*) "\n"
+		"Parameters\n"
+		"----------\n"
+		"  const vector<double>& InversePSD\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  WaveformAtAPointFT&\n"
+		"\n"
+		"\n"
+		"\n"
+		"\n"
+		"Parameters\n"
+		"----------\n"
+		"  const string& Detector = 'AdvLIGO_ZeroDet_HighP'\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  WaveformAtAPointFT&\n"
+		"\n"
+		"\n"
+		"" },
+  { "ZeroAbove", (PyCFunction) _wrap_WaveformAtAPointFT_ZeroAbove, METH_VARARGS, (char*) "\n"
+		"Parameters\n"
+		"----------\n"
+		"  const double Frequency\n"
+		"\n"
+		"Returns\n"
+		"-------\n"
+		"  WaveformAtAPointFT&\n"
+		"\n"
+		"\n"
+		"" },
   { NULL, NULL, 0, NULL } /* Sentinel */
 };
 
@@ -42516,25 +42834,27 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__PNWaveform_methods[] = {
 		"\n"
 		"" },
   { "Omega_tot", (PyCFunction) _wrap__PNWaveform_Omega_tot, METH_VARARGS, (char*) "\n"
-		"Parameters\n"
-		"----------\n"
-		"  const unsigned int iTime\n"
+		"Total angular velocity of PN binary at an instant of time.\n"
+		"==========================================================\n"
+		"  Parameters\n"
+		"  ----------\n"
+		"    const unsigned int iTime\n"
+		"  \n"
+		"  Returns\n"
+		"  -------\n"
+		"    vector<double>\n"
+		"  \n"
 		"\n"
-		"Returns\n"
-		"-------\n"
-		"  vector<double>\n"
-		"\n"
-		"\n"
-		"\n"
-		"\n"
-		"Parameters\n"
-		"----------\n"
-		"  (none)\n"
-		"\n"
-		"Returns\n"
-		"-------\n"
-		"  vector<vector<double>>\n"
-		"\n"
+		"Total angular velocity of PN binary at each instant of time.\n"
+		"============================================================\n"
+		"  Parameters\n"
+		"  ----------\n"
+		"    (none)\n"
+		"  \n"
+		"  Returns\n"
+		"  -------\n"
+		"    vector<vector<double>>\n"
+		"  \n"
 		"\n"
 		"" },
   { "L", (PyCFunction) _wrap__PNWaveform_L, METH_VARARGS, (char*) "\n"
@@ -42591,8 +42911,8 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__PNWaveform_methods[] = {
 		"  double\n"
 		"\n"
 		"\n"
-		"\n"
-		"\n"
+		"ctor of magnitudes of Omega_orb at each instant of time.\n"
+		"========================================================\n"
 		"Parameters\n"
 		"----------\n"
 		"  (none)\n"
@@ -42613,8 +42933,8 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__PNWaveform_methods[] = {
 		"  double\n"
 		"\n"
 		"\n"
-		"\n"
-		"\n"
+		"ctor of magnitudes of Omega_prec at each instant of time.\n"
+		"=========================================================\n"
 		"Parameters\n"
 		"----------\n"
 		"  (none)\n"
@@ -42635,8 +42955,8 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__PNWaveform_methods[] = {
 		"  double\n"
 		"\n"
 		"\n"
-		"\n"
-		"\n"
+		"ctor of magnitudes of Omega_tot at each instant of time.\n"
+		"========================================================\n"
 		"Parameters\n"
 		"----------\n"
 		"  (none)\n"
@@ -42657,8 +42977,8 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__GWFrames__PNWaveform_methods[] = {
 		"  double\n"
 		"\n"
 		"\n"
-		"\n"
-		"\n"
+		"ctor of magnitudes of angular momentum L at each instant of time.\n"
+		"=================================================================\n"
 		"Parameters\n"
 		"----------\n"
 		"  (none)\n"
