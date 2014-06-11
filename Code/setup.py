@@ -76,6 +76,7 @@ class build_ext(_build_ext):
 class install_lib(_install_lib):
     """Specialized Python lib installer for moving spinsfast.so."""
     def run(self):
+        from distutils.sysconfig import get_python_lib
         import os
         ## Also include a hack to install in the correct directory if necessary
         if not os.access(self.install_dir, os.W_OK):
@@ -83,7 +84,6 @@ class install_lib(_install_lib):
                 import site
                 self.install_dir = site.USER_SITE
             else:
-                from distutils.sysconfig import get_python_lib;
                 self.install_dir = get_python_lib()
         _install_lib.run(self)
         copy_file('spinsfast/lib/spinsfast.so', '{0}/spinsfast.so'.format(get_python_lib()))
