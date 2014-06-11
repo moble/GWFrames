@@ -24,19 +24,15 @@ endif
 # By default, just call the python build process
 all: install_user
 
-install : spinsfast SphericalFunctions
+install :
 	$(shell python setup.py install)
 
-install_user : spinsfast SphericalFunctions
+install_user :
 	$(shell python setup.py install --user)
 
 spinsfast :
 	build=build/config.mk $(MAKE) -C spinsfast
 	cp spinsfast/lib/spinsfast.so $(shell python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")/
-
-SphericalFunctions :
-	$(MAKE) -C SphericalFunctions
-
 
 
 # Mike likes to use python's virtual environments to build with
@@ -44,7 +40,6 @@ SphericalFunctions :
 # the following is, unfortunately, necessary for him.  This makes him
 # happy.  It is probably not necessary for most users, however.
 MikeHappy :
-	build=build/config.mk $(MAKE) -C spinsfast && cp spinsfast/lib/spinsfast.so $(shell python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")/
 	$(VIRTUAL_ENV)/bin/python setup.py install --prefix=$(VIRTUAL_ENV)
 
 #	cd Quaternions && $(VIRTUAL_ENV)/bin/python setup.py install --prefix=$(VIRTUAL_ENV)

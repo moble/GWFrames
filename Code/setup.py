@@ -16,43 +16,91 @@ Now, 'import GWFrames' may be run from a python
 instance started in any directory on the system.
 """
 
-## Need to build the spinsfast.so
+from os.path import isdir, isfile, exists, abspath, join
 from subprocess import check_call
-check_call('build=build/config.mk make -C spinsfast', shell=True)
+from sys import argv, executable
+from distutils.sysconfig import get_python_lib
+from os import makedirs, pardir, devnull, environ
+from shutil import copyfile
+from distutils.command.build import build
+from distutils.command.build_ext import build_ext as _build_ext
+from distutils.command.install_lib import install_lib as _install_lib
+from distutils.command.install_scripts import install_scripts as _install_scripts
+from distutils.file_util import copy_file
+from distutils.core import setup, Extension
+from subprocess import check_output, CalledProcessError
+from numpy import get_include
+
+# Make sure submoduls are checked out
+if not (isdir('Quaternions') and isfile('Quaternions/setup.py')):
+    raise EnvironmentError("Can't find `Quaternions` module.  Did you forget to `git submodule init` and `git submodule update`?")
+if not (isdir('SphericalFunctions') and isfile('SphericalFunctions/setup.py')):
+    raise EnvironmentError("Can't find `SphericalFunctions` module.  Did you forget to `git submodule init` and `git submodule update`?")
+if not (isdir('SpacetimeAlgebra') and isfile('SpacetimeAlgebra/setup.py')):
+    raise EnvironmentError("Can't find `SpacetimeAlgebra` module.  Did you forget to `git submodule init` and `git submodule update`?")
+if not (isdir('PostNewtonian/C++') and isfile('PostNewtonian/C++/PNEvolution_Q.cpp')):
+    raise EnvironmentError("Can't find `PostNewtonian/C++` module.  Did you forget to `git submodule init` and `git submodule update`?")
+
+## Need to build the spinsfast.so first, and copy it to the same place as the rest of this stuff
+print("\nBuilding spinsfast first")
+cmd = 'build=build/config.mk make -C spinsfast'
+print(cmd)
+check_call(cmd, shell=True)
+print("Finished building spinsfast")
+
+## Build Quaternions and SphericalFunctions
+print("\nInstalling SphericalFunctions")
+cmd = ' '.join(['cd SphericalFunctions && ', executable]+argv)
+print(cmd)
+check_call(cmd, shell=True)
+print("Finished installing SphericalFunctions\n")
 
 ## If PRD won't let me keep a subdirectory, make one
-from os.path import exists
-from os import makedirs
 if not exists('GWFrames') :
     makedirs('GWFrames')
-from shutil import copyfile
 if not exists('GWFrames/plot.py') :
     copyfile('plot.py', 'GWFrames/plot.py')
 
 ## distutils doesn't build swig modules in the correct order by
 ## default -- the python module is installed first.  This will pop
 ## 'build_ext' to the beginning of the command list.
-from distutils.command.build import build
 build.sub_commands = sorted(build.sub_commands, key=lambda sub_command: int(sub_command[0]!='build_ext'))
 
 ## We also need to copy the SWIG-generated python script GWFrames.py
 ## to GWFrames/__init__.py so that it gets installed correctly.
-from distutils.command.build_ext import build_ext as _build_ext
-from distutils.file_util import copy_file
 class build_ext(_build_ext):
     """Specialized Python source builder for moving SWIG module."""
     def run(self):
         _build_ext.run(self)
         copy_file('SWIG/GWFrames.py', 'GWFrames/__init__.py')
-
-## Now import the basics
-from distutils.core import setup, Extension
-from subprocess import check_output, CalledProcessError
-from os import devnull, environ
-
+class install_lib(_install_lib):
+    """Specialized Python lib installer for moving spinsfast.so."""
+    def run(self):
+        import os
+        ## Also include a hack to install in the correct directory if necessary
+        if not os.access(self.install_dir, os.W_OK):
+            if('--user' in argv):
+                import site
+                self.install_dir = site.USER_SITE
+            else:
+                from distutils.sysconfig import get_python_lib;
+                self.install_dir = get_python_lib()
+        _install_lib.run(self)
+        copy_file('spinsfast/lib/spinsfast.so', '{0}/spinsfast.so'.format(get_python_lib()))
+class install_scripts(_install_scripts):
+    """Hack to install scripts in the correct directory if necessary"""
+    def run(self):
+        import os
+        if not os.access(self.install_dir, os.W_OK):
+            if('--user' in argv):
+                import site
+                self.install_dir = site.USER_BASE+'/bin'
+            else:
+                from distutils.sysconfig import get_python_lib;
+                self.install_dir = abspath(join(get_python_lib(), pardir, pardir, pardir, 'bin'))
+        _install_scripts.run(self)
 
 # Add directories for numpy and other inclusions
-from numpy import get_include
 IncDirs = ['spinsfast/include',
            'SphericalFunctions',
            'Quaternions',
@@ -71,7 +119,6 @@ if "FFTW3_HOME" in environ :
     LibDirs += [environ["FFTW3_HOME"]+'/lib']
 
 # If /opt/local directories exist, use them
-from os.path import isdir
 if isdir('/opt/local/include'):
     IncDirs += ['/opt/local/include']
 if isdir('/opt/local/lib'):
@@ -82,7 +129,7 @@ import distutils.sysconfig as ds
 cfs=ds.get_config_vars()
 for key, value in cfs.items() :
     if(type(cfs[key])==str) :
-        cfs[key] = value.replace('-Wstrict-prototypes', '').replace('-Wshorten-64-to-32', '') #.replace('', '')
+        cfs[key] = value.replace('-Wstrict-prototypes', '').replace('-Wshorten-64-to-32', '')
 
 ## Try to determine an automatic version number for this
 try :
@@ -192,7 +239,7 @@ setup(name="GWFrames",
       # keywords = ,
       # platforms = ,
       # cmdclass = ,
-      cmdclass={'build_ext': build_ext},
+      cmdclass={'build_ext': build_ext, 'install_lib': install_lib, 'install_scripts': install_scripts},
       # data_files = ,
       # package_dir =
       )
