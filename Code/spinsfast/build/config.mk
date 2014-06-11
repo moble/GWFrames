@@ -1,5 +1,13 @@
 INC+=
 
+## See if FFTW3_HOME is set; if so, use it
+ifdef FFTW3_HOME
+	INC+=-I${FFTW3_HOME}/include
+	LIBFFTW=-L${FFTW3_HOME}/lib -lfftw3
+else
+	LIBFFTW=-lfftw3
+endif
+
 CFLAGS:=-Wall  -g -std=c99 -O3 -fpic -fstrict-aliasing -Wstrict-aliasing -D_GNU_SOURCE
 
 # Optional portions of code
@@ -7,8 +15,6 @@ CFLAGS:=-Wall  -g -std=c99 -O3 -fpic -fstrict-aliasing -Wstrict-aliasing -D_GNU_
 #CFLAGS+= -DUSE_HEALPIX
 
 CC:=gcc $(CFLAGS)
-
-LIBFFTW=-lfftw3
 
 # Libraries for optional portions
 #LIBGSL=-lgsl -lgslcblas
