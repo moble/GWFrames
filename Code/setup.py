@@ -16,6 +16,10 @@ Now, 'import GWFrames' may be run from a python
 instance started in any directory on the system.
 """
 
+## Need to build the spinsfast.so
+from subprocess import check_call
+check_call('build=build/config.mk make -C spinsfast', shell=True)
+
 ## If PRD won't let me keep a subdirectory, make one
 from os.path import exists
 from os import makedirs

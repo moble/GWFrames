@@ -410,9 +410,10 @@ Do everything necessary to align two waveform objects.
     in the inertial frame. Otherwise, they must already be in the co-rotating
     frame. (E.g., the co-orbital frame is an error.)
     
-    The nHat quantity is just the approximate direction for that vector in the
-    systems, used to set the direction of the x axis for the rotating frame.
-    Only the value at t_mid for W_A is needed.
+    The `nHat` quantity is just the approximate direction for that
+    vector (pointing from black hole A to black hole B) in the
+    systems, used to set the direction of the x axis for the rotating
+    frame.  Only the value at t_mid for W_A is needed.
     
     Note that the alignment algorithm assumes that the waveforms are already
     reasonably well aligned in time. In particular, the final value of

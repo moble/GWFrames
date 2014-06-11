@@ -2302,15 +2302,18 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
   /// While doing so, it re-adjusts the frame alignment to the modes
   /// for `W_B` to account for the changing meaning of t_mid.
   ///
+  /// Note that `t_1` and `t_2` refer to fixed times with respect to
+  /// the time axis of `W_A`.
+  ///
   /// The input waveforms are transformed to their co-rotating frames
   /// if they are in the inertial frame.  Otherwise, they must already
   /// be in the co-rotating frame.  (E.g., the co-orbital frame is an
   /// error.)
   ///
   /// The `nHat` quantity is just the approximate direction for that
-  /// vector in the systems, used to set the direction of the x axis
-  /// for the rotating frame.  Only the value at t_mid for `W_A` is
-  /// needed.
+  /// vector (pointing from black hole A to black hole B) in the
+  /// systems, used to set the direction of the x axis for the
+  /// rotating frame.  Only the value at t_mid for `W_A` is needed.
   ///
   /// Note that the alignment algorithm assumes that the waveforms are
   /// already reasonably well aligned in time.  In particular, the

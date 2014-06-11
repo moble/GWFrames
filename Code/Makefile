@@ -25,10 +25,10 @@ endif
 all: install_user
 
 install : spinsfast SphericalFunctions
-	python setup.py install
+	$(shell python setup.py install)
 
 install_user : spinsfast SphericalFunctions
-	python setup.py install --user
+	$(shell python setup.py install --user)
 
 spinsfast :
 	build=build/config.mk $(MAKE) -C spinsfast

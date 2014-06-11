@@ -23,6 +23,8 @@ Code/GWFrames_wrap.cpp
 Code/build
 Code/spinsfast/bin/
 Code/spinsfast/lib/
+Code/SWIG/GWFrames.py
+Code/SWIG/GWFrames_wrap.cpp
 Docs/xml
 Docs/latex
 Docs/html
