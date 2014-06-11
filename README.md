@@ -102,8 +102,9 @@ Contributions
 =============
 The code is primarily written by me (Mike Boyle).  Dan Hemberger helped
 by porting older code from [Triton](https://github.com/moble/Triton) to
-perform noise-weighted overlap code.  Serguei Ossokine also helped
-substantially by cross-checking the post-Newtonian formulas and results.
+perform noise-weighted overlap code, and with numerous bug reports and 
+helpful suggestions.  Serguei Ossokine also helped substantially by 
+cross-checking the post-Newtonian formulas and results.
 
 Other contributions are entirely welcome.  The preferred method is via
 github's excellent interface.  If you have a bug report, just go to the
