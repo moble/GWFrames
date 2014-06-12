@@ -86,7 +86,7 @@ class install_lib(_install_lib):
             else:
                 self.install_dir = get_python_lib()
         _install_lib.run(self)
-        copy_file('spinsfast/lib/spinsfast.so', '{0}/spinsfast.so'.format(get_python_lib()))
+        copy_file('spinsfast/lib/spinsfast.so', '{0}/spinsfast.so'.format(self.install_dir))
 class install_scripts(_install_scripts):
     """Hack to install scripts in the correct directory if necessary"""
     def run(self):
