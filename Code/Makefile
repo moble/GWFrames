@@ -29,10 +29,10 @@ all:
 	@echo "  python setup.py install --user"
 
 install :
-	$(shell python setup.py install)
+	python setup.py install
 
 install_user :
-	$(shell python setup.py install --user)
+	python setup.py install --user
 
 spinsfast :
 	build=build/config.mk $(MAKE) -C spinsfast
