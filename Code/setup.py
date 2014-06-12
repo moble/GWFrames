@@ -43,7 +43,7 @@ if not (isdir('PostNewtonian/C++') and isfile('PostNewtonian/C++/PNEvolution_Q.c
 
 ## Need to build the spinsfast.so first, and copy it to the same place as the rest of this stuff
 print("\nBuilding spinsfast first")
-cmd = 'build=build/config.mk make -C spinsfast'
+cmd = 'cd spinsfast && python python/setup.py --build-base obj/ install --install-lib lib/'
 print(cmd)
 check_call(cmd, shell=True)
 print("Finished building spinsfast")
@@ -222,12 +222,12 @@ setup(name="GWFrames",
                   libraries=['gsl', 'gslcblas', 'fftw3'],
                   define_macros = [('CodeRevision', CodeRevision)],
                   language='c++',
-                  swig_opts=swig_opts, #['-globals', 'constants', '-c++', '-builtin', '-outdir', 'SWIG/'],# '-debug-tmsearch', '-debug-tmused'],
+                  swig_opts=swig_opts,
                   extra_link_args=['-fPIC', getcwd()+'/spinsfast/lib/spinsfast.so'],
                   # extra_link_args=['-lgomp', '-fPIC', '-Wl,-undefined,error'], # `-undefined,error` tells the linker to fail on undefined symbols
                   extra_compile_args=['-Wno-deprecated', '-Wno-unused-variable', '-DUSE_GSL'] #'-fopenmp',
                   # extra_compile_args=['-ffast-math'] # DON'T USE fast-math!!!  It makes it impossible to detect NANs
-                  )
+                  ),
         ],
       # classifiers = ,
       # distclass = ,

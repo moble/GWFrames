@@ -1,6 +1,7 @@
 from distutils.core import setup, Extension
 from distutils.sysconfig import get_python_lib
 import os
+import glob
 
 numpy_inc = os.path.join(get_python_lib(plat_specific=1), 'numpy/core/include')
 
@@ -18,14 +19,15 @@ if "FFTW3_HOME" in environ :
     LibDirs += [environ["FFTW3_HOME"]+'/lib']
 
 module1 = Extension('spinsfast',
-                    sources = ['python/spinsfast_module.c'],
+                    sources = ['python/spinsfast_module.c'] + glob.glob('code/*.c'),
                     # include_dirs = [numpy_inc,'include'],
                     include_dirs=IncDirs,
-                    libraries=['spinsfast','fftw3'],
+                    # libraries=['spinsfast','fftw3'],
+                    libraries=['fftw3'],
                     # library_dirs = ["lib"],
                     library_dirs=LibDirs,
                     extra_compile_args=['-std=c99','-fPIC'],
-                    depends=['lib/libspinsfast.a'],
+                    # depends=['lib/libspinsfast.a'],
                     )
 
 setup (name = 'spinsfast',
