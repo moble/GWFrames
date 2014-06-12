@@ -20,7 +20,7 @@ from os.path import isdir, isfile, exists, abspath, join
 from subprocess import check_call
 from sys import argv, executable
 from distutils.sysconfig import get_python_lib
-from os import makedirs, pardir, devnull, environ
+from os import makedirs, pardir, devnull, environ, getcwd
 from shutil import copyfile
 from distutils.command.build import build
 from distutils.command.build_ext import build_ext as _build_ext
@@ -86,7 +86,6 @@ class install_lib(_install_lib):
             else:
                 self.install_dir = get_python_lib()
         _install_lib.run(self)
-        copy_file('spinsfast/lib/spinsfast.so', '{0}/spinsfast.so'.format(self.install_dir))
 class install_scripts(_install_scripts):
     """Hack to install scripts in the correct directory if necessary"""
     def run(self):
@@ -106,7 +105,7 @@ IncDirs = ['spinsfast/include',
            'Quaternions',
            'SpacetimeAlgebra',
            get_include()]
-LibDirs = ['spinsfast/lib']
+LibDirs = []
 
 ## See if GSL_HOME is set; if so, use it
 if "GSL_HOME" in environ :
@@ -220,11 +219,11 @@ setup(name="GWFrames",
                              'GWFrames_Doc.i'],
                   include_dirs=IncDirs,
                   library_dirs=LibDirs,
-                  libraries=['gsl', 'gslcblas', 'fftw3', 'spinsfast'],
+                  libraries=['gsl', 'gslcblas', 'fftw3'],
                   define_macros = [('CodeRevision', CodeRevision)],
                   language='c++',
                   swig_opts=swig_opts, #['-globals', 'constants', '-c++', '-builtin', '-outdir', 'SWIG/'],# '-debug-tmsearch', '-debug-tmused'],
-                  extra_link_args=['-fPIC'],
+                  extra_link_args=['-fPIC', getcwd()+'/spinsfast/lib/spinsfast.so'],
                   # extra_link_args=['-lgomp', '-fPIC', '-Wl,-undefined,error'], # `-undefined,error` tells the linker to fail on undefined symbols
                   extra_compile_args=['-Wno-deprecated', '-Wno-unused-variable', '-DUSE_GSL'] #'-fopenmp',
                   # extra_compile_args=['-ffast-math'] # DON'T USE fast-math!!!  It makes it impossible to detect NANs
