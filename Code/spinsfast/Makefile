@@ -31,17 +31,17 @@ INC += -Iinclude
 include $(build)
 
 # Variables to hold targets
-EXEC :=  
-OBJ := 
-LIB := 
+EXEC :=
+OBJ :=
+LIB :=
 # Get the module.mk files and include them, collecting targets and subprogs
 MODMK := $(patsubst %,%/module.mk, $(MODULES))
 include $(MODMK)
 
-TARGETS := $(EXEC) $(LIB) $(OBJ) 
+TARGETS := $(EXEC) $(LIB) $(OBJ)
 
 
 alltargets : $(TARGETS)
 
-clean : 
-	rm $(TARGETS)
+clean :
+	rm -f $(TARGETS)

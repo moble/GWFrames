@@ -93,9 +93,9 @@ cpp : Utilities.o Quaternions/Quaternions.o Waveforms.o PNWaveforms.o Scri.o Spa
 # The following are just handy targets for removing compiled stuff
 clean :
 	-/bin/rm -f *.o
-allclean : clean
-	-/bin/rm -rf build
+	-/bin/rm -rf build spinsfast/python/build spinsfast/lib/* spinsfast/build/lib* spinsfast/build/temp.*
 	-build=build/config.mk $(MAKE) -C spinsfast clean
+allclean : clean
 realclean : allclean
 
 # This just runs SWIG, which can be handy for committing pre-swigged files

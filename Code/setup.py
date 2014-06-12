@@ -30,6 +30,7 @@ from distutils.file_util import copy_file
 from distutils.core import setup, Extension
 from subprocess import check_output, CalledProcessError
 from numpy import get_include
+import glob
 
 # Make sure submoduls are checked out
 if not (isdir('Quaternions') and isfile('Quaternions/setup.py')):
@@ -41,9 +42,11 @@ if not (isdir('SpacetimeAlgebra') and isfile('SpacetimeAlgebra/setup.py')):
 if not (isdir('PostNewtonian/C++') and isfile('PostNewtonian/C++/PNEvolution_Q.cpp')):
     raise EnvironmentError("Can't find `PostNewtonian/C++` module.  Did you forget to `git submodule init` and `git submodule update`?")
 
-## Need to build the spinsfast.so first, and copy it to the same place as the rest of this stuff
+## Need to build the spinsfast.so first, in its own setup, because
+## it's all C code, whereas GWFrames is C++ code.  But we will just
+## include the object files below, when we link the _GWFrames.so
 print("\nBuilding spinsfast first")
-cmd = 'cd spinsfast && python python/setup.py --build-base obj/ install --install-lib lib/'
+cmd = 'cd spinsfast && {0} python/setup.py build --build-temp build/temp install --install-lib lib/'.format(executable)
 print(cmd)
 check_call(cmd, shell=True)
 print("Finished building spinsfast")
@@ -179,25 +182,26 @@ setup(name="GWFrames",
       # py_modules = ['GWFrames'],
       scripts = ['Scripts/RunExtrapolations.py', 'Scripts/ExtrapolateAnnex.py'],
       ext_modules = [
-        Extension('_GWFrames', ['Quaternions/Quaternions.cpp',
-                                'Quaternions/IntegrateAngularVelocity.cpp',
-                                'Quaternions/Utilities.cpp',
-                                'PostNewtonian/C++/PNEvolution.cpp',
-                                'PostNewtonian/C++/PNEvolution_Q.cpp',
-                                'PostNewtonian/C++/PNWaveformModes.cpp',
-                                'SphericalFunctions/Combinatorics.cpp',
-                                'SphericalFunctions/WignerDMatrices.cpp',
-                                'SphericalFunctions/SWSHs.cpp',
-                                'SpacetimeAlgebra/SpacetimeAlgebra.cpp',
-                                'Utilities.cpp',
-                                'Waveforms.cpp',
-                                'PNWaveforms.cpp',
-                                'WaveformsAtAPointFT.cpp',
-                                'fft.cpp',
-                                'NoiseCurves.cpp',
-                                'Interpolate.cpp',
-                                'Scri.cpp',
-                                'SWIG/GWFrames.i'],
+        Extension('_GWFrames',
+                  sources = ['Quaternions/Quaternions.cpp',
+                             'Quaternions/IntegrateAngularVelocity.cpp',
+                             'Quaternions/Utilities.cpp',
+                             'PostNewtonian/C++/PNEvolution.cpp',
+                             'PostNewtonian/C++/PNEvolution_Q.cpp',
+                             'PostNewtonian/C++/PNWaveformModes.cpp',
+                             'SphericalFunctions/Combinatorics.cpp',
+                             'SphericalFunctions/WignerDMatrices.cpp',
+                             'SphericalFunctions/SWSHs.cpp',
+                             'SpacetimeAlgebra/SpacetimeAlgebra.cpp',
+                             'Utilities.cpp',
+                             'Waveforms.cpp',
+                             'PNWaveforms.cpp',
+                             'WaveformsAtAPointFT.cpp',
+                             'fft.cpp',
+                             'NoiseCurves.cpp',
+                             'Interpolate.cpp',
+                             'Scri.cpp',
+                             'SWIG/GWFrames.i'],
                   depends = ['Quaternions/Quaternions.hpp',
                              'Quaternions/IntegrateAngularVelocity.hpp',
                              'Quaternions/Utilities.hpp',
@@ -223,7 +227,7 @@ setup(name="GWFrames",
                   define_macros = [('CodeRevision', CodeRevision)],
                   language='c++',
                   swig_opts=swig_opts,
-                  extra_link_args=['-fPIC', getcwd()+'/spinsfast/lib/spinsfast.so'],
+                  extra_link_args=['-fPIC',] + glob.glob('spinsfast/build/temp/*/*.o'),
                   # extra_link_args=['-lgomp', '-fPIC', '-Wl,-undefined,error'], # `-undefined,error` tells the linker to fail on undefined symbols
                   extra_compile_args=['-Wno-deprecated', '-Wno-unused-variable', '-DUSE_GSL'] #'-fopenmp',
                   # extra_compile_args=['-ffast-math'] # DON'T USE fast-math!!!  It makes it impossible to detect NANs
