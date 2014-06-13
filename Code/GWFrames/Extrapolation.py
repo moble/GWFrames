@@ -324,7 +324,8 @@ def Extrapolate(**kwargs) :
     from textwrap import dedent
     from numpy import sqrt, abs, fmod, pi, transpose, array
     from scipy.interpolate import splev, splrep
-    from GWFrames import Inertial, Corotating, Intersection, FrameFromAngularVelocity, Quaternions, Waveform, Waveforms, vectorW, vectord, vectorvectord
+    from GWFrames import Inertial, Corotating, Intersection, Waveform, Waveforms
+    from Quaternions import FrameFromAngularVelocity, Quaternions
 
     # Process keyword arguments
     InputDirectory = kwargs.pop('InputDirectory', './')
@@ -390,8 +391,7 @@ def Extrapolate(**kwargs) :
     i_outer = SortedRadiiIndices[-1]
 
     # Convert to c++ objects and interpolate to common times
-    Ws = Waveforms(vectorW(Ws))
-    Radii = vectorvectord(Radii)
+    Ws = Waveforms(Ws)
     print("Interpolating to common times..."); stdout.flush()
     Ws.SetCommonTime(Radii, MinTimeStep, EarliestTime, LatestTime)
     W_outer = Ws[i_outer]
@@ -445,9 +445,9 @@ def Extrapolate(**kwargs) :
 
     # If required, figure out the orbital frequencies
     if(UseOmega) :
-        Omegas = vectord([sqrt(sum([c**2 for c in o])) for o in W_outer.AngularVelocityVector([2])])
+        Omegas = [sqrt(sum([c**2 for c in o])) for o in W_outer.AngularVelocityVector([2])]
     else :
-        Omegas = vectord([])
+        Omegas = []
 
     # Transform W_outer into its smoothed corotating frame, and align modes with frame at given instant
     stdout.write("Rotating into common (outer) frame...\n"); stdout.flush()
