@@ -180,7 +180,7 @@ setup(name="GWFrames",
       license=License,
       packages = ['GWFrames'],
       # py_modules = ['GWFrames'],
-      scripts = ['Scripts/RunExtrapolations.py', 'Scripts/ExtrapolateAnnex.py'],
+      scripts = [],
       ext_modules = [
         Extension('_GWFrames',
                   sources = ['Quaternions/Quaternions.cpp',
