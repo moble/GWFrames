@@ -324,8 +324,7 @@ def Extrapolate(**kwargs) :
     from textwrap import dedent
     from numpy import sqrt, abs, fmod, pi, transpose, array
     from scipy.interpolate import splev, splrep
-    from GWFrames import Inertial, Corotating, Intersection, Waveform, Waveforms
-    from Quaternions import FrameFromAngularVelocity, Quaternions
+    from GWFrames import Inertial, Corotating, Waveform, Waveforms
 
     # Process keyword arguments
     InputDirectory = kwargs.pop('InputDirectory', './')
