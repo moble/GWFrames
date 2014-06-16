@@ -37,9 +37,15 @@
 %feature("pythonappend") GWFrames::Waveform::PNEquivalentPrecessionalAV() const %{ if isinstance(val, tuple) : val = numpy.array(val) %}
 #endif
 //// Allow us to extract the outputs naturally in python
+/* %typemap(in) std::vector< std::vector< double,std::allocator< double > >,std::allocator< std::vector< double,std::allocator< double > > > > &Radii = std::vector<std::vector<double> >& INPUT; */
+/* %typemap(in) std::vector<std::vector<double> >& INPUT = std::vector< std::vector< double,std::allocator< double > >,std::allocator< std::vector< double,std::allocator< double > > > > &Radii; */
+/* %typemap(in) std::vector<std::vector<double> >& Radii = std::vector<std::vector<double> >& INPUT; */
+/* %typemap(argout) std::vector<std::vector<double> > *Radii = std::vector<std::vector<double> > *OUTPUT; */
+/* %typemap(argout) std::vector<std::vector<double> > &Radii = std::vector<std::vector<double> > &OUTPUT; */
+/* %apply std::vector<std::vector<double> >& Radii { std::vector<std::vector<double> >& INPUT }; */
 %apply double& OUTPUT { double& deltat };
-%apply Quaternions::Quaternion& OUTPUT { Quaternions::Quaternion& R_delta };
-%apply Quaternions::Quaternion& OUTPUT { Quaternions::Quaternion& R_eps };
+/* %apply Quaternions::Quaternion& OUTPUT { Quaternions::Quaternion& R_delta }; */
+/* %apply Quaternions::Quaternion& OUTPUT { Quaternions::Quaternion& R_eps }; */
 //// Parse the header file to generate wrappers
 %include "../Waveforms.hpp"
 //// Make sure vectors of Waveform are understood

@@ -64,6 +64,7 @@ using std::complex;
 
 // This macro is useful for debugging
 #define INFOTOCERR std::cerr << __FILE__ << ":" << __LINE__ << ":" << __func__ << ": "
+#define INFOTOCOUT std::cout << __FILE__ << ":" << __LINE__ << ":" << __func__ << ": "
 
 const complex<double> ImaginaryI(0.0,1.0);
 
@@ -2215,12 +2216,12 @@ public:
     t_A.erase(t_A.begin(), t_A.begin()+i);
     R_fA.erase(R_fA.begin(), R_fA.begin()+i);
 
-    { // Just for debugging temporarily
-      INFOTOCERR << "\tOutput to /tmp/XiIntegral.dat" << std::endl;
-      ofstream myfile;
-      myfile.open ("/tmp/XiIntegralPoints.dat");
-      myfile.close();
-    }
+    // { // Just for debugging temporarily
+    //   INFOTOCERR << "\tOutput to /tmp/XiIntegral.dat" << std::endl;
+    //   ofstream myfile;
+    //   myfile.open ("/tmp/XiIntegralPoints.dat");
+    //   myfile.close();
+    // }
   }
 
   void SetR_epsB(const std::vector<Quaternion>& iR_epsB) {
@@ -2265,13 +2266,13 @@ public:
       fdot_last1 = fdot1;
       fdot_last2 = fdot2;
     }
-    { // Just for debugging temporarily
-      // INFOTOCERR << "\tOutput to /tmp/XiIntegralPoints.dat" << std::endl;
-      ofstream myfile;
-      myfile.open ("/tmp/XiIntegralPoints.dat", std::ofstream::app);
-      myfile << deltat << " " << f1 << " " << f2 << std::endl;
-      myfile.close();
-    }
+    // { // Just for debugging temporarily
+    //   INFOTOCERR << "\tOutput to /tmp/XiIntegralPoints.dat" << std::endl;
+    //   ofstream myfile;
+    //   myfile.open ("/tmp/XiIntegralPoints.dat", std::ofstream::app);
+    //   myfile << deltat << " " << f1 << " " << f2 << std::endl;
+    //   myfile.close();
+    // }
     Flip = (f2<f1);
     return std::min(f1,f2);
   }
@@ -2287,12 +2288,13 @@ double minfunc (const gsl_vector* delta, void* params) {
 
 /// Do everything necessary to align two waveform objects
 void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
-                              const double t_1, const double t_2, std::vector<double> nHat_A)
+                              const double t_1, const double t_2, unsigned int InitialEvaluations, std::vector<double> nHat_A)
 {
   /// \param W_A Fixed waveform (though modes are re-aligned)
   /// \param W_B Adjusted waveform (modes are re-aligned and frame and time are offset)
   /// \param t_1 Beginning of alignment interval
   /// \param t_2 End of alignment interval
+  /// \param InitialEvaluations Number of evaluations for dumb initial optimization
   /// \param nHat_A Approximate nHat vector at (t_1+t_2)/2. [optional]
   ///
   /// This function aligns the frame to the waveform modes for both
@@ -2327,9 +2329,11 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
 
   // Make sure W_A and W_B are in their co-rotating frames
   if(W_A.FrameType()==GWFrames::Inertial) {
+    INFOTOCOUT << "\tTransforming input Waveform A (in place) to co-rotating frame." << std::endl;
     W_A.TransformToCorotatingFrame();
   }
   if(W_B.FrameType()==GWFrames::Inertial) {
+    INFOTOCOUT << "\tTransforming input Waveform B (in place) to co-rotating frame." << std::endl;
     W_B.TransformToCorotatingFrame();
   }
   if(W_A.FrameType()!=GWFrames::Corotating || W_B.FrameType()!=GWFrames::Corotating) {
@@ -2383,31 +2387,47 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
   {
     // R_epsB is an array of R_eps rotors for waveform B, assuming the
     // various deltat values
+struct timeval rightnow;
+gettimeofday(&rightnow, NULL); unsigned long long tNow = rightnow.tv_usec + (unsigned long long)rightnow.tv_sec * 1000000;
     Aligner.SetR_epsB(W_B.GetAlignmentsOfDecompositionFrameToModes());
+gettimeofday(&rightnow, NULL); unsigned long long tThen = rightnow.tv_usec + (unsigned long long)rightnow.tv_sec * 1000000;
+INFOTOCERR << "\tSetR_eps took " << (tThen-tNow)/1000000.0L << " seconds." << std::endl;
 
     // Evaluate Xi_c for every deltat that won't require interpolating
     // W_B to find R_eps_B (because interpolation is really slow)
     const GWFrames::Waveform W_B_Interval = W_B.SliceOfTimesWithoutModes(t_mid+deltat_1, t_mid+deltat_2);
     using namespace GWFrames; // To subtract double from vector<double> below
     vector<double> deltats = W_B_Interval.T()-t_mid;
+    if (InitialEvaluations<deltats.size()) { // make sure deltats is small enough
+      const int step = deltats.size()/InitialEvaluations + 1;
+      vector<double> deltats_tmp;
+      deltats_tmp.reserve(InitialEvaluations);
+      for(unsigned int i=0; i<InitialEvaluations; i+=step) {
+        deltats_tmp.push_back(deltats[i]);
+      }
+      deltats_tmp.swap(deltats);
+    }
     vector<Quaternion> XiIntegral1(deltats.size());
     vector<Quaternion> XiIntegral2(deltats.size());
+gettimeofday(&rightnow, NULL); tNow = rightnow.tv_usec + (unsigned long long)rightnow.tv_sec * 1000000;
     for(unsigned int i=0; i<XiIntegral1.size(); ++i) {
       XiIntegral1[i] = Quaternions::DefiniteIntegral(R_fA*Aligner.Rbar_epsB(t_mid+deltats[i])*Aligner.Rbar_fB(t_A+deltats[i]), t_A);
       XiIntegral2[i] = Quaternions::DefiniteIntegral(R_fA*(-Quaternions::zHat)*Aligner.Rbar_epsB(t_mid+deltats[i])*Aligner.Rbar_fB(t_A+deltats[i]), t_A);
     }
+gettimeofday(&rightnow, NULL); tThen = rightnow.tv_usec + (unsigned long long)rightnow.tv_sec * 1000000;
+INFOTOCERR << "\tDefiniteIntegrals took " << (tThen-tNow)/1000000.0L << " seconds." << std::endl;
 
-    { // Just for debugging temporarily
-      INFOTOCERR << "\tOutput to /tmp/XiIntegral.dat" << std::endl;
-      ofstream myfile;
-      myfile.open ("/tmp/XiIntegral.dat");
-      for(unsigned int i=0; i<XiIntegral1.size(); ++i) {
-        myfile << deltats[i] << " "
-               << 2*(t_2 - t_1 - Quaternions::abs(XiIntegral1[i])) << " "
-               << 2*(t_2 - t_1 - Quaternions::abs(XiIntegral2[i])) << std::endl;
-      }
-      myfile.close();
-    }
+    // { // Just for debugging temporarily
+    //   INFOTOCERR << "\tOutput to /tmp/XiIntegral.dat" << std::endl;
+    //   ofstream myfile;
+    //   myfile.open ("/tmp/XiIntegral.dat");
+    //   for(unsigned int i=0; i<XiIntegral1.size(); ++i) {
+    //     myfile << deltats[i] << " "
+    //            << 2*(t_2 - t_1 - Quaternions::abs(XiIntegral1[i])) << " "
+    //            << 2*(t_2 - t_1 - Quaternions::abs(XiIntegral2[i])) << std::endl;
+    //   }
+    //   myfile.close();
+    // }
 
     // Find the best value
     double Xi_c_min = 1e300;
@@ -2444,7 +2464,8 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
   {
     const unsigned int NDimensions = 4;
     const unsigned int MaxIterations = 2000;
-    const double MinSimplexSize = 2.0e-13; // This can be less than sqrt(machine precision) because of the integral nature of our objective function
+    const double MinSimplexSize = 2.0e-9; // This can be less than sqrt(machine precision) because of the integral nature of our objective function
+    // const double MinSimplexSize = 2.0e-13; // This can be less than sqrt(machine precision) because of the integral nature of our objective function
     double deltat=0.0;
 
     const double InitialTrialTimeStep = std::max(W_A.T(1)-W_A.T(0), W_B.T(1)-W_B.T(0))/2.;
@@ -3256,1016 +3277,1016 @@ GWFrames::Waveform GWFrames::Waveform::operator*(const GWFrames::Waveform& B) co
 GWFrames::Waveform GWFrames::Waveform::operator/(const GWFrames::Waveform& B) const { return BinaryOp<std::divides<std::complex<double> > >(B); }
 
 
-/// Newman-Penrose edth operator
-GWFrames::Waveform GWFrames::Waveform::NPEdth() const {
-  /// This operator is the one defined by Newman and Penrose (1966)
-  /// and further described by Goldberg et al. (1967).  It raises the
-  /// spin weight of any field on the sphere by 1.  Note that this
-  /// operator does not preserve boost weights in any nice way --
-  /// except in special cases.  The GHP version does.  Note that, in
-  /// this implementation, the only difference between the NP and GHP
-  /// versions is the factor of \f$\sqrt{2}\f$.  The additional GHP
-  /// term that keeps the boost weight meaningful is zero in any given
-  /// frame -- though it transforms nontrivially.
-  ///
-  /// Note that the boost weight is set to the value of `WeightError`,
-  /// which is just meant to be large enough that it will give
-  /// improbable values if used.  This is not fool-proof.
-  ///
-  /// \sa NPEdthBar
-  /// \sa GHPEdth
-  /// \sa GHPEdthBar
-  /// \sa IntegrateNPEdth
-  /// \sa IntegrateNPEdthBar
-  /// \sa IntegrateGHPEdth
-  /// \sa IntegrateGHPEdthBar
+// /// Newman-Penrose edth operator
+// GWFrames::Waveform GWFrames::Waveform::NPEdth() const {
+//   /// This operator is the one defined by Newman and Penrose (1966)
+//   /// and further described by Goldberg et al. (1967).  It raises the
+//   /// spin weight of any field on the sphere by 1.  Note that this
+//   /// operator does not preserve boost weights in any nice way --
+//   /// except in special cases.  The GHP version does.  Note that, in
+//   /// this implementation, the only difference between the NP and GHP
+//   /// versions is the factor of \f$\sqrt{2}\f$.  The additional GHP
+//   /// term that keeps the boost weight meaningful is zero in any given
+//   /// frame -- though it transforms nontrivially.
+//   ///
+//   /// Note that the boost weight is set to the value of `WeightError`,
+//   /// which is just meant to be large enough that it will give
+//   /// improbable values if used.  This is not fool-proof.
+//   ///
+//   /// \sa NPEdthBar
+//   /// \sa GHPEdth
+//   /// \sa GHPEdthBar
+//   /// \sa IntegrateNPEdth
+//   /// \sa IntegrateNPEdthBar
+//   /// \sa IntegrateGHPEdth
+//   /// \sa IntegrateGHPEdthBar
 
-  const Waveform& A = *this;
-  const int NModes = A.NModes();
-  const int NTimes = A.NTimes();
-  const int s = A.SpinWeight();
-  const int lMin = std::abs(s+1);
-  Waveform EdthA(A);
-  EdthA.history << "this->NPEdth();" << endl;
+//   const Waveform& A = *this;
+//   const int NModes = A.NModes();
+//   const int NTimes = A.NTimes();
+//   const int s = A.SpinWeight();
+//   const int lMin = std::abs(s+1);
+//   Waveform EdthA(A);
+//   EdthA.history << "this->NPEdth();" << endl;
 
-  for(int i_m=0; i_m<NModes; ++i_m) {
-    const int l = A.LM(i_m)[0];
-    if(l<lMin) {
-      for(int i_t=0; i_t<NTimes; ++i_t) {
-        EdthA.SetData(i_m, i_t, 0.0);
-      }
-    } else {
-      const double factor = std::sqrt((l-s)*(l+s+1));
-      for(int i_t=0; i_t<NTimes; ++i_t) {
-        EdthA.SetData(i_m, i_t, EdthA.Data(i_m, i_t)*factor);
-      }
-    }
-  }
+//   for(int i_m=0; i_m<NModes; ++i_m) {
+//     const int l = A.LM(i_m)[0];
+//     if(l<lMin) {
+//       for(int i_t=0; i_t<NTimes; ++i_t) {
+//         EdthA.SetData(i_m, i_t, 0.0);
+//       }
+//     } else {
+//       const double factor = std::sqrt((l-s)*(l+s+1));
+//       for(int i_t=0; i_t<NTimes; ++i_t) {
+//         EdthA.SetData(i_m, i_t, EdthA.Data(i_m, i_t)*factor);
+//       }
+//     }
+//   }
 
-  EdthA.SetSpinWeight(A.SpinWeight()+1);
-  EdthA.SetBoostWeight(WeightError);
+//   EdthA.SetSpinWeight(A.SpinWeight()+1);
+//   EdthA.SetBoostWeight(WeightError);
 
-  return EdthA;
-}
-
-/// Newman-Penrose edth operator conjugate
-GWFrames::Waveform GWFrames::Waveform::NPEdthBar() const {
-  /// This operator is the one defined by Newman and Penrose (1966)
-  /// and further described by Goldberg et al. (1967).  It lowers the
-  /// spin weight of any field on the sphere by 1.  Note that this
-  /// operator does not preserve boost weights in any nice way --
-  /// except in special cases.  The GHP version does.  Note that, in
-  /// this implementation, the only difference between the NP and GHP
-  /// versions is the factor of \f$\sqrt{2}\f$.  The additional GHP
-  /// term that keeps the boost weight meaningful is zero in any given
-  /// frame -- though it transforms nontrivially.
-  ///
-  /// Note that the boost weight is set to the value of `WeightError`,
-  /// which is just meant to be large enough that it will give
-  /// improbable values if used.  This is not fool-proof.
-  ///
-  /// \sa NPEdth
-  /// \sa GHPEdth
-  /// \sa GHPEdthBar
-  /// \sa IntegrateNPEdth
-  /// \sa IntegrateNPEdthBar
-  /// \sa IntegrateGHPEdth
-  /// \sa IntegrateGHPEdthBar
-
-  const Waveform& A = *this;
-  const int NModes = A.NModes();
-  const int NTimes = A.NTimes();
-  const int s = A.SpinWeight();
-  const int lMin = std::abs(s-1);
-  Waveform EdthBarA(A);
-  EdthBarA.history << "this->NPEdthBar();" << endl;
-
-  for(int i_m=0; i_m<NModes; ++i_m) {
-    const int l = A.LM(i_m)[0];
-    if(l<lMin) {
-      for(int i_t=0; i_t<NTimes; ++i_t) {
-        EdthBarA.SetData(i_m, i_t, 0.0);
-      }
-    } else {
-      const double factor = -std::sqrt((l+s)*(l-s+1));
-      for(int i_t=0; i_t<NTimes; ++i_t) {
-        EdthBarA.SetData(i_m, i_t, EdthBarA.Data(i_m, i_t)*factor);
-      }
-    }
-  }
-
-  EdthBarA.SetSpinWeight(A.SpinWeight()-1);
-  EdthBarA.SetBoostWeight(WeightError);
-
-  return EdthBarA;
-}
-
-/// Geroch-Held-Penrose edth operator
-GWFrames::Waveform GWFrames::Waveform::GHPEdth() const {
-  /// This operator is the one defined by Geroch et al. (1973).  It
-  /// raises the spin weight of any field on the sphere by 1, while
-  /// leaving the boost weight unchanged.
-  ///
-  /// This operator is very similar to the basic Newman-Penrose edth
-  /// operator, except that it preserves boost weights.  Its effect in
-  /// this implementation is identical (up to a factor of
-  /// \f$\sqrt{2}\f$) to the NP edth.  There is an additional term in
-  /// the definition of the GHP operator, but its value is zero.  (It
-  /// transforms nontrivially, though.)  In this context, we have
-  /// `NPEdth() = sqrt(2)*GHPEdth()`.
-  ///
-  /// The complex shear \f$\sigma\f$ has spin weight +2 and boost
-  /// weight +1.  The radial coordinate \f$r\f$ has boost weight -1,
-  /// and the derivative with respect to time \f$d/du\f$ has boost
-  /// weight -1.  The asymptotic metric shear \f$r\, h\f$ has spin
-  /// weight -2 and boost weight -1.  In particular, it seems that
-  /// \f$r\, h = r^2\, \bar{\sigma}\f$.
-  ///
-  /// The Newman-Penrose scalars \f$\Psi_i\f$ have spin weight and
-  /// boost weight equal to \f$2-i\f$.  (E.g., \f$\Psi_4\f$ has \f$s =
-  /// b = -2\f$.)  However, when these are multiplied by the
-  /// appropriate factors of \f$r\f$ to find the leading-order terms,
-  /// they acquire boost weights.  In particular, we need to multiply
-  /// \f$\Psi_i\f$ by \f$r^{5-i}\f$ to get nonzero values at scri,
-  /// which adds \f$i-5\f$ to the boost weight, so that the asymptotic
-  /// NP scalars all have boost weight -3.
-  ///
-  /// \sa NPEdth
-  /// \sa NPEdthBar
-  /// \sa GHPEdthBar
-  /// \sa IntegrateNPEdth
-  /// \sa IntegrateNPEdthBar
-  /// \sa IntegrateGHPEdth
-  /// \sa IntegrateGHPEdthBar
-
-  const Waveform& A = *this;
-  const int NModes = A.NModes();
-  const int NTimes = A.NTimes();
-  const int s = A.SpinWeight();
-  const int lMin = std::abs(s+1);
-  Waveform EdthA(A);
-  EdthA.history << "this->GHPEdth();" << endl;
-
-  for(int i_m=0; i_m<NModes; ++i_m) {
-    const int l = A.LM(i_m)[0];
-    if(l<lMin) {
-      for(int i_t=0; i_t<NTimes; ++i_t) {
-        EdthA.SetData(i_m, i_t, 0.0);
-      }
-    } else {
-      const double factor = std::sqrt((l-s)*(l+s+1.)/2.);
-      for(int i_t=0; i_t<NTimes; ++i_t) {
-        EdthA.SetData(i_m, i_t, EdthA.Data(i_m, i_t)*factor);
-      }
-    }
-  }
-
-  EdthA.SetSpinWeight(A.SpinWeight()+1);
-  //EdthA.SetBoostWeight(A.BoostWeight()); // No change
-
-  return EdthA;
-}
-
-/// Geroch-Held-Penrose edth operator conjugate
-GWFrames::Waveform GWFrames::Waveform::GHPEdthBar() const {
-  /// This operator is the one defined by Geroch et al. (1973).  It
-  /// lowers the spin weight of any field on the sphere by 1, while
-  /// leaving the boost weight unchanged.
-  ///
-  /// This operator is very similar to the basic Newman-Penrose edth
-  /// operator, except that it preserves boost weights.  Its effect in
-  /// this implementation is identical (up to a factor of
-  /// \f$\sqrt{2}\f$) to the NP edth.  There is an additional term in
-  /// the definition of the GHP operator, but its value is zero.  (It
-  /// transforms nontrivially, though.)  In this context, we have
-  /// `NPEdthBar() = sqrt(2)*GHPEdthBar()`.
-  ///
-  /// The complex shear \f$\sigma\f$ has spin weight +2 and boost
-  /// weight +1.  The radial coordinate \f$r\f$ has boost weight -1,
-  /// and the derivative with respect to time \f$d/du\f$ has boost
-  /// weight -1.  The asymptotic metric shear \f$r\, h\f$ has spin
-  /// weight -2 and boost weight -1.  In particular, it seems that
-  /// \f$r\, h = r^2\, \bar{\sigma}\f$.
-  ///
-  /// The Newman-Penrose scalars \f$\Psi_i\f$ have spin weight and
-  /// boost weight equal to \f$2-i\f$.  (E.g., \f$\Psi_4\f$ has \f$s =
-  /// b = -2\f$.)  However, when these are multiplied by the
-  /// appropriate factors of \f$r\f$ to find the leading-order terms,
-  /// they acquire boost weights.  In particular, we need to multiply
-  /// \f$\Psi_i\f$ by \f$r^{5-i}\f$ to get nonzero values at scri,
-  /// which adds \f$i-5\f$ to the boost weight, so that the asymptotic
-  /// NP scalars all have boost weight -3.
-  ///
-  /// \sa NPEdth
-  /// \sa NPEdthBar
-  /// \sa GHPEdth
-  /// \sa IntegrateNPEdth
-  /// \sa IntegrateNPEdthBar
-  /// \sa IntegrateGHPEdth
-  /// \sa IntegrateGHPEdthBar
-
-  const Waveform& A = *this;
-  const int NModes = A.NModes();
-  const int NTimes = A.NTimes();
-  const int s = A.SpinWeight();
-  const int lMin = std::abs(s-1);
-  Waveform EdthBarA(A);
-  EdthBarA.history << "this->GHPEdthBar();" << endl;
-
-  for(int i_m=0; i_m<NModes; ++i_m) {
-    const int l = A.LM(i_m)[0];
-    if(l<lMin) {
-      for(int i_t=0; i_t<NTimes; ++i_t) {
-        EdthBarA.SetData(i_m, i_t, 0.0);
-      }
-    } else {
-      const double factor = -std::sqrt((l+s)*(l-s+1.)/2.);
-      for(int i_t=0; i_t<NTimes; ++i_t) {
-        EdthBarA.SetData(i_m, i_t, EdthBarA.Data(i_m, i_t)*factor);
-      }
-    }
-  }
-
-  EdthBarA.SetSpinWeight(A.SpinWeight()-1);
-  //EdthBarA.SetBoostWeight(A.BoostWeight()); // No change
-
-  return EdthBarA;
-}
-
-
-
-
-/// Integrate the Newman-Penrose edth operator
-GWFrames::Waveform GWFrames::Waveform::IntegrateNPEdth() const {
-  /// This operator inverts the action of the Newman-Penrose edth
-  /// operator.  This is not a perfect inverse, because the l=s-1 term
-  /// is set to zero.  To be precise, if `Waveform A` has spin weight
-  /// \f$s\f$, then `A.NPEdth().IntegrateNPEdth()` has the effect of
-  /// setting the \f$\ell=s\f$ term in `A` to zero.
-  ///
-  /// Note that the N-P edth operator does not preserve boost weights,
-  /// so the boost weight is set to the value of `WeightError`, which
-  /// is just meant to be large enough that it will give improbable
-  /// values if used.  This is not fool-proof.  See the GHP edth
-  /// operator for a weight-preserving version.
-  ///
-  /// \sa NPEdth
-  /// \sa NPEdthBar
-  /// \sa GHPEdth
-  /// \sa GHPEdthBar
-  /// \sa IntegrateNPEdthBar
-  /// \sa IntegrateGHPEdth
-  /// \sa IntegrateGHPEdthBar
-
-  const Waveform& A = *this;
-  const int NModes = A.NModes();
-  const int NTimes = A.NTimes();
-  const int s = A.SpinWeight()-1;
-  const int lMin = std::abs(s);
-  Waveform IntegralEdthA(A);
-  IntegralEdthA.history << "this->IntegrateNPEdth();" << endl;
-
-  for(int i_m=0; i_m<NModes; ++i_m) {
-    const int l = A.LM(i_m)[0];
-    const double factor = std::sqrt((l-s)*(l+s+1));
-    if(l<=lMin || factor == 0.0) {
-      for(int i_t=0; i_t<NTimes; ++i_t) {
-        IntegralEdthA.SetData(i_m, i_t, 0.0);
-      }
-    } else {
-      for(int i_t=0; i_t<NTimes; ++i_t) {
-        IntegralEdthA.SetData(i_m, i_t, IntegralEdthA.Data(i_m, i_t)/factor);
-      }
-    }
-  }
-
-  IntegralEdthA.SetSpinWeight(A.SpinWeight()-1);
-  IntegralEdthA.SetBoostWeight(WeightError);
-
-  return IntegralEdthA;
-}
-
-/// Integrate the Newman-Penrose edth operator conjugate
-GWFrames::Waveform GWFrames::Waveform::IntegrateNPEdthBar() const {
-  /// This operator inverts the action of the conjugated
-  /// Newman-Penrose edth operator.  This is not a perfect inverse,
-  /// because the l=s-1 term is set to zero.  To be precise, if
-  /// `Waveform A` has spin weight \f$s\f$, then
-  /// `A.NPEdthBar().IntegrateNPEdthBar()` has the effect of setting
-  /// the \f$\ell=s\f$ term in `A` to zero.
-  ///
-  /// Note that the N-P edth operator does not preserve boost weights,
-  /// so the boost weight is set to the value of `WeightError`, which
-  /// is just meant to be large enough that it will give improbable
-  /// values if used.  This is not fool-proof.  See the GHP edth
-  /// operator for a weight-preserving version.
-  ///
-  /// \sa NPEdth
-  /// \sa NPEdthBar
-  /// \sa GHPEdth
-  /// \sa GHPEdthBar
-  /// \sa IntegrateNPEdthBar
-  /// \sa IntegrateGHPEdth
-  /// \sa IntegrateGHPEdthBar
-
-  const Waveform& A = *this;
-  const int NModes = A.NModes();
-  const int NTimes = A.NTimes();
-  const int s = A.SpinWeight()+1;
-  const int lMin = std::abs(s);
-  Waveform IntegralEdthBarA(A);
-  IntegralEdthBarA.history << "this->IntegrateNPEdthBar();" << endl;
-
-  for(int i_m=0; i_m<NModes; ++i_m) {
-    const int l = A.LM(i_m)[0];
-    const double factor = -std::sqrt((l+s)*(l-s+1));
-    if(l<=lMin || factor == 0.0) {
-      for(int i_t=0; i_t<NTimes; ++i_t) {
-        IntegralEdthBarA.SetData(i_m, i_t, 0.0);
-      }
-    } else {
-      for(int i_t=0; i_t<NTimes; ++i_t) {
-        IntegralEdthBarA.SetData(i_m, i_t, IntegralEdthBarA.Data(i_m, i_t)/factor);
-      }
-    }
-  }
-
-  IntegralEdthBarA.SetSpinWeight(A.SpinWeight()+1);
-  IntegralEdthBarA.SetBoostWeight(WeightError);
-
-  return IntegralEdthBarA;
-}
-
-/// Integrate the Geroch-Held-Penrose edth operator
-GWFrames::Waveform GWFrames::Waveform::IntegrateGHPEdth() const {
-  /// This operator inverts the action of the GHP edth operator.  This
-  /// is not a perfect inverse, because the l=s-1 term is set to zero.
-  /// To be precise, if `Waveform A` has spins weight \f$s\f$, then
-  /// `A.GHPEdth().IntegrateGHPEdth()` has the effect of setting the
-  /// \f$\ell=s\f$ term in `A` to zero.
-  ///
-  /// \sa NPEdth
-  /// \sa NPEdthBar
-  /// \sa GHPEdth
-  /// \sa GHPEdthBar
-  /// \sa IntegrateNPEdth
-  /// \sa IntegrateNPEdthBar
-  /// \sa IntegrateGHPEdthBar
-
-  const Waveform& A = *this;
-  const int NModes = A.NModes();
-  const int NTimes = A.NTimes();
-  const int s = A.SpinWeight()-1;
-  const int lMin = std::abs(s);
-  Waveform IntegralEdthA(A);
-  IntegralEdthA.history << "this->IntegrateGHPEdth();" << endl;
-
-  for(int i_m=0; i_m<NModes; ++i_m) {
-    const int l = A.LM(i_m)[0];
-    const double factor = std::sqrt((l-s)*(l+s+1.)/2.);
-    if(l<=lMin || factor == 0.0) {
-      for(int i_t=0; i_t<NTimes; ++i_t) {
-        IntegralEdthA.SetData(i_m, i_t, 0.0);
-      }
-    } else {
-      for(int i_t=0; i_t<NTimes; ++i_t) {
-        IntegralEdthA.SetData(i_m, i_t, IntegralEdthA.Data(i_m, i_t)/factor);
-      }
-    }
-  }
-
-  IntegralEdthA.SetSpinWeight(A.SpinWeight()-1);
-  //IntegralEdthA.SetBoostWeight(A.BoostWeight()); // No change
-
-  return IntegralEdthA;
-}
-
-/// Integrate the Geroch-Held-Penrose edth operator conjugate
-GWFrames::Waveform GWFrames::Waveform::IntegrateGHPEdthBar() const {
-  /// This operator inverts the action of the GHP edth operator.  This
-  /// is not a perfect inverse, because the l=s-1 term is set to zero.
-  /// To be precise, if `Waveform A` has spins weight \f$s\f$, then
-  /// `A.GHPEdth().IntegrateGHPEdth()` has the effect of setting the
-  /// \f$\ell=s\f$ term in `A` to zero.
-  ///
-  /// \sa NPEdth
-  /// \sa NPEdthBar
-  /// \sa GHPEdth
-  /// \sa GHPEdthBar
-  /// \sa IntegrateNPEdth
-  /// \sa IntegrateNPEdthBar
-  /// \sa IntegrateGHPEdth
-
-  const Waveform& A = *this;
-  const int NModes = A.NModes();
-  const int NTimes = A.NTimes();
-  const int s = A.SpinWeight()+1;
-  const int lMin = std::abs(s);
-  Waveform IntegralEdthBarA(A);
-  IntegralEdthBarA.history << "this->GHPEdthBar();" << endl;
-
-  for(int i_m=0; i_m<NModes; ++i_m) {
-    const int l = A.LM(i_m)[0];
-    const double factor = -std::sqrt((l+s)*(l-s+1.)/2.);
-    if(l<lMin || factor == 0.0) {
-      for(int i_t=0; i_t<NTimes; ++i_t) {
-        IntegralEdthBarA.SetData(i_m, i_t, 0.0);
-      }
-    } else {
-      for(int i_t=0; i_t<NTimes; ++i_t) {
-        IntegralEdthBarA.SetData(i_m, i_t, IntegralEdthBarA.Data(i_m, i_t)/factor);
-      }
-    }
-  }
-
-  IntegralEdthBarA.SetSpinWeight(A.SpinWeight()+1);
-  //IntegralEdthBarA.SetBoostWeight(A.BoostWeight()); // No change
-
-  return IntegralEdthBarA;
-}
-
-
-// #ifndef DOXYGEN
-// #ifdef __restrict
-// #define restrict __restrict
-// #endif
-// using namespace std;
-// extern "C" {
-//   #include <stdlib.h>
-//   #include <stdio.h>
-//   #include <math.h>
-//   #include <complex.h>
-//   #include "fftw3.h"
-//   #include "alm.h"
-//   #include "wigner_d_halfpi.h"
-//   #include "spinsfast_forward.h"
-//   #include "spinsfast_backward.h"
+//   return EdthA;
 // }
-// #endif // DOXYGEN
 
-/// Re-interpolate data to new time slices given by this supertranslation
-GWFrames::Waveform GWFrames::Waveform::ApplySupertranslation(std::vector<std::complex<double> >& gamma) const {
-  /// This function takes the current data decomposed as spherical
-  /// harmonics on a given slicing, transforms to physical space,
-  /// re-interpolates the data at each point to a new set of time
-  /// slices, and transforms back to spherical-harmonic coefficients.
-  ///
-  /// The supertranslation data input `gamma` is a vector of
-  /// complex numbers representing the (scalar) spherical-harmonic
-  /// components of the supertranslation, stored in the order (0,0),
-  /// (1,-1), (1,0), (1,1), (2,-2), ...  The overall time translation
-  /// is given by the first component; the spatial translation is
-  /// given by the second through fourth componentes; higher
-  /// components give the proper supertranslations.  In particular, a
-  /// proper supertranslation will have its first four coefficients
-  /// equal to 0.0.
-  ///
-  /// Note that, for general spin-weighted spherical-harmonic
-  /// components \f${}_{s}a_{l,m}\f$, a real function results when
-  /// \f${}_{-s}a_{l,-m} = {}_{s}a_{l,m}^\ast\f$.  In particular, the
-  /// input `gamma` data are assumed to satisfy this formula with
-  /// \f$s=0\f$.
+// /// Newman-Penrose edth operator conjugate
+// GWFrames::Waveform GWFrames::Waveform::NPEdthBar() const {
+//   /// This operator is the one defined by Newman and Penrose (1966)
+//   /// and further described by Goldberg et al. (1967).  It lowers the
+//   /// spin weight of any field on the sphere by 1.  Note that this
+//   /// operator does not preserve boost weights in any nice way --
+//   /// except in special cases.  The GHP version does.  Note that, in
+//   /// this implementation, the only difference between the NP and GHP
+//   /// versions is the factor of \f$\sqrt{2}\f$.  The additional GHP
+//   /// term that keeps the boost weight meaningful is zero in any given
+//   /// frame -- though it transforms nontrivially.
+//   ///
+//   /// Note that the boost weight is set to the value of `WeightError`,
+//   /// which is just meant to be large enough that it will give
+//   /// improbable values if used.  This is not fool-proof.
+//   ///
+//   /// \sa NPEdth
+//   /// \sa GHPEdth
+//   /// \sa GHPEdthBar
+//   /// \sa IntegrateNPEdth
+//   /// \sa IntegrateNPEdthBar
+//   /// \sa IntegrateGHPEdth
+//   /// \sa IntegrateGHPEdthBar
 
-  // Find the max ell present in the input gamma data
-  int lMax=0;
-  for(; lMax<=SphericalFunctions::ellMax; ++lMax) {
-    if(N_lm(lMax)==int(gamma.size())) {
-      break;
-    }
-  }
+//   const Waveform& A = *this;
+//   const int NModes = A.NModes();
+//   const int NTimes = A.NTimes();
+//   const int s = A.SpinWeight();
+//   const int lMin = std::abs(s-1);
+//   Waveform EdthBarA(A);
+//   EdthBarA.history << "this->NPEdthBar();" << endl;
 
-  // Make sure gamma doesn't have more ell modes than SphericalFunctions::ellMax
-  if(lMax>=SphericalFunctions::ellMax) {
-    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-              << "\nError: Input supertranslation data has length " << gamma.size() << "."
-              << "\n       This is not a recognized length for spherical-harmonic data.\n"
-              << std::endl;
-    throw(GWFrames_VectorSizeMismatch);
-  }
-  const unsigned int Nlm = N_lm(lMax);
+//   for(int i_m=0; i_m<NModes; ++i_m) {
+//     const int l = A.LM(i_m)[0];
+//     if(l<lMin) {
+//       for(int i_t=0; i_t<NTimes; ++i_t) {
+//         EdthBarA.SetData(i_m, i_t, 0.0);
+//       }
+//     } else {
+//       const double factor = -std::sqrt((l+s)*(l-s+1));
+//       for(int i_t=0; i_t<NTimes; ++i_t) {
+//         EdthBarA.SetData(i_m, i_t, EdthBarA.Data(i_m, i_t)*factor);
+//       }
+//     }
+//   }
 
-  // Make sure the Waveform is in the inertial frame
-  if(frameType != GWFrames::Inertial) {
-    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-              << "\nError: Asking to supertranslate a Waveform in the " << GWFrames::WaveformFrameNames[frameType] << " frame."
-              << "\n       This only makes sense with Waveforms in the " << GWFrames::WaveformFrameNames[GWFrames::Inertial] << " frame.\n"
-              << std::endl;
-    throw(GWFrames_WrongFrameType);
-  }
+//   EdthBarA.SetSpinWeight(A.SpinWeight()-1);
+//   EdthBarA.SetBoostWeight(WeightError);
 
-  // Set up some constants
-  const Waveform& A = *this;
-  const unsigned int ntimes = A.NTimes();
-  const unsigned int nmodes = A.NModes();
-  const complex<double> zero(0.0,0.0);
-  const complex<double> ImaginaryI(0.0,1.0);
+//   return EdthBarA;
+// }
 
-  // Copy infrastructure to new Waveform
-  Waveform B;
-  B.spinweight = A.spinweight;
-  B.boostweight = A.boostweight;
-  B.history.str(A.history.str());
-  B.history.clear();
-  B.history.seekp(0, ios_base::end);
-  B.history << "*this = B.ApplySupertranslation([" << gamma[0];
-  for(unsigned int i=1; i<gamma.size(); ++i) {
-    B.history << ", " << gamma[i];
-  }
-  B. history << "]);"<< std::endl;
-  B.frame = A.frame;
-  B.frameType = A.frameType;
-  B.dataType = A.dataType;
-  B.rIsScaledOut = A.rIsScaledOut;
-  B.mIsScaledOut = A.mIsScaledOut;
-  B.lm = A.lm;
+// /// Geroch-Held-Penrose edth operator
+// GWFrames::Waveform GWFrames::Waveform::GHPEdth() const {
+//   /// This operator is the one defined by Geroch et al. (1973).  It
+//   /// raises the spin weight of any field on the sphere by 1, while
+//   /// leaving the boost weight unchanged.
+//   ///
+//   /// This operator is very similar to the basic Newman-Penrose edth
+//   /// operator, except that it preserves boost weights.  Its effect in
+//   /// this implementation is identical (up to a factor of
+//   /// \f$\sqrt{2}\f$) to the NP edth.  There is an additional term in
+//   /// the definition of the GHP operator, but its value is zero.  (It
+//   /// transforms nontrivially, though.)  In this context, we have
+//   /// `NPEdth() = sqrt(2)*GHPEdth()`.
+//   ///
+//   /// The complex shear \f$\sigma\f$ has spin weight +2 and boost
+//   /// weight +1.  The radial coordinate \f$r\f$ has boost weight -1,
+//   /// and the derivative with respect to time \f$d/du\f$ has boost
+//   /// weight -1.  The asymptotic metric shear \f$r\, h\f$ has spin
+//   /// weight -2 and boost weight -1.  In particular, it seems that
+//   /// \f$r\, h = r^2\, \bar{\sigma}\f$.
+//   ///
+//   /// The Newman-Penrose scalars \f$\Psi_i\f$ have spin weight and
+//   /// boost weight equal to \f$2-i\f$.  (E.g., \f$\Psi_4\f$ has \f$s =
+//   /// b = -2\f$.)  However, when these are multiplied by the
+//   /// appropriate factors of \f$r\f$ to find the leading-order terms,
+//   /// they acquire boost weights.  In particular, we need to multiply
+//   /// \f$\Psi_i\f$ by \f$r^{5-i}\f$ to get nonzero values at scri,
+//   /// which adds \f$i-5\f$ to the boost weight, so that the asymptotic
+//   /// NP scalars all have boost weight -3.
+//   ///
+//   /// \sa NPEdth
+//   /// \sa NPEdthBar
+//   /// \sa GHPEdthBar
+//   /// \sa IntegrateNPEdth
+//   /// \sa IntegrateNPEdthBar
+//   /// \sa IntegrateGHPEdth
+//   /// \sa IntegrateGHPEdthBar
 
-  // These numbers determine the equi-angular grid on which we will do
-  // the interpolation.  For best accuracy, have N_phi > 2*lMax and
-  // N_theta > 2*lMax; but for speed, don't make them much greater.
-  const unsigned int N_phi = 2*lMax + 1;
-  const unsigned int N_theta = 2*lMax + 1;
-  const unsigned int N_tot = N_phi*N_theta;
+//   const Waveform& A = *this;
+//   const int NModes = A.NModes();
+//   const int NTimes = A.NTimes();
+//   const int s = A.SpinWeight();
+//   const int lMin = std::abs(s+1);
+//   Waveform EdthA(A);
+//   EdthA.history << "this->GHPEdth();" << endl;
 
-  // Transform times to physical space
-  vector<complex<double> > DeltaT_complex(N_tot, zero);
-  spinsfast_salm2map(reinterpret_cast<fftw_complex*>(&gamma[0]),
-                     reinterpret_cast<fftw_complex*>(&DeltaT_complex[0]),
-                     0, N_theta, N_phi, lMax);
-  vector<double> DeltaT(DeltaT_complex.size());
-  for(unsigned int i=0; i<DeltaT.size(); ++i) {
-    DeltaT[i] = real(DeltaT_complex[i]);
-  }
+//   for(int i_m=0; i_m<NModes; ++i_m) {
+//     const int l = A.LM(i_m)[0];
+//     if(l<lMin) {
+//       for(int i_t=0; i_t<NTimes; ++i_t) {
+//         EdthA.SetData(i_m, i_t, 0.0);
+//       }
+//     } else {
+//       const double factor = std::sqrt((l-s)*(l+s+1.)/2.);
+//       for(int i_t=0; i_t<NTimes; ++i_t) {
+//         EdthA.SetData(i_m, i_t, EdthA.Data(i_m, i_t)*factor);
+//       }
+//     }
+//   }
 
-  // Find largest and smallest time excursions
-  double MinDeltaT = 0.0;
-  double MaxDeltaT = 0.0;
-  for(unsigned int i_t=0; i_t<N_tot; ++i_t) {
-    // cerr << "DeltaT[" << i_t << "] = " << DeltaT[i_t] << endl;
-    if(DeltaT[i_t] < MinDeltaT) { MinDeltaT = DeltaT[i_t]; }
-    if(DeltaT[i_t] > MaxDeltaT) { MaxDeltaT = DeltaT[i_t]; }
-  }
-  // cerr << "Min/MaxDeltaT: " << MinDeltaT << " " << MaxDeltaT << endl;
+//   EdthA.SetSpinWeight(A.SpinWeight()+1);
+//   //EdthA.SetBoostWeight(A.BoostWeight()); // No change
 
-  // Set up new time slices, beginning with an offset of MinDeltaT
-  // and ending with an offset of -MaxDeltaT (so that the
-  // interpolation does not need to extrapolate)
-  const double FirstT = t[0]-MinDeltaT;
-  const double LastT = t.back()-MaxDeltaT;
-  unsigned int i_Min, i_Max;
-  for(i_Min=0; i_Min<ntimes; ++i_Min) {
-    if(t[i_Min]>=FirstT) {
-      break;
-    }
-  }
-  for(i_Max=ntimes-1; i_Max>0; --i_Max) {
-    if(t[i_Max]<=LastT) {
-      break;
-    }
-  }
-  B.t = std::vector<double>(t.begin()+i_Min, t.begin()+i_Max+1);
-  const unsigned int ntimesB = B.NTimes();
-  B.ResizeData(nmodes, ntimesB);
-  // cerr << "First/LastT: " << FirstT << " " << LastT << endl;
-  // cerr << "i_Min/Max: " << i_Min << " " << i_Max << endl;
-  // cerr << "Times: " << B.t[0] << " " << B.t.back() << endl;
+//   return EdthA;
+// }
 
-  // Storage arrays
-  std::vector<std::complex<double> > alm(Nlm); // Work array
-  std::vector<std::complex<double> > mapA(N_tot); // Work array
-  std::vector<std::vector<double> > fARe(N_tot, std::vector<double>(ntimes));
-  std::vector<std::vector<double> > fAIm(N_tot, std::vector<double>(ntimes));
-  std::vector<std::vector<std::complex<double> > > fB(ntimesB, std::vector<std::complex<double> >(N_tot));
+// /// Geroch-Held-Penrose edth operator conjugate
+// GWFrames::Waveform GWFrames::Waveform::GHPEdthBar() const {
+//   /// This operator is the one defined by Geroch et al. (1973).  It
+//   /// lowers the spin weight of any field on the sphere by 1, while
+//   /// leaving the boost weight unchanged.
+//   ///
+//   /// This operator is very similar to the basic Newman-Penrose edth
+//   /// operator, except that it preserves boost weights.  Its effect in
+//   /// this implementation is identical (up to a factor of
+//   /// \f$\sqrt{2}\f$) to the NP edth.  There is an additional term in
+//   /// the definition of the GHP operator, but its value is zero.  (It
+//   /// transforms nontrivially, though.)  In this context, we have
+//   /// `NPEdthBar() = sqrt(2)*GHPEdthBar()`.
+//   ///
+//   /// The complex shear \f$\sigma\f$ has spin weight +2 and boost
+//   /// weight +1.  The radial coordinate \f$r\f$ has boost weight -1,
+//   /// and the derivative with respect to time \f$d/du\f$ has boost
+//   /// weight -1.  The asymptotic metric shear \f$r\, h\f$ has spin
+//   /// weight -2 and boost weight -1.  In particular, it seems that
+//   /// \f$r\, h = r^2\, \bar{\sigma}\f$.
+//   ///
+//   /// The Newman-Penrose scalars \f$\Psi_i\f$ have spin weight and
+//   /// boost weight equal to \f$2-i\f$.  (E.g., \f$\Psi_4\f$ has \f$s =
+//   /// b = -2\f$.)  However, when these are multiplied by the
+//   /// appropriate factors of \f$r\f$ to find the leading-order terms,
+//   /// they acquire boost weights.  In particular, we need to multiply
+//   /// \f$\Psi_i\f$ by \f$r^{5-i}\f$ to get nonzero values at scri,
+//   /// which adds \f$i-5\f$ to the boost weight, so that the asymptotic
+//   /// NP scalars all have boost weight -3.
+//   ///
+//   /// \sa NPEdth
+//   /// \sa NPEdthBar
+//   /// \sa GHPEdth
+//   /// \sa IntegrateNPEdth
+//   /// \sa IntegrateNPEdthBar
+//   /// \sa IntegrateGHPEdth
+//   /// \sa IntegrateGHPEdthBar
 
-  // Transform to physical space (before interpolation)
-  for(unsigned int i_t=0; i_t<ntimes; ++i_t) {
-    // Get alm data at this time
-    for(unsigned int i_m=0; i_m<nmodes; ++i_m) {
-      alm[i_m] = A.Data(i_m,i_t);
-    }
-    // Transform
-    spinsfast_salm2map(reinterpret_cast<fftw_complex*>(&alm[0]),
-                       reinterpret_cast<fftw_complex*>(&mapA[0]),
-                       0, N_theta, N_phi, lMax);
-    // Save to main storage arrays
-    for(unsigned int i_p=0; i_p<N_tot; ++i_p) {
-      fARe[i_p][i_t] = real(mapA[i_p]);
-      fAIm[i_p][i_t] = imag(mapA[i_p]);
-    }
-  }
+//   const Waveform& A = *this;
+//   const int NModes = A.NModes();
+//   const int NTimes = A.NTimes();
+//   const int s = A.SpinWeight();
+//   const int lMin = std::abs(s-1);
+//   Waveform EdthBarA(A);
+//   EdthBarA.history << "this->GHPEdthBar();" << endl;
 
-  // Declare the GSL interpolators for the data
-  gsl_interp_accel* accRe = gsl_interp_accel_alloc();
-  gsl_interp_accel* accIm = gsl_interp_accel_alloc();
-  gsl_spline* splineRe = gsl_spline_alloc(gsl_interp_cspline, ntimes);
-  gsl_spline* splineIm = gsl_spline_alloc(gsl_interp_cspline, ntimes);
+//   for(int i_m=0; i_m<NModes; ++i_m) {
+//     const int l = A.LM(i_m)[0];
+//     if(l<lMin) {
+//       for(int i_t=0; i_t<NTimes; ++i_t) {
+//         EdthBarA.SetData(i_m, i_t, 0.0);
+//       }
+//     } else {
+//       const double factor = -std::sqrt((l+s)*(l-s+1.)/2.);
+//       for(int i_t=0; i_t<NTimes; ++i_t) {
+//         EdthBarA.SetData(i_m, i_t, EdthBarA.Data(i_m, i_t)*factor);
+//       }
+//     }
+//   }
 
-  // Loop over all points doing interpolation
-  // cerr << "Begin\n=====" << endl;
-  for(unsigned int i_p=0; i_p<N_tot; ++i_p) {
-    const double t_p = DeltaT[i_p];
-    // cerr << i_p << ", " << t_p << endl;
-    // Initialize interpolators for this point
-    gsl_spline_init(splineRe, &(A.t)[0], &fARe[i_p][0], ntimes);
-    gsl_spline_init(splineIm, &(A.t)[0], &fAIm[i_p][0], ntimes);
-    // Loop over all times at a given point
-    for(unsigned int i_t=0; i_t<ntimesB; ++i_t) {
-      // cerr << "\t" << B.t[i_t] << flush;
-      // Interpolate data onto new time slices
-      fB[i_t][i_p] = complex<double>( gsl_spline_eval(splineRe, B.t[i_t]+t_p, accRe), gsl_spline_eval(splineIm, B.t[i_t]+t_p, accIm) );
-      // cerr << "+" << endl;
-    }
-    // cerr << "+" << endl;
-  }
-  // cerr << "End\n===" << endl;
+//   EdthBarA.SetSpinWeight(A.SpinWeight()-1);
+//   //EdthBarA.SetBoostWeight(A.BoostWeight()); // No change
 
-  // Free the data and interpolators
-  fARe.clear();
-  fAIm.clear();
-  gsl_interp_accel_free(accRe);
-  gsl_interp_accel_free(accIm);
-  gsl_spline_free(splineRe);
-  gsl_spline_free(splineIm);
-
-  // Transform back to spectral space (after interpolation)
-  for(unsigned int i_t=0; i_t<ntimesB; ++i_t) {
-    // Transform
-    spinsfast_map2salm(reinterpret_cast<fftw_complex*>(&fB[i_t][0]),
-                       reinterpret_cast<fftw_complex*>(&alm[0]),
-                       0, N_theta, N_phi, lMax);
-    // Save to main storage arrays
-    for(unsigned int i_m=0; i_m<Nlm; ++i_m) {
-      B.data[i_m][i_t] = alm[i_m];
-    }
-  }
-
-  return B;
-}
+//   return EdthBarA;
+// }
 
 
-// /// Apply a boost to a boost-weighted function
-// GWFrames::Waveform GWFrames::Waveform::Boost(const std::vector<double>& v) const {
+
+
+// /// Integrate the Newman-Penrose edth operator
+// GWFrames::Waveform GWFrames::Waveform::IntegrateNPEdth() const {
+//   /// This operator inverts the action of the Newman-Penrose edth
+//   /// operator.  This is not a perfect inverse, because the l=s-1 term
+//   /// is set to zero.  To be precise, if `Waveform A` has spin weight
+//   /// \f$s\f$, then `A.NPEdth().IntegrateNPEdth()` has the effect of
+//   /// setting the \f$\ell=s\f$ term in `A` to zero.
+//   ///
+//   /// Note that the N-P edth operator does not preserve boost weights,
+//   /// so the boost weight is set to the value of `WeightError`, which
+//   /// is just meant to be large enough that it will give improbable
+//   /// values if used.  This is not fool-proof.  See the GHP edth
+//   /// operator for a weight-preserving version.
+//   ///
+//   /// \sa NPEdth
+//   /// \sa NPEdthBar
+//   /// \sa GHPEdth
+//   /// \sa GHPEdthBar
+//   /// \sa IntegrateNPEdthBar
+//   /// \sa IntegrateGHPEdth
+//   /// \sa IntegrateGHPEdthBar
+
+//   const Waveform& A = *this;
+//   const int NModes = A.NModes();
+//   const int NTimes = A.NTimes();
+//   const int s = A.SpinWeight()-1;
+//   const int lMin = std::abs(s);
+//   Waveform IntegralEdthA(A);
+//   IntegralEdthA.history << "this->IntegrateNPEdth();" << endl;
+
+//   for(int i_m=0; i_m<NModes; ++i_m) {
+//     const int l = A.LM(i_m)[0];
+//     const double factor = std::sqrt((l-s)*(l+s+1));
+//     if(l<=lMin || factor == 0.0) {
+//       for(int i_t=0; i_t<NTimes; ++i_t) {
+//         IntegralEdthA.SetData(i_m, i_t, 0.0);
+//       }
+//     } else {
+//       for(int i_t=0; i_t<NTimes; ++i_t) {
+//         IntegralEdthA.SetData(i_m, i_t, IntegralEdthA.Data(i_m, i_t)/factor);
+//       }
+//     }
+//   }
+
+//   IntegralEdthA.SetSpinWeight(A.SpinWeight()-1);
+//   IntegralEdthA.SetBoostWeight(WeightError);
+
+//   return IntegralEdthA;
+// }
+
+// /// Integrate the Newman-Penrose edth operator conjugate
+// GWFrames::Waveform GWFrames::Waveform::IntegrateNPEdthBar() const {
+//   /// This operator inverts the action of the conjugated
+//   /// Newman-Penrose edth operator.  This is not a perfect inverse,
+//   /// because the l=s-1 term is set to zero.  To be precise, if
+//   /// `Waveform A` has spin weight \f$s\f$, then
+//   /// `A.NPEdthBar().IntegrateNPEdthBar()` has the effect of setting
+//   /// the \f$\ell=s\f$ term in `A` to zero.
+//   ///
+//   /// Note that the N-P edth operator does not preserve boost weights,
+//   /// so the boost weight is set to the value of `WeightError`, which
+//   /// is just meant to be large enough that it will give improbable
+//   /// values if used.  This is not fool-proof.  See the GHP edth
+//   /// operator for a weight-preserving version.
+//   ///
+//   /// \sa NPEdth
+//   /// \sa NPEdthBar
+//   /// \sa GHPEdth
+//   /// \sa GHPEdthBar
+//   /// \sa IntegrateNPEdthBar
+//   /// \sa IntegrateGHPEdth
+//   /// \sa IntegrateGHPEdthBar
+
+//   const Waveform& A = *this;
+//   const int NModes = A.NModes();
+//   const int NTimes = A.NTimes();
+//   const int s = A.SpinWeight()+1;
+//   const int lMin = std::abs(s);
+//   Waveform IntegralEdthBarA(A);
+//   IntegralEdthBarA.history << "this->IntegrateNPEdthBar();" << endl;
+
+//   for(int i_m=0; i_m<NModes; ++i_m) {
+//     const int l = A.LM(i_m)[0];
+//     const double factor = -std::sqrt((l+s)*(l-s+1));
+//     if(l<=lMin || factor == 0.0) {
+//       for(int i_t=0; i_t<NTimes; ++i_t) {
+//         IntegralEdthBarA.SetData(i_m, i_t, 0.0);
+//       }
+//     } else {
+//       for(int i_t=0; i_t<NTimes; ++i_t) {
+//         IntegralEdthBarA.SetData(i_m, i_t, IntegralEdthBarA.Data(i_m, i_t)/factor);
+//       }
+//     }
+//   }
+
+//   IntegralEdthBarA.SetSpinWeight(A.SpinWeight()+1);
+//   IntegralEdthBarA.SetBoostWeight(WeightError);
+
+//   return IntegralEdthBarA;
+// }
+
+// /// Integrate the Geroch-Held-Penrose edth operator
+// GWFrames::Waveform GWFrames::Waveform::IntegrateGHPEdth() const {
+//   /// This operator inverts the action of the GHP edth operator.  This
+//   /// is not a perfect inverse, because the l=s-1 term is set to zero.
+//   /// To be precise, if `Waveform A` has spins weight \f$s\f$, then
+//   /// `A.GHPEdth().IntegrateGHPEdth()` has the effect of setting the
+//   /// \f$\ell=s\f$ term in `A` to zero.
+//   ///
+//   /// \sa NPEdth
+//   /// \sa NPEdthBar
+//   /// \sa GHPEdth
+//   /// \sa GHPEdthBar
+//   /// \sa IntegrateNPEdth
+//   /// \sa IntegrateNPEdthBar
+//   /// \sa IntegrateGHPEdthBar
+
+//   const Waveform& A = *this;
+//   const int NModes = A.NModes();
+//   const int NTimes = A.NTimes();
+//   const int s = A.SpinWeight()-1;
+//   const int lMin = std::abs(s);
+//   Waveform IntegralEdthA(A);
+//   IntegralEdthA.history << "this->IntegrateGHPEdth();" << endl;
+
+//   for(int i_m=0; i_m<NModes; ++i_m) {
+//     const int l = A.LM(i_m)[0];
+//     const double factor = std::sqrt((l-s)*(l+s+1.)/2.);
+//     if(l<=lMin || factor == 0.0) {
+//       for(int i_t=0; i_t<NTimes; ++i_t) {
+//         IntegralEdthA.SetData(i_m, i_t, 0.0);
+//       }
+//     } else {
+//       for(int i_t=0; i_t<NTimes; ++i_t) {
+//         IntegralEdthA.SetData(i_m, i_t, IntegralEdthA.Data(i_m, i_t)/factor);
+//       }
+//     }
+//   }
+
+//   IntegralEdthA.SetSpinWeight(A.SpinWeight()-1);
+//   //IntegralEdthA.SetBoostWeight(A.BoostWeight()); // No change
+
+//   return IntegralEdthA;
+// }
+
+// /// Integrate the Geroch-Held-Penrose edth operator conjugate
+// GWFrames::Waveform GWFrames::Waveform::IntegrateGHPEdthBar() const {
+//   /// This operator inverts the action of the GHP edth operator.  This
+//   /// is not a perfect inverse, because the l=s-1 term is set to zero.
+//   /// To be precise, if `Waveform A` has spins weight \f$s\f$, then
+//   /// `A.GHPEdth().IntegrateGHPEdth()` has the effect of setting the
+//   /// \f$\ell=s\f$ term in `A` to zero.
+//   ///
+//   /// \sa NPEdth
+//   /// \sa NPEdthBar
+//   /// \sa GHPEdth
+//   /// \sa GHPEdthBar
+//   /// \sa IntegrateNPEdth
+//   /// \sa IntegrateNPEdthBar
+//   /// \sa IntegrateGHPEdth
+
+//   const Waveform& A = *this;
+//   const int NModes = A.NModes();
+//   const int NTimes = A.NTimes();
+//   const int s = A.SpinWeight()+1;
+//   const int lMin = std::abs(s);
+//   Waveform IntegralEdthBarA(A);
+//   IntegralEdthBarA.history << "this->GHPEdthBar();" << endl;
+
+//   for(int i_m=0; i_m<NModes; ++i_m) {
+//     const int l = A.LM(i_m)[0];
+//     const double factor = -std::sqrt((l+s)*(l-s+1.)/2.);
+//     if(l<lMin || factor == 0.0) {
+//       for(int i_t=0; i_t<NTimes; ++i_t) {
+//         IntegralEdthBarA.SetData(i_m, i_t, 0.0);
+//       }
+//     } else {
+//       for(int i_t=0; i_t<NTimes; ++i_t) {
+//         IntegralEdthBarA.SetData(i_m, i_t, IntegralEdthBarA.Data(i_m, i_t)/factor);
+//       }
+//     }
+//   }
+
+//   IntegralEdthBarA.SetSpinWeight(A.SpinWeight()+1);
+//   //IntegralEdthBarA.SetBoostWeight(A.BoostWeight()); // No change
+
+//   return IntegralEdthBarA;
+// }
+
+
+// // #ifndef DOXYGEN
+// // #ifdef __restrict
+// // #define restrict __restrict
+// // #endif
+// // using namespace std;
+// // extern "C" {
+// //   #include <stdlib.h>
+// //   #include <stdio.h>
+// //   #include <math.h>
+// //   #include <complex.h>
+// //   #include "fftw3.h"
+// //   #include "alm.h"
+// //   #include "wigner_d_halfpi.h"
+// //   #include "spinsfast_forward.h"
+// //   #include "spinsfast_backward.h"
+// // }
+// // #endif // DOXYGEN
+
+// /// Re-interpolate data to new time slices given by this supertranslation
+// GWFrames::Waveform GWFrames::Waveform::ApplySupertranslation(std::vector<std::complex<double> >& gamma) const {
+//   /// This function takes the current data decomposed as spherical
+//   /// harmonics on a given slicing, transforms to physical space,
+//   /// re-interpolates the data at each point to a new set of time
+//   /// slices, and transforms back to spherical-harmonic coefficients.
+//   ///
+//   /// The supertranslation data input `gamma` is a vector of
+//   /// complex numbers representing the (scalar) spherical-harmonic
+//   /// components of the supertranslation, stored in the order (0,0),
+//   /// (1,-1), (1,0), (1,1), (2,-2), ...  The overall time translation
+//   /// is given by the first component; the spatial translation is
+//   /// given by the second through fourth componentes; higher
+//   /// components give the proper supertranslations.  In particular, a
+//   /// proper supertranslation will have its first four coefficients
+//   /// equal to 0.0.
+//   ///
+//   /// Note that, for general spin-weighted spherical-harmonic
+//   /// components \f${}_{s}a_{l,m}\f$, a real function results when
+//   /// \f${}_{-s}a_{l,-m} = {}_{s}a_{l,m}^\ast\f$.  In particular, the
+//   /// input `gamma` data are assumed to satisfy this formula with
+//   /// \f$s=0\f$.
+
+//   // Find the max ell present in the input gamma data
+//   int lMax=0;
+//   for(; lMax<=SphericalFunctions::ellMax; ++lMax) {
+//     if(N_lm(lMax)==int(gamma.size())) {
+//       break;
+//     }
+//   }
+
+//   // Make sure gamma doesn't have more ell modes than SphericalFunctions::ellMax
+//   if(lMax>=SphericalFunctions::ellMax) {
+//     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+//               << "\nError: Input supertranslation data has length " << gamma.size() << "."
+//               << "\n       This is not a recognized length for spherical-harmonic data.\n"
+//               << std::endl;
+//     throw(GWFrames_VectorSizeMismatch);
+//   }
+//   const unsigned int Nlm = N_lm(lMax);
+
+//   // Make sure the Waveform is in the inertial frame
+//   if(frameType != GWFrames::Inertial) {
+//     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+//               << "\nError: Asking to supertranslate a Waveform in the " << GWFrames::WaveformFrameNames[frameType] << " frame."
+//               << "\n       This only makes sense with Waveforms in the " << GWFrames::WaveformFrameNames[GWFrames::Inertial] << " frame.\n"
+//               << std::endl;
+//     throw(GWFrames_WrongFrameType);
+//   }
+
+//   // Set up some constants
+//   const Waveform& A = *this;
+//   const unsigned int ntimes = A.NTimes();
+//   const unsigned int nmodes = A.NModes();
+//   const complex<double> zero(0.0,0.0);
+//   const complex<double> ImaginaryI(0.0,1.0);
+
+//   // Copy infrastructure to new Waveform
+//   Waveform B;
+//   B.spinweight = A.spinweight;
+//   B.boostweight = A.boostweight;
+//   B.history.str(A.history.str());
+//   B.history.clear();
+//   B.history.seekp(0, ios_base::end);
+//   B.history << "*this = B.ApplySupertranslation([" << gamma[0];
+//   for(unsigned int i=1; i<gamma.size(); ++i) {
+//     B.history << ", " << gamma[i];
+//   }
+//   B. history << "]);"<< std::endl;
+//   B.frame = A.frame;
+//   B.frameType = A.frameType;
+//   B.dataType = A.dataType;
+//   B.rIsScaledOut = A.rIsScaledOut;
+//   B.mIsScaledOut = A.mIsScaledOut;
+//   B.lm = A.lm;
+
+//   // These numbers determine the equi-angular grid on which we will do
+//   // the interpolation.  For best accuracy, have N_phi > 2*lMax and
+//   // N_theta > 2*lMax; but for speed, don't make them much greater.
+//   const unsigned int N_phi = 2*lMax + 1;
+//   const unsigned int N_theta = 2*lMax + 1;
+//   const unsigned int N_tot = N_phi*N_theta;
+
+//   // Transform times to physical space
+//   vector<complex<double> > DeltaT_complex(N_tot, zero);
+//   spinsfast_salm2map(reinterpret_cast<fftw_complex*>(&gamma[0]),
+//                      reinterpret_cast<fftw_complex*>(&DeltaT_complex[0]),
+//                      0, N_theta, N_phi, lMax);
+//   vector<double> DeltaT(DeltaT_complex.size());
+//   for(unsigned int i=0; i<DeltaT.size(); ++i) {
+//     DeltaT[i] = real(DeltaT_complex[i]);
+//   }
+
+//   // Find largest and smallest time excursions
+//   double MinDeltaT = 0.0;
+//   double MaxDeltaT = 0.0;
+//   for(unsigned int i_t=0; i_t<N_tot; ++i_t) {
+//     // cerr << "DeltaT[" << i_t << "] = " << DeltaT[i_t] << endl;
+//     if(DeltaT[i_t] < MinDeltaT) { MinDeltaT = DeltaT[i_t]; }
+//     if(DeltaT[i_t] > MaxDeltaT) { MaxDeltaT = DeltaT[i_t]; }
+//   }
+//   // cerr << "Min/MaxDeltaT: " << MinDeltaT << " " << MaxDeltaT << endl;
+
+//   // Set up new time slices, beginning with an offset of MinDeltaT
+//   // and ending with an offset of -MaxDeltaT (so that the
+//   // interpolation does not need to extrapolate)
+//   const double FirstT = t[0]-MinDeltaT;
+//   const double LastT = t.back()-MaxDeltaT;
+//   unsigned int i_Min, i_Max;
+//   for(i_Min=0; i_Min<ntimes; ++i_Min) {
+//     if(t[i_Min]>=FirstT) {
+//       break;
+//     }
+//   }
+//   for(i_Max=ntimes-1; i_Max>0; --i_Max) {
+//     if(t[i_Max]<=LastT) {
+//       break;
+//     }
+//   }
+//   B.t = std::vector<double>(t.begin()+i_Min, t.begin()+i_Max+1);
+//   const unsigned int ntimesB = B.NTimes();
+//   B.ResizeData(nmodes, ntimesB);
+//   // cerr << "First/LastT: " << FirstT << " " << LastT << endl;
+//   // cerr << "i_Min/Max: " << i_Min << " " << i_Max << endl;
+//   // cerr << "Times: " << B.t[0] << " " << B.t.back() << endl;
+
+//   // Storage arrays
+//   std::vector<std::complex<double> > alm(Nlm); // Work array
+//   std::vector<std::complex<double> > mapA(N_tot); // Work array
+//   std::vector<std::vector<double> > fARe(N_tot, std::vector<double>(ntimes));
+//   std::vector<std::vector<double> > fAIm(N_tot, std::vector<double>(ntimes));
+//   std::vector<std::vector<std::complex<double> > > fB(ntimesB, std::vector<std::complex<double> >(N_tot));
+
+//   // Transform to physical space (before interpolation)
+//   for(unsigned int i_t=0; i_t<ntimes; ++i_t) {
+//     // Get alm data at this time
+//     for(unsigned int i_m=0; i_m<nmodes; ++i_m) {
+//       alm[i_m] = A.Data(i_m,i_t);
+//     }
+//     // Transform
+//     spinsfast_salm2map(reinterpret_cast<fftw_complex*>(&alm[0]),
+//                        reinterpret_cast<fftw_complex*>(&mapA[0]),
+//                        0, N_theta, N_phi, lMax);
+//     // Save to main storage arrays
+//     for(unsigned int i_p=0; i_p<N_tot; ++i_p) {
+//       fARe[i_p][i_t] = real(mapA[i_p]);
+//       fAIm[i_p][i_t] = imag(mapA[i_p]);
+//     }
+//   }
+
+//   // Declare the GSL interpolators for the data
+//   gsl_interp_accel* accRe = gsl_interp_accel_alloc();
+//   gsl_interp_accel* accIm = gsl_interp_accel_alloc();
+//   gsl_spline* splineRe = gsl_spline_alloc(gsl_interp_cspline, ntimes);
+//   gsl_spline* splineIm = gsl_spline_alloc(gsl_interp_cspline, ntimes);
+
+//   // Loop over all points doing interpolation
+//   // cerr << "Begin\n=====" << endl;
+//   for(unsigned int i_p=0; i_p<N_tot; ++i_p) {
+//     const double t_p = DeltaT[i_p];
+//     // cerr << i_p << ", " << t_p << endl;
+//     // Initialize interpolators for this point
+//     gsl_spline_init(splineRe, &(A.t)[0], &fARe[i_p][0], ntimes);
+//     gsl_spline_init(splineIm, &(A.t)[0], &fAIm[i_p][0], ntimes);
+//     // Loop over all times at a given point
+//     for(unsigned int i_t=0; i_t<ntimesB; ++i_t) {
+//       // cerr << "\t" << B.t[i_t] << flush;
+//       // Interpolate data onto new time slices
+//       fB[i_t][i_p] = complex<double>( gsl_spline_eval(splineRe, B.t[i_t]+t_p, accRe), gsl_spline_eval(splineIm, B.t[i_t]+t_p, accIm) );
+//       // cerr << "+" << endl;
+//     }
+//     // cerr << "+" << endl;
+//   }
+//   // cerr << "End\n===" << endl;
+
+//   // Free the data and interpolators
+//   fARe.clear();
+//   fAIm.clear();
+//   gsl_interp_accel_free(accRe);
+//   gsl_interp_accel_free(accIm);
+//   gsl_spline_free(splineRe);
+//   gsl_spline_free(splineIm);
+
+//   // Transform back to spectral space (after interpolation)
+//   for(unsigned int i_t=0; i_t<ntimesB; ++i_t) {
+//     // Transform
+//     spinsfast_map2salm(reinterpret_cast<fftw_complex*>(&fB[i_t][0]),
+//                        reinterpret_cast<fftw_complex*>(&alm[0]),
+//                        0, N_theta, N_phi, lMax);
+//     // Save to main storage arrays
+//     for(unsigned int i_m=0; i_m<Nlm; ++i_m) {
+//       B.data[i_m][i_t] = alm[i_m];
+//     }
+//   }
+
+//   return B;
+// }
+
+
+// // /// Apply a boost to a boost-weighted function
+// // GWFrames::Waveform GWFrames::Waveform::Boost(const std::vector<double>& v) const {
+// //   /// This function does three things.  First, it evaluates the
+// //   /// Waveform on what will become an equi-angular grid after
+// //   /// transformation by the boost.  Second, it multiplies each of
+// //   /// those points by the appropriate conformal factor
+// //   /// \f$K^b(\vartheta, \varphi)\f$, where \f$b\f$ is the boost weight
+// //   /// stored with the Waveform.  Finally, it transforms back to
+// //   /// Fourier space using that new equi-angular grid.
+
+
+// //   std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Not properly implemented yet." << std::endl;
+// //   throw(GWFrames_NotYetImplemented);
+
+// //   //return Waveform();
+// //   // return B;
+// // }
+
+
+// /// Apply a boost to Psi4 data
+// GWFrames::Waveform& GWFrames::Waveform::BoostPsi4(const std::vector<std::vector<double> >& v) {
 //   /// This function does three things.  First, it evaluates the
 //   /// Waveform on what will become an equi-angular grid after
-//   /// transformation by the boost.  Second, it multiplies each of
-//   /// those points by the appropriate conformal factor
-//   /// \f$K^b(\vartheta, \varphi)\f$, where \f$b\f$ is the boost weight
-//   /// stored with the Waveform.  Finally, it transforms back to
+//   /// transformation by the boost.  Second, at each point of that
+//   /// grid, it takes the appropriate combinations of the present value
+//   /// of Psi_4 and its conjugate to give the value of Psi_4 as
+//   /// observed in the boosted frame.  Finally, it transforms back to
 //   /// Fourier space using that new equi-angular grid.
+//   ///
+//   /// The input three-velocities are assumed to give the velocities of
+//   /// the boosted frame relative to the present frame.
 
+//   // Check the size of the input velocity
+//   if(v.size()!=NTimes()) {
+//     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": (v.size()=" << v.size() << ") != (NTimes()=" << NTimes() << ")" << std::endl;
+//     throw(GWFrames_VectorSizeMismatch);
+//   }
 
-//   std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Not properly implemented yet." << std::endl;
-//   throw(GWFrames_NotYetImplemented);
+//   // Set up storage and calculate useful constants
+//   const int ellMax = this->EllMax();
+//   const int n_thetaRotated= 2*ellMax+1;
+//   const int n_phiRotated = 2*ellMax+1;
+//   const double dthetaRotated = M_PI/double(n_thetaRotated-1); // thetaRotated should return to M_PI
+//   const double dphiRotated = 2*M_PI/double(n_phiRotated); // phiRotated should not return to 2*M_PI
+//   vector<complex<double> > Grid(n_phiRotated*n_thetaRotated);
+//   SphericalFunctions::SWSH sYlm(SpinWeight());
 
-//   //return Waveform();
-//   // return B;
+//   SpacetimeAlgebra::vector tPz;
+//   tPz.set_gamma_0(1./std::sqrt(2));
+//   tPz.set_gamma_3(1./std::sqrt(2));
+//   SpacetimeAlgebra::vector tMz;
+//   tMz.set_gamma_0(1./std::sqrt(2));
+//   tMz.set_gamma_3(-1./std::sqrt(2));
+//   SpacetimeAlgebra::vector xPiyRe;
+//   xPiyRe.set_gamma_1(1./std::sqrt(2));
+//   SpacetimeAlgebra::vector xPiyIm;
+//   xPiyIm.set_gamma_2(1./std::sqrt(2));
+//   SpacetimeAlgebra::vector xMiyRe;
+//   xMiyRe.set_gamma_1(1./std::sqrt(2));
+//   SpacetimeAlgebra::vector xMiyIm;
+//   xMiyIm.set_gamma_2(-1./std::sqrt(2));
+
+//   // Main loop over time steps
+//   for(unsigned int i_t=0; i_t<NTimes(); ++i_t) {
+//     const vector<double>& v_i = v[i_t];
+//     if(v_i.size()!=3) {
+//       std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": v[" << i_t << "].size()=" << v_i.size()
+//                 << ".  Input is assumed to be a vector of three-velocities." << std::endl;
+//       throw(GWFrames_VectorSizeMismatch);
+//     }
+
+//     const double beta = std::sqrt(v_i[0]*v_i[0] + v_i[1]*v_i[1] + v_i[2]*v_i[2]);
+//     if(beta<1.e-9) { continue; } // TODO: This may need to be adjusted, or other statements made smarter about using the value of gamma
+//     vector<double> vHat(3);
+//     vHat[0] = v_i[0]/beta;
+//     vHat[1] = v_i[1]/beta;
+//     vHat[2] = v_i[2]/beta;
+//     const double gamma = 1.0/std::sqrt(1.0-beta*beta);
+//     const double sqrtplus = std::sqrt((gamma+1)/2);
+//     const double sqrtminus = std::sqrt((gamma-1)/2);
+
+//     // Calculate the boost rotor
+//     SpacetimeAlgebra::spinor BoostRotor;
+//     BoostRotor.set_scalar(sqrtplus);
+//     BoostRotor.set_gamma_0_gamma_1(sqrtminus*vHat[0]);
+//     BoostRotor.set_gamma_0_gamma_2(sqrtminus*vHat[1]);
+//     BoostRotor.set_gamma_0_gamma_3(sqrtminus*vHat[2]);
+
+//     vector<complex<double> > Modes(N_lm(ellMax), 0.0);
+//     vector<complex<double> > Modes2(N_lm(ellMax), 0.0);
+
+//     // Fill the Modes data for this time step
+//     for(int i_mode=0; i_mode<N_lm(std::abs(SpinWeight())-1); ++i_mode) {
+//       // Explicitly zero the modes with ell<|s|
+//       Modes[i_mode] = 0.0;
+//     }
+//     for(int i_mode=N_lm(std::abs(SpinWeight())-1), ell=std::abs(SpinWeight()); ell<=ellMax; ++ell) {
+//       // Now, fill modes with ell>=|s| in the correct order
+//       for(int m=-ell; m<=ell; ++m, ++i_mode) {
+//         Modes[i_mode] = this->Data(FindModeIndex(ell,m), i_t);
+//       }
+//     }
+
+//     // Construct the data on the distorted grid
+//     for(int i_g=0, i_thetaRotated=0; i_thetaRotated<n_thetaRotated; ++i_thetaRotated) {
+//       for(int i_phiRotated=0; i_phiRotated<n_phiRotated; ++i_phiRotated, ++i_g) {
+//         const double thetaRotated = dthetaRotated*i_thetaRotated;
+//         const double phiRotated = dphiRotated*i_phiRotated;
+
+//         // Calculate the rotation rotors
+//         SpacetimeAlgebra::spinor Rotor_thetaRotated;
+//         Rotor_thetaRotated.set_scalar(std::cos(thetaRotated/2));
+//         Rotor_thetaRotated.set_gamma_1_gamma_3(std::sin(thetaRotated/2));
+//         SpacetimeAlgebra::spinor Rotor_phiRotated;
+//         Rotor_phiRotated.set_scalar(std::cos(phiRotated/2));
+//         Rotor_phiRotated.set_gamma_1_gamma_2(-std::sin(phiRotated/2));
+//         const SpacetimeAlgebra::spinor RotationRotorRotated(Rotor_phiRotated * Rotor_thetaRotated);
+
+//         // This is the complete transformation rotor for going from
+//         // (t,x,y,z) in the present frame to (t,theta,phi,r) in the
+//         // boosted frame:
+//         const SpacetimeAlgebra::spinor LorentzRotor(BoostRotor * RotationRotorRotated);
+
+//         // The following give the important tetrad elements in the boosted frame
+//         const int Filler=0; // Useless constant for Gaigen code
+//         const SpacetimeAlgebra::vector lRotated(LorentzRotor*tPz*SpacetimeAlgebra::reverse(LorentzRotor), Filler);
+//         const SpacetimeAlgebra::vector nRotated(LorentzRotor*tMz*SpacetimeAlgebra::reverse(LorentzRotor), Filler);
+//         const SpacetimeAlgebra::vector mBarReRotated(LorentzRotor*xMiyRe*SpacetimeAlgebra::reverse(LorentzRotor), Filler);
+//         const SpacetimeAlgebra::vector mBarImRotated(LorentzRotor*xMiyIm*SpacetimeAlgebra::reverse(LorentzRotor), Filler);
+
+//         // Figure out the coordinates in the present frame
+//         // corresponding to the given coordinates in the boosted frame
+//         vector<double> r(3);
+//         r[0] = lRotated.get_gamma_1();
+//         r[1] = lRotated.get_gamma_2();
+//         r[2] = lRotated.get_gamma_3();
+//         const double rMag = std::sqrt(r[0]*r[0]+r[1]*r[1]+r[2]*r[2]);
+//         const double theta = std::acos(r[2]/rMag);
+//         const double phi = std::atan2(r[1],r[0]);
+
+//         if(i_g==0 && i_t==0) {
+//           std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ":\n"
+//                     << "    Note that the (theta,phi) coordinates produced here are not in the same range\n"
+//                     << "    as the (thetaRotated,phiRotated) coordinates because of (1) the range of atan2,\n"
+//                     << "    which is in (-pi,pi), rather than (0,2*pi); and (2) at (theta=0), the phi value\n"
+//                     << "    comes out as 0, even though phiRotated may not be.\n\n"
+//                     << "    Fortunately, I think both these problems are handled automatically by taking the\n"
+//                     << "    tetrad components as we do.  Of course, I may be missing something problematic...\n" << std::endl;
+//         }
+
+//         // This gives us the rotor to get from the z axis to the
+//         // spherical coordinates in the present frame
+//         SpacetimeAlgebra::spinor Rotor_theta;
+//         Rotor_theta.set_scalar(std::cos(theta/2));
+//         Rotor_theta.set_gamma_1_gamma_3(std::sin(theta/2));
+//         SpacetimeAlgebra::spinor Rotor_phi;
+//         Rotor_phi.set_scalar(std::cos(phi/2));
+//         Rotor_phi.set_gamma_1_gamma_2(-std::sin(phi/2));
+//         const SpacetimeAlgebra::spinor RotationRotor(Rotor_phi * Rotor_theta);
+
+//         // The following give the important tetrad elements in the present frame
+//         const SpacetimeAlgebra::vector l(RotationRotor*tPz*SpacetimeAlgebra::reverse(RotationRotor), Filler);
+//         const SpacetimeAlgebra::vector n(RotationRotor*tMz*SpacetimeAlgebra::reverse(RotationRotor), Filler);
+//         const SpacetimeAlgebra::vector mRe(RotationRotor*xPiyRe*SpacetimeAlgebra::reverse(RotationRotor), Filler);
+//         const SpacetimeAlgebra::vector mIm(RotationRotor*xPiyIm*SpacetimeAlgebra::reverse(RotationRotor), Filler);
+//         const SpacetimeAlgebra::vector mBarRe(RotationRotor*xMiyRe*SpacetimeAlgebra::reverse(RotationRotor), Filler);
+//         const SpacetimeAlgebra::vector mBarIm(RotationRotor*xMiyIm*SpacetimeAlgebra::reverse(RotationRotor), Filler);
+
+//         // Get the value of Psi4 in this frame at the appropriate
+//         // point of this frame
+//         const Quaternion Rp(theta, phi);
+//         sYlm.SetRotation(Rp);
+//         const complex<double> Psi_4 = sYlm.Evaluate(Modes);
+
+//         // Get the components of the other frame's tetrad in the basis
+//         // of this tetrad.  In particular, these are *not* the dot
+//         // products of the other frame's basis vectors with this
+//         // frame's basis vectors.  Instead, we expand, e.g., nRotated
+//         // in terms of this frame's (l,n,m,mbar) basis, and just take
+//         // the coefficients in that expansion.  [This distinction
+//         // matters because, e.g., n.n = 0 but n.l \neq 0.]  Also note
+//         // that we will not need any components involving the l vector
+//         // in either frame, because that will just give us terms
+//         // proportional to Psi3, etc., which are assumed to fall off
+//         // more quickly than we care to bother with.
+//         const complex<double> i_complex(0.,1.);
+//         const complex<double> nRotated_n = -SpacetimeAlgebra::sp(nRotated, l);
+//         const complex<double> nRotated_m = SpacetimeAlgebra::sp(nRotated, mBarRe) + i_complex*SpacetimeAlgebra::sp(nRotated, mBarIm);
+//         const complex<double> nRotated_mBar = SpacetimeAlgebra::sp(nRotated, mRe) + i_complex*SpacetimeAlgebra::sp(nRotated, mIm);
+//         const complex<double> mBarRotated_n =
+//           - ( SpacetimeAlgebra::sp(mBarReRotated, l) + i_complex*SpacetimeAlgebra::sp(mBarImRotated, l) );
+//         const complex<double> mBarRotated_m =
+//           SpacetimeAlgebra::sp(mBarReRotated, mBarRe) + i_complex*SpacetimeAlgebra::sp(mBarReRotated, mBarIm)
+//           + i_complex * ( SpacetimeAlgebra::sp(mBarImRotated, mBarRe) + i_complex*SpacetimeAlgebra::sp(mBarImRotated, mBarIm) );
+//         const complex<double> mBarRotated_mBar =
+//           SpacetimeAlgebra::sp(mBarReRotated, mRe) + i_complex*SpacetimeAlgebra::sp(mBarReRotated, mIm)
+//           + i_complex * ( SpacetimeAlgebra::sp(mBarImRotated, mRe) + i_complex*SpacetimeAlgebra::sp(mBarImRotated, mIm) );
+
+//         // Evaluate the data for the boosted frame at this point
+//         Grid[i_g] =
+//           (nRotated_n * mBarRotated_mBar * nRotated_n * mBarRotated_mBar
+//            - nRotated_mBar * mBarRotated_n * nRotated_n * mBarRotated_mBar
+//            - nRotated_n * mBarRotated_mBar * nRotated_mBar * mBarRotated_n
+//            + nRotated_mBar * mBarRotated_n * nRotated_mBar * mBarRotated_n) * Psi_4
+//           + (nRotated_n * mBarRotated_m * nRotated_n * mBarRotated_m
+//              - nRotated_m * mBarRotated_n * nRotated_n * mBarRotated_m
+//              - nRotated_n * mBarRotated_m * nRotated_m * mBarRotated_n
+//              + nRotated_m * mBarRotated_n * nRotated_m * mBarRotated_n) * std::conj(Psi_4);
+
+//         if(i_t%5000==0) {
+//           std::cerr << thetaRotated << "," << phiRotated << "; " << theta << "," << phi
+//                     << "; \t" << Grid[i_g] << "," << Psi_4 << std::endl;
+//         }
+//       }
+//     }
+
+//     // Decompose the data into modes
+//     spinsfast_map2salm(reinterpret_cast<fftw_complex*>(&Grid[0]),
+//                        reinterpret_cast<fftw_complex*>(&Modes2[0]),
+//                        SpinWeight(), n_thetaRotated, n_phiRotated, ellMax);
+
+//     // Set new data at this time step
+//     for(int i_mode=N_lm(std::abs(SpinWeight())-1), ell=std::abs(SpinWeight()); ell<=ellMax; ++ell) {
+//       for(int m=-ell; m<=ell; ++m, ++i_mode) {
+//         this->SetData(this->FindModeIndex(ell,m), i_t, Modes2[i_mode]);
+//       }
+//     }
+
+//   }
+
+//   return *this;
 // }
 
+// /// Translate the waveform data by some series of spatial translations
+// GWFrames::Waveform GWFrames::Waveform::Translate(const std::vector<std::vector<double> >& deltax) const {
+//   /// \param x Array of 3-vectors by which to translate
+//   if(deltax.size() != NTimes()) {
+//     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+//               << "\nERROR: (deltax.size()=" << deltax.size() << ") != (NTimes()=" << NTimes() << ")"
+//               << "\n       If you're going to translate, you need to do it at each time step.\n" << std::endl;
+//     throw(GWFrames_VectorSizeMismatch);
+//   }
 
-/// Apply a boost to Psi4 data
-GWFrames::Waveform& GWFrames::Waveform::BoostPsi4(const std::vector<std::vector<double> >& v) {
-  /// This function does three things.  First, it evaluates the
-  /// Waveform on what will become an equi-angular grid after
-  /// transformation by the boost.  Second, at each point of that
-  /// grid, it takes the appropriate combinations of the present value
-  /// of Psi_4 and its conjugate to give the value of Psi_4 as
-  /// observed in the boosted frame.  Finally, it transforms back to
-  /// Fourier space using that new equi-angular grid.
-  ///
-  /// The input three-velocities are assumed to give the velocities of
-  /// the boosted frame relative to the present frame.
+//   const unsigned int ntimes = NTimes();
 
-  // Check the size of the input velocity
-  if(v.size()!=NTimes()) {
-    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": (v.size()=" << v.size() << ") != (NTimes()=" << NTimes() << ")" << std::endl;
-    throw(GWFrames_VectorSizeMismatch);
-  }
+//   for(unsigned int i=0; i<ntimes; ++i) {
+//     if(deltax[i].size() != 3) {
+//       std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+//                 << "\nERROR: (deltax[" << i << "].size()=" << deltax[i].size() << ") != 3"
+//                 << "\n       Each translation should be a 3-vector.\n" << std::endl;
+//       throw(GWFrames_VectorSizeMismatch);
+//     }
+//   }
 
-  // Set up storage and calculate useful constants
-  const int ellMax = this->EllMax();
-  const int n_thetaRotated= 2*ellMax+1;
-  const int n_phiRotated = 2*ellMax+1;
-  const double dthetaRotated = M_PI/double(n_thetaRotated-1); // thetaRotated should return to M_PI
-  const double dphiRotated = 2*M_PI/double(n_phiRotated); // phiRotated should not return to 2*M_PI
-  vector<complex<double> > Grid(n_phiRotated*n_thetaRotated);
-  SphericalFunctions::SWSH sYlm(SpinWeight());
+//   // Copy infrastructure to new Waveform
+//   const Waveform& A = *this;
+//   Waveform B;
+//   B.spinweight = A.spinweight;
+//   B.boostweight = A.boostweight;
+//   B.history.str(A.history.str());
+//   B.history.clear();
+//   B.history.seekp(0, ios_base::end);
+//   B.history << "*this = B.Translate(...);"<< std::endl;
+//   B.frame = std::vector<Quaternions::Quaternion>(0);
+//   B.frameType = A.frameType;
+//   B.dataType = A.dataType;
+//   B.rIsScaledOut = A.rIsScaledOut;
+//   B.mIsScaledOut = A.mIsScaledOut;
+//   B.lm = A.lm;
+//   B.t = A.t; // This will get reset later
 
-  SpacetimeAlgebra::vector tPz;
-  tPz.set_gamma_0(1./std::sqrt(2));
-  tPz.set_gamma_3(1./std::sqrt(2));
-  SpacetimeAlgebra::vector tMz;
-  tMz.set_gamma_0(1./std::sqrt(2));
-  tMz.set_gamma_3(-1./std::sqrt(2));
-  SpacetimeAlgebra::vector xPiyRe;
-  xPiyRe.set_gamma_1(1./std::sqrt(2));
-  SpacetimeAlgebra::vector xPiyIm;
-  xPiyIm.set_gamma_2(1./std::sqrt(2));
-  SpacetimeAlgebra::vector xMiyRe;
-  xMiyRe.set_gamma_1(1./std::sqrt(2));
-  SpacetimeAlgebra::vector xMiyIm;
-  xMiyIm.set_gamma_2(-1./std::sqrt(2));
+//   // These numbers determine the equi-angular grid on which we will do
+//   // the interpolation.  For best accuracy, have N_phi > 2*ellMax and
+//   // N_theta > 2*ellMax; but for speed, don't make them much greater.
+//   const int ellMax(EllMax());
+//   const unsigned int N_phi = 2*ellMax + 1;
+//   const unsigned int N_theta = 2*ellMax + 1;
+//   const double dtheta = M_PI/double(N_theta-1); // theta should return to M_PI
+//   const double dphi = 2*M_PI/double(N_phi); // phi should not return to 2*M_PI
+//   vector<complex<double> > Grid(N_phi*N_theta);
 
-  // Main loop over time steps
-  for(unsigned int i_t=0; i_t<NTimes(); ++i_t) {
-    const vector<double>& v_i = v[i_t];
-    if(v_i.size()!=3) {
-      std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": v[" << i_t << "].size()=" << v_i.size()
-                << ".  Input is assumed to be a vector of three-velocities." << std::endl;
-      throw(GWFrames_VectorSizeMismatch);
-    }
+//   // Find earliest and latest times we can use for our new data set
+//   unsigned int iEarliest = 0;
+//   unsigned int iLatest = ntimes-1;
+//   const double tEarliest = t[0];
+//   const double tLatest = t.back();
+//   { // Do the 0th point explicitly for earliest time only
+//     const unsigned int i=0;
+//     const double deltaxiMag = std::sqrt(deltax[i][0]*deltax[i][0] + deltax[i][1]*deltax[i][1] + deltax[i][2]*deltax[i][2]);
+//     if(t[i]-deltaxiMag<tEarliest) {
+//       iEarliest = std::max(iEarliest, i+1);
+//     }
+//   }
+//   for(unsigned int i=1; i<ntimes-1; ++i) { // Do all points in between
+//     const double deltaxiMag = std::sqrt(deltax[i][0]*deltax[i][0] + deltax[i][1]*deltax[i][1] + deltax[i][2]*deltax[i][2]);
+//     if(t[i]-deltaxiMag<tEarliest) {
+//       iEarliest = std::max(iEarliest, i+1);
+//     }
+//     if(t[i]+deltaxiMag>tLatest) {
+//       iLatest = std::min(iLatest, i-1);
+//     }
+//   }
+//   { // Do the last point explicitly for latest time
+//     const unsigned int i=ntimes-1;
+//     const double deltaxiMag = std::sqrt(deltax[i][0]*deltax[i][0] + deltax[i][1]*deltax[i][1] + deltax[i][2]*deltax[i][2]);
+//     if(t[i]+deltaxiMag>tLatest) {
+//       iLatest = std::min(iLatest, i-1);
+//     }
+//   }
 
-    const double beta = std::sqrt(v_i[0]*v_i[0] + v_i[1]*v_i[1] + v_i[2]*v_i[2]);
-    if(beta<1.e-9) { continue; } // TODO: This may need to be adjusted, or other statements made smarter about using the value of gamma
-    vector<double> vHat(3);
-    vHat[0] = v_i[0]/beta;
-    vHat[1] = v_i[1]/beta;
-    vHat[2] = v_i[2]/beta;
-    const double gamma = 1.0/std::sqrt(1.0-beta*beta);
-    const double sqrtplus = std::sqrt((gamma+1)/2);
-    const double sqrtminus = std::sqrt((gamma-1)/2);
+//   // Now check that we actually have something to work with here
+//   if(iLatest<iEarliest) {
+//     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+//               << "\nERROR: (iLatest=" << iLatest << ") < (iEarliest=" << iEarliest << ")"
+//               << "\n       The translation is too extreme, and there is not enough data for even one complete time step.\n" << std::endl;
+//     throw(GWFrames_EmptyIntersection);
+//   }
 
-    // Calculate the boost rotor
-    SpacetimeAlgebra::spinor BoostRotor;
-    BoostRotor.set_scalar(sqrtplus);
-    BoostRotor.set_gamma_0_gamma_1(sqrtminus*vHat[0]);
-    BoostRotor.set_gamma_0_gamma_2(sqrtminus*vHat[1]);
-    BoostRotor.set_gamma_0_gamma_3(sqrtminus*vHat[2]);
+//   // The new times will just be that subset of the old times for which
+//   // data exist in every direction after translation.
+//   B.t.erase(B.t.begin()+iLatest+1, B.t.end());
+//   B.t.erase(B.t.begin(), B.t.begin()+iEarliest);
+//   B.data.resize(NModes(), B.NTimes()); // Each row (first index, nn) corresponds to a mode
 
-    vector<complex<double> > Modes(N_lm(ellMax), 0.0);
-    vector<complex<double> > Modes2(N_lm(ellMax), 0.0);
+//   // Main loop over time steps
+//   for(unsigned int i_t_B=0; i_t_B<B.NTimes(); ++i_t_B) {
+//     // These will hold the input and output data.  Note that spinsfast
+//     // has had some weird behavior in the past when the output data is
+//     // not initialized to zero, so just do this each time, even though
+//     // it's slow.
+//     vector<complex<double> > Modes(N_lm(ellMax), 0.0);
 
-    // Fill the Modes data for this time step
-    for(int i_mode=0; i_mode<N_lm(std::abs(SpinWeight())-1); ++i_mode) {
-      // Explicitly zero the modes with ell<|s|
-      Modes[i_mode] = 0.0;
-    }
-    for(int i_mode=N_lm(std::abs(SpinWeight())-1), ell=std::abs(SpinWeight()); ell<=ellMax; ++ell) {
-      // Now, fill modes with ell>=|s| in the correct order
-      for(int m=-ell; m<=ell; ++m, ++i_mode) {
-        Modes[i_mode] = this->Data(FindModeIndex(ell,m), i_t);
-      }
-    }
+//     // Construct the data on the translated grid
+//     for(int i_g=0, i_theta=0; i_theta<N_theta; ++i_theta) {
+//       for(int i_phi=0; i_phi<N_phi; ++i_phi, ++i_g) {
+//         const double theta = dtheta*i_theta;
+//         const double phi = dphi*i_phi;
 
-    // Construct the data on the distorted grid
-    for(int i_g=0, i_thetaRotated=0; i_thetaRotated<n_thetaRotated; ++i_thetaRotated) {
-      for(int i_phiRotated=0; i_phiRotated<n_phiRotated; ++i_phiRotated, ++i_g) {
-        const double thetaRotated = dthetaRotated*i_thetaRotated;
-        const double phiRotated = dphiRotated*i_phiRotated;
+//         const double rHat_dot_deltax =
+//           deltax[i_t_B][0]*std::sin(theta)*std::cos(phi)
+//           + deltax[i_t_B][1]*std::sin(theta)*std::sin(phi)
+//           + deltax[i_t_B][2]*std::cos(theta);
 
-        // Calculate the rotation rotors
-        SpacetimeAlgebra::spinor Rotor_thetaRotated;
-        Rotor_thetaRotated.set_scalar(std::cos(thetaRotated/2));
-        Rotor_thetaRotated.set_gamma_1_gamma_3(std::sin(thetaRotated/2));
-        SpacetimeAlgebra::spinor Rotor_phiRotated;
-        Rotor_phiRotated.set_scalar(std::cos(phiRotated/2));
-        Rotor_phiRotated.set_gamma_1_gamma_2(-std::sin(phiRotated/2));
-        const SpacetimeAlgebra::spinor RotationRotorRotated(Rotor_phiRotated * Rotor_thetaRotated);
+//         // Evaluate the data for the translated frame at this point
+//         Grid[i_g] = A.InterpolateToPoint(theta, phi, B.T(i_t_B)-rHat_dot_deltax);
+//       }
+//     }
 
-        // This is the complete transformation rotor for going from
-        // (t,x,y,z) in the present frame to (t,theta,phi,r) in the
-        // boosted frame:
-        const SpacetimeAlgebra::spinor LorentzRotor(BoostRotor * RotationRotorRotated);
+//     // Decompose the data into modes
+//     spinsfast_map2salm(reinterpret_cast<fftw_complex*>(&Grid[0]),
+//                        reinterpret_cast<fftw_complex*>(&Modes[0]),
+//                        SpinWeight(), N_theta, N_phi, ellMax);
 
-        // The following give the important tetrad elements in the boosted frame
-        const int Filler=0; // Useless constant for Gaigen code
-        const SpacetimeAlgebra::vector lRotated(LorentzRotor*tPz*SpacetimeAlgebra::reverse(LorentzRotor), Filler);
-        const SpacetimeAlgebra::vector nRotated(LorentzRotor*tMz*SpacetimeAlgebra::reverse(LorentzRotor), Filler);
-        const SpacetimeAlgebra::vector mBarReRotated(LorentzRotor*xMiyRe*SpacetimeAlgebra::reverse(LorentzRotor), Filler);
-        const SpacetimeAlgebra::vector mBarImRotated(LorentzRotor*xMiyIm*SpacetimeAlgebra::reverse(LorentzRotor), Filler);
+//     // Set new data at this time step
+//     for(int i_mode=N_lm(std::abs(SpinWeight())-1), ell=std::abs(SpinWeight()); ell<=ellMax; ++ell) {
+//       for(int m=-ell; m<=ell; ++m, ++i_mode) {
+//         B.SetData(B.FindModeIndex(ell,m), i_t_B, Modes[i_mode]);
+//       }
+//     }
 
-        // Figure out the coordinates in the present frame
-        // corresponding to the given coordinates in the boosted frame
-        vector<double> r(3);
-        r[0] = lRotated.get_gamma_1();
-        r[1] = lRotated.get_gamma_2();
-        r[2] = lRotated.get_gamma_3();
-        const double rMag = std::sqrt(r[0]*r[0]+r[1]*r[1]+r[2]*r[2]);
-        const double theta = std::acos(r[2]/rMag);
-        const double phi = std::atan2(r[1],r[0]);
+//   } // i_t_B loop
 
-        if(i_g==0 && i_t==0) {
-          std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ":\n"
-                    << "    Note that the (theta,phi) coordinates produced here are not in the same range\n"
-                    << "    as the (thetaRotated,phiRotated) coordinates because of (1) the range of atan2,\n"
-                    << "    which is in (-pi,pi), rather than (0,2*pi); and (2) at (theta=0), the phi value\n"
-                    << "    comes out as 0, even though phiRotated may not be.\n\n"
-                    << "    Fortunately, I think both these problems are handled automatically by taking the\n"
-                    << "    tetrad components as we do.  Of course, I may be missing something problematic...\n" << std::endl;
-        }
-
-        // This gives us the rotor to get from the z axis to the
-        // spherical coordinates in the present frame
-        SpacetimeAlgebra::spinor Rotor_theta;
-        Rotor_theta.set_scalar(std::cos(theta/2));
-        Rotor_theta.set_gamma_1_gamma_3(std::sin(theta/2));
-        SpacetimeAlgebra::spinor Rotor_phi;
-        Rotor_phi.set_scalar(std::cos(phi/2));
-        Rotor_phi.set_gamma_1_gamma_2(-std::sin(phi/2));
-        const SpacetimeAlgebra::spinor RotationRotor(Rotor_phi * Rotor_theta);
-
-        // The following give the important tetrad elements in the present frame
-        const SpacetimeAlgebra::vector l(RotationRotor*tPz*SpacetimeAlgebra::reverse(RotationRotor), Filler);
-        const SpacetimeAlgebra::vector n(RotationRotor*tMz*SpacetimeAlgebra::reverse(RotationRotor), Filler);
-        const SpacetimeAlgebra::vector mRe(RotationRotor*xPiyRe*SpacetimeAlgebra::reverse(RotationRotor), Filler);
-        const SpacetimeAlgebra::vector mIm(RotationRotor*xPiyIm*SpacetimeAlgebra::reverse(RotationRotor), Filler);
-        const SpacetimeAlgebra::vector mBarRe(RotationRotor*xMiyRe*SpacetimeAlgebra::reverse(RotationRotor), Filler);
-        const SpacetimeAlgebra::vector mBarIm(RotationRotor*xMiyIm*SpacetimeAlgebra::reverse(RotationRotor), Filler);
-
-        // Get the value of Psi4 in this frame at the appropriate
-        // point of this frame
-        const Quaternion Rp(theta, phi);
-        sYlm.SetRotation(Rp);
-        const complex<double> Psi_4 = sYlm.Evaluate(Modes);
-
-        // Get the components of the other frame's tetrad in the basis
-        // of this tetrad.  In particular, these are *not* the dot
-        // products of the other frame's basis vectors with this
-        // frame's basis vectors.  Instead, we expand, e.g., nRotated
-        // in terms of this frame's (l,n,m,mbar) basis, and just take
-        // the coefficients in that expansion.  [This distinction
-        // matters because, e.g., n.n = 0 but n.l \neq 0.]  Also note
-        // that we will not need any components involving the l vector
-        // in either frame, because that will just give us terms
-        // proportional to Psi3, etc., which are assumed to fall off
-        // more quickly than we care to bother with.
-        const complex<double> i_complex(0.,1.);
-        const complex<double> nRotated_n = -SpacetimeAlgebra::sp(nRotated, l);
-        const complex<double> nRotated_m = SpacetimeAlgebra::sp(nRotated, mBarRe) + i_complex*SpacetimeAlgebra::sp(nRotated, mBarIm);
-        const complex<double> nRotated_mBar = SpacetimeAlgebra::sp(nRotated, mRe) + i_complex*SpacetimeAlgebra::sp(nRotated, mIm);
-        const complex<double> mBarRotated_n =
-          - ( SpacetimeAlgebra::sp(mBarReRotated, l) + i_complex*SpacetimeAlgebra::sp(mBarImRotated, l) );
-        const complex<double> mBarRotated_m =
-          SpacetimeAlgebra::sp(mBarReRotated, mBarRe) + i_complex*SpacetimeAlgebra::sp(mBarReRotated, mBarIm)
-          + i_complex * ( SpacetimeAlgebra::sp(mBarImRotated, mBarRe) + i_complex*SpacetimeAlgebra::sp(mBarImRotated, mBarIm) );
-        const complex<double> mBarRotated_mBar =
-          SpacetimeAlgebra::sp(mBarReRotated, mRe) + i_complex*SpacetimeAlgebra::sp(mBarReRotated, mIm)
-          + i_complex * ( SpacetimeAlgebra::sp(mBarImRotated, mRe) + i_complex*SpacetimeAlgebra::sp(mBarImRotated, mIm) );
-
-        // Evaluate the data for the boosted frame at this point
-        Grid[i_g] =
-          (nRotated_n * mBarRotated_mBar * nRotated_n * mBarRotated_mBar
-           - nRotated_mBar * mBarRotated_n * nRotated_n * mBarRotated_mBar
-           - nRotated_n * mBarRotated_mBar * nRotated_mBar * mBarRotated_n
-           + nRotated_mBar * mBarRotated_n * nRotated_mBar * mBarRotated_n) * Psi_4
-          + (nRotated_n * mBarRotated_m * nRotated_n * mBarRotated_m
-             - nRotated_m * mBarRotated_n * nRotated_n * mBarRotated_m
-             - nRotated_n * mBarRotated_m * nRotated_m * mBarRotated_n
-             + nRotated_m * mBarRotated_n * nRotated_m * mBarRotated_n) * std::conj(Psi_4);
-
-        if(i_t%5000==0) {
-          std::cerr << thetaRotated << "," << phiRotated << "; " << theta << "," << phi
-                    << "; \t" << Grid[i_g] << "," << Psi_4 << std::endl;
-        }
-      }
-    }
-
-    // Decompose the data into modes
-    spinsfast_map2salm(reinterpret_cast<fftw_complex*>(&Grid[0]),
-                       reinterpret_cast<fftw_complex*>(&Modes2[0]),
-                       SpinWeight(), n_thetaRotated, n_phiRotated, ellMax);
-
-    // Set new data at this time step
-    for(int i_mode=N_lm(std::abs(SpinWeight())-1), ell=std::abs(SpinWeight()); ell<=ellMax; ++ell) {
-      for(int m=-ell; m<=ell; ++m, ++i_mode) {
-        this->SetData(this->FindModeIndex(ell,m), i_t, Modes2[i_mode]);
-      }
-    }
-
-  }
-
-  return *this;
-}
-
-/// Translate the waveform data by some series of spatial translations
-GWFrames::Waveform GWFrames::Waveform::Translate(const std::vector<std::vector<double> >& deltax) const {
-  /// \param x Array of 3-vectors by which to translate
-  if(deltax.size() != NTimes()) {
-    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-              << "\nERROR: (deltax.size()=" << deltax.size() << ") != (NTimes()=" << NTimes() << ")"
-              << "\n       If you're going to translate, you need to do it at each time step.\n" << std::endl;
-    throw(GWFrames_VectorSizeMismatch);
-  }
-
-  const unsigned int ntimes = NTimes();
-
-  for(unsigned int i=0; i<ntimes; ++i) {
-    if(deltax[i].size() != 3) {
-      std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-                << "\nERROR: (deltax[" << i << "].size()=" << deltax[i].size() << ") != 3"
-                << "\n       Each translation should be a 3-vector.\n" << std::endl;
-      throw(GWFrames_VectorSizeMismatch);
-    }
-  }
-
-  // Copy infrastructure to new Waveform
-  const Waveform& A = *this;
-  Waveform B;
-  B.spinweight = A.spinweight;
-  B.boostweight = A.boostweight;
-  B.history.str(A.history.str());
-  B.history.clear();
-  B.history.seekp(0, ios_base::end);
-  B.history << "*this = B.Translate(...);"<< std::endl;
-  B.frame = std::vector<Quaternions::Quaternion>(0);
-  B.frameType = A.frameType;
-  B.dataType = A.dataType;
-  B.rIsScaledOut = A.rIsScaledOut;
-  B.mIsScaledOut = A.mIsScaledOut;
-  B.lm = A.lm;
-  B.t = A.t; // This will get reset later
-
-  // These numbers determine the equi-angular grid on which we will do
-  // the interpolation.  For best accuracy, have N_phi > 2*ellMax and
-  // N_theta > 2*ellMax; but for speed, don't make them much greater.
-  const int ellMax(EllMax());
-  const unsigned int N_phi = 2*ellMax + 1;
-  const unsigned int N_theta = 2*ellMax + 1;
-  const double dtheta = M_PI/double(N_theta-1); // theta should return to M_PI
-  const double dphi = 2*M_PI/double(N_phi); // phi should not return to 2*M_PI
-  vector<complex<double> > Grid(N_phi*N_theta);
-
-  // Find earliest and latest times we can use for our new data set
-  unsigned int iEarliest = 0;
-  unsigned int iLatest = ntimes-1;
-  const double tEarliest = t[0];
-  const double tLatest = t.back();
-  { // Do the 0th point explicitly for earliest time only
-    const unsigned int i=0;
-    const double deltaxiMag = std::sqrt(deltax[i][0]*deltax[i][0] + deltax[i][1]*deltax[i][1] + deltax[i][2]*deltax[i][2]);
-    if(t[i]-deltaxiMag<tEarliest) {
-      iEarliest = std::max(iEarliest, i+1);
-    }
-  }
-  for(unsigned int i=1; i<ntimes-1; ++i) { // Do all points in between
-    const double deltaxiMag = std::sqrt(deltax[i][0]*deltax[i][0] + deltax[i][1]*deltax[i][1] + deltax[i][2]*deltax[i][2]);
-    if(t[i]-deltaxiMag<tEarliest) {
-      iEarliest = std::max(iEarliest, i+1);
-    }
-    if(t[i]+deltaxiMag>tLatest) {
-      iLatest = std::min(iLatest, i-1);
-    }
-  }
-  { // Do the last point explicitly for latest time
-    const unsigned int i=ntimes-1;
-    const double deltaxiMag = std::sqrt(deltax[i][0]*deltax[i][0] + deltax[i][1]*deltax[i][1] + deltax[i][2]*deltax[i][2]);
-    if(t[i]+deltaxiMag>tLatest) {
-      iLatest = std::min(iLatest, i-1);
-    }
-  }
-
-  // Now check that we actually have something to work with here
-  if(iLatest<iEarliest) {
-    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-              << "\nERROR: (iLatest=" << iLatest << ") < (iEarliest=" << iEarliest << ")"
-              << "\n       The translation is too extreme, and there is not enough data for even one complete time step.\n" << std::endl;
-    throw(GWFrames_EmptyIntersection);
-  }
-
-  // The new times will just be that subset of the old times for which
-  // data exist in every direction after translation.
-  B.t.erase(B.t.begin()+iLatest+1, B.t.end());
-  B.t.erase(B.t.begin(), B.t.begin()+iEarliest);
-  B.data.resize(NModes(), B.NTimes()); // Each row (first index, nn) corresponds to a mode
-
-  // Main loop over time steps
-  for(unsigned int i_t_B=0; i_t_B<B.NTimes(); ++i_t_B) {
-    // These will hold the input and output data.  Note that spinsfast
-    // has had some weird behavior in the past when the output data is
-    // not initialized to zero, so just do this each time, even though
-    // it's slow.
-    vector<complex<double> > Modes(N_lm(ellMax), 0.0);
-
-    // Construct the data on the translated grid
-    for(int i_g=0, i_theta=0; i_theta<N_theta; ++i_theta) {
-      for(int i_phi=0; i_phi<N_phi; ++i_phi, ++i_g) {
-        const double theta = dtheta*i_theta;
-        const double phi = dphi*i_phi;
-
-        const double rHat_dot_deltax =
-          deltax[i_t_B][0]*std::sin(theta)*std::cos(phi)
-          + deltax[i_t_B][1]*std::sin(theta)*std::sin(phi)
-          + deltax[i_t_B][2]*std::cos(theta);
-
-        // Evaluate the data for the translated frame at this point
-        Grid[i_g] = A.InterpolateToPoint(theta, phi, B.T(i_t_B)-rHat_dot_deltax);
-      }
-    }
-
-    // Decompose the data into modes
-    spinsfast_map2salm(reinterpret_cast<fftw_complex*>(&Grid[0]),
-                       reinterpret_cast<fftw_complex*>(&Modes[0]),
-                       SpinWeight(), N_theta, N_phi, ellMax);
-
-    // Set new data at this time step
-    for(int i_mode=N_lm(std::abs(SpinWeight())-1), ell=std::abs(SpinWeight()); ell<=ellMax; ++ell) {
-      for(int m=-ell; m<=ell; ++m, ++i_mode) {
-        B.SetData(B.FindModeIndex(ell,m), i_t_B, Modes[i_mode]);
-      }
-    }
-
-  } // i_t_B loop
-
-  return B;
-}
+//   return B;
+// }
 
 
 
@@ -4301,7 +4322,7 @@ GWFrames::Waveforms::Waveforms(const std::vector<Waveform>& In) : Ws(In), Common
 
 /// Interpolate to a common set of times.
 void GWFrames::Waveforms::SetCommonTime(std::vector<std::vector<double> >& Radii,
-                                                        const double MinTimeStep, const double EarliestTime, const double LatestTime) {
+                                        const double MinTimeStep, const double EarliestTime, const double LatestTime) {
   const unsigned int NWaveforms = Radii.size();
   vector<double> TLimits(2);
   TLimits[0] = EarliestTime;

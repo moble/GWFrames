@@ -207,18 +207,18 @@ namespace GWFrames {
     Waveform operator/(const Waveform& B) const;
     Waveform operator*(const double b) const;
     Waveform operator/(const double b) const;
-    Waveform NPEdth() const;
-    Waveform NPEdthBar() const;
-    Waveform GHPEdth() const;
-    Waveform GHPEdthBar() const;
-    Waveform IntegrateNPEdth() const;
-    Waveform IntegrateNPEdthBar() const;
-    Waveform IntegrateGHPEdth() const;
-    Waveform IntegrateGHPEdthBar() const;
-    Waveform ApplySupertranslation(std::vector<std::complex<double> >& gamma) const;
-    // Waveform Boost(const std::vector<double>& v) const;
-    Waveform& BoostPsi4(const std::vector<std::vector<double> >& v);
-    Waveform Translate(const std::vector<std::vector<double> >& x) const;
+    // Waveform NPEdth() const;
+    // Waveform NPEdthBar() const;
+    // Waveform GHPEdth() const;
+    // Waveform GHPEdthBar() const;
+    // Waveform IntegrateNPEdth() const;
+    // Waveform IntegrateNPEdthBar() const;
+    // Waveform IntegrateGHPEdth() const;
+    // Waveform IntegrateGHPEdthBar() const;
+    // Waveform ApplySuprtranslation(std::vector<std::complex<double> >& gamma) const;
+    // // Waveform Boost(const std::vector<double>& v) const;
+    // Waveform& BoostPsi4(const std::vector<std::vector<double> >& v);
+    // Waveform Translate(const std::vector<std::vector<double> >& x) const;
 
     // Output to data file
     const Waveform& Output(const std::string& FileName, const unsigned int precision=14) const;
@@ -227,7 +227,8 @@ namespace GWFrames {
   inline Waveform operator*(const double b, const Waveform& A) { return A*b; }
   #include "Waveforms_BinaryOp.ipp"
 
-  void AlignWaveforms(Waveform& A, Waveform& B, const double t_1, const double t_2, std::vector<double> nHat_A=std::vector<double>(0));
+  void AlignWaveforms(Waveform& A, Waveform& B, const double t_1, const double t_2, unsigned int InitialEvaluations=0,
+                      std::vector<double> nHat_A=std::vector<double>(0));
 
 
   /// Object storing a collection of Waveform objects to be operated on uniformly

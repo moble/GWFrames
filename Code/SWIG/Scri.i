@@ -25,19 +25,19 @@ namespace GWFrames {
   void __setitem__(const unsigned int i, const std::complex<double>& a) { $self->operator[](i)=a; }
 };
 %extend GWFrames::Modes { // None of the above seem to work, so...
-  const std::complex<double> __getitem__(const unsigned int i) const { return $self->operator[](i); }
+  /* const std::complex<double> __getitem__(const unsigned int i) const { return $self->operator[](i); } */
   void __setitem__(const unsigned int i, const std::complex<double>& a) { $self->operator[](i)=a; }
 };
 %extend GWFrames::SliceModes { // None of the above seem to work, so...
   const GWFrames::Modes& __getitem__(const unsigned int i) const { return $self->operator[](i); }
   void __setitem__(const unsigned int i, const GWFrames::Modes& a) { $self->operator[](i)=a; }
 };
-%extend GWFrames::SliceGrid { // None of the above seem to work, so...
-  const GWFrames::DataGrid& __getitem__(const unsigned int i) const { return $self->operator[](i); }
-  void __setitem__(const unsigned int i, const GWFrames::DataGrid& a) { $self->operator[](i)=a; }
-};
+/* %extend GWFrames::SliceGrid { // None of the above seem to work, so... */
+/*   const GWFrames::DataGrid& __getitem__(const unsigned int i) const { return $self->operator[](i); } */
+/*   void __setitem__(const unsigned int i, const GWFrames::DataGrid& a) { $self->operator[](i)=a; } */
+/* }; */
 %extend GWFrames::Scri { // None of the above seem to work, so...
-  const GWFrames::SliceModes __getitem__(const unsigned int i) const { return $self->operator[](i); }
+  /* const GWFrames::SliceModes __getitem__(const unsigned int i) const { return $self->operator[](i); } */
   void __setitem__(const unsigned int i, const GWFrames::SliceModes& a) { $self->operator[](i) = a; }
 };
 %extend GWFrames::SuperMomenta { // None of the above seem to work, so...

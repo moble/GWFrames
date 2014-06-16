@@ -324,7 +324,7 @@ def Extrapolate(**kwargs) :
     from textwrap import dedent
     from numpy import sqrt, abs, fmod, pi, transpose, array
     from scipy.interpolate import splev, splrep
-    from GWFrames import Inertial, Corotating, Waveform, Waveforms
+    from GWFrames import Inertial, Corotating, Waveform, Waveforms, _vectorW
 
     # Process keyword arguments
     InputDirectory = kwargs.pop('InputDirectory', './')
@@ -390,7 +390,7 @@ def Extrapolate(**kwargs) :
     i_outer = SortedRadiiIndices[-1]
 
     # Convert to c++ objects and interpolate to common times
-    Ws = Waveforms(Ws)
+    Ws = Waveforms(_vectorW(Ws))
     print("Interpolating to common times..."); stdout.flush()
     Ws.SetCommonTime(Radii, MinTimeStep, EarliestTime, LatestTime)
     W_outer = Ws[i_outer]
