@@ -71,6 +71,6 @@
     if(i>-1 && i<GWFramesNumberOfErrors) { s << "GWFrames exception: " << GWFramesErrors[i]; }
     else  { s << "GWFrames: Unknown exception number {" << i << "}"; }
     PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
-    return NULL;
+    return 0; // NULL;
   }
 }
