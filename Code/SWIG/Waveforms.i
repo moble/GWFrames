@@ -10,11 +10,6 @@
 %ignore GWFrames::Waveform::operator=;
 %ignore GWFrames::Waveforms::operator[];
 %rename(__getitem__) GWFrames::Waveforms::operator[] const;
-// //// Allow us to get Quaternions returned naturally when passed by reference
-// %typemap(in,numinputs=0) Quaternions::Quaternion& OUTPUT (Quaternions::Quaternion temp) { $1 = &temp; }
-// %typemap(argout) Quaternions::Quaternion& OUTPUT {
-//   $result = SWIG_Python_AppendOutput($result, SWIG_NewPointerObj((new Quaternions::Quaternion(static_cast< const Quaternions::Quaternion& >(temp$argnum))), SWIGTYPE_p_Quaternions__Quaternion, SWIG_POINTER_OWN |  0 ));
-// }
 //// These will convert the output data to numpy.ndarray for easier use
 #ifndef SWIGPYTHON_BUILTIN
 %feature("pythonappend") GWFrames::Waveform::T() const %{ if isinstance(val, tuple) : val = numpy.array(val) %}
@@ -36,16 +31,7 @@
 %feature("pythonappend") GWFrames::Waveform::PNEquivalentOrbitalAV() const %{ if isinstance(val, tuple) : val = numpy.array(val) %}
 %feature("pythonappend") GWFrames::Waveform::PNEquivalentPrecessionalAV() const %{ if isinstance(val, tuple) : val = numpy.array(val) %}
 #endif
-//// Allow us to extract the outputs naturally in python
-/* %typemap(in) std::vector< std::vector< double,std::allocator< double > >,std::allocator< std::vector< double,std::allocator< double > > > > &Radii = std::vector<std::vector<double> >& INPUT; */
-/* %typemap(in) std::vector<std::vector<double> >& INPUT = std::vector< std::vector< double,std::allocator< double > >,std::allocator< std::vector< double,std::allocator< double > > > > &Radii; */
-/* %typemap(in) std::vector<std::vector<double> >& Radii = std::vector<std::vector<double> >& INPUT; */
-/* %typemap(argout) std::vector<std::vector<double> > *Radii = std::vector<std::vector<double> > *OUTPUT; */
-/* %typemap(argout) std::vector<std::vector<double> > &Radii = std::vector<std::vector<double> > &OUTPUT; */
-/* %apply std::vector<std::vector<double> >& Radii { std::vector<std::vector<double> >& INPUT }; */
 %apply double& OUTPUT { double& deltat };
-/* %apply Quaternions::Quaternion& OUTPUT { Quaternions::Quaternion& R_delta }; */
-/* %apply Quaternions::Quaternion& OUTPUT { Quaternions::Quaternion& R_eps }; */
 //// Parse the header file to generate wrappers
 %include "../Waveforms.hpp"
 //// Make sure vectors of Waveform are understood
@@ -70,6 +56,10 @@ namespace std {
       S << std::endl;
     }
     return S.str();
+  }
+  //// This function is called when returning the Waveform object in the interpreter
+  std::string __repr__() {
+    return ($self->HistoryStr());
   }
   //// Allow Waveform objects to be pickled
   %insert("python") %{
@@ -99,13 +89,21 @@ namespace std {
         self.SetData(data[8])
   %}
  };
-// Note the 's' on 'Waveforms' below!
-%extend GWFrames::Waveforms {
-  void __setitem__(int i, const GWFrames::Waveform& W) {
-    $self->operator[](i) = W;
-    return;
-  }
- };
+/* // Note the 's' on 'Waveforms' below! */
+/* %extend GWFrames::Waveforms { */
+/*   void __setitem__(int i, const GWFrames::Waveform& W) { */
+/*     $self->operator[](i) = W; */
+/*     return; */
+/*   } */
+/*   GWFrames::Waveform GetWaveform(int i) const { */
+/*     // Something goes wrong with __getitem__; with this, we can at least hack. */
+/*     return GWFrames::Waveform($self->operator[](i)); */
+/*   } */
+/*   GWFrames::Waveform& GetWaveformRef(int i) { */
+/*     // Something goes wrong with __getitem__; with this, we can at least hack. */
+/*     return $self->operator[](i); */
+/*   } */
+/*  }; */
 
 
 

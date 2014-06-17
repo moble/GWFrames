@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
+
 ModeRegex = r"""Y_l(?P<L>[0-9]+)_m(?P<M>[-+0-9]+)\.dat"""
 
 def PickChMass(filename='Horizons.h5') :
@@ -225,6 +227,29 @@ def ReadFiniteRadiusData(ChMass=0.0, filename='rh_FiniteRadii_CodeUnits.h5', Coo
         f.close()
     return Ws,Radii,CoordRadii
 
+def SetCommonTime(Ws, Radii, MinTimeStep=0.005, EarliestTime=-3e300, LatestTime=3e300):
+    """Interpolate Waveforms and radius data to a common set of times
+
+    This function replaces the old `SetCommonTime` function from
+    Waveforms.cpp, so that the Ws object seen here does not need to be
+    a GWFrames::Waveform object.  This simplifies much of the later
+    processing used in `Extrapolate` below.
+
+    """
+    from scipy import interpolate
+    from GWFrames import Intersection
+    NWaveforms = len(Radii)
+    TLimits = [EarliestTime, LatestTime]
+    # Get the new time data before any interpolations
+    T = Intersection(TLimits, Ws[0].T(), MinTimeStep, EarliestTime, LatestTime)
+    for i_W in range(1, NWaveforms):
+        T = Intersection(T, Ws[i_W].T());
+    # Interpolate Radii and then Ws (in that order!)
+    for i_W in range(NWaveforms):
+        Radii[i_W] = interpolate.splev(T, interpolate.splrep(Ws[i_W].T(), Radii[i_W], s=0), der=0)
+        Ws[i_W].InterpolateInPlace(T)
+    return
+
 
 
 def Extrapolate(**kwargs) :
@@ -324,7 +349,7 @@ def Extrapolate(**kwargs) :
     from textwrap import dedent
     from numpy import sqrt, abs, fmod, pi, transpose, array
     from scipy.interpolate import splev, splrep
-    from GWFrames import Inertial, Corotating, Waveform, Waveforms, _vectorW
+    from GWFrames import Inertial, Corotating, Waveform
 
     # Process keyword arguments
     InputDirectory = kwargs.pop('InputDirectory', './')
@@ -390,9 +415,8 @@ def Extrapolate(**kwargs) :
     i_outer = SortedRadiiIndices[-1]
 
     # Convert to c++ objects and interpolate to common times
-    Ws = Waveforms(_vectorW(Ws))
     print("Interpolating to common times..."); stdout.flush()
-    Ws.SetCommonTime(Radii, MinTimeStep, EarliestTime, LatestTime)
+    SetCommonTime(Ws, Radii, MinTimeStep, EarliestTime, LatestTime)
     W_outer = Ws[i_outer]
 
     # If the AlignmentTime is not set properly, set it to the default
@@ -469,7 +493,17 @@ def Extrapolate(**kwargs) :
 
     # Do the actual extrapolations
     print("Running extrapolations."); stdout.flush()
-    ExtrapolatedWaveforms = Ws.Extrapolate(Radii, ExtrapolationOrders, Omegas)
+    # Ws = Waveforms(_vectorW(Ws))
+    # Ws.CommonTimeIsSet()
+    # print([i for i in range(1)]); stdout.flush()
+    # ExtrapolatedWaveformsObject = Ws.Extrapolate(Radii, ExtrapolationOrders, Omegas)
+    # print(type(ExtrapolatedWaveformsObject))
+    # print([10])
+    # for i in range(10):
+    #     print("Yep"); stdout.flush()
+    # print([i for i in range(1)]); stdout.flush()
+    # ExtrapolatedWaveforms = [ExtrapolatedWaveformsObject.GetWaveform(i) for i in range(ExtrapolatedWaveformsObject.size())]
+    ExtrapolatedWaveforms = _Extrapolate(Ws, Radii, ExtrapolationOrders, Omegas)
 
     NExtrapolations = len(ExtrapolationOrders)
     for i,ExtrapolationOrder in enumerate(ExtrapolationOrders) :
@@ -477,8 +511,6 @@ def Extrapolate(**kwargs) :
         if(OutputFrame==Inertial or OutputFrame==Corotating) :
             stdout.write("N={0}: Rotating into inertial frame...".format(ExtrapolationOrder)); stdout.flush()
             ExtrapolatedWaveforms[i].TransformToInertialFrame()
-            if(ExtrapolationOrder>=0) :
-                ExtrapolatedWaveforms[i+NExtrapolations].TransformToInertialFrame()
             print("☺"); stdout.flush()
         if(OutputFrame==Corotating) :
             stdout.write("N={0}: Rotating into corotating frame...".format(ExtrapolationOrder)); stdout.flush()
@@ -487,8 +519,6 @@ def Extrapolate(**kwargs) :
 
         # Append the relevant information to the history
         ExtrapolatedWaveforms[i].AppendHistory(InputArguments)
-        if(ExtrapolationOrder>=0) :
-            ExtrapolatedWaveforms[i+NExtrapolations].AppendHistory(InputArguments)
 
         # Output the data
         ExtrapolatedFile = OutputDirectory+ExtrapolatedFiles.format(N=ExtrapolationOrder)
@@ -517,7 +547,7 @@ def Extrapolate(**kwargs) :
     for i,ExtrapolationOrder in reversed(list(enumerate(ExtrapolationOrders))) :
         if(i>0) : # Compare to the last one
             if(DifferenceFiles or PlotFormat) :
-                Diff = ExtrapolatedWaveforms[i].Compare(ExtrapolatedWaveforms[i-1])
+                Diff = GWFrames.Waveform(ExtrapolatedWaveforms[i].Compare(ExtrapolatedWaveforms[i-1]))
             if(DifferenceFiles) :
                 DifferenceFile = OutputDirectory+DifferenceFiles.format(N=ExtrapolationOrder, Nm1=ExtrapolationOrders[i-1])
                 stdout.write("N={0}: Writing {1}... ".format(ExtrapolationOrder, DifferenceFile)); stdout.flush()
@@ -528,7 +558,7 @@ def Extrapolate(**kwargs) :
                 print("☺"); stdout.flush()
             if(PlotFormat) :
                 # stdout.write("Plotting... "); stdout.flush()
-                Interpolated = ExtrapolatedWaveforms[i].Interpolate(Diff.T())
+                Interpolated = GWFrames.Waveform(ExtrapolatedWaveforms[i].Interpolate(Diff.T()))
                 Normalization = Interpolated.Norm(True)
                 AbsA = splev(Diff.T(), splrep(ExtrapolatedWaveforms[i].T(), ExtrapolatedWaveforms[i].Abs(ExtrapolatedWaveforms[i].FindModeIndex(2,2)), s=0), der=0)
                 AbsB = splev(Diff.T(), splrep(ExtrapolatedWaveforms[i-1].T(), ExtrapolatedWaveforms[i-1].Abs(ExtrapolatedWaveforms[i-1].FindModeIndex(2,2)), s=0), der=0)
@@ -756,3 +786,160 @@ def RunExtrapolation(TopLevelInputDir, TopLevelOutputDir, Subdirectory, DataFile
         chdir(OriginalDir)
 
     return 0
+
+
+def _Extrapolate(FiniteRadiusWaveforms, Radii, ExtrapolationOrders, Omegas=None):
+    import numpy
+    
+    import GWFrames
+
+    # Get the various dimensions, etc.
+    MaxN = max(ExtrapolationOrders)
+    MinN = min(ExtrapolationOrders)
+    UseOmegas = ((Omegas is not None) and (len(Omegas)!=0))
+    NTimes = FiniteRadiusWaveforms[0].NTimes()
+    NModes = FiniteRadiusWaveforms[0].NModes()
+    NFiniteRadii = len(FiniteRadiusWaveforms)
+    NExtrapolations = len(ExtrapolationOrders)
+    SVDTol = 1.e-12; # Same as Numerical Recipes default in fitsvd.h
+
+    # Make sure everyone is playing with a full deck
+    if(abs(MinN)>NFiniteRadii):
+        print("""ERROR: Asking for finite-radius waveform {0}, but only got {1} finite-radius Waveform objects; need at least as {2} finite-radius waveforms.
+
+        """.format(MinN, NFiniteRadii, abs(MinN)))
+        raise ValueError("GWFrames_IndexOutOfBounds")
+    if(MaxN>0 and (MaxN+1)>=NFiniteRadii):
+        print("ERROR: Asking for extrapolation up to order {0}, but only got {1}"\
+              "finite-radius Waveform objects; need at least {2} waveforms.".format(MaxN, NFiniteRadii, MaxN+1))
+        raise ValueError("GWFrames_IndexOutOfBounds")
+    if(len(Radii)!=NFiniteRadii):
+        print("""ERROR: Mismatch in data to be extrapolated; there are different numbers of waveforms and radius vectors.
+        len(FiniteRadiusWaveforms)={0}; len(Radii)={1}
+        """.format(NFiniteRadii, len(Radii)))
+        raise ValueError("GWFrames_VectorSizeMismatch")
+    if(UseOmegas and len(Omegas)!=NTimes):
+        print("ERROR: NTimes mismatch in data to be extrapolated.\n"+
+              "       FiniteRadiusWaveforms[0].NTimes()={0}\n".format(NTimes)+
+              "       Omegas.size()={0}\n".format(len(Omegas))+
+              "\n")
+        raise ValueError("GWFrames_VectorSizeMismatch")
+    for i_W in range(1,NFiniteRadii):
+        if(FiniteRadiusWaveforms[i_W].NTimes() != NTimes):
+            print("ERROR: NTimes mismatch in data to be extrapolated.\n"+
+                  "       FiniteRadiusWaveforms[0].NTimes()={0}\n".format(NTimes)+
+                  "       FiniteRadiusWaveforms[{i_W}].NTimes()={0}\n".format(FiniteRadiusWaveforms[i_W].NTimes())+
+                  "\n")
+            raise ValueError("GWFrames_VectorSizeMismatch")
+        if(FiniteRadiusWaveforms[i_W].NModes() != NModes):
+            print("ERROR: NModes mismatch in data to be extrapolated.\n"+
+                  "       FiniteRadiusWaveforms[0].NModes()={0}\n".format(NModes)+
+                  "       FiniteRadiusWaveforms[{i_W}].NModes()={0}\n".format(FiniteRadiusWaveforms[i_W].NModes())+
+                  "\n")
+            raise ValueError("GWFrames_VectorSizeMismatch")
+        if(len(Radii[i_W]) != NTimes):
+            print("ERROR: NTimes mismatch in data to be extrapolated.\n"+
+                  "       FiniteRadiusWaveforms[0].NTimes()={0}\n".format(NTimes)+
+                  "       Radii[{i_W}].size()={0}\n".format(len(Radii[i_W]))+
+                  "\n")
+            raise ValueError("GWFrames_VectorSizeMismatch")
+
+    # Set up the output data, recording everything but the mode data
+    ExtrapolatedWaveforms = [None]*NExtrapolations
+    for i_N in range(NExtrapolations):
+        N = ExtrapolationOrders[i_N]
+        if(N<0):
+            ExtrapolatedWaveforms[i_N] = GWFrames.Waveform(FiniteRadiusWaveforms[NFiniteRadii+N])
+        else:
+            # Do everything but set the data
+            ExtrapolatedWaveforms[i_N] = GWFrames.Waveform(FiniteRadiusWaveforms[NFiniteRadii-1].CopyWithoutData())
+            ExtrapolatedWaveforms[i_N].AppendHistory("### Extrapolating with N={0}\n".format(N))
+            ExtrapolatedWaveforms[i_N].SetT(FiniteRadiusWaveforms[NFiniteRadii-1].T())
+            ExtrapolatedWaveforms[i_N].SetFrame(FiniteRadiusWaveforms[NFiniteRadii-1].Frame())
+            ExtrapolatedWaveforms[i_N].SetLM(FiniteRadiusWaveforms[NFiniteRadii-1].LM())
+            ExtrapolatedWaveforms[i_N].ResizeData(NModes, NTimes)
+
+    if(MaxN<0):
+        return ExtrapolatedWaveforms
+
+    MaxCoefficients = MaxN+1
+
+    # Loop over time
+    from sys import stdout
+    LengthProgressBar = 48 # characters, excluding ends
+    last_completed = 0
+    for i_t in range(NTimes):
+        completed = int(LengthProgressBar*i_t/float(NTimes-1))
+        if(completed>last_completed):
+            print("[{0}{1}]".format('#'*completed, '-'*(LengthProgressBar-completed)), end="\r")
+            stdout.flush()
+            last_completed=completed
+
+        # Set up the radius data (if we are NOT using Omega)
+        if not UseOmegas:
+            OneOverRadii = [1.0/Radii[i_W][i_t] for i_W in range(NFiniteRadii)]
+
+            Re = [[FiniteRadiusWaveforms[i_W].Re(i_m,i_t)  for i_m in range(NModes)] for i_W in range(NFiniteRadii)]
+            Im = [[FiniteRadiusWaveforms[i_W].Im(i_m,i_t)  for i_m in range(NModes)] for i_W in range(NFiniteRadii)]
+
+            # Loop over extrapolation orders
+            for i_N in range(NExtrapolations):
+                N = ExtrapolationOrders[i_N]
+
+                # If non-extrapolating, skip to the next one (the copying was
+                # done when ExtrapolatedWaveforms[i_N] was constructed)
+                if(N<0):
+                    continue
+
+                # Do the extrapolations
+                re = numpy.polyfit(OneOverRadii, Re, N)[-1,:]
+                im = numpy.polyfit(OneOverRadii, Im, N)[-1,:]
+
+                # Record the results
+                for i_m in range(NModes):
+                    ExtrapolatedWaveforms[i_N].SetData(i_m, i_t, re[i_m]+1j*im[i_m])
+
+        else: # UseOmegas
+
+            # Loop over modes
+            for i_m in range(NModes):
+
+                # Set up the radius data (if we ARE using Omega)
+                M = FiniteRadiusWaveforms[0].LM(i_m)[1];
+                if(UseOmegas):
+                    OneOverRadii = [1.0/(Radii[i_W][i_t]*M*Omegas[i_t]) if M!=0 else 1.0/(Radii[i_W][i_t]) for i_W in range(NFiniteRadii)]
+                    # for i_W in range(NFiniteRadii):
+                    #     OneOverRadius = 1.0/(Radii[i_W][i_t]*M*Omegas[i_t]) if M!=0 else 1.0/(Radii[i_W][i_t])
+                    #     OneOverRadii[i_W,0] = 1.0
+                    #     for i_N in range(1,MaxCoefficients):
+                    #         OneOverRadii[i_W, i_N] = OneOverRadius*OneOverRadii[i_W, i_N-1]
+
+                # Set up the mode data
+                Re = numpy.empty([NFiniteRadii,])
+                Im = numpy.empty([NFiniteRadii,])
+                for i_W in range(NFiniteRadii):
+                    Re[i_W] = FiniteRadiusWaveforms[i_W].Re(i_m,i_t)
+                    Im[i_W] = FiniteRadiusWaveforms[i_W].Im(i_m,i_t)
+
+                # Loop over extrapolation orders
+                for i_N in range(NExtrapolations):
+                    N = ExtrapolationOrders[i_N]
+
+                    # If non-extrapolating, skip to the next one (the copying was
+                    # done when ExtrapolatedWaveforms[i_N] was constructed)
+                    if(N<0):
+                        continue
+
+                    # Do the extrapolations
+                    re = numpy.polyfit(OneOverRadii, Re, N)[-1]
+                    im = numpy.polyfit(OneOverRadii, Im, N)[-1]
+                    # OneOverRadii_N = OneOverRadii[:, :N+1]
+                    # gsl_multifit_linear_usvd(OneOverRadii_N.matrix, Re, SVDTol)
+                    # re = FitCoefficients_N.vector[0]
+                    # gsl_multifit_linear_usvd(OneOverRadii_N.matrix, Im, SVDTol)
+                    # im = FitCoefficients_N.vector[0]
+                    ExtrapolatedWaveforms[i_N].SetData(i_m, i_t, re+1j*im)
+
+    print("")
+
+    return ExtrapolatedWaveforms

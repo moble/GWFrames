@@ -231,33 +231,36 @@ namespace GWFrames {
                       std::vector<double> nHat_A=std::vector<double>(0));
 
 
-  /// Object storing a collection of Waveform objects to be operated on uniformly
-  class Waveforms { // (plural!)
+  // /// Object storing a collection of Waveform objects to be operated on uniformly
+  // class Waveforms { // (plural!)
 
-  private:  // Member data
-    std::vector<Waveform> Ws;
-    bool CommonTimeSet;
+  // private:  // Member data
+  //   std::vector<Waveform> Ws;
+  //   bool CommonTimeSet;
 
-  public:  // Constructors and Destructor
-    Waveforms(const int N=0);
-    Waveforms(const Waveforms& In);
-    Waveforms(const std::vector<Waveform>& In);
-    ~Waveforms() { }
+  // public:  // Constructors and Destructor
+  //   Waveforms(const int N=0);
+  //   Waveforms(const Waveforms& In);
+  //   Waveforms(const std::vector<Waveform>& In);
+  //   ~Waveforms() { }
 
-  public:  // Operators
-    inline const Waveform& operator[](const int i) const { return Ws[i]; }
-    inline Waveform& operator[](const int i) { return Ws[i]; }
+  // public:  // Operators
+  //   inline const Waveform& operator[](const int i) const { return Ws[i]; }
+  //   inline Waveform& operator[](const int i) { return Ws[i]; }
 
-  public:  // Members
-    void clear() { Ws.clear(); }
-    inline unsigned int size() const { return Ws.size(); }
-    void SetCommonTime(std::vector<std::vector<double> >& Radii,
-                       const double MinTimeStep=0.005, const double EarliestTime=-3e300, const double LatestTime=3e300);
-    Waveforms Extrapolate(std::vector<std::vector<double> >& Radii,
-                          const std::vector<int>& ExtrapolationOrders,
-                          const std::vector<double>& Omegas=std::vector<double>(0));
+  // public:  // Members
+  //   void clear() { Ws.clear(); }
+  //   inline unsigned int size() const { return Ws.size(); }
+  //   void SetCommonTime(std::vector<std::vector<double> >& Radii,
+  //                      const double MinTimeStep=0.005, const double EarliestTime=-3e300, const double LatestTime=3e300);
+  //   void CommonTimeIsSet() { CommonTimeSet = true; }
+  //   std::vector<Waveform> WaveformVector() const { return Ws; }
+  //   // Waveforms Extrapolate(std::vector<std::vector<double> >& Radii,
+  //   std::vector<Waveform> Extrapolate(std::vector<std::vector<double> >& Radii,
+  //                                     const std::vector<int>& ExtrapolationOrders,
+  //                                     const std::vector<double>& Omegas=std::vector<double>(0));
 
-  }; // class Waveforms (plural!)
+  // }; // class Waveforms (plural!)
 
 } // namespace GWFrames
 
