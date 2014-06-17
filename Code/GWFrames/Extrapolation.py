@@ -869,11 +869,12 @@ def _Extrapolate(FiniteRadiusWaveforms, Radii, ExtrapolationOrders, Omegas=None)
     LengthProgressBar = 48 # characters, excluding ends
     last_completed = 0
     for i_t in range(NTimes):
-        completed = int(LengthProgressBar*i_t/float(NTimes-1))
-        if(completed>last_completed):
-            print("[{0}{1}]".format('#'*completed, '-'*(LengthProgressBar-completed)), end="\r")
-            stdout.flush()
-            last_completed=completed
+        if stdout.isatty():
+            completed = int(LengthProgressBar*i_t/float(NTimes-1))
+            if(completed>last_completed):
+                print("[{0}{1}]".format('#'*completed, '-'*(LengthProgressBar-completed)), end="\r")
+                stdout.flush()
+                last_completed=completed
 
         # Set up the radius data (if we are NOT using Omega)
         if not UseOmegas:
