@@ -192,21 +192,6 @@ Return greatest ell value present in the data.
   
 """
 
-%feature("docstring") AdvLIGO_ZeroDet_HighP """
-
-
-  Parameters
-  ----------
-    const vector<double>& F
-    const bool Invert = false
-    const double NoiseFloor = 0.0
-  
-  Returns
-  -------
-    vector<double>
-  
-"""
-
 %feature("docstring") ellmax """
 
 
@@ -343,16 +328,47 @@ Copy of the Waveform between indices i_t_a and i_t_b, only ell=2 modes.
   
 """
 
-%feature("docstring") GWFrames::Waveforms::~Waveforms """
+%feature("docstring") WaveformUtilities::Interpolate """
 
 
   Parameters
   ----------
-    (none)
+    const vector<double>& X1
+    const vector<double>& Y1
+    const vector<double>& X2
+    vector<double>& Y2
   
   Returns
   -------
-    ~Waveforms
+    void
+  
+
+
+
+  Parameters
+  ----------
+    const vector<double>& X1
+    const vector<double>& Y1
+    const vector<double>& X2
+    vector<double>& Y2
+    const double ExtrapVal
+  
+  Returns
+  -------
+    void
+  
+
+
+
+  Parameters
+  ----------
+    const vector<double>& X1
+    const vector<double>& Y1
+    const double& X2
+  
+  Returns
+  -------
+    double
   
 """
 
@@ -391,6 +407,8 @@ Do everything necessary to align two waveform objects.
       Beginning of alignment interval
     const double t_2
       End of alignment interval
+    unsigned int InitialEvaluations = 0
+      Number of evaluations for dumb initial optimization
     vector<double> nHat_A = vector<double>(0)
       Approximate nHat vector at (t_1+t_2)/2. [optional]
   
@@ -406,20 +424,27 @@ Do everything necessary to align two waveform objects.
     with W_A as well as possible. While doing so, it re-adjusts the frame
     alignment to the modes for W_B to account for the changing meaning of t_mid.
     
+    Note that t_1 and t_2 refer to fixed times with respect to the time axis of
+    W_A.
+    
     The input waveforms are transformed to their co-rotating frames if they are
     in the inertial frame. Otherwise, they must already be in the co-rotating
     frame. (E.g., the co-orbital frame is an error.)
     
-    The `nHat` quantity is just the approximate direction for that
-    vector (pointing from black hole A to black hole B) in the
-    systems, used to set the direction of the x axis for the rotating
-    frame.  Only the value at t_mid for W_A is needed.
+    The nHat quantity is just the approximate direction for that vector
+    (pointing from black hole A to black hole B) in the systems, used to set
+    the direction of the x axis for the rotating frame. Only the value at t_mid
+    for W_A is needed.
     
-    Note that the alignment algorithm assumes that the waveforms are already
-    reasonably well aligned in time. In particular, the final value of
-    t_mid+deltat for W_B must lie somewhere in the interval (t_1, t_2) at
-    least, and after the time shift, W_B must have data over all of that
-    interval.
+    The alignment algorithm assumes that the waveforms are already reasonably
+    well aligned in time. In particular, the final value of t_mid+deltat for
+    W_B must lie somewhere in the interval (t_1, t_2) at least, and after the
+    time shift, W_B must have data over all of that interval.
+    
+    As long as this last condition is satisfied, and the waveforms are even
+    remotely well sampled, and your data does not contain other grievous
+    errors, I (Mike Boyle) do hereby guarantee that this function will find the
+    optimal alignment. Or your money back.
   
 """
 
@@ -825,138 +850,9 @@ class GWFrames::Modes
   
 """
 
-%feature("docstring") GWFrames::Waveform::GHPEdthBar """
-Geroch-Held-Penrose edth operator conjugate.
-============================================
-  Parameters
-  ----------
-    (none)
-  
-  Returns
-  -------
-    Waveform
-  
-  Description
-  -----------
-    This operator is the one defined by Geroch et al. (1973). It lowers the
-    spin weight of any field on the sphere by 1, while leaving the boost weight
-    unchanged.
-    
-    This operator is very similar to the basic Newman-Penrose edth operator,
-    except that it preserves boost weights. Its effect in this implementation
-    is identical (up to a factor of $\\sqrt{2}$) to the NP edth. There is an
-    additional term in the definition of the GHP operator, but its value is
-    zero. (It transforms nontrivially, though.) In this context, we have
-    NPEdthBar() = sqrt(2)*GHPEdthBar().
-    
-    The complex shear $\\sigma$ has spin weight +2 and boost weight +1. The
-    radial coordinate $r$ has boost weight -1, and the derivative with respect
-    to time $d/du$ has boost weight -1. The asymptotic metric shear $r\\, h$
-    has spin weight -2 and boost weight -1. In particular, it seems that $r\\,
-    h = r^2\\, \\bar{\\sigma}$.
-    
-    The Newman-Penrose scalars $\\Psi_i$ have spin weight and boost weight
-    equal to $2-i$. (E.g., $\\Psi_4$ has $s = b = -2$.) However, when these are
-    multiplied by the appropriate factors of $r$ to find the leading-order
-    terms, they acquire boost weights. In particular, we need to multiply
-    $\\Psi_i$ by $r^{5-i}$ to get nonzero values at scri, which adds $i-5$ to
-    the boost weight, so that the asymptotic NP scalars all have boost weight
-    -3.
-    
-    NPEdth
-    
-    NPEdthBar
-    
-    GHPEdth
-    
-    IntegrateNPEdth
-    
-    IntegrateNPEdthBar
-    
-    IntegrateGHPEdth
-    
-    IntegrateGHPEdthBar
-  
-"""
-
-%feature("docstring") GWFrames::Waveforms::Extrapolate """
-Main extrapolation routine.
-===========================
-  Parameters
-  ----------
-    vector<vector<double>>& Radii
-      Array of radii for each Waveform (first index) and each time (second
-      index)
-    const vector<int>& ExtrapolationOrders
-      List of integers denote extrapolation orders
-    const vector<double>& Omegas = vector<double>(0)
-      Optional list of angular frequencies for scaling extrapolation polynomial
-  
-  Returns
-  -------
-    Waveforms
-  
-  Description
-  -----------
-    The input FiniteRadiusWaveforms are assumed to be properly scaled and
-    time-retarded, and interpolated to a uniform set of retarded times. This
-    function simply steps through the indices, fitting those data to
-    polynomials in 1/radius, and evaluating at 0 (for infinity).
-    
-    The extrapolation orders can be negative. In this case, the scaled,
-    time-retarded waveform at finite radius is given, where N=-1 is the
-    outermost Waveform, N=-2 is the second to outermost, etc.
-    
-    Note that the fitting uses gsl_multifit_linear_usvd, which is GSL's fitting
-    function that does NOT use column scaling (specified by the 'u' in front of
-    'svd' in the function name). The basic GSL fitting function uses column
-    scaling 'to improve
-the accuracy of the singular values'. However, for
-    convergent series, this scaling can make all the coefficients roughly equal
-    (just as the Omegas option does), which defeats the SVD.
-  
-"""
-
-%feature("docstring") GWFrames::Waveform::NPEdth """
-Newman-Penrose edth operator.
-=============================
-  Parameters
-  ----------
-    (none)
-  
-  Returns
-  -------
-    Waveform
-  
-  Description
-  -----------
-    This operator is the one defined by Newman and Penrose (1966) and further
-    described by Goldberg et al. (1967). It raises the spin weight of any field
-    on the sphere by 1. Note that this operator does not preserve boost weights
-    in any nice way  except in special cases. The GHP version does. Note that,
-    in this implementation, the only difference between the NP and GHP versions
-    is the factor of $\\sqrt{2}$. The additional GHP term that keeps the boost
-    weight meaningful is zero in any given frame  though it transforms
-    nontrivially.
-    
-    Note that the boost weight is set to the value of WeightError, which is
-    just meant to be large enough that it will give improbable values if used.
-    This is not fool-proof.
-    
-    NPEdthBar
-    
-    GHPEdth
-    
-    GHPEdthBar
-    
-    IntegrateNPEdth
-    
-    IntegrateNPEdthBar
-    
-    IntegrateGHPEdth
-    
-    IntegrateGHPEdthBar
-  
+%feature("docstring") GWFrames """
+namespace GWFrames
+==================
 """
 
 %feature("docstring") TransitionFunction_Smooth """
@@ -1077,37 +973,18 @@ Efficiently swap data between two Waveform objects.
   
 """
 
-%feature("docstring") GWFrames::Waveform::IntegrateGHPEdthBar """
-Integrate the Geroch-Held-Penrose edth operator conjugate.
-==========================================================
+%feature("docstring") AdvLIGO_ZeroDet_HighP """
+
+
   Parameters
   ----------
-    (none)
+    const vector<double>& F
+    const bool Invert = false
+    const double NoiseFloor = 0.0
   
   Returns
   -------
-    Waveform
-  
-  Description
-  -----------
-    This operator inverts the action of the GHP edth operator. This is not a
-    perfect inverse, because the l=s-1 term is set to zero. To be precise, if
-    Waveform A has spins weight $s$, then A.GHPEdth().IntegrateGHPEdth() has
-    the effect of setting the $\\ell=s$ term in A to zero.
-    
-    NPEdth
-    
-    NPEdthBar
-    
-    GHPEdth
-    
-    GHPEdthBar
-    
-    IntegrateNPEdth
-    
-    IntegrateNPEdthBar
-    
-    IntegrateGHPEdth
+    vector<double>
   
 """
 
@@ -1127,31 +1004,6 @@ Integrate the Geroch-Held-Penrose edth operator conjugate.
 %feature("docstring") WaveformUtilities """
 namespace WaveformUtilities
 ===========================
-"""
-
-%feature("docstring") GWFrames::Waveform::BoostPsi4 """
-Apply a boost to Psi4 data.
-===========================
-  Parameters
-  ----------
-    const vector<vector<double>>& v
-  
-  Returns
-  -------
-    Waveform&
-  
-  Description
-  -----------
-    This function does three things. First, it evaluates the Waveform on what
-    will become an equi-angular grid after transformation by the boost. Second,
-    at each point of that grid, it takes the appropriate combinations of the
-    present value of Psi_4 and its conjugate to give the value of Psi_4 as
-    observed in the boosted frame. Finally, it transforms back to Fourier space
-    using that new equi-angular grid.
-    
-    The input three-velocities are assumed to give the velocities of the
-    boosted frame relative to the present frame.
-  
 """
 
 %feature("docstring") AdvLIGO_ZeroDet_LowP """
@@ -1630,19 +1482,6 @@ Execute a BMS transformation except for the supertranslation of points.
   
 """
 
-%feature("docstring") GWFrames::Waveforms::clear """
-
-
-  Parameters
-  ----------
-    (none)
-  
-  Returns
-  -------
-    void
-  
-"""
-
 %feature("docstring") Modes::bar """
 
 
@@ -1854,12 +1693,12 @@ Constructor of PN waveform from parameters.
       Initial dimensionless spin vector of BH2
     const double Omega_orb_i
       Initial orbital angular frequency
+    double Omega_orb_0 = -1.0
+      Earliest orbital angular frequency to compute (optional)
     const Quaternions::Quaternion& R_frame_i = Quaternions::Quaternion(1, 0, 0, 0)
       Overall rotation of the system (optional)
     const double PNOrder = 4.0
       PN order at which to compute all quantities (default: 4.0)
-    double Omega_orb_0 = -1.0
-      Initial velocity to compute (optional)
   
   Returns
   -------
@@ -2090,30 +1929,6 @@ Hybridize this Waveform with another.
   
 """
 
-%feature("docstring") WaveformUtilities::NoiseCurve """
-
-
-  Parameters
-  ----------
-    const vector<double>& F
-    const string& Detector = 'AdvLIGO_ZeroDet_HighP'
-    const bool Invert = false
-    const double NoiseFloor = 0.0
-  
-  Returns
-  -------
-    vector<double>
-  
-  Description
-  -----------
-    These functions return various noise curves as described e.g., in
-    LIGO-T0900288-v3, and fit by Collin Capano. Noise curves implemented thus
-    far are: IniLIGO_Approx  The Initial LIGO design goal AdvLIGO_ZeroDet_HighP
-     LIGO-T0900288-v3 AdvLIGO_ZeroDet_LowP  LIGO-T0900288-v3
-    AdvLIGO_NSNSOptimal  Collin Capano's fit for the NS-NS optimized noise curve
-  
-"""
-
 %feature("docstring") GWFrames::PNWaveform::LMag """
 
 
@@ -2224,50 +2039,6 @@ Assignment operator.
   
 """
 
-%feature("docstring") WaveformUtilities::Interpolate """
-
-
-  Parameters
-  ----------
-    const vector<double>& X1
-    const vector<double>& Y1
-    const vector<double>& X2
-    vector<double>& Y2
-  
-  Returns
-  -------
-    void
-  
-
-
-
-  Parameters
-  ----------
-    const vector<double>& X1
-    const vector<double>& Y1
-    const vector<double>& X2
-    vector<double>& Y2
-    const double ExtrapVal
-  
-  Returns
-  -------
-    void
-  
-
-
-
-  Parameters
-  ----------
-    const vector<double>& X1
-    const vector<double>& Y1
-    const double& X2
-  
-  Returns
-  -------
-    double
-  
-"""
-
 %feature("docstring") GWFrames::Waveform::Abs """
 
 
@@ -2334,40 +2105,6 @@ class GWFrames::Scri
   
 """
 
-%feature("docstring") GWFrames::Waveform::IntegrateGHPEdth """
-Integrate the Geroch-Held-Penrose edth operator.
-================================================
-  Parameters
-  ----------
-    (none)
-  
-  Returns
-  -------
-    Waveform
-  
-  Description
-  -----------
-    This operator inverts the action of the GHP edth operator. This is not a
-    perfect inverse, because the l=s-1 term is set to zero. To be precise, if
-    Waveform A has spins weight $s$, then A.GHPEdth().IntegrateGHPEdth() has
-    the effect of setting the $\\ell=s$ term in A to zero.
-    
-    NPEdth
-    
-    NPEdthBar
-    
-    GHPEdth
-    
-    GHPEdthBar
-    
-    IntegrateNPEdth
-    
-    IntegrateNPEdthBar
-    
-    IntegrateGHPEdthBar
-  
-"""
-
 %feature("docstring") Interpolator::Interpolator """
 
 
@@ -2430,39 +2167,6 @@ Integrate the Geroch-Held-Penrose edth operator.
   Returns
   -------
     Waveform
-  
-"""
-
-%feature("docstring") GWFrames::Waveform::ApplySupertranslation """
-Re-interpolate data to new time slices given by this supertranslation.
-======================================================================
-  Parameters
-  ----------
-    vector<complex<double>>& gamma
-  
-  Returns
-  -------
-    Waveform
-  
-  Description
-  -----------
-    This function takes the current data decomposed as spherical harmonics on a
-    given slicing, transforms to physical space, re-interpolates the data at
-    each point to a new set of time slices, and transforms back to
-    spherical-harmonic coefficients.
-    
-    The supertranslation data input gamma is a vector of complex numbers
-    representing the (scalar) spherical-harmonic components of the
-    supertranslation, stored in the order (0,0), (1,-1), (1,0), (1,1), (2,-2),
-    ... The overall time translation is given by the first component; the
-    spatial translation is given by the second through fourth componentes;
-    higher components give the proper supertranslations. In particular, a
-    proper supertranslation will have its first four coefficients equal to 0.0.
-    
-    Note that, for general spin-weighted spherical-harmonic components
-    ${}_{s}a_{l,m}$, a real function results when ${}_{-s}a_{l,-m} =
-    {}_{s}a_{l,m}^\\ast$. In particular, the input gamma data are assumed to
-    satisfy this formula with $s=0$.
   
 """
 
@@ -3184,43 +2888,27 @@ Remove all data relating to times outside of the given range.
   
 """
 
-%feature("docstring") GWFrames::Waveform::IntegrateNPEdthBar """
-Integrate the Newman-Penrose edth operator conjugate.
-=====================================================
+%feature("docstring") WaveformUtilities::NoiseCurve """
+
+
   Parameters
   ----------
-    (none)
+    const vector<double>& F
+    const string& Detector = 'AdvLIGO_ZeroDet_HighP'
+    const bool Invert = false
+    const double NoiseFloor = 0.0
   
   Returns
   -------
-    Waveform
+    vector<double>
   
   Description
   -----------
-    This operator inverts the action of the conjugated Newman-Penrose edth
-    operator. This is not a perfect inverse, because the l=s-1 term is set to
-    zero. To be precise, if Waveform A has spin weight $s$, then
-    A.NPEdthBar().IntegrateNPEdthBar() has the effect of setting the $\\ell=s$
-    term in A to zero.
-    
-    Note that the N-P edth operator does not preserve boost weights, so the
-    boost weight is set to the value of WeightError, which is just meant to be
-    large enough that it will give improbable values if used. This is not
-    fool-proof. See the GHP edth operator for a weight-preserving version.
-    
-    NPEdth
-    
-    NPEdthBar
-    
-    GHPEdth
-    
-    GHPEdthBar
-    
-    IntegrateNPEdthBar
-    
-    IntegrateGHPEdth
-    
-    IntegrateGHPEdthBar
+    These functions return various noise curves as described e.g., in
+    LIGO-T0900288-v3, and fit by Collin Capano. Noise curves implemented thus
+    far are: IniLIGO_Approx  The Initial LIGO design goal AdvLIGO_ZeroDet_HighP
+     LIGO-T0900288-v3 AdvLIGO_ZeroDet_LowP  LIGO-T0900288-v3
+    AdvLIGO_NSNSOptimal  Collin Capano's fit for the NS-NS optimized noise curve
   
 """
 
@@ -3296,22 +2984,6 @@ class GWFrames::SuperMomenta
   Returns
   -------
     Waveform&
-  
-"""
-
-%feature("docstring") GWFrames::Waveforms::SetCommonTime """
-Interpolate to a common set of times.
-=====================================
-  Parameters
-  ----------
-    vector<vector<double>>& Radii
-    const double MinTimeStep = 0.005
-    const double EarliestTime = -3e300
-    const double LatestTime = 3e300
-  
-  Returns
-  -------
-    void
   
 """
 
@@ -3539,48 +3211,6 @@ Interpolate the Waveform to a new set of time instants.
   
 """
 
-%feature("docstring") GWFrames::Waveform::NPEdthBar """
-Newman-Penrose edth operator conjugate.
-=======================================
-  Parameters
-  ----------
-    (none)
-  
-  Returns
-  -------
-    Waveform
-  
-  Description
-  -----------
-    This operator is the one defined by Newman and Penrose (1966) and further
-    described by Goldberg et al. (1967). It lowers the spin weight of any field
-    on the sphere by 1. Note that this operator does not preserve boost weights
-    in any nice way  except in special cases. The GHP version does. Note that,
-    in this implementation, the only difference between the NP and GHP versions
-    is the factor of $\\sqrt{2}$. The additional GHP term that keeps the boost
-    weight meaningful is zero in any given frame  though it transforms
-    nontrivially.
-    
-    Note that the boost weight is set to the value of WeightError, which is
-    just meant to be large enough that it will give improbable values if used.
-    This is not fool-proof.
-    
-    NPEdth
-    
-    GHPEdth
-    
-    GHPEdthBar
-    
-    IntegrateNPEdth
-    
-    IntegrateNPEdthBar
-    
-    IntegrateGHPEdth
-    
-    IntegrateGHPEdthBar
-  
-"""
-
 %feature("docstring") GWFrames::Scri::operator[] """
 
 
@@ -3676,17 +3306,16 @@ Derive three-velocity from the inverse conformal metric.
   
 """
 
-%feature("docstring") GWFrames::WaveformAtAPointFT::InnerProduct """
+%feature("docstring") VectorStringForm """
 
 
   Parameters
   ----------
-    const WaveformAtAPointFT& B
-    const vector<double>& InversePSD
+    const vector<double>& V
   
   Returns
   -------
-    double
+    string
   
 """
 
@@ -3703,27 +3332,32 @@ Derive three-velocity from the inverse conformal metric.
   
 """
 
-%feature("docstring") GWFrames::Waveforms::operator[] """
+%feature("docstring") WaveformUtilities::Interpolate """
 
 
   Parameters
   ----------
-    const int i
+    const vector<double>& X1
+    const vector<double>& Y1
+    const vector<double>& X2
   
   Returns
   -------
-    const Waveform&
+    vector<double>
   
 
 
 
   Parameters
   ----------
-    const int i
+    const vector<double>& X1
+    const vector<double>& Y1
+    const vector<double>& X2
+    const double ExtrapVal
   
   Returns
   -------
-    Waveform&
+    vector<double>
   
 """
 
@@ -3836,57 +3470,17 @@ namespace std
   
 """
 
-%feature("docstring") GWFrames::Waveform::GHPEdth """
-Geroch-Held-Penrose edth operator.
-==================================
+%feature("docstring") GWFrames::WaveformAtAPointFT::InnerProduct """
+
+
   Parameters
   ----------
-    (none)
+    const WaveformAtAPointFT& B
+    const vector<double>& InversePSD
   
   Returns
   -------
-    Waveform
-  
-  Description
-  -----------
-    This operator is the one defined by Geroch et al. (1973). It raises the
-    spin weight of any field on the sphere by 1, while leaving the boost weight
-    unchanged.
-    
-    This operator is very similar to the basic Newman-Penrose edth operator,
-    except that it preserves boost weights. Its effect in this implementation
-    is identical (up to a factor of $\\sqrt{2}$) to the NP edth. There is an
-    additional term in the definition of the GHP operator, but its value is
-    zero. (It transforms nontrivially, though.) In this context, we have
-    NPEdth() = sqrt(2)*GHPEdth().
-    
-    The complex shear $\\sigma$ has spin weight +2 and boost weight +1. The
-    radial coordinate $r$ has boost weight -1, and the derivative with respect
-    to time $d/du$ has boost weight -1. The asymptotic metric shear $r\\, h$
-    has spin weight -2 and boost weight -1. In particular, it seems that $r\\,
-    h = r^2\\, \\bar{\\sigma}$.
-    
-    The Newman-Penrose scalars $\\Psi_i$ have spin weight and boost weight
-    equal to $2-i$. (E.g., $\\Psi_4$ has $s = b = -2$.) However, when these are
-    multiplied by the appropriate factors of $r$ to find the leading-order
-    terms, they acquire boost weights. In particular, we need to multiply
-    $\\Psi_i$ by $r^{5-i}$ to get nonzero values at scri, which adds $i-5$ to
-    the boost weight, so that the asymptotic NP scalars all have boost weight
-    -3.
-    
-    NPEdth
-    
-    NPEdthBar
-    
-    GHPEdthBar
-    
-    IntegrateNPEdth
-    
-    IntegrateNPEdthBar
-    
-    IntegrateGHPEdth
-    
-    IntegrateGHPEdthBar
+    double
   
 """
 
@@ -4291,35 +3885,6 @@ Find index of mode with given (l,m) data without the chance of throwing an excep
   
 """
 
-%feature("docstring") WaveformUtilities::Interpolate """
-
-
-  Parameters
-  ----------
-    const vector<double>& X1
-    const vector<double>& Y1
-    const vector<double>& X2
-  
-  Returns
-  -------
-    vector<double>
-  
-
-
-
-  Parameters
-  ----------
-    const vector<double>& X1
-    const vector<double>& Y1
-    const vector<double>& X2
-    const double ExtrapVal
-  
-  Returns
-  -------
-    vector<double>
-  
-"""
-
 %feature("docstring") GWFrames::Waveform::EvaluateAtPoint """
 Evaluate Waveform at a particular sky location.
 ===============================================
@@ -4363,46 +3928,6 @@ Evaluate Waveform at a particular sky location and an instant of time.
     coordinate system. In particular, this will make no sense if the frame type
     is something other than inertial, and will fail if the FrameType is neither
     UnknownFrameType nor Inertial.
-  
-"""
-
-%feature("docstring") GWFrames::Waveform::IntegrateNPEdth """
-Integrate the Newman-Penrose edth operator.
-===========================================
-  Parameters
-  ----------
-    (none)
-  
-  Returns
-  -------
-    Waveform
-  
-  Description
-  -----------
-    This operator inverts the action of the Newman-Penrose edth operator. This
-    is not a perfect inverse, because the l=s-1 term is set to zero. To be
-    precise, if Waveform A has spin weight $s$, then
-    A.NPEdth().IntegrateNPEdth() has the effect of setting the $\\ell=s$ term
-    in A to zero.
-    
-    Note that the N-P edth operator does not preserve boost weights, so the
-    boost weight is set to the value of WeightError, which is just meant to be
-    large enough that it will give improbable values if used. This is not
-    fool-proof. See the GHP edth operator for a weight-preserving version.
-    
-    NPEdth
-    
-    NPEdthBar
-    
-    GHPEdth
-    
-    GHPEdthBar
-    
-    IntegrateNPEdthBar
-    
-    IntegrateGHPEdth
-    
-    IntegrateGHPEdthBar
   
 """
 
@@ -4489,19 +4014,6 @@ Frame in which the rotation is minimal.
   Returns
   -------
     DataGrid&
-  
-"""
-
-%feature("docstring") VectorStringForm """
-
-
-  Parameters
-  ----------
-    const vector<double>& V
-  
-  Returns
-  -------
-    string
   
 """
 
@@ -4594,20 +4106,6 @@ Measure the absolute magnitude of the violation of parity in the z direction.
   Returns
   -------
     PolynomialInterpolator
-  
-"""
-
-%feature("docstring") NumberToString """
-
-
-  Parameters
-  ----------
-    typename T 
-    T Number
-  
-  Returns
-  -------
-    typename T
   
 """
 
@@ -4732,20 +4230,6 @@ Constructor on boosted grid by means of functor.
   
 """
 
-%feature("docstring") GWFrames::Waveform::Translate """
-Translate the waveform data by some series of spatial translations.
-===================================================================
-  Parameters
-  ----------
-    const vector<vector<double>>& x
-      Array of 3-vectors by which to translate
-  
-  Returns
-  -------
-    Waveform
-  
-"""
-
 %feature("docstring") GWFrames::Waveform::DataTypeLaTeXString """
 
 
@@ -4756,18 +4240,6 @@ Translate the waveform data by some series of spatial translations.
   Returns
   -------
     string
-  
-"""
-
-%feature("docstring") GWFrames::Waveforms """
-class GWFrames::Waveforms
-=========================
-  Object storing a collection of Waveform objects to be operated on uniformly.
-  
-  Member variables
-  ----------------
-    vector<Waveform> Ws
-    bool CommonTimeSet
   
 """
 
@@ -4898,19 +4370,6 @@ Pointwise multiply this object by another Waveform object.
   
 """
 
-%feature("docstring") GWFrames::Waveforms::size """
-
-
-  Parameters
-  ----------
-    (none)
-  
-  Returns
-  -------
-    unsigned int
-  
-"""
-
 %feature("docstring") GWFrames::DataGrid::size """
 
 
@@ -4994,11 +4453,6 @@ Calculate the $<LL>$ quantity defined in the paper.
     $<LL>^{ab} = \\sum_{\\ell,m,m'} [\\bar{f}^{\\ell,m'} <\\ell,m' | L_a L_b |
     \\ell,m> f^{\\ell,m} ]$
   
-"""
-
-%feature("docstring") GWFrames """
-namespace GWFrames
-==================
 """
 
 %feature("docstring") GWFrames::PNWaveform::LHat """
@@ -5517,45 +4971,6 @@ Find the appropriate rotations to fix the orientation of the corotating frame.
     Note that this function has no option to choose the direction of X based on
     some nHat vector, as other similar functions have. That issue is assumed to
     be handled elsewhere.
-  
-"""
-
-%feature("docstring") GWFrames::Waveforms::Waveforms """
-Waveforms (plural!) //.
-=======================
-  Parameters
-  ----------
-    const int N = 0
-  
-  Returns
-  -------
-    Waveforms
-  
-  Description
-  -----------
-    Empty constructor of N empty objects.
-  
-
-Basic copy constructor.
-=======================
-  Parameters
-  ----------
-    const Waveforms& In
-  
-  Returns
-  -------
-    Waveforms
-  
-
-Basic copy constructor.
-=======================
-  Parameters
-  ----------
-    const vector<Waveform>& In
-  
-  Returns
-  -------
-    Waveforms
   
 """
 
