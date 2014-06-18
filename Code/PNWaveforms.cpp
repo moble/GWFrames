@@ -79,8 +79,8 @@ GWFrames::PNWaveform::PNWaveform(const PNWaveform& a) :
 /// Constructor of PN waveform from parameters
 GWFrames::PNWaveform::PNWaveform(const std::string& Approximant, const double delta,
                                  const std::vector<double>& chi1_i, const std::vector<double>& chi2_i,
-                                 const double Omega_orb_i, const Quaternions::Quaternion& R_frame_i,
-                                 const double PNOrder, double Omega_orb_0) :
+                                 const double Omega_orb_i, double Omega_orb_0,
+                                 const Quaternions::Quaternion& R_frame_i, const double PNOrder) :
   Waveform(), mchi1(0), mchi2(0), mOmega_orb(0), mOmega_prec(0), mL(0), mPhi_orb(0)
 {
   ///
@@ -89,9 +89,9 @@ GWFrames::PNWaveform::PNWaveform(const std::string& Approximant, const double de
   /// \param chi1_i Initial dimensionless spin vector of BH1
   /// \param chi2_i Initial dimensionless spin vector of BH2
   /// \param Omega_orb_i Initial orbital angular frequency
+  /// \param Omega_orb_0 Earliest orbital angular frequency to compute (optional)
   /// \param R_frame_i Overall rotation of the system (optional)
   /// \param PNOrder PN order at which to compute all quantities (default: 4.0)
-  /// \param Omega_orb_0 Initial velocity to compute (optional)
   ///
   /// The PN system is initialized having the BHs along the x axis,
   /// with the orbital angular velocity along the positive z axis,
