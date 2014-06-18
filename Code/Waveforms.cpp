@@ -841,7 +841,11 @@ std::vector<double> GWFrames::Waveform::NormalizedAntisymmetry(std::vector<int> 
         for(int m=-ell; m<=ell; ++m) {
           const complex<double> h_ell_m = Data(FindModeIndexWithoutError(ell,m), i_t);
           const complex<double> hbar_ell_mm = std::conj(Data(FindModeIndexWithoutError(ell,-m), i_t));
-          diff += std::norm(h_ell_m - std::pow(-1,m) * hbar_ell_mm);
+          if(m&2==0) {
+            diff += std::norm(h_ell_m - hbar_ell_mm);
+          } else {
+            diff += std::norm(h_ell_m + hbar_ell_mm);
+          }
           norm += std::norm(h_ell_m);
         }
       } else{
@@ -884,13 +888,24 @@ std::vector<std::vector<double> > GWFrames::Waveform::DipoleMoment(int ellMax) c
           const double Wigner3j_A = Wigner3j(ell, ellPrime, 1, 2, -2, 0);
           for(int mPrime=std::max(m-1,-ellPrime); mPrime<=std::min(m+1,ellPrime); ++mPrime) {
             // This is the whole thing, except for the n_j modes
-            const complex<double> BasicFactor = Data(FindModeIndex(ell,m), i_t) * std::conj(Data(FindModeIndex(ellPrime,mPrime), i_t))
-              * std::pow(-1,mPrime) * sqrtFactor * Wigner3j(ell, ellPrime, 1, m, -mPrime, mPrime-m) * Wigner3j_A;
-            if(mPrime==m) { // This will only affect the z component
-              d[2] += std::sqrt(2) * BasicFactor;
-            } else { // This will only affect the x and y components
-              d[0] += (mPrime-m==1 ? -1. : 1.) * BasicFactor;
-              d[1] += ImaginaryI * BasicFactor;
+            if(mPrime%2 == 0) {
+              const complex<double> BasicFactor = Data(FindModeIndex(ell,m), i_t) * std::conj(Data(FindModeIndex(ellPrime,mPrime), i_t))
+                * sqrtFactor * Wigner3j(ell, ellPrime, 1, m, -mPrime, mPrime-m) * Wigner3j_A;
+              if(mPrime==m) { // This will only affect the z component
+                d[2] += std::sqrt(2) * BasicFactor;
+              } else { // This will only affect the x and y components
+                d[0] += (mPrime-m==1 ? -1. : 1.) * BasicFactor;
+                d[1] += ImaginaryI * BasicFactor;
+              }
+            } else {
+              const complex<double> BasicFactor = -Data(FindModeIndex(ell,m), i_t) * std::conj(Data(FindModeIndex(ellPrime,mPrime), i_t))
+                * sqrtFactor * Wigner3j(ell, ellPrime, 1, m, -mPrime, mPrime-m) * Wigner3j_A;
+              if(mPrime==m) { // This will only affect the z component
+                d[2] += std::sqrt(2) * BasicFactor;
+              } else { // This will only affect the x and y components
+                d[0] += (mPrime-m==1 ? -1. : 1.) * BasicFactor;
+                d[1] += ImaginaryI * BasicFactor;
+              }
             }
             // if(d[0]!=d[0] || d[1]!=d[1] || d[2]!=d[2]) { // DEBUG NANs
             //   INFOTOCERR << i_t << ": (" << ell << "," << m << "); (" << ellPrime << "," << mPrime
