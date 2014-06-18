@@ -2317,11 +2317,17 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
   /// systems, used to set the direction of the x axis for the
   /// rotating frame.  Only the value at t_mid for `W_A` is needed.
   ///
-  /// Note that the alignment algorithm assumes that the waveforms are
-  /// already reasonably well aligned in time.  In particular, the
-  /// final value of t_mid+deltat for `W_B` must lie somewhere in the
-  /// interval (t_1, t_2) at least, and after the time shift, `W_B`
-  /// must have data over all of that interval.
+  /// The alignment algorithm assumes that the waveforms are already
+  /// reasonably well aligned in time.  In particular, the final value
+  /// of t_mid+deltat for `W_B` must lie somewhere in the interval
+  /// (t_1, t_2) at least, and after the time shift, `W_B` must have
+  /// data over all of that interval.
+  ///
+  /// As long as this last condition is satisfied, and the waveforms
+  /// are even remotely well sampled, and your data does not contain
+  /// other grievous errors, I (Mike Boyle) do hereby guarantee that
+  /// this function will find the optimal alignment.  Or your money
+  /// back.
 
   if(nHat_A.size()==0) {
     nHat_A = Quaternions::xHat.vec();
@@ -2362,12 +2368,18 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
   Quaternion R_delta;
   const double t_mid = (t_1+t_2)/2.;
 
-  // Set the bounds of possible values for deltat to ensure that
-  // W_B.T[0]+deltat<t1 and W_B.T[-1]+deltat>t2, which mean
-  // t_2-W_B.T[-1] < deltat < t_1-W_B.T[0].  Also, don't search
-  // more than (t2-t1)/2. to either left or right.
-  const double deltat_1 = std::max(t_2-W_B.T(W_B.NTimes()-1), (t_1-t_2)/2.);
-  const double deltat_2 = std::min(t_1-W_B.T(0), (t_2-t_1)/2.);
+  // We have two time offsets: deltat_1 being the most negative number
+  // we will shift the time data by; deltat_2 being the most positive
+  // number.  We set the bounds of possible values for deltat to
+  // ensure that W_B.T[0]+deltat_2<t_1 and W_B.T[-1]+deltat_1>t_2,
+  // which mean t_2-W_B.T[-1] < deltat_1 and deltat_2 < t_1-W_B.T[0].
+  // Similarly, require that t_1+deltat_1>W_B.T[0] and
+  // t_2+deltat_2<W_B.T[-1].  Finally, don't search more than
+  // (t2-t1)/2. to either left or right.  And just for good measure,
+  // let's make those margins a little wider by taking the second and
+  // second-to-last elements of W_B.T().
+  const double deltat_1 = std::max(std::max(t_2-W_B.T(W_B.NTimes()-2), W_B.T(1)-t_1), -(t_2-t_1)/2.);
+  const double deltat_2 = std::min(std::min(t_1-W_B.T(1), W_B.T(W_B.NTimes()-2)-t_2),  (t_2-t_1)/2.);
 
   // Align W_A forever, and align W_B initially as a first guess
   W_A.AlignDecompositionFrameToModes(t_mid, nHat_A);
@@ -2387,20 +2399,16 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
   {
     // R_epsB is an array of R_eps rotors for waveform B, assuming the
     // various deltat values
-struct timeval rightnow;
-gettimeofday(&rightnow, NULL); unsigned long long tNow = rightnow.tv_usec + (unsigned long long)rightnow.tv_sec * 1000000;
     Aligner.SetR_epsB(W_B.GetAlignmentsOfDecompositionFrameToModes());
-gettimeofday(&rightnow, NULL); unsigned long long tThen = rightnow.tv_usec + (unsigned long long)rightnow.tv_sec * 1000000;
-INFOTOCERR << "\tSetR_eps took " << (tThen-tNow)/1000000.0L << " seconds." << std::endl;
 
     // Evaluate Xi_c for every deltat that won't require interpolating
     // W_B to find R_eps_B (because interpolation is really slow)
     const GWFrames::Waveform W_B_Interval = W_B.SliceOfTimesWithoutModes(t_mid+deltat_1, t_mid+deltat_2);
     using namespace GWFrames; // To subtract double from vector<double> below
     vector<double> deltats = W_B_Interval.T()-t_mid;
-    if (InitialEvaluations<deltats.size()) { // make sure deltats is small enough
-      const int step = deltats.size()/InitialEvaluations + 1;
+    if(InitialEvaluations>0 && InitialEvaluations<deltats.size()) { // make sure deltats is small enough
       vector<double> deltats_tmp;
+      const unsigned int step = deltats.size()/InitialEvaluations + 1;
       deltats_tmp.reserve(InitialEvaluations);
       for(unsigned int i=0; i<InitialEvaluations; i+=step) {
         deltats_tmp.push_back(deltats[i]);
@@ -2409,13 +2417,10 @@ INFOTOCERR << "\tSetR_eps took " << (tThen-tNow)/1000000.0L << " seconds." << st
     }
     vector<Quaternion> XiIntegral1(deltats.size());
     vector<Quaternion> XiIntegral2(deltats.size());
-gettimeofday(&rightnow, NULL); tNow = rightnow.tv_usec + (unsigned long long)rightnow.tv_sec * 1000000;
     for(unsigned int i=0; i<XiIntegral1.size(); ++i) {
       XiIntegral1[i] = Quaternions::DefiniteIntegral(R_fA*Aligner.Rbar_epsB(t_mid+deltats[i])*Aligner.Rbar_fB(t_A+deltats[i]), t_A);
       XiIntegral2[i] = Quaternions::DefiniteIntegral(R_fA*(-Quaternions::zHat)*Aligner.Rbar_epsB(t_mid+deltats[i])*Aligner.Rbar_fB(t_A+deltats[i]), t_A);
     }
-gettimeofday(&rightnow, NULL); tThen = rightnow.tv_usec + (unsigned long long)rightnow.tv_sec * 1000000;
-INFOTOCERR << "\tDefiniteIntegrals took " << (tThen-tNow)/1000000.0L << " seconds." << std::endl;
 
     // { // Just for debugging temporarily
     //   INFOTOCERR << "\tOutput to /tmp/XiIntegral.dat" << std::endl;
