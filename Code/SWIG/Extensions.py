@@ -52,6 +52,13 @@ class Waveform(_Waveform):
     """
     __metaclass__ = _MetaWaveform
 
+_WaveformReturners = ['CopyWithoutData', 'SliceOfTimeIndices', 'SliceOfTimeIndicesWithEll2', 'SliceOfTimeIndicesWithoutModes', 'SliceOfTimes', 'SliceOfTimesWithEll2',
+                      'SliceOfTimesWithoutModes', 'Interpolate', 'InterpolateInPlace', 'DropTimesOutside', 'DropEllModes', 'KeepOnlyEllModes', 'KeepOnlyEll2',
+                      'SetSpinWeight', 'SetBoostWeight', 'AppendHistory', 'SetHistory', 'SetT', 'SetTime', 'SetFrame', 'SetFrameType', 'SetDataType', 'SetRIsScaledOut',
+                      'SetMIsScaledOut', 'SetLM', 'SetData', 'SetData', 'ResizeData', 'Differentiate', 'RotatePhysicalSystem',
+                      'RotatePhysicalSystem', 'RotateDecompositionBasis', 'RotateDecompositionBasis', 'TransformToCoprecessingFrame', 'TransformToAngularVelocityFrame',
+                      'TransformToCorotatingFrame', 'TransformToInertialFrame', 'AlignDecompositionFrameToModes', 'Compare', 'Hybridize']
+
 class _MetaPNWaveform(type(_PNWaveform)):
     pass
 
@@ -115,6 +122,31 @@ class PNWaveform(_PNWaveform):
     """
     __metaclass__ = _MetaPNWaveform
 
+
+
+# Now, we just make sure that any Waveform or PNWaveform member that
+# returns a _Waveform or _PNWaveform gets wrapped to return the
+# appropriate derived object
+from functools import wraps
+def _ObliterateUnderscores(func):
+    @wraps(func, ('__name__', '__doc__'))
+    def decorator(self, *args, **kwargs):
+        def Derivedify(obj):
+            typestr = type(obj).__name__
+            if typestr=='_Waveform' or typestr=='_PNWaveform':
+                return eval(typestr[1:])(obj)
+            else:
+                return obj
+        ret = func(self, *args, **kwargs)
+        if isinstance(ret, tuple):
+            for i in range(len(ret)):
+                ret[i] = Derivedify(ret[i])
+            return ret
+        else:
+            return Derivedify(ret)
+    return decorator
+for _WaveformReturner in _WaveformReturners:
+    setattr(Waveform, _WaveformReturner, _ObliterateUnderscores(getattr(Waveform, _WaveformReturner)))
 
 
 
@@ -322,7 +354,6 @@ def ReadFromNRAR(FileName) :
     """
     import re
     import h5py
-    from GWFrames import Waveform
     from Quaternions import Quaternion
     import numpy
     YlmRegex = re.compile(r"""Y_l(?P<L>[0-9]+)_m(?P<M>[-+0-9]+)\.dat""")
