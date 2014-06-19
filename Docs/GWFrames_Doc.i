@@ -155,27 +155,16 @@ This function creates a frequency vector in (0 -> positives -> negatives -> 0) o
   
 """
 
-%feature("docstring") GWFrames::Waveform::TransformToAngularVelocityFrame """
-Transform Waveform to frame aligned with angular-velocity vector.
-=================================================================
+%feature("docstring") GWFrames::Waveform::KeepOnlyEll2 """
+Remove data relating to all but the ell=2 modes.
+================================================
   Parameters
   ----------
-    const vector<int>& Lmodes = vector<int>(0)
-      L modes to evaluate
+    (none)
   
   Returns
   -------
     Waveform&
-  
-  Description
-  -----------
-    This function combines the steps required to obtain the Waveform in the
-    frame aligned with the angular-velocity vector. Note that this frame is not
-    the corotating frame; this frame has its z axis aligned with the
-    angular-velocity vector.
-    
-    If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
-    or [2,3,4], for example, restricts the range of the sum.
   
 """
 
@@ -673,6 +662,68 @@ class GWFrames::PNWaveform
 ==========================
   Object for calculating a post-Newtonian Waveform with (optional) precession.
   
+  Fundamental object creating precessing PN waveform.
+  
+  This object is a subclass of the GWFrames::Waveform object. In addition to
+  the data stored in a Waveform, this stores the two spins chi1 and chi2; the
+  orbital angular-velocity vectors Omega_orb, Omega_prec, and Omega_tot; the PN
+  angular momentum; and the orbital phase Phi_orb. Various methods also exist
+  for retrieving the vectors, their magnitudes, and their normalized versions.
+  
+  history
+  
+  String recording history of data
+  
+  t
+  
+  Vector of time indices
+  
+  frame
+  
+  Vector of quaternions. This represents the rotation applied to the physical
+  system to go from the standard inertial frame to the frame in which the
+  Waveform is decomposed. If this vector has length 0, the frame is assumed to
+  be constant, and the standard frame. If this vector has length 1, the frame
+  is assumed to be constant, but given by that value. Otherwise, this vector is
+  assumed to have length NTimes(), corresponding to the frame at each moment.
+  
+  lm
+  
+  Vector of vectors of int's, giving (ell,m) data
+  
+  data
+  
+  Vector of complex numbers representing h or Psi4.
+  
+  chi1
+  
+  Vector of vectors of doubles representing the spin of BH 1.
+  
+  chi2
+  
+  Vector of vectors of doubles representing the spin of BH 2.
+  
+  Omega_orb
+  
+  Vector of vectors of doubles representing the orbital angular-velocity vector.
+  
+  Omega_prec
+  
+  Vector of vectors of doubles representing the precessional angular-velocity
+  vector.
+  
+  Omega_tot
+  
+  Vector of vectors of doubles representing the total angular-velocity vector.
+  
+  L
+  
+  Vector of vectors of doubles representing the angular-momentum vector.
+  
+  Phi_orb
+  
+  Vector of doubles representing the orbital phase.
+  
   Member variables
   ----------------
     vector<vector<double>> mchi1
@@ -853,24 +904,22 @@ class GWFrames::Modes
 %feature("docstring") GWFrames """
 namespace GWFrames
 ==================
+  Collection of objects and functions for manipulating gravitational waves.
+  
 """
 
-%feature("docstring") TransitionFunction_Smooth """
-Local utility function.
-=======================
-  Parameters
-  ----------
-    const double x
+%feature("docstring") GWFrames::BinomialCoefficientFunctor """
+class GWFrames::BinomialCoefficientFunctor
+==========================================
+  Storage for pre-calculated binomial values.
   
-  Returns
-  -------
-    double
+  The object is a functor for the binomial coefficients. E.g.,
+  BinomialCoefficientFunctor Binom;
+const double Binom_4_2 = Binom(4,2);
   
-  Description
-  -----------
-    This smoothly transitions from 0.0 for x<=0.0 to 1.0 for x>=1.0. The
-    function is just the usual transition function based on the familiar smooth
-    but non-analytic function.
+  Note that values up to Binom(2*ellMax_GWFrames, ...) are calculated, where
+  ellMax_GWFrames is set in Utilities.hpp. Requests for greater values are
+  answered with an exception.
   
 """
 
@@ -1006,18 +1055,20 @@ namespace WaveformUtilities
 ===========================
 """
 
-%feature("docstring") AdvLIGO_ZeroDet_LowP """
-
-
-  Parameters
-  ----------
-    const vector<double>& F
-    const bool Invert = false
-    const double NoiseFloor = 0.0
+%feature("docstring") GWFrames::WignerCoefficientFunctor """
+class GWFrames::WignerCoefficientFunctor
+========================================
+  Storage for pre-calculated values of coefficients used in calculating Wigner
+  D matrices.
   
-  Returns
-  -------
-    vector<double>
+  The object is a functor for certain coefficients needed when computing the
+  Wigner D matrices. E.g., WignerCoefficientFunctor WignerCoeff;
+const double
+  Coeff_4_3_m2 = WignerCoeff(4,3,-2);
+  
+  Note that values up to WignerCoeff(ellMax_GWFrames, ...) are calculated,
+  where ellMax_GWFrames is set in Utilities.hpp. Requests for greater values
+  are answered with an exception.
   
 """
 
@@ -1025,6 +1076,64 @@ namespace WaveformUtilities
 class GWFrames::Waveform
 ========================
   Object storing data and other information for a single waveform.
+  
+  Fundamental object encapsulating waveform data, such as time, (l,m)
+  information, and complex data.
+  
+  This object provides the main user interface for this collection of code. The
+  various methods for this class are intended to provide all manipulations that
+  might be necessary in the course of waveform analysis.
+  
+  history
+  
+  String recording history of data
+  
+  t
+  
+  Vector of time indices
+  
+  frame
+  
+  Vector of unit quaternions (rotors). This rotation, applied to the standard
+  basis (x,y,z) results in the basis (X,Y,Z), with respect to which the
+  waveform is decomposed. If this vector has length 0, the frame is assumed to
+  be constant. If this vector has length 1, the frame is assumed to be
+  constant, but given by that value. Otherwise, this vector is assumed to have
+  length NTimes(), corresponding to the frame at each moment.
+  
+  FrameType
+  
+  Enum type defined as {UnknownFrameType, Inertial, Aligned, Coorbital,
+  Corotating}. This is used to check that appropriate operations are performed,
+  when such operations are sensitive to the frame.
+  
+  DataType
+  
+  Enum type defined as {UnknownDataType, h, hdot, Psi4}. This is used to check
+  that appropriate operations are performed, when such operations are sensitive
+  to the data type (finding the flux, for example).
+  
+  RScaledOut
+  
+  Boolean stating whether or not radial dependence has been scaled out of the
+  data. If true, the data represents r*h or r*Psi4, for example.
+  
+  MScaledOut
+  
+  Boolean stating whether or not the mass dependence has been scaled out of the
+  data. If true, the data represents h/M or M*Psi4, for example, and the time
+  represents t/M.
+  
+  lm
+  
+  Vector of vectors of int's, giving (ell,m) data
+  
+  data
+  
+  Vector of complex numbers representing h or Psi4. Note that this data is
+  stored as real and imaginary parts. In the corotating frame, this is probably
+  optimal, as decomposing into modulus and phase is no longer useful, and can
+  actually lead to discontinuities in m=0 modes.
   
   Member variables
   ----------------
@@ -2626,6 +2735,30 @@ Find index of mode with given (l,m) data.
   
 """
 
+%feature("docstring") GWFrames::Waveform::TransformToAngularVelocityFrame """
+Transform Waveform to frame aligned with angular-velocity vector.
+=================================================================
+  Parameters
+  ----------
+    const vector<int>& Lmodes = vector<int>(0)
+      L modes to evaluate
+  
+  Returns
+  -------
+    Waveform&
+  
+  Description
+  -----------
+    This function combines the steps required to obtain the Waveform in the
+    frame aligned with the angular-velocity vector. Note that this frame is not
+    the corotating frame; this frame has its z axis aligned with the
+    angular-velocity vector.
+    
+    If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
+    or [2,3,4], for example, restricts the range of the sum.
+  
+"""
+
 %feature("docstring") GWFrames::PNWaveform::chiHat2 """
 
 
@@ -2773,16 +2906,19 @@ Interpolate the Waveform to a new set of time instants.
   
 """
 
-%feature("docstring") GWFrames::Waveform::KeepOnlyEll2 """
-Remove data relating to all but the ell=2 modes.
-================================================
-  Parameters
-  ----------
-    (none)
+%feature("docstring") GWFrames::LadderOperatorFactorFunctor """
+class GWFrames::LadderOperatorFactorFunctor
+===========================================
+  Storage for pre-calculated values of the ladder operator factor.
   
-  Returns
-  -------
-    Waveform&
+  The object is a functor for the coefficients of the standard angular-momentum
+  ladder operator. E.g., LadderOperatorFactorFunctor LadderCoeff;
+const double
+  Ladder_4_3 = LadderCoeff(4,3);
+  
+  Note that values up to LadderCoeff(ellMax_GWFrames, ...) are calculated,
+  where ellMax_GWFrames is set in Utilities.hpp. Requests for greater values
+  are answered with an exception.
   
 """
 
@@ -2850,6 +2986,21 @@ Remove data relating to all but the ell=2 modes.
   
 """
 
+%feature("docstring") AdvLIGO_NSNSOptimal """
+
+
+  Parameters
+  ----------
+    const vector<double>& F
+    const bool Invert = false
+    const double NoiseFloor = 0.0
+  
+  Returns
+  -------
+    vector<double>
+  
+"""
+
 %feature("docstring") GWFrames::Waveform::DropTimesOutside """
 Remove all data relating to times outside of the given range.
 =============================================================
@@ -2912,18 +3063,22 @@ Remove all data relating to times outside of the given range.
   
 """
 
-%feature("docstring") AdvLIGO_NSNSOptimal """
-
-
-  Parameters
-  ----------
-    const vector<double>& F
-    const bool Invert = false
-    const double NoiseFloor = 0.0
+%feature("docstring") GWFrames::WignerD """
+class GWFrames::WignerD
+=======================
+  Calculate values of Wigner's D matrices.
   
-  Returns
-  -------
-    vector<double>
+  This object is a functor for calculating the values of Wigner's D matrices
+  for many values of (ell,m',m), given some rotation. E.g., WignerD D(R);
+const
+  double D_5_2_m4 = D(5,2,-4);
+const double D_5_2_m3 = D(5,2,-3);
+  
+  The idea is that the rotation can be set to some rotor R, appropriate for
+  some instant in time (possibly using the SetRotation member function), which
+  caches certain values that need to be re-computed for any R. Work at that
+  instant of time will usually require computing many values, making this an
+  efficient method of doing so.
   
 """
 
@@ -3316,6 +3471,19 @@ Derive three-velocity from the inverse conformal metric.
   Returns
   -------
     string
+  
+"""
+
+%feature("docstring") GWFrames::SWSH """
+class GWFrames::SWSH
+====================
+  Calculate SWSHs directly from Wigner D matrices.
+  
+  This object calculates values of SWSHs directly from the Wigner D matrices,
+  in terms of rotors, with the conventions described in
+  http://arxiv.org/abs/0709.0093. Here, the value at some point (theta, phi) is
+  given by evaluating this object for a rotor that takes the north pole (0,0,1)
+  into the point (theta, phi).
   
 """
 
@@ -4017,6 +4185,22 @@ Frame in which the rotation is minimal.
   
 """
 
+%feature("docstring") GWFrames::FactorialFunctor """
+class GWFrames::FactorialFunctor
+================================
+  Storage for pre-calculated factorials.
+  
+  Rather than re-calculating factorial values each time they are needed, we
+  simply cache the values, which are pre-calculated when this object is
+  constructed. They may then be accessed by querying this object as a functor.
+  E.g., FactorialFunctor Factorial;
+const double Fac17 = Factorial(17);
+  
+  Note that only values up to Factorial(171) are calculated, because that is
+  the largest value that can be stored as an int in standard C++.
+  
+"""
+
 %feature("docstring") ImaginaryI """
 
 
@@ -4240,6 +4424,21 @@ Constructor on boosted grid by means of functor.
   Returns
   -------
     string
+  
+"""
+
+%feature("docstring") AdvLIGO_ZeroDet_LowP """
+
+
+  Parameters
+  ----------
+    const vector<double>& F
+    const bool Invert = false
+    const double NoiseFloor = 0.0
+  
+  Returns
+  -------
+    vector<double>
   
 """
 
@@ -4667,6 +4866,25 @@ Remove data relating to all but the given ell modes.
   Returns
   -------
     Waveform&
+  
+"""
+
+%feature("docstring") TransitionFunction_Smooth """
+Local utility function.
+=======================
+  Parameters
+  ----------
+    const double x
+  
+  Returns
+  -------
+    double
+  
+  Description
+  -----------
+    This smoothly transitions from 0.0 for x<=0.0 to 1.0 for x>=1.0. The
+    function is just the usual transition function based on the familiar smooth
+    but non-analytic function.
   
 """
 
