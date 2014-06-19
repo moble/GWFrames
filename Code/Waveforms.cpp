@@ -841,7 +841,7 @@ std::vector<double> GWFrames::Waveform::NormalizedAntisymmetry(std::vector<int> 
         for(int m=-ell; m<=ell; ++m) {
           const complex<double> h_ell_m = Data(FindModeIndexWithoutError(ell,m), i_t);
           const complex<double> hbar_ell_mm = std::conj(Data(FindModeIndexWithoutError(ell,-m), i_t));
-          if(m&2==0) {
+          if(m%2==0) {
             diff += std::norm(h_ell_m - hbar_ell_mm);
           } else {
             diff += std::norm(h_ell_m + hbar_ell_mm);
