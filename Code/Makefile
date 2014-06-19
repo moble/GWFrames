@@ -24,9 +24,13 @@ endif
 .DEFAULT_GOAL := build_message
 build_message:
 	@echo "The default make target has changed. If you want to build and install"
-	@echo "the code, you should run:"
-	@echo "  make install_user"
-	@echo "This calls 'python setup.py install --user' in the Code directory."
+	@echo "the code, you should run"
+	@echo "  python setup.py install --user"
+	@echo "to build and install into the default user-local directory, or"
+	@echo "  python setup.py install"
+	@echo "to build and install into the system (or virtualenv) directory."
+	@echo "Remaining options in this Makefile are just for general reference in"
+	@echo "the event that build complications arise and they may be helpful."
 
 install :
 	python setup.py install
@@ -37,18 +41,6 @@ install_user :
 spinsfast :
 	build=build/config.mk $(MAKE) -C spinsfast
 	cp spinsfast/lib/spinsfast.so $(shell python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")/
-
-
-# Mike likes to use python's virtual environments to build with
-# various versions and arrangements of python.  As such, he finds that
-# the following is, unfortunately, necessary for him.  This makes him
-# happy.  It is probably not necessary for most users, however.
-MikeHappy :
-	$(VIRTUAL_ENV)/bin/python setup.py install --prefix=$(VIRTUAL_ENV)
-
-#	cd Quaternions && $(VIRTUAL_ENV)/bin/python setup.py install --prefix=$(VIRTUAL_ENV)
-#	cd SphericalFunctions && $(VIRTUAL_ENV)/bin/python setup.py install --prefix=$(VIRTUAL_ENV)
-
 
 
 
@@ -100,4 +92,4 @@ realclean : allclean
 
 # This just runs SWIG, which can be handy for committing pre-swigged files
 swig :
-	swig -python -globals constants -c++ -o GWFrames_wrap.cpp GWFrames.i
+	swig -python -globals constants -c++ -builtin -outdir SWIG/ -DUSE_GSL -o SWIG/GWFrames_wrap.cpp SWIG/GWFrames.i
