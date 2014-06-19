@@ -12,21 +12,117 @@
 # above by the line
 #    %rename(_Waveform) Waveform;
 # in `Waveforms.i`.
+
 class _MetaWaveform(type(_Waveform)):
     pass
+
 class Waveform(_Waveform):
+    """Object storing data and other information for a single waveform.
+
+    Fundamental object encapsulating waveform data, such as time,
+    (l,m) information, and complex data.
+
+    This object provides the main user interface for this collection
+    of code. The various methods for this class are intended to
+    provide all manipulations that might be necessary in the course of
+    waveform analysis.
+
+    For an extensive listing of all methods available for Waveform
+    objects, run `help(GWFrames.Waveform)`.  Documentation is also
+    available for each such method individually.
+
+    In python, the preferred ways to construct a new Waveform from a
+    data file is to use either `GWFrames.ReadFromH5` or
+    `GWFrames.ReadFromNRAR`.  The copy constructor also works.
+
+    Member data
+    -----------
+      int spinweight
+      int boostweight
+      std::stringstream history
+      std::vector<double> t
+      std::vector<Quaternions::Quaternion> frame
+      WaveformFrameType frameType
+      WaveformDataType dataType
+      bool rIsScaledOut
+      bool mIsScaledOut
+      std::vector<std::vector<int> > lm
+      MatrixC data
+
+    """
     __metaclass__ = _MetaWaveform
+
 class _MetaPNWaveform(type(_PNWaveform)):
     pass
+
 class PNWaveform(_PNWaveform):
+    """Fundamental object creating precessing PN waveform.
+
+    This object is a subclass of the GWFrames::Waveform object.  In
+    addition to the data stored in a Waveform, this stores the two
+    spins chi1 and chi2; the orbital angular-velocity vectors
+    Omega_orb, Omega_prec; the PN angular momentum L; and the orbital
+    phase Phi_orb.  Various methods also exist for retrieving the
+    vectors, their magnitudes, and their normalized versions.
+
+    For an extensive listing of all methods available for PNWaveform
+    objects, run `help(GWFrames.PNWaveform)`.  Documentation is also
+    available for each such method individually.
+
+    Member data
+    -----------
+      [All of GWFrames.Waveform members and...]
+      std::vector<std::vector<double> > mchi1
+      std::vector<std::vector<double> > mchi2
+      std::vector<std::vector<double> > mOmega_orb
+      std::vector<std::vector<double> > mOmega_prec
+      std::vector<std::vector<double> > mL
+      std::vector<double> mPhi_orb
+
+    Constructor
+    -----------
+      PNWaveform(const std::string& Approximant,
+                 const double delta,
+                 const std::vector<double>& chi1_i,
+                 const std::vector<double>& chi2_i,
+                 const double Omega_orb_i,
+                 double Omega_orb_0=-1.0,
+                 const Quaternions::Quaternion& R_frame_i=Quaternions::Quaternion(1,0,0,0),
+                 const double PNOrder=4.0)
+
+    The PN system is initialized having the BHs along the x axis, with
+    the orbital angular velocity along the positive z axis, having
+    magnitude Omega_orb_i.  The input spin vectors must be defined
+    with respect to this basis.  Note that the optional parameter
+    `Omega_orb_0` may be given, in which case the PN system is also
+    evolved backwards to that point.
+
+    The TaylorTn system is first integrated to compute the dynamics of
+    the binary.  The evolved spin vectors chi1 and chi2, orbital
+    angular-velocity vector Omega_orb, and orbital phase Phi_orb are
+    stored.  Simultaneously, the minimal-rotation frame of the
+    angular-velocity vector is computed, then rotated about the z'
+    axis by Phi_orb, resulting in the binary's frame.  Once this step
+    is completed, the information is used to construct the waveform in
+    the minimal-rotation frame.  (That is, the waveform will be
+    essentially corotating.)
+
+    Note that, to get the PNWaveform in an inertial frame, you must
+    first apply the method TransformToInertialFrame().
+
+    The copy constructor also works.
+
+    """
     __metaclass__ = _MetaPNWaveform
+
+
+
 
 
 def GetFileNamePrefix(W) :
     return W.DescriptorString() + '_' + W.FrameTypeString() + '_'
 Waveform.GetFileNamePrefix = GetFileNamePrefix
 PNWaveform.GetFileNamePrefix = GetFileNamePrefix
-
 
 def GetLaTeXDataDescription(W) :
     from GWFrames import UnknownDataType, h, hdot, Psi4
@@ -45,7 +141,6 @@ def GetLaTeXDataDescription(W) :
     return LaTeXDataDescription
 Waveform.GetLaTeXDataDescription = GetLaTeXDataDescription
 PNWaveform.GetLaTeXDataDescription = GetLaTeXDataDescription
-
 
 def OutputToNRAR(W, FileName, FileWriteMode='w') :
     """
@@ -98,7 +193,6 @@ def OutputToNRAR(W, FileName, FileWriteMode='w') :
         F.close()
 Waveform.OutputToNRAR = OutputToNRAR
 
-
 def OutputToH5(W, FileName, FileWriteMode='w') :
     """
     Output the Waveform with all necessary information.
@@ -143,7 +237,6 @@ def OutputToH5(W, FileName, FileWriteMode='w') :
         # Close the file and we are done
         F.close()
 Waveform.OutputToH5 = OutputToH5
-
 
 def ReadFromH5(FileName) :
     """
@@ -203,7 +296,6 @@ def ReadFromH5(FileName) :
         f.close()
     return W
 
-
 def MonotonicIndices(T, MinTimeStep=1.e-5) :
     """
     Given an array of times, return the indices that make the array strictly monotonic.
@@ -223,7 +315,6 @@ def MonotonicIndices(T, MinTimeStep=1.e-5) :
             i = j-1
         i += 1
     return Ind
-
 
 def ReadFromNRAR(FileName) :
     """
@@ -320,6 +411,5 @@ def ReadFromNRAR(FileName) :
     finally : # Use `finally` to make sure this happens:
         f_h5.close()
     return W
-
 
 %}

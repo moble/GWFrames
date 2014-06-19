@@ -9,6 +9,8 @@
 // Quiet warnings about overloaded operators being ignored.
 //#pragma SWIG nowarn=362,389,401,509
 
+// Unless otherwise provided, just let SWIG document any functions.
+%feature("autodoc", "1");
 
 /////////////////////////////////////////////////
 //// These will be needed by the c++ wrapper ////

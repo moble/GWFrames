@@ -2,14 +2,19 @@
 ////////////////////////////////////
 //// Read in the Waveform class ////
 ////////////////////////////////////
-// Rename C++ Waveform objects to be _Waveform, so that we can
-// subclass Waveform objects in python.
+
+// Rename C++ GWFrames::Waveform objects to be GWFrames::_Waveform, so
+// that we can add attributes to GWFrames.Waveform objects in python
+// (which are defined in Extensions.py using GWFrames::_Waveform as a
+// metaclass).
 %rename(_Waveform) Waveform;
+
 //// Ignore things that don't translate well...
 %ignore operator<<;
 %ignore GWFrames::Waveform::operator=;
 %ignore GWFrames::Waveforms::operator[];
 %rename(__getitem__) GWFrames::Waveforms::operator[] const;
+
 //// These will convert the output data to numpy.ndarray for easier use
 #ifndef SWIGPYTHON_BUILTIN
 %feature("pythonappend") GWFrames::Waveform::T() const %{ if isinstance(val, tuple) : val = numpy.array(val) %}
@@ -31,13 +36,17 @@
 %feature("pythonappend") GWFrames::Waveform::PNEquivalentOrbitalAV() const %{ if isinstance(val, tuple) : val = numpy.array(val) %}
 %feature("pythonappend") GWFrames::Waveform::PNEquivalentPrecessionalAV() const %{ if isinstance(val, tuple) : val = numpy.array(val) %}
 #endif
+
 %apply double& OUTPUT { double& deltat };
+
 //// Parse the header file to generate wrappers
 %include "../Waveforms.hpp"
+
 //// Make sure vectors of Waveform are understood
 namespace std {
   %template(_vectorW) vector<GWFrames::Waveform>;
 };
+
 //// Make any additions to the Waveform class here
 %extend GWFrames::Waveform {
   //// This function is called when printing the Waveform object
@@ -89,22 +98,6 @@ namespace std {
         self.SetData(data[8])
   %}
  };
-/* // Note the 's' on 'Waveforms' below! */
-/* %extend GWFrames::Waveforms { */
-/*   void __setitem__(int i, const GWFrames::Waveform& W) { */
-/*     $self->operator[](i) = W; */
-/*     return; */
-/*   } */
-/*   GWFrames::Waveform GetWaveform(int i) const { */
-/*     // Something goes wrong with __getitem__; with this, we can at least hack. */
-/*     return GWFrames::Waveform($self->operator[](i)); */
-/*   } */
-/*   GWFrames::Waveform& GetWaveformRef(int i) { */
-/*     // Something goes wrong with __getitem__; with this, we can at least hack. */
-/*     return $self->operator[](i); */
-/*   } */
-/*  }; */
-
 
 
 ////////////////////////////////////////////
