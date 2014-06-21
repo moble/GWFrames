@@ -1539,13 +1539,22 @@ vector<Matrix> GWFrames::Waveform::LLMatrix(vector<int> Lmodes) const {
 }
 
 /// Calculate the principal axis of the LL matrix, as prescribed by O'Shaughnessy et al.
-std::vector<std::vector<double> > GWFrames::Waveform::LLDominantEigenvector(const std::vector<int>& Lmodes) const {
+std::vector<std::vector<double> > GWFrames::Waveform::LLDominantEigenvector(const std::vector<int>& Lmodes,
+                                                                            const Quaternions::Quaternion& RoughInitialEllDirection) const {
   ///
-  /// \param Lmodes L modes to evaluate
+  /// \param Lmodes L modes to evaluate (optional)
+  /// \param RoughInitialEllDirection Vague guess about the preferred initial (optional)
   ///
   /// If Lmodes is empty (default), all L modes are used.  Setting
   /// Lmodes to [2] or [2,3,4], for example, restricts the range of
   /// the sum.
+  ///
+  /// Ell is the direction of the angular velocity for a PN system, so
+  /// some rough guess about that direction allows us to choose the
+  /// direction of the eigenvectors output by this function to be more
+  /// parallel than anti-parallel to that direction.  The default is
+  /// to simply choose the z axis, since this is most often the
+  /// correct choice anyway.
   ///
 
   // Calculate the LL matrix at each instant
@@ -1555,6 +1564,13 @@ std::vector<std::vector<double> > GWFrames::Waveform::LLDominantEigenvector(cons
   vector<vector<double> > dpa(NTimes(), vector<double>(3));
   for(unsigned int i=0; i<ll.size(); ++i) {
     dpa[i] = GWFrames::DominantPrincipalAxis(ll[i]);
+  }
+
+  // Make the initial direction closer to RoughInitialEllDirection than not
+  if(RoughInitialEllDirection.dot(dpa[0])<0.) {
+    dpa[0][0] = -dpa[0][0];
+    dpa[0][1] = -dpa[0][1];
+    dpa[0][2] = -dpa[0][2];
   }
 
   // Now, go through and make the vectors reasonably continuous.
@@ -1687,9 +1703,21 @@ GWFrames::Waveform& GWFrames::Waveform::TransformToCoprecessingFrame(const std::
   /// Lmodes to [2] or [2,3,4], for example, restricts the range of
   /// the sum.
   ///
+  Quaternions::Quaternion RoughInitialEllDirection;
+  const unsigned int NPointsForDeriv = 7;
+  if(NTimes()<=NPointsForDeriv || FrameType()==GWFrames::Coorbital || FrameType()==GWFrames::Corotating) {
+    // In either of these frame types, the angular velocity is likely
+    // to be nonsense.  So we might as well revert to the default,
+    // which is at least more likely to be correct than the ~random
+    // output of GSL.
+    RoughInitialEllDirection = Quaternions::zHat;
+  } else {
+    const Waveform Segment = SliceOfTimeIndicesWithEll2(0, NPointsForDeriv);
+    RoughInitialEllDirection = Quaternions::Quaternion(Segment.AngularVelocityVector()[NPointsForDeriv/2]); // Using integer division
+  }
   history << "this->TransformToCoprecessingFrame(" << StringForm(Lmodes) << ")\n#";
-  this->frameType = GWFrames::Coprecessing;
-  return this->RotateDecompositionBasis(FrameFromZ(normalized(QuaternionArray(this->LLDominantEigenvector(Lmodes))), T()));
+  SetFrameType(GWFrames::Coprecessing);
+  return this->RotateDecompositionBasis(FrameFromZ(normalized(QuaternionArray(this->LLDominantEigenvector(Lmodes, RoughInitialEllDirection))), T()));
 }
 
 /// Transform Waveform to frame aligned with angular-velocity vector.
