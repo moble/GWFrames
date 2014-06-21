@@ -144,7 +144,7 @@ GWFrames::PNWaveform::PNWaveform(const std::string& Approximant, const double de
             << "# hostname = " << hostname << std::endl
             << "# date = " << date // comes with a newline
             << "W = PNWaveform(" << Approximant << ", " << delta << ", " << VectorStringForm(chi1_i) << ", " << VectorStringForm(chi2_i)
-            << ", " << Omega_orb_i << ", " << R_frame_i << ", " << PNOrder << ", " << Omega_orb_0 << ");" << std::endl;
+            << ", " << Omega_orb_i << ", " << Omega_orb_0 << ", " << R_frame_i << ", " << PNOrder << ");" << std::endl;
   }
 
   vector<double> v;
