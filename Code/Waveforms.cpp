@@ -936,7 +936,7 @@ std::vector<double> GWFrames::Waveform::ZParityViolationSquared(std::vector<int>
   /// systems in a suitable frame should have zero violation.
   /// Precessing systems in any frame and nonprecessing systems in the
   /// wrong frame will show violations.  This quantity can be
-  /// minimized over orientation to show the presence or absence of a
+  /// minimized over attitude to show the presence or absence of a
   /// plane of symmetry.
 
   if(Lmodes.size()==0) {
@@ -972,7 +972,7 @@ std::vector<double> GWFrames::Waveform::ZParityViolationNormalized(std::vector<i
   /// systems in a suitable frame should have zero violation.
   /// Precessing systems in any frame and nonprecessing systems in the
   /// wrong frame will show violations.  This quantity can be
-  /// minimized over orientation to show the presence or absence of a
+  /// minimized over attitude to show the presence or absence of a
   /// plane of symmetry.
   ///
   /// The quantity is normalized by the overall norm of the data at
@@ -1986,7 +1986,7 @@ GWFrames::Waveform& GWFrames::Waveform::InterpolateInPlace(const std::vector<dou
   return *this;
 }
 
-/// Find the appropriate rotations to fix the orientation of the corotating frame.
+/// Find the appropriate rotations to fix the attitude of the corotating frame.
 std::vector<Quaternions::Quaternion> GWFrames::Waveform::GetAlignmentsOfDecompositionFrameToModes(const std::vector<int>& Lmodes) const {
   ///
   /// \param Lmodes Lmodes to use in computing \f$<LL>\f$
@@ -2051,7 +2051,7 @@ std::vector<Quaternions::Quaternion> GWFrames::Waveform::GetAlignmentsOfDecompos
   return UnflipRotors(R_eps);
 }
 
-/// Find the appropriate rotation to fix the orientation of the corotating frame.
+/// Find the appropriate rotation to fix the attitude of the corotating frame.
 Quaternions::Quaternion GWFrames::Waveform::GetAlignmentOfDecompositionFrameToModes(const double t_fid, const Quaternions::Quaternion& nHat_t_fid,
                                                                                     const std::vector<int>& Lmodes) const {
   ///
@@ -2169,7 +2169,7 @@ Quaternions::Quaternion GWFrames::Waveform::GetAlignmentOfDecompositionFrameToMo
   return R_eps;
 }
 
-/// Fix the orientation of the corotating frame.
+/// Fix the attitude of the corotating frame.
 GWFrames::Waveform& GWFrames::Waveform::AlignDecompositionFrameToModes(const double t_fid, const Quaternions::Quaternion& nHat_t_fid, const std::vector<int>& Lmodes) {
   ///
   /// \param t_fid Fiducial time at which the alignment should happen
@@ -2343,7 +2343,7 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
   /// This function aligns the frame to the waveform modes for both
   /// input Waveform objects at time t_mid = (t_1+t_2)/2.  It also
   /// optimizes the alignment of `W_B` by adjusting its time and
-  /// overall orientations to align with `W_A` as well as possible.
+  /// overall attitudes to align with `W_A` as well as possible.
   /// While doing so, it re-adjusts the frame alignment to the modes
   /// for `W_B` to account for the changing meaning of t_mid.
   ///
@@ -2367,9 +2367,10 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
   /// data over all of that interval.
   ///
   /// As long as this last condition is satisfied, and the waveforms
-  /// are even remotely well sampled, and your data does not contain
-  /// other grievous errors, I (Mike Boyle) do hereby guarantee that
-  /// this function will find the optimal alignment.  Or your money
+  /// are even remotely well sampled, and assuming the code's logic
+  /// does not fail due to otherwise weird or unexpected inputs, I
+  /// (Mike Boyle) do hereby guarantee that this algorithm will find
+  /// the optimal alignment in both time and attitude.  Or your money
   /// back.
 
   if(nHat_A.size()==0) {

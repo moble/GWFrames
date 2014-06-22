@@ -36,6 +36,7 @@ import matplotlib as mpl
 mpl.use('Agg')
 import matplotlib.pyplot as plt
 import GWFrames
+import Quaternions
 
 # Read in the data files
 print("Reading waveforms from data files...")
@@ -46,65 +47,74 @@ for i,File in enumerate(Files):
 print("Finished!\n")
 W_0 = Ws[0]
 
-# Transform each Waveform into its corotating frame
-print("Transforming to corotating frames...")
-for i,W in enumerate(Ws):
-    print("\tTransforming {0} of {1}...".format(i+1, len(Ws)))
-    W.TransformToCorotatingFrame()
-    W.AlignDecompositionFrameToModes(tmid)
-print("Finished!\n")
 
 # Align to original Waveform
 print("Aligning all following waveforms to first...")
-xHat = GWFrames.Quaternion(0,1,0,0)
-R0_mid = GWFrames.Squad(W_0.Frame(), W_0.T(), [tmid])[0]
+xHat = Quaternions.Quaternion(0,1,0,0)
+# R0_mid = Quaternions.Squad(W_0.Frame(), W_0.T(), [tmid])[0]
 for i,W in enumerate(Ws[1:]):
     print("\tAligning {0} of {1}...".format(i+1, len(Ws[1:])))
-    # Rotate by pi if necessary
-    Ri_mid = GWFrames.Squad(W.Frame(), W.T(), [tmid])[0]
-    if((R0_mid*xHat*R0_mid.inverse()).dot(Ri_mid*xHat*Ri_mid.inverse())<0) :
-        W.RotateDecompositionBasis(GWFrames.exp(GWFrames.Quaternion(0,0,0,pi/2)))
-    # Align corotating frame of `W[1:]` to corotating frame of `W[0]`
-    W.AlignTimeAndFrame(W_0, t1, t2);
+    GWFrames.AlignWaveforms(W_0, W, t1, t2)
+    # # Rotate by pi if necessary
+    # Ri_mid = Quaternions.Squad(W.Frame(), W.T(), [tmid])[0]
+    # if((R0_mid*xHat*R0_mid.inverse()).dot(Ri_mid*xHat*Ri_mid.inverse())<0) :
+    #     W.RotateDecompositionBasis(Quaternions.exp(Quaternions.Quaternion(0,0,0,pi/2)))
+    # # Align corotating frame of `W[1:]` to corotating frame of `W[0]`
+    # W.AlignTimeAndFrame(W_0, t1, t2);
+    Diff = W_0.Compare(W)
+    plot(Diff.T(), Quaternions.angle(Diff.Frame()))
 print("Finished!\n")
 
-# First, we interpolate everything onto the common subset of time steps:
-print("Plotting differences...")
-Tini = max([W.T(0) for W in Ws])
-Tfin = min([W.T(W.NTimes()-1) for W in Ws])
-R_0 = W_0.Frame()[(W_0.T()>=Tini) & (W_0.T()<=Tfin)]
-T_0 = W_0.T()[(W_0.T()>=Tini) & (W_0.T()<=Tfin)]
-Abs_0 = W_0.Interpolate(T_0).Abs(W_0.FindModeIndex(2,2))
-Imid = argmin(abs(T_0-tmid))
-plt.figure(0)
-plt.figure(1)
-for i,W in enumerate(Ws[1:]):
-    print("\tPlotting {0} of {1}...".format(i+1, len(Ws[1:])))
-    R_i = GWFrames.Squad(W.Frame(), W.T(), T_0)
-    RDelta = GWFrames.UnflipRotors(GWFrames.RDelta(R_0, R_i, Imid))
-    PhiDelta = array(GWFrames.angle(RDelta))
-    plt.figure(0)
-    plt.semilogy(T_0, 2.0*PhiDelta, label=Legends[i])
-    plt.figure(1)
-    Abs_i = W.Interpolate(T_0).Abs(W.FindModeIndex(2,2))
-    plt.semilogy(T_0, abs(Abs_0-Abs_i)/Abs_0, label=Legends[i])
-print("Finished!\n")
 
-plt.figure(0)
-plt.xlim((tmin,tmax))
-plt.ylim((1e-6,1))
-plt.ylabel(r'$2\Phi_\Delta$')
-# ylabel(r'$2\Phi_{\Delta}\ =\ 4\, \left| \log \left( R_{1}\, \bar{R}_{2} \right) \right|$')
-plt.xlabel(r'$(t-r_\ast)/M$')
-plt.title('Phase difference between waveforms')
-plt.legend(loc='upper left')
-plt.savefig(PhaseDifferencePlot)
 
-plt.figure(1)
-plt.xlim((tmin,tmax))
-plt.ylim((1e-6,1))
-plt.xlabel(r'$(t-r_\ast)/M$')
-plt.ylabel(r'$\left(|h^{2,2}_1|-|h^{2,2}_2|\right)\,/\,|h^{2,2}_1|$')
-plt.title(r'Relative amplitude differences between $(2,2)$ modes')
-plt.legend(loc='upper left')
-plt.savefig(AmplitudeDifferencePlot);
+#exit(0)
+
+
+# # First, we interpolate everything onto the common subset of time steps:
+# print("Plotting differences...")
+# Tini = max([W.T(0) for W in Ws])
+# Tfin = min([W.T(W.NTimes()-1) for W in Ws])
+# R_0 = W_0.Frame()[(W_0.T()>=Tini) & (W_0.T()<=Tfin)]
+# T_0 = W_0.T()[(W_0.T()>=Tini) & (W_0.T()<=Tfin)]
+# Abs_0 = W_0.Interpolate(T_0).Abs(W_0.FindModeIndex(2,2))
+# Imid = argmin(abs(T_0-tmid))
+# plt.figure(0)
+# plt.figure(1)
+# for i,W in enumerate(Ws[1:]):
+#     print("\tPlotting {0} of {1}...".format(i+1, len(Ws[1:])))
+#     R_i = Quaternions.Squad(W.Frame(), W.T(), T_0)
+#     RDelta = Quaternions.UnflipRotors(Quaternions.RDelta(R_0, R_i, Imid))
+#     PhiDelta = array(Quaternions.angle(RDelta))
+#     plt.figure(0)
+#     plt.semilogy(T_0, 2.0*PhiDelta, label=Legends[i])
+#     plt.figure(1)
+#     Abs_i = W.Interpolate(T_0).Abs(W.FindModeIndex(2,2))
+#     plt.semilogy(T_0, abs(Abs_0-Abs_i)/Abs_0, label=Legends[i])
+# print("Finished!\n")
+
+# plt.figure(0)
+# plt.xlim((tmin,tmax))
+# plt.ylim((1e-6,1))
+# plt.ylabel(r'$2\Phi_\Delta$')
+# # ylabel(r'$2\Phi_{\Delta}\ =\ 4\, \left| \log \left( R_{1}\, \bar{R}_{2} \right) \right|$')
+# plt.xlabel(r'$(t-r_\ast)/M$')
+# plt.title('Phase difference between waveforms')
+# plt.legend(loc='upper left')
+# try :
+#     tight_layout(pad=0.1)
+# except :
+#     pass
+# plt.savefig(PhaseDifferencePlot)
+
+# plt.figure(1)
+# plt.xlim((tmin,tmax))
+# plt.ylim((1e-6,1))
+# plt.xlabel(r'$(t-r_\ast)/M$')
+# plt.ylabel(r'$\left(|h^{2,2}_1|-|h^{2,2}_2|\right)\,/\,|h^{2,2}_1|$')
+# plt.title(r'Relative amplitude differences between $(2,2)$ modes')
+# plt.legend(loc='upper left')
+# try :
+#     tight_layout(pad=0.1)
+# except :
+#     pass
+# plt.savefig(AmplitudeDifferencePlot);

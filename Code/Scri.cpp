@@ -185,7 +185,7 @@ DataGrid::DataGrid(const int Spin, const int N_theta, const int N_phi, const GWF
   /// \param f Functor operating on a Quaternion object
   ///
   /// The functor takes a Quaternion argument, which describes the
-  /// location and orientation of the point to be evaluated.  In
+  /// location and alignment of the point to be evaluated.  In
   /// particular, the rotor takes the \f$\hat{z}\f$ vector into the
   /// point at which the field is to be measured, and takes \f$\hat{x}
   /// + i \hat{y}\f$ into the \f$m\f$ vector (within normalization)

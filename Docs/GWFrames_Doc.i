@@ -409,7 +409,7 @@ Do everything necessary to align two waveform objects.
   -----------
     This function aligns the frame to the waveform modes for both input
     Waveform objects at time t_mid = (t_1+t_2)/2. It also optimizes the
-    alignment of W_B by adjusting its time and overall orientations to align
+    alignment of W_B by adjusting its time and overall attitudes to align
     with W_A as well as possible. While doing so, it re-adjusts the frame
     alignment to the modes for W_B to account for the changing meaning of t_mid.
     
@@ -1519,7 +1519,7 @@ Measure the relative magnitude of the violation of parity in the z direction.
     (reflection across the x-y plane). Nonprecessing systems in a suitable
     frame should have zero violation. Precessing systems in any frame and
     nonprecessing systems in the wrong frame will show violations. This
-    quantity can be minimized over orientation to show the presence or absence
+    quantity can be minimized over attitude to show the presence or absence
     of a plane of symmetry.
     
     The quantity is normalized by the overall norm of the data at each instant,
@@ -3786,7 +3786,7 @@ Return the normalized asymmetry as a function of time.
 """
 
 %feature("docstring") GWFrames::Waveform::AlignDecompositionFrameToModes """
-Fix the orientation of the corotating frame.
+Fix the attitude of the corotating frame.
 ============================================
   Parameters
   ----------
@@ -4273,7 +4273,7 @@ Measure the absolute magnitude of the violation of parity in the z direction.
     (reflection across the x-y plane). Nonprecessing systems in a suitable
     frame should have zero violation. Precessing systems in any frame and
     nonprecessing systems in the wrong frame will show violations. This
-    quantity can be minimized over orientation to show the presence or absence
+    quantity can be minimized over attitude to show the presence or absence
     of a plane of symmetry.
   
 """
@@ -4370,7 +4370,7 @@ Constructor on boosted grid by means of functor.
   Description
   -----------
     The functor takes a Quaternion argument, which describes the location and
-    orientation of the point to be evaluated. In particular, the rotor takes
+    attitude of the point to be evaluated. In particular, the rotor takes
     the $\\hat{z}$ vector into the point at which the field is to be measured,
     and takes $\\hat{x} + i \\hat{y}$ into the $m$ vector (within
     normalization) needed for spin-weighted fields.
@@ -4973,7 +4973,7 @@ Return vector of vector of imaginary parts of all modes as function of time.
 """
 
 %feature("docstring") GWFrames::Waveform::GetAlignmentOfDecompositionFrameToModes """
-Find the appropriate rotation to fix the orientation of the corotating frame.
+Find the appropriate rotation to fix the attitude of the corotating frame.
 =============================================================================
   Parameters
   ----------
@@ -5166,7 +5166,7 @@ Construct a boosted grid with the conformal factor at each point.
 """
 
 %feature("docstring") GWFrames::Waveform::GetAlignmentsOfDecompositionFrameToModes """
-Find the appropriate rotations to fix the orientation of the corotating frame.
+Find the appropriate rotations to fix the attitude of the corotating frame.
 ==============================================================================
   Parameters
   ----------
