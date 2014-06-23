@@ -30,17 +30,13 @@ from distutils.file_util import copy_file
 from distutils.core import setup, Extension
 from subprocess import check_output, CalledProcessError
 from numpy import get_include
-import glob
+import glob, os, os.path
 
-# Make sure submoduls are checked out
-if not (isdir('Quaternions') and isfile('Quaternions/setup.py')):
-    raise EnvironmentError("Can't find `Quaternions` module.  Did you forget to `git submodule init` and `git submodule update`?")
-if not (isdir('SphericalFunctions') and isfile('SphericalFunctions/setup.py')):
-    raise EnvironmentError("Can't find `SphericalFunctions` module.  Did you forget to `git submodule init` and `git submodule update`?")
-if not (isdir('SpacetimeAlgebra') and isfile('SpacetimeAlgebra/setup.py')):
-    raise EnvironmentError("Can't find `SpacetimeAlgebra` module.  Did you forget to `git submodule init` and `git submodule update`?")
-if not (isdir('PostNewtonian/C++') and isfile('PostNewtonian/C++/PNEvolution_Q.cpp')):
-    raise EnvironmentError("Can't find `PostNewtonian/C++` module.  Did you forget to `git submodule init` and `git submodule update`?")
+## Make sure the submodules are alive and working
+from setupsubmodules import require_clean_submodules
+submodules = ['Quaternions', 'SphericalFunctions', 'SpacetimeAlgebra', 'PostNewtonian']
+require_clean_submodules( os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)),
+                          submodules )
 
 ## Need to build the spinsfast.so first, in its own setup, because
 ## it's all C code, whereas GWFrames is C++ code.  But we will just
