@@ -2456,7 +2456,7 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
       vector<double> deltats_tmp;
       const unsigned int step = deltats.size()/InitialEvaluations + 1;
       deltats_tmp.reserve(InitialEvaluations);
-      for(unsigned int i=0; i<InitialEvaluations; i+=step) {
+      for(unsigned int i=0; i<deltats.size(); i+=step) {
         deltats_tmp.push_back(deltats[i]);
       }
       deltats_tmp.swap(deltats);
