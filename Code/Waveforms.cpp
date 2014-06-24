@@ -62,7 +62,7 @@ using std::ios_base;
 using std::complex;
 
 
-// This macro is useful for debugging
+// These macros are useful for debugging
 #define INFOTOCERR std::cerr << __FILE__ << ":" << __LINE__ << ":" << __func__ << ": "
 #define INFOTOCOUT std::cout << __FILE__ << ":" << __LINE__ << ":" << __func__ << ": "
 
@@ -2218,11 +2218,12 @@ public:
   mutable unsigned int nHat_B_i; // Just a guess to speed up hunting for the index
   mutable unsigned int Rbar_epsB_i; // Just a guess to speed up hunting for the index
   mutable bool Flip;
+  const bool Debug;
 public:
   WaveformAligner(const GWFrames::Waveform& W_A, const GWFrames::Waveform& iW_B,
-                  const double t_1, const double t_2)
+                  const double t_1, const double t_2, const bool iDebug)
     : R_fA(W_A.Frame()), t_A(W_A.T()), W_B(iW_B), t_mid((t_1+t_2)/2.),
-      R_epsB(0), R_epsB_is_set(false), nHat_B_i(0), Rbar_epsB_i(0), Flip(false)
+      R_epsB(0), R_epsB_is_set(false), nHat_B_i(0), Rbar_epsB_i(0), Flip(false), Debug(iDebug)
   {
     // Check to make sure we have sufficient times before any offset.
     // (This is necessary but not sufficient for the method to work.)
@@ -2259,12 +2260,12 @@ public:
     t_A.erase(t_A.begin(), t_A.begin()+i);
     R_fA.erase(R_fA.begin(), R_fA.begin()+i);
 
-    // { // Just for debugging temporarily
-    //   INFOTOCERR << "\tOutput to /tmp/XiIntegral.dat" << std::endl;
-    //   ofstream myfile;
-    //   myfile.open ("/tmp/XiIntegralPoints.dat");
-    //   myfile.close();
-    // }
+    if(Debug) {
+      INFOTOCERR << "\tOutput to /tmp/XiIntegral.dat" << std::endl;
+      ofstream myfile;
+      myfile.open ("/tmp/XiIntegralPoints.dat");
+      myfile.close();
+    }
   }
 
   void SetR_epsB(const std::vector<Quaternion>& iR_epsB) {
@@ -2309,14 +2310,14 @@ public:
       fdot_last1 = fdot1;
       fdot_last2 = fdot2;
     }
-    // { // Just for debugging temporarily
-    //   // INFOTOCERR << "\tOutput to /tmp/XiIntegralPoints.dat" << std::endl;
-    //   ofstream myfile;
-    //   myfile.open("/tmp/XiIntegralPoints.dat", std::ofstream::app);
-    //   myfile << std::setprecision(15);
-    //   myfile << deltat << " " << f1 << " " << f2 << std::endl;
-    //   myfile.close();
-    // }
+    if(Debug) {
+      // INFOTOCERR << "\tOutput to /tmp/XiIntegralPoints.dat" << std::endl;
+      ofstream myfile;
+      myfile.open("/tmp/XiIntegralPoints.dat", std::ofstream::app);
+      myfile << std::setprecision(15);
+      myfile << deltat << " " << f1 << " " << f2 << std::endl;
+      myfile.close();
+    }
     Flip = (f2<f1);
     return std::min(f1,f2);
   }
@@ -2332,7 +2333,7 @@ double minfunc (const gsl_vector* delta, void* params) {
 
 /// Do everything necessary to align two waveform objects
 void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
-                              const double t_1, const double t_2, unsigned int InitialEvaluations, std::vector<double> nHat_A)
+                              const double t_1, const double t_2, unsigned int InitialEvaluations, std::vector<double> nHat_A, const bool Debug)
 {
   /// \param W_A Fixed waveform (though modes are re-aligned)
   /// \param W_B Adjusted waveform (modes are re-aligned and frame and time are offset)
@@ -2430,7 +2431,7 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
   W_A.AlignDecompositionFrameToModes(t_mid, nHat_A);
   W_B.AlignDecompositionFrameToModes(t_mid, Quaternions::xHat);
 
-  WaveformAligner Aligner(W_A, W_B, t_1, t_2);
+  WaveformAligner Aligner(W_A, W_B, t_1, t_2, Debug);
   const std::vector<double>& t_A = Aligner.t_A;
   const std::vector<Quaternions::Quaternion>& R_fA = Aligner.R_fA;
 
@@ -2467,18 +2468,18 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
       XiIntegral2[i] = Quaternions::DefiniteIntegral(R_fA*(-Quaternions::zHat)*Aligner.Rbar_epsB(t_mid+deltats[i])*Aligner.Rbar_fB(t_A+deltats[i]), t_A);
     }
 
-    // { // Just for debugging temporarily
-    //   INFOTOCERR << "\tOutput to /tmp/XiIntegral.dat" << std::endl;
-    //   ofstream myfile;
-    //   myfile.open ("/tmp/XiIntegral.dat");
-    //   myfile << std::setprecision(15);
-    //   for(unsigned int i=0; i<XiIntegral1.size(); ++i) {
-    //     myfile << deltats[i] << " "
-    //            << 2*(t_2 - t_1 - Quaternions::abs(XiIntegral1[i])) << " "
-    //            << 2*(t_2 - t_1 - Quaternions::abs(XiIntegral2[i])) << std::endl;
-    //   }
-    //   myfile.close();
-    // }
+    if(Debug) {
+      INFOTOCERR << "\tOutput to /tmp/XiIntegral.dat" << std::endl;
+      ofstream myfile;
+      myfile.open ("/tmp/XiIntegral.dat");
+      myfile << std::setprecision(15);
+      for(unsigned int i=0; i<XiIntegral1.size(); ++i) {
+        myfile << deltats[i] << " "
+               << 2*(t_2 - t_1 - Quaternions::abs(XiIntegral1[i])) << " "
+               << 2*(t_2 - t_1 - Quaternions::abs(XiIntegral2[i])) << std::endl;
+      }
+      myfile.close();
+    }
 
     // Find the best value
     double Xi_c_min = 1e300;
@@ -2538,8 +2539,6 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
     const Quaternions::Quaternion R_delta_log = Quaternions::logRotor(R_delta);
     const Quaternions::Quaternion NegativeR_delta_log = Quaternions::logRotor(-R_delta);
     gsl_vector_set(x, 0, deltat);
-    // INFOTOCOUT << Aligner.EvaluateMinimizationQuantity(deltat, R_delta_log[1], R_delta_log[2], R_delta_log[3])
-    //            << " " << Aligner.EvaluateMinimizationQuantity(deltat, NegativeR_delta_log[1], NegativeR_delta_log[2], NegativeR_delta_log[3]) << std::endl;
     if(Aligner.EvaluateMinimizationQuantity(deltat, R_delta_log[1], R_delta_log[2], R_delta_log[3])
        <= Aligner.EvaluateMinimizationQuantity(deltat, NegativeR_delta_log[1], NegativeR_delta_log[2], NegativeR_delta_log[3])) {
       gsl_vector_set(x, 1, R_delta_log[1]);

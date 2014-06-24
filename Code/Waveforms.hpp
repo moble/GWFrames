@@ -229,7 +229,7 @@ namespace GWFrames {
   #include "Waveforms_BinaryOp.ipp"
 
   void AlignWaveforms(Waveform& A, Waveform& B, const double t_1, const double t_2, unsigned int InitialEvaluations=0,
-                      std::vector<double> nHat_A=std::vector<double>(0));
+                      std::vector<double> nHat_A=std::vector<double>(0), const bool Debug=false);
 
 
   // /// Object storing a collection of Waveform objects to be operated on uniformly
