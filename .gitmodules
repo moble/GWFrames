@@ -1,13 +1,16 @@
 [submodule "Code/PostNewtonian"]
-	path = Code/PostNewtonian
-	url = git@github.com:MOBle/PostNewtonian.git
-	branch = master
+    path = Code/PostNewtonian
+    url = https://github.com/moble/PostNewtonian.git
+    branch = master
 [submodule "Code/SphericalFunctions"]
-	path = Code/SphericalFunctions
-	url = git@github.com:MOBle/SphericalFunctions.git
+    path = Code/SphericalFunctions
+    url = https://github.com/moble/SphericalFunctions.git
+    branch = master
 [submodule "Code/SpacetimeAlgebra"]
-	path = Code/SpacetimeAlgebra
-	url = git@github.com:MOBle/SpacetimeAlgebra.git
+    path = Code/SpacetimeAlgebra
+    url = https://github.com/moble/SpacetimeAlgebra.git
+    branch = master
 [submodule "Code/Quaternions"]
-	path = Code/Quaternions
-	url = git@github.com:MOBle/Quaternions.git
+    path = Code/Quaternions
+    url = https://github.com/moble/Quaternions.git
+    branch = master
