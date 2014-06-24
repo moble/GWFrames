@@ -93,7 +93,7 @@ def Hybridize(PathToSystem, Waveform='rhOverM_Asymptotic_GeometricUnits.h5/Extra
     # its merger time is set to t=0.0, which is the only physically
     # meaningful fiducial quantity present.  That quality will
     # therefore also be present in the output waveform.
-    GWFrames.AlignWaveforms(W_NR_corot, W_PN_corot, t1, t2, DirectAlignmentEvaluations, [], True)
+    GWFrames.AlignWaveforms(W_NR_corot, W_PN_corot, t1, t2, DirectAlignmentEvaluations)
 
     print("Constructing PN-NR hybrid"); sys.stdout.flush()
 
