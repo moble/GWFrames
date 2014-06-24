@@ -2310,9 +2310,10 @@ public:
       fdot_last2 = fdot2;
     }
     // { // Just for debugging temporarily
-    //   INFOTOCERR << "\tOutput to /tmp/XiIntegralPoints.dat" << std::endl;
+    //   // INFOTOCERR << "\tOutput to /tmp/XiIntegralPoints.dat" << std::endl;
     //   ofstream myfile;
-    //   myfile.open ("/tmp/XiIntegralPoints.dat", std::ofstream::app);
+    //   myfile.open("/tmp/XiIntegralPoints.dat", std::ofstream::app);
+    //   myfile << std::setprecision(15);
     //   myfile << deltat << " " << f1 << " " << f2 << std::endl;
     //   myfile.close();
     // }
@@ -2470,6 +2471,7 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
     //   INFOTOCERR << "\tOutput to /tmp/XiIntegral.dat" << std::endl;
     //   ofstream myfile;
     //   myfile.open ("/tmp/XiIntegral.dat");
+    //   myfile << std::setprecision(15);
     //   for(unsigned int i=0; i<XiIntegral1.size(); ++i) {
     //     myfile << deltats[i] << " "
     //            << 2*(t_2 - t_1 - Quaternions::abs(XiIntegral1[i])) << " "
@@ -2533,11 +2535,21 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
 
     // Set initial values
     x = gsl_vector_alloc(NDimensions);
-    const Quaternions::Quaternion R_delta_log = R_delta.logRotor();
+    const Quaternions::Quaternion R_delta_log = Quaternions::logRotor(R_delta);
+    const Quaternions::Quaternion NegativeR_delta_log = Quaternions::logRotor(-R_delta);
     gsl_vector_set(x, 0, deltat);
-    gsl_vector_set(x, 1, R_delta_log[1]);
-    gsl_vector_set(x, 2, R_delta_log[2]);
-    gsl_vector_set(x, 3, R_delta_log[3]);
+    // INFOTOCOUT << Aligner.EvaluateMinimizationQuantity(deltat, R_delta_log[1], R_delta_log[2], R_delta_log[3])
+    //            << " " << Aligner.EvaluateMinimizationQuantity(deltat, NegativeR_delta_log[1], NegativeR_delta_log[2], NegativeR_delta_log[3]) << std::endl;
+    if(Aligner.EvaluateMinimizationQuantity(deltat, R_delta_log[1], R_delta_log[2], R_delta_log[3])
+       <= Aligner.EvaluateMinimizationQuantity(deltat, NegativeR_delta_log[1], NegativeR_delta_log[2], NegativeR_delta_log[3])) {
+      gsl_vector_set(x, 1, R_delta_log[1]);
+      gsl_vector_set(x, 2, R_delta_log[2]);
+      gsl_vector_set(x, 3, R_delta_log[3]);
+    } else {
+      gsl_vector_set(x, 1, NegativeR_delta_log[1]);
+      gsl_vector_set(x, 2, NegativeR_delta_log[2]);
+      gsl_vector_set(x, 3, NegativeR_delta_log[3]);
+    }
 
     // Set initial step sizes
     ss = gsl_vector_alloc(NDimensions);
@@ -2601,7 +2613,6 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
     gsl_multimin_fminimizer_free(s);
 
     // Now, apply the transformations
-    INFOTOCERR << "\tThe flip implmentation (" << Flip << ") needs to be checked." << std::endl;
     W_B.AlignDecompositionFrameToModes(t_mid+deltat, (Flip ? -Quaternions::xHat : Quaternions::xHat));
     W_B.SetTime(W_B.T()-deltat);
     W_B.SetFrame(R_delta*W_B.Frame());
