@@ -226,7 +226,7 @@ setup(name="GWFrames",
                   extra_objects = glob.glob('spinsfast/build/temp/*/*.o'),
                   extra_link_args = ['-fPIC',],
                   # extra_link_args=['-lgomp', '-fPIC', '-Wl,-undefined,error'], # `-undefined,error` tells the linker to fail on undefined symbols
-                  extra_compile_args=['-Wno-deprecated', '-Wno-unused-variable', '-DUSE_GSL', '-O3'] #'-fopenmp',
+                  extra_compile_args=['-Wno-deprecated', '-Wno-unused-variable', '-DUSE_GSL', '-O3', '-ftree-vectorize'] #'-fopenmp',
                   # extra_compile_args=['-ffast-math'] # DON'T USE fast-math!!!  It makes it impossible to detect NANs
                   ),
         ],
