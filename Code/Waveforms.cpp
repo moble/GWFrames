@@ -2414,20 +2414,20 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
   Quaternion R_delta;
   const double t_mid = (t_1+t_2)/2.;
 
-  // We have two time offsets: deltat_1 being the most negative number
-  // we will shift the time data by; deltat_2 being the most positive
-  // number.  We set the bounds of possible values for deltat to
-  // ensure that W_B.T[0]+deltat_2<t_1 and W_B.T[-1]+deltat_1>t_2,
-  // which mean t_2-W_B.T[-1] < deltat_1 and deltat_2 < t_1-W_B.T[0].
-  // Similarly, require that t_1+deltat_1>W_B.T[0] and
-  // t_2+deltat_2<W_B.T[-1].  Finally, don't search more than
-  // (t2-t1)/2. to either left or right.  And just for good measure,
-  // let's make those margins a little wider by taking the second and
-  // second-to-last elements of W_B.T().
-  // const double deltat_1 = std::max(std::max(t_2-W_B.T(W_B.NTimes()-2), W_B.T(1)-t_1), -(t_2-t_1)/2.);
-  // const double deltat_2 = std::min(std::min(t_1-W_B.T(1), W_B.T(W_B.NTimes()-2)-t_2),  (t_2-t_1)/2.);
-  const double deltat_1 = std::max(t_2-W_B.T(W_B.NTimes()-2), (t_1-t_2)/2.);
-  const double deltat_2 = std::min(t_1-W_B.T(1), (t_2-t_1)/2.);
+  // We have two time offsets: deltat_1 being the most negative
+  // number; deltat_2 being the most positive number.  These are the
+  // offsets given to the time window on which we will evaluate W_B.
+  // That is, W_B is left in place, but we evaluate it on a shifting
+  // window of time (equivalent to shifting W_B by the opposite
+  // amount); W_A is always left in place, and we only evaluate it on
+  // the original window.  Thus, we set the bounds to ensure that
+  // W_B.T(0)<t_1+deltat_1 and W_B.T(-1)>t_2+deltat_2 -- which
+  // translate into deltat_1>W_B.T(0)-t_1 and deltat_2<W_B.T(-1)-t_2.
+  // Just for good measure, let's move those W_B.T indices in one.
+  // Also, we don't search more than (t2-t1)/2.0 to either left or
+  // right.
+  const double deltat_1 = std::max(W_B.T(1)-t_1, -(t_2-t_1)/2.);
+  const double deltat_2 = std::min(W_B.NTimes()-2-t_2, (t_2-t_1)/2.);
 
 
   // Align W_A forever, and align W_B initially as a first guess
@@ -2452,7 +2452,6 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
 
     // Evaluate Xi_c for every deltat that won't require interpolating
     // W_B to find R_eps_B (because interpolation is really slow)
-INFOTOCERR << W_B.T(0) << " " << W_B.T(W_B.NTimes()-1) << " " << t_mid << " " << deltat_1 << " " << deltat_2 << std::endl;
     const GWFrames::Waveform W_B_Interval = W_B.SliceOfTimesWithoutModes(t_mid+deltat_1, t_mid+deltat_2);
     using namespace GWFrames; // To subtract double from vector<double> below
     vector<double> deltats = W_B_Interval.T()-t_mid;
