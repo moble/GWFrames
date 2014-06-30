@@ -2489,6 +2489,9 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
     unsigned int i_Xi_c_min = 0;
     bool Flip = false;
     for(unsigned int i=0; i<XiIntegral1.size(); ++i) {
+      // Note that, presumably because of the `abs` here, the sign of
+      // the argmin will be ambiguous.  This needs to be detected
+      // below, when we set the initial conditions for the minimizer.
       const double Xi_c_i1 = 2*(t_2 - t_1 - Quaternions::abs(XiIntegral1[i]));
       const double Xi_c_i2 = 2*(t_2 - t_1 - Quaternions::abs(XiIntegral2[i]));
       if(Xi_c_i1<Xi_c_min) {
