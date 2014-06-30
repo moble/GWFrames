@@ -22,25 +22,18 @@
   #endif
   namespace GWFrames {
     static sigjmp_buf FloatingPointExceptionJumpBuffer;
-    static sigjmp_buf InterruptExceptionJumpBuffer;
     void FloatingPointExceptionHandler(int sig) {
       siglongjmp(FloatingPointExceptionJumpBuffer, sig);
-    }
-    void InterruptExceptionHandler(int sig) {
-      siglongjmp(InterruptExceptionJumpBuffer, sig);
     }
     class ExceptionHandlerSwitcher {
     private:
       int OriginalExceptionFlags;
       void (*OriginalFloatingPointExceptionHandler)(int);
-      void (*OriginalInterruptExceptionHandler)(int);
     public:
       ExceptionHandlerSwitcher()
         : OriginalExceptionFlags(fegetexcept()),
-          OriginalFloatingPointExceptionHandler(signal(SIGFPE, FloatingPointExceptionHandler)),
-          OriginalInterruptExceptionHandler(signal(SIGINT, InterruptExceptionHandler))
+          OriginalFloatingPointExceptionHandler(signal(SIGFPE, FloatingPointExceptionHandler))
       {
-std::cout << "ExceptionHandlerSwitcher()" << std::endl;
         #ifdef __APPLE__
           _mm_setcsr( _MM_MASK_MASK &~
                      (_MM_MASK_OVERFLOW|_MM_MASK_INVALID|_MM_MASK_DIV_ZERO));
@@ -49,14 +42,12 @@ std::cout << "ExceptionHandlerSwitcher()" << std::endl;
         #endif
       }
       ~ExceptionHandlerSwitcher() {
-std::cout << "~ExceptionHandlerSwitcher()" << std::endl;
         #ifdef __APPLE__
           _mm_setcsr(OriginalExceptionFlags);
         #else
           feenableexcept(OriginalExceptionFlags);
         #endif
         signal(SIGFPE, OriginalFloatingPointExceptionHandler);
-        signal(SIGINT, OriginalInterruptExceptionHandler);
       }
     };
   }
@@ -123,29 +114,22 @@ std::cout << "~ExceptionHandlerSwitcher()" << std::endl;
 // It's a good idea to try to keep this part brief, just to cut down
 // the size of the wrapper file.
 %exception {
-
   if (!sigsetjmp(GWFrames::FloatingPointExceptionJumpBuffer, 1)) {
-    if(!sigsetjmp(GWFrames::InterruptExceptionJumpBuffer, 1)) {
-      try {
-        const GWFrames::ExceptionHandlerSwitcher Switcher;
-        $action;
-      } catch(int i) {
-        std::stringstream s;
-        if(i>-1 && i<GWFramesNumberOfErrors) { s << "$fulldecl: " << GWFramesErrors[i]; }
-        else  { s << "$fulldecl: Unknown exception number {" << i << "}"; }
-        PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
-        return 0;
-      } catch(...) {
-        PyErr_SetString(PyExc_RuntimeError, "$fulldecl: Unknown exception; default handler");
-        return 0;
-      }
-    } else {
-      PyErr_SetString(PyExc_RuntimeError, "$fulldecl: Caught a manual interrupt in the c++ code.");
+    try {
+      const GWFrames::ExceptionHandlerSwitcher Switcher;
+      $action;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) { s << "$fulldecl: " << GWFramesErrors[i]; }
+      else  { s << "$fulldecl: Unknown exception number {" << i << "}"; }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return 0;
+    } catch(...) {
+      PyErr_SetString(PyExc_RuntimeError, "$fulldecl: Unknown exception; default handler");
       return 0;
     }
   } else {
     PyErr_SetString(PyExc_RuntimeError, "$fulldecl: Caught a floating-point exception in the c++ code.");
     return 0;
   }
-
 }
