@@ -13,6 +13,7 @@
   #include <csignal>
   #ifdef __APPLE__
     #include <xmmintrin.h>
+    int fegetexcept() { return _mm_getcsr(); }
   #else
     #include <fenv.h>     // For feenableexcept. Doesn't seem to be a <cfenv>
     #ifndef __USE_GNU
@@ -20,31 +21,37 @@
     #endif
   #endif
   namespace GWFrames {
-    void FloatingPointExceptionHandler(int sig);
-    void InterruptExceptionHandler(int sig);
+    static sigjmp_buf FloatingPointExceptionJumpBuffer;
+    static sigjmp_buf InterruptExceptionJumpBuffer;
+    void FloatingPointExceptionHandler(int sig) {
+      siglongjmp(FloatingPointExceptionJumpBuffer, sig);
+    }
+    void InterruptExceptionHandler(int sig) {
+      siglongjmp(InterruptExceptionJumpBuffer, sig);
+    }
     class ExceptionHandlerSwitcher {
     private:
+      int OriginalExceptionFlags;
       void (*OriginalFloatingPointExceptionHandler)(int);
       void (*OriginalInterruptExceptionHandler)(int);
-      sigjmp_buf FloatingPointExceptionJumpBuffer;
-      sigjmp_buf InterruptExceptionJumpBuffer;
-      int OriginalExceptionFlags;
     public:
-      ExceptionHandlerSwitcher() {
+      ExceptionHandlerSwitcher()
+        : OriginalExceptionFlags(fegetexcept()),
+          OriginalFloatingPointExceptionHandler(signal(SIGFPE, FloatingPointExceptionHandler)),
+          OriginalInterruptExceptionHandler(signal(SIGINT, InterruptExceptionHandler))
+      {
+std::cout << "ExceptionHandlerSwitcher()" << std::endl;
         #ifdef __APPLE__
-          OriginalExceptionFlags = _mm_getcsr();
           _mm_setcsr( _MM_MASK_MASK &~
                      (_MM_MASK_OVERFLOW|_MM_MASK_INVALID|_MM_MASK_DIV_ZERO));
         #else
-          OriginalExceptionFlags = fegetexcept();
           feenableexcept(FE_INVALID | FE_DIVBYZERO | FE_OVERFLOW);
         #endif
-        OriginalFloatingPointExceptionHandler = signal(SIGFPE, FloatingPointExceptionHandler);
-        OriginalInterruptExceptionHandler = signal(SIGINT, InterruptExceptionHandler);
       }
       ~ExceptionHandlerSwitcher() {
+std::cout << "~ExceptionHandlerSwitcher()" << std::endl;
         #ifdef __APPLE__
-          _mm_setcsr( OriginalExceptionFlags );
+          _mm_setcsr(OriginalExceptionFlags);
         #else
           feenableexcept(OriginalExceptionFlags);
         #endif
@@ -52,29 +59,6 @@
         signal(SIGINT, OriginalInterruptExceptionHandler);
       }
     };
-
-
-    void FloatingPointExceptionHandler(int sig) {
-      signal(SIGFPE, prev_FPE_handler);
-      siglongjmp(FloatingPointExceptionJumpBuffer, sig);
-    }
-    void InterruptExceptionHandler(int sig) {
-      signal(SIGINT, OriginalInterruptExceptionHandler);
-      siglongjmp(InterruptExceptionJumpBuffer, sig);
-    }
-    // This function enables termination on FPE's
-    bool _RaiseFloatingPointException() {
-      #ifdef __APPLE__
-      _mm_setcsr( _MM_MASK_MASK &~
-                  (_MM_MASK_OVERFLOW|_MM_MASK_INVALID|_MM_MASK_DIV_ZERO));
-      #else
-      feenableexcept(FE_INVALID | FE_DIVBYZERO | FE_OVERFLOW);
-      #endif
-      return true;
-    }
-    // Ensure RaiseFloatingPointException() is not optimized away by
-    // using its output to define a global variable.
-    bool RaiseFPE = _RaiseFloatingPointException();
   }
 
   // The following allows us to elegantly fail in python from
@@ -140,24 +124,19 @@
 // the size of the wrapper file.
 %exception {
 
-  prev_GWFramesFPE_handler = signal(SIGFPE, GWFrames_FloatingPointExceptionHandler);
-  prev_GWFramesINT_handler = signal(SIGINT, GWFrames_InterruptExceptionHandler);
-  if (!sigsetjmp(GWFrames_FloatingPointExceptionJumpBuffer, 1)) {
-    if(!sigsetjmp(GWFrames_InterruptExceptionJumpBuffer, 1)) {
+  if (!sigsetjmp(GWFrames::FloatingPointExceptionJumpBuffer, 1)) {
+    if(!sigsetjmp(GWFrames::InterruptExceptionJumpBuffer, 1)) {
       try {
+        const GWFrames::ExceptionHandlerSwitcher Switcher;
         $action;
       } catch(int i) {
         std::stringstream s;
         if(i>-1 && i<GWFramesNumberOfErrors) { s << "$fulldecl: " << GWFramesErrors[i]; }
         else  { s << "$fulldecl: Unknown exception number {" << i << "}"; }
         PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
-        signal(SIGFPE, prev_GWFramesFPE_handler);
-        signal(SIGINT, prev_GWFramesINT_handler);
         return 0;
       } catch(...) {
         PyErr_SetString(PyExc_RuntimeError, "$fulldecl: Unknown exception; default handler");
-        signal(SIGFPE, prev_GWFramesFPE_handler);
-        signal(SIGINT, prev_GWFramesINT_handler);
         return 0;
       }
     } else {
@@ -168,7 +147,5 @@
     PyErr_SetString(PyExc_RuntimeError, "$fulldecl: Caught a floating-point exception in the c++ code.");
     return 0;
   }
-  signal(SIGFPE, prev_GWFramesFPE_handler);
-  signal(SIGINT, prev_GWFramesINT_handler);
 
 }
