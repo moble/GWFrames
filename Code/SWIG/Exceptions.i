@@ -72,5 +72,10 @@
     else  { s << "GWFrames: Unknown exception number {" << i << "}"; }
     PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
     return 0; // NULL;
+  } catch(...) {
+    std::stringstream s;
+    s << "GWFrames: Unknown exception, default handler";
+    PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+    return 0;
   }
 }
