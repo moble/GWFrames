@@ -75,7 +75,7 @@
   } catch(...) {
     std::stringstream s;
     s << "GWFrames: Unknown exception, default handler";
-    PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+    PyErr_SetString(PyExc_RuntimeError, s.str().c_str());
     return 0;
   }
 }
