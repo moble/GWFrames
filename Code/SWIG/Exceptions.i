@@ -116,7 +116,7 @@
 %exception {
   if (!sigsetjmp(GWFrames::FloatingPointExceptionJumpBuffer, 1)) {
     try {
-      const GWFrames::ExceptionHandlerSwitcher Switcher;
+      // const GWFrames::ExceptionHandlerSwitcher Switcher;
       $action;
     } catch(int i) {
       std::stringstream s;
