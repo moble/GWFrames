@@ -18,7 +18,7 @@ namespace GWFrames {
     PNWaveform(const PNWaveform& W);
     PNWaveform(const std::string& Approximant, const double delta, const std::vector<double>& chi1_i, const std::vector<double>& chi2_i,
                const double Omega_orb_i, double Omega_orb_0=-1.0, const Quaternions::Quaternion& R_frame_i=Quaternions::Quaternion(1,0,0,0),
-               const double PNOrder=4.0);
+               const double PNOrder=4.0, const unsigned int MinStepsPerOrbit=32);
     ~PNWaveform() { }
 
   private:  // Member data
