@@ -14,6 +14,10 @@
 #include "Utilities.hpp"
 #include "Errors.hpp"
 
+// These macros are useful for debugging
+#define INFOTOCERR std::cerr << __FILE__ << ":" << __LINE__ << ":" << __func__ << ": "
+#define INFOTOCOUT std::cout << __FILE__ << ":" << __LINE__ << ":" << __func__ << ": "
+
 using std::vector;
 using std::string;
 using Quaternions::Quaternion;
@@ -80,7 +84,7 @@ GWFrames::PNWaveform::PNWaveform(const PNWaveform& a) :
 GWFrames::PNWaveform::PNWaveform(const std::string& Approximant, const double delta,
                                  const std::vector<double>& chi1_i, const std::vector<double>& chi2_i,
                                  const double Omega_orb_i, double Omega_orb_0,
-                                 const Quaternions::Quaternion& R_frame_i, const double PNOrder) :
+                                 const Quaternions::Quaternion& R_frame_i, const double PNOrder, const unsigned int MinStepsPerOrbit) :
   Waveform(), mchi1(0), mchi2(0), mOmega_orb(0), mOmega_prec(0), mL(0), mPhi_orb(0)
 {
   ///
@@ -92,6 +96,7 @@ GWFrames::PNWaveform::PNWaveform(const std::string& Approximant, const double de
   /// \param Omega_orb_0 Earliest orbital angular frequency to compute (optional)
   /// \param R_frame_i Overall rotation of the system (optional)
   /// \param PNOrder PN order at which to compute all quantities (default: 4.0)
+  /// \param MinStepsPerOrbit Minimum number of time steps at which to evaluate
   ///
   /// The PN system is initialized having the BHs along the x axis,
   /// with the orbital angular velocity along the positive z axis,
@@ -150,7 +155,7 @@ GWFrames::PNWaveform::PNWaveform(const std::string& Approximant, const double de
   vector<double> v;
 
   PostNewtonian::EvolvePN_Q(Approximant, PNOrder, v_0, v_i, m1, m2, chi1_i, chi2_i, R_frame_i,
-                            t, v, mchi1, mchi2, frame, mPhi_orb, mL);
+                            t, v, mchi1, mchi2, frame, mPhi_orb, mL, MinStepsPerOrbit);
 
   mOmega_orb = GWFrames::pow(v,3)*PostNewtonian::ellHat(frame);
   mOmega_prec = Quaternions::vec(Quaternions::FrameAngularVelocity(frame, t)) - mOmega_orb;

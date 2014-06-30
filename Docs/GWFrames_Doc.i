@@ -400,6 +400,7 @@ Do everything necessary to align two waveform objects.
       Number of evaluations for dumb initial optimization
     vector<double> nHat_A = vector<double>(0)
       Approximate nHat vector at (t_1+t_2)/2. [optional]
+    const bool Debug = false
   
   Returns
   -------
@@ -409,9 +410,9 @@ Do everything necessary to align two waveform objects.
   -----------
     This function aligns the frame to the waveform modes for both input
     Waveform objects at time t_mid = (t_1+t_2)/2. It also optimizes the
-    alignment of W_B by adjusting its time and overall attitudes to align
-    with W_A as well as possible. While doing so, it re-adjusts the frame
-    alignment to the modes for W_B to account for the changing meaning of t_mid.
+    alignment of W_B by adjusting its time and overall attitudes to align with
+    W_A as well as possible. While doing so, it re-adjusts the frame alignment
+    to the modes for W_B to account for the changing meaning of t_mid.
     
     Note that t_1 and t_2 refer to fixed times with respect to the time axis of
     W_A.
@@ -431,9 +432,10 @@ Do everything necessary to align two waveform objects.
     time shift, W_B must have data over all of that interval.
     
     As long as this last condition is satisfied, and the waveforms are even
-    remotely well sampled, and your data does not contain other grievous
-    errors, I (Mike Boyle) do hereby guarantee that this function will find the
-    optimal alignment. Or your money back.
+    remotely well sampled, and assuming the code's logic does not fail due to
+    otherwise weird or unexpected inputs, I (Mike Boyle) do hereby guarantee
+    that this algorithm will find the optimal alignment in both time and
+    attitude. Or your money back.
   
 """
 
@@ -1519,8 +1521,8 @@ Measure the relative magnitude of the violation of parity in the z direction.
     (reflection across the x-y plane). Nonprecessing systems in a suitable
     frame should have zero violation. Precessing systems in any frame and
     nonprecessing systems in the wrong frame will show violations. This
-    quantity can be minimized over attitude to show the presence or absence
-    of a plane of symmetry.
+    quantity can be minimized over attitude to show the presence or absence of
+    a plane of symmetry.
     
     The quantity is normalized by the overall norm of the data at each instant,
     and the square-root of that ratio is returned.
@@ -1808,6 +1810,8 @@ Constructor of PN waveform from parameters.
       Overall rotation of the system (optional)
     const double PNOrder = 4.0
       PN order at which to compute all quantities (default: 4.0)
+    const unsigned int MinStepsPerOrbit = 32
+      Minimum number of time steps at which to evaluate
   
   Returns
   -------
@@ -3787,7 +3791,7 @@ Return the normalized asymmetry as a function of time.
 
 %feature("docstring") GWFrames::Waveform::AlignDecompositionFrameToModes """
 Fix the attitude of the corotating frame.
-============================================
+=========================================
   Parameters
   ----------
     const double t_fid
@@ -4273,8 +4277,8 @@ Measure the absolute magnitude of the violation of parity in the z direction.
     (reflection across the x-y plane). Nonprecessing systems in a suitable
     frame should have zero violation. Precessing systems in any frame and
     nonprecessing systems in the wrong frame will show violations. This
-    quantity can be minimized over attitude to show the presence or absence
-    of a plane of symmetry.
+    quantity can be minimized over attitude to show the presence or absence of
+    a plane of symmetry.
   
 """
 
@@ -4370,10 +4374,10 @@ Constructor on boosted grid by means of functor.
   Description
   -----------
     The functor takes a Quaternion argument, which describes the location and
-    attitude of the point to be evaluated. In particular, the rotor takes
-    the $\\hat{z}$ vector into the point at which the field is to be measured,
-    and takes $\\hat{x} + i \\hat{y}$ into the $m$ vector (within
-    normalization) needed for spin-weighted fields.
+    alignment of the point to be evaluated. In particular, the rotor takes the
+    $\\hat{z}$ vector into the point at which the field is to be measured, and
+    takes $\\hat{x} + i \\hat{y}$ into the $m$ vector (within normalization)
+    needed for spin-weighted fields.
   
 """
 
@@ -4734,7 +4738,9 @@ Calculate the principal axis of the LL matrix, as prescribed by O'Shaughnessy et
   Parameters
   ----------
     const vector<int>& Lmodes = vector<int>(0)
-      L modes to evaluate
+      L modes to evaluate (optional)
+    const Quaternions::Quaternion& RoughInitialEllDirection = Quaternions::zHat
+      Vague guess about the preferred initial (optional)
   
   Returns
   -------
@@ -4744,6 +4750,12 @@ Calculate the principal axis of the LL matrix, as prescribed by O'Shaughnessy et
   -----------
     If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
     or [2,3,4], for example, restricts the range of the sum.
+    
+    Ell is the direction of the angular velocity for a PN system, so some rough
+    guess about that direction allows us to choose the direction of the
+    eigenvectors output by this function to be more parallel than anti-parallel
+    to that direction. The default is to simply choose the z axis, since this
+    is most often the correct choice anyway.
   
 """
 
@@ -4974,7 +4986,7 @@ Return vector of vector of imaginary parts of all modes as function of time.
 
 %feature("docstring") GWFrames::Waveform::GetAlignmentOfDecompositionFrameToModes """
 Find the appropriate rotation to fix the attitude of the corotating frame.
-=============================================================================
+==========================================================================
   Parameters
   ----------
     const double t_fid
@@ -5167,7 +5179,7 @@ Construct a boosted grid with the conformal factor at each point.
 
 %feature("docstring") GWFrames::Waveform::GetAlignmentsOfDecompositionFrameToModes """
 Find the appropriate rotations to fix the attitude of the corotating frame.
-==============================================================================
+===========================================================================
   Parameters
   ----------
     const vector<int>& Lmodes = vector<int>(0)
