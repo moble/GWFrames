@@ -4,6 +4,56 @@
 
 // The following will appear in the header of the `_wrap.cpp` file.
 %{
+  // The following allows us to elegantly fail in python from manual
+  // interrupts and floating-point exceptions found in the c++ code.
+  // The setjmp part of this was inspired by the post
+  // <http://stackoverflow.com/a/12155582/1194883>.  The code for
+  // setting the csr flags is taken from SpEC.
+  #include <csetjmp>
+  #include <csignal>
+  #ifdef __APPLE__
+    #include <xmmintrin.h>
+    int fegetexcept() { return _mm_getcsr(); }
+  #else
+    #include <fenv.h>     // For feenableexcept. Doesn't seem to be a <cfenv>
+    #ifndef __USE_GNU
+      extern "C" int feenableexcept (int EXCEPTS);
+    #endif
+  #endif
+  namespace GWFrames {
+    static sigjmp_buf FloatingPointExceptionJumpBuffer;
+    void FloatingPointExceptionHandler(int sig) {
+      siglongjmp(FloatingPointExceptionJumpBuffer, sig);
+    }
+    class ExceptionHandlerSwitcher {
+    private:
+      int OriginalExceptionFlags;
+      void (*OriginalFloatingPointExceptionHandler)(int);
+    public:
+      ExceptionHandlerSwitcher()
+        : OriginalExceptionFlags(fegetexcept()),
+          OriginalFloatingPointExceptionHandler(signal(SIGFPE, FloatingPointExceptionHandler))
+      {
+        #ifdef __APPLE__
+          _mm_setcsr( _MM_MASK_MASK &~
+                     (_MM_MASK_OVERFLOW|_MM_MASK_INVALID|_MM_MASK_DIV_ZERO));
+        #else
+          feenableexcept(FE_INVALID | FE_DIVBYZERO | FE_OVERFLOW);
+        #endif
+      }
+      ~ExceptionHandlerSwitcher() {
+        #ifdef __APPLE__
+          _mm_setcsr(OriginalExceptionFlags);
+        #else
+          feenableexcept(OriginalExceptionFlags);
+        #endif
+        signal(SIGFPE, OriginalFloatingPointExceptionHandler);
+      }
+    };
+  }
+
+  // The following allows us to elegantly fail in python from
+  // exceptions raised by the c++ code.
   const char* const GWFramesErrors[] = {
     "This function is not yet implemented.",
     "Failed system call.",
@@ -64,18 +114,22 @@
 // It's a good idea to try to keep this part brief, just to cut down
 // the size of the wrapper file.
 %exception {
-  try {
-    $action;
-  } catch(int i) {
-    std::stringstream s;
-    if(i>-1 && i<GWFramesNumberOfErrors) { s << "GWFrames exception: " << GWFramesErrors[i]; }
-    else  { s << "GWFrames: Unknown exception number {" << i << "}"; }
-    PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
-    return 0; // NULL;
-  } catch(...) {
-    std::stringstream s;
-    s << "GWFrames: Unknown exception, default handler";
-    PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+  if (!sigsetjmp(GWFrames::FloatingPointExceptionJumpBuffer, 1)) {
+    try {
+      const GWFrames::ExceptionHandlerSwitcher Switcher;
+      $action;
+    } catch(int i) {
+      std::stringstream s;
+      if(i>-1 && i<GWFramesNumberOfErrors) { s << "$fulldecl: " << GWFramesErrors[i]; }
+      else  { s << "$fulldecl: Unknown exception number {" << i << "}"; }
+      PyErr_SetString(GWFramesExceptions[i], s.str().c_str());
+      return 0;
+    } catch(...) {
+      PyErr_SetString(PyExc_RuntimeError, "$fulldecl: Unknown exception; default handler");
+      return 0;
+    }
+  } else {
+    PyErr_SetString(PyExc_RuntimeError, "$fulldecl: Caught a floating-point exception in the c++ code.");
     return 0;
   }
 }
