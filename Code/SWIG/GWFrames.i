@@ -29,6 +29,7 @@
   #include "../Waveforms.hpp"
   #include "../PNWaveforms.hpp"
   #include "../WaveformsAtAPointFT.hpp"
+
 %}
 
 
@@ -36,11 +37,11 @@
 //// This lets me use numpy.array in the code below ////
 ////////////////////////////////////////////////////////
 %{
-#define SWIG_FILE_WITH_INIT
+  #define SWIG_FILE_WITH_INIT
 %}
 %include "numpy.i"
 %init %{
-import_array();
+  import_array();
 %}
 
 
