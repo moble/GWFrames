@@ -95,7 +95,7 @@ class PNWaveform(_PNWaveform):
                  const double Omega_orb_i,
                  double Omega_orb_0=-1.0,
                  const Quaternions::Quaternion& R_frame_i=Quaternions::Quaternion(1,0,0,0),
-                 const double PNOrder=4.0)
+                 const double PNOrder=4.0, const unsigned int MinStepsPerOrbit=32)
 
     The PN system is initialized having the BHs along the x axis, with
     the orbital angular velocity along the positive z axis, having
