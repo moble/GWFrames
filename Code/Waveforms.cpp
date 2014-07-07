@@ -3157,6 +3157,140 @@ std::complex<double> GWFrames::Waveform::InterpolateToPoint(const double varthet
 }
 
 
+/// Translate the waveform data by some series of spatial translations
+GWFrames::Waveform GWFrames::Waveform::Translate(const std::vector<std::vector<double> >& deltax) const {
+  /// \param x Array of 3-vectors by which to translate (function of time)
+
+  if(frameType == GWFrames::UnknownFrameType) {
+    INFOTOCERR << "\nWarning: Asking to Translate a Waveform in an `" << GWFrames::WaveformFrameNames[frameType] << "` frame."
+               << "\n         This should only be applied to Waveforms in the `" << GWFrames::WaveformFrameNames[GWFrames::Inertial] << "` frame."
+               << "\n         Proceeding, under the assumption that you know what you're doing."
+               << std::endl;
+  } else if(frameType != GWFrames::Inertial) {
+    INFOTOCERR << "\nError: Asking to Translate a Waveform in the " << GWFrames::WaveformFrameNames[frameType] << " frame."
+               << "\n       This should only be applied to Waveforms in the " << GWFrames::WaveformFrameNames[GWFrames::Inertial] << " frame.\n"
+               << std::endl;
+    throw(GWFrames_NotYetImplemented);
+  }
+
+  if(deltax.size() != NTimes()) {
+    INFOTOCERR << "\nERROR: (deltax.size()=" << deltax.size() << ") != (NTimes()=" << NTimes() << ")"
+               << "\n       If you're going to translate, you need to do it at each time step.\n" << std::endl;
+    throw(GWFrames_VectorSizeMismatch);
+  }
+
+  const unsigned int ntimes = NTimes();
+
+  for(unsigned int i=0; i<ntimes; ++i) {
+    if(deltax[i].size() != 3) {
+      INFOTOCERR << "\nERROR: (deltax[" << i << "].size()=" << deltax[i].size() << ") != 3"
+                 << "\n       Each translation should be a 3-vector.\n" << std::endl;
+      throw(GWFrames_VectorSizeMismatch);
+    }
+  }
+
+  // Copy infrastructure to new Waveform
+  const Waveform& A = *this;
+  Waveform B = A.CopyWithoutData();
+  B.history << "*this = this->.Translate(...);"<< std::endl;
+  B.frame = std::vector<Quaternions::Quaternion>(0);
+  B.lm = A.lm;
+  B.t = A.t; // B.t will get reset later
+
+  // These numbers determine the equi-angular grid on which we will do
+  // the interpolation.  For best accuracy, have N_phi > 2*ellMax and
+  // N_theta > 2*ellMax; but for speed, don't make them much greater.
+  const int ellMax(EllMax());
+  const unsigned int N_phi = 2*ellMax + 1;
+  const unsigned int N_theta = 2*ellMax + 1;
+  const double dtheta = M_PI/double(N_theta-1); // theta should return to M_PI
+  const double dphi = 2*M_PI/double(N_phi); // phi should not return to 2*M_PI
+  vector<complex<double> > Grid(N_phi*N_theta);
+
+  // Find earliest and latest times we can use for our new data set
+  unsigned int iEarliest = 0;
+  unsigned int iLatest = ntimes-1;
+  const double tEarliest = t[0];
+  const double tLatest = t.back();
+  { // Do the 0th point explicitly for earliest time only
+    const unsigned int i=0;
+    const double deltaxiMag = std::sqrt(deltax[i][0]*deltax[i][0] + deltax[i][1]*deltax[i][1] + deltax[i][2]*deltax[i][2]);
+    if(t[i]-deltaxiMag<tEarliest) {
+      iEarliest = std::max(iEarliest, i+1);
+    }
+  }
+  for(unsigned int i=1; i<ntimes-1; ++i) { // Do all points in between
+    const double deltaxiMag = std::sqrt(deltax[i][0]*deltax[i][0] + deltax[i][1]*deltax[i][1] + deltax[i][2]*deltax[i][2]);
+    if(t[i]-deltaxiMag<tEarliest) {
+      iEarliest = std::max(iEarliest, i+1);
+    }
+    if(t[i]+deltaxiMag>tLatest) {
+      iLatest = std::min(iLatest, i-1);
+    }
+  }
+  { // Do the last point explicitly for latest time
+    const unsigned int i=ntimes-1;
+    const double deltaxiMag = std::sqrt(deltax[i][0]*deltax[i][0] + deltax[i][1]*deltax[i][1] + deltax[i][2]*deltax[i][2]);
+    if(t[i]+deltaxiMag>tLatest) {
+      iLatest = std::min(iLatest, i-1);
+    }
+  }
+
+  // Now check that we actually have something to work with here
+  if(iLatest<iEarliest) {
+    INFOTOCERR << "\nERROR: (iLatest=" << iLatest << ") < (iEarliest=" << iEarliest << ")"
+               << "\n       The translation is too extreme, and there is not enough data for even one complete time step.\n" << std::endl;
+    throw(GWFrames_EmptyIntersection);
+  }
+
+  // The new times will just be that subset of the old times for which
+  // data exist in every direction after translation.
+  B.t.erase(B.t.begin()+iLatest+1, B.t.end());
+  B.t.erase(B.t.begin(), B.t.begin()+iEarliest);
+  B.data.resize(NModes(), B.NTimes()); // Each row (first index, nn) corresponds to a mode
+
+  // Main loop over time steps
+  for(unsigned int i_t_B=0; i_t_B<B.NTimes(); ++i_t_B) {
+    // These will hold the input and output data.  Note that spinsfast
+    // has had some weird behavior in the past when the output data is
+    // not initialized to zero, so just do this each time, even though
+    // it's slow.
+    vector<complex<double> > Modes(N_lm(ellMax), 0.0);
+
+    // Construct the data on the translated grid
+    for(int i_g=0, i_theta=0; i_theta<N_theta; ++i_theta) {
+      for(int i_phi=0; i_phi<N_phi; ++i_phi, ++i_g) {
+        const double theta = dtheta*i_theta;
+        const double phi = dphi*i_phi;
+
+        const double rHat_dot_deltax =
+          deltax[i_t_B][0]*std::sin(theta)*std::cos(phi)
+          + deltax[i_t_B][1]*std::sin(theta)*std::sin(phi)
+          + deltax[i_t_B][2]*std::cos(theta);
+
+        // Evaluate the data for the translated frame at this point
+        Grid[i_g] = A.InterpolateToPoint(theta, phi, B.T(i_t_B)-rHat_dot_deltax);
+      }
+    }
+
+    // Decompose the data into modes
+    spinsfast_map2salm(reinterpret_cast<fftw_complex*>(&Grid[0]),
+                       reinterpret_cast<fftw_complex*>(&Modes[0]),
+                       SpinWeight(), N_theta, N_phi, ellMax);
+
+    // Set new data at this time step
+    for(int i_mode=N_lm(std::abs(SpinWeight())-1), ell=std::abs(SpinWeight()); ell<=ellMax; ++ell) {
+      for(int m=-ell; m<=ell; ++m, ++i_mode) {
+        B.SetData(B.FindModeIndex(ell,m), i_t_B, Modes[i_mode]);
+      }
+    }
+
+  } // i_t_B loop
+
+  return B;
+}
+
+
 /// Output Waveform object to data file.
 const GWFrames::Waveform& GWFrames::Waveform::Output(const std::string& FileName, const unsigned int precision) const {
   const std::string Descriptor = DescriptorString();
