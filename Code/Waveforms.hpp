@@ -210,6 +210,8 @@ namespace GWFrames {
     Waveform operator/(const double b) const;
 
     Waveform Translate(const std::vector<std::vector<double> >& deltax) const;
+    Waveform& BoostPsi4(const std::vector<std::vector<double> >& v);
+    Waveform& BoostHFaked(const std::vector<std::vector<double> >& v);
 
     // Output to data file
     const Waveform& Output(const std::string& FileName, const unsigned int precision=14) const;

@@ -790,7 +790,6 @@ def RunExtrapolation(TopLevelInputDir, TopLevelOutputDir, Subdirectory, DataFile
 
 def _Extrapolate(FiniteRadiusWaveforms, Radii, ExtrapolationOrders, Omegas=None):
     import numpy
-    
     import GWFrames
 
     # Get the various dimensions, etc.
