@@ -1059,9 +1059,9 @@ public:
   double Minimize(const unsigned int i) {
     W = Win.SliceOfTimeIndicesWithEll2(i);
     W.RotateDecompositionBasis(R_last);
-    const unsigned int MaxIterations = 2000;
+    const unsigned int MaxIterations = 7500;
     const double MinSimplexSize = 1.0e-15; // When the function is abs of a linear function, this can be small
-    const double InitialTrialAngleStep = M_PI/16.0;
+    const double InitialTrialAngleStep = M_PI/1.5;
     size_t iter = 0;
     int status = GSL_CONTINUE;
     double size = 0.0;
@@ -1070,7 +1070,7 @@ public:
     gsl_vector_set(x, 0, 0.);
     gsl_vector_set(x, 1, 0.);
     double Violation=EvaluateMinimizationQuantity(0.0,0.0);
-    double dalpha=0.05;
+    double dalpha=0.001;
     for(double alpha=dalpha; alpha<M_PI; alpha+=dalpha) {
       {
         const double violation = EvaluateMinimizationQuantity(alpha/2.0,0.0);
@@ -1118,6 +1118,9 @@ public:
       size = gsl_multimin_fminimizer_size(s);
       status = gsl_multimin_test_size(size, MinSimplexSize);
     }
+    if(iter>=MaxIterations) {
+      INFOTOCERR << "Warning: stopped minimizing due to too many iterations." << std::endl;
+    }
     // Get rotation and normalized value
     const Quaternions::Quaternion R_delta = Quaternions::exp(Quaternions::Quaternion(0.0, gsl_vector_get(s->x, 0), gsl_vector_get(s->x, 1), 0.0));
     R_last = R_delta * R_last;
@@ -1151,7 +1154,8 @@ std::vector<double> GWFrames::Waveform::ZParityViolationMinimized() const {
 
   for(unsigned int i_t=0; i_t<ntimes; ++i_t) {
     INFOTOCERR << i_t << "/" << ntimes << std::endl;
-    violations[i_t] = Minimizer.Minimize(i_t);
+    violations[i_t] = std::min(Minimizer.Minimize(i_t), Minimizer.Minimize(i_t));
+    // violations[i_t] = Minimizer.Minimize(i_t);
   }
 
   return violations;
