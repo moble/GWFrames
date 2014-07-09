@@ -3520,9 +3520,8 @@ GWFrames::Waveform& GWFrames::Waveform::BoostHFaked(const std::vector<std::vecto
   /// the boosted frame relative to the present frame.
   ///
   /// Note that this function simply uses the correct transformation
-  /// of Psi_4, and then conjugates the tetrad inner products, as
-  /// roughly appropriate for h, then multiplies by the appropriate
-  /// power of gamma at each point.  This, of course, assumes that \f$\ddot{h} =
+  /// of Psi_4, then multiplies by the appropriate power of gamma (-2)
+  /// at each point.  This, of course, assumes that \f$\ddot{h} =
   /// \Psi_4\f$ in both frames.  That need not be the case, which is
   /// why "Faked" is in the name of this function.
 
@@ -3531,6 +3530,10 @@ GWFrames::Waveform& GWFrames::Waveform::BoostHFaked(const std::vector<std::vecto
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": (v.size()=" << v.size() << ") != (NTimes()=" << NTimes() << ")" << std::endl;
     throw(GWFrames_VectorSizeMismatch);
   }
+
+  INFOTOCERR << "\nCAUTION!!!  This function relies on an imperfect formula."
+             << "\nIt assumes that the second time derivative of h equals"
+             << "\n(plus or minus) Psi_4, which need not be exactly true.\n" << std::endl;
 
   // Set up storage and calculate useful constants
   const int ellMax = this->EllMax();
@@ -3694,14 +3697,14 @@ GWFrames::Waveform& GWFrames::Waveform::BoostHFaked(const std::vector<std::vecto
 
         // Evaluate the data for the boosted frame at this point
         Grid[i_g] =
-          ( std::conj(nRotated_n * mBarRotated_mBar * nRotated_n * mBarRotated_mBar
-                      - nRotated_mBar * mBarRotated_n * nRotated_n * mBarRotated_mBar
-                      - nRotated_n * mBarRotated_mBar * nRotated_mBar * mBarRotated_n
-                      + nRotated_mBar * mBarRotated_n * nRotated_mBar * mBarRotated_n) * h
-            + std::conj(nRotated_n * mBarRotated_m * nRotated_n * mBarRotated_m
-                        - nRotated_m * mBarRotated_n * nRotated_n * mBarRotated_m
-                        - nRotated_n * mBarRotated_m * nRotated_m * mBarRotated_n
-                        + nRotated_m * mBarRotated_n * nRotated_m * mBarRotated_n) * std::conj(h) ) / (gamma*gamma);
+          ( (nRotated_n * mBarRotated_mBar * nRotated_n * mBarRotated_mBar
+             - nRotated_mBar * mBarRotated_n * nRotated_n * mBarRotated_mBar
+             - nRotated_n * mBarRotated_mBar * nRotated_mBar * mBarRotated_n
+             + nRotated_mBar * mBarRotated_n * nRotated_mBar * mBarRotated_n) * h
+            + (nRotated_n * mBarRotated_m * nRotated_n * mBarRotated_m
+               - nRotated_m * mBarRotated_n * nRotated_n * mBarRotated_m
+               - nRotated_n * mBarRotated_m * nRotated_m * mBarRotated_n
+               + nRotated_m * mBarRotated_n * nRotated_m * mBarRotated_n) * std::conj(h) ) / (gamma*gamma);
 
         // if(i_t%5000==0) {
         //   std::cerr << thetaRotated << "," << phiRotated << "; " << theta << "," << phi
