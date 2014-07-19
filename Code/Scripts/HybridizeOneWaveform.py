@@ -23,19 +23,24 @@ import h5py
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
+try : # If this matplotlib is too old, just ignore this
+    from matplotlib.pyplot import tight_layout
+except :
+    pass
+
 import GWFrames
 import GWFrames.plot
 import Quaternions
 
 def Hybridize(PathToSystem, Waveform='rhOverM_Asymptotic_GeometricUnits.h5/Extrapolated_N2.dir',
               t1=1000.0, t2=-sys.float_info.max, InitialOmega_orb=0.0, DirectAlignmentEvaluations=0, Approximant='TaylorT1',
-              PlotFileName='Hybridization.pdf', HybridFileName='Hybrid.h5'):
+              PlotFileName='Hybridization.pdf', HybridFileName='Hybrid.h5', MinStepsPerOrbit=32, PNWaveformModeOrder=3.5, PNOrbitalEvolutionOrder=4.0):
 
     print("Reading and transforming NR data"); sys.stdout.flush()
 
     # Read the Waveform from the file, and transform to co-rotating frame
     W_NR_corot = GWFrames.ReadFromNRAR(os.path.join(PathToSystem, Waveform))
-    W_NR_corot.TransformToCorotatingFrame()
+    W_NR_corot.TransformToCorotatingFrame();
 
     # Place the merger (moment of greatest waveform norm) at t=0, as a
     # rough initial alignment with the PN waveform, which ends at t=0.
@@ -82,7 +87,8 @@ def Hybridize(PathToSystem, Waveform='rhOverM_Asymptotic_GeometricUnits.h5/Extra
     # Construct complete waveform
     if(InitialOmega_orb==0.0):
         InitialOmega_orb = 0.5*Omega_orb_0
-    W_PN_corot = GWFrames.PNWaveform(Approximant, delta, chia_0, chib_0, Omega_orb_0, InitialOmega_orb, R_frame_i)
+    W_PN_corot = GWFrames.PNWaveform(Approximant, delta, chia_0, chib_0, Omega_orb_0, InitialOmega_orb, R_frame_i,
+                                     MinStepsPerOrbit, PNWaveformModeOrder, PNOrbitalEvolutionOrder)
     W_PN_corot.TransformToInertialFrame();
     W_PN_corot.TransformToCorotatingFrame();
 
@@ -111,9 +117,13 @@ def Hybridize(PathToSystem, Waveform='rhOverM_Asymptotic_GeometricUnits.h5/Extra
         W_hyb_corot.plot('LogAbs', [2,2], lw=3, label='Hybrid')
         W_PN_corot.plot('LogAbs', [2,2], label='PN')
         W_NR_corot.plot('LogAbs', [2,2], label='NR')
-        plt.ylim((1e-4,1.))
+        plt.ylim((1e-2,1.))
         plt.xlim((W_NR_corot.T(0), W_NR_corot.T()[-1]))
-        plt.legend(loc='upper left');
+        plt.legend(loc='upper left')
+        try:
+            tight_layout(pad=0.1)
+        except:
+            pass
         plt.savefig(os.path.join(PathToSystem, PlotFileName))
 
     print("Transforming hybrid to inertial frame and outputting to {0}".format(os.path.join(PathToSystem, HybridFileName))); sys.stdout.flush()
@@ -146,6 +156,12 @@ if __name__ == "__main__" :
                         help='Number of evaluations to use in the simple first stage of alignment [default: 0]')
     parser.add_argument('--Approximant', default='TaylorT1',
                         help='PN approximant; TaylorT1|TaylorT4|TaylorT5 [default: TaylorT1]')
+    parser.add_argument('--PNWaveformModeOrder', type=float, default=3.5,
+                        help='PN order at which to compute waveform modes [default: 3.5]')
+    parser.add_argument('--PNOrbitalEvolutionOrder', type=float, default=4.0,
+                        help='PN order at which to compute orbital evolution [default: 4.0]')
+    parser.add_argument('--MinStepsPerOrbit', type=int, default=32,
+                        help='Minimum number of time steps at which to evaluate in each orbit [default: 32]')
     parser.add_argument('--PlotFileName', default='Hybridization.pdf',
                         help='File name to which the result is plotted for diagnostics; empty string for no output [default: Hybridization.pdf]')
     parser.add_argument('--HybridFileName', default='Hybrid.h5',
@@ -159,7 +175,7 @@ if __name__ == "__main__" :
     PathToSystem = os.path.abspath(args['PathToSystem'])
 
     Hybridize(PathToSystem, args['Waveform'], args['t1'], args['t2'], args['InitialOmega_orb'], args['DirectAlignmentEvaluations'],
-              args['Approximant'], args['PlotFileName'], args['HybridFileName'])
+              args['Approximant'], args['PlotFileName'], args['HybridFileName'], args['MinStepsPerOrbit'], args['PNWaveformModeOrder'], args['PNOrbitalEvolutionOrder'])
 
 
 # PathToSXSCatalog = '/Users/boyle/Research/Data/SimulationAnnex/Catalog/'
