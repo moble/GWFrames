@@ -1059,9 +1059,9 @@ public:
   double Minimize(const unsigned int i) {
     W = Win.SliceOfTimeIndicesWithEll2(i);
     W.RotateDecompositionBasis(R_last);
-    const unsigned int MaxIterations = 2000;
+    const unsigned int MaxIterations = 7500;
     const double MinSimplexSize = 1.0e-15; // When the function is abs of a linear function, this can be small
-    const double InitialTrialAngleStep = M_PI/16.0;
+    const double InitialTrialAngleStep = M_PI/1.5;
     size_t iter = 0;
     int status = GSL_CONTINUE;
     double size = 0.0;
@@ -1070,7 +1070,7 @@ public:
     gsl_vector_set(x, 0, 0.);
     gsl_vector_set(x, 1, 0.);
     double Violation=EvaluateMinimizationQuantity(0.0,0.0);
-    double dalpha=0.05;
+    double dalpha=0.001;
     for(double alpha=dalpha; alpha<M_PI; alpha+=dalpha) {
       {
         const double violation = EvaluateMinimizationQuantity(alpha/2.0,0.0);
@@ -1118,6 +1118,9 @@ public:
       size = gsl_multimin_fminimizer_size(s);
       status = gsl_multimin_test_size(size, MinSimplexSize);
     }
+    if(iter>=MaxIterations) {
+      INFOTOCERR << "Warning: stopped minimizing due to too many iterations." << std::endl;
+    }
     // Get rotation and normalized value
     const Quaternions::Quaternion R_delta = Quaternions::exp(Quaternions::Quaternion(0.0, gsl_vector_get(s->x, 0), gsl_vector_get(s->x, 1), 0.0));
     R_last = R_delta * R_last;
@@ -1151,7 +1154,8 @@ std::vector<double> GWFrames::Waveform::ZParityViolationMinimized() const {
 
   for(unsigned int i_t=0; i_t<ntimes; ++i_t) {
     INFOTOCERR << i_t << "/" << ntimes << std::endl;
-    violations[i_t] = Minimizer.Minimize(i_t);
+    violations[i_t] = std::min(Minimizer.Minimize(i_t), Minimizer.Minimize(i_t));
+    // violations[i_t] = Minimizer.Minimize(i_t);
   }
 
   return violations;
@@ -3155,6 +3159,581 @@ std::complex<double> GWFrames::Waveform::InterpolateToPoint(const double varthet
 
   return value;
 }
+
+
+/// Translate the waveform data by some series of spatial translations
+GWFrames::Waveform GWFrames::Waveform::Translate(const std::vector<std::vector<double> >& deltax) const {
+  /// \param x Array of 3-vectors by which to translate (function of time)
+
+  if(frameType == GWFrames::UnknownFrameType) {
+    INFOTOCERR << "\nWarning: Asking to Translate a Waveform in an `" << GWFrames::WaveformFrameNames[frameType] << "` frame."
+               << "\n         This should only be applied to Waveforms in the `" << GWFrames::WaveformFrameNames[GWFrames::Inertial] << "` frame."
+               << "\n         Proceeding, under the assumption that you know what you're doing."
+               << std::endl;
+  } else if(frameType != GWFrames::Inertial) {
+    INFOTOCERR << "\nError: Asking to Translate a Waveform in the " << GWFrames::WaveformFrameNames[frameType] << " frame."
+               << "\n       This should only be applied to Waveforms in the " << GWFrames::WaveformFrameNames[GWFrames::Inertial] << " frame.\n"
+               << std::endl;
+    throw(GWFrames_NotYetImplemented);
+  }
+
+  if(deltax.size() != NTimes()) {
+    INFOTOCERR << "\nERROR: (deltax.size()=" << deltax.size() << ") != (NTimes()=" << NTimes() << ")"
+               << "\n       If you're going to translate, you need to do it at each time step.\n" << std::endl;
+    throw(GWFrames_VectorSizeMismatch);
+  }
+
+  const unsigned int ntimes = NTimes();
+
+  for(unsigned int i=0; i<ntimes; ++i) {
+    if(deltax[i].size() != 3) {
+      INFOTOCERR << "\nERROR: (deltax[" << i << "].size()=" << deltax[i].size() << ") != 3"
+                 << "\n       Each translation should be a 3-vector.\n" << std::endl;
+      throw(GWFrames_VectorSizeMismatch);
+    }
+  }
+
+  // Copy infrastructure to new Waveform
+  const Waveform& A = *this;
+  Waveform B = A.CopyWithoutData();
+  B.history << "*this = this->.Translate(...);"<< std::endl;
+  B.frame = std::vector<Quaternions::Quaternion>(0);
+  B.lm = A.lm;
+  B.t = A.t; // B.t will get reset later
+
+  // These numbers determine the equi-angular grid on which we will do
+  // the interpolation.  For best accuracy, have N_phi > 2*ellMax and
+  // N_theta > 2*ellMax; but for speed, don't make them much greater.
+  const int ellMax(EllMax());
+  const unsigned int N_phi = 2*ellMax + 1;
+  const unsigned int N_theta = 2*ellMax + 1;
+  const double dtheta = M_PI/double(N_theta-1); // theta should return to M_PI
+  const double dphi = 2*M_PI/double(N_phi); // phi should not return to 2*M_PI
+  vector<complex<double> > Grid(N_phi*N_theta);
+
+  // Find earliest and latest times we can use for our new data set
+  unsigned int iEarliest = 0;
+  unsigned int iLatest = ntimes-1;
+  const double tEarliest = t[0];
+  const double tLatest = t.back();
+  { // Do the 0th point explicitly for earliest time only
+    const unsigned int i=0;
+    const double deltaxiMag = std::sqrt(deltax[i][0]*deltax[i][0] + deltax[i][1]*deltax[i][1] + deltax[i][2]*deltax[i][2]);
+    if(t[i]-deltaxiMag<tEarliest) {
+      iEarliest = std::max(iEarliest, i+1);
+    }
+  }
+  for(unsigned int i=1; i<ntimes-1; ++i) { // Do all points in between
+    const double deltaxiMag = std::sqrt(deltax[i][0]*deltax[i][0] + deltax[i][1]*deltax[i][1] + deltax[i][2]*deltax[i][2]);
+    if(t[i]-deltaxiMag<tEarliest) {
+      iEarliest = std::max(iEarliest, i+1);
+    }
+    if(t[i]+deltaxiMag>tLatest) {
+      iLatest = std::min(iLatest, i-1);
+    }
+  }
+  { // Do the last point explicitly for latest time
+    const unsigned int i=ntimes-1;
+    const double deltaxiMag = std::sqrt(deltax[i][0]*deltax[i][0] + deltax[i][1]*deltax[i][1] + deltax[i][2]*deltax[i][2]);
+    if(t[i]+deltaxiMag>tLatest) {
+      iLatest = std::min(iLatest, i-1);
+    }
+  }
+
+  // Now check that we actually have something to work with here
+  if(iLatest<iEarliest) {
+    INFOTOCERR << "\nERROR: (iLatest=" << iLatest << ") < (iEarliest=" << iEarliest << ")"
+               << "\n       The translation is too extreme, and there is not enough data for even one complete time step.\n" << std::endl;
+    throw(GWFrames_EmptyIntersection);
+  }
+
+  // The new times will just be that subset of the old times for which
+  // data exist in every direction after translation.
+  B.t.erase(B.t.begin()+iLatest+1, B.t.end());
+  B.t.erase(B.t.begin(), B.t.begin()+iEarliest);
+  B.data.resize(NModes(), B.NTimes()); // Each row (first index, nn) corresponds to a mode
+
+  // Main loop over time steps
+  for(unsigned int i_t_B=0; i_t_B<B.NTimes(); ++i_t_B) {
+    // These will hold the input and output data.  Note that spinsfast
+    // has had some weird behavior in the past when the output data is
+    // not initialized to zero, so just do this each time, even though
+    // it's slow.
+    vector<complex<double> > Modes(N_lm(ellMax), 0.0);
+
+    // Construct the data on the translated grid
+    for(int i_g=0, i_theta=0; i_theta<N_theta; ++i_theta) {
+      for(int i_phi=0; i_phi<N_phi; ++i_phi, ++i_g) {
+        const double theta = dtheta*i_theta;
+        const double phi = dphi*i_phi;
+
+        const double rHat_dot_deltax =
+          deltax[i_t_B][0]*std::sin(theta)*std::cos(phi)
+          + deltax[i_t_B][1]*std::sin(theta)*std::sin(phi)
+          + deltax[i_t_B][2]*std::cos(theta);
+
+        // Evaluate the data for the translated frame at this point
+        Grid[i_g] = A.InterpolateToPoint(theta, phi, B.T(i_t_B)-rHat_dot_deltax);
+      }
+    }
+
+    // Decompose the data into modes
+    spinsfast_map2salm(reinterpret_cast<fftw_complex*>(&Grid[0]),
+                       reinterpret_cast<fftw_complex*>(&Modes[0]),
+                       SpinWeight(), N_theta, N_phi, ellMax);
+
+    // Set new data at this time step
+    for(int i_mode=N_lm(std::abs(SpinWeight())-1), ell=std::abs(SpinWeight()); ell<=ellMax; ++ell) {
+      for(int m=-ell; m<=ell; ++m, ++i_mode) {
+        B.SetData(B.FindModeIndex(ell,m), i_t_B, Modes[i_mode]);
+      }
+    }
+
+  } // i_t_B loop
+
+  return B;
+}
+
+
+/// Apply a boost to Psi4 data
+GWFrames::Waveform& GWFrames::Waveform::BoostPsi4(const std::vector<std::vector<double> >& v) {
+  /// This function does three things.  First, it evaluates the
+  /// Waveform on what will become an equi-angular grid after
+  /// transformation by the boost.  Second, at each point of that
+  /// grid, it takes the appropriate combinations of the present value
+  /// of Psi_4 and its conjugate to give the value of Psi_4 as
+  /// observed in the boosted frame.  Finally, it transforms back to
+  /// Fourier space using that new equi-angular grid.
+  ///
+  /// The input three-velocities are assumed to give the velocities of
+  /// the boosted frame relative to the present frame.
+
+  // Check the size of the input velocity
+  if(v.size()!=NTimes()) {
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": (v.size()=" << v.size() << ") != (NTimes()=" << NTimes() << ")" << std::endl;
+    throw(GWFrames_VectorSizeMismatch);
+  }
+
+  // Set up storage and calculate useful constants
+  const int ellMax = this->EllMax();
+  const int n_thetaRotated= 2*ellMax+1;
+  const int n_phiRotated = 2*ellMax+1;
+  const double dthetaRotated = M_PI/double(n_thetaRotated-1); // thetaRotated should return to M_PI
+  const double dphiRotated = 2*M_PI/double(n_phiRotated); // phiRotated should not return to 2*M_PI
+  vector<complex<double> > Grid(n_phiRotated*n_thetaRotated);
+  SphericalFunctions::SWSH sYlm(SpinWeight());
+
+  SpacetimeAlgebra::vector tPz;
+  tPz.set_gamma_0(1./std::sqrt(2));
+  tPz.set_gamma_3(1./std::sqrt(2));
+  SpacetimeAlgebra::vector tMz;
+  tMz.set_gamma_0(1./std::sqrt(2));
+  tMz.set_gamma_3(-1./std::sqrt(2));
+  SpacetimeAlgebra::vector xPiyRe;
+  xPiyRe.set_gamma_1(1./std::sqrt(2));
+  SpacetimeAlgebra::vector xPiyIm;
+  xPiyIm.set_gamma_2(1./std::sqrt(2));
+  SpacetimeAlgebra::vector xMiyRe;
+  xMiyRe.set_gamma_1(1./std::sqrt(2));
+  SpacetimeAlgebra::vector xMiyIm;
+  xMiyIm.set_gamma_2(-1./std::sqrt(2));
+
+  // Main loop over time steps
+  for(unsigned int i_t=0; i_t<NTimes(); ++i_t) {
+    const vector<double>& v_i = v[i_t];
+    if(v_i.size()!=3) {
+      std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": v[" << i_t << "].size()=" << v_i.size()
+                << ".  Input is assumed to be a vector of three-velocities." << std::endl;
+      throw(GWFrames_VectorSizeMismatch);
+    }
+
+    const double beta = std::sqrt(v_i[0]*v_i[0] + v_i[1]*v_i[1] + v_i[2]*v_i[2]);
+    if(beta<1.e-9) { continue; } // TODO: This may need to be adjusted, or other statements made smarter about using the value of gamma
+    vector<double> vHat(3);
+    vHat[0] = v_i[0]/beta;
+    vHat[1] = v_i[1]/beta;
+    vHat[2] = v_i[2]/beta;
+    const double gamma = 1.0/std::sqrt(1.0-beta*beta);
+    const double sqrtplus = std::sqrt((gamma+1)/2);
+    const double sqrtminus = std::sqrt((gamma-1)/2);
+
+    // Calculate the boost rotor
+    SpacetimeAlgebra::spinor BoostRotor;
+    BoostRotor.set_scalar(sqrtplus);
+    BoostRotor.set_gamma_0_gamma_1(sqrtminus*vHat[0]);
+    BoostRotor.set_gamma_0_gamma_2(sqrtminus*vHat[1]);
+    BoostRotor.set_gamma_0_gamma_3(sqrtminus*vHat[2]);
+
+    vector<complex<double> > Modes(N_lm(ellMax), 0.0);
+    vector<complex<double> > Modes2(N_lm(ellMax), 0.0);
+
+    // Fill the Modes data for this time step
+    for(int i_mode=0; i_mode<N_lm(std::abs(SpinWeight())-1); ++i_mode) {
+      // Explicitly zero the modes with ell<|s|
+      Modes[i_mode] = 0.0;
+    }
+    for(int i_mode=N_lm(std::abs(SpinWeight())-1), ell=std::abs(SpinWeight()); ell<=ellMax; ++ell) {
+      // Now, fill modes with ell>=|s| in the correct order
+      for(int m=-ell; m<=ell; ++m, ++i_mode) {
+        Modes[i_mode] = this->Data(FindModeIndex(ell,m), i_t);
+      }
+    }
+
+    // Construct the data on the distorted grid
+    for(int i_g=0, i_thetaRotated=0; i_thetaRotated<n_thetaRotated; ++i_thetaRotated) {
+      for(int i_phiRotated=0; i_phiRotated<n_phiRotated; ++i_phiRotated, ++i_g) {
+        const double thetaRotated = dthetaRotated*i_thetaRotated;
+        const double phiRotated = dphiRotated*i_phiRotated;
+
+        // Calculate the rotation rotors
+        SpacetimeAlgebra::spinor Rotor_thetaRotated;
+        Rotor_thetaRotated.set_scalar(std::cos(thetaRotated/2));
+        Rotor_thetaRotated.set_gamma_1_gamma_3(std::sin(thetaRotated/2));
+        SpacetimeAlgebra::spinor Rotor_phiRotated;
+        Rotor_phiRotated.set_scalar(std::cos(phiRotated/2));
+        Rotor_phiRotated.set_gamma_1_gamma_2(-std::sin(phiRotated/2));
+        const SpacetimeAlgebra::spinor RotationRotorRotated(Rotor_phiRotated * Rotor_thetaRotated);
+
+        // This is the complete transformation rotor for going from
+        // (t,x,y,z) in the present frame to (t,theta,phi,r) in the
+        // boosted frame:
+        const SpacetimeAlgebra::spinor LorentzRotor(BoostRotor * RotationRotorRotated);
+
+        // The following give the important tetrad elements in the boosted frame
+        const int Filler=0; // Useless constant for Gaigen code
+        const SpacetimeAlgebra::vector lRotated(LorentzRotor*tPz*SpacetimeAlgebra::reverse(LorentzRotor), Filler);
+        const SpacetimeAlgebra::vector nRotated(LorentzRotor*tMz*SpacetimeAlgebra::reverse(LorentzRotor), Filler);
+        const SpacetimeAlgebra::vector mBarReRotated(LorentzRotor*xMiyRe*SpacetimeAlgebra::reverse(LorentzRotor), Filler);
+        const SpacetimeAlgebra::vector mBarImRotated(LorentzRotor*xMiyIm*SpacetimeAlgebra::reverse(LorentzRotor), Filler);
+
+        // Figure out the coordinates in the present frame
+        // corresponding to the given coordinates in the boosted frame
+        vector<double> r(3);
+        r[0] = lRotated.get_gamma_1();
+        r[1] = lRotated.get_gamma_2();
+        r[2] = lRotated.get_gamma_3();
+        const double rMag = std::sqrt(r[0]*r[0]+r[1]*r[1]+r[2]*r[2]);
+        const double theta = std::acos(r[2]/rMag);
+        const double phi = std::atan2(r[1],r[0]);
+
+        if(i_g==0 && i_t==0) {
+          std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ":\n"
+                    << "    Note that the (theta,phi) coordinates produced here are not in the same range\n"
+                    << "    as the (thetaRotated,phiRotated) coordinates because of (1) the range of atan2,\n"
+                    << "    which is in (-pi,pi), rather than (0,2*pi); and (2) at (theta=0), the phi value\n"
+                    << "    comes out as 0, even though phiRotated may not be.\n\n"
+                    << "    Fortunately, I think both these problems are handled automatically by taking the\n"
+                    << "    tetrad components as we do.  Of course, I may be missing something problematic...\n" << std::endl;
+        }
+
+        // This gives us the rotor to get from the z axis to the
+        // spherical coordinates in the present frame
+        SpacetimeAlgebra::spinor Rotor_theta;
+        Rotor_theta.set_scalar(std::cos(theta/2));
+        Rotor_theta.set_gamma_1_gamma_3(std::sin(theta/2));
+        SpacetimeAlgebra::spinor Rotor_phi;
+        Rotor_phi.set_scalar(std::cos(phi/2));
+        Rotor_phi.set_gamma_1_gamma_2(-std::sin(phi/2));
+        const SpacetimeAlgebra::spinor RotationRotor(Rotor_phi * Rotor_theta);
+
+        // The following give the important tetrad elements in the present frame
+        const SpacetimeAlgebra::vector l(RotationRotor*tPz*SpacetimeAlgebra::reverse(RotationRotor), Filler);
+        const SpacetimeAlgebra::vector n(RotationRotor*tMz*SpacetimeAlgebra::reverse(RotationRotor), Filler);
+        const SpacetimeAlgebra::vector mRe(RotationRotor*xPiyRe*SpacetimeAlgebra::reverse(RotationRotor), Filler);
+        const SpacetimeAlgebra::vector mIm(RotationRotor*xPiyIm*SpacetimeAlgebra::reverse(RotationRotor), Filler);
+        const SpacetimeAlgebra::vector mBarRe(RotationRotor*xMiyRe*SpacetimeAlgebra::reverse(RotationRotor), Filler);
+        const SpacetimeAlgebra::vector mBarIm(RotationRotor*xMiyIm*SpacetimeAlgebra::reverse(RotationRotor), Filler);
+
+        // Get the value of Psi4 in this frame at the appropriate
+        // point of this frame
+        const Quaternion Rp(theta, phi);
+        sYlm.SetRotation(Rp);
+        const complex<double> Psi_4 = sYlm.Evaluate(Modes);
+
+        // Get the components of the other frame's tetrad in the basis
+        // of this tetrad.  In particular, these are *not* the dot
+        // products of the other frame's basis vectors with this
+        // frame's basis vectors.  Instead, we expand, e.g., nRotated
+        // in terms of this frame's (l,n,m,mbar) basis, and just take
+        // the coefficients in that expansion.  [This distinction
+        // matters because, e.g., n.n = 0 but n.l \neq 0.]  Also note
+        // that we will not need any components involving the l vector
+        // in either frame, because that will just give us terms
+        // proportional to Psi3, etc., which are assumed to fall off
+        // more quickly than we care to bother with.
+        const complex<double> i_complex(0.,1.);
+        const complex<double> nRotated_n = -SpacetimeAlgebra::sp(nRotated, l);
+        const complex<double> nRotated_m = SpacetimeAlgebra::sp(nRotated, mBarRe) + i_complex*SpacetimeAlgebra::sp(nRotated, mBarIm);
+        const complex<double> nRotated_mBar = SpacetimeAlgebra::sp(nRotated, mRe) + i_complex*SpacetimeAlgebra::sp(nRotated, mIm);
+        const complex<double> mBarRotated_n =
+          - ( SpacetimeAlgebra::sp(mBarReRotated, l) + i_complex*SpacetimeAlgebra::sp(mBarImRotated, l) );
+        const complex<double> mBarRotated_m =
+          SpacetimeAlgebra::sp(mBarReRotated, mBarRe) + i_complex*SpacetimeAlgebra::sp(mBarReRotated, mBarIm)
+          + i_complex * ( SpacetimeAlgebra::sp(mBarImRotated, mBarRe) + i_complex*SpacetimeAlgebra::sp(mBarImRotated, mBarIm) );
+        const complex<double> mBarRotated_mBar =
+          SpacetimeAlgebra::sp(mBarReRotated, mRe) + i_complex*SpacetimeAlgebra::sp(mBarReRotated, mIm)
+          + i_complex * ( SpacetimeAlgebra::sp(mBarImRotated, mRe) + i_complex*SpacetimeAlgebra::sp(mBarImRotated, mIm) );
+
+        // Evaluate the data for the boosted frame at this point
+        Grid[i_g] =
+          (nRotated_n * mBarRotated_mBar * nRotated_n * mBarRotated_mBar
+           - nRotated_mBar * mBarRotated_n * nRotated_n * mBarRotated_mBar
+           - nRotated_n * mBarRotated_mBar * nRotated_mBar * mBarRotated_n
+           + nRotated_mBar * mBarRotated_n * nRotated_mBar * mBarRotated_n) * Psi_4
+          + (nRotated_n * mBarRotated_m * nRotated_n * mBarRotated_m
+             - nRotated_m * mBarRotated_n * nRotated_n * mBarRotated_m
+             - nRotated_n * mBarRotated_m * nRotated_m * mBarRotated_n
+             + nRotated_m * mBarRotated_n * nRotated_m * mBarRotated_n) * std::conj(Psi_4);
+
+        // if(i_t%5000==0) {
+        //   std::cerr << thetaRotated << "," << phiRotated << "; " << theta << "," << phi
+        //             << "; \t" << Grid[i_g] << "," << Psi_4 << std::endl;
+        // }
+      }
+    }
+
+    // Decompose the data into modes
+    spinsfast_map2salm(reinterpret_cast<fftw_complex*>(&Grid[0]),
+                       reinterpret_cast<fftw_complex*>(&Modes2[0]),
+                       SpinWeight(), n_thetaRotated, n_phiRotated, ellMax);
+
+    // Set new data at this time step
+    for(int i_mode=N_lm(std::abs(SpinWeight())-1), ell=std::abs(SpinWeight()); ell<=ellMax; ++ell) {
+      for(int m=-ell; m<=ell; ++m, ++i_mode) {
+        this->SetData(this->FindModeIndex(ell,m), i_t, Modes2[i_mode]);
+      }
+    }
+
+  }
+
+  return *this;
+}
+
+
+/// Apply a boost to Psi4 data
+GWFrames::Waveform& GWFrames::Waveform::BoostHFaked(const std::vector<std::vector<double> >& v) {
+  /// This function does three things.  First, it evaluates the
+  /// Waveform on what will become an equi-angular grid after
+  /// transformation by the boost.  Second, at each point of that
+  /// grid, it takes the appropriate combinations of the present value
+  /// of h and its conjugate to give the value of h as observed in the
+  /// boosted frame.  Finally, it transforms back to Fourier space
+  /// using that new equi-angular grid.
+  ///
+  /// The input three-velocities are assumed to give the velocities of
+  /// the boosted frame relative to the present frame.
+  ///
+  /// Note that this function simply uses the correct transformation
+  /// of Psi_4, then multiplies by the appropriate power of gamma (-2)
+  /// at each point.  This, of course, assumes that \f$\ddot{h} =
+  /// \Psi_4\f$ in both frames.  That need not be the case, which is
+  /// why "Faked" is in the name of this function.
+
+  // Check the size of the input velocity
+  if(v.size()!=NTimes()) {
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": (v.size()=" << v.size() << ") != (NTimes()=" << NTimes() << ")" << std::endl;
+    throw(GWFrames_VectorSizeMismatch);
+  }
+
+  INFOTOCERR << "\nCAUTION!!!  This function relies on an imperfect formula."
+             << "\nIt assumes that the second time derivative of h equals"
+             << "\n(plus or minus) Psi_4, which need not be exactly true.\n" << std::endl;
+
+  // Set up storage and calculate useful constants
+  const int ellMax = this->EllMax();
+  const int n_thetaRotated= 2*ellMax+1;
+  const int n_phiRotated = 2*ellMax+1;
+  const double dthetaRotated = M_PI/double(n_thetaRotated-1); // thetaRotated should return to M_PI
+  const double dphiRotated = 2*M_PI/double(n_phiRotated); // phiRotated should not return to 2*M_PI
+  vector<complex<double> > Grid(n_phiRotated*n_thetaRotated);
+  SphericalFunctions::SWSH sYlm(SpinWeight());
+
+  SpacetimeAlgebra::vector tPz;
+  tPz.set_gamma_0(1./std::sqrt(2));
+  tPz.set_gamma_3(1./std::sqrt(2));
+  SpacetimeAlgebra::vector tMz;
+  tMz.set_gamma_0(1./std::sqrt(2));
+  tMz.set_gamma_3(-1./std::sqrt(2));
+  SpacetimeAlgebra::vector xPiyRe;
+  xPiyRe.set_gamma_1(1./std::sqrt(2));
+  SpacetimeAlgebra::vector xPiyIm;
+  xPiyIm.set_gamma_2(1./std::sqrt(2));
+  SpacetimeAlgebra::vector xMiyRe;
+  xMiyRe.set_gamma_1(1./std::sqrt(2));
+  SpacetimeAlgebra::vector xMiyIm;
+  xMiyIm.set_gamma_2(-1./std::sqrt(2));
+
+  // Main loop over time steps
+  for(unsigned int i_t=0; i_t<NTimes(); ++i_t) {
+    const vector<double>& v_i = v[i_t];
+    if(v_i.size()!=3) {
+      std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": v[" << i_t << "].size()=" << v_i.size()
+                << ".  Input is assumed to be a vector of three-velocities." << std::endl;
+      throw(GWFrames_VectorSizeMismatch);
+    }
+
+    const double beta = std::sqrt(v_i[0]*v_i[0] + v_i[1]*v_i[1] + v_i[2]*v_i[2]);
+    if(beta<1.e-9) { continue; } // TODO: This may need to be adjusted, or other statements made smarter about using the value of gamma
+    vector<double> vHat(3);
+    vHat[0] = v_i[0]/beta;
+    vHat[1] = v_i[1]/beta;
+    vHat[2] = v_i[2]/beta;
+    const double gamma = 1.0/std::sqrt(1.0-beta*beta);
+    const double sqrtplus = std::sqrt((gamma+1)/2);
+    const double sqrtminus = std::sqrt((gamma-1)/2);
+
+    // Calculate the boost rotor
+    SpacetimeAlgebra::spinor BoostRotor;
+    BoostRotor.set_scalar(sqrtplus);
+    BoostRotor.set_gamma_0_gamma_1(sqrtminus*vHat[0]);
+    BoostRotor.set_gamma_0_gamma_2(sqrtminus*vHat[1]);
+    BoostRotor.set_gamma_0_gamma_3(sqrtminus*vHat[2]);
+
+    vector<complex<double> > Modes(N_lm(ellMax), 0.0);
+    vector<complex<double> > Modes2(N_lm(ellMax), 0.0);
+
+    // Fill the Modes data for this time step
+    for(int i_mode=0; i_mode<N_lm(std::abs(SpinWeight())-1); ++i_mode) {
+      // Explicitly zero the modes with ell<|s|
+      Modes[i_mode] = 0.0;
+    }
+    for(int i_mode=N_lm(std::abs(SpinWeight())-1), ell=std::abs(SpinWeight()); ell<=ellMax; ++ell) {
+      // Now, fill modes with ell>=|s| in the correct order
+      for(int m=-ell; m<=ell; ++m, ++i_mode) {
+        Modes[i_mode] = this->Data(FindModeIndex(ell,m), i_t);
+      }
+    }
+
+    // Construct the data on the distorted grid
+    for(int i_g=0, i_thetaRotated=0; i_thetaRotated<n_thetaRotated; ++i_thetaRotated) {
+      for(int i_phiRotated=0; i_phiRotated<n_phiRotated; ++i_phiRotated, ++i_g) {
+        const double thetaRotated = dthetaRotated*i_thetaRotated;
+        const double phiRotated = dphiRotated*i_phiRotated;
+
+        // Calculate the rotation rotors
+        SpacetimeAlgebra::spinor Rotor_thetaRotated;
+        Rotor_thetaRotated.set_scalar(std::cos(thetaRotated/2));
+        Rotor_thetaRotated.set_gamma_1_gamma_3(std::sin(thetaRotated/2));
+        SpacetimeAlgebra::spinor Rotor_phiRotated;
+        Rotor_phiRotated.set_scalar(std::cos(phiRotated/2));
+        Rotor_phiRotated.set_gamma_1_gamma_2(-std::sin(phiRotated/2));
+        const SpacetimeAlgebra::spinor RotationRotorRotated(Rotor_phiRotated * Rotor_thetaRotated);
+
+        // This is the complete transformation rotor for going from
+        // (t,x,y,z) in the present frame to (t,theta,phi,r) in the
+        // boosted frame:
+        const SpacetimeAlgebra::spinor LorentzRotor(BoostRotor * RotationRotorRotated);
+
+        // The following give the important tetrad elements in the boosted frame
+        const int Filler=0; // Useless constant for Gaigen code
+        const SpacetimeAlgebra::vector lRotated(LorentzRotor*tPz*SpacetimeAlgebra::reverse(LorentzRotor), Filler);
+        const SpacetimeAlgebra::vector nRotated(LorentzRotor*tMz*SpacetimeAlgebra::reverse(LorentzRotor), Filler);
+        const SpacetimeAlgebra::vector mBarReRotated(LorentzRotor*xMiyRe*SpacetimeAlgebra::reverse(LorentzRotor), Filler);
+        const SpacetimeAlgebra::vector mBarImRotated(LorentzRotor*xMiyIm*SpacetimeAlgebra::reverse(LorentzRotor), Filler);
+
+        // Figure out the coordinates in the present frame
+        // corresponding to the given coordinates in the boosted frame
+        vector<double> r(3);
+        r[0] = lRotated.get_gamma_1();
+        r[1] = lRotated.get_gamma_2();
+        r[2] = lRotated.get_gamma_3();
+        const double rMag = std::sqrt(r[0]*r[0]+r[1]*r[1]+r[2]*r[2]);
+        const double theta = std::acos(r[2]/rMag);
+        const double phi = std::atan2(r[1],r[0]);
+
+        if(i_g==0 && i_t==0) {
+          std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ":\n"
+                    << "    Note that the (theta,phi) coordinates produced here are not in the same range\n"
+                    << "    as the (thetaRotated,phiRotated) coordinates because of (1) the range of atan2,\n"
+                    << "    which is in (-pi,pi), rather than (0,2*pi); and (2) at (theta=0), the phi value\n"
+                    << "    comes out as 0, even though phiRotated may not be.\n\n"
+                    << "    Fortunately, I think both these problems are handled automatically by taking the\n"
+                    << "    tetrad components as we do.  Of course, I may be missing something problematic...\n" << std::endl;
+        }
+
+        // This gives us the rotor to get from the z axis to the
+        // spherical coordinates in the present frame
+        SpacetimeAlgebra::spinor Rotor_theta;
+        Rotor_theta.set_scalar(std::cos(theta/2));
+        Rotor_theta.set_gamma_1_gamma_3(std::sin(theta/2));
+        SpacetimeAlgebra::spinor Rotor_phi;
+        Rotor_phi.set_scalar(std::cos(phi/2));
+        Rotor_phi.set_gamma_1_gamma_2(-std::sin(phi/2));
+        const SpacetimeAlgebra::spinor RotationRotor(Rotor_phi * Rotor_theta);
+
+        // The following give the important tetrad elements in the present frame
+        const SpacetimeAlgebra::vector l(RotationRotor*tPz*SpacetimeAlgebra::reverse(RotationRotor), Filler);
+        const SpacetimeAlgebra::vector n(RotationRotor*tMz*SpacetimeAlgebra::reverse(RotationRotor), Filler);
+        const SpacetimeAlgebra::vector mRe(RotationRotor*xPiyRe*SpacetimeAlgebra::reverse(RotationRotor), Filler);
+        const SpacetimeAlgebra::vector mIm(RotationRotor*xPiyIm*SpacetimeAlgebra::reverse(RotationRotor), Filler);
+        const SpacetimeAlgebra::vector mBarRe(RotationRotor*xMiyRe*SpacetimeAlgebra::reverse(RotationRotor), Filler);
+        const SpacetimeAlgebra::vector mBarIm(RotationRotor*xMiyIm*SpacetimeAlgebra::reverse(RotationRotor), Filler);
+
+        // Get the value of h in this frame at the appropriate point
+        // of this frame
+        const Quaternion Rp(theta, phi);
+        sYlm.SetRotation(Rp);
+        const complex<double> h = sYlm.Evaluate(Modes);
+
+        // Get the components of the other frame's tetrad in the basis
+        // of this tetrad.  In particular, these are *not* the dot
+        // products of the other frame's basis vectors with this
+        // frame's basis vectors.  Instead, we expand, e.g., nRotated
+        // in terms of this frame's (l,n,m,mbar) basis, and just take
+        // the coefficients in that expansion.  [This distinction
+        // matters because, e.g., n.n = 0 but n.l \neq 0.]  Also note
+        // that we will not need any components involving the l vector
+        // in either frame, because that will just give us terms
+        // proportional to Psi3, etc., which are assumed to fall off
+        // more quickly than we care to bother with.
+        const complex<double> i_complex(0.,1.);
+        const complex<double> nRotated_n = -SpacetimeAlgebra::sp(nRotated, l);
+        const complex<double> nRotated_m = SpacetimeAlgebra::sp(nRotated, mBarRe) + i_complex*SpacetimeAlgebra::sp(nRotated, mBarIm);
+        const complex<double> nRotated_mBar = SpacetimeAlgebra::sp(nRotated, mRe) + i_complex*SpacetimeAlgebra::sp(nRotated, mIm);
+        const complex<double> mBarRotated_n =
+          - ( SpacetimeAlgebra::sp(mBarReRotated, l) + i_complex*SpacetimeAlgebra::sp(mBarImRotated, l) );
+        const complex<double> mBarRotated_m =
+          SpacetimeAlgebra::sp(mBarReRotated, mBarRe) + i_complex*SpacetimeAlgebra::sp(mBarReRotated, mBarIm)
+          + i_complex * ( SpacetimeAlgebra::sp(mBarImRotated, mBarRe) + i_complex*SpacetimeAlgebra::sp(mBarImRotated, mBarIm) );
+        const complex<double> mBarRotated_mBar =
+          SpacetimeAlgebra::sp(mBarReRotated, mRe) + i_complex*SpacetimeAlgebra::sp(mBarReRotated, mIm)
+          + i_complex * ( SpacetimeAlgebra::sp(mBarImRotated, mRe) + i_complex*SpacetimeAlgebra::sp(mBarImRotated, mIm) );
+
+        // Evaluate the data for the boosted frame at this point
+        Grid[i_g] =
+          ( (nRotated_n * mBarRotated_mBar * nRotated_n * mBarRotated_mBar
+             - nRotated_mBar * mBarRotated_n * nRotated_n * mBarRotated_mBar
+             - nRotated_n * mBarRotated_mBar * nRotated_mBar * mBarRotated_n
+             + nRotated_mBar * mBarRotated_n * nRotated_mBar * mBarRotated_n) * h
+            + (nRotated_n * mBarRotated_m * nRotated_n * mBarRotated_m
+               - nRotated_m * mBarRotated_n * nRotated_n * mBarRotated_m
+               - nRotated_n * mBarRotated_m * nRotated_m * mBarRotated_n
+               + nRotated_m * mBarRotated_n * nRotated_m * mBarRotated_n) * std::conj(h) ) / (gamma*gamma);
+
+        // if(i_t%5000==0) {
+        //   std::cerr << thetaRotated << "," << phiRotated << "; " << theta << "," << phi
+        //             << "; \t" << Grid[i_g] << "," << h << std::endl;
+        // }
+      }
+    }
+
+    // Decompose the data into modes
+    spinsfast_map2salm(reinterpret_cast<fftw_complex*>(&Grid[0]),
+                       reinterpret_cast<fftw_complex*>(&Modes2[0]),
+                       SpinWeight(), n_thetaRotated, n_phiRotated, ellMax);
+
+    // Set new data at this time step
+    for(int i_mode=N_lm(std::abs(SpinWeight())-1), ell=std::abs(SpinWeight()); ell<=ellMax; ++ell) {
+      for(int m=-ell; m<=ell; ++m, ++i_mode) {
+        this->SetData(this->FindModeIndex(ell,m), i_t, Modes2[i_mode]);
+      }
+    }
+
+  }
+
+  return *this;
+}
+
 
 
 /// Output Waveform object to data file.
