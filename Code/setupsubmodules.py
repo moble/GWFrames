@@ -146,12 +146,20 @@ def require_clean_submodules(repo_root, submodules):
         print("checking out submodules for the first time")
         update_submodules(repo_root)
     elif status == "unclean":
-        print('\n'.join([
-            "Cannot build / install with unclean submodules.",
-            "Please update submodules with",
-            "    git submodule init",
-            "    git submodule update",
-            "in the top-level directory, or commit any",
-            "submodule changes you have made."
+        print('\n'.join(["",
+            "WARNING:",
+            "The submodules are not clean.  This means that either you have",
+            "changed the code in the submodules, or something has gone quite wrong",
+            "with your git repo.  I will continue to try to build, but if",
+            "something goes wrong with the installation, this is probably the",
+            "cause.  You may want to commit any submodule changes you have made."
         ]))
-        sys.exit(1)
+        # print('\n'.join([
+        #     "Cannot build / install with unclean submodules.",
+        #     "Please update submodules with",
+        #     "    git submodule init",
+        #     "    git submodule update",
+        #     "in the top-level directory, or commit any",
+        #     "submodule changes you have made."
+        # ]))
+        # sys.exit(1)
