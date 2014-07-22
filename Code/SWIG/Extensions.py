@@ -88,14 +88,17 @@ class PNWaveform(_PNWaveform):
 
     Constructor
     -----------
-      PNWaveform(const std::string& Approximant,
-                 const double delta,
-                 const std::vector<double>& chi1_i,
-                 const std::vector<double>& chi2_i,
-                 const double Omega_orb_i,
-                 double Omega_orb_0=-1.0,
-                 const Quaternions::Quaternion& R_frame_i=Quaternions::Quaternion(1,0,0,0),
-                 const double PNOrder=4.0, const unsigned int MinStepsPerOrbit=32)
+    Parameters:
+      Approximant: 'TaylorT1'|'TaylorT4'|'TaylorT5'
+      delta: Normalized BH mass difference (M1-M2)/(M1+M2)
+      chi1_i: Initial dimensionless spin vector of BH1
+      chi2_i: Initial dimensionless spin vector of BH2
+      Omega_orb_i: Initial orbital angular frequency
+      Omega_orb_0: Earliest orbital angular frequency to compute (default: Omega_orb_i)
+      R_frame_i: Overall rotation of the system (default: No rotation)
+      MinStepsPerOrbit: Minimum number of time steps at which to evaluate (default: 32)
+      PNWaveformModeOrder: PN order at which to compute waveform modes (default: 3.5)
+      PNOrbitalEvolutionOrder: PN order at which to compute orbital evolution (default: 4.0)
 
     The PN system is initialized having the BHs along the x axis, with
     the orbital angular velocity along the positive z axis, having

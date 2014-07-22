@@ -1057,6 +1057,31 @@ namespace WaveformUtilities
 ===========================
 """
 
+%feature("docstring") GWFrames::Waveform::BoostPsi4 """
+Apply a boost to Psi4 data.
+===========================
+  Parameters
+  ----------
+    const vector<vector<double>>& v
+  
+  Returns
+  -------
+    Waveform&
+  
+  Description
+  -----------
+    This function does three things. First, it evaluates the Waveform on what
+    will become an equi-angular grid after transformation by the boost. Second,
+    at each point of that grid, it takes the appropriate combinations of the
+    present value of Psi_4 and its conjugate to give the value of Psi_4 as
+    observed in the boosted frame. Finally, it transforms back to Fourier space
+    using that new equi-angular grid.
+    
+    The input three-velocities are assumed to give the velocities of the
+    boosted frame relative to the present frame.
+  
+"""
+
 %feature("docstring") GWFrames::WignerCoefficientFunctor """
 class GWFrames::WignerCoefficientFunctor
 ========================================
@@ -1808,10 +1833,12 @@ Constructor of PN waveform from parameters.
       Earliest orbital angular frequency to compute (optional)
     const Quaternions::Quaternion& R_frame_i = Quaternions::Quaternion(1, 0, 0, 0)
       Overall rotation of the system (optional)
-    const double PNOrder = 4.0
-      PN order at which to compute all quantities (default: 4.0)
     const unsigned int MinStepsPerOrbit = 32
       Minimum number of time steps at which to evaluate
+    const double PNWaveformModeOrder = 3.5
+      PN order at which to compute waveform modes (default: 3.5)
+    const double PNOrbitalEvolutionOrder = 4.0
+      PN order at which to compute orbital evolution (default: 4.0)
   
   Returns
   -------
@@ -4418,6 +4445,19 @@ Constructor on boosted grid by means of functor.
   
 """
 
+%feature("docstring") GWFrames::Waveform::Translate """
+Translate the waveform data by some series of spatial translations.
+===================================================================
+  Parameters
+  ----------
+    const vector<vector<double>>& deltax
+  
+  Returns
+  -------
+    Waveform
+  
+"""
+
 %feature("docstring") GWFrames::Waveform::DataTypeLaTeXString """
 
 
@@ -4570,6 +4610,36 @@ Pointwise multiply this object by another Waveform object.
   Returns
   -------
     complex<double>&
+  
+"""
+
+%feature("docstring") GWFrames::Waveform::BoostHFaked """
+Apply a boost to Psi4 data.
+===========================
+  Parameters
+  ----------
+    const vector<vector<double>>& v
+  
+  Returns
+  -------
+    Waveform&
+  
+  Description
+  -----------
+    This function does three things. First, it evaluates the Waveform on what
+    will become an equi-angular grid after transformation by the boost. Second,
+    at each point of that grid, it takes the appropriate combinations of the
+    present value of h and its conjugate to give the value of h as observed in
+    the boosted frame. Finally, it transforms back to Fourier space using that
+    new equi-angular grid.
+    
+    The input three-velocities are assumed to give the velocities of the
+    boosted frame relative to the present frame.
+    
+    Note that this function simply uses the correct transformation of Psi_4,
+    then multiplies by the appropriate power of gamma (-2) at each point. This,
+    of course, assumes that $\\ddot{h} = \\Psi_4$ in both frames. That need not
+    be the case, which is why 'Faked' is in the name of this function.
   
 """
 

@@ -88,37 +88,7 @@ GWFrames::PNWaveform::PNWaveform(const std::string& Approximant, const double de
                                  const double PNWaveformModeOrder, const double PNOrbitalEvolutionOrder) :
   Waveform(), mchi1(0), mchi2(0), mOmega_orb(0), mOmega_prec(0), mL(0), mPhi_orb(0)
 {
-  ///
-  /// \param Approximant 'TaylorT1'|'TaylorT4'|'TaylorT5'
-  /// \param delta Normalized BH mass difference (M1-M2)/(M1+M2)
-  /// \param chi1_i Initial dimensionless spin vector of BH1
-  /// \param chi2_i Initial dimensionless spin vector of BH2
-  /// \param Omega_orb_i Initial orbital angular frequency
-  /// \param Omega_orb_0 Earliest orbital angular frequency to compute (optional)
-  /// \param R_frame_i Overall rotation of the system (optional)
-  /// \param MinStepsPerOrbit Minimum number of time steps at which to evaluate
-  /// \param PNWaveformModeOrder PN order at which to compute waveform modes (default: 3.5)
-  /// \param PNOrbitalEvolutionOrder PN order at which to compute orbital evolution (default: 4.0)
-  ///
-  /// The PN system is initialized having the BHs along the x axis,
-  /// with the orbital angular velocity along the positive z axis,
-  /// having magnitude Omega_orb_i.  The input spin vectors must be
-  /// defined with respect to this basis.  Note that the optional
-  /// parameter `Omega_orb_0` may be given, in which case the PN
-  /// system is also evolved backwards to that point.
-  ///
-  /// The TaylorTn system is first integrated to compute the dynamics
-  /// of the binary.  The evolved spin vectors chi1 and chi2, orbital
-  /// angular-velocity vector Omega_orb, and orbital phase Phi_orb are
-  /// stored.  Simultaneously, the minimal-rotation frame of the
-  /// angular-velocity vector is computed, then rotated about the z'
-  /// axis by Phi_orb, resulting in the binary's frame.  Once this
-  /// step is completed, the information is used to construct the
-  /// waveform in the minimal-rotation frame.  (That is, the waveform
-  /// will be essentially corotating.)
-  ///
-  /// Note that, to get the PNWaveform in an inertial frame, you must
-  /// first apply the method TransformToInertialFrame().
+  /// See GWFrames/Code/SWIG/Extensions.py for the docstring for this object
 
   const double v_i = std::pow(Omega_orb_i, 1./3.);
   const double m1 = (1.0+delta)/2.0;
