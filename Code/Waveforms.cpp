@@ -790,11 +790,13 @@ int GWFrames::Waveform::EllMax() const {
 
 /// Find index of mode with given (l,m) data.
 unsigned int GWFrames::Waveform::FindModeIndex(const int l, const int m) const {
+  const unsigned int i_expected = ell*(ell+1) + m - SpinWeight()*SpinWeight();
+  if(lm[i_expected][0]==l && lm[i_expected][1]==m) { return i_expected; }
   //ORIENTATION!!! following loop
   for(unsigned int i=0; i<NModes(); ++i) {
     if(lm[i][0]==l && lm[i][1]==m) { return i; }
   }
-  cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Can't find (ell,m)=(" << l << ", " << m << ")" << endl;
+  INFOTOCERR << " Can't find (ell,m)=(" << l << ", " << m << ")" << endl;
   throw(GWFrames_WaveformMissingLMIndex);
 }
 
@@ -802,7 +804,8 @@ unsigned int GWFrames::Waveform::FindModeIndex(const int l, const int m) const {
 unsigned int GWFrames::Waveform::FindModeIndexWithoutError(const int l, const int m) const {
   /// If the requested mode is not present, the returned index is 1
   /// beyond the end of the mode vector.
-
+  const unsigned int i_expected = ell*(ell+1) + m - SpinWeight()*SpinWeight();
+  if(lm[i_expected][0]==l && lm[i_expected][1]==m) { return i_expected; }
   // ORIENTATION!!! following loop
   unsigned int i=0;
   for(; i<NModes(); ++i) {
