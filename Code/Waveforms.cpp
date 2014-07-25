@@ -995,13 +995,17 @@ std::vector<double> GWFrames::Waveform::ZParityViolationNormalized(std::vector<i
       const unsigned int i_m = FindModeIndex(ell,m);
       const unsigned int i_mm = FindModeIndex(ell,-m);
       for(unsigned int i_t=0; i_t<NTimes(); ++i_t) {
-        violation[i_t] += 0.25 * std::norm( Data(i_m,i_t) - std::pow(-1.,ell)*std::conj(Data(i_mm,i_t)) );
+        if((ell%2)==0) {
+          violation[i_t] += std::norm( Data(i_m,i_t) - std::conj(Data(i_mm,i_t)) );
+        } else {
+          violation[i_t] += std::norm( Data(i_m,i_t) + std::conj(Data(i_mm,i_t)) );
+        }
         norm[i_t] += std::norm( Data(i_m,i_t) );
       }
     }
   }
   for(unsigned int i_t=0; i_t<NTimes(); ++i_t) {
-    violation[i_t] = std::sqrt(violation[i_t]/norm[i_t]);
+    violation[i_t] = std::sqrt(violation[i_t]/(4.0*norm[i_t]));
   }
 
   return violation;
@@ -1030,6 +1034,7 @@ public:
   gsl_vector* ss;
   gsl_vector* x;
   gsl_multimin_function min_func;
+  // ofstream DebugFile;
 public:
   ZParityViolationMinimizer(const GWFrames::Waveform& WIN)
     : Win(WIN), W(Win.SliceOfTimeIndicesWithEll2(Win.NTimes()/2)), R_last(), EllEqualsTwo(1,2),
@@ -1042,8 +1047,12 @@ public:
     s = gsl_multimin_fminimizer_alloc(gsl_multimin_fminimizer_nmsimplex2, min_func.n);
     ss = gsl_vector_alloc(min_func.n);
     x = gsl_vector_alloc(min_func.n);
+    // INFOTOCERR << "Opening debug file /tmp/MinimumParityDirections.dat" << endl;
+    // DebugFile.open("/tmp/MinimumParityDirections.dat");
   }
   ~ZParityViolationMinimizer() {
+    // INFOTOCERR << "Closing debug file /tmp/MinimumParityDirections.dat" << endl;
+    // DebugFile.close();
     gsl_vector_free(x);
     gsl_vector_free(ss);
     gsl_multimin_fminimizer_free(s);
@@ -1125,6 +1134,7 @@ public:
     const Quaternions::Quaternion R_delta = Quaternions::exp(Quaternions::Quaternion(0.0, gsl_vector_get(s->x, 0), gsl_vector_get(s->x, 1), 0.0));
     R_last = R_delta * R_last;
     // INFOTOCERR << iter << " " << s->fval << "; " << R_delta_log[1] << "," << R_delta_log[2] << endl;
+    // DebugFile << W.T(0) << ", " << R_last*Quaternions::zHat*R_last.conjugate() << endl;
     return GWFrames::Waveform(W).RotateDecompositionBasis(R_delta).ZParityViolationNormalized()[0];
   }
 };
@@ -1154,6 +1164,7 @@ std::vector<double> GWFrames::Waveform::ZParityViolationMinimized() const {
 
   for(unsigned int i_t=0; i_t<ntimes; ++i_t) {
     INFOTOCERR << i_t << "/" << ntimes << std::endl;
+    // Minimizer is stateful, so this gives us a second try, after a restart:
     violations[i_t] = std::min(Minimizer.Minimize(i_t), Minimizer.Minimize(i_t));
     // violations[i_t] = Minimizer.Minimize(i_t);
   }
