@@ -790,7 +790,7 @@ int GWFrames::Waveform::EllMax() const {
 
 /// Find index of mode with given (l,m) data.
 unsigned int GWFrames::Waveform::FindModeIndex(const int l, const int m) const {
-  const unsigned int i_expected = ell*(ell+1) + m - SpinWeight()*SpinWeight();
+  const unsigned int i_expected = l*(l+1) + m - SpinWeight()*SpinWeight();
   if(lm[i_expected][0]==l && lm[i_expected][1]==m) { return i_expected; }
   //ORIENTATION!!! following loop
   for(unsigned int i=0; i<NModes(); ++i) {
@@ -804,7 +804,7 @@ unsigned int GWFrames::Waveform::FindModeIndex(const int l, const int m) const {
 unsigned int GWFrames::Waveform::FindModeIndexWithoutError(const int l, const int m) const {
   /// If the requested mode is not present, the returned index is 1
   /// beyond the end of the mode vector.
-  const unsigned int i_expected = ell*(ell+1) + m - SpinWeight()*SpinWeight();
+  const unsigned int i_expected = l*(l+1) + m - SpinWeight()*SpinWeight();
   if(lm[i_expected][0]==l && lm[i_expected][1]==m) { return i_expected; }
   // ORIENTATION!!! following loop
   unsigned int i=0;
@@ -930,89 +930,210 @@ std::vector<std::vector<double> > GWFrames::Waveform::DipoleMoment(int ellMax) c
   return D;
 }
 
-/// Measure the absolute magnitude of the violation of parity in the z direction
-std::vector<double> GWFrames::Waveform::ZParityViolationSquared(std::vector<int> Lmodes) const {
-  /// \param Lmodes L modes to evaluate
-  ///
-  /// This function measures the violation of invariance under
-  /// z-parity (reflection across the x-y plane).  Nonprecessing
-  /// systems in a suitable frame should have zero violation.
-  /// Precessing systems in any frame and nonprecessing systems in the
-  /// wrong frame will show violations.  This quantity can be
-  /// minimized over attitude to show the presence or absence of a
-  /// plane of symmetry.
-
-  if(Lmodes.size()==0) {
-    Lmodes.push_back(lm[0][0]);
-    for(unsigned int i_m=0; i_m<NModes(); ++i_m) {
-      if(std::find(Lmodes.begin(), Lmodes.end(), lm[i_m][0]) == Lmodes.end() ) {
-        Lmodes.push_back(lm[i_m][0]);
-      }
-    }
+inline std::complex<double> GWFrames::Waveform::XParityConjugate(const unsigned int i_m, const unsigned int i_mm, const unsigned int i_t) const {
+  if((lm[i_m][1]%2)==0) {
+    return std::conj(Data(i_m, i_t));
   }
-
-  vector<double> violation(NTimes(),0.0);
-
-  for(int ell=std::abs(SpinWeight()); ell<=EllMax(); ++ell) {
-    for(int m=-ell; m<=ell; ++m) {
-      const unsigned int i_m = FindModeIndex(ell,m);
-      const unsigned int i_mm = FindModeIndex(ell,-m);
-      for(unsigned int i_t=0; i_t<NTimes(); ++i_t) {
-        violation[i_t] += 0.25 * std::norm( Data(i_m,i_t) - std::pow(-1.,ell)*std::conj(Data(i_mm,i_t)) );
-      }
-    }
-  }
-
-  return violation;
+  return -std::conj(Data(i_m, i_t));
 }
 
-/// Measure the relative magnitude of the violation of parity in the z direction
-std::vector<double> GWFrames::Waveform::ZParityViolationNormalized(std::vector<int> Lmodes) const {
-  /// \param Lmodes L modes to evaluate
-  ///
-  /// This function measures the violation of invariance under
-  /// z-parity (reflection across the x-y plane).  Nonprecessing
-  /// systems in a suitable frame should have zero violation.
-  /// Precessing systems in any frame and nonprecessing systems in the
-  /// wrong frame will show violations.  This quantity can be
-  /// minimized over attitude to show the presence or absence of a
-  /// plane of symmetry.
-  ///
-  /// The quantity is normalized by the overall norm of the data at
-  /// each instant, and the square-root of that ratio is returned.
+inline std::complex<double> GWFrames::Waveform::YParityConjugate(const unsigned int i_m, const unsigned int i_mm, const unsigned int i_t) const {
+  return std::conj(Data(i_m, i_t));
+}
 
-  if(Lmodes.size()==0) {
-    Lmodes.push_back(lm[0][0]);
-    for(unsigned int i_m=0; i_m<NModes(); ++i_m) {
-      if(std::find(Lmodes.begin(), Lmodes.end(), lm[i_m][0]) == Lmodes.end() ) {
-        Lmodes.push_back(lm[i_m][0]);
-      }
-    }
+inline std::complex<double> GWFrames::Waveform::ZParityConjugate(const unsigned int i_m, const unsigned int i_mm, const unsigned int i_t) const {
+  if((lm[i_m][0]%2)==0) {
+    return std::conj(Data(i_mm, i_t));
   }
+  return -std::conj(Data(i_mm, i_t));
+}
 
+inline std::complex<double> GWFrames::Waveform::ParityConjugate(const unsigned int i_m, const unsigned int i_mm, const unsigned int i_t) const {
+  if(((lm[i_m][0]+lm[i_m][1])%2)==0) {
+    return std::conj(Data(i_mm, i_t));
+  }
+  return -std::conj(Data(i_mm, i_t));
+}
+
+// Local utility function for evaluating involution violation
+std::vector<double> GWFrames::Waveform::InvolutionViolationSquared(GWFrames::Waveform::WaveformInvolutionFunction Invol, std::vector<int> Lmodes) const {
   vector<double> violation(NTimes(),0.0);
-  vector<double> norm(NTimes(),0.0);
 
   for(int ell=std::abs(SpinWeight()); ell<=EllMax(); ++ell) {
-    for(int m=-ell; m<=ell; ++m) {
-      const unsigned int i_m = FindModeIndex(ell,m);
-      const unsigned int i_mm = FindModeIndex(ell,-m);
-      for(unsigned int i_t=0; i_t<NTimes(); ++i_t) {
-        if((ell%2)==0) {
-          violation[i_t] += std::norm( Data(i_m,i_t) - std::conj(Data(i_mm,i_t)) );
-        } else {
-          violation[i_t] += std::norm( Data(i_m,i_t) + std::conj(Data(i_mm,i_t)) );
+    if(Lmodes.size()==0 || GWFrames::xINy(ell,Lmodes)) {
+      for(int m=-ell; m<=ell; ++m) {
+        const unsigned int i_m = FindModeIndex(ell,m);
+        const unsigned int i_mm = FindModeIndex(ell,-m);
+        for(unsigned int i_t=0; i_t<NTimes(); ++i_t) {
+          violation[i_t] += 0.25 * std::norm( Data(i_m,i_t) - (this->*Invol)(i_m,i_mm,i_t) );
         }
-        norm[i_t] += std::norm( Data(i_m,i_t) );
       }
     }
-  }
-  for(unsigned int i_t=0; i_t<NTimes(); ++i_t) {
-    violation[i_t] = std::sqrt(violation[i_t]/(4.0*norm[i_t]));
   }
 
   return violation;
 }
+
+
+// Private utility function for taking involution of a Waveform
+GWFrames::Waveform GWFrames::Waveform::Involution(WaveformInvolutionFunction WInvol, QuaternionInvolutionFunction QInvol) const {
+  const Waveform& A = *this;
+  Waveform B = A.CopyWithoutData();
+  const int ellMax = A.EllMax();
+  const unsigned int nTimes = A.NTimes();
+  B.t = A.t;
+  B.frame.resize(A.frame.size());
+  for(unsigned int i=0; i<A.frame.size(); ++i) {
+    B.frame[i] = QInvol(A.frame[i]);
+  }
+  B.lm = A.lm;
+  B.data.resize(A.NModes(), A.NTimes());
+  for(int ell=std::abs(SpinWeight()); ell<=ellMax; ++ell) {
+    for(int m=-ell; m<=ell; ++m) {
+      const unsigned int i_m = FindModeIndex(ell,m);
+      const unsigned int i_mm = FindModeIndex(ell,-m);
+      for(unsigned int i_t=0; i_t<nTimes; ++i_t) {
+        B.data[i_m][i_t] = (A.*WInvol)(i_m,i_mm,i_t);
+      }
+    }
+  }
+  return B;
+}
+
+// Private utility function for taking involution of a Waveform
+GWFrames::Waveform GWFrames::Waveform::InvolutionSymmetricPart(WaveformInvolutionFunction WInvol, QuaternionInvolutionFunction QInvol) const {
+  const Waveform& A = *this;
+  Waveform B = A.CopyWithoutData();
+  const int ellMax = A.EllMax();
+  const unsigned int nTimes = A.NTimes();
+  B.t = A.t;
+  B.frame.resize(A.frame.size());
+  for(unsigned int i=0; i<A.frame.size(); ++i) {
+    B.frame[i] = 0.5 * ( A.frame[i] +  QInvol(A.frame[i]) );
+  }
+  B.lm = A.lm;
+  B.data.resize(A.NModes(), A.NTimes());
+  for(int ell=std::abs(SpinWeight()); ell<=ellMax; ++ell) {
+    for(int m=-ell; m<=ell; ++m) {
+      const unsigned int i_m = FindModeIndex(ell,m);
+      const unsigned int i_mm = FindModeIndex(ell,-m);
+      for(unsigned int i_t=0; i_t<nTimes; ++i_t) {
+        B.data[i_m][i_t] = 0.5 * ( A.data[i_m][i_t] + (A.*WInvol)(i_m,i_mm,i_t) );
+      }
+    }
+  }
+  return B;
+}
+
+// Private utility function for taking involution of a Waveform
+GWFrames::Waveform GWFrames::Waveform::InvolutionAntisymmetricPart(WaveformInvolutionFunction WInvol, QuaternionInvolutionFunction QInvol) const {
+  const Waveform& A = *this;
+  Waveform B = A.CopyWithoutData();
+  const int ellMax = A.EllMax();
+  const unsigned int nTimes = A.NTimes();
+  B.t = A.t;
+  B.frame.resize(A.frame.size());
+  for(unsigned int i=0; i<A.frame.size(); ++i) {
+    B.frame[i] = 0.5 * ( A.frame[i] -  QInvol(A.frame[i]) );
+  }
+  B.lm = A.lm;
+  B.data.resize(A.NModes(), A.NTimes());
+  for(int ell=std::abs(SpinWeight()); ell<=ellMax; ++ell) {
+    for(int m=-ell; m<=ell; ++m) {
+      const unsigned int i_m = FindModeIndex(ell,m);
+      const unsigned int i_mm = FindModeIndex(ell,-m);
+      for(unsigned int i_t=0; i_t<nTimes; ++i_t) {
+        B.data[i_m][i_t] = 0.5 * ( A.data[i_m][i_t] - (A.*WInvol)(i_m,i_mm,i_t) );
+      }
+    }
+  }
+  return B;
+}
+
+
+// /// Measure the absolute magnitude of the violation of parity in the z direction
+// std::vector<double> GWFrames::Waveform::ZParityViolationSquared(std::vector<int> Lmodes) const {
+//   /// \param Lmodes L modes to evaluate
+//   ///
+//   /// This function measures the violation of invariance under
+//   /// z-parity (reflection across the x-y plane).  Nonprecessing
+//   /// systems in a suitable frame should have zero violation.
+//   /// Precessing systems in any frame and nonprecessing systems in the
+//   /// wrong frame will show violations.  This quantity can be
+//   /// minimized over attitude to show the presence or absence of a
+//   /// plane of symmetry.
+
+//   if(Lmodes.size()==0) {
+//     Lmodes.push_back(lm[0][0]);
+//     for(unsigned int i_m=0; i_m<NModes(); ++i_m) {
+//       if(std::find(Lmodes.begin(), Lmodes.end(), lm[i_m][0]) == Lmodes.end() ) {
+//         Lmodes.push_back(lm[i_m][0]);
+//       }
+//     }
+//   }
+
+//   vector<double> violation(NTimes(),0.0);
+
+//   for(int ell=std::abs(SpinWeight()); ell<=EllMax(); ++ell) {
+//     for(int m=-ell; m<=ell; ++m) {
+//       const unsigned int i_m = FindModeIndex(ell,m);
+//       const unsigned int i_mm = FindModeIndex(ell,-m);
+//       for(unsigned int i_t=0; i_t<NTimes(); ++i_t) {
+//         violation[i_t] += 0.25 * std::norm( Data(i_m,i_t) - std::pow(-1.,ell)*std::conj(Data(i_mm,i_t)) );
+//       }
+//     }
+//   }
+
+//   return violation;
+// }
+
+// /// Measure the relative magnitude of the violation of parity in the z direction
+// std::vector<double> GWFrames::Waveform::ZParityViolationNormalized(std::vector<int> Lmodes) const {
+//   /// \param Lmodes L modes to evaluate
+//   ///
+//   /// This function measures the violation of invariance under
+//   /// z-parity (reflection across the x-y plane).  Nonprecessing
+//   /// systems in a suitable frame should have zero violation.
+//   /// Precessing systems in any frame and nonprecessing systems in the
+//   /// wrong frame will show violations.  This quantity can be
+//   /// minimized over attitude to show the presence or absence of a
+//   /// plane of symmetry.
+//   ///
+//   /// The quantity is normalized by the overall norm of the data at
+//   /// each instant, and the square-root of that ratio is returned.
+
+//   if(Lmodes.size()==0) {
+//     Lmodes.push_back(lm[0][0]);
+//     for(unsigned int i_m=0; i_m<NModes(); ++i_m) {
+//       if(std::find(Lmodes.begin(), Lmodes.end(), lm[i_m][0]) == Lmodes.end() ) {
+//         Lmodes.push_back(lm[i_m][0]);
+//       }
+//     }
+//   }
+
+//   vector<double> violation(NTimes(),0.0);
+//   vector<double> norm(NTimes(),0.0);
+
+//   for(int ell=std::abs(SpinWeight()); ell<=EllMax(); ++ell) {
+//     for(int m=-ell; m<=ell; ++m) {
+//       const unsigned int i_m = FindModeIndex(ell,m);
+//       const unsigned int i_mm = FindModeIndex(ell,-m);
+//       for(unsigned int i_t=0; i_t<NTimes(); ++i_t) {
+//         if((ell%2)==0) {
+//           violation[i_t] += std::norm( Data(i_m,i_t) - std::conj(Data(i_mm,i_t)) );
+//         } else {
+//           violation[i_t] += std::norm( Data(i_m,i_t) + std::conj(Data(i_mm,i_t)) );
+//         }
+//         norm[i_t] += std::norm( Data(i_m,i_t) );
+//       }
+//     }
+//   }
+//   for(unsigned int i_t=0; i_t<NTimes(); ++i_t) {
+//     violation[i_t] = std::sqrt(violation[i_t]/(4.0*norm[i_t]));
+//   }
+
+//   return violation;
+// }
 
 
 // The following are local objects used by `ZParityViolationMinimized`
