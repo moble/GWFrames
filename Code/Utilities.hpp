@@ -24,6 +24,7 @@ namespace GWFrames {
   std::vector<double> exp(const std::vector<double>& x);
   std::vector<double> operator+(const std::vector<double>& a, const std::vector<double>& b);
   std::vector<double> operator-(const std::vector<double>& a, const std::vector<double>& b);
+  std::vector<double> operator/(const std::vector<double>& a, const std::vector<double>& b);
   std::vector<double> operator+(const std::vector<double>& a, const double b);
   std::vector<double> operator-(const std::vector<double>& a, const double b);
   std::vector<double> operator/(const std::vector<double>& a, const double b);

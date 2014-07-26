@@ -102,6 +102,19 @@ std::vector<double> GWFrames::operator-(const std::vector<double>& a, const std:
   return c;
 }
 
+std::vector<double> GWFrames::operator/(const std::vector<double>& a, const std::vector<double>& b) {
+  const unsigned int size = a.size();
+  if(b.size() != size) {
+    INFOTOCERR << ": a.size()=" << a.size() << "; b.size()=" << b.size() << endl;
+    throw(GWFrames_VectorSizeMismatch);
+  }
+  vector<double> c(size);
+  for(unsigned int i=0; i<size; ++i) {
+    c[i] = a[i]/b[i];
+  }
+  return c;
+}
+
 std::vector<double> GWFrames::operator+(const std::vector<double>& a, const double b) {
   const unsigned int size = a.size();
   vector<double> c(a);
