@@ -200,11 +200,17 @@ namespace GWFrames {
     inline std::vector<double> ParityViolationNormalized(std::vector<int> Lmodes=std::vector<int>(0)) const {
       return ParityViolationSquared(Lmodes) / Norm();
     }
+    inline Waveform XParityInvolution() const {
+      return Involution(&Waveform::XParityConjugate, &Quaternions::XParityConjugateSpinor);
+    }
     inline Waveform XParitySymmetricPart() const {
       return InvolutionSymmetricPart(&Waveform::XParityConjugate, &Quaternions::XParityConjugateSpinor);
     }
     inline Waveform XParityAntisymmetricPart() const {
       return InvolutionAntisymmetricPart(&Waveform::XParityConjugate, &Quaternions::XParityConjugateSpinor);
+    }
+    inline Waveform YParityInvolution() const {
+      return Involution(&Waveform::YParityConjugate, &Quaternions::YParityConjugateSpinor);
     }
     inline Waveform YParitySymmetricPart() const {
       return InvolutionSymmetricPart(&Waveform::YParityConjugate, &Quaternions::YParityConjugateSpinor);
@@ -212,17 +218,32 @@ namespace GWFrames {
     inline Waveform YParityAntisymmetricPart() const {
       return InvolutionAntisymmetricPart(&Waveform::YParityConjugate, &Quaternions::YParityConjugateSpinor);
     }
+    inline Waveform ZParityInvolution() const {
+      return Involution(&Waveform::ZParityConjugate, &Quaternions::ZParityConjugateSpinor);
+    }
     inline Waveform ZParitySymmetricPart() const {
       return InvolutionSymmetricPart(&Waveform::ZParityConjugate, &Quaternions::ZParityConjugateSpinor);
     }
     inline Waveform ZParityAntisymmetricPart() const {
       return InvolutionAntisymmetricPart(&Waveform::ZParityConjugate, &Quaternions::ZParityConjugateSpinor);
     }
+    inline Waveform ParityInvolution() const {
+      return Involution(&Waveform::ParityConjugate, &Quaternions::ParityConjugateSpinor);
+    }
     inline Waveform ParitySymmetricPart() const {
       return InvolutionSymmetricPart(&Waveform::ParityConjugate, &Quaternions::ParityConjugateSpinor);
     }
     inline Waveform ParityAntisymmetricPart() const {
       return InvolutionAntisymmetricPart(&Waveform::ParityConjugate, &Quaternions::ParityConjugateSpinor);
+    }
+    inline Waveform ConjugateAntipodalEvaluation() const {
+      return this->ParityInvolution();
+    }
+    inline Waveform ConjugateAntipodalSymmetricPart() const {
+      return this->ParitySymmetricPart();
+    }
+    inline Waveform ConjugateAntipodalAntisymmetricPart() const {
+      return this->ParityAntisymmetricPart();
     }
 
   private: // Private function for use in public rotation methods
