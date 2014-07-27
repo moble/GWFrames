@@ -311,22 +311,22 @@ GWFrames::Waveform GWFrames::Waveform::SliceOfTimeIndices(const unsigned int i_t
   /// i_t_a and i_t_b should hold the indices pointing to the first
   /// time in `t` after `t_a`, and the first time in `t` after `t_b`
   /// (or one-past-the-end of `t` if necessary)
-  if(i_t_a>i_t_b) {
-    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Requesting impossible slice"
-              << "\ni_t_a=" << i_t_a << "  >  i_t_b=" << i_t_b << std::endl;
-    throw(GWFrames_EmptyIntersection);
-  }
-  if(i_t_b>NTimes()) {
-    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Requesting impossible slice"
-              << "\ni_t_b=" << i_t_b << "  >  NTimes()=" << NTimes() << std::endl;
-    throw(GWFrames_IndexOutOfBounds);
-  }
-  Waveform Slice = this->CopyWithoutData();
-  Slice.lm = lm;
-  Slice.history << "this->SliceOfTimeIndices(" << i_t_a << ", " << i_t_b << ");" << std::endl;
   if(i_t_b==0) {
     i_t_b = i_t_a+1;
   }
+  if(i_t_a>i_t_b) {
+    INFOTOCERR << ": Requesting impossible slice"
+               << "\ni_t_a=" << i_t_a << "  >  i_t_b=" << i_t_b << std::endl;
+    throw(GWFrames_EmptyIntersection);
+  }
+  if(i_t_b>NTimes()) {
+    INFOTOCERR << ": Requesting impossible slice"
+               << "\ni_t_b=" << i_t_b << "  >  NTimes()=" << NTimes() << std::endl;
+    throw(GWFrames_IndexOutOfBounds);
+  }
+  Waveform Slice = this->CopyWithoutData();
+  Slice.history << "this->SliceOfTimeIndices(" << i_t_a << ", " << i_t_b << ");" << std::endl;
+  Slice.lm = lm;
   const unsigned int ntimes = i_t_b-i_t_a;
   const unsigned int nmodes = NModes();
   Slice.data.resize(nmodes, ntimes);
@@ -359,11 +359,21 @@ GWFrames::Waveform GWFrames::Waveform::SliceOfTimeIndicesWithEll2(const unsigned
   /// i_t_a and i_t_b should hold the indices pointing to the first
   /// time in `t` after `t_a`, and the first time in `t` after `t_b`
   /// (or one-past-the-end of `t` if necessary)
-  Waveform Slice = this->CopyWithoutData();
-  Slice.history << "this->SliceOfTimeIndicesWithEll2(" << i_t_a << ", " << i_t_b << ");" << std::endl;
   if(i_t_b==0) {
     i_t_b = i_t_a+1;
   }
+  if(i_t_a>i_t_b) {
+    INFOTOCERR << ": Requesting impossible slice"
+               << "\ni_t_a=" << i_t_a << "  >  i_t_b=" << i_t_b << std::endl;
+    throw(GWFrames_EmptyIntersection);
+  }
+  if(i_t_b>NTimes()) {
+    INFOTOCERR << ": Requesting impossible slice"
+               << "\ni_t_b=" << i_t_b << "  >  NTimes()=" << NTimes() << std::endl;
+    throw(GWFrames_IndexOutOfBounds);
+  }
+  Waveform Slice = this->CopyWithoutData();
+  Slice.history << "this->SliceOfTimeIndicesWithEll2(" << i_t_a << ", " << i_t_b << ");" << std::endl;
   Slice.lm = vector<vector<int> >(5, vector<int>(2));
   const unsigned int ntimes = i_t_b-i_t_a;
   const unsigned int nmodes = 5;
@@ -378,6 +388,11 @@ GWFrames::Waveform GWFrames::Waveform::SliceOfTimeIndicesWithEll2(const unsigned
   }
   if(frame.size() == NTimes()) {
     Slice.frame = vector<Quaternion>(frame.begin()+i_t_a, frame.begin()+i_t_b);
+  } else if(frame.size()==1) {
+    Slice.frame = frame;
+  } else if(frame.size()!=0) {
+    INFOTOCERR << " I don't understand what to do with frame data of length " << frame.size() << " in a Waveform with " << NTimes() << " times." << std::endl;
+    throw(GWFrames_VectorSizeMismatch);
   }
   Slice.t = vector<double>(t.begin()+i_t_a, t.begin()+i_t_b);
   return Slice;
@@ -930,30 +945,6 @@ std::vector<std::vector<double> > GWFrames::Waveform::DipoleMoment(int ellMax) c
   return D;
 }
 
-inline std::complex<double> GWFrames::Waveform::XParityConjugate(const unsigned int i_m, const unsigned int i_mm, const unsigned int i_t) const {
-  if((lm[i_m][1]%2)==0) {
-    return std::conj(Data(i_m, i_t));
-  }
-  return -std::conj(Data(i_m, i_t));
-}
-
-inline std::complex<double> GWFrames::Waveform::YParityConjugate(const unsigned int i_m, const unsigned int i_mm, const unsigned int i_t) const {
-  return std::conj(Data(i_m, i_t));
-}
-
-inline std::complex<double> GWFrames::Waveform::ZParityConjugate(const unsigned int i_m, const unsigned int i_mm, const unsigned int i_t) const {
-  if((lm[i_m][0]%2)==0) {
-    return std::conj(Data(i_mm, i_t));
-  }
-  return -std::conj(Data(i_mm, i_t));
-}
-
-inline std::complex<double> GWFrames::Waveform::ParityConjugate(const unsigned int i_m, const unsigned int i_mm, const unsigned int i_t) const {
-  if(((lm[i_m][0]+lm[i_m][1])%2)==0) {
-    return std::conj(Data(i_mm, i_t));
-  }
-  return -std::conj(Data(i_mm, i_t));
-}
 
 // Local utility function for evaluating involution violation
 std::vector<double> GWFrames::Waveform::InvolutionViolationSquared(GWFrames::Waveform::WaveformInvolutionFunction Invol, std::vector<int> Lmodes) const {
@@ -1051,92 +1042,8 @@ GWFrames::Waveform GWFrames::Waveform::InvolutionAntisymmetricPart(WaveformInvol
 }
 
 
-// /// Measure the absolute magnitude of the violation of parity in the z direction
-// std::vector<double> GWFrames::Waveform::ZParityViolationSquared(std::vector<int> Lmodes) const {
-//   /// \param Lmodes L modes to evaluate
-//   ///
-//   /// This function measures the violation of invariance under
-//   /// z-parity (reflection across the x-y plane).  Nonprecessing
-//   /// systems in a suitable frame should have zero violation.
-//   /// Precessing systems in any frame and nonprecessing systems in the
-//   /// wrong frame will show violations.  This quantity can be
-//   /// minimized over attitude to show the presence or absence of a
-//   /// plane of symmetry.
 
-//   if(Lmodes.size()==0) {
-//     Lmodes.push_back(lm[0][0]);
-//     for(unsigned int i_m=0; i_m<NModes(); ++i_m) {
-//       if(std::find(Lmodes.begin(), Lmodes.end(), lm[i_m][0]) == Lmodes.end() ) {
-//         Lmodes.push_back(lm[i_m][0]);
-//       }
-//     }
-//   }
-
-//   vector<double> violation(NTimes(),0.0);
-
-//   for(int ell=std::abs(SpinWeight()); ell<=EllMax(); ++ell) {
-//     for(int m=-ell; m<=ell; ++m) {
-//       const unsigned int i_m = FindModeIndex(ell,m);
-//       const unsigned int i_mm = FindModeIndex(ell,-m);
-//       for(unsigned int i_t=0; i_t<NTimes(); ++i_t) {
-//         violation[i_t] += 0.25 * std::norm( Data(i_m,i_t) - std::pow(-1.,ell)*std::conj(Data(i_mm,i_t)) );
-//       }
-//     }
-//   }
-
-//   return violation;
-// }
-
-// /// Measure the relative magnitude of the violation of parity in the z direction
-// std::vector<double> GWFrames::Waveform::ZParityViolationNormalized(std::vector<int> Lmodes) const {
-//   /// \param Lmodes L modes to evaluate
-//   ///
-//   /// This function measures the violation of invariance under
-//   /// z-parity (reflection across the x-y plane).  Nonprecessing
-//   /// systems in a suitable frame should have zero violation.
-//   /// Precessing systems in any frame and nonprecessing systems in the
-//   /// wrong frame will show violations.  This quantity can be
-//   /// minimized over attitude to show the presence or absence of a
-//   /// plane of symmetry.
-//   ///
-//   /// The quantity is normalized by the overall norm of the data at
-//   /// each instant, and the square-root of that ratio is returned.
-
-//   if(Lmodes.size()==0) {
-//     Lmodes.push_back(lm[0][0]);
-//     for(unsigned int i_m=0; i_m<NModes(); ++i_m) {
-//       if(std::find(Lmodes.begin(), Lmodes.end(), lm[i_m][0]) == Lmodes.end() ) {
-//         Lmodes.push_back(lm[i_m][0]);
-//       }
-//     }
-//   }
-
-//   vector<double> violation(NTimes(),0.0);
-//   vector<double> norm(NTimes(),0.0);
-
-//   for(int ell=std::abs(SpinWeight()); ell<=EllMax(); ++ell) {
-//     for(int m=-ell; m<=ell; ++m) {
-//       const unsigned int i_m = FindModeIndex(ell,m);
-//       const unsigned int i_mm = FindModeIndex(ell,-m);
-//       for(unsigned int i_t=0; i_t<NTimes(); ++i_t) {
-//         if((ell%2)==0) {
-//           violation[i_t] += std::norm( Data(i_m,i_t) - std::conj(Data(i_mm,i_t)) );
-//         } else {
-//           violation[i_t] += std::norm( Data(i_m,i_t) + std::conj(Data(i_mm,i_t)) );
-//         }
-//         norm[i_t] += std::norm( Data(i_m,i_t) );
-//       }
-//     }
-//   }
-//   for(unsigned int i_t=0; i_t<NTimes(); ++i_t) {
-//     violation[i_t] = std::sqrt(violation[i_t]/(4.0*norm[i_t]));
-//   }
-
-//   return violation;
-// }
-
-
-// The following are local objects used by `ZParityViolationMinimized`
+// The following are local objects used by `MinimalParityViolation`
 #ifndef DOXYGEN
 #include <gsl/gsl_errno.h>
 #include <gsl/gsl_min.h>
@@ -1146,55 +1053,67 @@ void myGSLErrorHandler2 (const char * reason, const char * file, int line, int g
   throw(gsl_errno);
 }
 gsl_error_handler_t* defaultGSLErrorHandler3 = gsl_set_error_handler((gsl_error_handler_t*) &myGSLErrorHandler2);
-double minfunc_ZParityViolation (const gsl_vector* delta, void* params);
-class ZParityViolationMinimizer {
+double minfunc_MinimalParityViolation (const gsl_vector* delta, void* params);
+class MinimalParityViolationMinimizer {
 public:
   const GWFrames::Waveform& Win;
   GWFrames::Waveform W;
   Quaternions::Quaternion R_last;
   const std::vector<int> EllEqualsTwo;
-  const int i_2, i_1, i_0, i_m1, i_m2;
   gsl_multimin_fminimizer* s;
   gsl_vector* ss;
   gsl_vector* x;
   gsl_multimin_function min_func;
-  // ofstream DebugFile;
+  ofstream DebugFile;
 public:
-  ZParityViolationMinimizer(const GWFrames::Waveform& WIN)
-    : Win(WIN), W(Win.SliceOfTimeIndicesWithEll2(Win.NTimes()/2)), R_last(), EllEqualsTwo(1,2),
-      i_2(Win.FindModeIndex(2,2)), i_1(Win.FindModeIndex(2,1)), i_0(Win.FindModeIndex(2,0)), i_m1(Win.FindModeIndex(2,-1)), i_m2(Win.FindModeIndex(2,-2))
+  MinimalParityViolationMinimizer(const GWFrames::Waveform& WIN)
+    : Win(WIN), W(Win.SliceOfTimeIndicesWithEll2(Win.NTimes()/2)), R_last(), EllEqualsTwo(1,2)
   {
     min_func.n = 2;
-    min_func.f = &minfunc_ZParityViolation;
+    min_func.f = &minfunc_MinimalParityViolation;
     min_func.params = (void*) this;
     R_last = Quaternions::sqrtOfRotor(-Quaternions::zHat*Quaternions::Quaternion(W.LLDominantEigenvector()[0]));
     s = gsl_multimin_fminimizer_alloc(gsl_multimin_fminimizer_nmsimplex2, min_func.n);
     ss = gsl_vector_alloc(min_func.n);
     x = gsl_vector_alloc(min_func.n);
-    // INFOTOCERR << "Opening debug file /tmp/MinimumParityDirections.dat" << endl;
-    // DebugFile.open("/tmp/MinimumParityDirections.dat");
+    INFOTOCERR << "Opening debug file /tmp/MinimumParityDirections.dat" << endl;
+    DebugFile.open("/tmp/MinimumParityDirections.dat");
+    DebugFile << std::setprecision(12);
   }
-  ~ZParityViolationMinimizer() {
-    // INFOTOCERR << "Closing debug file /tmp/MinimumParityDirections.dat" << endl;
-    // DebugFile.close();
+  ~MinimalParityViolationMinimizer() {
+    INFOTOCERR << "Closing debug file /tmp/MinimumParityDirections.dat" << endl;
+    DebugFile.close();
     gsl_vector_free(x);
     gsl_vector_free(ss);
     gsl_multimin_fminimizer_free(s);
   }
   double EvaluateMinimizationQuantity(const double deltax, const double deltay) const {
+    // const GWFrames::Waveform W2 = GWFrames::Waveform(W).RotateDecompositionBasis(Quaternions::Quaternion(deltax,deltay));
     const GWFrames::Waveform W2 = GWFrames::Waveform(W).RotateDecompositionBasis(Quaternions::exp(Quaternions::Quaternion(0.0,deltax,deltay,0.0)));
-    return std::sqrt (std::norm( W2.Data(i_2,0) - std::conj(W2.Data(i_m2,0)) )
-                      + std::norm( W2.Data(i_1,0) - std::conj(W2.Data(i_m1,0)) )
-                      + std::norm( W2.Data(i_0,0) - std::conj(W2.Data(i_0,0)) )
-                      + std::norm( W2.Data(i_m1,0) - std::conj(W2.Data(i_1,0)) )
-                      + std::norm( W2.Data(i_m2,0) - std::conj(W2.Data(i_2,0)) ) );
+    return W2.ZParityViolationSquared()[0];
+    // return std::sqrt(std::min(std::min(W2.XParityViolationSquared()[0], W2.YParityViolationSquared()[0]), W2.ZParityViolationSquared()[0]));
   }
-  double Minimize(const unsigned int i) {
-    W = Win.SliceOfTimeIndicesWithEll2(i);
+  double Minimize(const unsigned int i, const int direction) {
+    // W = Win.SliceOfTimeIndicesWithEll2(i);
+    switch (direction) {
+    case 0:
+      R_last = Quaternions::Quaternion(0.707106781187, 0, 0.707106781187, 0);
+      break;
+    case 1:
+      R_last = Quaternions::Quaternion(0.707106781187, -0.707106781187, 0, 0);
+      break;
+    case 2:
+      R_last = Quaternions::One;
+      break;
+    default:
+      throw(GWFrames_ValueError);
+    }
+    W = Win.SliceOfTimeIndices(i);
     W.RotateDecompositionBasis(R_last);
-    const unsigned int MaxIterations = 7500;
-    const double MinSimplexSize = 1.0e-15; // When the function is abs of a linear function, this can be small
-    const double InitialTrialAngleStep = M_PI/1.5;
+    const unsigned int MaxIterations = 2000;
+    const double MinSimplexSize = 1.0e-8;
+    // const double MinSimplexSize = 1.0e-15; // When the function is abs of a linear function, this can be small
+    const double InitialTrialAngleStep = M_PI/8.0;
     size_t iter = 0;
     int status = GSL_CONTINUE;
     double size = 0.0;
@@ -1202,27 +1121,88 @@ public:
     // Do a dumb minimization first
     gsl_vector_set(x, 0, 0.);
     gsl_vector_set(x, 1, 0.);
-    double Violation=EvaluateMinimizationQuantity(0.0,0.0);
-    double dalpha=0.001;
-    for(double alpha=dalpha; alpha<M_PI; alpha+=dalpha) {
-      {
-        const double violation = EvaluateMinimizationQuantity(alpha/2.0,0.0);
-        if(Violation>violation) {
-          Violation = violation;
-          gsl_vector_set(x, 0, alpha/2.0);
-          gsl_vector_set(x, 1, 0.0);
-        }
-      }
-      { // Check the opposite direction too, just in case...
-        const double violation = EvaluateMinimizationQuantity(0.0,alpha/2.0);
-        if(Violation>violation) {
-          Violation = violation;
-          gsl_vector_set(x, 0, 0.0);
-          gsl_vector_set(x, 1, alpha/2.0);
-        }
-      }
-    }
-    // INFOTOCERR << std::setprecision(12) << Violation << "; " << R_delta_log[1] << "," << R_delta_log[2] << endl;
+    // double Violation=EvaluateMinimizationQuantity(0.0,0.0);
+    // {
+    //   const double Theta = M_PI/2.;
+    //   const double Phi = 0.0;
+    //   const double deltax = -(Theta/2.)*std::sin(Phi);
+    //   const double deltay = (Theta/2.)*std::cos(Phi);
+    //   const double violation = EvaluateMinimizationQuantity(deltax,deltay);
+    //   if(i==0) {
+    //     INFOTOCERR << " x(Theta,Phi)=(" << Theta << "," << Phi << ")\t"
+    //                << " (Violation,violation)=(" << Violation << "," << violation << ")" << std::endl;
+    //   }
+    //   if(Violation>violation) {
+    //     INFOTOCERR << " Moving: x(Theta,Phi)=(" << Theta << "," << Phi << ")\t"
+    //                << " (Violation,violation)=(" << Violation << "," << violation << ")" << std::endl;
+    //     Violation = violation;
+    //     gsl_vector_set(x, 0, deltax);
+    //     gsl_vector_set(x, 1, deltay);
+    //   }
+    // }
+    // {
+    //   const double Theta = M_PI/2.;
+    //   const double Phi = M_PI/2.;
+    //   const double deltax = -(Theta/2.)*std::sin(Phi);
+    //   const double deltay = (Theta/2.)*std::cos(Phi);
+    //   const double violation = EvaluateMinimizationQuantity(deltax,deltay);
+    //   if(i==0) {
+    //     INFOTOCERR << " y(Theta,Phi)=(" << Theta << "," << Phi << ")\t"
+    //                << " (Violation,violation)=(" << Violation << "," << violation << ")" << std::endl;
+    //   }
+    //   if(Violation>violation) {
+    //     INFOTOCERR << " Moving: y(Theta,Phi)=(" << Theta << "," << Phi << ")\t"
+    //                << " (Violation,violation)=(" << Violation << "," << violation << ")" << std::endl;
+    //     Violation = violation;
+    //     gsl_vector_set(x, 0, deltax);
+    //     gsl_vector_set(x, 1, deltay);
+    //   }
+    // }
+    // {
+    //   // import numpy as np
+    //   // import healpy as hp
+    //   // for NSIDE in [8,16,32,64]:
+    //   //     np.savetxt('/tmp/HealpixCoords_N{0}.dat'.format(NSIDE),
+    //   //                np.array([list(coords) for i in range(hp.nside2npix(NSIDE))
+    //   //                          for coords in [hp.pix2ang(NSIDE, i)]
+    //   //                          if (coords[0]<=np.pi/2. and coords[1]<=np.pi/2.)]))
+    //   ifstream CoordsFile;
+    //   CoordsFile.open("/tmp/HealpixHemisphere_N16.dat");
+    //   double Theta,Phi;
+    //   while(CoordsFile>>Theta && CoordsFile>>Phi) {
+    //     const double deltax = -(Theta/2.)*std::sin(Phi);
+    //     const double deltay = (Theta/2.)*std::cos(Phi);
+    //     // const GWFrames::Waveform W2 = GWFrames::Waveform(W).RotateDecompositionBasis(Quaternions::exp(Quaternions::Quaternion(0.0,deltax,deltay,0.0)));
+    //     // const double X = W2.XParityViolationSquared()[0];
+    //     // const double Y = W2.YParityViolationSquared()[0];
+    //     // const double Z = W2.ZParityViolationSquared()[0];
+    //     // if(X<Violation && X<Y && X<Z) {
+    //     //   Violation = X;
+    //     //   gsl_vector_set(x, 0, (Theta/2.)*std::cos(Phi));
+    //     //   gsl_vector_set(x, 1, (Theta/2.)*std::sin(Phi));
+    //     // } else if(Y<Violation && Y<Z) {
+    //     //   Violation = Y;
+    //     // } else if(Z<Violation) {
+    //     //   Violation = Z;
+    //     //   gsl_vector_set(x, 0, (Theta/2.)*std::cos(Phi));
+    //     //   gsl_vector_set(x, 1, (Theta/2.)*std::sin(Phi));
+    //     // }
+    //     const double violation = EvaluateMinimizationQuantity(deltax,deltay);
+    //     if(i==0) {
+    //       INFOTOCERR << " (Theta,Phi)=(" << Theta << "," << Phi << ")\t"
+    //                  << " (Violation,violation)=(" << Violation << "," << violation << ")" << std::endl;
+    //     }
+    //     if(Violation>violation) {
+    //       INFOTOCERR << " Moving: (Theta,Phi)=(" << Theta << "," << Phi << ")\t"
+    //                  << " (Violation,violation)=(" << Violation << "," << violation << ")" << std::endl;
+    //       Violation = violation;
+    //       gsl_vector_set(x, 0, deltax);
+    //       gsl_vector_set(x, 1, deltay);
+    //     }
+    //   }
+    //   CoordsFile.close();
+    // }
+    // // INFOTOCERR << std::setprecision(12) << Violation << "; " << R_delta_log[1] << "," << R_delta_log[2] << endl;
 
     // Use the result from the last block to start off an explicit optimization
     gsl_vector_set(ss, 0, InitialTrialAngleStep);
@@ -1233,19 +1213,16 @@ public:
       iter++;
       status = gsl_multimin_fminimizer_iterate(s);
       if(status==GSL_EBADFUNC) {
-        std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-                  << ":\nThe iteration encountered a singular point where the function evaluated to Inf or NaN"
-                  << "\nwhile minimizing at (" << gsl_vector_get(s->x, 0) << ", " << gsl_vector_get(s->x, 1)
-                  << ")." << std::endl;
+        INFOTOCERR << ":\nThe iteration encountered a singular point where the function evaluated to Inf or NaN"
+                   << "\nwhile minimizing at (" << gsl_vector_get(s->x, 0) << ", " << gsl_vector_get(s->x, 1)
+                   << ")." << std::endl;
       }
       if(status==GSL_FAILURE) {
-        std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-                  << ":\nThe algorithm could not improve the current best approximation or bounding interval." << std::endl;
+        INFOTOCERR << ":\nThe algorithm could not improve the current best approximation or bounding interval." << std::endl;
       }
       if(status==GSL_ENOPROG) {
-        std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-                  << ":\nThe minimizer is unable to improve on its current estimate, either due to"
-                  << "\nnumerical difficulty or because a genuine local minimum has been reached." << std::endl;
+        INFOTOCERR << ":\nThe minimizer is unable to improve on its current estimate, either due to"
+                   << "\nnumerical difficulty or because a genuine local minimum has been reached." << std::endl;
       }
       if(status) break;
       size = gsl_multimin_fminimizer_size(s);
@@ -1255,22 +1232,40 @@ public:
       INFOTOCERR << "Warning: stopped minimizing due to too many iterations." << std::endl;
     }
     // Get rotation and normalized value
+    // const Quaternions::Quaternion R_delta = Quaternions::Quaternion(gsl_vector_get(s->x, 0), gsl_vector_get(s->x, 1));
     const Quaternions::Quaternion R_delta = Quaternions::exp(Quaternions::Quaternion(0.0, gsl_vector_get(s->x, 0), gsl_vector_get(s->x, 1), 0.0));
-    R_last = R_delta * R_last;
+    R_last = R_delta*R_last;
     // INFOTOCERR << iter << " " << s->fval << "; " << R_delta_log[1] << "," << R_delta_log[2] << endl;
-    // DebugFile << W.T(0) << ", " << R_last*Quaternions::zHat*R_last.conjugate() << endl;
-    return GWFrames::Waveform(W).RotateDecompositionBasis(R_delta).ZParityViolationNormalized()[0];
+    DebugFile << W.T(0) << ", " << R_last*Quaternions::zHat*R_last.conjugate() << endl;
+    W.RotateDecompositionBasis(R_delta);
+    return W.ZParityViolationNormalized()[0];
+    // const double X = W2.XParityViolationNormalized()[0];
+    // const double Y = W2.YParityViolationNormalized()[0];
+    // const double Z = W2.ZParityViolationNormalized()[0];
+    // if(X<Y && X<Z) {
+    //   INFOTOCERR << std::setprecision(12) << W.T(0) << " X<Y<Z " << X << "<" << Y << "<" << Z << "  " << R_last << "  " << R_last*Quaternions::xHat*R_last.conjugate() << endl;
+    //   DebugFile << W.T(0) << ", " << R_last*Quaternions::xHat*R_last.conjugate() << endl;
+    //   return X;
+    // } else if(Y<Z) {
+    //   INFOTOCERR << std::setprecision(12) << W.T(0) << " X>Y<Z " << X << ">" << Y << "<" << Z << "  " << R_last << "  " << R_last*Quaternions::yHat*R_last.conjugate() << endl;
+    //   DebugFile << W.T(0) << ", " << R_last*Quaternions::yHat*R_last.conjugate() << endl;
+    //   return Y;
+    // } else {
+    //   INFOTOCERR << std::setprecision(12) << W.T(0) << " X>Y>Z " << X << ">" << Y << ">" << Z << "  " << R_last << "  " << R_last*Quaternions::zHat*R_last.conjugate() << endl;
+    //   DebugFile << W.T(0) << ", " << R_last*Quaternions::zHat*R_last.conjugate() << endl;
+    //   return Z;
+    // }
   }
 };
-double minfunc_ZParityViolation (const gsl_vector* delta, void* params) {
-  ZParityViolationMinimizer* Minimizer = (ZParityViolationMinimizer*) params;
+double minfunc_MinimalParityViolation (const gsl_vector* delta, void* params) {
+  MinimalParityViolationMinimizer* Minimizer = (MinimalParityViolationMinimizer*) params;
   return Minimizer->EvaluateMinimizationQuantity(gsl_vector_get(delta,0),
                                                  gsl_vector_get(delta,1));
 }
 #endif // DOXYGEN
 
 /// Measure the relative magnitude of the violation of parity in the z direction
-std::vector<double> GWFrames::Waveform::ZParityViolationMinimized() const {
+std::vector<double> GWFrames::Waveform::MinimalParityViolation() const {
   /// This function measures the violation of invariance under
   /// z-parity (reflection across the x-y plane).  Nonprecessing
   /// systems in a suitable frame should have zero violation.
@@ -1284,13 +1279,14 @@ std::vector<double> GWFrames::Waveform::ZParityViolationMinimized() const {
 
   const unsigned int ntimes = NTimes();
   vector<double> violations(ntimes);
-  ZParityViolationMinimizer Minimizer(*this);
+  MinimalParityViolationMinimizer Minimizer(*this);
 
   for(unsigned int i_t=0; i_t<ntimes; ++i_t) {
-    INFOTOCERR << i_t << "/" << ntimes << std::endl;
+    INFOTOCERR << i_t+1 << "/" << ntimes << std::endl;
     // Minimizer is stateful, so this gives us a second try, after a restart:
-    violations[i_t] = std::min(Minimizer.Minimize(i_t), Minimizer.Minimize(i_t));
+    // violations[i_t] = std::min(Minimizer.Minimize(i_t), Minimizer.Minimize(i_t));
     // violations[i_t] = Minimizer.Minimize(i_t);
+    violations[i_t] = std::min(std::min(Minimizer.Minimize(i_t,0), Minimizer.Minimize(i_t,1)), Minimizer.Minimize(i_t,2));
   }
 
   return violations;

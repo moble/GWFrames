@@ -156,50 +156,37 @@ namespace GWFrames {
     std::vector<double> Norm(const bool TakeSquareRoot=false) const;
     unsigned int MaxNormIndex(const unsigned int SkipFraction=4) const;
     inline double MaxNormTime(const unsigned int SkipFraction=4) const { return T(MaxNormIndex(SkipFraction)); }
-    std::vector<double> NormalizedAntisymmetry(std::vector<int> LModesForAsymmetry=std::vector<int>(0)) const;
-    std::vector<std::vector<double> > DipoleMoment(int ellMax=0) const;
-    // std::vector<double> ZParityViolationSquared(std::vector<int> Lmodes=std::vector<int>(0)) const;
-    // std::vector<double> ZParityViolationNormalized(std::vector<int> Lmodes=std::vector<int>(0)) const;
-    std::vector<double> ZParityViolationMinimized() const;
 
   // Involutions
   private:
     typedef std::complex<double> (Waveform::*WaveformInvolutionFunction)(const unsigned int ell, const unsigned int m, const unsigned int i_t) const;
     typedef Quaternions::Quaternion (*QuaternionInvolutionFunction)(const Quaternions::Quaternion& Q);
-    inline std::complex<double> XParityConjugate(const unsigned int i_m, const unsigned int i_mm, const unsigned int i_t) const;
-    inline std::complex<double> YParityConjugate(const unsigned int i_m, const unsigned int i_mm, const unsigned int i_t) const;
-    inline std::complex<double> ZParityConjugate(const unsigned int i_m, const unsigned int i_mm, const unsigned int i_t) const;
-    inline std::complex<double> ParityConjugate(const unsigned int i_m, const unsigned int i_mm, const unsigned int i_t) const;
-    inline std::complex<double> ConjugateAntipodalEvaluation(const unsigned int i_m, const unsigned int i_mm, const unsigned int i_t) const;
+    inline std::complex<double> XParityConjugate(const unsigned int i_m, const unsigned int i_mm, const unsigned int i_t) const {
+      if((lm[i_m][1]%2)==0) { return std::conj(Data(i_m, i_t)); }
+      return -std::conj(Data(i_m, i_t));
+    }
+    inline std::complex<double> YParityConjugate(const unsigned int i_m, const unsigned int i_mm, const unsigned int i_t) const {
+      return std::conj(Data(i_m, i_t));
+    }
+    inline std::complex<double> ZParityConjugate(const unsigned int i_m, const unsigned int i_mm, const unsigned int i_t) const {
+      if((lm[i_m][0]%2)==0) { return std::conj(Data(i_mm, i_t)); }
+      return -std::conj(Data(i_mm, i_t));
+    }
+    inline std::complex<double> ParityConjugate(const unsigned int i_m, const unsigned int i_mm, const unsigned int i_t) const {
+      if(((lm[i_m][0]+lm[i_m][1])%2)==0) { return std::conj(Data(i_mm, i_t)); }
+      return -std::conj(Data(i_mm, i_t));
+    }
+    inline std::complex<double> ConjugateAntipodalEvaluation(const unsigned int i_m, const unsigned int i_mm, const unsigned int i_t) const {
+      return this->ParityConjugate(i_m, i_mm, i_t);
+    }
     std::vector<double> InvolutionViolationSquared(WaveformInvolutionFunction Invol, std::vector<int> Lmodes=std::vector<int>(0)) const;
     Waveform Involution(WaveformInvolutionFunction WInvol, QuaternionInvolutionFunction QInvol) const;
     Waveform InvolutionSymmetricPart(WaveformInvolutionFunction Invol, QuaternionInvolutionFunction QInvol) const;
     Waveform InvolutionAntisymmetricPart(WaveformInvolutionFunction Invol, QuaternionInvolutionFunction QInvol) const;
   public:
-    inline std::vector<double> XParityViolationSquared(std::vector<int> Lmodes=std::vector<int>(0)) const {
-      return InvolutionViolationSquared(&Waveform::XParityConjugate, Lmodes);
-    }
-    inline std::vector<double> YParityViolationSquared(std::vector<int> Lmodes=std::vector<int>(0)) const {
-      return InvolutionViolationSquared(&Waveform::YParityConjugate, Lmodes);
-    }
-    inline std::vector<double> ZParityViolationSquared(std::vector<int> Lmodes=std::vector<int>(0)) const {
-      return InvolutionViolationSquared(&Waveform::ZParityConjugate, Lmodes);
-    }
-    inline std::vector<double> ParityViolationSquared(std::vector<int> Lmodes=std::vector<int>(0)) const {
-      return InvolutionViolationSquared(&Waveform::ParityConjugate, Lmodes);
-    }
-    inline std::vector<double> XParityViolationNormalized(std::vector<int> Lmodes=std::vector<int>(0)) const {
-      return XParityViolationSquared(Lmodes) / Norm();
-    }
-    inline std::vector<double> YParityViolationNormalized(std::vector<int> Lmodes=std::vector<int>(0)) const {
-      return YParityViolationSquared(Lmodes) / Norm();
-    }
-    inline std::vector<double> ZParityViolationNormalized(std::vector<int> Lmodes=std::vector<int>(0)) const {
-      return ZParityViolationSquared(Lmodes) / Norm();
-    }
-    inline std::vector<double> ParityViolationNormalized(std::vector<int> Lmodes=std::vector<int>(0)) const {
-      return ParityViolationSquared(Lmodes) / Norm();
-    }
+    std::vector<double> NormalizedAntisymmetry(std::vector<int> LModesForAsymmetry=std::vector<int>(0)) const;
+    std::vector<std::vector<double> > DipoleMoment(int ellMax=0) const;
+    std::vector<double> MinimalParityViolation() const;
     inline Waveform XParityInvolution() const {
       return Involution(&Waveform::XParityConjugate, &Quaternions::XParityConjugateSpinor);
     }
@@ -208,6 +195,12 @@ namespace GWFrames {
     }
     inline Waveform XParityAntisymmetricPart() const {
       return InvolutionAntisymmetricPart(&Waveform::XParityConjugate, &Quaternions::XParityConjugateSpinor);
+    }
+    inline std::vector<double> XParityViolationSquared(std::vector<int> Lmodes=std::vector<int>(0)) const {
+      return InvolutionViolationSquared(&Waveform::XParityConjugate, Lmodes);
+    }
+    inline std::vector<double> XParityViolationNormalized(std::vector<int> Lmodes=std::vector<int>(0)) const {
+      return GWFrames::sqrt(XParityViolationSquared(Lmodes) / Norm());
     }
     inline Waveform YParityInvolution() const {
       return Involution(&Waveform::YParityConjugate, &Quaternions::YParityConjugateSpinor);
@@ -218,6 +211,12 @@ namespace GWFrames {
     inline Waveform YParityAntisymmetricPart() const {
       return InvolutionAntisymmetricPart(&Waveform::YParityConjugate, &Quaternions::YParityConjugateSpinor);
     }
+    inline std::vector<double> YParityViolationSquared(std::vector<int> Lmodes=std::vector<int>(0)) const {
+      return InvolutionViolationSquared(&Waveform::YParityConjugate, Lmodes);
+    }
+    inline std::vector<double> YParityViolationNormalized(std::vector<int> Lmodes=std::vector<int>(0)) const {
+      return GWFrames::sqrt(YParityViolationSquared(Lmodes) / Norm());
+    }
     inline Waveform ZParityInvolution() const {
       return Involution(&Waveform::ZParityConjugate, &Quaternions::ZParityConjugateSpinor);
     }
@@ -227,6 +226,12 @@ namespace GWFrames {
     inline Waveform ZParityAntisymmetricPart() const {
       return InvolutionAntisymmetricPart(&Waveform::ZParityConjugate, &Quaternions::ZParityConjugateSpinor);
     }
+    inline std::vector<double> ZParityViolationSquared(std::vector<int> Lmodes=std::vector<int>(0)) const {
+      return InvolutionViolationSquared(&Waveform::ZParityConjugate, Lmodes);
+    }
+    inline std::vector<double> ZParityViolationNormalized(std::vector<int> Lmodes=std::vector<int>(0)) const {
+      return GWFrames::sqrt(ZParityViolationSquared(Lmodes) / Norm());
+    }
     inline Waveform ParityInvolution() const {
       return Involution(&Waveform::ParityConjugate, &Quaternions::ParityConjugateSpinor);
     }
@@ -235,6 +240,12 @@ namespace GWFrames {
     }
     inline Waveform ParityAntisymmetricPart() const {
       return InvolutionAntisymmetricPart(&Waveform::ParityConjugate, &Quaternions::ParityConjugateSpinor);
+    }
+    inline std::vector<double> ParityViolationSquared(std::vector<int> Lmodes=std::vector<int>(0)) const {
+      return InvolutionViolationSquared(&Waveform::ParityConjugate, Lmodes);
+    }
+    inline std::vector<double> ParityViolationNormalized(std::vector<int> Lmodes=std::vector<int>(0)) const {
+      return GWFrames::sqrt(ParityViolationSquared(Lmodes) / Norm());
     }
     inline Waveform ConjugateAntipodalEvaluation() const {
       return this->ParityInvolution();
