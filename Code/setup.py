@@ -38,21 +38,24 @@ submodules = ['Quaternions', 'SphericalFunctions', 'SpacetimeAlgebra', 'PostNewt
 require_clean_submodules( os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)),
                           submodules )
 
-## Need to build the spinsfast.so first, in its own setup, because
-## it's all C code, whereas GWFrames is C++ code.  But we will just
-## include the object files below, when we link the _GWFrames.so
-print("\nBuilding spinsfast first")
-cmd = 'cd spinsfast && {0} python/setup.py build --build-temp build/temp install --install-lib lib/'.format(executable)
-print(cmd)
-check_call(cmd, shell=True)
-print("Finished building spinsfast")
+if '--just-this' in argv:
+    argv.remove('--just-this')
+else:
+    ## Need to build the spinsfast.so first, in its own setup, because
+    ## it's all C code, whereas GWFrames is C++ code.  But we will just
+    ## include the object files below, when we link the _GWFrames.so
+    print("\nBuilding spinsfast first")
+    cmd = 'cd spinsfast && {0} python/setup.py build --build-temp build/temp install --install-lib lib/'.format(executable)
+    print(cmd)
+    check_call(cmd, shell=True)
+    print("Finished building spinsfast")
 
-## Build Quaternions and SphericalFunctions
-print("\nInstalling SphericalFunctions")
-cmd = ' '.join(['cd SphericalFunctions && ', executable]+argv)
-print(cmd)
-check_call(cmd, shell=True)
-print("Finished installing SphericalFunctions\n")
+    ## Build Quaternions and SphericalFunctions
+    print("\nInstalling SphericalFunctions")
+    cmd = ' '.join(['cd SphericalFunctions && ', executable]+argv)
+    print(cmd)
+    check_call(cmd, shell=True)
+    print("Finished installing SphericalFunctions\n")
 
 ## If PRD won't let me keep a subdirectory, make one
 if not exists('GWFrames') :
