@@ -3596,7 +3596,7 @@ class GWFrames::ScriFunctor
 ===========================
 """
 
-%feature("docstring") GWFrames::Waveform::ZParityViolationMinimized """
+%feature("docstring") GWFrames::Waveform::MinimalParityViolation """
 Measure the relative magnitude of the violation of parity in the z direction.
 =============================================================================
   Parameters
