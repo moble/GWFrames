@@ -35,6 +35,19 @@ class Waveform(_Waveform):
     data file is to use either `GWFrames.ReadFromH5` or
     `GWFrames.ReadFromNRAR`.  The copy constructor also works.
 
+    Note on Waveform Types:
+    In any system, h -- being strain -- should be dimensionless.
+    When G=c=1, the dimensionless quantities are rMPsi4, rhdot, and
+    rhOverM; as are rOverM and tOverM.  When G and c are
+    dimensionful, the dimensionless quantities are
+        -  (r/c) * (M*G/c^3) * Psi4
+        -  (r/c) * hdot
+        -  (r/c) * h / (M*G/c^3)
+        -  (r/c) / (M*G/c^3)
+        -  t / (M*G/c^3)
+    To regain the dimensionful quantities, we simply need to remove
+    the relevant dimensionful elements (e.g., the r and M factors).
+
     Member data
     -----------
       int spinweight
