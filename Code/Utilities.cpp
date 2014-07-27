@@ -164,6 +164,15 @@ std::vector<double> GWFrames::operator*(const double a, const std::vector<double
   return b*a;
 }
 
+std::vector<double> GWFrames::sqrt(const std::vector<double>& a) {
+  const unsigned int size = a.size();
+  vector<double> b(a);
+  for(unsigned int i=0; i<size; ++i) {
+    b[i] = std::sqrt(a[i]);
+  }
+  return b;
+}
+
 std::vector<std::vector<double> > GWFrames::operator/(const std::vector<std::vector<double> >& a, const std::vector<double>& b) {
   const unsigned int size1 = a.size();
   if(size1<1) { return vector<vector<double> >(0); }
