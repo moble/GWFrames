@@ -152,14 +152,6 @@ def require_clean_submodules(repo_root, submodules):
             "changed the code in the submodules, or something has gone quite wrong",
             "with your git repo.  I will continue to try to build, but if",
             "something goes wrong with the installation, this is probably the",
-            "cause.  You may want to commit any submodule changes you have made."
+            "cause.  You may want to commit any submodule changes you have made.",
+            ""
         ]))
-        # print('\n'.join([
-        #     "Cannot build / install with unclean submodules.",
-        #     "Please update submodules with",
-        #     "    git submodule init",
-        #     "    git submodule update",
-        #     "in the top-level directory, or commit any",
-        #     "submodule changes you have made."
-        # ]))
-        # sys.exit(1)
