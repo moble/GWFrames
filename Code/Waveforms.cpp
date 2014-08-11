@@ -2048,6 +2048,9 @@ std::vector<Quaternions::Quaternion> GWFrames::Waveform::GetAlignmentsOfDecompos
 
   const vector<vector<double> > V_h = this->LLDominantEigenvector(Lmodes);
 
+  const unsigned int i_22 = FindModeIndex(2,2);
+  const unsigned int i_2m2 = FindModeIndex(2,-2);
+
   for(unsigned int i_t=0; i_t<NTimes(); ++i_t) {
     // Choose the normalized eigenvector more parallel to omegaHat than anti-parallel
     const Quaternion V_hi = (omegaHat[i_t].dot(V_h[i_t]) < 0 ? -Quaternions::normalized(V_h[i_t]) : Quaternions::normalized(V_h[i_t]));
@@ -2059,12 +2062,12 @@ std::vector<Quaternions::Quaternion> GWFrames::Waveform::GetAlignmentsOfDecompos
     Waveform Instant = this->SliceOfTimeIndicesWithEll2(i_t);
     Instant.RotateDecompositionBasis(R_V_hi);
 
-    // Get the phase of the (2,2) mode after rotation
-    const unsigned int i_22 = Instant.FindModeIndex(2,2);
+    // Get the phase of the (2,+/-2) modes after rotation
     const double phase_22 = std::atan2(Instant.Im(i_22,0),Instant.Re(i_22,0));
+    const double phase_2m2 = std::atan2(Instant.Im(i_2m2,0),Instant.Re(i_2m2,0));
 
     // R_eps is the rotation we will be applying on the right-hand side
-    R_eps[i_t] = R_V_hi * Quaternions::exp(Quaternions::Quaternion(0,0,0,(-phase_22/4)));
+    R_eps[i_t] = R_V_hi * Quaternions::exp(Quaternions::Quaternion(0,0,0,(-(phase_22+phase_2m2)/8.)));
   }
 
   return UnflipRotors(R_eps);
@@ -2166,12 +2169,14 @@ Quaternions::Quaternion GWFrames::Waveform::GetAlignmentOfDecompositionFrameToMo
   // Now rotate Instant so that its z axis is aligned with V_f
   Instant.RotateDecompositionBasis(R_V_f);
 
-  // Get the phase of the (2,2) mode after rotation
+  // Get the phase of the (2,+/-2) modes after rotation
   const unsigned int i_22 = Instant.FindModeIndex(2,2);
+  const unsigned int i_2m2 = Instant.FindModeIndex(2,-2);
   const double phase_22 = std::atan2(Instant.Im(i_22,0),Instant.Re(i_22,0));
+  const double phase_2m2 = std::atan2(Instant.Im(i_2m2,0),Instant.Re(i_2m2,0));
 
   // R_eps is the rotation we will be applying on the right-hand side
-  R_eps = R_V_f * Quaternions::exp(Quaternions::Quaternion(0,0,0,(-phase_22/4)));
+  R_eps = R_V_f * Quaternions::exp(Quaternions::Quaternion(0,0,0,(-(phase_22-phase_2m2)/8.)));
 
   // Without changing anything else (the direction of V_f or the
   // phase), make sure that the rotating frame's XHat axis is more
