@@ -221,7 +221,7 @@ def OutputToNRAR(W, FileName, FileWriteMode='w') :
     try :
         F = File(FileName, FileWriteMode)
     except IOError : # If that did not work...
-        print("OutputToH5 was unable to open the file '{0}'.\n\n".format(FileName))
+        print("OutputToNRAR was unable to open the file '{0}'.\n\n".format(FileName))
         raise # re-raise the exception after the informative message above
     try :
         # If we are writing to a group within the file, create it
