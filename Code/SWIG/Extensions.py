@@ -246,6 +246,7 @@ def OutputToNRAR(W, FileName, FileWriteMode='w') :
         # Close the file and we are done
         F.close()
 Waveform.OutputToNRAR = OutputToNRAR
+PNWaveform.OutputToNRAR = OutputToNRAR
 
 def OutputToH5(W, FileName, FileWriteMode='w') :
     """
@@ -290,6 +291,7 @@ def OutputToH5(W, FileName, FileWriteMode='w') :
         # Close the file and we are done
         F.close()
 Waveform.OutputToH5 = OutputToH5
+PNWaveform.OutputToH5 = OutputToH5
 
 def ReadFromH5(FileName) :
     """
