@@ -190,27 +190,33 @@ def GetLaTeXDataDescription(W) :
 Waveform.GetLaTeXDataDescription = GetLaTeXDataDescription
 PNWaveform.GetLaTeXDataDescription = GetLaTeXDataDescription
 
+def __AddFileNamePrefix(W, FileName):
+    """Add a descriptive prefix to FileName"""
+    from os.path import basename, dirname
+    BaseName = W.GetFileNamePrefix() + basename(FileName)
+    if not dirname(FileName):
+        FileName = BaseName
+    else:
+        FileName = dirname(FileName) + '/' + BaseName
+    return FileName
+
 def OutputToNRAR(W, FileName, FileWriteMode='w') :
     """
     Output the Waveform in NRAR format.
 
     Note that the FileName is prepended with some descriptive
     information involving the data type and the frame type, such as
-    'rhOverM_' or 'rMPsi4_'.
+    'rhOverM_Corotating_' or 'rMPsi4_Aligned_'.
 
     """
     from h5py import File
-    from os.path import basename, dirname
     from GWFrames import UnknownDataType, h, hdot, Psi4
     Group = None
     if('.h5' in FileName and not FileName.endswith('.h5')) :
         FileName,Group = FileName.split('.h5')
         FileName += '.h5'
     # Add descriptive prefix to FileName
-    if(not dirname(FileName)) :
-        FileName = W.DescriptorString() + '_' + basename(FileName)
-    else :
-        FileName = dirname(FileName) + '/' + basename(FileName)
+    FileName = __AddFileNamePrefix(W, FileName)
     # Open the file for output
     try :
         F = File(FileName, FileWriteMode)
@@ -251,10 +257,9 @@ def OutputToH5(W, FileName, FileWriteMode='w') :
 
     """
     from h5py import File
-    from os.path import basename, dirname
     from GWFrames import UnknownDataType, h, hdot, Psi4
     # Add descriptive prefix to FileName
-    FileName = dirname(FileName) + '/' + W.GetFileNamePrefix() + basename(FileName)
+    FileName = __AddFileNamePrefix(W, FileName)
     # Open the file for output
     try :
         F = File(FileName, FileWriteMode)
