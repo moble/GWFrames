@@ -250,7 +250,10 @@ PNWaveform.OutputToNRAR = OutputToNRAR
 
 def OutputToH5(W, FileName, FileWriteMode='w') :
     """
-    Output the Waveform with all necessary information.
+    Output the Waveform with all necessary information, in GWFrames format.
+
+    This function outputs the Waveform object with *all* data, in a
+    format that is not compatible with NRAR.  See also `OutputToNRAR`.
 
     Note that the FileName is prepended with some descriptive
     information involving the data type and the frame type, such as
@@ -283,7 +286,7 @@ def OutputToH5(W, FileName, FileWriteMode='w') :
         Data = F.create_group("Data")
         for i_m in range(W.NModes()) :
             ell,m = W.LM()[i_m]
-            Data_m = Data.create_dataset("l{0}_m{1:+}".format(ell, m), data=W.Data(i_m),
+            Data_m = Data.create_dataset("l{0}_m{1:+}".format(int(ell), int(m)), data=W.Data(i_m),
                                          compression="gzip", shuffle=True)
             Data_m.attrs['ell'] = ell
             Data_m.attrs['m'] = m
