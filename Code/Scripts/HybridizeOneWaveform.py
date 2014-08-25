@@ -79,7 +79,7 @@ def Hybridize(PathToSystem, Waveform='rhOverM_Asymptotic_GeometricUnits.h5/Extra
     delta = (ma-mb)/(ma+mb)
     chia_0 = chiA[i_1]
     chib_0 = chiB[i_1]
-    Omega_orb_0 = Omega[i_1,2]
+    Omega_orb_0 = np.sqrt(Omega[i_1,0]**2+Omega[i_1,1]**2+Omega[i_1,2]**2)
     R_frame_i = Quaternions.FrameFromXY([nHat[i_1],],[lambdaHat[i_1],])[0]
 
     print("Constructing PN data"); sys.stdout.flush()
