@@ -82,7 +82,9 @@ class PNWaveform(_PNWaveform):
     addition to the data stored in a Waveform, this stores the two
     spins chi1 and chi2; the orbital angular-velocity vectors
     Omega_orb, Omega_prec; the PN angular momentum L; and the orbital
-    phase Phi_orb.  Various methods also exist for retrieving the
+    phase Phi_orb.  All such vectors are with respect to the inertial
+    frame.  We also have the usual frame data, which is initially the
+    co-orbital frame.  Various methods also exist for retrieving the
     vectors, their magnitudes, and their normalized versions.
 
     For an extensive listing of all methods available for PNWaveform
@@ -108,32 +110,36 @@ class PNWaveform(_PNWaveform):
       chi2_i: Initial dimensionless spin vector of BH2
       Omega_orb_i: Initial orbital angular frequency
       Omega_orb_0: Earliest orbital angular frequency to compute (default: Omega_orb_i)
-      R_frame_i: Overall rotation of the system (default: No rotation)
+      R_frame_i: Initial rotation of the binary (default: No rotation)
       MinStepsPerOrbit: Minimum number of time steps at which to evaluate (default: 32)
       PNWaveformModeOrder: PN order at which to compute waveform modes (default: 3.5)
       PNOrbitalEvolutionOrder: PN order at which to compute orbital evolution (default: 4.0)
 
-    The PN system is initialized having the BHs along the x axis, with
-    the orbital angular velocity along the positive z axis, having
-    magnitude Omega_orb_i.  The input spin vectors must be defined
-    with respect to this basis.  Note that the optional parameter
-    `Omega_orb_0` may be given, in which case the PN system is also
-    evolved backwards to that point.
+    [There is also a copy constructor.]
+
+    The PN system is defined with respect to an inertial basis
+    (x,y,z).  The input spin vectors must be defined with respect to
+    this basis.  A new basis is (X,Y,Z) is created by rotating (x,y,z)
+    by `R_frame_i`.  The black-hole positions are initialized with
+    respect to this basis, with BH1 along the positive X axis and BH2
+    along the negative X axis, and the orbital angular velocity along
+    the positive Z axis having magnitude `Omega_orb_i`.  Note that the
+    optional parameter `Omega_orb_0` may be given, in which case the
+    PN system is also evolved backwards to that point.
 
     The TaylorTn system is first integrated to compute the dynamics of
-    the binary.  The evolved spin vectors chi1 and chi2, orbital
-    angular-velocity vector Omega_orb, and orbital phase Phi_orb are
-    stored.  Simultaneously, the minimal-rotation frame of the
-    angular-velocity vector is computed, then rotated about the z'
-    axis by Phi_orb, resulting in the binary's frame.  Once this step
-    is completed, the information is used to construct the waveform in
-    the minimal-rotation frame.  (That is, the waveform will be
-    essentially corotating.)
+    the binary.  The evolved spin vectors `chi1` and `chi2`, orbital
+    angular-velocity vector `Omega_orb`, and co-orbital frame
+    `R_frame` itself are stored, in addition to a few other niceties.
+    Once this evolution is completed, the information is used to
+    construct the waveform in the co-orbital frame.  (The waveform
+    will be nearly co-rotating, but not quite.)
 
-    Note that, to get the PNWaveform in an inertial frame, you must
-    first apply the method TransformToInertialFrame().
-
-    The copy constructor also works.
+    To get the PNWaveform in an inertial frame, you must first apply
+    the method TransformToInertialFrame().  To get the PNWaveform in a
+    co-rotating frame, you first apply the method
+    TransformToInertialFrame(), then the method
+    TransformToCororatingFrame().
 
     """
     __metaclass__ = _MetaPNWaveform
