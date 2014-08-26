@@ -42,8 +42,8 @@ def Hybridize(PathToSystem, Waveform='rhOverM_Asymptotic_GeometricUnits.h5/Extra
     W_NR_corot = GWFrames.ReadFromNRAR(os.path.join(PathToSystem, Waveform))
     W_NR_corot.TransformToCorotatingFrame();
 
-    # Place the merger (moment of greatest waveform norm) at t=0, as a
-    # rough initial alignment with the PN waveform, which ends at t=0.
+    # Place the merger (moment of greatest waveform norm) at t=0, as
+    # the only generally meaningful time.
     t0 = -W_NR_corot.MaxNormTime()
     W_NR_corot.SetT(W_NR_corot.T()+t0)
     t1 = t1 + t0
@@ -85,7 +85,7 @@ def Hybridize(PathToSystem, Waveform='rhOverM_Asymptotic_GeometricUnits.h5/Extra
 
     print("Constructing PN data"); sys.stdout.flush()
 
-    # Construct complete waveform
+    # Construct complete PN waveform
     if(InitialOmega_orb==0.0):
         InitialOmega_orb = 0.5*Omega_orb_0
     W_PN_corot = GWFrames.PNWaveform(Approximant, delta, chia_0, chib_0, Omega_orb_0, InitialOmega_orb, R_frame_i,
