@@ -74,6 +74,7 @@ def Hybridize(PathToSystem, Waveform='rhOverM_Asymptotic_GeometricUnits.h5/Extra
 
     # Take initial data to be simply the coordinate quantities at the relaxation time
     i_1 = abs(tA-t1).argmin()
+    t_i = tA[i_1]
     ma = mA[i_1]
     mb = mB[i_1]
     delta = (ma-mb)/(ma+mb)
@@ -89,6 +90,7 @@ def Hybridize(PathToSystem, Waveform='rhOverM_Asymptotic_GeometricUnits.h5/Extra
         InitialOmega_orb = 0.5*Omega_orb_0
     W_PN_corot = GWFrames.PNWaveform(Approximant, delta, chia_0, chib_0, Omega_orb_0, InitialOmega_orb, R_frame_i,
                                      MinStepsPerOrbit, PNWaveformModeOrder, PNOrbitalEvolutionOrder)
+    W_PN_corot.SetT(W_PN_corot.T()+t_i);
     W_PN_corot.TransformToInertialFrame();
     W_PN_corot.TransformToCorotatingFrame();
 
