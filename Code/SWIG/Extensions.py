@@ -35,6 +35,10 @@ class Waveform(_Waveform):
     data file is to use either `GWFrames.ReadFromH5` or
     `GWFrames.ReadFromNRAR`.  The copy constructor also works.
 
+    The Waveform's `frame` data records the rotors needed to rotate
+    the standard (x,y,z) basis into the (X,Y,Z) basis with respect to
+    which the Waveform's mode `data` are decomposed.
+
     Note on Waveform Types:
     In any system, h -- being strain -- should be dimensionless.
     When G=c=1, the dimensionless quantities are rMPsi4, rhdot, and

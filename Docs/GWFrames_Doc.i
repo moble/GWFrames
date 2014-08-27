@@ -142,6 +142,31 @@ This function creates a frequency vector in (0 -> positives -> negatives -> 0) o
   
 """
 
+%feature("docstring") GWFrames::Waveform::AngularVelocityVectorRelativeToInertial """
+Calculate the angular velocity of the Waveform.
+===============================================
+  Parameters
+  ----------
+    const vector<int>& Lmodes = vector<int>(0)
+      L modes to evaluate
+  
+  Returns
+  -------
+    vector<vector<double>>
+  
+  Description
+  -----------
+    This returns the angular velocity of the Waveform, as defined in Sec. II of
+    'Angular velocity of gravitational radiation and the corotating frame'. The
+    vector is given in the inertial frame (x,y,z), rather than the (possibly
+    rotating) mode frame (X,Y,Z), which is unlike most other methods for
+    Waveform.
+    
+    If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
+    or [2,3,4], for example, restricts the range of the sum.
+  
+"""
+
 %feature("docstring") GWFrames::Waveform::FrameTypeString """
 
 
@@ -317,47 +342,16 @@ Copy of the Waveform between indices i_t_a and i_t_b, only ell=2 modes.
   
 """
 
-%feature("docstring") WaveformUtilities::Interpolate """
+%feature("docstring") GWFrames::Waveform::ConjugateAntipodalSymmetricPart """
 
 
   Parameters
   ----------
-    const vector<double>& X1
-    const vector<double>& Y1
-    const vector<double>& X2
-    vector<double>& Y2
+    (none)
   
   Returns
   -------
-    void
-  
-
-
-
-  Parameters
-  ----------
-    const vector<double>& X1
-    const vector<double>& Y1
-    const vector<double>& X2
-    vector<double>& Y2
-    const double ExtrapVal
-  
-  Returns
-  -------
-    void
-  
-
-
-
-  Parameters
-  ----------
-    const vector<double>& X1
-    const vector<double>& Y1
-    const double& X2
-  
-  Returns
-  -------
-    double
+    Waveform
   
 """
 
@@ -553,6 +547,21 @@ Copy of the Waveform between t_a and t_b, only ell=2 modes.
   
 """
 
+%feature("docstring") GWFrames::InverseConformalFactorGrid """
+Construct a grid with the conformal factor at each point.
+=========================================================
+  Parameters
+  ----------
+    const ThreeVector& v
+    const int n_theta
+    const int n_phi
+  
+  Returns
+  -------
+    DataGrid
+  
+"""
+
 %feature("docstring") GWFrames::PNWaveform::Omega_orbMag """
 
 
@@ -574,6 +583,21 @@ Vector of magnitudes of Omega_orb at each instant of time.
   Returns
   -------
     vector<double>
+  
+"""
+
+%feature("docstring") GWFrames::ConformalFactorGrid """
+Construct a grid with the conformal factor at each point.
+=========================================================
+  Parameters
+  ----------
+    const ThreeVector& v
+    const int n_theta
+    const int n_phi
+  
+  Returns
+  -------
+    DataGrid
   
 """
 
@@ -654,7 +678,7 @@ Rotate the physical content of the Waveform.
     which the modes are decomposed. Therefore, the new frame must be the
     original frame data times $\\bar{R}_{phys}$.
     
-    Note that this function does not change the frameType; this is left to the
+    Note that this function does not change the frameType; that is left to the
     calling function.
   
 """
@@ -814,11 +838,25 @@ Calculate the angular velocity of the Waveform.
   Description
   -----------
     This returns the angular velocity of the Waveform, as defined in Sec. II of
-    'Angular velocity of gravitational radiation and the corotating frame'.
-    Note that the returned vector is relative to the inertial frame.
+    'Angular velocity of gravitational radiation and the corotating frame'. The
+    vector is given in the (possibly rotating) mode frame (X,Y,Z), rather than
+    the inertial frame (x,y,z).
     
     If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
     or [2,3,4], for example, restricts the range of the sum.
+  
+"""
+
+%feature("docstring") GWFrames::Waveform::ConjugateAntipodalAntisymmetricPart """
+
+
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    Waveform
   
 """
 
@@ -900,6 +938,20 @@ class GWFrames::Modes
   Returns
   -------
     int
+  
+"""
+
+%feature("docstring") GWFrames::Waveform::BinaryOp """
+Pointwise multiply this object by another Waveform object.
+==========================================================
+  Parameters
+  ----------
+    typename Op 
+    const Waveform& B
+  
+  Returns
+  -------
+    typename Op
   
 """
 
@@ -1057,28 +1109,16 @@ namespace WaveformUtilities
 ===========================
 """
 
-%feature("docstring") GWFrames::Waveform::BoostPsi4 """
-Apply a boost to Psi4 data.
-===========================
+%feature("docstring") GWFrames::Waveform::ParityViolationNormalized """
+
+
   Parameters
   ----------
-    const vector<vector<double>>& v
+    vector<int> Lmodes = vector<int>(0)
   
   Returns
   -------
-    Waveform&
-  
-  Description
-  -----------
-    This function does three things. First, it evaluates the Waveform on what
-    will become an equi-angular grid after transformation by the boost. Second,
-    at each point of that grid, it takes the appropriate combinations of the
-    present value of Psi_4 and its conjugate to give the value of Psi_4 as
-    observed in the boosted frame. Finally, it transforms back to Fourier space
-    using that new equi-angular grid.
-    
-    The input three-velocities are assumed to give the velocities of the
-    boosted frame relative to the present frame.
+    vector<double>
   
 """
 
@@ -1178,6 +1218,15 @@ class GWFrames::Waveform
   
   Non-public member functions
   ---------------------------
+    complex<double> XParityConjugate
+    complex<double> YParityConjugate
+    complex<double> ZParityConjugate
+    complex<double> ParityConjugate
+    complex<double> ConjugateAntipodalEvaluation
+    vector<double> InvolutionViolationSquared
+    Waveform Involution
+    Waveform InvolutionSymmetricPart
+    Waveform InvolutionAntisymmetricPart
     Waveform& TransformModesToRotatedFrame
       Rotate modes of the Waveform object.  
 """
@@ -1491,6 +1540,19 @@ Differentiate the waveform as a function of time.
   
 """
 
+%feature("docstring") GWFrames::Waveform::XParityViolationSquared """
+
+
+  Parameters
+  ----------
+    vector<int> Lmodes = vector<int>(0)
+  
+  Returns
+  -------
+    vector<double>
+  
+"""
+
 %feature("docstring") InverseConformalFactorFunctor::operator() """
 
 
@@ -1529,28 +1591,15 @@ Returns the physical frequencies in Hz.
 """
 
 %feature("docstring") GWFrames::Waveform::ZParityViolationNormalized """
-Measure the relative magnitude of the violation of parity in the z direction.
-=============================================================================
+
+
   Parameters
   ----------
     vector<int> Lmodes = vector<int>(0)
-      L modes to evaluate
   
   Returns
   -------
     vector<double>
-  
-  Description
-  -----------
-    This function measures the violation of invariance under z-parity
-    (reflection across the x-y plane). Nonprecessing systems in a suitable
-    frame should have zero violation. Precessing systems in any frame and
-    nonprecessing systems in the wrong frame will show violations. This
-    quantity can be minimized over attitude to show the presence or absence of
-    a plane of symmetry.
-    
-    The quantity is normalized by the overall norm of the data at each instant,
-    and the square-root of that ratio is returned.
   
 """
 
@@ -1680,6 +1729,31 @@ Find the next iteration of the BMS transformation via Moreschi's algorithm.
   
 """
 
+%feature("docstring") GWFrames::Waveform::BoostPsi4 """
+Apply a boost to Psi4 data.
+===========================
+  Parameters
+  ----------
+    const vector<vector<double>>& v
+  
+  Returns
+  -------
+    Waveform&
+  
+  Description
+  -----------
+    This function does three things. First, it evaluates the Waveform on what
+    will become an equi-angular grid after transformation by the boost. Second,
+    at each point of that grid, it takes the appropriate combinations of the
+    present value of Psi_4 and its conjugate to give the value of Psi_4 as
+    observed in the boosted frame. Finally, it transforms back to Fourier space
+    using that new equi-angular grid.
+    
+    The input three-velocities are assumed to give the velocities of the
+    boosted frame relative to the present frame.
+  
+"""
+
 %feature("docstring") GWFrames::Modes::Modes """
 
 
@@ -1701,6 +1775,32 @@ Find the next iteration of the BMS transformation via Moreschi's algorithm.
   Returns
   -------
     Modes
+  
+"""
+
+%feature("docstring") GWFrames::Waveform::XParitySymmetricPart """
+
+
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    Waveform
+  
+"""
+
+%feature("docstring") GWFrames::Waveform::ZParitySymmetricPart """
+
+
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    Waveform
   
 """
 
@@ -1820,25 +1920,15 @@ Constructor of PN waveform from parameters.
   Parameters
   ----------
     const string& Approximant
-      'TaylorT1'|'TaylorT4'|'TaylorT5'
     const double delta
-      Normalized BH mass difference (M1-M2)/(M1+M2)
     const vector<double>& chi1_i
-      Initial dimensionless spin vector of BH1
     const vector<double>& chi2_i
-      Initial dimensionless spin vector of BH2
     const double Omega_orb_i
-      Initial orbital angular frequency
     double Omega_orb_0 = -1.0
-      Earliest orbital angular frequency to compute (optional)
     const Quaternions::Quaternion& R_frame_i = Quaternions::Quaternion(1, 0, 0, 0)
-      Overall rotation of the system (optional)
     const unsigned int MinStepsPerOrbit = 32
-      Minimum number of time steps at which to evaluate
     const double PNWaveformModeOrder = 3.5
-      PN order at which to compute waveform modes (default: 3.5)
     const double PNOrbitalEvolutionOrder = 4.0
-      PN order at which to compute orbital evolution (default: 4.0)
   
   Returns
   -------
@@ -1846,23 +1936,7 @@ Constructor of PN waveform from parameters.
   
   Description
   -----------
-    The PN system is initialized having the BHs along the x axis, with the
-    orbital angular velocity along the positive z axis, having magnitude
-    Omega_orb_i. The input spin vectors must be defined with respect to this
-    basis. Note that the optional parameter Omega_orb_0 may be given, in which
-    case the PN system is also evolved backwards to that point.
-    
-    The TaylorTn system is first integrated to compute the dynamics of the
-    binary. The evolved spin vectors chi1 and chi2, orbital angular-velocity
-    vector Omega_orb, and orbital phase Phi_orb are stored. Simultaneously, the
-    minimal-rotation frame of the angular-velocity vector is computed, then
-    rotated about the z' axis by Phi_orb, resulting in the binary's frame. Once
-    this step is completed, the information is used to construct the waveform
-    in the minimal-rotation frame. (That is, the waveform will be essentially
-    corotating.)
-    
-    Note that, to get the PNWaveform in an inertial frame, you must first apply
-    the method TransformToInertialFrame().
+    See GWFrames/Code/SWIG/Extensions.py for the docstring for this object
   
 """
 
@@ -2008,18 +2082,16 @@ Evaluate Waveform at a particular sky location and an instant of time.
   
 """
 
-%feature("docstring") GWFrames::InverseConformalFactorGrid """
-Construct a grid with the conformal factor at each point.
-=========================================================
+%feature("docstring") GWFrames::Waveform::ParityViolationSquared """
+
+
   Parameters
   ----------
-    const ThreeVector& v
-    const int n_theta
-    const int n_phi
+    vector<int> Lmodes = vector<int>(0)
   
   Returns
   -------
-    DataGrid
+    vector<double>
   
 """
 
@@ -2179,6 +2251,50 @@ Assignment operator.
   
 """
 
+%feature("docstring") WaveformUtilities::Interpolate """
+
+
+  Parameters
+  ----------
+    const vector<double>& X1
+    const vector<double>& Y1
+    const vector<double>& X2
+    vector<double>& Y2
+  
+  Returns
+  -------
+    void
+  
+
+
+
+  Parameters
+  ----------
+    const vector<double>& X1
+    const vector<double>& Y1
+    const vector<double>& X2
+    vector<double>& Y2
+    const double ExtrapVal
+  
+  Returns
+  -------
+    void
+  
+
+
+
+  Parameters
+  ----------
+    const vector<double>& X1
+    const vector<double>& Y1
+    const double& X2
+  
+  Returns
+  -------
+    double
+  
+"""
+
 %feature("docstring") GWFrames::Waveform::Abs """
 
 
@@ -2257,6 +2373,30 @@ class GWFrames::Scri
   Returns
   -------
     Interpolator
+  
+"""
+
+%feature("docstring") GWFrames::WaveformAtAPointFT::Normalize """
+
+
+  Parameters
+  ----------
+    const vector<double>& InversePSD
+  
+  Returns
+  -------
+    WaveformAtAPointFT&
+  
+
+
+
+  Parameters
+  ----------
+    const string& Detector = 'AdvLIGO_ZeroDet_HighP'
+  
+  Returns
+  -------
+    WaveformAtAPointFT&
   
 """
 
@@ -2491,18 +2631,16 @@ class GWFrames::WaveformAtAPointFT
   
 """
 
-%feature("docstring") GWFrames::ConformalFactorGrid """
-Construct a grid with the conformal factor at each point.
-=========================================================
+%feature("docstring") GWFrames::Waveform::ConjugateAntipodalEvaluation """
+
+
   Parameters
   ----------
-    const ThreeVector& v
-    const int n_theta
-    const int n_phi
+    (none)
   
   Returns
   -------
-    DataGrid
+    Waveform
   
 """
 
@@ -3017,6 +3155,19 @@ const double
   
 """
 
+%feature("docstring") GWFrames::Waveform::ZParityInvolution """
+
+
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    Waveform
+  
+"""
+
 %feature("docstring") AdvLIGO_NSNSOptimal """
 
 
@@ -3173,14 +3324,12 @@ class GWFrames::SuperMomenta
   
 """
 
-%feature("docstring") WaveformUtilities::InverseNoiseCurve """
+%feature("docstring") GWFrames::Waveform::YParityViolationNormalized """
 
 
   Parameters
   ----------
-    const vector<double>& F
-    const string& Detector = 'AdvLIGO_ZeroDet_HighP'
-    const double NoiseFloor = 0.0
+    vector<int> Lmodes = vector<int>(0)
   
   Returns
   -------
@@ -3203,10 +3352,25 @@ Calculate the $<L \\partial_t>$ quantity defined in the paper.
   Description
   -----------
     If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
-    or [2,3,4], for example, restricts the range of the sum.
+    or [2,3,4], for example, restricts the range of the sum. The vector is
+    given with respect to the (possibly rotating) mode frame (X,Y,Z), rather
+    than the inertial frame (x,y,z).
     
     $<L \\partial_t>^a = \\sum_{\\ell,m,m'} \\Im [ \\bar{f}^{\\ell,m'}
     <\\ell,m' | L_a | \\ell,m> \\dot{f}^{\\ell,m} ]$
+  
+"""
+
+%feature("docstring") GWFrames::Waveform::ParityInvolution """
+
+
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    Waveform
   
 """
 
@@ -3596,31 +3760,6 @@ class GWFrames::ScriFunctor
 ===========================
 """
 
-%feature("docstring") GWFrames::Waveform::MinimalParityViolation """
-Measure the relative magnitude of the violation of parity in the z direction.
-=============================================================================
-  Parameters
-  ----------
-    (none)
-  
-  Returns
-  -------
-    vector<double>
-  
-  Description
-  -----------
-    This function measures the violation of invariance under z-parity
-    (reflection across the x-y plane). Nonprecessing systems in a suitable
-    frame should have zero violation. Precessing systems in any frame and
-    nonprecessing systems in the wrong frame will show violations. The quantity
-    is normalized by the overall norm of the data at each instant, and the
-    square-root of that ratio is taken.
-    
-    This is performed iteratively at each time step, as the system is rotated,
-    and the parity violation is minimized.
-  
-"""
-
 %feature("docstring") GWFrames::Waveform::ResizeData """
 
 
@@ -3632,6 +3771,19 @@ Measure the relative magnitude of the violation of parity in the z direction.
   Returns
   -------
     Waveform&
+  
+"""
+
+%feature("docstring") GWFrames::Waveform::YParitySymmetricPart """
+
+
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    Waveform
   
 """
 
@@ -3887,6 +4039,19 @@ Output Waveform object to data file.
   
 """
 
+%feature("docstring") GWFrames::Waveform::ParitySymmetricPart """
+
+
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    Waveform
+  
+"""
+
 %feature("docstring") GWFrames::Waveform::RIsScaledOut """
 
 
@@ -3935,17 +4100,42 @@ class GWFrames::SliceModes
   
 """
 
-%feature("docstring") dotproduct """
-
-
+%feature("docstring") GWFrames::Waveform::RotateDecompositionBasis """
+Rotate the basis in which this Waveform is measured by a constant rotor.
+========================================================================
   Parameters
   ----------
-    const double * a
-    const double * b
+    const Quaternions::Quaternion& R_frame
   
   Returns
   -------
-    double
+    Waveform&
+  
+
+Rotate the basis in which this Waveform is measured.
+====================================================
+  Parameters
+  ----------
+    const vector<Quaternions::Quaternion>& R_frame
+      Vector of Quaternions by which to rotate
+  
+  Returns
+  -------
+    Waveform&
+  
+  Description
+  -----------
+    This rotates the coordinate basis, leaving the physical system in place.
+    
+    The Waveform's frame data records the rotors needed to rotate the standard
+    (x,y,z) basis into the (X,Y,Z) basis with respect to which the Waveform
+    modes are decomposed. If this is not the first rotation of the frame, we
+    need to be careful about how we record the total rotation. Here, we are
+    just composing rotations, so we need to store R_frame times the original
+    frame data.
+    
+    Note that this function does not change the frameType; this is left to the
+    calling function.
   
 """
 
@@ -3959,6 +4149,19 @@ class GWFrames::SliceModes
   Returns
   -------
     Waveform&
+  
+"""
+
+%feature("docstring") GWFrames::Waveform::XParityViolationNormalized """
+
+
+  Parameters
+  ----------
+    vector<int> Lmodes = vector<int>(0)
+  
+  Returns
+  -------
+    vector<double>
   
 """
 
@@ -4053,6 +4256,19 @@ Find index of mode with given (l,m) data without the chance of throwing an excep
   Returns
   -------
     const vector<vector<double>>&
+  
+"""
+
+%feature("docstring") GWFrames::Waveform::YParityInvolution """
+
+
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    Waveform
   
 """
 
@@ -4197,6 +4413,8 @@ Frame in which the rotation is minimal.
   Description
   -----------
     This function combines the steps required to obtain the corotating frame.
+    The result is given relative to the (possibly rotating) mode frame (X,Y,Z),
+    rather than the inertial frame (x,y,z).
     
     If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
     or [2,3,4], for example, restricts the range of the sum.
@@ -4229,6 +4447,21 @@ const double Fac17 = Factorial(17);
   
   Note that only values up to Factorial(171) are calculated, because that is
   the largest value that can be stored as an int in standard C++.
+  
+"""
+
+%feature("docstring") WaveformUtilities::InverseNoiseCurve """
+
+
+  Parameters
+  ----------
+    const vector<double>& F
+    const string& Detector = 'AdvLIGO_ZeroDet_HighP'
+    const double NoiseFloor = 0.0
+  
+  Returns
+  -------
+    vector<double>
   
 """
 
@@ -4287,25 +4520,15 @@ Remove data relating to the given ell modes.
 """
 
 %feature("docstring") GWFrames::Waveform::ZParityViolationSquared """
-Measure the absolute magnitude of the violation of parity in the z direction.
-=============================================================================
+
+
   Parameters
   ----------
     vector<int> Lmodes = vector<int>(0)
-      L modes to evaluate
   
   Returns
   -------
     vector<double>
-  
-  Description
-  -----------
-    This function measures the violation of invariance under z-parity
-    (reflection across the x-y plane). Nonprecessing systems in a suitable
-    frame should have zero violation. Precessing systems in any frame and
-    nonprecessing systems in the wrong frame will show violations. This
-    quantity can be minimized over attitude to show the presence or absence of
-    a plane of symmetry.
   
 """
 
@@ -4445,6 +4668,19 @@ Constructor on boosted grid by means of functor.
   
 """
 
+%feature("docstring") GWFrames::Waveform::YParityViolationSquared """
+
+
+  Parameters
+  ----------
+    vector<int> Lmodes = vector<int>(0)
+  
+  Returns
+  -------
+    vector<double>
+  
+"""
+
 %feature("docstring") GWFrames::Waveform::Translate """
 Translate the waveform data by some series of spatial translations.
 ===================================================================
@@ -4483,6 +4719,19 @@ Translate the waveform data by some series of spatial translations.
   Returns
   -------
     vector<double>
+  
+"""
+
+%feature("docstring") GWFrames::Waveform::ZParityAntisymmetricPart """
+
+
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    Waveform
   
 """
 
@@ -4527,17 +4776,41 @@ Evaluate the dipole moment of the waveform.
   
 """
 
-%feature("docstring") GWFrames::Waveform::BinaryOp """
-Pointwise multiply this object by another Waveform object.
-==========================================================
+%feature("docstring") GWFrames::Waveform::ParityAntisymmetricPart """
+
+
   Parameters
   ----------
-    typename Op 
-    const Waveform& B
+    (none)
   
   Returns
   -------
-    typename Op
+    Waveform
+  
+"""
+
+%feature("docstring") GWFrames::Waveform::MinimalParityViolation """
+Measure the relative magnitude of the violation of parity in the z direction.
+=============================================================================
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    vector<double>
+  
+  Description
+  -----------
+    This function measures the violation of invariance under z-parity
+    (reflection across the x-y plane). Nonprecessing systems in a suitable
+    frame should have zero violation. Precessing systems in any frame and
+    nonprecessing systems in the wrong frame will show violations. The quantity
+    is normalized by the overall norm of the data at each instant, and the
+    square-root of that ratio is taken.
+    
+    This is performed iteratively at each time step, as the system is rotated,
+    and the parity violation is minimized.
   
 """
 
@@ -4721,7 +4994,9 @@ Calculate the $<LL>$ quantity defined in the paper.
   Description
   -----------
     If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
-    or [2,3,4], for example, restricts the range of the sum.
+    or [2,3,4], for example, restricts the range of the sum. The matrix is
+    given in the (possibly rotating) mode frame (X,Y,Z), rather than the
+    inertial frame (x,y,z).
     
     $<LL>^{ab} = \\sum_{\\ell,m,m'} [\\bar{f}^{\\ell,m'} <\\ell,m' | L_a L_b |
     \\ell,m> f^{\\ell,m} ]$
@@ -4778,27 +5053,16 @@ Return the norm (sum of squares of modes) of the waveform.
   
 """
 
-%feature("docstring") GWFrames::WaveformAtAPointFT::Normalize """
+%feature("docstring") GWFrames::Waveform::XParityAntisymmetricPart """
 
 
   Parameters
   ----------
-    const vector<double>& InversePSD
+    (none)
   
   Returns
   -------
-    WaveformAtAPointFT&
-  
-
-
-
-  Parameters
-  ----------
-    const string& Detector = 'AdvLIGO_ZeroDet_HighP'
-  
-  Returns
-  -------
-    WaveformAtAPointFT&
+    Waveform
   
 """
 
@@ -4826,6 +5090,9 @@ Calculate the principal axis of the LL matrix, as prescribed by O'Shaughnessy et
     eigenvectors output by this function to be more parallel than anti-parallel
     to that direction. The default is to simply choose the z axis, since this
     is most often the correct choice anyway.
+    
+    The vector is given in the (possibly rotating) mode frame (X,Y,Z), rather
+    than the inertial frame (x,y,z).
   
 """
 
@@ -5041,6 +5308,19 @@ Return vector of vector of imaginary parts of all modes as function of time.
   
 """
 
+%feature("docstring") GWFrames::Waveform::XParityInvolution """
+
+
+  Parameters
+  ----------
+    (none)
+  
+  Returns
+  -------
+    Waveform
+  
+"""
+
 %feature("docstring") GWFrames::SuperMomenta::T """
 
 
@@ -5193,42 +5473,16 @@ class GWFrames::DataGrid
   
 """
 
-%feature("docstring") GWFrames::Waveform::RotateDecompositionBasis """
-Rotate the basis in which this Waveform is measured by a constant rotor.
-========================================================================
-  Parameters
-  ----------
-    const Quaternions::Quaternion& R_frame
-  
-  Returns
-  -------
-    Waveform&
-  
+%feature("docstring") GWFrames::Waveform::YParityAntisymmetricPart """
 
-Rotate the basis in which this Waveform is measured.
-====================================================
+
   Parameters
   ----------
-    const vector<Quaternions::Quaternion>& R_frame
-      Vector of Quaternions by which to rotate
+    (none)
   
   Returns
   -------
-    Waveform&
-  
-  Description
-  -----------
-    This rotates the coordinate basis, leaving the physical system in place.
-    
-    The Waveform's frame data records the rotors needed to rotate the standard
-    (x,y,z) basis into the (X,Y,Z) basis with respect to which the Waveform
-    modes are decomposed. If this is not the first rotation of the frame, we
-    need to be careful about how we record the total rotation. Here, we are
-    just composing rotations, so we need to store R_frame times the original
-    frame data.
-    
-    Note that this function does not change the frameType; this is left to the
-    calling function.
+    Waveform
   
 """
 
@@ -5271,6 +5525,20 @@ Find the appropriate rotations to fix the attitude of the corotating frame.
     Note that this function has no option to choose the direction of X based on
     some nHat vector, as other similar functions have. That issue is assumed to
     be handled elsewhere.
+  
+"""
+
+%feature("docstring") dotproduct """
+
+
+  Parameters
+  ----------
+    const double * a
+    const double * b
+  
+  Returns
+  -------
+    double
   
 """
 

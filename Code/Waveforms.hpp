@@ -259,6 +259,7 @@ namespace GWFrames {
     std::vector<std::vector<double> > LLDominantEigenvector(const std::vector<int>& Lmodes=std::vector<int>(0),
                                                             const Quaternions::Quaternion& RoughInitialEllDirection=Quaternions::zHat) const;
     std::vector<std::vector<double> > AngularVelocityVector(const std::vector<int>& Lmodes=std::vector<int>(0)) const;
+    std::vector<std::vector<double> > AngularVelocityVectorRelativeToInertial(const std::vector<int>& Lmodes=std::vector<int>(0)) const;
     std::vector<Quaternions::Quaternion> CorotatingFrame(const std::vector<int>& Lmodes=std::vector<int>(0)) const;
 
     // Convenient transformations

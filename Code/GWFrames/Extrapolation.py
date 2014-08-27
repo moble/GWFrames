@@ -468,7 +468,7 @@ def Extrapolate(**kwargs) :
 
     # If required, figure out the orbital frequencies
     if(UseOmega) :
-        Omegas = [sqrt(sum([c**2 for c in o])) for o in W_outer.AngularVelocityVector([2])]
+        Omegas = [sqrt(sum([c**2 for c in o])) for o in W_outer.AngularVelocityVectorRelativeToInertial([2])]
     else :
         Omegas = []
 

@@ -91,7 +91,6 @@ def Hybridize(PathToSystem, Waveform='rhOverM_Asymptotic_GeometricUnits.h5/Extra
     W_PN_corot = GWFrames.PNWaveform(Approximant, delta, chia_0, chib_0, Omega_orb_0, InitialOmega_orb, R_frame_i,
                                      MinStepsPerOrbit, PNWaveformModeOrder, PNOrbitalEvolutionOrder)
     W_PN_corot.SetT(W_PN_corot.T()+t_i);
-    W_PN_corot.TransformToInertialFrame();
     W_PN_corot.TransformToCorotatingFrame();
 
     print("Aligning PN and NR waveforms"); sys.stdout.flush()

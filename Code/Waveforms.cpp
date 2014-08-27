@@ -1,8 +1,6 @@
 // Copyright (c) 2014, Michael Boyle
 // See LICENSE file for details
 
-// #include <omp.h>
-
 #include <unistd.h>
 #include <sys/param.h>
 #include <sstream>
@@ -1212,7 +1210,7 @@ GWFrames::Waveform& GWFrames::Waveform::RotatePhysicalSystem(std::vector<Quatern
   /// modes are decomposed.  Therefore, the new frame must be the
   /// original `frame` data times \f$\bar{R}_{phys}\f$.
   ///
-  /// Note that this function does not change the `frameType`; this is
+  /// Note that this function does not change the `frameType`; that is
   /// left to the calling function.
   ///
 
@@ -1427,7 +1425,9 @@ vector<vector<double> > GWFrames::Waveform::LdtVector(vector<int> Lmodes) const 
   ///
   /// If Lmodes is empty (default), all L modes are used.  Setting
   /// Lmodes to [2] or [2,3,4], for example, restricts the range of
-  /// the sum.
+  /// the sum.  The vector is given with respect to the (possibly
+  /// rotating) mode frame (X,Y,Z), rather than the inertial frame
+  /// (x,y,z).
   ///
   /// \f$<L \partial_t>^a = \sum_{\ell,m,m'} \Im [ \bar{f}^{\ell,m'} < \ell,m' | L_a | \ell,m > \dot{f}^{\ell,m} ]\f$
 
@@ -1486,7 +1486,8 @@ vector<Matrix> GWFrames::Waveform::LLMatrix(vector<int> Lmodes) const {
   ///
   /// If Lmodes is empty (default), all L modes are used.  Setting
   /// Lmodes to [2] or [2,3,4], for example, restricts the range of
-  /// the sum.
+  /// the sum.  The matrix is given in the (possibly rotating) mode
+  /// frame (X,Y,Z), rather than the inertial frame (x,y,z).
   ///
   /// \f$<LL>^{ab} = \sum_{\ell,m,m'} [\bar{f}^{\ell,m'} < \ell,m' | L_a L_b | \ell,m > f^{\ell,m} ]\f$
 
@@ -1575,6 +1576,8 @@ std::vector<std::vector<double> > GWFrames::Waveform::LLDominantEigenvector(cons
   /// to simply choose the z axis, since this is most often the
   /// correct choice anyway.
   ///
+  /// The vector is given in the (possibly rotating) mode frame
+  /// (X,Y,Z), rather than the inertial frame (x,y,z).
 
   // Calculate the LL matrix at each instant
   vector<Matrix> ll = LLMatrix(Lmodes);
@@ -1636,8 +1639,8 @@ vector<vector<double> > GWFrames::Waveform::AngularVelocityVector(const vector<i
   /// This returns the angular velocity of the Waveform, as defined in
   /// Sec. II of <a href="http://arxiv.org/abs/1302.2919">"Angular
   /// velocity of gravitational radiation and the corotating
-  /// frame"</a>.  Note that the returned vector is relative to the
-  /// inertial frame.
+  /// frame"</a>.  The vector is given in the (possibly rotating) mode
+  /// frame (X,Y,Z), rather than the inertial frame (x,y,z).
   ///
   /// If Lmodes is empty (default), all L modes are used.  Setting
   /// Lmodes to [2] or [2,3,4], for example, restricts the range of
@@ -1647,16 +1650,6 @@ vector<vector<double> > GWFrames::Waveform::AngularVelocityVector(const vector<i
   // Calculate the L vector and LL matrix at each instant
   vector<vector<double> > l = LdtVector(Lmodes);
   vector<Matrix> ll = LLMatrix(Lmodes);
-
-  // If the frame is nontrivial, include its contribution
-  const bool TimeDependentFrame = (frame.size()>1);
-  const vector<Quaternion> Rdot = (TimeDependentFrame
-                                   ? Quaternions::QuaternionDerivative(frame, t)
-                                   : vector<Quaternion>(0));
-  const bool ConstantNontrivialFrame = (frame.size()==1);
-  const Quaternion R0 = (ConstantNontrivialFrame
-                         ? frame[0]
-                         : Quaternion(1,0,0,0));
 
   // Construct some objects for storage
   vector<vector<double> > omega(NTimes(), vector<double>(3));
@@ -1675,18 +1668,59 @@ vector<vector<double> > GWFrames::Waveform::AngularVelocityVector(const vector<i
     omega[iTime][0] = -gsl_vector_get(x, 0);
     omega[iTime][1] = -gsl_vector_get(x, 1);
     omega[iTime][2] = -gsl_vector_get(x, 2);
-
-    if(TimeDependentFrame) { // Include frame-rotation effects
-      const Quaternion& R = frame[iTime];
-      omega[iTime] = (R*Quaternion(omega[iTime])*R.conjugate() + 2*Rdot[iTime]*R.conjugate()).vec();
-    } else if(ConstantNontrivialFrame) { // Just rotate the result
-      omega[iTime] = (R0*Quaternion(omega[iTime])*R0.conjugate()).vec();
-    }
   }
 
   // Free the memory
   gsl_permutation_free(p);
   gsl_vector_free(x);
+
+  return omega;
+}
+
+/// Calculate the angular velocity of the Waveform.
+vector<vector<double> > GWFrames::Waveform::AngularVelocityVectorRelativeToInertial(const vector<int>& Lmodes) const {
+  ///
+  /// \param Lmodes L modes to evaluate
+  ///
+  /// This returns the angular velocity of the Waveform, as defined in
+  /// Sec. II of <a href="http://arxiv.org/abs/1302.2919">"Angular
+  /// velocity of gravitational radiation and the corotating
+  /// frame"</a>.  The vector is given in the inertial frame (x,y,z),
+  /// rather than the (possibly rotating) mode frame (X,Y,Z), which is
+  /// unlike most other methods for `Waveform`.
+  ///
+  /// If Lmodes is empty (default), all L modes are used.  Setting
+  /// Lmodes to [2] or [2,3,4], for example, restricts the range of
+  /// the sum.
+  ///
+
+  vector<vector<double> > omega = this->AngularVelocityVector(Lmodes);
+
+  // If the frame is nontrivial, include its contribution
+  const bool TimeDependentFrame = (frame.size()>1);
+  const vector<Quaternion> Rdot = (TimeDependentFrame
+                                   ? Quaternions::QuaternionDerivative(frame, t)
+                                   : vector<Quaternion>(0));
+  const bool ConstantNontrivialFrame = (frame.size()==1);
+  const Quaternion R0 = (ConstantNontrivialFrame
+                         ? frame[0]
+                         : Quaternion(1,0,0,0));
+
+  if(!TimeDependentFrame && !ConstantNontrivialFrame) {
+    return omega;
+  }
+
+  // Loop through time steps
+  if(TimeDependentFrame) { // Include frame-rotation effects
+    for(unsigned int iTime=0; iTime<omega.size(); ++iTime) {
+      const Quaternion& R = frame[iTime];
+      omega[iTime] = (R*Quaternion(omega[iTime])*R.conjugate() + 2*Rdot[iTime]*R.conjugate()).vec();
+    }
+  } else if(ConstantNontrivialFrame) { // Just rotate the resul
+    for(unsigned int iTime=0; iTime<omega.size(); ++iTime) {
+      omega[iTime] = (R0*Quaternion(omega[iTime])*R0.conjugate()).vec();
+    }
+  }
 
   return omega;
 }
@@ -1697,7 +1731,9 @@ std::vector<Quaternions::Quaternion> GWFrames::Waveform::CorotatingFrame(const s
   /// \param Lmodes L modes to evaluate
   ///
   /// This function combines the steps required to obtain the
-  /// corotating frame.
+  /// corotating frame.  The result is given relative to the (possibly
+  /// rotating) mode frame (X,Y,Z), rather than the inertial frame
+  /// (x,y,z).
   ///
   /// If Lmodes is empty (default), all L modes are used.  Setting
   /// Lmodes to [2] or [2,3,4], for example, restricts the range of
@@ -1773,14 +1809,6 @@ GWFrames::Waveform& GWFrames::Waveform::TransformToCorotatingFrame(const std::ve
   /// Lmodes to [2] or [2,3,4], for example, restricts the range of
   /// the sum.
   ///
-
-  if(frameType != GWFrames::Inertial) {
-    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-              << "\nWarning: Asking to transform a Waveform in the " << GWFrames::WaveformFrameNames[frameType] << " frame into the corotating frame."
-              << "\n         You have to think very carefully about whether or not this is what you really want.\n"
-              << "\n         This should probably only be applied to Waveforms in the " << GWFrames::WaveformFrameNames[GWFrames::Inertial] << " frame.\n"
-              << std::endl;
-  }
 
   vector<Quaternion> R_corot = this->CorotatingFrame(Lmodes);
   this->frameType = GWFrames::Corotating;
@@ -2044,7 +2072,7 @@ std::vector<Quaternions::Quaternion> GWFrames::Waveform::GetAlignmentsOfDecompos
   // Get direction of angular-velocity vector at each time step, in this frame
   const vector<Quaternion> omegaHat
     = Quaternions::inverse(frame)
-      * Quaternions::normalized(Quaternions::QuaternionArray(this->SliceOfTimesWithEll2().TransformToInertialFrame().AngularVelocityVector())) * frame;
+      * Quaternions::normalized(Quaternions::QuaternionArray(this->SliceOfTimesWithEll2().AngularVelocityVectorRelativeToInertial())) * frame;
 
   const vector<vector<double> > V_h = this->LLDominantEigenvector(Lmodes);
 
