@@ -3098,24 +3098,19 @@ std::complex<double> GWFrames::Waveform::InterpolateToPoint(const double varthet
   /// will fail if the `FrameType` is neither `UnknownFrameType` nor
   /// `Inertial`.
   ///
+  /// Pointers to GSL interpolation objects can be passed in, which
+  /// eliminates the need to re-allocate them for each interpolation.
 
   bool ThisFunctionOwnsThePointers = (accRe==0);
 
-  if(frameType != GWFrames::Inertial) {
-    if(frameType == GWFrames::UnknownFrameType) {
-      std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-                << "\nWarning: Asking for a Waveform in an " << GWFrames::WaveformFrameNames[frameType] << " frame to be evaluated at a point."
-                << "\n         This should probably only be applied to Waveforms in the " << GWFrames::WaveformFrameNames[GWFrames::Inertial] << " frame."
-                << "\n         But I'll trust you to know what you're doing.\n"
-                << std::endl;
-    } else {
-      std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-                << "\nError: Asking for a Waveform in the " << GWFrames::WaveformFrameNames[frameType] << " frame to be evaluated at a point."
-                << "\n       This should only be applied to Waveforms in the " << GWFrames::WaveformFrameNames[GWFrames::Inertial] << " frame.\n"
-                << std::endl;
-      throw(GWFrames_WrongFrameType);
-    }
-  }
+  // // Quiet this warning, because this function is called millions of times
+  // if(frameType == GWFrames::UnknownFrameType) {
+  //   std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+  //             << "\nWarning: Asking for a Waveform in an " << GWFrames::WaveformFrameNames[frameType] << " frame to be evaluated at a point."
+  //             << "\n         This should probably only be applied to Waveforms in the " << GWFrames::WaveformFrameNames[GWFrames::Inertial] << " frame."
+  //             << "\n         But I'll trust you to know what you're doing.\n"
+  //             << std::endl;
+  // }
 
   if(NTimes()<4) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
@@ -3138,10 +3133,7 @@ std::complex<double> GWFrames::Waveform::InterpolateToPoint(const double varthet
     throw(GWFrames_ValueError);
   }
 
-  const int NM = NModes();
-  vector<double> dRe(4), dIm(dRe.size()); // N.B.: If 4 is changed, any function calling this with nonzero pointers must be changed.
-  SphericalFunctions::SWSH Y(SpinWeight());
-  Y.SetAngles(vartheta, varphi);
+  vector<double> dRe(4), dIm(dRe.size()); // N.B.: If `4` is changed, any function calling this with nonzero pointers must be changed.
 
   // Find a series of time steps around the requested time
   unsigned int i_t_0(std::max(int(Quaternions::hunt(t, t_i))-1, 0));
@@ -3149,16 +3141,14 @@ std::complex<double> GWFrames::Waveform::InterpolateToPoint(const double varthet
     i_t_0 = NTimes()-4;
   }
 
+  // Construct the shorter Waveform that will be evaluated at the point
+  const Waveform W_short = this->SliceOfTimeIndices(i_t_0, i_t_0+4);
+
   // Evaluate at this point at a series of times around the requested time
-  for(int i_m=0; i_m<NM; ++i_m) {
-    const int ell = LM(i_m)[0];
-    const int m   = LM(i_m)[1];
-    const complex<double> Ylm = Y(ell,m);
-    for(unsigned int i_t=0; i_t<dRe.size(); ++i_t) {
-      const complex<double> val = Data(i_m, i_t+i_t_0) * Ylm;
-      dRe[i_t] += std::real(val);
-      dIm[i_t] += std::imag(val);
-    }
+  const std::vector<complex<double> > val = W_short.EvaluateAtPoint(vartheta, varphi);
+  for(unsigned int i_t=0; i_t<dRe.size(); ++i_t) {
+    dRe[i_t] = std::real(val[i_t]);
+    dIm[i_t] = std::imag(val[i_t]);
   }
 
   // Now interpolate in time
@@ -3166,10 +3156,10 @@ std::complex<double> GWFrames::Waveform::InterpolateToPoint(const double varthet
     accRe = gsl_interp_accel_alloc();
     accIm = gsl_interp_accel_alloc();
     splineRe = gsl_spline_alloc(gsl_interp_cspline, dRe.size());
-    splineIm = gsl_spline_alloc(gsl_interp_cspline, dRe.size());
+    splineIm = gsl_spline_alloc(gsl_interp_cspline, dIm.size());
   }
   gsl_spline_init(splineRe, &(t)[i_t_0], &dRe[0], dRe.size());
-  gsl_spline_init(splineIm, &(t)[i_t_0], &dIm[0], dRe.size());
+  gsl_spline_init(splineIm, &(t)[i_t_0], &dIm[0], dIm.size());
   const complex<double> value( gsl_spline_eval(splineRe, t_i, accRe), gsl_spline_eval(splineIm, t_i, accIm) );
   if(ThisFunctionOwnsThePointers) {
     gsl_interp_accel_free(accRe);
@@ -3188,18 +3178,14 @@ GWFrames::Waveform GWFrames::Waveform::Translate(const std::vector<std::vector<d
   ///
   /// This function is slow because it has to interpolate to
   /// NTimes*(2*ellMax+1)^2 different completely unique points.  Since
-  /// interpolation is so slow, this takes time.
+  /// interpolation is so slow, this takes a lot of time.  The
+  /// function also has to transform back from physical space to
+  /// modes, which is another significant chunk of time.
 
   if(frameType == GWFrames::UnknownFrameType) {
     INFOTOCERR << "\nWarning: Asking to Translate a Waveform in an `" << GWFrames::WaveformFrameNames[frameType] << "` frame."
-               << "\n         This should only be applied to Waveforms in the `" << GWFrames::WaveformFrameNames[GWFrames::Inertial] << "` frame."
-               << "\n         Proceeding, under the assumption that you know what you're doing."
+               << "\n         This assumes that the Waveform::frame member data is correct...."
                << std::endl;
-  } else if(frameType != GWFrames::Inertial) {
-    INFOTOCERR << "\nError: Asking to Translate a Waveform in the " << GWFrames::WaveformFrameNames[frameType] << " frame."
-               << "\n       This should only be applied to Waveforms in the " << GWFrames::WaveformFrameNames[GWFrames::Inertial] << " frame.\n"
-               << std::endl;
-    throw(GWFrames_NotYetImplemented);
   }
 
   if(deltax.size() != NTimes()) {

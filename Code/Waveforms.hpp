@@ -283,7 +283,6 @@ namespace GWFrames {
 
     // Pointwise operations and spin-weight operators
     std::vector<std::complex<double> > EvaluateAtPoint(const double vartheta, const double varphi) const;
-    // std::complex<double> InterpolateToPoint(const double vartheta, const double varphi, const double t_i) const;
     std::complex<double> InterpolateToPoint(const double vartheta, const double varphi, const double t_i,
                                             gsl_interp_accel* accRe=0, gsl_interp_accel* accIm=0, gsl_spline* splineRe=0, gsl_spline* splineIm=0) const;
     template <typename Op> Waveform BinaryOp(const Waveform& b) const;
