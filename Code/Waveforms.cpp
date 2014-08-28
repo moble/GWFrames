@@ -3085,10 +3085,11 @@ std::vector<std::complex<double> > GWFrames::Waveform::EvaluateAtPoint(const dou
 }
 
 /// Evaluate Waveform at a particular sky location and an instant of time
-std::complex<double> GWFrames::Waveform::InterpolateToPoint(const double vartheta, const double varphi, const double t_i) const {
+std::complex<double> GWFrames::Waveform::InterpolateToPoint(const double vartheta, const double varphi, const double t_i,
+                                                            gsl_interp_accel* accRe, gsl_interp_accel* accIm, gsl_spline* splineRe, gsl_spline* splineIm) const {
   ///
-  /// \param vartheta Polar angle of detector
-  /// \param varphi Azimuthal angle of detector
+  /// \param vartheta Polar angle of complex detector
+  /// \param varphi Azimuthal angle of complex detector
   /// \param t_i New time to interpolate to
   ///
   /// Note that the input angle parameters are measured relative to
@@ -3097,6 +3098,8 @@ std::complex<double> GWFrames::Waveform::InterpolateToPoint(const double varthet
   /// will fail if the `FrameType` is neither `UnknownFrameType` nor
   /// `Inertial`.
   ///
+
+  bool ThisFunctionOwnsThePointers = (accRe==0);
 
   if(frameType != GWFrames::Inertial) {
     if(frameType == GWFrames::UnknownFrameType) {
@@ -3136,7 +3139,7 @@ std::complex<double> GWFrames::Waveform::InterpolateToPoint(const double varthet
   }
 
   const int NM = NModes();
-  vector<double> dRe(4), dIm(dRe.size());
+  vector<double> dRe(4), dIm(dRe.size()); // N.B.: If 4 is changed, any function calling this with nonzero pointers must be changed.
   SphericalFunctions::SWSH Y(SpinWeight());
   Y.SetAngles(vartheta, varphi);
 
@@ -3159,17 +3162,21 @@ std::complex<double> GWFrames::Waveform::InterpolateToPoint(const double varthet
   }
 
   // Now interpolate in time
-  gsl_interp_accel* accRe = gsl_interp_accel_alloc();
-  gsl_interp_accel* accIm = gsl_interp_accel_alloc();
-  gsl_spline* splineRe = gsl_spline_alloc(gsl_interp_cspline, dRe.size());
-  gsl_spline* splineIm = gsl_spline_alloc(gsl_interp_cspline, dRe.size());
+  if(ThisFunctionOwnsThePointers) {
+    accRe = gsl_interp_accel_alloc();
+    accIm = gsl_interp_accel_alloc();
+    splineRe = gsl_spline_alloc(gsl_interp_cspline, dRe.size());
+    splineIm = gsl_spline_alloc(gsl_interp_cspline, dRe.size());
+  }
   gsl_spline_init(splineRe, &(t)[i_t_0], &dRe[0], dRe.size());
   gsl_spline_init(splineIm, &(t)[i_t_0], &dIm[0], dRe.size());
   const complex<double> value( gsl_spline_eval(splineRe, t_i, accRe), gsl_spline_eval(splineIm, t_i, accIm) );
-  gsl_interp_accel_free(accRe);
-  gsl_interp_accel_free(accIm);
-  gsl_spline_free(splineRe);
-  gsl_spline_free(splineIm);
+  if(ThisFunctionOwnsThePointers) {
+    gsl_interp_accel_free(accRe);
+    gsl_interp_accel_free(accIm);
+    gsl_spline_free(splineRe);
+    gsl_spline_free(splineIm);
+  }
 
   return value;
 }
@@ -3178,6 +3185,10 @@ std::complex<double> GWFrames::Waveform::InterpolateToPoint(const double varthet
 /// Translate the waveform data by some series of spatial translations
 GWFrames::Waveform GWFrames::Waveform::Translate(const std::vector<std::vector<double> >& deltax) const {
   /// \param x Array of 3-vectors by which to translate (function of time)
+  ///
+  /// This function is slow because it has to interpolate to
+  /// NTimes*(2*ellMax+1)^2 different completely unique points.  Since
+  /// interpolation is so slow, this takes time.
 
   if(frameType == GWFrames::UnknownFrameType) {
     INFOTOCERR << "\nWarning: Asking to Translate a Waveform in an `" << GWFrames::WaveformFrameNames[frameType] << "` frame."
@@ -3267,6 +3278,12 @@ GWFrames::Waveform GWFrames::Waveform::Translate(const std::vector<std::vector<d
   B.t.erase(B.t.begin(), B.t.begin()+iEarliest);
   B.data.resize(NModes(), B.NTimes()); // Each row (first index, nn) corresponds to a mode
 
+  // We allocate just once, for speed, and pass these to InterpolateToPoint
+  gsl_interp_accel* accRe = gsl_interp_accel_alloc();
+  gsl_interp_accel* accIm = gsl_interp_accel_alloc();
+  gsl_spline* splineRe = gsl_spline_alloc(gsl_interp_cspline, 4);
+  gsl_spline* splineIm = gsl_spline_alloc(gsl_interp_cspline, 4);
+
   // Main loop over time steps
   for(unsigned int i_t_B=0; i_t_B<B.NTimes(); ++i_t_B) {
     // These will hold the input and output data.  Note that spinsfast
@@ -3287,7 +3304,7 @@ GWFrames::Waveform GWFrames::Waveform::Translate(const std::vector<std::vector<d
           + deltax[i_t_B][2]*std::cos(theta);
 
         // Evaluate the data for the translated frame at this point
-        Grid[i_g] = A.InterpolateToPoint(theta, phi, B.T(i_t_B)-rHat_dot_deltax);
+        Grid[i_g] = A.InterpolateToPoint(theta, phi, B.T(i_t_B)-rHat_dot_deltax, accRe, accIm, splineRe, splineIm);
       }
     }
 
@@ -3304,6 +3321,11 @@ GWFrames::Waveform GWFrames::Waveform::Translate(const std::vector<std::vector<d
     }
 
   } // i_t_B loop
+
+  gsl_interp_accel_free(accRe);
+  gsl_interp_accel_free(accIm);
+  gsl_spline_free(splineRe);
+  gsl_spline_free(splineIm);
 
   return B;
 }
