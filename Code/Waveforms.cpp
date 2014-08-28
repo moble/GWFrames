@@ -1802,8 +1802,9 @@ GWFrames::Waveform& GWFrames::Waveform::TransformToCorotatingFrame(const std::ve
   ///
   /// This function combines the steps required to obtain the Waveform
   /// in the corotating frame.  Note that this leaves an integration
-  /// constant unset.  To set it, the modes should be rotated so that
-  /// they are aligned with the frame using `AlignModesToFrame`.
+  /// constant unset.  To set it, the modes can be rotated so that
+  /// they are aligned with the frame using, for example, the function
+  /// `AlignDecompositionFrameToModes`.
   ///
   /// If Lmodes is empty (default), all L modes are used.  Setting
   /// Lmodes to [2] or [2,3,4], for example, restricts the range of
@@ -3026,9 +3027,65 @@ GWFrames::Waveform GWFrames::Waveform::Hybridize(const GWFrames::Waveform& B, co
   return C;
 }
 
-
 /// Evaluate Waveform at a particular sky location
 std::vector<std::complex<double> > GWFrames::Waveform::EvaluateAtPoint(const double vartheta, const double varphi) const {
+  ///
+  /// \param vartheta Polar angle of detector
+  /// \param varphi Azimuthal angle of detector
+  ///
+  /// Note that the input angle parameters are measured relative to
+  /// the inertial coordinate system.  If the modes are decomposed in
+  /// a rotating frame, the angles will be adjusted appropriately at
+  /// each time step (and the spin-weight will be compensated for
+  /// automatically).
+  ///
+  /// Basically, that means that this function works correctly for
+  /// Waveforms in rotating frames, without first rotating the
+  /// Waveform into the inertial frame.  This saves significant
+  /// computational cost.
+  ///
+
+  if(frameType == GWFrames::UnknownFrameType) {
+    INFOTOCERR << "\nWarning: Asking for a Waveform in the " << GWFrames::WaveformFrameNames[GWFrames::UnknownFrameType] << " frame to be evaluated at a point."
+               << "\n         This assumes that the Waveform::frame member data is correct...\n"
+               << std::endl;
+  }
+
+  const int NT = NTimes();
+  const int NM = NModes();
+  vector<complex<double> > d(NT, complex<double>(0.,0.)); // Be sure to initialize to 0.0
+  const Quaternions::Quaternion R_thetaphi(vartheta, varphi);
+  SphericalFunctions::SWSH Y(SpinWeight()); // Y can be evaluated in terms of a unit quaternion
+  Y.SetRotation(R_thetaphi); // This may be changed below
+
+  if(frame.size()<2) {
+    if(frame.size()==1) {
+      Y.SetRotation(frame[0].inverse()*R_thetaphi);
+    }
+    for(int i_m=0; i_m<NM; ++i_m) {
+      const int ell = LM(i_m)[0];
+      const int m   = LM(i_m)[1];
+      const complex<double> Ylm = Y(ell,m);
+      for(int i_t=0; i_t<NT; ++i_t) {
+        d[i_t] += Data(i_m, i_t) * Ylm;
+      }
+    }
+  } else {
+    for(unsigned int i_t=0; i_t<NT; ++i_t) {
+      Y.SetRotation(frame[i_t].inverse()*R_thetaphi);
+      for(int i_m=0; i_m<NM; ++i_m) {
+        const int ell = LM(i_m)[0];
+        const int m   = LM(i_m)[1];
+        d[i_t] += Data(i_m, i_t) * Y(ell,m);
+      }
+    }
+  }
+
+  return d;
+}
+
+/// Evaluate Waveform at a particular sky location
+std::vector<std::complex<double> > GWFrames::Waveform::EvaluateAtPoint1(const double vartheta, const double varphi) const {
   ///
   /// \param vartheta Polar angle of detector
   /// \param varphi Azimuthal angle of detector
@@ -3074,7 +3131,7 @@ std::vector<std::complex<double> > GWFrames::Waveform::EvaluateAtPoint(const dou
 }
 
 /// Evaluate Waveform at a particular sky location and an instant of time
-std::complex<double> GWFrames::Waveform::EvaluateAtPoint(const double vartheta, const double varphi, const unsigned int i_t) const {
+std::complex<double> GWFrames::Waveform::EvaluateAtPoint1(const double vartheta, const double varphi, const unsigned int i_t) const {
   ///
   /// \param vartheta Polar angle of detector
   /// \param varphi Azimuthal angle of detector
