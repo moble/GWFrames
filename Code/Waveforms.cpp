@@ -3163,17 +3163,18 @@ GWFrames::Waveform GWFrames::Waveform::Translate(const std::vector<std::vector<d
   /// used to rotate the `deltax` vector appropriately at each time
   /// step.
   ///
-  /// The output Waveform is always in the inertial frame.  The input
-  /// Waveform can be in any frame.  And though this routine is
-  /// fastest if the Waveform is in the inertial frame, it would be
-  /// more expensive to transform it first.  (Basically, try not to
-  /// bother transforming the Waveform before calling this function.)
+  /// The input Waveform can be in any frame; that frame will be
+  /// preserved.  And though this routine is fastest if the Waveform
+  /// is in the inertial frame, it would be more expensive to
+  /// transform it to the inertial frame first, and (depending on the
+  /// rotating frame) you can expect higher accuracy in the rotating
+  /// frame anyway.
   ///
-  /// This function is very slow because it has to interpolate to
-  /// NTimes*(2*ellMax+1)^2 different completely unique points.  Since
-  /// interpolation is so slow, this takes a lot of time.  The
-  /// function also has to transform back from physical space to
-  /// modes, which is another significant chunk of time.
+  /// For any type of frame, this function is very slow because it has
+  /// to interpolate to NTimes*(2*ellMax+1)^2 different completely
+  /// unique points.  Since interpolation is so slow, this takes a lot
+  /// of time.  The function also has to transform back from physical
+  /// space to modes, which is another significant chunk of time.
 
   if(frameType == GWFrames::UnknownFrameType) {
     INFOTOCERR << "\nWarning: Asking to Translate a Waveform in an `" << GWFrames::WaveformFrameNames[frameType] << "` frame."
@@ -3201,10 +3202,9 @@ GWFrames::Waveform GWFrames::Waveform::Translate(const std::vector<std::vector<d
   const Waveform& A = *this;
   Waveform B = A.CopyWithoutData();
   B.history << "*this = this->.Translate(...);"<< std::endl;
-  B.frame = std::vector<Quaternions::Quaternion>(0);
-  B.frameType = GWFrames::Inertial;
+  B.frame = A.frame; // B.frame will get trimmed later (with B.t)
   B.lm = A.lm;
-  B.t = A.t; // B.t will get reset later
+  B.t = A.t; // B.t will get trimmed later
 
   // These numbers determine the equi-angular grid on which we will do
   // the interpolation.  For best accuracy, have N_phi > 2*ellMax and
@@ -3257,12 +3257,18 @@ GWFrames::Waveform GWFrames::Waveform::Translate(const std::vector<std::vector<d
   B.t.erase(B.t.begin()+iLatest+1, B.t.end());
   B.t.erase(B.t.begin(), B.t.begin()+iEarliest);
   B.data.resize(NModes(), B.NTimes()); // Each row (first index, nn) corresponds to a mode
+  if(B.frame.size()>1) {
+    B.frame.erase(B.frame.begin()+iLatest+1, B.frame.end());
+    B.frame.erase(B.frame.begin(), B.frame.begin()+iEarliest);
+  }
 
   // We allocate just once, for speed, and pass these to InterpolateToPoint
   gsl_interp_accel* accRe = gsl_interp_accel_alloc();
   gsl_interp_accel* accIm = gsl_interp_accel_alloc();
   gsl_spline* splineRe = gsl_spline_alloc(gsl_interp_cspline, 4);
   gsl_spline* splineIm = gsl_spline_alloc(gsl_interp_cspline, 4);
+
+  std::vector<double> deltax_i;
 
   // Main loop over time steps
   for(unsigned int i_t_B=0; i_t_B<B.NTimes(); ++i_t_B) {
@@ -3272,21 +3278,39 @@ GWFrames::Waveform GWFrames::Waveform::Translate(const std::vector<std::vector<d
     // it's slow.
     vector<complex<double> > Modes(N_lm(ellMax), 0.0);
 
+    // Adjust direction of deltax[i_t_B] as necessary
+    if(B.frame.size()==0) {
+      deltax_i = deltax[i_t_B];
+    } else if(B.frame.size()==1) {
+      deltax_i = ( B.Frame(0).conjugate() * Quaternions::Quaternion(deltax[i_t_B]) * B.Frame(0) ).vec();
+    } else {
+      deltax_i = ( B.Frame(i_t_B).conjugate() * Quaternions::Quaternion(deltax[i_t_B]) * B.Frame(i_t_B) ).vec();
+    }
+
     // Construct the data on the translated grid
     for(int i_g=0, i_theta=0; i_theta<N_theta; ++i_theta) {
       for(int i_phi=0; i_phi<N_phi; ++i_phi, ++i_g) {
+
+        INFOTOCERR << "\nERROR: This function is currently wrong for Waveforms in rotating frames."
+                   << "\n       (The version in master that returns in the inertial frame is correct, though.)"
+                   << "\n       I could try to change the angles to be the inertial coordinates corresponding to"
+                   << "\n       this frame's (vartheta, varphi), but it seems like that would need expensive interpolation."
+                   << "\n       Or I could just not account for the rotating frame in the InterpolateToPoint step..." << std::endl;
+        throw(GWFrames_NotYetImplemented);
+
         const double theta = dtheta*i_theta;
         const double phi = dphi*i_phi;
 
+        // Get the amount of time translation in this direction
         const double rHat_dot_deltax =
-          deltax[i_t_B][0]*std::sin(theta)*std::cos(phi)
-          + deltax[i_t_B][1]*std::sin(theta)*std::sin(phi)
-          + deltax[i_t_B][2]*std::cos(theta);
+          deltax_i[0]*std::sin(theta)*std::cos(phi)
+          + deltax_i[1]*std::sin(theta)*std::sin(phi)
+          + deltax_i[2]*std::cos(theta);
 
         // Evaluate the data for the translated frame at this point
         Grid[i_g] = A.InterpolateToPoint(theta, phi, B.T(i_t_B)-rHat_dot_deltax, accRe, accIm, splineRe, splineIm);
-      }
-    }
+      } // i_phi loop
+    } // i_g,i_theta loop
 
     // Decompose the data into modes
     spinsfast_map2salm(reinterpret_cast<fftw_complex*>(&Grid[0]),
