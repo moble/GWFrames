@@ -74,7 +74,7 @@ _WaveformReturners = ['CopyWithoutData', 'SliceOfTimeIndices', 'SliceOfTimeIndic
                       'SetSpinWeight', 'SetBoostWeight', 'AppendHistory', 'SetHistory', 'SetT', 'SetTime', 'SetFrame', 'SetFrameType', 'SetDataType', 'SetRIsScaledOut',
                       'SetMIsScaledOut', 'SetLM', 'SetData', 'SetData', 'ResizeData', 'Differentiate', 'RotatePhysicalSystem',
                       'RotatePhysicalSystem', 'RotateDecompositionBasis', 'RotateDecompositionBasis', 'TransformToCoprecessingFrame', 'TransformToAngularVelocityFrame',
-                      'TransformToCorotatingFrame', 'TransformToInertialFrame', 'AlignDecompositionFrameToModes', 'Compare', 'Hybridize']
+                      'TransformToCorotatingFrame', 'TransformToInertialFrame', 'AlignDecompositionFrameToModes', 'Compare', 'Hybridize', 'Translate']
 
 class _MetaPNWaveform(type(_PNWaveform)):
     pass

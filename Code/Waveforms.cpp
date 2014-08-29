@@ -565,11 +565,10 @@ std::vector<std::complex<double> > GWFrames::Waveform::DataDot(const unsigned in
 /// Differentiate the waveform as a function of time
 GWFrames::Waveform& GWFrames::Waveform::Differentiate() {
   if(frameType != GWFrames::Inertial) {
-    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-              << "\nError: Asking to Differentiate a Waveform in the " << GWFrames::WaveformFrameNames[frameType] << " frame."
-              << "\n       This is possible, but not yet implemented."
-              << "\n       This should only be applied to Waveforms in the " << GWFrames::WaveformFrameNames[GWFrames::Inertial] << " frame.\n"
-              << std::endl;
+    INFOTOCERR << "\nError: Asking to Differentiate a Waveform in the " << GWFrames::WaveformFrameNames[frameType] << " frame."
+               << "\n       This is possible, but not yet implemented."
+               << "\n       This should only be applied to Waveforms in the " << GWFrames::WaveformFrameNames[GWFrames::Inertial] << " frame.\n"
+               << std::endl;
     throw(GWFrames_NotYetImplemented);
   }
 
@@ -1280,15 +1279,13 @@ GWFrames::Waveform& GWFrames::Waveform::RotateDecompositionBasis(const std::vect
   ///
 
   if(R_frame.size()==0) {
-    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-              << "\nWarning: You have passed an empty set of rotors to `RotateDecompositionBasis`.  I will"
-              << "\n         do nothing, and simply return the Waveform as is.  But this is most unusual!"
-              << std::endl;
+    INFOTOCERR << "\nWarning: You have passed an empty set of rotors to `RotateDecompositionBasis`.  I will"
+               << "\n         do nothing, and simply return the Waveform as is.  But this is most unusual!"
+               << std::endl;
     return *this;
   }
   if(R_frame.size()!=NTimes()) {
-    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-              << "\nError: (R_frame.size()=" << R_frame.size() << ") != (NTimes()=" << NTimes() << ")" << std::endl;
+    INFOTOCERR << "\nError: (R_frame.size()=" << R_frame.size() << ") != (NTimes()=" << NTimes() << ")" << std::endl;
     throw(GWFrames_VectorSizeMismatch);
   }
 
@@ -1827,36 +1824,32 @@ GWFrames::Waveform& GWFrames::Waveform::TransformToInertialFrame() {
   ///
 
   if(frameType == GWFrames::Inertial) {
-    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-              << "\nWarning: Waveform is already in the " << GWFrames::WaveformFrameNames[GWFrames::Inertial] << " frame;"
-              << " this function will have no effect."
-              << "\n         If it's not really in that frame, tell the Waveform first.\n"
-              << std::endl;
+    INFOTOCERR << "\nWarning: Waveform is already in the " << GWFrames::WaveformFrameNames[GWFrames::Inertial] << " frame;"
+               << " this function will have no effect."
+               << "\n         If it's not really in that frame, tell the Waveform first.\n"
+               << std::endl;
     return *this;
   }
 
   if(frameType == GWFrames::UnknownFrameType) {
-    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-              << "\nWarning: Waveform frame type is " << GWFrames::WaveformFrameNames[GWFrames::UnknownFrameType] << "."
-              << "\n         I assume you know what you're doing...\n"
-              << std::endl;
+    INFOTOCERR << "\nWarning: Waveform frame type is " << GWFrames::WaveformFrameNames[GWFrames::UnknownFrameType] << "."
+               << "\n         I assume you know what you're doing...\n"
+               << std::endl;
     return *this;
   }
 
   if(frame.size() == 0) {
-    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-              << "\nWarning: frame.size()=" << frame.size() << ".  I will assume that this *is* the"
-              << "           inertial frame, so this function will have no effect.\n"
-              <<"            And I will continue to assume you know what you're doing...\n"
-              << std::endl;
+    INFOTOCERR << "\nWarning: frame.size()=" << frame.size() << ".  I will assume that this *is* the"
+               << "\n         inertial frame, so this function will have no effect.\n"
+               << "\n         And I will continue to assume you know what you're doing...\n"
+               << std::endl;
     return *this;
   }
 
   if(frame.size() != NTimes()) {
-    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-              << "\nError: (frame.size()=" << frame.size() << ") != (NTimes()=" << NTimes() << ")."
-              << "         I don't know what to do with this data, or what the inertial frame is."
-              << std::endl;
+    INFOTOCERR << "\nError: (frame.size()=" << frame.size() << ") != (NTimes()=" << NTimes() << ")."
+               << "\n       I don't know what to do with this data, or what the inertial frame is."
+               << std::endl;
     throw(GWFrames_VectorSizeMismatch);
   }
 
@@ -1878,7 +1871,7 @@ GWFrames::Waveform GWFrames::Waveform::Interpolate(const std::vector<double>& Ne
   /// will be thrown.
   ///
   if(NewTime.size()==0) {
-    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Asking for empty Waveform." << std::endl;
+    INFOTOCERR << ": Asking for empty Waveform." << std::endl;
     throw(GWFrames_EmptyIntersection);
   }
   unsigned int i0=0, i1=NewTime.size()-1;
@@ -1996,7 +1989,7 @@ GWFrames::Waveform& GWFrames::Waveform::InterpolateInPlace(const std::vector<dou
   }
 
   history << HistoryStr()
-            << "*this = this->Interpolate(NewTime);" << std::endl;
+          << "*this = this->Interpolate(NewTime);" << std::endl;
   const vector<double> OldTime(t);
   if(frame.size()==1) { // Assume we have just a constant non-trivial frame
     frame = frame;
@@ -2073,7 +2066,7 @@ std::vector<Quaternions::Quaternion> GWFrames::Waveform::GetAlignmentsOfDecompos
   // Get direction of angular-velocity vector at each time step, in this frame
   const vector<Quaternion> omegaHat
     = Quaternions::inverse(frame)
-      * Quaternions::normalized(Quaternions::QuaternionArray(this->SliceOfTimesWithEll2().AngularVelocityVectorRelativeToInertial())) * frame;
+    * Quaternions::normalized(Quaternions::QuaternionArray(this->SliceOfTimesWithEll2().AngularVelocityVectorRelativeToInertial())) * frame;
 
   const vector<vector<double> > V_h = this->LLDominantEigenvector(Lmodes);
 
@@ -2629,21 +2622,18 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
       status = gsl_multimin_fminimizer_iterate(s);
 
       if(status==GSL_EBADFUNC) {
-        std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-                  << ":\nThe iteration encountered a singular point where the function evaluated to Inf or NaN"
-                  << "\nwhile minimizing at (" << gsl_vector_get(s->x, 0) << ", " << gsl_vector_get(s->x, 1)
-                  << ", " << gsl_vector_get(s->x, 2) << ", " << gsl_vector_get(s->x, 3) << ")." << std::endl;
+        INFOTOCERR << ":\nThe iteration encountered a singular point where the function evaluated to Inf or NaN"
+                   << "\nwhile minimizing at (" << gsl_vector_get(s->x, 0) << ", " << gsl_vector_get(s->x, 1)
+                   << ", " << gsl_vector_get(s->x, 2) << ", " << gsl_vector_get(s->x, 3) << ")." << std::endl;
       }
 
       if(status==GSL_FAILURE) {
-        std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-                  << ":\nThe algorithm could not improve the current best approximation or bounding interval." << std::endl;
+        INFOTOCERR << ":\nThe algorithm could not improve the current best approximation or bounding interval." << std::endl;
       }
 
       if(status==GSL_ENOPROG) {
-        std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-                  << ":\nThe minimizer is unable to improve on its current estimate, either due to"
-                  << "\nnumerical difficulty or because a genuine local minimum has been reached." << std::endl;
+        INFOTOCERR << ":\nThe minimizer is unable to improve on its current estimate, either due to"
+                   << "\nnumerical difficulty or because a genuine local minimum has been reached." << std::endl;
       }
 
       if(status) break;
@@ -2652,9 +2642,8 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
     }
 
     if(iter==MaxIterations) {
-      std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-                << "\nWarning: Minimization ended because it went through " << MaxIterations << " iterations."
-                << "\n         This may indicate failure.  You may want to try with a better initial guess." << std::endl;
+      INFOTOCERR << "\nWarning: Minimization ended because it went through " << MaxIterations << " iterations."
+                 << "\n         This may indicate failure.  You may want to try with a better initial guess." << std::endl;
     }
 
     // Get time shift and rotation
@@ -2694,12 +2683,11 @@ GWFrames::Waveform GWFrames::Waveform::Compare(const GWFrames::Waveform& A, cons
 
   // Check to see if the frameTypes are the same
   if(frameType != A.frameType) {
-    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-              << "\nWarning:"
-              << "\n       This Waveform is in the " << GWFrames::WaveformFrameNames[frameType] << " frame,"
-              << "\n       The Waveform in the argument is in the " << GWFrames::WaveformFrameNames[A.frameType] << " frame."
-              << "\n       Comparing them probably does not make sense.\n"
-              << std::endl;
+    INFOTOCERR << "\nWarning:"
+               << "\n       This Waveform is in the " << GWFrames::WaveformFrameNames[frameType] << " frame,"
+               << "\n       The Waveform in the argument is in the " << GWFrames::WaveformFrameNames[A.frameType] << " frame."
+               << "\n       Comparing them probably does not make sense.\n"
+               << std::endl;
   }
 
   // Make sure we have the same number of modes in the input data
@@ -2863,52 +2851,46 @@ GWFrames::Waveform GWFrames::Waveform::Hybridize(const GWFrames::Waveform& B, co
 
   // Check to see if the various type flags agree
   if(A.spinweight != B.spinweight) {
-    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-              << "\nWarning:"
-              << "\n       This Waveform has spin weight " << A.spinweight << "."
-              << "\n       The Waveform in the argument has spin weight " << B.spinweight << "."
-              << "\n       Hybridizing them probably does not make sense.\n"
-              << std::endl;
+    INFOTOCERR << "\nWarning:"
+               << "\n       This Waveform has spin weight " << A.spinweight << "."
+               << "\n       The Waveform in the argument has spin weight " << B.spinweight << "."
+               << "\n       Hybridizing them probably does not make sense.\n"
+               << std::endl;
   }
   if(A.boostweight != B.boostweight) {
-    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-              << "\nWarning:"
-              << "\n       This Waveform has boost weight " << A.boostweight << "."
-              << "\n       The Waveform in the argument has boost weight " << B.boostweight << "."
-              << "\n       Hybridizing them probably does not make sense.\n"
-              << std::endl;
+    INFOTOCERR << "\nWarning:"
+               << "\n       This Waveform has boost weight " << A.boostweight << "."
+               << "\n       The Waveform in the argument has boost weight " << B.boostweight << "."
+               << "\n       Hybridizing them probably does not make sense.\n"
+               << std::endl;
   }
   if(A.frameType != B.frameType) {
-    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-              << "\nWarning:"
-              << "\n       This Waveform is in the " << GWFrames::WaveformFrameNames[A.frameType] << " frame."
-              << "\n       The Waveform in the argument is in the " << GWFrames::WaveformFrameNames[B.frameType] << " frame."
-              << "\n       Hybridizing them probably does not make sense.\n"
-              << std::endl;
+    INFOTOCERR << "\nWarning:"
+               << "\n       This Waveform is in the " << GWFrames::WaveformFrameNames[A.frameType] << " frame."
+               << "\n       The Waveform in the argument is in the " << GWFrames::WaveformFrameNames[B.frameType] << " frame."
+               << "\n       Hybridizing them probably does not make sense.\n"
+               << std::endl;
   }
   if(A.dataType != B.dataType) {
-    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-              << "\nWarning:"
-              << "\n       This Waveform has data type " << GWFrames::WaveformDataNames[A.dataType] << "."
-              << "\n       The Waveform in the argument has data type " << GWFrames::WaveformDataNames[B.dataType] << "."
-              << "\n       Hybridizing them probably does not make sense.\n"
-              << std::endl;
+    INFOTOCERR << "\nWarning:"
+               << "\n       This Waveform has data type " << GWFrames::WaveformDataNames[A.dataType] << "."
+               << "\n       The Waveform in the argument has data type " << GWFrames::WaveformDataNames[B.dataType] << "."
+               << "\n       Hybridizing them probably does not make sense.\n"
+               << std::endl;
   }
   if(A.rIsScaledOut != B.rIsScaledOut) {
-    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-              << "\nWarning:"
-              << "\n       This Waveform claims radius is " << (A.rIsScaledOut ? "" : "not ") << "scaled out."
-              << "\n       The Waveform in the argument claims radius is " << (B.rIsScaledOut ? "" : "not ") << "scaled out."
-              << "\n       Hybridizing them probably does not make sense.\n"
-              << std::endl;
+    INFOTOCERR << "\nWarning:"
+               << "\n       This Waveform claims radius is " << (A.rIsScaledOut ? "" : "not ") << "scaled out."
+               << "\n       The Waveform in the argument claims radius is " << (B.rIsScaledOut ? "" : "not ") << "scaled out."
+               << "\n       Hybridizing them probably does not make sense.\n"
+               << std::endl;
   }
   if(A.mIsScaledOut != B.mIsScaledOut) {
-    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-              << "\nWarning:"
-              << "\n       This Waveform claims mass is " << (A.mIsScaledOut ? "" : "not ") << "scaled out."
-              << "\n       The Waveform in the argument claims mass is " << (B.mIsScaledOut ? "" : "not ") << "scaled out."
-              << "\n       Hybridizing them probably does not make sense.\n"
-              << std::endl;
+    INFOTOCERR << "\nWarning:"
+               << "\n       This Waveform claims mass is " << (A.mIsScaledOut ? "" : "not ") << "scaled out."
+               << "\n       The Waveform in the argument claims mass is " << (B.mIsScaledOut ? "" : "not ") << "scaled out."
+               << "\n       Hybridizing them probably does not make sense.\n"
+               << std::endl;
   }
 
   // Make sure we have the same number of modes in the input data
@@ -2925,10 +2907,9 @@ GWFrames::Waveform GWFrames::Waveform::Hybridize(const GWFrames::Waveform& B, co
     const double t2A = A.T(A.NTimes()-1);
     const double t2B = B.T(B.NTimes()-1);
     if(t1<t1A || t1<t1B || t2>t2A || t2>t2B) {
-      std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-                << ": These Waveforms do not overlap on the requested range."
-                << "\nA.T(0)=" << t1A << "\tB.T(0)" << t1B << "\tt1=" << t1
-                << "\nA.T(-1)=" << t2A << "\tB.T(-1)" << t2B << "\tt2=" << t2 << std::endl;
+      INFOTOCERR << ": These Waveforms do not overlap on the requested range."
+                 << "\nA.T(0)=" << t1A << "\tB.T(0)" << t1B << "\tt1=" << t1
+                 << "\nA.T(-1)=" << t2A << "\tB.T(-1)" << t2B << "\tt2=" << t2 << std::endl;
       throw(GWFrames_EmptyIntersection);
     }
   }
@@ -3028,10 +3009,12 @@ GWFrames::Waveform GWFrames::Waveform::Hybridize(const GWFrames::Waveform& B, co
 }
 
 /// Evaluate Waveform at a particular sky location
-std::vector<std::complex<double> > GWFrames::Waveform::EvaluateAtPoint(const double vartheta, const double varphi) const {
+std::vector<std::complex<double> > GWFrames::Waveform::EvaluateAtPoint(const double vartheta, const double varphi, const unsigned int i_0, int i_1) const {
   ///
   /// \param vartheta Polar angle of detector
   /// \param varphi Azimuthal angle of detector
+  /// \param i_0 Optional initial index to evaluate
+  /// \param i_1 Optional one-past-final index to evaluate
   ///
   /// Note that the input angle parameters are measured relative to
   /// the inertial coordinate system.  If the modes are decomposed in
@@ -3050,33 +3033,46 @@ std::vector<std::complex<double> > GWFrames::Waveform::EvaluateAtPoint(const dou
                << "\n         This assumes that the Waveform::frame member data is correct...\n"
                << std::endl;
   }
+  if(i_1==-1) {
+    i_1 = NTimes();
+  }
+  if(i_0>=i_1) {
+    INFOTOCERR << "\nError: Asking to EvaluateAtPoint on indices (i_0=" << i_0 << ") >= (i_1=" << i_1 << ")."
+               << "\n       This is impossible; i_1 should be at least 1 more than i_0." << std::endl;
+    throw(GWFrames_IndexOutOfBounds);
+  }
+  if(i_1>NTimes()) {
+    INFOTOCERR << "\nError: Asking to EvaluateAtPoint on indices [i_0,i_1)=[" << i_0 << "," << i_1 << ") in a Waveform with " << NTimes() << " time steps." << std::endl;
+    throw(GWFrames_IndexOutOfBounds);
+  }
 
-  const int NT = NTimes();
   const int NM = NModes();
-  vector<complex<double> > d(NT, complex<double>(0.,0.)); // Be sure to initialize to 0.0
+
+  vector<complex<double> > d(i_1-i_0, complex<double>(0.,0.)); // Be sure to initialize to 0.0
   const Quaternions::Quaternion R_thetaphi(vartheta, varphi);
   SphericalFunctions::SWSH Y(SpinWeight()); // Y can be evaluated in terms of a unit quaternion
-  Y.SetRotation(R_thetaphi); // This may be changed below
 
   if(frame.size()<2) {
-    if(frame.size()==1) {
+    if(frame.size()==0) {
+      Y.SetRotation(R_thetaphi);
+    } else { // frame.size()==1
       Y.SetRotation(frame[0].inverse()*R_thetaphi);
     }
     for(int i_m=0; i_m<NM; ++i_m) {
       const int ell = LM(i_m)[0];
       const int m   = LM(i_m)[1];
       const complex<double> Ylm = Y(ell,m);
-      for(int i_t=0; i_t<NT; ++i_t) {
-        d[i_t] += Data(i_m, i_t) * Ylm;
+      for(int i_t=i_0; i_t<i_1; ++i_t) {
+        d[i_t-i_0] += Data(i_m, i_t) * Ylm;
       }
     }
   } else {
-    for(unsigned int i_t=0; i_t<NT; ++i_t) {
+    for(unsigned int i_t=i_0; i_t<i_1; ++i_t) {
       Y.SetRotation(frame[i_t].inverse()*R_thetaphi);
       for(int i_m=0; i_m<NM; ++i_m) {
         const int ell = LM(i_m)[0];
         const int m   = LM(i_m)[1];
-        d[i_t] += Data(i_m, i_t) * Y(ell,m);
+        d[i_t-i_0] += Data(i_m, i_t) * Y(ell,m);
       }
     }
   }
@@ -3103,49 +3099,36 @@ std::complex<double> GWFrames::Waveform::InterpolateToPoint(const double varthet
 
   bool ThisFunctionOwnsThePointers = (accRe==0);
 
-  // // Quiet this warning, because this function is called millions of times
-  // if(frameType == GWFrames::UnknownFrameType) {
-  //   std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-  //             << "\nWarning: Asking for a Waveform in an " << GWFrames::WaveformFrameNames[frameType] << " frame to be evaluated at a point."
-  //             << "\n         This should probably only be applied to Waveforms in the " << GWFrames::WaveformFrameNames[GWFrames::Inertial] << " frame."
-  //             << "\n         But I'll trust you to know what you're doing.\n"
-  //             << std::endl;
-  // }
-
   if(NTimes()<4) {
-    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-              << "\nError: " << NTimes() << " is not enough points to interpolate.\n"
-              << std::endl;
+    INFOTOCERR << "\nError: " << NTimes() << " is not enough points to interpolate.\n"
+               << std::endl;
     throw(GWFrames_BadWaveformInformation);
   }
 
   if(t_i<T(0)) {
-    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-              << "\nError: (t_i=" << t_i << ") is earlier than the earliest time in the data (T(0)=" << T(0) << ").\n"
-              << std::endl;
+    INFOTOCERR << "\nError: (t_i=" << t_i << ") is earlier than the earliest time in the data (T(0)=" << T(0) << ").\n"
+               << std::endl;
     throw(GWFrames_ValueError);
   }
 
   if(t_i>T(NTimes()-1)) {
-    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-              << "\nError: (t_i=" << t_i << ") is later than the latest time in the data (T(" << NTimes()-1 << ")=" << T(NTimes()-1) << ").\n"
-              << std::endl;
+    INFOTOCERR << "\nError: (t_i=" << t_i << ") is later than the latest time in the data (T(" << NTimes()-1 << ")=" << T(NTimes()-1) << ").\n"
+               << std::endl;
     throw(GWFrames_ValueError);
   }
 
   vector<double> dRe(4), dIm(dRe.size()); // N.B.: If `4` is changed, any function calling this with nonzero pointers must be changed.
 
-  // Find a series of time steps around the requested time
-  unsigned int i_t_0(std::max(int(Quaternions::hunt(t, t_i))-1, 0));
-  if(i_t_0+3>=NTimes()) {
-    i_t_0 = NTimes()-4;
+  // Find a series of 4 time steps around the requested time
+  unsigned int i_t_0(std::max(int(Quaternions::hunt(t, t_i))-(int(dRe.size()/2)-1), 0));
+  if(i_t_0+(dRe.size()-1)>=NTimes()) {
+    i_t_0 = NTimes()-dRe.size();
   }
 
-  // Construct the shorter Waveform that will be evaluated at the point
-  const Waveform W_short = this->SliceOfTimeIndices(i_t_0, i_t_0+4);
-
   // Evaluate at this point at a series of times around the requested time
-  const std::vector<complex<double> > val = W_short.EvaluateAtPoint(vartheta, varphi);
+  const std::vector<complex<double> > val = this->EvaluateAtPoint(vartheta, varphi, i_t_0, i_t_0+dRe.size());
+
+  // Copy that result into separate real, imaginary arrays for interpolation
   for(unsigned int i_t=0; i_t<dRe.size(); ++i_t) {
     dRe[i_t] = std::real(val[i_t]);
     dIm[i_t] = std::imag(val[i_t]);
@@ -3171,12 +3154,22 @@ std::complex<double> GWFrames::Waveform::InterpolateToPoint(const double varthet
   return value;
 }
 
-
 /// Translate the waveform data by some series of spatial translations
 GWFrames::Waveform GWFrames::Waveform::Translate(const std::vector<std::vector<double> >& deltax) const {
-  /// \param x Array of 3-vectors by which to translate (function of time)
+  /// \param deltax Array of 3-vectors by which to translate (function of time)
   ///
-  /// This function is slow because it has to interpolate to
+  /// The `deltax` parameter is assumed to be given relative to the
+  /// inertial frame; if this Waveform has `frame` data, it will be
+  /// used to rotate the `deltax` vector appropriately at each time
+  /// step.
+  ///
+  /// The output Waveform is always in the inertial frame.  The input
+  /// Waveform can be in any frame.  And though this routine is
+  /// fastest if the Waveform is in the inertial frame, it would be
+  /// more expensive to transform it first.  (Basically, try not to
+  /// bother transforming the Waveform before calling this function.)
+  ///
+  /// This function is very slow because it has to interpolate to
   /// NTimes*(2*ellMax+1)^2 different completely unique points.  Since
   /// interpolation is so slow, this takes a lot of time.  The
   /// function also has to transform back from physical space to
@@ -3209,6 +3202,7 @@ GWFrames::Waveform GWFrames::Waveform::Translate(const std::vector<std::vector<d
   Waveform B = A.CopyWithoutData();
   B.history << "*this = this->.Translate(...);"<< std::endl;
   B.frame = std::vector<Quaternions::Quaternion>(0);
+  B.frameType = GWFrames::Inertial;
   B.lm = A.lm;
   B.t = A.t; // B.t will get reset later
 
@@ -3315,7 +3309,6 @@ GWFrames::Waveform GWFrames::Waveform::Translate(const std::vector<std::vector<d
 
   return B;
 }
-
 
 /// Apply a boost to Psi4 data
 GWFrames::Waveform& GWFrames::Waveform::BoostPsi4(const std::vector<std::vector<double> >& v) {
@@ -3532,7 +3525,7 @@ GWFrames::Waveform& GWFrames::Waveform::BoostPsi4(const std::vector<std::vector<
 }
 
 
-/// Apply a boost to Psi4 data
+/// Apply a boost to h data, with nontrivial assumptions
 GWFrames::Waveform& GWFrames::Waveform::BoostHFaked(const std::vector<std::vector<double> >& v) {
   /// This function does three things.  First, it evaluates the
   /// Waveform on what will become an equi-angular grid after
@@ -3784,36 +3777,32 @@ GWFrames::Waveform GWFrames::Waveform::operator+(const GWFrames::Waveform& B) co
   const Waveform& A = *this;
 
   if(A.spinweight != B.spinweight) {
-    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-              << "\nError: Asking for the sum of two Waveform objects with different spin weights."
-              << "\n       A.SpinWeight()=" << A.SpinWeight() << "\tB.SpinWeight()=" << B.SpinWeight()
-              << std::endl;
+    INFOTOCERR << "\nError: Asking for the sum of two Waveform objects with different spin weights."
+               << "\n       A.SpinWeight()=" << A.SpinWeight() << "\tB.SpinWeight()=" << B.SpinWeight()
+               << std::endl;
     throw(GWFrames_BadWaveformInformation);
   }
 
   if(A.frameType != GWFrames::Inertial || B.frameType != GWFrames::Inertial) {
     if(A.frameType != B.frameType) {
-      std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-                << "\nError: Asking for the sum of Waveforms in " << GWFrames::WaveformFrameNames[A.frameType]
-                << " and " << GWFrames::WaveformFrameNames[B.frameType] << " frames."
-                << "\n       This should only be applied to Waveforms in the same frame.\n"
-                << std::endl;
+      INFOTOCERR << "\nError: Asking for the sum of Waveforms in " << GWFrames::WaveformFrameNames[A.frameType]
+                 << " and " << GWFrames::WaveformFrameNames[B.frameType] << " frames."
+                 << "\n       This should only be applied to Waveforms in the same frame.\n"
+                 << std::endl;
       throw(GWFrames_WrongFrameType);
     } else if(A.frame.size() != B.frame.size()) {
-      std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-                << "\nError: Asking for the sum of Waveforms with " << A.frame.size() << " and " << B.frame.size() << " frame data points."
-                << "\n       This should only be applied to Waveforms in the same frame.\n"
-                << std::endl;
+      INFOTOCERR << "\nError: Asking for the sum of Waveforms with " << A.frame.size() << " and " << B.frame.size() << " frame data points."
+                 << "\n       This should only be applied to Waveforms in the same frame.\n"
+                 << std::endl;
       throw(GWFrames_WrongFrameType);
     }
   }
 
   if(A.NTimes() != B.NTimes()) {
-    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-              << "\nError: Asking for the sum of two Waveform objects with different time data."
-              << "\n       A.NTimes()=" << A.NTimes() << "\tB.NTimes()=" << B.NTimes()
-              << "\n       Interpolate to a common set of times first.\n"
-              << std::endl;
+    INFOTOCERR << "\nError: Asking for the sum of two Waveform objects with different time data."
+               << "\n       A.NTimes()=" << A.NTimes() << "\tB.NTimes()=" << B.NTimes()
+               << "\n       Interpolate to a common set of times first.\n"
+               << std::endl;
     throw(GWFrames_MatrixSizeMismatch);
   }
 
@@ -3842,36 +3831,32 @@ GWFrames::Waveform GWFrames::Waveform::operator-(const GWFrames::Waveform& B) co
   const Waveform& A = *this;
 
   if(A.spinweight != B.spinweight) {
-    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-              << "\nError: Asking for the difference of two Waveform objects with different spin weights."
-              << "\n       A.SpinWeight()=" << A.SpinWeight() << "\tB.SpinWeight()=" << B.SpinWeight()
-              << std::endl;
+    INFOTOCERR << "\nError: Asking for the difference of two Waveform objects with different spin weights."
+               << "\n       A.SpinWeight()=" << A.SpinWeight() << "\tB.SpinWeight()=" << B.SpinWeight()
+               << std::endl;
     throw(GWFrames_BadWaveformInformation);
   }
 
   if(A.frameType != GWFrames::Inertial || B.frameType != GWFrames::Inertial) {
     if(A.frameType != B.frameType) {
-      std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-                << "\nError: Asking for the difference of Waveforms in " << GWFrames::WaveformFrameNames[A.frameType]
-                << " and " << GWFrames::WaveformFrameNames[B.frameType] << " frames."
-                << "\n       This should only be applied to Waveforms in the same frame.\n"
-                << std::endl;
+      INFOTOCERR << "\nError: Asking for the difference of Waveforms in " << GWFrames::WaveformFrameNames[A.frameType]
+                 << " and " << GWFrames::WaveformFrameNames[B.frameType] << " frames."
+                 << "\n       This should only be applied to Waveforms in the same frame.\n"
+                 << std::endl;
       throw(GWFrames_WrongFrameType);
     } else if(A.frame.size() != B.frame.size()) {
-      std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-                << "\nError: Asking for the difference of Waveforms with " << A.frame.size() << " and " << B.frame.size() << " frame data points."
-                << "\n       This should only be applied to Waveforms in the same frame.\n"
-                << std::endl;
+      INFOTOCERR << "\nError: Asking for the difference of Waveforms with " << A.frame.size() << " and " << B.frame.size() << " frame data points."
+                 << "\n       This should only be applied to Waveforms in the same frame.\n"
+                 << std::endl;
       throw(GWFrames_WrongFrameType);
     }
   }
 
   if(A.NTimes() != B.NTimes()) {
-    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-              << "\nError: Asking for the difference of two Waveform objects with different time data."
-              << "\n       A.NTimes()=" << A.NTimes() << "\tB.NTimes()=" << B.NTimes()
-              << "\n       Interpolate to a common set of times first.\n"
-              << std::endl;
+    INFOTOCERR << "\nError: Asking for the difference of two Waveform objects with different time data."
+               << "\n       A.NTimes()=" << A.NTimes() << "\tB.NTimes()=" << B.NTimes()
+               << "\n       Interpolate to a common set of times first.\n"
+               << std::endl;
     throw(GWFrames_MatrixSizeMismatch);
   }
 
