@@ -10,7 +10,6 @@ namespace GWFrames {
 
 namespace GWFrames {
 
-
   /// The WaveformAtAPointFT class is a derived class, constructed
   /// from waveforms evaluated at a point, using the given complex
   /// detector response (F+ + i*Fx) -- or more particularly, its
@@ -37,6 +36,9 @@ namespace GWFrames {
     const double& F(const unsigned int f) const { return mFreqs[f]; }
     unsigned int NFreq() const { return mFreqs.size(); }
     bool IsNormalized() const { return mNormalized; }
+    double Dt() const { return mDt; }
+    double Vartheta() const { return mVartheta; }
+    double Varphi() const { return mVarphi; }
 
     const std::vector<double>& Re() const { return mRealF; }
     const std::vector<double>& Im() const { return mImagF; }

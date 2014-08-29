@@ -15,6 +15,7 @@ extern "C" {
   #include "wigner_d_halfpi.h"
   #include "spinsfast_forward.h"
   #include "spinsfast_backward.h"
+  #include <gsl/gsl_spline.h>
 }
 #undef complex
 #endif // DOXYGEN
@@ -62,7 +63,7 @@ namespace GWFrames {
 
   public:  // Copy-ish constructoroids
     Waveform CopyWithoutData() const;
-    Waveform SliceOfTimeIndices(const unsigned int i_t_a, unsigned int t_b=0) const;
+    Waveform SliceOfTimeIndices(const unsigned int i_t_a, unsigned int i_t_b=0) const;
     Waveform SliceOfTimeIndicesWithEll2(const unsigned int i_t_a, unsigned int i_t_b=0) const;
     Waveform SliceOfTimeIndicesWithoutModes(const unsigned int i_t_a, unsigned int i_t_b=0) const;
     Waveform SliceOfTimes(const double t_a=-1e300, const double t_b=1e300) const;
@@ -281,9 +282,10 @@ namespace GWFrames {
     Waveform Hybridize(const Waveform& B, const double t1, const double t2, const double tMinStep=0.005) const;
 
     // Pointwise operations and spin-weight operators
-    std::vector<std::complex<double> > EvaluateAtPoint(const double vartheta, const double varphi) const;
-    std::complex<double> EvaluateAtPoint(const double vartheta, const double varphi, const unsigned int i_t) const;
-    std::complex<double> InterpolateToPoint(const double vartheta, const double varphi, const double t_i) const;
+    std::vector<std::complex<double> > EvaluateAtPoint(const double vartheta, const double varphi,
+                                                       const unsigned int i_0=0, int i_1=-1) const;
+    std::complex<double> InterpolateToPoint(const double vartheta, const double varphi, const double t_i,
+                                            gsl_interp_accel* accRe=0, gsl_interp_accel* accIm=0, gsl_spline* splineRe=0, gsl_spline* splineIm=0) const;
     template <typename Op> Waveform BinaryOp(const Waveform& b) const;
     Waveform operator+(const Waveform& B) const;
     Waveform operator-(const Waveform& B) const;
