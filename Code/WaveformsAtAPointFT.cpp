@@ -254,11 +254,12 @@ namespace GWFrames {
     // note: assumes N is even
     timeOffset = (maxi<N/2 ? double(maxi)/(N*df) : double(maxi-int(N))/(N*df));
     phaseOffset = atan2(data.imag(maxi), data.real(maxi))/2.0;
-    /// The return from ifft is just the bare FFT sum, so we multiply by df to get
-    /// the continuum-analog FT.  This is correct because the input data (re,im) are
-    /// the continuum-analog data, rather than just the return from the bare FFT sum.
-    /// See, e.g., Eq. (A.33) [rather than Eq. (A.35)] of
-    /// http://etd.caltech.edu/etd/available/etd-01122009-143851/
+    /// The return from ifft is just the bare FFT sum, so we multiply by
+    /// df to get the continuum-analog FT.  This is correct because the
+    /// input data (re,im) are the continuum-analog data, rather than
+    /// just the return from the bare FFT sum.  See, e.g., Eq. (A.33)
+    /// [as opposed to Eq. (A.35)] of my (Mike Boyle's) thesis:
+    /// <http://thesis.library.caltech.edu/143>.
     match = 4.0*df*maxmag;
     return;
   }
