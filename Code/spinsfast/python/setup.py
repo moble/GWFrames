@@ -17,6 +17,11 @@ if "GSL_HOME" in environ :
 if "FFTW3_HOME" in environ :
     IncDirs += [environ["FFTW3_HOME"]+'/include']
     LibDirs += [environ["FFTW3_HOME"]+'/lib']
+# If /opt/local directories exist, use them
+if isdir('/opt/local/include'):
+    IncDirs += ['/opt/local/include']
+if isdir('/opt/local/lib'):
+    LibDirs += ['/opt/local/lib']
 
 module1 = Extension('spinsfast',
                     sources = ['python/spinsfast_module.c'] + glob.glob('code/*.c'),
