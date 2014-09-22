@@ -1,3 +1,4 @@
+from os.path import isdir
 from distutils.core import setup, Extension
 from distutils.sysconfig import get_python_lib
 import os
