@@ -51,7 +51,6 @@
 
 %import "../Quaternions/Quaternions.i"
 %import "../Quaternions/Quaternions_typemaps.i"
-//%import "../SphericalFunctions/SphericalFunctions.i"
 %include "../Quaternions/vector_typemaps.i"
 
 %include <typemaps.i>
