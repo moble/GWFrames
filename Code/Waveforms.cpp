@@ -803,7 +803,9 @@ int GWFrames::Waveform::EllMax() const {
 /// Find index of mode with given (l,m) data.
 unsigned int GWFrames::Waveform::FindModeIndex(const int l, const int m) const {
   const unsigned int i_expected = l*(l+1) + m - SpinWeight()*SpinWeight();
-  if(lm[i_expected][0]==l && lm[i_expected][1]==m) { return i_expected; }
+  if (lm.size() > i_expected) {
+    if(lm[i_expected][0]==l && lm[i_expected][1]==m) { return i_expected; }
+  }
   //ORIENTATION!!! following loop
   for(unsigned int i=0; i<NModes(); ++i) {
     if(lm[i][0]==l && lm[i][1]==m) { return i; }
