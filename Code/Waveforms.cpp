@@ -444,8 +444,16 @@ GWFrames::Waveform& GWFrames::Waveform::DropTimesOutside(const double t_a, const
     newdata[mode].swap(ModeData);
   }
   data = MatrixC(newdata);
-  frame.erase(frame.begin()+i_t_b, frame.end());
-  frame.erase(frame.begin(), frame.begin()+i_t_a);
+  // Only erase frame data if it exists (see SliceOfTimeIndices)
+  if(frame.size() == NTimes()) {
+    frame.erase(frame.begin()+i_t_b, frame.end());
+    frame.erase(frame.begin(), frame.begin()+i_t_a);
+  } else if(frame.size()!=0 && frame.size()!=1) {
+    INFOTOCERR << " I don't understand what to do with frame data of length "
+               << frame.size() << " in a Waveform with " << NTimes()
+               << " times." << std::endl;
+    throw(GWFrames_VectorSizeMismatch);
+  }
   t.erase(t.begin()+i_t_b, t.end());
   t.erase(t.begin(), t.begin()+i_t_a);
   return *this;
