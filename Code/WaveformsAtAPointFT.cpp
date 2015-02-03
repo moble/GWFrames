@@ -102,6 +102,7 @@ GWFrames::WaveformAtAPointFT::WaveformAtAPointFT(const GWFrames::Waveform& W,
   }
 
   // Set up the frequency domain (in Hz)
+  double Dt_dimensionful = 0.0;
   {
     // Conversion of time to seconds from geometric units
     // Fundamental constants
@@ -109,6 +110,7 @@ GWFrames::WaveformAtAPointFT::WaveformAtAPointFT(const GWFrames::Waveform& W,
     const double c    = 299792458;       // Units of m / s
     const double Msol = 1.98892e30;      // Units of kg
     const double TotalMassInSeconds = TotalMass * Msol * G / cube(c);
+    Dt_dimensionful = Dt * TotalMassInSeconds;
     const vector<double> PhysicalTimes = TotalMassInSeconds * NewTimes;
     mFreqs = WU::TimeToPositiveFrequencies(PhysicalTimes);
   }
@@ -124,8 +126,8 @@ GWFrames::WaveformAtAPointFT::WaveformAtAPointFT(const GWFrames::Waveform& W,
   mRealF.resize(mFreqs.size());
   mImagF.resize(mFreqs.size());
   for(unsigned int i=0; i<RealT.size()/2; ++i) {
-    mRealF[i] = Dt*RealT[2*i];
-    mImagF[i] = Dt*RealT[2*i+1];
+    mRealF[i] = Dt_dimensionful*RealT[2*i];
+    mImagF[i] = Dt_dimensionful*RealT[2*i+1];
   }
   // Sort out some funky storage
   mRealF.back() = 0.0; // RealT[1]; // just ignore data at the Nyquist frequency
