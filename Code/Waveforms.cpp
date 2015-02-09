@@ -2541,15 +2541,29 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
       INFOTOCERR << "\tOutput to XiIntegral.dat" << std::endl;
       ofstream myfile;
       myfile.open ("XiIntegral.dat");
-      myfile << "# deltats[i] |Xi1| |Xi2| Xi1.w Xi1.x Xi1.y Xi1.z Xi2.w Xi2.x Xi2.y Xi2.z" << std::endl;
+      myfile << "# deltats[i] |Xi1| |Xi2| Xi1.w Xi1.x Xi1.y Xi1.z Xi2.w Xi2.x Xi2.y Xi2.z Upsilon1a Upsilon1b Upsilon2a Upsilon2b"
+             << std::endl;
       myfile << std::setprecision(15);
       for(unsigned int i=0; i<XiIntegral1.size(); ++i) {
+        const Quaternions::Quaternion R_delta_log1 = Quaternions::logRotor(XiIntegral1[i].normalized());
+        const Quaternions::Quaternion NegativeR_delta_log1 = Quaternions::logRotor(-XiIntegral1[i].normalized());
+        const Quaternions::Quaternion R_delta_log2 = Quaternions::logRotor(XiIntegral2[i].normalized());
+        const Quaternions::Quaternion NegativeR_delta_log2 = Quaternions::logRotor(-XiIntegral2[i].normalized());
+        const double Upsilon1a = Aligner.EvaluateMinimizationQuantity(deltats[i], R_delta_log1[1], R_delta_log1[2], R_delta_log1[3]);
+        const double Upsilon1b = Aligner.EvaluateMinimizationQuantity(deltats[i], NegativeR_delta_log1[1],
+                                                                      NegativeR_delta_log1[2], NegativeR_delta_log1[3]);
+        const double Upsilon2a = Aligner.EvaluateMinimizationQuantity(deltats[i], R_delta_log2[1], R_delta_log2[2], R_delta_log2[3]);
+        const double Upsilon2b = Aligner.EvaluateMinimizationQuantity(deltats[i], NegativeR_delta_log2[1],
+                                                                      NegativeR_delta_log2[2], NegativeR_delta_log2[3]);
         myfile << deltats[i] << " "
                << 2*(t_2 - t_1 - Quaternions::abs(XiIntegral1[i])) << " "
                << 2*(t_2 - t_1 - Quaternions::abs(XiIntegral2[i])) << " "
-               << XiIntegral1[i].str() << " " << XiIntegral2[i].str() << std::endl;
+               << XiIntegral1[i].str() << " " << XiIntegral2[i].str() << " "
+               << Upsilon1a << " " << Upsilon1b << " " << Upsilon2a << " " << Upsilon2b
+               << std::endl;
       }
       myfile.close();
+      INFOTOCERR << "\tOutput to XiIntegral.dat finished" << std::endl;
     }
 
     // Find the best value
