@@ -2268,20 +2268,21 @@ public:
   std::vector<Quaternions::Quaternion> R_fA;
   const Quaternions::Quaternion nHat_A_mid;
   std::vector<double> t_A;
+  const GWFrames::Waveform& W_A;
   const GWFrames::Waveform& W_B;
   const double t_mid;
   std::vector<Quaternion> R_epsB;
   bool R_epsB_is_set;
   mutable unsigned int Rbar_epsB_i; // Just a guess to speed up hunting for the index
-  mutable bool Flip;
+  mutable int OptimalType;
   const bool Debug;
   mutable ofstream myfile;
 public:
-  WaveformAligner(const GWFrames::Waveform& W_A, const GWFrames::Waveform& iW_B,
+  WaveformAligner(const GWFrames::Waveform& iW_A, const GWFrames::Waveform& iW_B,
                   const double t_1, const double t_2, const bool iDebug, const Quaternions::Quaternion& nHat_A)
-    : R_fA(W_A.Frame()), nHat_A_mid(nHat_A),
-      t_A(W_A.T()), W_B(iW_B), t_mid((t_1+t_2)/2.),
-      R_epsB(0), R_epsB_is_set(false), Rbar_epsB_i(0), Flip(false), Debug(iDebug),
+    : R_fA(iW_A.Frame()), nHat_A_mid(nHat_A),
+      t_A(iW_A.T()), W_A(iW_A), W_B(iW_B), t_mid((t_1+t_2)/2.),
+      R_epsB(0), R_epsB_is_set(false), Rbar_epsB_i(0), OptimalType(0), Debug(iDebug),
       myfile()
   {
     // Check to make sure we have sufficient times before any offset.
@@ -2322,6 +2323,7 @@ public:
     if(Debug) {
       INFOTOCERR << "\tOutput to UpsilonIntegral.dat" << std::endl;
       myfile.open("UpsilonIntegral.dat");
+      myfile << "# deltat f1 f2 f3 f4 deltax deltay deltaz" << std::endl;
     }
   }
 
@@ -2355,35 +2357,96 @@ public:
     return Quaternions::conjugate(R_epsB[Rbar_epsB_i]);
   }
 
-  double EvaluateMinimizationQuantity(const double deltat, const double deltax, const double deltay, const double deltaz) const {
+  void FindBestMinimizationWaveform(const double deltax, const double deltay, const double deltaz,
+                                    const std::vector<bool> TryVersion, Quaternion& R_eps, bool& SignFlip) const {
+    const GWFrames::Waveform W_A_interp = W_A.Interpolate(t_A);
+    GWFrames::Waveform W_B_interp;// = W_B.Interpolate(t_A);
+    const unsigned int ntimes = W_B_interp.NTimes();
+    const unsigned int nmodes = W_B_interp.NModes();
+    vector<double> Norms(4, 1e300);
+    const Quaternions::Quaternion R_eps0 = W_B.GetAlignmentOfDecompositionFrameToModes(t_mid, Quaternions::xHat);
+    for(unsigned int v=0; v<4; ++v) {
+      if(TryVersion[v]) {
+        if(v==0) { R_eps = R_eps0; }
+        else if(v==1) { R_eps = -R_eps0; }
+        else if(v==2) { R_eps = R_eps0*Quaternions::zHat; }
+        else if(v==3) { R_eps = -R_eps0*Quaternions::zHat; }
+        W_B_interp = W_B.Interpolate(t_A);
+        W_B_interp.RotateDecompositionBasis(R_eps);
+        for(unsigned int i_B=0; i_B<nmodes; ++i_B) {
+          const unsigned int i_A = W_A_interp.FindModeIndex(W_B.LM(i_B)[0], W_B.LM(i_B)[1]);
+          for(unsigned int i_t=0; i_t<ntimes; ++i_t) {
+            W_B_interp.SetData(i_B, i_t, W_A_interp.Data(i_A,i_t)-W_B_interp.Data(i_B,i_t));
+          }
+        }
+        const std::vector<double> Norm = W_B_interp.Norm();
+        const std::vector<double> Time = W_B_interp.T();
+        Norms[v] = GWFrames::CumulativeScalarIntegral(Norm, Time);
+      }
+    }
+    const double min_norm = std::min(std::min(std::min(Norms[0], Norms[1]), Norms[2]), Norms[3]);
+    if(Norms[0]==min_norm) { R_eps = R_eps0; SignFlip=false; }
+    else if(Norms[1]==min_norm) { R_eps = -R_eps0; SignFlip=true; }
+    else if(Norms[2]==min_norm) { R_eps = R_eps0*Quaternions::zHat; SignFlip=false; }
+    else if(Norms[3]==min_norm) { R_eps = -R_eps0*Quaternions::zHat; SignFlip=true; }
+    return;
+  }
+
+  void EvaluateMinimizationQuantities(const double deltat, const double deltax, const double deltay, const double deltaz,
+                                      double& f1, double& f2, double& f3, double& f4) const {
     using namespace Quaternions; // Allow me to subtract a double from a vector<double> below
     const Quaternions::Quaternion R_eps = W_B.GetAlignmentOfDecompositionFrameToModes(t_mid+deltat, Quaternions::xHat);
     // const Quaternions::Quaternion R_eps = W_B.GetAlignmentOfDecompositionFrameToModes(t_mid+deltat, nHat_A_mid);
     const Quaternions::Quaternion R_delta = Quaternions::exp(Quaternions::Quaternion(0, deltax, deltay, deltaz));
     const std::vector<Quaternions::Quaternion> R_Bprime = Quaternions::Squad(R_delta * W_B.Frame() * R_eps, W_B.T(), t_A+deltat);
     const unsigned int Size=R_Bprime.size();
-    double f1 = 0.0;
-    double f2 = 0.0;
+    f1 = 0.0;
+    f2 = 0.0;
+    f3 = 0.0;
+    f4 = 0.0;
     double fdot_last1 = 4 * Quaternions::normsquared( Quaternions::logRotor( R_fA[0] * Quaternions::inverse(R_Bprime[0]) ) );
-    double fdot_last2 = 4 * Quaternions::normsquared( Quaternions::logRotor( R_fA[0] * Quaternions::inverse(R_Bprime[0]*Quaternions::zHat) ) );
+    double fdot_last2 = 4 * Quaternions::normsquared( Quaternions::logRotor( R_fA[0] * Quaternions::inverse(-R_Bprime[0]) ) );
+    double fdot_last3 = 4 * Quaternions::normsquared( Quaternions::logRotor( R_fA[0] * Quaternions::inverse(R_Bprime[0]*Quaternions::zHat) ) );
+    double fdot_last4 = 4 * Quaternions::normsquared( Quaternions::logRotor( R_fA[0] * Quaternions::inverse(-R_Bprime[0]*Quaternions::zHat) ) );
     for(unsigned int i=1; i<Size; ++i) {
       const double fdot1 = 4 * Quaternions::normsquared( Quaternions::logRotor( R_fA[i] * Quaternions::inverse(R_Bprime[i]) ) );
-      const double fdot2 = 4 * Quaternions::normsquared( Quaternions::logRotor( R_fA[i] * Quaternions::inverse(R_Bprime[i]*Quaternions::zHat) ) );
+      const double fdot2 = 4 * Quaternions::normsquared( Quaternions::logRotor( R_fA[i] * Quaternions::inverse(-R_Bprime[i]) ) );
+      const double fdot3 = 4 * Quaternions::normsquared( Quaternions::logRotor( R_fA[i] * Quaternions::inverse(R_Bprime[i]*Quaternions::zHat) ) );
+      const double fdot4 = 4 * Quaternions::normsquared( Quaternions::logRotor( R_fA[i] * Quaternions::inverse(-R_Bprime[i]*Quaternions::zHat) ) );
       f1 += (t_A[i]-t_A[i-1])*(fdot1+fdot_last1)/2.0;
       f2 += (t_A[i]-t_A[i-1])*(fdot2+fdot_last2)/2.0;
+      f3 += (t_A[i]-t_A[i-1])*(fdot3+fdot_last3)/2.0;
+      f4 += (t_A[i]-t_A[i-1])*(fdot4+fdot_last4)/2.0;
       fdot_last1 = fdot1;
       fdot_last2 = fdot2;
+      fdot_last3 = fdot3;
+      fdot_last4 = fdot4;
     }
+    return;
+  }
+
+  double EvaluateMinimizationQuantity(const double deltat, const double deltax, const double deltay, const double deltaz) const {
+    double f1,f2,f3,f4;
+    EvaluateMinimizationQuantities(deltat, deltax, deltay, deltaz, f1, f2, f3, f4);
     if(Debug) {
       myfile << std::setprecision(15);
-      myfile << deltat << " " << f1 << " " << f2 << " " << deltax << " " << deltay << " " << deltaz << std::endl;
+      myfile << deltat << " " << f1 << " " << f2 << " " << f3 << " " << f4
+             << " " << deltax << " " << deltay << " " << deltaz << std::endl;
     }
-    if(f2-f1<-Quaternion_Epsilon) {
-      Flip = true;
+    if(f1-2*Quaternion_Epsilon<std::min(std::min(f2,f3),f4)) {
+      OptimalType = 1;
+      return f1;
+    }
+    if(f2-2*Quaternion_Epsilon<std::min(f3,f4)) {
+      OptimalType = 2;
       return f2;
     }
-    Flip = false;
-    return f1;
+    if(f3-2*Quaternion_Epsilon<f4) {
+      OptimalType = 3;
+      return f3;
+    }
+    OptimalType = 4;
+    return f4;
   }
 };
 double minfunc (const gsl_vector* delta, void* params) {
@@ -2683,33 +2746,67 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
 
     // Get time shift and rotation
     deltat = gsl_vector_get(s->x, 0);
-    R_delta = Quaternions::exp(Quaternions::Quaternion(0.0, gsl_vector_get(s->x, 1), gsl_vector_get(s->x, 2), gsl_vector_get(s->x, 3)));
-    Aligner.EvaluateMinimizationQuantity(gsl_vector_get(s->x,0), gsl_vector_get(s->x,1), gsl_vector_get(s->x,2), gsl_vector_get(s->x,3));
-    const bool Flip = Aligner.Flip;
+    const double deltax = gsl_vector_get(s->x, 1);
+    const double deltay = gsl_vector_get(s->x, 2);
+    const double deltaz = gsl_vector_get(s->x, 3);
 
     INFOTOCOUT << "Objective function=" << s->fval << " at " << deltat << std::endl;
+    
+    // R_delta = Quaternions::exp(Quaternions::Quaternion(0.0, gsl_vector_get(s->x, 1), gsl_vector_get(s->x, 2), gsl_vector_get(s->x, 3)));
+    // Aligner.EvaluateMinimizationQuantity(gsl_vector_get(s->x,0), gsl_vector_get(s->x,1), gsl_vector_get(s->x,2), gsl_vector_get(s->x,3));
+    // const int OptimalType = Aligner.OptimalType;
+
+    // Set the time translation
+    W_B.SetTime(W_B.T()-deltat);
+
+    // Decide which of the four possible minima we've found
+    double f1,f2,f3,f4;
+    Aligner.EvaluateMinimizationQuantities(0.0, deltax, deltay, deltaz, f1, f2, f3, f4);
+    const double fmax = std::max(std::max(std::max(f1, f2), f3), f4);
+    const double fmin = std::min(std::min(std::min(f1, f2), f3), f4);
+INFOTOCERR << fmin << " " << fmax << std::endl;
+    std::vector<bool> TryVersion(4, false);
+    if((f1-fmin)<(fmax-fmin)*1e-8) { TryVersion[0] = true; }
+INFOTOCERR << f1 << " " << TryVersion[0] << std::endl;
+    if((f2-fmin)<(fmax-fmin)*1e-8) { TryVersion[1] = true; }
+INFOTOCERR << f2 << " " << TryVersion[1] << std::endl;
+    if((f3-fmin)<(fmax-fmin)*1e-8) { TryVersion[2] = true; }
+INFOTOCERR << f3 << " " << TryVersion[2] << std::endl;
+    if((f4-fmin)<(fmax-fmin)*1e-8) { TryVersion[3] = true; }
+INFOTOCERR << f4 << " " << TryVersion[3] << std::endl;
+    Quaternions::Quaternion R_eps;
+    bool SignFlip;
+INFOTOCERR << std::endl;
+    Aligner.FindBestMinimizationWaveform(deltax, deltay, deltaz, TryVersion, R_eps, SignFlip);
+INFOTOCERR << std::endl;
+
+    // Now, apply the transformations
+    W_B.RotateDecompositionBasis(R_eps);
+INFOTOCERR << std::endl;
+    if(SignFlip) {
+INFOTOCERR << std::endl;
+      W_B.SetFrame(-R_delta*W_B.Frame());
+INFOTOCERR << std::endl;
+    } else {
+INFOTOCERR << std::endl;
+      W_B.SetFrame(R_delta*W_B.Frame());
+INFOTOCERR << std::endl;
+    }
+INFOTOCERR << std::endl;
 
     // Free allocated memory
     gsl_vector_free(x);
     gsl_vector_free(ss);
     gsl_multimin_fminimizer_free(s);
-
-    // Now, apply the transformations
-    W_B.AlignDecompositionFrameToModes(t_mid+deltat, (Flip ? -Quaternions::xHat : Quaternions::xHat));
-    // W_B.AlignDecompositionFrameToModes(t_mid+deltat, nHat_A_mid);
-    W_B.SetTime(W_B.T()-deltat);
-    W_B.SetFrame(R_delta*W_B.Frame());
-
-    // Check if we need to flip the sign of the new rotors
-    const Quaternions::Quaternion R_B_mid = Quaternions::Squad(W_B.Frame(), W_B.T(), std::vector<double>(1,t_mid))[0];
-    if( ChordalDistance(R_A_mid, R_B_mid) > ChordalDistance(R_A_mid, -R_B_mid)) {
-      W_B.SetFrame(-1.0 * W_B.Frame());
-    }
+INFOTOCERR << std::endl;
 
     gettimeofday(&now, NULL); unsigned long long tWhen = now.tv_usec + (unsigned long long)now.tv_sec * 1000000;
+INFOTOCERR << std::endl;
     INFOTOCOUT << "\tSecond stage took " << (tWhen-tThen)/1000000.0L << " seconds with " << iter << " iterations and "
-               << (Flip ? "a" : "no" ) << " flip." << std::endl;
+               << (SignFlip ? "a" : "no" ) << " sign flip." << std::endl;
+INFOTOCERR << std::endl;
   }
+INFOTOCERR << std::endl;
 
   return;
 }
