@@ -2055,7 +2055,7 @@ std::vector<Quaternions::Quaternion> GWFrames::Waveform::GetAlignmentsOfDecompos
 
   if(frameType!=GWFrames::Coprecessing && frameType!=GWFrames::Coorbital && frameType!=GWFrames::Corotating) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ":"
-              << "\nError: GetAlignmentOfDecompositionFrameToModes only takes Waveforms in the "
+              << "\nError: GetAlignmentsOfDecompositionFrameToModes only takes Waveforms in the "
               << GWFrames::WaveformFrameNames[GWFrames::Coprecessing] << ", "
               << GWFrames::WaveformFrameNames[GWFrames::Coorbital] << ", or "
               << GWFrames::WaveformFrameNames[GWFrames::Corotating] << " frames."
@@ -2065,7 +2065,7 @@ std::vector<Quaternions::Quaternion> GWFrames::Waveform::GetAlignmentsOfDecompos
 
   if(frame.size()!=NTimes()) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ":"
-              << "\nError: GetAlignmentOfDecompositionFrameToModes requires full information about the Waveform's frame."
+              << "\nError: GetAlignmentsOfDecompositionFrameToModes requires full information about the Waveform's frame."
               << "\n       This Waveform has " << NTimes() << " time steps, but " << frame.size() << " rotors in its frame data." << std::endl;
     throw(GWFrames_VectorSizeMismatch);
   }
@@ -2267,19 +2267,20 @@ class WaveformAligner {
 public:
   std::vector<Quaternions::Quaternion> R_fA;
   std::vector<double> t_A;
+  const GWFrames::Waveform& W_A;
   const GWFrames::Waveform& W_B;
   const double t_mid;
   std::vector<Quaternion> R_epsB;
   bool R_epsB_is_set;
-  mutable unsigned int nHat_B_i; // Just a guess to speed up hunting for the index
   mutable unsigned int Rbar_epsB_i; // Just a guess to speed up hunting for the index
-  mutable bool Flip;
   const bool Debug;
+  mutable ofstream myfile;
 public:
-  WaveformAligner(const GWFrames::Waveform& W_A, const GWFrames::Waveform& iW_B,
+  WaveformAligner(const GWFrames::Waveform& iW_A, const GWFrames::Waveform& iW_B,
                   const double t_1, const double t_2, const bool iDebug)
-    : R_fA(W_A.Frame()), t_A(W_A.T()), W_B(iW_B), t_mid((t_1+t_2)/2.),
-      R_epsB(0), R_epsB_is_set(false), nHat_B_i(0), Rbar_epsB_i(0), Flip(false), Debug(iDebug)
+    : R_fA(iW_A.Frame()), t_A(iW_A.T()), W_A(iW_A), W_B(iW_B), t_mid((t_1+t_2)/2.),
+      R_epsB(0), R_epsB_is_set(false), Rbar_epsB_i(0), Debug(iDebug),
+      myfile()
   {
     // Check to make sure we have sufficient times before any offset.
     // (This is necessary but not sufficient for the method to work.)
@@ -2317,9 +2318,14 @@ public:
     R_fA.erase(R_fA.begin(), R_fA.begin()+i);
 
     if(Debug) {
-      INFOTOCERR << "\tOutput to /tmp/XiIntegral.dat" << std::endl;
-      ofstream myfile;
-      myfile.open ("/tmp/XiIntegralPoints.dat");
+      INFOTOCERR << "\tOutput to UpsilonIntegral.dat" << std::endl;
+      myfile.open("UpsilonIntegral.dat");
+      myfile << "# deltat f1 f2 f3 f4 deltax deltay deltaz" << std::endl;
+    }
+  }
+
+  ~WaveformAligner() {
+    if(myfile.is_open()) {
       myfile.close();
     }
   }
@@ -2348,34 +2354,76 @@ public:
     return Quaternions::conjugate(R_epsB[Rbar_epsB_i]);
   }
 
+  void FindBestMinimizationWaveform(const std::vector<std::vector<double> >& optima, const std::vector<bool>& try_version,
+                                    double& deltat, Quaternion& R_delta, Quaternion& R_eps) const {
+    using namespace Quaternions; // Allow me to add a double to a vector<double> below
+    const GWFrames::Waveform W_A_interp = W_A.Interpolate(t_A);
+    vector<double> Norms(4, 1e300);
+    const Quaternions::Quaternion R_eps0 = W_B.GetAlignmentOfDecompositionFrameToModes(t_mid, Quaternions::xHat);
+    for(unsigned int branch_choice=0; branch_choice<4; ++branch_choice) {
+      GWFrames::Waveform W_B_interp = W_B.Interpolate(t_A+optima[branch_choice][0]);
+      const unsigned int ntimes = W_B_interp.NTimes();
+      const unsigned int nmodes = W_B_interp.NModes();
+      if(try_version[branch_choice]) {
+        if(branch_choice==0) { R_eps = R_eps0; }
+        else if(branch_choice==1) { R_eps = -R_eps0; }
+        else if(branch_choice==2) { R_eps = R_eps0*Quaternions::zHat; }
+        else if(branch_choice==3) { R_eps = -R_eps0*Quaternions::zHat; }
+        W_B_interp = W_B.Interpolate(t_A);
+        W_B_interp.RotateDecompositionBasis(R_eps);
+        for(unsigned int i_B=0; i_B<nmodes; ++i_B) {
+          const unsigned int i_A = W_A_interp.FindModeIndex(W_B.LM(i_B)[0], W_B.LM(i_B)[1]);
+          for(unsigned int i_t=0; i_t<ntimes; ++i_t) {
+            W_B_interp.SetData(i_B, i_t, W_A_interp.Data(i_A,i_t)-W_B_interp.Data(i_B,i_t));
+          }
+        }
+        const std::vector<double> Norm = W_B_interp.Norm();
+        const std::vector<double> Time = W_B_interp.T();
+        Norms[branch_choice] = GWFrames::CumulativeScalarIntegral(Norm, Time);
+      }
+    }
+    const double min_norm = std::min(std::min(std::min(Norms[0], Norms[1]), Norms[2]), Norms[3]);
+    if(Norms[0]==min_norm) {
+      deltat = optima[0][0];
+      R_delta = Quaternions::exp(Quaternions::Quaternion(0.0, optima[0][1], optima[0][2], optima[0][3]));
+      R_eps=R_eps0;
+    } else if(Norms[1]==min_norm) {
+      deltat = optima[1][0];
+      R_delta = Quaternions::exp(Quaternions::Quaternion(0.0, optima[1][1], optima[1][2], optima[1][3]));
+      R_eps=-R_eps0;
+    } else if(Norms[2]==min_norm) {
+      deltat = optima[2][0];
+      R_delta = Quaternions::exp(Quaternions::Quaternion(0.0, optima[2][1], optima[2][2], optima[2][3]));
+      R_eps=R_eps0*Quaternions::zHat;
+    } else if(Norms[3]==min_norm) {
+      deltat = optima[3][0];
+      R_delta = Quaternions::exp(Quaternions::Quaternion(0.0, optima[3][1], optima[3][2], optima[3][3]));
+      R_eps=-R_eps0*Quaternions::zHat;
+    } else {
+      INFOTOCERR << ": Somehow, I found a min norm that wasn't equal to itself..." << std::endl;
+      throw(GWFrames_ValueError);
+    }
+    return;
+  }
+
   double EvaluateMinimizationQuantity(const double deltat, const double deltax, const double deltay, const double deltaz) const {
-    using namespace Quaternions; // Allow me to subtract a double from a vector<double> below
+    using namespace Quaternions; // Allow me to add a double to a vector<double> below
     const Quaternions::Quaternion R_eps = W_B.GetAlignmentOfDecompositionFrameToModes(t_mid+deltat, Quaternions::xHat);
     const Quaternions::Quaternion R_delta = Quaternions::exp(Quaternions::Quaternion(0, deltax, deltay, deltaz));
     const std::vector<Quaternions::Quaternion> R_Bprime = Quaternions::Squad(R_delta * W_B.Frame() * R_eps, W_B.T(), t_A+deltat);
     const unsigned int Size=R_Bprime.size();
-    double f1 = 0.0;
-    double f2 = 0.0;
-    double fdot_last1 = 4 * Quaternions::normsquared( Quaternions::logRotor( R_fA[0] * Quaternions::inverse(R_Bprime[0]) ) );
-    double fdot_last2 = 4 * Quaternions::normsquared( Quaternions::logRotor( R_fA[0] * Quaternions::inverse(R_Bprime[0]*Quaternions::zHat) ) );
+    double f = 0.0;
+    double fdot_last = 4 * Quaternions::normsquared( Quaternions::logRotor( R_fA[0] * Quaternions::inverse(R_Bprime[0]) ) );
     for(unsigned int i=1; i<Size; ++i) {
-      const double fdot1 = 4 * Quaternions::normsquared( Quaternions::logRotor( R_fA[i] * Quaternions::inverse(R_Bprime[i]) ) );
-      const double fdot2 = 4 * Quaternions::normsquared( Quaternions::logRotor( R_fA[i] * Quaternions::inverse(R_Bprime[i]*Quaternions::zHat) ) );
-      f1 += (t_A[i]-t_A[i-1])*(fdot1+fdot_last1)/2.0;
-      f2 += (t_A[i]-t_A[i-1])*(fdot2+fdot_last2)/2.0;
-      fdot_last1 = fdot1;
-      fdot_last2 = fdot2;
+      const double fdot = 4 * Quaternions::normsquared( Quaternions::logRotor( R_fA[i] * Quaternions::inverse(R_Bprime[i]) ) );
+      f += (t_A[i]-t_A[i-1])*(fdot+fdot_last)/2.0;
+      fdot_last = fdot;
     }
     if(Debug) {
-      // INFOTOCERR << "\tOutput to /tmp/XiIntegralPoints.dat" << std::endl;
-      ofstream myfile;
-      myfile.open("/tmp/XiIntegralPoints.dat", std::ofstream::app);
       myfile << std::setprecision(15);
-      myfile << deltat << " " << f1 << " " << f2 << std::endl;
-      myfile.close();
+      myfile << deltat << " " << deltax << " " << deltay << " " << deltaz << " " << f << std::endl;
     }
-    Flip = (f2<f1);
-    return std::min(f1,f2);
+    return f;
   }
 };
 double minfunc (const gsl_vector* delta, void* params) {
@@ -2469,6 +2517,7 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
 
   Quaternion R_delta;
   const double t_mid = (t_1+t_2)/2.;
+  ofstream myfile;
 
   // We have two time offsets: deltat_1 being the most negative
   // number; deltat_2 being the most positive number.  These are the
@@ -2485,14 +2534,18 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
   const double deltat_1 = std::max(W_B.T(1)-t_1, -(t_2-t_1)/2.);
   const double deltat_2 = std::min(W_B.NTimes()-2-t_2, (t_2-t_1)/2.);
 
-
   // Align W_A forever, and align W_B initially as a first guess
   W_A.AlignDecompositionFrameToModes(t_mid, nHat_A);
-  W_B.AlignDecompositionFrameToModes(t_mid, Quaternions::xHat);
+  const Quaternions::Quaternion R_A_mid = Quaternions::Squad(W_A.Frame(), W_A.T(), std::vector<double>(1,t_mid))[0];
+  const Quaternions::Quaternion nHat_A_mid = R_A_mid * Quaternions::xHat * R_A_mid.inverse();
+  W_B.AlignDecompositionFrameToModes(t_mid, nHat_A_mid);
 
   WaveformAligner Aligner(W_A, W_B, t_1, t_2, Debug);
   const std::vector<double>& t_A = Aligner.t_A;
   const std::vector<Quaternions::Quaternion>& R_fA = Aligner.R_fA;
+  std::vector<double> Upsilon(4, 1e300);
+  std::vector<bool> try_branch(4, false);
+  std::vector<std::vector<double> > optima(4, std::vector<double>(4));
 
   struct timeval now;
   gettimeofday(&now, NULL); unsigned long long tNow = now.tv_usec + (unsigned long long)now.tv_sec * 1000000;
@@ -2523,159 +2576,213 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
     vector<Quaternion> XiIntegral1(deltats.size());
     vector<Quaternion> XiIntegral2(deltats.size());
     for(unsigned int i=0; i<XiIntegral1.size(); ++i) {
-      XiIntegral1[i] = Quaternions::DefiniteIntegral(R_fA*Aligner.Rbar_epsB(t_mid+deltats[i])*Aligner.Rbar_fB(t_A+deltats[i]), t_A);
-      XiIntegral2[i] = Quaternions::DefiniteIntegral(R_fA*(-Quaternions::zHat)*Aligner.Rbar_epsB(t_mid+deltats[i])*Aligner.Rbar_fB(t_A+deltats[i]), t_A);
+      XiIntegral1[i] = Quaternions::DefiniteIntegral(R_fA
+                                                     *Aligner.Rbar_epsB(t_mid+deltats[i])
+                                                     *Aligner.Rbar_fB(t_A+deltats[i]), t_A);
+      XiIntegral2[i] = Quaternions::DefiniteIntegral(R_fA
+                                                     *(-Quaternions::zHat)*Aligner.Rbar_epsB(t_mid+deltats[i])
+                                                     *Aligner.Rbar_fB(t_A+deltats[i]), t_A);
     }
 
     if(Debug) {
-      INFOTOCERR << "\tOutput to /tmp/XiIntegral.dat" << std::endl;
-      ofstream myfile;
-      myfile.open ("/tmp/XiIntegral.dat");
+      INFOTOCERR << "\tOutput to XiIntegral.dat" << std::endl;
+      myfile.open ("XiIntegral.dat");
+      myfile << "# deltats[i] |Xi1| |Xi2| "
+             << "Xi1.w Xi1.x Xi1.y Xi1.z Xi2.w Xi2.x Xi2.y Xi2.z "
+             << "Upsilon1a Upsilon1b Upsilon2a Upsilon2b"
+             << std::endl;
       myfile << std::setprecision(15);
-      for(unsigned int i=0; i<XiIntegral1.size(); ++i) {
+    }
+
+    for(unsigned int i=0; i<XiIntegral1.size(); ++i) {
+      const Quaternions::Quaternion R_delta_log1 = Quaternions::logRotor(XiIntegral1[i].normalized());
+      const Quaternions::Quaternion NegativeR_delta_log1 = Quaternions::logRotor(-XiIntegral1[i].normalized());
+      const Quaternions::Quaternion R_delta_log2 = Quaternions::logRotor(XiIntegral2[i].normalized());
+      const Quaternions::Quaternion NegativeR_delta_log2 = Quaternions::logRotor(-XiIntegral2[i].normalized());
+      const double Upsilon0 = Aligner.EvaluateMinimizationQuantity(deltats[i], R_delta_log1[1], R_delta_log1[2], R_delta_log1[3]);
+      const double Upsilon1 = Aligner.EvaluateMinimizationQuantity(deltats[i], NegativeR_delta_log1[1],
+                                                                   NegativeR_delta_log1[2], NegativeR_delta_log1[3]);
+      const double Upsilon2 = Aligner.EvaluateMinimizationQuantity(deltats[i], R_delta_log2[1], R_delta_log2[2], R_delta_log2[3]);
+      const double Upsilon3 = Aligner.EvaluateMinimizationQuantity(deltats[i], NegativeR_delta_log2[1],
+                                                                   NegativeR_delta_log2[2], NegativeR_delta_log2[3]);
+      if(Upsilon0<Upsilon[0]) {
+        Upsilon[0] = Upsilon0;
+        optima[0][0] = deltats[i];
+        optima[0][1] = R_delta_log1[1];
+        optima[0][2] = R_delta_log1[2];
+        optima[0][3] = R_delta_log1[3];
+      }
+      if(Upsilon1<Upsilon[1]) {
+        Upsilon[1] = Upsilon1;
+        optima[1][0] = deltats[i];
+        optima[1][1] = NegativeR_delta_log1[1];
+        optima[1][2] = NegativeR_delta_log1[2];
+        optima[1][3] = NegativeR_delta_log1[3];
+      }
+      if(Upsilon2<Upsilon[2]) {
+        Upsilon[2] = Upsilon2;
+        optima[2][0] = deltats[i];
+        optima[2][1] = R_delta_log2[1];
+        optima[2][2] = R_delta_log2[2];
+        optima[2][3] = R_delta_log2[3];
+      }
+      if(Upsilon3<Upsilon[3]) {
+        Upsilon[3] = Upsilon3;
+        optima[3][0] = deltats[i];
+        optima[3][1] = NegativeR_delta_log2[1];
+        optima[3][2] = NegativeR_delta_log2[2];
+        optima[3][3] = NegativeR_delta_log2[3];
+      }
+      if(Debug) {
         myfile << deltats[i] << " "
                << 2*(t_2 - t_1 - Quaternions::abs(XiIntegral1[i])) << " "
-               << 2*(t_2 - t_1 - Quaternions::abs(XiIntegral2[i])) << std::endl;
+               << 2*(t_2 - t_1 - Quaternions::abs(XiIntegral2[i])) << " "
+               << XiIntegral1[i].str() << " " << XiIntegral2[i].str() << " "
+               << Upsilon0 << " " << Upsilon1 << " " << Upsilon2 << " " << Upsilon3
+               << std::endl;
       }
+    }
+
+    if(Debug) {
       myfile.close();
+      INFOTOCERR << "\tOutput to XiIntegral.dat finished" << std::endl;
     }
 
-    // Find the best value
-    double Xi_c_min = 1e300;
-    unsigned int i_Xi_c_min = 0;
-    bool Flip = false;
-    for(unsigned int i=0; i<XiIntegral1.size(); ++i) {
-      // Note that, presumably because of the `abs` here, the sign of
-      // the argmin will be ambiguous.  This needs to be detected
-      // below, when we set the initial conditions for the minimizer.
-      const double Xi_c_i1 = 2*(t_2 - t_1 - Quaternions::abs(XiIntegral1[i]));
-      const double Xi_c_i2 = 2*(t_2 - t_1 - Quaternions::abs(XiIntegral2[i]));
-      if(Xi_c_i1<Xi_c_min) {
-        Xi_c_min = Xi_c_i1;
-        i_Xi_c_min = i;
-        Flip = false;
-      }
-      if(Xi_c_i2<Xi_c_min) {
-        Xi_c_min = Xi_c_i2;
-        i_Xi_c_min = i;
-        Flip = true;
-      }
-    }
-    const double deltat = deltats[i_Xi_c_min];
-    // W_B.RotateDecompositionBasis(Aligner.Rbar_epsB(t_mid+deltat).conjugate() * (Flip ? Quaternions::zHat : Quaternions::One));
-    W_B.SetTime(W_B.T()-deltat);
-    R_delta = (Flip ? XiIntegral2[i_Xi_c_min].normalized() : XiIntegral1[i_Xi_c_min].normalized());
-
-    INFOTOCOUT << "Objective function=" << Xi_c_min << " at " << deltat << " with" << (Flip ? " " : " no ") << "flip." << std::endl;
+    INFOTOCOUT << "Objective function=(" << Upsilon[0] << "," << Upsilon[1] << "," << Upsilon[2] << "," << Upsilon[3] << ")\n";
+    INFOTOCOUT << "         at deltat=(" << optima[0][0] << "," << optima[1][0] << "," << optima[2][0] << "," << optima[3][0] << ")"
+               << std::endl;
   }
 
   gettimeofday(&now, NULL); unsigned long long tThen = now.tv_usec + (unsigned long long)now.tv_sec * 1000000;
   INFOTOCOUT << "\tFirst stage took " << (tThen-tNow)/1000000.0L << " seconds." << std::endl;
 
+  { // Decide which of the four possible minima to test further
+    const double Upsilon_max = std::max(std::max(std::max(Upsilon[0], Upsilon[1]), Upsilon[2]), Upsilon[3]);
+    const double Upsilon_min = std::min(std::min(std::min(Upsilon[0], Upsilon[1]), Upsilon[2]), Upsilon[3]);
+    for(unsigned int j=0; j<4; ++j) {
+      if((Upsilon[j]-Upsilon_min)<(Upsilon_max-Upsilon_min)*1e-8) { try_branch[j] = true; }
+    }
+  }
+
   // Next, minimize algorithmically, in four dimensions, accounting
   // for all adjustments in generality.  This is very slow, but we've
   // gotten a very good initial guess from the dumb way above.
-  {
-    const unsigned int NDimensions = 4;
-    const unsigned int MaxIterations = 2000;
-    const double MinSimplexSize = 2.0e-9; // This can be less than sqrt(machine precision) because of the integral nature of our objective function
-    // const double MinSimplexSize = 2.0e-13; // This can be less than sqrt(machine precision) because of the integral nature of our objective function
-    double deltat=0.0;
+  std::vector<double> difference_norm(4, 1e300);
+  size_t iter_tot = 0;
+  for(unsigned int branch_choice=0; branch_choice<4; ++branch_choice) {
+    if(try_branch[branch_choice]) {
+      const unsigned int NDimensions = 4;
+      const unsigned int MaxIterations = 2000;
+      const double MinSimplexSize = 2.0e-9;
+      const double InitialTrialTimeStep = std::max(W_A.T(1)-W_A.T(0), W_B.T(1)-W_B.T(0))/2.;
+      const double InitialTrialAngleStep = 1.0/(t_2-t_1);
 
-    const double InitialTrialTimeStep = std::max(W_A.T(1)-W_A.T(0), W_B.T(1)-W_B.T(0))/2.;
-    const double InitialTrialAngleStep = 1.0/(t_2-t_1);
+      // Use Nelder-Mead simplex minimization
+      const gsl_multimin_fminimizer_type* T =
+        gsl_multimin_fminimizer_nmsimplex2;
+      gsl_multimin_fminimizer* s = NULL;
+      gsl_vector* ss;
+      gsl_vector* x;
+      gsl_multimin_function min_func;
+      size_t iter = 0;
+      int status = GSL_CONTINUE;
+      double size = 0.0;
 
-    // Use Nelder-Mead simplex minimization
-    const gsl_multimin_fminimizer_type* T =
-      gsl_multimin_fminimizer_nmsimplex2;
-    gsl_multimin_fminimizer* s = NULL;
-    gsl_vector* ss;
-    gsl_vector* x;
-    gsl_multimin_function min_func;
-    size_t iter = 0;
-    int status = GSL_CONTINUE;
-    double size = 0.0;
-
-    // Set initial values
-    x = gsl_vector_alloc(NDimensions);
-    const Quaternions::Quaternion R_delta_log = Quaternions::logRotor(R_delta);
-    const Quaternions::Quaternion NegativeR_delta_log = Quaternions::logRotor(-R_delta);
-    gsl_vector_set(x, 0, deltat);
-    if(Aligner.EvaluateMinimizationQuantity(deltat, R_delta_log[1], R_delta_log[2], R_delta_log[3])
-       <= Aligner.EvaluateMinimizationQuantity(deltat, NegativeR_delta_log[1], NegativeR_delta_log[2], NegativeR_delta_log[3])) {
-      gsl_vector_set(x, 1, R_delta_log[1]);
-      gsl_vector_set(x, 2, R_delta_log[2]);
-      gsl_vector_set(x, 3, R_delta_log[3]);
-    } else {
-      gsl_vector_set(x, 1, NegativeR_delta_log[1]);
-      gsl_vector_set(x, 2, NegativeR_delta_log[2]);
-      gsl_vector_set(x, 3, NegativeR_delta_log[3]);
-    }
-
-    // Set initial step sizes
-    ss = gsl_vector_alloc(NDimensions);
-    gsl_vector_set(ss, 0, InitialTrialTimeStep);
-    gsl_vector_set(ss, 1, InitialTrialAngleStep);
-    gsl_vector_set(ss, 2, InitialTrialAngleStep);
-    gsl_vector_set(ss, 3, InitialTrialAngleStep);
-
-    min_func.n = NDimensions;
-    min_func.f = &minfunc;
-    min_func.params = (void*) &Aligner;
-
-    s = gsl_multimin_fminimizer_alloc(T, NDimensions);
-    gsl_multimin_fminimizer_set(s, &min_func, x, ss);
-
-    // Run the minimization
-    while(status == GSL_CONTINUE && iter < MaxIterations) {
-      iter++;
-      status = gsl_multimin_fminimizer_iterate(s);
-
-      if(status==GSL_EBADFUNC) {
-        INFOTOCERR << ":\nThe iteration encountered a singular point where the function evaluated to Inf or NaN"
-                   << "\nwhile minimizing at (" << gsl_vector_get(s->x, 0) << ", " << gsl_vector_get(s->x, 1)
-                   << ", " << gsl_vector_get(s->x, 2) << ", " << gsl_vector_get(s->x, 3) << ")." << std::endl;
+      // Set initial values
+      x = gsl_vector_alloc(NDimensions);
+      for(unsigned int j=0; j<NDimensions; ++j) {
+        gsl_vector_set(x, j, optima[branch_choice][j]);
       }
 
-      if(status==GSL_FAILURE) {
-        INFOTOCERR << ":\nThe algorithm could not improve the current best approximation or bounding interval." << std::endl;
+      // Set initial step sizes
+      ss = gsl_vector_alloc(NDimensions);
+      gsl_vector_set(ss, 0, InitialTrialTimeStep);
+      gsl_vector_set(ss, 1, InitialTrialAngleStep);
+      gsl_vector_set(ss, 2, InitialTrialAngleStep);
+      gsl_vector_set(ss, 3, InitialTrialAngleStep);
+
+      min_func.n = NDimensions;
+      min_func.f = &minfunc;
+      min_func.params = (void*) &Aligner;
+
+      s = gsl_multimin_fminimizer_alloc(T, NDimensions);
+      gsl_multimin_fminimizer_set(s, &min_func, x, ss);
+
+      // Run the minimization
+      while(status == GSL_CONTINUE && iter < MaxIterations) {
+        iter++;
+        status = gsl_multimin_fminimizer_iterate(s);
+
+        if(status==GSL_EBADFUNC) {
+          INFOTOCERR << ":\nThe iteration encountered a singular point where the function evaluated to Inf or NaN"
+                     << "\nwhile minimizing at (" << gsl_vector_get(s->x, 0) << ", " << gsl_vector_get(s->x, 1)
+                     << ", " << gsl_vector_get(s->x, 2) << ", " << gsl_vector_get(s->x, 3) << ")." << std::endl;
+        }
+
+        if(status==GSL_FAILURE) {
+          INFOTOCERR << ":\nThe algorithm could not improve the current best approximation or bounding interval." << std::endl;
+        }
+
+        if(status==GSL_ENOPROG) {
+          INFOTOCERR << ":\nThe minimizer is unable to improve on its current estimate, either due to"
+                     << "\nnumerical difficulty or because a genuine local minimum has been reached." << std::endl;
+        }
+
+        if(status) break;
+        size = gsl_multimin_fminimizer_size(s);
+        status = gsl_multimin_test_size(size, MinSimplexSize);
       }
 
-      if(status==GSL_ENOPROG) {
-        INFOTOCERR << ":\nThe minimizer is unable to improve on its current estimate, either due to"
-                   << "\nnumerical difficulty or because a genuine local minimum has been reached." << std::endl;
+      iter_tot += iter;
+
+      if(iter==MaxIterations) {
+        INFOTOCERR << "\nWarning: Minimization ended because it went through " << MaxIterations << " iterations."
+                   << "\n         This may indicate failure.  You may want to try with a better initial guess." << std::endl;
       }
 
-      if(status) break;
-      size = gsl_multimin_fminimizer_size(s);
-      status = gsl_multimin_test_size(size, MinSimplexSize);
+      // Get time shift and rotation
+      for(unsigned int j=0; j<NDimensions; ++j) {
+        optima[branch_choice][j] = gsl_vector_get(s->x, j);
+      }
+
+      // Get value of objective function here
+      Upsilon[branch_choice] = s->fval;
+
+      INFOTOCOUT << "Objective function Upsilon=" << s->fval
+                 << " at deltat=" << optima[branch_choice][0]
+                 << " for branch_choice=" << branch_choice
+                 << " after " << iter << " iterations." << std::endl;
+
+      // Free allocated memory
+      gsl_vector_free(x);
+      gsl_vector_free(ss);
+      gsl_multimin_fminimizer_free(s);
+    }
+  }
+
+  {  // Decide on the best choice of branch
+    const double Upsilon_max = std::max(std::max(std::max(Upsilon[0], Upsilon[1]), Upsilon[2]), Upsilon[3]);
+    const double Upsilon_min = std::min(std::min(std::min(Upsilon[0], Upsilon[1]), Upsilon[2]), Upsilon[3]);
+    for(unsigned int j=0; j<4; ++j) {
+      if((Upsilon[j]-Upsilon_min)<(Upsilon_max-Upsilon_min)*1e-8) {
+        try_branch[j] = true;
+      } else {
+        try_branch[j] = false;
+      }
     }
 
-    if(iter==MaxIterations) {
-      INFOTOCERR << "\nWarning: Minimization ended because it went through " << MaxIterations << " iterations."
-                 << "\n         This may indicate failure.  You may want to try with a better initial guess." << std::endl;
-    }
-
-    // Get time shift and rotation
-    deltat = gsl_vector_get(s->x, 0);
-    R_delta = Quaternions::exp(Quaternions::Quaternion(0.0, gsl_vector_get(s->x, 1), gsl_vector_get(s->x, 2), gsl_vector_get(s->x, 3)));
-    Aligner.EvaluateMinimizationQuantity(gsl_vector_get(s->x,0), gsl_vector_get(s->x,1), gsl_vector_get(s->x,2), gsl_vector_get(s->x,3));
-    const bool Flip = Aligner.Flip;
-
-    INFOTOCOUT << "Objective function=" << s->fval << " at " << deltat << std::endl;
-
-    // Free allocated memory
-    gsl_vector_free(x);
-    gsl_vector_free(ss);
-    gsl_multimin_fminimizer_free(s);
+    double deltat;
+    Quaternions::Quaternion R_eps;
+    Aligner.FindBestMinimizationWaveform(optima, try_branch, deltat, R_delta, R_eps);
 
     // Now, apply the transformations
-    W_B.AlignDecompositionFrameToModes(t_mid+deltat, (Flip ? -Quaternions::xHat : Quaternions::xHat));
     W_B.SetTime(W_B.T()-deltat);
+    W_B.RotateDecompositionBasis(R_eps);
     W_B.SetFrame(R_delta*W_B.Frame());
 
     gettimeofday(&now, NULL); unsigned long long tWhen = now.tv_usec + (unsigned long long)now.tv_sec * 1000000;
-    INFOTOCOUT << "\tSecond stage took " << (tWhen-tThen)/1000000.0L << " seconds with " << iter << " iterations." << std::endl;
+    INFOTOCOUT << "\tSecond stage took " << (tWhen-tThen)/1000000.0L
+               << " seconds with " << iter_tot << " iterations." << std::endl;
   }
 
   return;
