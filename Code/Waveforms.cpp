@@ -2266,7 +2266,6 @@ GWFrames::Waveform& GWFrames::Waveform::AlignDecompositionFrameToModes(const dou
 class WaveformAligner {
 public:
   std::vector<Quaternions::Quaternion> R_fA;
-  const Quaternions::Quaternion nHat_A_mid;
   std::vector<double> t_A;
   const GWFrames::Waveform& W_A;
   const GWFrames::Waveform& W_B;
@@ -2274,15 +2273,13 @@ public:
   std::vector<Quaternion> R_epsB;
   bool R_epsB_is_set;
   mutable unsigned int Rbar_epsB_i; // Just a guess to speed up hunting for the index
-  mutable int OptimalType;
   const bool Debug;
   mutable ofstream myfile;
 public:
   WaveformAligner(const GWFrames::Waveform& iW_A, const GWFrames::Waveform& iW_B,
-                  const double t_1, const double t_2, const bool iDebug, const Quaternions::Quaternion& nHat_A)
-    : R_fA(iW_A.Frame()), nHat_A_mid(nHat_A),
-      t_A(iW_A.T()), W_A(iW_A), W_B(iW_B), t_mid((t_1+t_2)/2.),
-      R_epsB(0), R_epsB_is_set(false), Rbar_epsB_i(0), OptimalType(0), Debug(iDebug),
+                  const double t_1, const double t_2, const bool iDebug)
+    : R_fA(iW_A.Frame()), t_A(iW_A.T()), W_A(iW_A), W_B(iW_B), t_mid((t_1+t_2)/2.),
+      R_epsB(0), R_epsB_is_set(false), Rbar_epsB_i(0), Debug(iDebug),
       myfile()
   {
     // Check to make sure we have sufficient times before any offset.
@@ -2543,7 +2540,7 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
   const Quaternions::Quaternion nHat_A_mid = R_A_mid * Quaternions::xHat * R_A_mid.inverse();
   W_B.AlignDecompositionFrameToModes(t_mid, nHat_A_mid);
 
-  WaveformAligner Aligner(W_A, W_B, t_1, t_2, Debug, nHat_A_mid);
+  WaveformAligner Aligner(W_A, W_B, t_1, t_2, Debug);
   const std::vector<double>& t_A = Aligner.t_A;
   const std::vector<Quaternions::Quaternion>& R_fA = Aligner.R_fA;
   std::vector<double> Upsilon(4, 1e300);
