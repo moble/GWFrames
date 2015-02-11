@@ -2535,8 +2535,9 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
     throw(GWFrames_EmptyIntersection);
   }
 
-  Quaternion R_delta, R_delta1, R_delta2;
+  Quaternion R_delta;
   const double t_mid = (t_1+t_2)/2.;
+  ofstream myfile;
 
   // We have two time offsets: deltat_1 being the most negative
   // number; deltat_2 being the most positive number.  These are the
@@ -2564,6 +2565,7 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
   const std::vector<Quaternions::Quaternion>& R_fA = Aligner.R_fA;
   std::vector<double> Upsilon(4, 1e300);
   std::vector<bool> try_branch(4, false);
+  std::vector<std::vector<double> > optima(4, std::vector<double>(4));
 
   struct timeval now;
   gettimeofday(&now, NULL); unsigned long long tNow = now.tv_usec + (unsigned long long)now.tv_sec * 1000000;
@@ -2604,75 +2606,71 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
 
     if(Debug) {
       INFOTOCERR << "\tOutput to XiIntegral.dat" << std::endl;
-      ofstream myfile;
       myfile.open ("XiIntegral.dat");
       myfile << "# deltats[i] |Xi1| |Xi2| "
              << "Xi1.w Xi1.x Xi1.y Xi1.z Xi2.w Xi2.x Xi2.y Xi2.z "
              << "Upsilon1a Upsilon1b Upsilon2a Upsilon2b"
              << std::endl;
       myfile << std::setprecision(15);
-      for(unsigned int i=0; i<XiIntegral1.size(); ++i) {
-        const Quaternions::Quaternion R_delta_log1 = Quaternions::logRotor(XiIntegral1[i].normalized());
-        const Quaternions::Quaternion NegativeR_delta_log1 = Quaternions::logRotor(-XiIntegral1[i].normalized());
-        const Quaternions::Quaternion R_delta_log2 = Quaternions::logRotor(XiIntegral2[i].normalized());
-        const Quaternions::Quaternion NegativeR_delta_log2 = Quaternions::logRotor(-XiIntegral2[i].normalized());
-        const double Upsilon1a = Aligner.EvaluateMinimizationQuantity(deltats[i], R_delta_log1[1], R_delta_log1[2], R_delta_log1[3]);
-        const double Upsilon1b = Aligner.EvaluateMinimizationQuantity(deltats[i], NegativeR_delta_log1[1],
-                                                                      NegativeR_delta_log1[2], NegativeR_delta_log1[3]);
-        const double Upsilon2a = Aligner.EvaluateMinimizationQuantity(deltats[i], R_delta_log2[1], R_delta_log2[2], R_delta_log2[3]);
-        const double Upsilon2b = Aligner.EvaluateMinimizationQuantity(deltats[i], NegativeR_delta_log2[1],
-                                                                      NegativeR_delta_log2[2], NegativeR_delta_log2[3]);
+    }
+
+    for(unsigned int i=0; i<XiIntegral1.size(); ++i) {
+      const Quaternions::Quaternion R_delta_log1 = Quaternions::logRotor(XiIntegral1[i].normalized());
+      const Quaternions::Quaternion NegativeR_delta_log1 = Quaternions::logRotor(-XiIntegral1[i].normalized());
+      const Quaternions::Quaternion R_delta_log2 = Quaternions::logRotor(XiIntegral2[i].normalized());
+      const Quaternions::Quaternion NegativeR_delta_log2 = Quaternions::logRotor(-XiIntegral2[i].normalized());
+      const double Upsilon0 = Aligner.EvaluateMinimizationQuantity(deltats[i], R_delta_log1[1], R_delta_log1[2], R_delta_log1[3]);
+      const double Upsilon1 = Aligner.EvaluateMinimizationQuantity(deltats[i], NegativeR_delta_log1[1],
+                                                                   NegativeR_delta_log1[2], NegativeR_delta_log1[3]);
+      const double Upsilon2 = Aligner.EvaluateMinimizationQuantity(deltats[i], R_delta_log2[1], R_delta_log2[2], R_delta_log2[3]);
+      const double Upsilon3 = Aligner.EvaluateMinimizationQuantity(deltats[i], NegativeR_delta_log2[1],
+                                                                   NegativeR_delta_log2[2], NegativeR_delta_log2[3]);
+      if(Upsilon0<Upsilon[0]) {
+        Upsilon[0] = Upsilon0;
+        optima[0][0] = deltats[i];
+        optima[0][1] = R_delta_log1[1];
+        optima[0][2] = R_delta_log1[2];
+        optima[0][3] = R_delta_log1[3];
+      }
+      if(Upsilon1<Upsilon[1]) {
+        Upsilon[1] = Upsilon1;
+        optima[1][0] = deltats[i];
+        optima[1][1] = NegativeR_delta_log1[1];
+        optima[1][2] = NegativeR_delta_log1[2];
+        optima[1][3] = NegativeR_delta_log1[3];
+      }
+      if(Upsilon2<Upsilon[2]) {
+        Upsilon[2] = Upsilon2;
+        optima[2][0] = deltats[i];
+        optima[2][1] = R_delta_log2[1];
+        optima[2][2] = R_delta_log2[2];
+        optima[2][3] = R_delta_log2[3];
+      }
+      if(Upsilon3<Upsilon[3]) {
+        Upsilon[3] = Upsilon3;
+        optima[3][0] = deltats[i];
+        optima[3][1] = NegativeR_delta_log2[1];
+        optima[3][2] = NegativeR_delta_log2[2];
+        optima[3][3] = NegativeR_delta_log2[3];
+      }
+      if(Debug) {
         myfile << deltats[i] << " "
                << 2*(t_2 - t_1 - Quaternions::abs(XiIntegral1[i])) << " "
                << 2*(t_2 - t_1 - Quaternions::abs(XiIntegral2[i])) << " "
                << XiIntegral1[i].str() << " " << XiIntegral2[i].str() << " "
-               << Upsilon1a << " " << Upsilon1b << " " << Upsilon2a << " " << Upsilon2b
+               << Upsilon0 << " " << Upsilon1 << " " << Upsilon2 << " " << Upsilon3
                << std::endl;
       }
+    }
+
+    if(Debug) {
       myfile.close();
       INFOTOCERR << "\tOutput to XiIntegral.dat finished" << std::endl;
     }
 
-    // Find the best value
-    double Xi_c_min = 1e300;
-    unsigned int i_Xi_c_min = 0;
-    bool Flip = false;
-    for(unsigned int i=0; i<XiIntegral1.size(); ++i) {
-      // Note that, presumably because of the `abs` here, the sign of
-      // the argmin will be ambiguous.  This needs to be detected
-      // below, when we set the initial conditions for the minimizer.
-      const double Xi_c_i1 = 2*(t_2 - t_1 - Quaternions::abs(XiIntegral1[i]));
-      const double Xi_c_i2 = 2*(t_2 - t_1 - Quaternions::abs(XiIntegral2[i]));
-      if(Xi_c_i1<Xi_c_min) {
-        Xi_c_min = Xi_c_i1;
-        i_Xi_c_min = i;
-        Flip = false;
-      }
-      if(Xi_c_i2<Xi_c_min) {
-        Xi_c_min = Xi_c_i2;
-        i_Xi_c_min = i;
-        Flip = true;
-      }
-    }
-    const double deltat = deltats[i_Xi_c_min];
-    W_B.SetTime(W_B.T()-deltat);
-    R_delta1 = XiIntegral1[i_Xi_c_min].normalized();
-    R_delta2 = XiIntegral2[i_Xi_c_min].normalized();
-
-    { // Find which variant gives the best values of Upsilon to start with
-      const Quaternions::Quaternion R_delta_log1 = Quaternions::logRotor(R_delta1);
-      const Quaternions::Quaternion NegativeR_delta_log1 = Quaternions::logRotor(-R_delta1);
-      const Quaternions::Quaternion R_delta_log2 = Quaternions::logRotor(R_delta2);
-      const Quaternions::Quaternion NegativeR_delta_log2 = Quaternions::logRotor(-R_delta2);
-      Upsilon[0] = Aligner.EvaluateMinimizationQuantity(0.0, R_delta_log1[1], R_delta_log1[2], R_delta_log1[3]);
-      Upsilon[1] = Aligner.EvaluateMinimizationQuantity(0.0, NegativeR_delta_log1[1],
-                                                        NegativeR_delta_log1[2], NegativeR_delta_log1[3]);
-      Upsilon[2] = Aligner.EvaluateMinimizationQuantity(0.0, R_delta_log2[1], R_delta_log2[2], R_delta_log2[3]);
-      Upsilon[3] = Aligner.EvaluateMinimizationQuantity(0.0, NegativeR_delta_log2[1],
-                                                        NegativeR_delta_log2[2], NegativeR_delta_log2[3]);
-    }
-
-    INFOTOCOUT << "Objective function=" << Xi_c_min << " at " << deltat << " with " << (Flip ? "a" : "no") << " flip." << std::endl;
+    INFOTOCOUT << "Objective function=(" << Upsilon[0] << "," << Upsilon[1] << "," << Upsilon[2] << "," << Upsilon[3] << ")\n";
+    INFOTOCOUT << "         at deltat=(" << optima[0][0] << "," << optima[1][0] << "," << optima[2][0] << "," << optima[3][0] << ")"
+               << std::endl;
   }
 
   gettimeofday(&now, NULL); unsigned long long tThen = now.tv_usec + (unsigned long long)now.tv_sec * 1000000;
@@ -2681,26 +2679,20 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
   { // Decide which of the four possible minima to test further
     const double Upsilon_max = std::max(std::max(std::max(Upsilon[0], Upsilon[1]), Upsilon[2]), Upsilon[3]);
     const double Upsilon_min = std::min(std::min(std::min(Upsilon[0], Upsilon[1]), Upsilon[2]), Upsilon[3]);
-INFOTOCERR << Upsilon_min << " " << Upsilon_max << std::endl;
     for(unsigned int j=0; j<4; ++j) {
       if((Upsilon[j]-Upsilon_min)<(Upsilon_max-Upsilon_min)*1e-8) { try_branch[j] = true; }
     }
-for(unsigned int j=0; j<4; ++j) {
-  INFOTOCERR << Upsilon[j] << " " << try_branch[j] << std::endl;
-}
   }
 
   // Next, minimize algorithmically, in four dimensions, accounting
   // for all adjustments in generality.  This is very slow, but we've
   // gotten a very good initial guess from the dumb way above.
-  std::vector<std::vector<double> > optima(4, std::vector<double>(4));
   std::vector<double> difference_norm(4, 1e300);
   size_t iter_tot = 0;
   for(unsigned int branch_choice=0; branch_choice<4; ++branch_choice) {
     if(try_branch[branch_choice]) {
-      Aligner.set_branch(branch_choice);
-      const Quaternions::Quaternion R_delta_log =
-        Quaternions::logRotor( (branch_choice<2 ? R_delta1 : R_delta2) * ((branch_choice%2)==0 ? 1.0 : -1.0) );
+      Aligner.set_branch(0); //
+      branch_choice);
 
       const unsigned int NDimensions = 4;
       const unsigned int MaxIterations = 2000;
@@ -2721,10 +2713,9 @@ for(unsigned int j=0; j<4; ++j) {
 
       // Set initial values
       x = gsl_vector_alloc(NDimensions);
-      gsl_vector_set(x, 0, 0.0);
-      gsl_vector_set(x, 1, R_delta_log[1]);
-      gsl_vector_set(x, 2, R_delta_log[2]);
-      gsl_vector_set(x, 3, R_delta_log[3]);
+      for(unsigned int j=0; j<NDimensions; ++j) {
+        gsl_vector_set(x, j, optima[branch_choice][j]);
+      }
 
       // Set initial step sizes
       ss = gsl_vector_alloc(NDimensions);
@@ -2792,18 +2783,17 @@ for(unsigned int j=0; j<4; ++j) {
     }
   }
 
-  // Decide on the best choice of branch
-  {
-    // Decide which of the four possible minima we've found
+  {  // Decide on the best choice of branch
     const double Upsilon_max = std::max(std::max(std::max(Upsilon[0], Upsilon[1]), Upsilon[2]), Upsilon[3]);
     const double Upsilon_min = std::min(std::min(std::min(Upsilon[0], Upsilon[1]), Upsilon[2]), Upsilon[3]);
-INFOTOCERR << Upsilon_min << " " << Upsilon_max << std::endl;
     for(unsigned int j=0; j<4; ++j) {
-      if((Upsilon[j]-Upsilon_min)<(Upsilon_max-Upsilon_min)*1e-8) { try_branch[j] = true; }
+      if((Upsilon[j]-Upsilon_min)<(Upsilon_max-Upsilon_min)*1e-8) {
+        try_branch[j] = true;
+      } else {
+        try_branch[j] = false;
+      }
     }
-for(unsigned int j=0; j<4; ++j) {
-  INFOTOCERR << Upsilon[j] << " " << try_branch[j] << std::endl;
-}
+
     double deltat;
     Quaternions::Quaternion R_eps;
     Aligner.FindBestMinimizationWaveform(optima, try_branch, deltat, R_delta, R_eps);
