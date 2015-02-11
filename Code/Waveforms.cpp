@@ -2055,7 +2055,7 @@ std::vector<Quaternions::Quaternion> GWFrames::Waveform::GetAlignmentsOfDecompos
 
   if(frameType!=GWFrames::Coprecessing && frameType!=GWFrames::Coorbital && frameType!=GWFrames::Corotating) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ":"
-              << "\nError: GetAlignmentOfDecompositionFrameToModes only takes Waveforms in the "
+              << "\nError: GetAlignmentsOfDecompositionFrameToModes only takes Waveforms in the "
               << GWFrames::WaveformFrameNames[GWFrames::Coprecessing] << ", "
               << GWFrames::WaveformFrameNames[GWFrames::Coorbital] << ", or "
               << GWFrames::WaveformFrameNames[GWFrames::Corotating] << " frames."
@@ -2065,7 +2065,7 @@ std::vector<Quaternions::Quaternion> GWFrames::Waveform::GetAlignmentsOfDecompos
 
   if(frame.size()!=NTimes()) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ":"
-              << "\nError: GetAlignmentOfDecompositionFrameToModes requires full information about the Waveform's frame."
+              << "\nError: GetAlignmentsOfDecompositionFrameToModes requires full information about the Waveform's frame."
               << "\n       This Waveform has " << NTimes() << " time steps, but " << frame.size() << " rotors in its frame data." << std::endl;
     throw(GWFrames_VectorSizeMismatch);
   }
@@ -2267,7 +2267,6 @@ class WaveformAligner {
 public:
   std::vector<Quaternions::Quaternion> R_fA;
   const Quaternions::Quaternion nHat_A_mid;
-  Quaternions::Quaternion branch;
   std::vector<double> t_A;
   const GWFrames::Waveform& W_A;
   const GWFrames::Waveform& W_B;
@@ -2281,7 +2280,7 @@ public:
 public:
   WaveformAligner(const GWFrames::Waveform& iW_A, const GWFrames::Waveform& iW_B,
                   const double t_1, const double t_2, const bool iDebug, const Quaternions::Quaternion& nHat_A)
-    : R_fA(iW_A.Frame()), nHat_A_mid(nHat_A), branch(1.0,0.0,0.0,0.0),
+    : R_fA(iW_A.Frame()), nHat_A_mid(nHat_A),
       t_A(iW_A.T()), W_A(iW_A), W_B(iW_B), t_mid((t_1+t_2)/2.),
       R_epsB(0), R_epsB_is_set(false), Rbar_epsB_i(0), OptimalType(0), Debug(iDebug),
       myfile()
@@ -2358,22 +2357,6 @@ public:
     return Quaternions::conjugate(R_epsB[Rbar_epsB_i]);
   }
 
-  void set_branch(const unsigned int branch_choice) {
-    if(branch_choice==0) {
-      branch = Quaternions::One;
-    } else if(branch_choice==1) {
-      branch = -Quaternions::One;
-    } else if(branch_choice==2) {
-      branch = Quaternions::zHat;
-    } else if(branch_choice==3) {
-      branch = -Quaternions::zHat;
-    } else {
-      INFOTOCERR << ": branch_choice " << branch_choice << " is not recognized." << std::endl;
-      throw(GWFrames_ValueError);
-    }
-    return;
-  }
-
   void FindBestMinimizationWaveform(const std::vector<std::vector<double> >& optima, const std::vector<bool>& try_version,
                                     double& deltat, Quaternion& R_delta, Quaternion& R_eps) const {
     using namespace Quaternions; // Allow me to add a double to a vector<double> below
@@ -2428,7 +2411,7 @@ public:
 
   double EvaluateMinimizationQuantity(const double deltat, const double deltax, const double deltay, const double deltaz) const {
     using namespace Quaternions; // Allow me to add a double to a vector<double> below
-    const Quaternions::Quaternion R_eps = W_B.GetAlignmentOfDecompositionFrameToModes(t_mid+deltat, Quaternions::xHat) * branch;
+    const Quaternions::Quaternion R_eps = W_B.GetAlignmentOfDecompositionFrameToModes(t_mid+deltat, Quaternions::xHat);
     const Quaternions::Quaternion R_delta = Quaternions::exp(Quaternions::Quaternion(0, deltax, deltay, deltaz));
     const std::vector<Quaternions::Quaternion> R_Bprime = Quaternions::Squad(R_delta * W_B.Frame() * R_eps, W_B.T(), t_A+deltat);
     const unsigned int Size=R_Bprime.size();
@@ -2441,7 +2424,7 @@ public:
     }
     if(Debug) {
       myfile << std::setprecision(15);
-      myfile << deltat << " " << deltax << " " << deltay << " " << deltaz << " " << branch << " " << f << std::endl;
+      myfile << deltat << " " << deltax << " " << deltay << " " << deltaz << " " << f << std::endl;
     }
     return f;
   }
@@ -2691,9 +2674,6 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
   size_t iter_tot = 0;
   for(unsigned int branch_choice=0; branch_choice<4; ++branch_choice) {
     if(try_branch[branch_choice]) {
-      Aligner.set_branch(0); //
-      branch_choice);
-
       const unsigned int NDimensions = 4;
       const unsigned int MaxIterations = 2000;
       const double MinSimplexSize = 2.0e-9;
