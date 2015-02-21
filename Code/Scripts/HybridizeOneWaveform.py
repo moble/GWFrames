@@ -34,7 +34,7 @@ import GWFrames.plot
 import Quaternions
 
 def Hybridize(PathToSystem, Waveform='rhOverM_Asymptotic_GeometricUnits.h5/Extrapolated_N2.dir',
-              t1=1000.0, t2=-sys.float_info.max, InitialOmega_orb=0.0, DirectAlignmentEvaluations=0, Approximant='TaylorT1',
+              t1=200.0, t2=-sys.float_info.max, InitialOmega_orb=0.0, DirectAlignmentEvaluations=0, Approximant='TaylorT1',
               PlotFileName='Hybridization.pdf', HybridFileName='Hybrid.h5', MinStepsPerOrbit=32,
               PNWaveformModeOrder=3.5, PNOrbitalEvolutionOrder=4.0, Debug=False):
 
@@ -42,6 +42,7 @@ def Hybridize(PathToSystem, Waveform='rhOverM_Asymptotic_GeometricUnits.h5/Extra
 
     # Read the Waveform from the file, and transform to co-rotating frame
     W_NR_corot = GWFrames.ReadFromNRAR(os.path.join(PathToSystem, Waveform))
+    W_NR_corot.DropTimesOutside(0.0, W_NR_corot.T(W_NR_corot.NTimes()-1));
     if Debug:
         W_NR_orig = GWFrames.Waveform(W_NR_corot)
     W_NR_corot.TransformToCorotatingFrame();
@@ -171,8 +172,8 @@ if __name__ == "__main__" :
                         help="Path (relative or absolute) to the data directory containing the system's waveform and horizon data")
     parser.add_argument('--Waveform', default='rhOverM_Asymptotic_GeometricUnits.h5/Extrapolated_N2.dir',
                         help='Path (relative to `PathToSystem`) in which to find the waveform data [default: rhOverM_Asymptotic_GeometricUnits.h5/Extrapolated_N2.dir]')
-    parser.add_argument('--t1', type=float, default=1000.0,
-                        help='Beginning of alignment/hybridization interval [default: 1000.0 from the beginning of NR]')
+    parser.add_argument('--t1', type=float, default=200.0,
+                        help='Beginning of alignment/hybridization interval [default: 200.0 from the beginning of NR]')
     parser.add_argument('--t2', type=float, default=-sys.float_info.max,
                         help='End of alignment/hybridization interval [default: 20%% closer to merger than t1]')
     parser.add_argument('--InitialOmega_orb', type=float, default=0.0,
