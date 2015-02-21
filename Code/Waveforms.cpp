@@ -2274,13 +2274,13 @@ public:
   bool R_epsB_is_set;
   mutable unsigned int Rbar_epsB_i; // Just a guess to speed up hunting for the index
   const bool Debug;
-  mutable ofstream myfile;
+  mutable ofstream UpsilonFile;
 public:
   WaveformAligner(const GWFrames::Waveform& iW_A, const GWFrames::Waveform& iW_B,
                   const double t_1, const double t_2, const bool iDebug)
     : R_fA(iW_A.Frame()), t_A(iW_A.T()), W_A(iW_A), W_B(iW_B), t_mid((t_1+t_2)/2.),
       R_epsB(0), R_epsB_is_set(false), Rbar_epsB_i(0), Debug(iDebug),
-      myfile()
+      UpsilonFile()
   {
     // Check to make sure we have sufficient times before any offset.
     // (This is necessary but not sufficient for the method to work.)
@@ -2318,15 +2318,16 @@ public:
     R_fA.erase(R_fA.begin(), R_fA.begin()+i);
 
     if(Debug) {
-      INFOTOCERR << "\tOutput to UpsilonIntegral.dat" << std::endl;
-      myfile.open("UpsilonIntegral.dat");
-      myfile << "# deltat f1 f2 f3 f4 deltax deltay deltaz" << std::endl;
+      INFOTOCERR << "Output to UpsilonIntegral.dat" << std::endl;
+      UpsilonFile.open("UpsilonIntegral.dat");
+      UpsilonFile << "# deltat deltax deltay deltaz f" << std::endl;
     }
   }
 
   ~WaveformAligner() {
-    if(myfile.is_open()) {
-      myfile.close();
+    if(UpsilonFile.is_open()) {
+      INFOTOCERR << "Output to UpsilonIntegral.dat finished" << std::endl;
+      UpsilonFile.close();
     }
   }
 
@@ -2400,7 +2401,7 @@ public:
       R_delta = Quaternions::exp(Quaternions::Quaternion(0.0, optima[3][1], optima[3][2], optima[3][3]));
       R_eps=-R_eps0*Quaternions::zHat;
     } else {
-      INFOTOCERR << ": Somehow, I found a min norm that wasn't equal to itself..." << std::endl;
+      INFOTOCERR << "Somehow, I found a min norm that wasn't equal to itself..." << std::endl;
       throw(GWFrames_ValueError);
     }
     return;
@@ -2420,8 +2421,8 @@ public:
       fdot_last = fdot;
     }
     if(Debug) {
-      myfile << std::setprecision(15);
-      myfile << deltat << " " << deltax << " " << deltay << " " << deltaz << " " << f << std::endl;
+      UpsilonFile << std::setprecision(15);
+      UpsilonFile << deltat << " " << deltax << " " << deltay << " " << deltaz << " " << f << std::endl;
     }
     return f;
   }
@@ -2485,11 +2486,11 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
 
   // Make sure W_A and W_B are in their co-rotating frames
   if(W_A.FrameType()==GWFrames::Inertial) {
-    INFOTOCOUT << "\tTransforming input Waveform A (in place) to co-rotating frame." << std::endl;
+    INFOTOCOUT << "Transforming input Waveform A (in place) to co-rotating frame." << std::endl;
     W_A.TransformToCorotatingFrame();
   }
   if(W_B.FrameType()==GWFrames::Inertial) {
-    INFOTOCOUT << "\tTransforming input Waveform B (in place) to co-rotating frame." << std::endl;
+    INFOTOCOUT << "Transforming input Waveform B (in place) to co-rotating frame." << std::endl;
     W_B.TransformToCorotatingFrame();
   }
   if(W_A.FrameType()!=GWFrames::Corotating || W_B.FrameType()!=GWFrames::Corotating) {
@@ -2517,7 +2518,7 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
 
   Quaternion R_delta;
   const double t_mid = (t_1+t_2)/2.;
-  ofstream myfile;
+  ofstream XiFile;
 
   // We have two time offsets: deltat_1 being the most negative
   // number; deltat_2 being the most positive number.  These are the
@@ -2585,13 +2586,14 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
     }
 
     if(Debug) {
-      INFOTOCERR << "\tOutput to XiIntegral.dat" << std::endl;
-      myfile.open ("XiIntegral.dat");
-      myfile << "# deltats[i] |Xi1| |Xi2| "
-             << "Xi1.w Xi1.x Xi1.y Xi1.z Xi2.w Xi2.x Xi2.y Xi2.z "
-             << "Upsilon1a Upsilon1b Upsilon2a Upsilon2b"
+      INFOTOCERR << "Output to XiIntegral.dat" << std::endl;
+      XiFile.open ("XiIntegral.dat");
+      XiFile << "# deltats[i] |Xi1| |Xi2| "
+             << "Xi1.w Xi1.x Xi1.y Xi1.z "
+             << "Xi2.w Xi2.x Xi2.y Xi2.z "
+             << "Upsilon(Xi1) Upsilon(-Xi1) Upsilon(Xi2) Upsilon(-Xi2)"
              << std::endl;
-      myfile << std::setprecision(15);
+      XiFile << std::setprecision(15);
     }
 
     for(unsigned int i=0; i<XiIntegral1.size(); ++i) {
@@ -2634,7 +2636,7 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
         optima[3][3] = NegativeR_delta_log2[3];
       }
       if(Debug) {
-        myfile << deltats[i] << " "
+        XiFile << deltats[i] << " "
                << 2*(t_2 - t_1 - Quaternions::abs(XiIntegral1[i])) << " "
                << 2*(t_2 - t_1 - Quaternions::abs(XiIntegral2[i])) << " "
                << XiIntegral1[i].str() << " " << XiIntegral2[i].str() << " "
@@ -2644,23 +2646,27 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
     }
 
     if(Debug) {
-      myfile.close();
-      INFOTOCERR << "\tOutput to XiIntegral.dat finished" << std::endl;
+      XiFile.close();
+      INFOTOCERR << "Output to XiIntegral.dat finished" << std::endl;
     }
 
-    INFOTOCOUT << "Objective function=(" << Upsilon[0] << "," << Upsilon[1] << "," << Upsilon[2] << "," << Upsilon[3] << ")\n";
-    INFOTOCOUT << "         at deltat=(" << optima[0][0] << "," << optima[1][0] << "," << optima[2][0] << "," << optima[3][0] << ")"
-               << std::endl;
+    INFOTOCOUT << "Objective function values:\n";
+    for(unsigned int j=0; j<4; ++j) {
+      INFOTOCOUT << "\tUpsilon(deltat=" << optima[j][0] << ", r_delta=[" << optima[j][1] << "," << optima[j][2]
+                 << "," << optima[j][3] << "]) = " << Upsilon[j] << std::endl;
+    }
+
+
   }
 
   gettimeofday(&now, NULL); unsigned long long tThen = now.tv_usec + (unsigned long long)now.tv_sec * 1000000;
-  INFOTOCOUT << "\tFirst stage took " << (tThen-tNow)/1000000.0L << " seconds." << std::endl;
+  INFOTOCOUT << "First stage took " << (tThen-tNow)/1000000.0L << " seconds." << std::endl;
 
   { // Decide which of the four possible minima to test further
     const double Upsilon_max = std::max(std::max(std::max(Upsilon[0], Upsilon[1]), Upsilon[2]), Upsilon[3]);
     const double Upsilon_min = std::min(std::min(std::min(Upsilon[0], Upsilon[1]), Upsilon[2]), Upsilon[3]);
     for(unsigned int j=0; j<4; ++j) {
-      if((Upsilon[j]-Upsilon_min)<(Upsilon_max-Upsilon_min)*1e-8) { try_branch[j] = true; }
+      if((Upsilon[j]-Upsilon_min)<(Upsilon_max-Upsilon_min)*1e-4) { try_branch[j] = true; }
     }
   }
 
@@ -2714,17 +2720,17 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
         status = gsl_multimin_fminimizer_iterate(s);
 
         if(status==GSL_EBADFUNC) {
-          INFOTOCERR << ":\nThe iteration encountered a singular point where the function evaluated to Inf or NaN"
+          INFOTOCERR << "\nThe iteration encountered a singular point where the function evaluated to Inf or NaN"
                      << "\nwhile minimizing at (" << gsl_vector_get(s->x, 0) << ", " << gsl_vector_get(s->x, 1)
                      << ", " << gsl_vector_get(s->x, 2) << ", " << gsl_vector_get(s->x, 3) << ")." << std::endl;
         }
 
         if(status==GSL_FAILURE) {
-          INFOTOCERR << ":\nThe algorithm could not improve the current best approximation or bounding interval." << std::endl;
+          INFOTOCERR << "\nThe algorithm could not improve the current best approximation or bounding interval." << std::endl;
         }
 
         if(status==GSL_ENOPROG) {
-          INFOTOCERR << ":\nThe minimizer is unable to improve on its current estimate, either due to"
+          INFOTOCERR << "\nThe minimizer is unable to improve on its current estimate, either due to"
                      << "\nnumerical difficulty or because a genuine local minimum has been reached." << std::endl;
         }
 
@@ -2748,10 +2754,10 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
       // Get value of objective function here
       Upsilon[branch_choice] = s->fval;
 
-      INFOTOCOUT << "Objective function Upsilon=" << s->fval
-                 << " at deltat=" << optima[branch_choice][0]
-                 << " for branch_choice=" << branch_choice
-                 << " after " << iter << " iterations." << std::endl;
+      INFOTOCOUT << "Objective function value for branch_choice=" << branch_choice
+                 << " after " << iter << " iterations:\n";
+      INFOTOCOUT << "\tUpsilon(deltat=" << optima[branch_choice][0] << ", r_delta=[" << optima[branch_choice][1]
+                 << "," << optima[branch_choice][2] << "," << optima[branch_choice][3] << "]) = " << Upsilon[branch_choice] << std::endl;
 
       // Free allocated memory
       gsl_vector_free(x);
@@ -2781,7 +2787,7 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
     W_B.SetFrame(R_delta*W_B.Frame());
 
     gettimeofday(&now, NULL); unsigned long long tWhen = now.tv_usec + (unsigned long long)now.tv_sec * 1000000;
-    INFOTOCOUT << "\tSecond stage took " << (tWhen-tThen)/1000000.0L
+    INFOTOCOUT << "Second stage took " << (tWhen-tThen)/1000000.0L
                << " seconds with " << iter_tot << " iterations." << std::endl;
   }
 
