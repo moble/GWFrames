@@ -2770,7 +2770,7 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
     const double Upsilon_max = std::max(std::max(std::max(Upsilon[0], Upsilon[1]), Upsilon[2]), Upsilon[3]);
     const double Upsilon_min = std::min(std::min(std::min(Upsilon[0], Upsilon[1]), Upsilon[2]), Upsilon[3]);
     for(unsigned int j=0; j<4; ++j) {
-      if((Upsilon[j]-Upsilon_min)<(Upsilon_max-Upsilon_min)*1e-8) {
+      if((Upsilon[j]-Upsilon_min)<(Upsilon_max-Upsilon_min)*1e-4) {
         try_branch[j] = true;
       } else {
         try_branch[j] = false;
