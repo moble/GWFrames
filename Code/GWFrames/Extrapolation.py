@@ -843,6 +843,14 @@ def _Extrapolate(FiniteRadiusWaveforms, Radii, ExtrapolationOrders, Omegas=None)
                   "\n")
             raise ValueError("GWFrames_VectorSizeMismatch")
 
+    # Set up the containers that will be used to store the data during
+    # extrapolation.  These are needed so that we don't have to make too many
+    # calls to Waveform object methods, which have to go through the _Waveform
+    # wrapper, and are therefore slow.
+    data = numpy.array([W.Data() for W in FiniteRadiusWaveforms])
+    data = data.view(dtype=float).reshape((data.shape[0], data.shape[1], data.shape[2], 2))
+    extrapolated_data = numpy.empty((NExtrapolations, NModes, NTimes), dtype=complex)
+
     # Set up the output data, recording everything but the mode data
     ExtrapolatedWaveforms = [None]*NExtrapolations
     for i_N in range(NExtrapolations):
@@ -870,7 +878,7 @@ def _Extrapolate(FiniteRadiusWaveforms, Radii, ExtrapolationOrders, Omegas=None)
     for i_t in range(NTimes):
         if stdout.isatty():
             completed = int(LengthProgressBar*i_t/float(NTimes-1))
-            if(completed>last_completed):
+            if(completed>last_completed or i_t==0):
                 print("[{0}{1}]".format('#'*completed, '-'*(LengthProgressBar-completed)), end="\r")
                 stdout.flush()
                 last_completed=completed
@@ -879,8 +887,10 @@ def _Extrapolate(FiniteRadiusWaveforms, Radii, ExtrapolationOrders, Omegas=None)
         if not UseOmegas:
             OneOverRadii = [1.0/Radii[i_W][i_t] for i_W in range(NFiniteRadii)]
 
-            Re = [[FiniteRadiusWaveforms[i_W].Re(i_m,i_t)  for i_m in range(NModes)] for i_W in range(NFiniteRadii)]
-            Im = [[FiniteRadiusWaveforms[i_W].Im(i_m,i_t)  for i_m in range(NModes)] for i_W in range(NFiniteRadii)]
+            Re = data[:, :, i_t, 0]
+            Im = data[:, :, i_t, 1]
+            # Re = [[FiniteRadiusWaveforms[i_W].Re(i_m,i_t)  for i_m in range(NModes)] for i_W in range(NFiniteRadii)]
+            # Im = [[FiniteRadiusWaveforms[i_W].Im(i_m,i_t)  for i_m in range(NModes)] for i_W in range(NFiniteRadii)]
 
             # Loop over extrapolation orders
             for i_N in range(NExtrapolations):
@@ -897,7 +907,8 @@ def _Extrapolate(FiniteRadiusWaveforms, Radii, ExtrapolationOrders, Omegas=None)
 
                 # Record the results
                 for i_m in range(NModes):
-                    ExtrapolatedWaveforms[i_N].SetData(i_m, i_t, re[i_m]+1j*im[i_m])
+                    extrapolated_data[i_N, i_m, i_t] = re[i_m]+1j*im[i_m]
+                    # ExtrapolatedWaveforms[i_N].SetData(i_m, i_t, re[i_m]+1j*im[i_m])
 
         else: # UseOmegas
 
@@ -915,11 +926,13 @@ def _Extrapolate(FiniteRadiusWaveforms, Radii, ExtrapolationOrders, Omegas=None)
                     #         OneOverRadii[i_W, i_N] = OneOverRadius*OneOverRadii[i_W, i_N-1]
 
                 # Set up the mode data
-                Re = numpy.empty([NFiniteRadii,])
-                Im = numpy.empty([NFiniteRadii,])
-                for i_W in range(NFiniteRadii):
-                    Re[i_W] = FiniteRadiusWaveforms[i_W].Re(i_m,i_t)
-                    Im[i_W] = FiniteRadiusWaveforms[i_W].Im(i_m,i_t)
+                # Re = numpy.empty([NFiniteRadii,])
+                # Im = numpy.empty([NFiniteRadii,])
+                # for i_W in range(NFiniteRadii):
+                #     Re[i_W] = FiniteRadiusWaveforms[i_W].Re(i_m,i_t)
+                #     Im[i_W] = FiniteRadiusWaveforms[i_W].Im(i_m,i_t)
+                Re = data[:, i_m, i_t, 0]
+                Im = data[:, i_m, i_t, 1]
 
                 # Loop over extrapolation orders
                 for i_N in range(NExtrapolations):
@@ -938,7 +951,13 @@ def _Extrapolate(FiniteRadiusWaveforms, Radii, ExtrapolationOrders, Omegas=None)
                     # re = FitCoefficients_N.vector[0]
                     # gsl_multifit_linear_usvd(OneOverRadii_N.matrix, Im, SVDTol)
                     # im = FitCoefficients_N.vector[0]
-                    ExtrapolatedWaveforms[i_N].SetData(i_m, i_t, re+1j*im)
+                    extrapolated_data[i_N, i_m, i_t] = re+1j*im
+                    # ExtrapolatedWaveforms[i_N].SetData(i_m, i_t, re+1j*im)
+
+    for i_N in range(NExtrapolations):
+        N = ExtrapolationOrders[i_N]
+        if(N>=0):
+            ExtrapolatedWaveforms[i_N].SetData(extrapolated_data[i_N])
 
     print("")
 
