@@ -21,7 +21,7 @@ import os.path
 import numpy as np
 import h5py
 import matplotlib as mpl
-mpl.use('Agg')  # Must after importing mpl, but before importing plt
+mpl.use('Agg')  # Must come after importing mpl, but before importing plt
 import matplotlib.pyplot as plt
 
 try : # If this matplotlib is too old, just ignore this

@@ -2382,6 +2382,7 @@ public:
         const std::vector<double> Time = W_B_interp.T();
         Norms[branch_choice] = GWFrames::CumulativeScalarIntegral(Norm, Time);
       }
+      INFOTOCOUT << "Norms[" << branch_choice << "]=" << Norms[branch_choice] << std::endl;
     }
     const double min_norm = std::min(std::min(std::min(Norms[0], Norms[1]), Norms[2]), Norms[3]);
     if(Norms[0]==min_norm) {
