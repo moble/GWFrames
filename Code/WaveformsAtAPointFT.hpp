@@ -28,7 +28,8 @@ namespace GWFrames {
                        const double TotalMass, // In solar masses
                        const unsigned int WindowNCycles=1,
                        const double DetectorResponseAmp=1.0,
-                       const double DetectorResponsePhase=0.0);
+                       const double DetectorResponsePhase=0.0,
+                       const unsigned int ExtraZeroPadPowers=0);
 
   public: // Access functions
     /// Returns the physical frequencies in Hz

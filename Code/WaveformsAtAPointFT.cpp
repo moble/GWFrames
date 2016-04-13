@@ -44,13 +44,17 @@ GWFrames::WaveformAtAPointFT::WaveformAtAPointFT(const GWFrames::Waveform& W,
                                                  const double TotalMass,
                                                  const unsigned int WindowNCycles,
                                                  const double DetectorResponseAmp,
-                                                 const double DetectorResponsePhase)
+                                                 const double DetectorResponsePhase,
+                                                 const unsigned int ExtraZeroPadPowers)
 : mDt(Dt), mVartheta(Vartheta), mVarphi(Varphi), mNormalized(false)
 {
 
   // Interpolate to an even time spacing dt whose size is the next power of 2
+  // Then zero pad for additional powers of 2 if requested (may be needed for
+  // more fine-grained control of time and phase offsets)
   const unsigned int N1 = (unsigned int)(std::floor((W.T().back()-W.T(0))/Dt));
-  const unsigned int N2 = (unsigned int)(std::pow(2.0,ceil(log2(N1))));
+  const unsigned int NPow = ceil(log2(N1)) + ExtraZeroPadPowers;
+  const unsigned int N2 = (unsigned int)(std::pow(2.0, NPow));
   vector<double> NewTimes(N2);
   for(unsigned int i=0; i<N2; ++i) {
     NewTimes[i] = W.T(0) + i*Dt;
