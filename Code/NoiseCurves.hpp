@@ -13,6 +13,7 @@ namespace WaveformUtilities {
   ///   AdvLIGO_ZeroDet_HighP -- LIGO-T0900288-v3
   ///   AdvLIGO_ZeroDet_LowP -- LIGO-T0900288-v3
   ///   AdvLIGO_NSNSOptimal -- Collin Capano's fit for the NS-NS optimized noise curve
+  ///   Flat -- Uses a PSD equal to one everywhere
   std::vector<double> NoiseCurve(const std::vector<double>& F,
                                  const std::string& Detector="AdvLIGO_ZeroDet_HighP",
                                  const bool Invert=false,

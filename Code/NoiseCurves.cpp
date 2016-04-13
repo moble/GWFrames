@@ -99,6 +99,10 @@ vector<double> IniLIGO_Approx(const vector<double>& F, const bool Invert=false, 
   return PSD;
 }
 
+vector<double> Flat(const vector<double>& F) {
+  return vector<double>(F.size(), 1.0);
+}
+
 vector<double> WU::NoiseCurve(const vector<double>& F, const string& Detector, const bool Invert, const double NoiseFloor) {
   if(Detector.compare("AdvLIGO_NSNSOptimal")==0) {
     return AdvLIGO_NSNSOptimal(F, Invert, NoiseFloor);
@@ -108,6 +112,8 @@ vector<double> WU::NoiseCurve(const vector<double>& F, const string& Detector, c
     return AdvLIGO_ZeroDet_LowP(F, Invert, NoiseFloor);
   } else if(Detector.compare("IniLIGO_Approx")==0) {
     return IniLIGO_Approx(F, Invert, NoiseFloor);
+  } else if(Detector.compare("Flat")==0) {
+    return Flat(F);
   } else {
     cerr << "\nUnknown Detector type: '" << Detector << "'" << endl;
     throw(GWFrames_UnknownDetector);
