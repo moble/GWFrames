@@ -150,7 +150,7 @@ namespace GWFrames {
 
   WaveformAtAPointFT& WaveformAtAPointFT::Normalize(const std::string& Detector)
   {
-    return Normalize(WU::NoiseCurve(F(), Detector, true));
+    return Normalize(WU::InverseNoiseCurve(F(), Detector));
   }
 
   WaveformAtAPointFT& WaveformAtAPointFT::ZeroAbove(const double Frequency)
@@ -186,7 +186,7 @@ namespace GWFrames {
 
   vector<double> WaveformAtAPointFT::InversePSD(const std::string& Detector) const
   {
-    return WU::NoiseCurve(F(), Detector, true);
+    return WU::InverseNoiseCurve(F(), Detector);
   }
 
   double WaveformAtAPointFT::SNR(const std::vector<double>& InversePSD) const
@@ -207,7 +207,7 @@ namespace GWFrames {
   double WaveformAtAPointFT::SNR(const std::string& Detector) const
   {
     /// \param[in] Detector Noise spectrum from this detector
-    return SNR(WU::NoiseCurve(F(), Detector, true));
+    return SNR(WU::InverseNoiseCurve(F(), Detector));
   }
 
   /// Compute the match between two WaveformAtAPointFT
@@ -271,7 +271,7 @@ namespace GWFrames {
                                  double& phaseOffset, double& match,
                                  const std::string& Detector) const
   {
-    Match(B, WU::NoiseCurve(F(), Detector, true), timeOffset, phaseOffset, match);
+    Match(B, WU::InverseNoiseCurve(F(), Detector), timeOffset, phaseOffset, match);
     return;
   }
 
@@ -288,7 +288,7 @@ namespace GWFrames {
   double WaveformAtAPointFT::Match(const WaveformAtAPointFT& B,
                                    const std::string& Detector) const
   {
-    return Match(B, WU::NoiseCurve(F(), Detector, true));
+    return Match(B, WU::InverseNoiseCurve(F(), Detector));
   }
 
 }
