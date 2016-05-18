@@ -414,7 +414,7 @@ def ReadFromNRAR(FileName) :
     try :
         try :
             # Add the old history to the new history, if found
-            OldHistory = f['History.txt'][()]
+            OldHistory = f['History.txt'][()].encode('ascii','ignore')
             W.AppendHistory("# <previous_history>\n#" + OldHistory.replace('\n','\n#') + "# </previous_history>\n")
         except KeyError :
             pass # Did not find a history
