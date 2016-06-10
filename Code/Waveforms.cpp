@@ -587,12 +587,13 @@ GWFrames::Waveform& GWFrames::Waveform::Differentiate() {
   data = MatrixC(NewData);
 
   boostweight -= 1;
-  if(dataType == GWFrames::h) { dataType = GWFrames::hdot; }
-  if(dataType == GWFrames::hdot) { dataType = GWFrames::Psi4; }
-  if(dataType == GWFrames::Psi4) { dataType = GWFrames::UnknownDataType; }
-  std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
-            << "\nWarning: Tracking the Waveform data type is not yet correct.  For Differentiate"
-            << "\n resulting in Psi4, the real part of the data should be negated.\n\n" << std::endl;
+  if(dataType == GWFrames::h) {
+    dataType = GWFrames::hdot;
+  } else if(dataType == GWFrames::hdot) {
+    dataType = GWFrames::Psi4;
+  } else {
+    dataType = GWFrames::UnknownDataType;
+  }
   history << "this->Differentiate();" << std::endl;
 
   return *this;
