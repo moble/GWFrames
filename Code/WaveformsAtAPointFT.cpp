@@ -215,6 +215,9 @@ namespace GWFrames {
   }
 
   /// Compute the match between two WaveformAtAPointFT
+  /// NOTE: in python, the values for timeOffset, phaseOffset, and match are
+  /// also part of the return value (even though Match returns void), e.g.:
+  ///   timeOffset, phaseOffset, match = Match(...)
   void WaveformAtAPointFT::Match(const WaveformAtAPointFT& B,
                                  const std::vector<double>& InversePSD,
                                  double& timeOffset, double& phaseOffset,
@@ -271,6 +274,9 @@ namespace GWFrames {
   }
 
   /// Compute the match between two WaveformAtAPointFT
+  /// NOTE: in python, the values for timeOffset, phaseOffset, and match are
+  /// also part of the return value (even though Match returns void), e.g.:
+  ///   timeOffset, phaseOffset, match = Match(...)
   void WaveformAtAPointFT::Match(const WaveformAtAPointFT& B, double& timeOffset,
                                  double& phaseOffset, double& match,
                                  const std::string& Detector) const
