@@ -225,7 +225,7 @@ namespace GWFrames {
   {
     /// \param[in] B WaveformAtAPointFT to compute match with
     /// \param[in] InversePSD Spectrum used to weight contributions by frequencies to match
-    /// \param[out] timeOffset Time offset used between the waveforms
+    /// \param[out] timeOffset Time offset (in seconds) between the waveforms
     /// \param[out] phaseOffset Phase offset used between the waveforms
     /// \param[out] match Match between the two waveforms
     const unsigned int n = NFreq(); // Only positive frequencies are stored in t
@@ -260,8 +260,8 @@ namespace GWFrames {
       const double mag = std::sqrt(sqr(data.real(i)) + sqr(data.imag(i)));
       if(mag>maxmag) { maxmag = mag; maxi = int(i); }
     }
-    // note: assumes N is even
-    timeOffset = (maxi<N/2 ? double(maxi)/(N*df) : double(maxi-int(N))/(N*df));
+    // note: assumes N is even and N >= maxi
+    timeOffset = (maxi<N/2 ? double(maxi)/(N*df) : -double(N-maxi)/(N*df));
     phaseOffset = atan2(data.imag(maxi), data.real(maxi))/2.0;
     /// The return from ifft is just the bare FFT sum, so we multiply by
     /// df to get the continuum-analog FT.  This is correct because the
