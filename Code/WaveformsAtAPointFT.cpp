@@ -54,7 +54,7 @@ GWFrames::WaveformAtAPointFT::WaveformAtAPointFT(const GWFrames::Waveform& W,
   // more fine-grained control of time and phase offsets)
   const unsigned int N1 = (unsigned int)(std::floor((W.T().back()-W.T(0))/Dt));
   const unsigned int NPow = ceil(log2(N1)) + ExtraZeroPadPowers;
-  const unsigned int N2 = (unsigned int)(std::pow(2.0, NPow));
+  const unsigned int N2 = (unsigned int)(std::pow(2.0, double(NPow)));
   vector<double> NewTimes(N2);
   for(unsigned int i=0; i<N2; ++i) {
     NewTimes[i] = W.T(0) + i*Dt;
