@@ -323,9 +323,9 @@ def ReadFromH5(FileName) :
         # Initialize the Waveform object
         W = Waveform()
         # Record the filename being read in
-        W.AppendHistory("*this = GWFrames.ReadFromH5(FileName='{0}')\n".format(FileName))
+        W.AppendHistory(str("*this = GWFrames.ReadFromH5(FileName='{0}')\n".format(FileName)))
         # Add the old history to the new history
-        W.AppendHistory("# <previous_history>\n#" + f['History'][()].replace('\n','\n#') + "# </previous_history>\n")
+        W.AppendHistory(str("# <previous_history>\n#" + f['History'][()].replace('\n','\n#') + "# </previous_history>\n"))
         # Get the time data
         W.SetTime(f['Time'])
         # Get the frame data, converting to GWFrame.Quaternion objects
@@ -396,7 +396,7 @@ def ReadFromNRAR(FileName) :
     # Initialize the Waveform object
     W = Waveform()
     # Record the filename being read in
-    W.AppendHistory("*this = GWFrames.ReadFromNRAR(FileName='{0}')\n".format(FileName))
+    W.AppendHistory(str("*this = GWFrames.ReadFromNRAR(FileName='{0}')\n".format(FileName)))
     try :
         FileName, RootGroup = FileName.rsplit('.h5', 1)
         FileName += '.h5'
@@ -415,7 +415,7 @@ def ReadFromNRAR(FileName) :
         try :
             # Add the old history to the new history, if found
             OldHistory = f['History.txt'][()].encode('ascii','ignore')
-            W.AppendHistory("# <previous_history>\n#" + OldHistory.replace('\n','\n#') + "# </previous_history>\n")
+            W.AppendHistory(str("# <previous_history>\n#" + OldHistory.replace('\n','\n#') + "# </previous_history>\n"))
         except KeyError :
             pass # Did not find a history
         # Get the frame data, converting to Quaternions.Quaternion objects

@@ -222,7 +222,7 @@ def ReadFiniteRadiusData(ChMass=0.0, filename='rh_FiniteRadii_CodeUnits.h5', Coo
                 stdout.write(WaveformNameString); stdout.flush()
                 PrintedLine += WaveformNameString
             Radii[n] = ReadFiniteRadiusWaveform(n, filename, WaveformNames[n], ChMass, InitialAdmEnergy, YLMRegex, LModes, DataType, Ws)
-            Ws[n].AppendHistory("### # Python read from '{0}/{1}'.\n".format(filename,WaveformNames[n]))
+            Ws[n].AppendHistory(str("### # Python read from '{0}/{1}'.\n".format(filename,WaveformNames[n])))
     finally :
         f.close()
     return Ws,Radii,CoordRadii
@@ -518,7 +518,7 @@ def Extrapolate(**kwargs) :
             print("☺"); stdout.flush()
 
         # Append the relevant information to the history
-        ExtrapolatedWaveforms[i].AppendHistory(InputArguments)
+        ExtrapolatedWaveforms[i].AppendHistory(str(InputArguments))
 
         # Output the data
         ExtrapolatedFile = OutputDirectory+ExtrapolatedFiles.format(N=ExtrapolationOrder)
@@ -860,7 +860,7 @@ def _Extrapolate(FiniteRadiusWaveforms, Radii, ExtrapolationOrders, Omegas=None)
         else:
             # Do everything but set the data
             ExtrapolatedWaveforms[i_N] = GWFrames.Waveform(FiniteRadiusWaveforms[NFiniteRadii-1].CopyWithoutData())
-            ExtrapolatedWaveforms[i_N].AppendHistory("### Extrapolating with N={0}\n".format(N))
+            ExtrapolatedWaveforms[i_N].AppendHistory(str("### Extrapolating with N={0}\n".format(N)))
             ExtrapolatedWaveforms[i_N].SetT(FiniteRadiusWaveforms[NFiniteRadii-1].T())
             ExtrapolatedWaveforms[i_N].SetFrame(FiniteRadiusWaveforms[NFiniteRadii-1].Frame())
             ExtrapolatedWaveforms[i_N].SetLM(FiniteRadiusWaveforms[NFiniteRadii-1].LM())
