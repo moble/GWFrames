@@ -663,6 +663,14 @@ std::string GWFrames::Waveform::DescriptorString() const {
       Descriptor = Descriptor + DataTypeString(); // hdot is independent of M
     else if(DataType()==Psi4)
       Descriptor = Descriptor + "M" + DataTypeString();
+    else if(DataType()==Psi3)
+      Descriptor = Descriptor + DataTypeString();
+    else if(DataType()==Psi2)
+      Descriptor = Descriptor + DataTypeString() + "OverM";
+    else if(DataType()==Psi1)
+      Descriptor = Descriptor + DataTypeString();
+    else if(DataType()==Psi0)
+      Descriptor = Descriptor + "M" + DataTypeString();
   } else {
     Descriptor = Descriptor + DataTypeString();
   }

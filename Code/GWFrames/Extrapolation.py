@@ -139,15 +139,32 @@ def ReadFiniteRadiusWaveform(n, filename, WaveformName, ChMass, InitialAdmEnergy
         Ws[n].SetMIsScaledOut(True) # We have made this true
         Ws[n].SetLM(LM)
         Data = empty((NModes, NTimes), dtype='complex')
+
+        RadiusRatio = Radii / CoordRadius
+
         if(DataType == GWFrames.h) :
             UnitScaleFactor = 1.0 / ChMass
+            RadiusRatio = Radii / CoordRadius
         elif(DataType == GWFrames.hdot) :
             UnitScaleFactor = 1.0
+            RadiusRatio = Radii / CoordRadius
         elif(DataType == GWFrames.Psi4) :
             UnitScaleFactor = ChMass
+            RadiusRatio = Radii / CoordRadius
+        elif(DataType == GWFrames.Psi3) :
+            UnitScaleFactor = 1.0
+            RadiusRatio = Radii / CoordRadius**2
+        elif(DataType == GWFrames.Psi2) :
+            UnitScaleFactor = 1.0 / ChMass
+            RadiusRatio = Radii / CoordRadius**3
+        elif(DataType == GWFrames.Psi1) :
+            UnitScaleFactor = 1.0
+            RadiusRatio = Radii / CoordRadius**4
+        elif(DataType == GWFrames.Psi0) :
+            UnitScaleFactor = ChMass
+            RadiusRatio = Radii / CoordRadius**5
         else :
             raise ValueError('DataType "{0}" is unknown.'.format(DataType))
-        RadiusRatio = Radii / CoordRadius
         for m,DataSet in enumerate(YLMdata) :
             modedata = array(W[DataSet])
             Data[m,:] = (modedata[Indices,1] + 1j*modedata[Indices,2]) * RadiusRatio * UnitScaleFactor
@@ -204,9 +221,17 @@ def ReadFiniteRadiusData(ChMass=0.0, filename='rh_FiniteRadii_CodeUnits.h5', Coo
             DataType = GWFrames.h
         elif('psi4' in DataType.lower()) :
             DataType = GWFrames.Psi4
+        elif('psi3' in DataType.lower()) :
+            DataType = GWFrames.Psi3
+        elif('psi2' in DataType.lower()) :
+            DataType = GWFrames.Psi2
+        elif('psi1' in DataType.lower()) :
+            DataType = GWFrames.Psi1
+        elif('psi0' in DataType.lower()) :
+            DataType = GWFrames.Psi0
         else :
             DataType = GWFrames.UnknownDataType
-            raise ValueError("The file '{0}' does not contain a recognizable description of the data type ('h', 'hdot', or 'Psi4').".format(filename))
+            raise ValueError("The file '{0}' does not contain a recognizable description of the data type ('h', 'hdot', 'Psi4', 'Psi3', 'Psi2', 'Psi1', or 'Psi0').".format(filename))
         PrintedLine = ''
         for n in range(NWaveforms) :
             if(n==NWaveforms-1) :
@@ -738,6 +763,14 @@ def FindPossibleExtrapolationsToRun(TopLevelInputDir) :
                     SubdirectoriesAndDataFiles.append([step[0].replace(TopLevelInputDir+'/',''), 'rh_FiniteRadii_CodeUnits.h5'])
                 if('rPsi4_FiniteRadii_CodeUnits.h5' in step[2]) :
                     SubdirectoriesAndDataFiles.append([step[0].replace(TopLevelInputDir+'/',''), 'rPsi4_FiniteRadii_CodeUnits.h5'])
+                if('r2Psi3_FiniteRadii_CodeUnits.h5' in step[2]) :
+                    SubdirectoriesAndDataFiles.append([step[0].replace(TopLevelInputDir+'/',''), 'r2Psi3_FiniteRadii_CodeUnits.h5'])
+                if('r3Psi2_FiniteRadii_CodeUnits.h5' in step[2]) :
+                    SubdirectoriesAndDataFiles.append([step[0].replace(TopLevelInputDir+'/',''), 'r3Psi2_FiniteRadii_CodeUnits.h5'])
+                if('r4Psi1_FiniteRadii_CodeUnits.h5' in step[2]) :
+                    SubdirectoriesAndDataFiles.append([step[0].replace(TopLevelInputDir+'/',''), 'r4Psi1_FiniteRadii_CodeUnits.h5'])
+                if('r5Psi0_FiniteRadii_CodeUnits.h5' in step[2]) :
+                    SubdirectoriesAndDataFiles.append([step[0].replace(TopLevelInputDir+'/',''), 'r5Psi0_FiniteRadii_CodeUnits.h5'])
     return SubdirectoriesAndDataFiles
 
 def RunExtrapolation(TopLevelInputDir, TopLevelOutputDir, Subdirectory, DataFile, Template) :
