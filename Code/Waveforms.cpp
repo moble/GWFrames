@@ -664,13 +664,13 @@ std::string GWFrames::Waveform::DescriptorString() const {
     else if(DataType()==Psi4)
       Descriptor = Descriptor + "M" + DataTypeString();
     else if(DataType()==Psi3)
-      Descriptor = Descriptor + DataTypeString();
+      Descriptor = Descriptor + "2" + DataTypeString();
     else if(DataType()==Psi2)
-      Descriptor = Descriptor + DataTypeString() + "OverM";
+      Descriptor = Descriptor + "3" + DataTypeString() + "OverM";
     else if(DataType()==Psi1)
-      Descriptor = Descriptor + DataTypeString();
+      Descriptor = Descriptor + "4" + DataTypeString() + "OverM2";
     else if(DataType()==Psi0)
-      Descriptor = Descriptor + "M" + DataTypeString();
+      Descriptor = Descriptor + "5" +  DataTypeString() + "OverM3";
   } else {
     Descriptor = Descriptor + DataTypeString();
   }

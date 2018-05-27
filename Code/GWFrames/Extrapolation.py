@@ -158,10 +158,10 @@ def ReadFiniteRadiusWaveform(n, filename, WaveformName, ChMass, InitialAdmEnergy
             UnitScaleFactor = 1.0 / ChMass
             RadiusRatio = Radii / CoordRadius**3
         elif(DataType == GWFrames.Psi1) :
-            UnitScaleFactor = 1.0
+            UnitScaleFactor = 1.0 / ChMass**2
             RadiusRatio = Radii / CoordRadius**4
         elif(DataType == GWFrames.Psi0) :
-            UnitScaleFactor = ChMass
+            UnitScaleFactor = 1.0 / ChMass**3
             RadiusRatio = Radii / CoordRadius**5
         else :
             raise ValueError('DataType "{0}" is unknown.'.format(DataType))
