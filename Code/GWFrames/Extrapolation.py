@@ -49,6 +49,30 @@ def ValidateSingleWaveform(h5file, filename, WaveformName, ExpectedNModes, Expec
     from re import compile as re_compile
     CompiledModeRegex = re_compile(ModeRegex)
     Valid = True
+
+    # Check identical time columns
+    it = 0
+    Ylm_mode_for_test = sorted(list(h5file[WaveformName]),reverse=True)[it]
+    while Ylm_mode_for_test[0:2] != 'Y_':
+        it += 1
+        Ylm_mode_for_test = sorted(list(h5file[WaveformName]),reverse=True)[it]
+        if it+2 > len(list(h5file[WaveformName])):
+            Valid = False
+            print("FAILED: No modes named 'Y_l*_m*.dat' in "+WaveformName+" in h5 file")
+            break
+    if Valid == True:
+        times = h5file[WaveformName + '/' + Ylm_mode_for_test][:, 0]
+        for mode in h5file[WaveformName]:
+            if mode[0:2] == 'Y_':
+                if not (times == h5file[WaveformName + '/' + mode][:, 0]).all():
+                    Valid = False
+                    print("FAILED: time column for "+mode+" in "+WaveformName+" does not match the others in "+filename+".")
+        # Check for missing time segments
+        max_allowed_timestep_size = 4   # Set the max allowed timestep size in units of M
+        for i in range(len(times)-1):
+            if (times[1+i] - times[i]) > max_allowed_timestep_size:
+                Valid = False
+                print("FAILED: max allowed timestep size ("+str(max_allowed_timestep_size)+" M) exceeded. Possible missing segment in "+WaveformName+" in "+filename+".")
     # Check ArealRadius
     if(not h5file[WaveformName+'/ArealRadius.dat'].shape==(ExpectedNTimes, 2)) :
         Valid = False
@@ -174,7 +198,7 @@ def ReadFiniteRadiusWaveform(n, filename, WaveformName, ChMass, InitialAdmEnergy
     return Radii/ChMass
 
 
-def ReadFiniteRadiusData(ChMass=0.0, filename='rh_FiniteRadii_CodeUnits.h5', CoordRadii=[], LModes=range(2,100)) :
+def ReadFiniteRadiusData(ChMass=0.0, filename='rh_FiniteRadii_CodeUnits.h5', CoordRadii=[], LModes=range(2,100), EnforceQualityAssurance=True) :
     """
     Read data at various radii, and offset by tortoise coordinate.
 
@@ -208,9 +232,13 @@ def ReadFiniteRadiusData(ChMass=0.0, filename='rh_FiniteRadii_CodeUnits.h5', Coo
         NWaveforms = len(WaveformNames)
         # Check input data
         if(not ValidateGroupOfWaveforms(f, filename, WaveformNames, LModes)) :
-            raise ValueError("Bad input waveforms in {0}.".format(filename))
+            if EnforceQualityAssurance:
+                raise ValueError("Bad input waveforms in {0}.".format(filename))
         # print("{0} passed the data-integrity tests.".format(filename))
-        stdout.write("{0} passed the data-integrity tests.\n".format(filename)); stdout.flush()
+        if EnforceQualityAssurance:
+            stdout.write("{0} passed the data-integrity tests.\n".format(filename)); stdout.flush()
+        else:
+            stdout.write("Not enforcing data-integrity tests. Continuing extrapolation.\n".format(filename)); stdout.flush()
         Ws = [GWFrames.Waveform() for i in range(NWaveforms)]
         Radii = [None]*NWaveforms
         InitialAdmEnergy = f[WaveformNames[0]+'/InitialAdmEnergy.dat'][0,1]
@@ -395,6 +423,7 @@ def Extrapolate(**kwargs) :
     EarliestTime = kwargs.pop('EarliestTime', -3.0e300)
     LatestTime = kwargs.pop('LatestTime', 3.0e300)
     AlignmentTime = kwargs.pop('AlignmentTime', None)
+    EnforceQualityAssurance = kwargs.pop('EnforceQualityAssurance', True)
     if(len(kwargs)>0) :
         raise ValueError("Unknown arguments to `Extrapolate`: kwargs={0}".format(kwargs))
 
@@ -425,7 +454,7 @@ def Extrapolate(**kwargs) :
 
     # Read in the Waveforms
     print("Reading Waveforms from {0}...".format(DataFile)); stdout.flush()
-    Ws,Radii,CoordRadii = ReadFiniteRadiusData(ChMass=ChMass, filename=DataFile, CoordRadii=CoordRadii, LModes=LModes)
+    Ws,Radii,CoordRadii = ReadFiniteRadiusData(ChMass=ChMass, filename=DataFile, CoordRadii=CoordRadii, LModes=LModes, EnforceQualityAssurance=EnforceQualityAssurance)
 
     Radii_shape = (len(Radii),len(Radii[0]))
 
