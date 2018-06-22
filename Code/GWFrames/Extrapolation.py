@@ -67,12 +67,6 @@ def ValidateSingleWaveform(h5file, filename, WaveformName, ExpectedNModes, Expec
                 if not (times == h5file[WaveformName + '/' + mode][:, 0]).all():
                     Valid = False
                     print("FAILED: time column for "+mode+" in "+WaveformName+" does not match the others in "+filename+".")
-        # Check for missing time segments
-        max_allowed_timestep_size = 4   # Set the max allowed timestep size in units of M
-        for i in range(len(times)-1):
-            if (times[1+i] - times[i]) > max_allowed_timestep_size:
-                Valid = False
-                print("FAILED: max allowed timestep size ("+str(max_allowed_timestep_size)+" M) exceeded. Possible missing segment in "+WaveformName+" in "+filename+".")
     # Check ArealRadius
     if(not h5file[WaveformName+'/ArealRadius.dat'].shape==(ExpectedNTimes, 2)) :
         Valid = False
@@ -164,8 +158,6 @@ def ReadFiniteRadiusWaveform(n, filename, WaveformName, ChMass, InitialAdmEnergy
         Ws[n].SetLM(LM)
         Data = empty((NModes, NTimes), dtype='complex')
 
-        RadiusRatio = Radii / CoordRadius
-
         if(DataType == GWFrames.h) :
             UnitScaleFactor = 1.0 / ChMass
             RadiusRatio = Radii / CoordRadius
@@ -177,16 +169,16 @@ def ReadFiniteRadiusWaveform(n, filename, WaveformName, ChMass, InitialAdmEnergy
             RadiusRatio = Radii / CoordRadius
         elif(DataType == GWFrames.Psi3) :
             UnitScaleFactor = 1.0
-            RadiusRatio = Radii / CoordRadius**2
+            RadiusRatio = (Radii / CoordRadius)**2
         elif(DataType == GWFrames.Psi2) :
             UnitScaleFactor = 1.0 / ChMass
-            RadiusRatio = Radii / CoordRadius**3
+            RadiusRatio = (Radii / CoordRadius)**3
         elif(DataType == GWFrames.Psi1) :
             UnitScaleFactor = 1.0 / ChMass**2
-            RadiusRatio = Radii / CoordRadius**4
+            RadiusRatio = (Radii / CoordRadius)**4
         elif(DataType == GWFrames.Psi0) :
             UnitScaleFactor = 1.0 / ChMass**3
-            RadiusRatio = Radii / CoordRadius**5
+            RadiusRatio = (Radii / CoordRadius)**5
         else :
             raise ValueError('DataType "{0}" is unknown.'.format(DataType))
         for m,DataSet in enumerate(YLMdata) :
@@ -239,28 +231,35 @@ def ReadFiniteRadiusData(ChMass=0.0, filename='rh_FiniteRadii_CodeUnits.h5', Coo
             stdout.write("{0} passed the data-integrity tests.\n".format(filename)); stdout.flush()
         else:
             stdout.write("Not enforcing data-integrity tests. Continuing extrapolation.\n".format(filename)); stdout.flush()
-        Ws = [GWFrames.Waveform() for i in range(NWaveforms)]
-        Radii = [None]*NWaveforms
-        InitialAdmEnergy = f[WaveformNames[0]+'/InitialAdmEnergy.dat'][0,1]
         DataType = basename(filename).partition('_')[0]
         if('hdot' in DataType.lower()) :
             DataType = GWFrames.hdot
+            SpinWeight = -2;
         elif('h' in DataType.lower()) :
             DataType = GWFrames.h
+            SpinWeight = -2;
         elif('psi4' in DataType.lower()) :
             DataType = GWFrames.Psi4
+            SpinWeight = -2;
         elif('psi3' in DataType.lower()) :
             DataType = GWFrames.Psi3
+            SpinWeight = -1;
         elif('psi2' in DataType.lower()) :
             DataType = GWFrames.Psi2
+            SpinWeight = 0;
         elif('psi1' in DataType.lower()) :
             DataType = GWFrames.Psi1
+            SpinWeight = 1;
         elif('psi0' in DataType.lower()) :
             DataType = GWFrames.Psi0
+            SpinWeight = 2;
         else :
             DataType = GWFrames.UnknownDataType
             raise ValueError("The file '{0}' does not contain a recognizable description of the data type ('h', 'hdot', 'Psi4', 'Psi3', 'Psi2', 'Psi1', or 'Psi0').".format(filename))
         PrintedLine = ''
+        Ws = [GWFrames.Waveform().SetSpinWeight(SpinWeight) for i in range(NWaveforms)]
+        Radii = [None]*NWaveforms
+        InitialAdmEnergy = f[WaveformNames[0]+'/InitialAdmEnergy.dat'][0,1]
         for n in range(NWaveforms) :
             if(n==NWaveforms-1) :
                 WaveformNameString = WaveformNames[n] + '\n'
@@ -396,6 +395,7 @@ def Extrapolate(**kwargs) :
     """
 
     # Basic imports
+    import GWFrames
     from os import makedirs, remove
     from os.path import exists, basename, dirname
     from sys import stdout, stderr

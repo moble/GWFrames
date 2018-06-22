@@ -251,7 +251,7 @@ GWFrames::Waveform::Waveform(const std::string& FileName, const std::string& Dat
   cerr << "Warning: Waveform constructor assumes (ell,m) modes are stored as (2,-2), (2,-1), ...\n";
   {
     unsigned int i_m = 0;
-    for(int ell=2; ell<10000; ++ell) { // Note ridiculous upper bound on ell to insure against infinite loops
+    for(int ell=std::abs(SpinWeight()); ell<10000; ++ell) { // Note ridiculous upper bound on ell to insure against infinite loops
       for(int m=-ell; m<=ell; ++m) {
         if(i_m>=NModes) { break; }
         lm[i_m][0] = ell;
@@ -670,7 +670,7 @@ std::string GWFrames::Waveform::DescriptorString() const {
     else if(DataType()==Psi1)
       Descriptor = Descriptor + "4" + DataTypeString() + "OverM2";
     else if(DataType()==Psi0)
-      Descriptor = Descriptor + "5" +  DataTypeString() + "OverM3";
+      Descriptor = Descriptor + "5" + DataTypeString() + "OverM3";
   } else {
     Descriptor = Descriptor + DataTypeString();
   }
@@ -870,7 +870,7 @@ std::vector<double> GWFrames::Waveform::NormalizedAntisymmetry(std::vector<int> 
   for(unsigned int i_t=0; i_t<ntimes; ++i_t) {
     diff = 0.;
     norm = 0.;
-    for(int ell=2; ell<=ellMax; ++ell) {
+    for(int ell=std::abs(SpinWeight()); ell<=ellMax; ++ell) {
       if(LModesForAsymmetry.size()==0 || GWFrames::xINy(ell,LModesForAsymmetry)) {
         for(int m=-ell; m<=ell; ++m) {
           const complex<double> h_ell_m = Data(FindModeIndexWithoutError(ell,m), i_t);
@@ -1356,7 +1356,8 @@ GWFrames::Waveform& GWFrames::Waveform::TransformModesToRotatedFrame(const std::
   // Loop through each mode and do the rotation
   {
     int mode=1;
-    for(int l=std::abs(SpinWeight()); l<NModes; ++l) {
+    const int lmin = lm[0][0];
+    for(int l=lmin; l<NModes; ++l) {
       if(NModes<mode) { break; }
 
       // Use a vector of mode indices, in case the modes are out of
