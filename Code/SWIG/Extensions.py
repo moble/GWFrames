@@ -190,10 +190,14 @@ def GetLaTeXDataDescription(W) :
     if(W.MIsScaledOut()) :
         if(W.DataType()==UnknownDataType or W.DataType()==h or W.DataType()==Psi2) :
             LaTeXDataDescription = LaTeXDataDescription + W.DataTypeLaTeXString() + r'/M'
-        elif(W.DataType()==hdot or W.DataType()==Psi3 or W.DataType()==Psi1) :
+        elif(W.DataType()==hdot or W.DataType()==Psi3) :
             LaTeXDataDescription = LaTeXDataDescription + W.DataTypeLaTeXString() # hdot is independent of M
-        elif(W.DataType()==Psi4 or W.DataType()==Psi0) :
+        elif(W.DataType()==Psi4) :
             LaTeXDataDescription = LaTeXDataDescription + r'M\,' + W.DataTypeLaTeXString()
+        elif(W.DataType()==Psi1) :
+            LaTeXDataDescription = LaTeXDataDescription + W.DataTypeLaTeXString() + r'/M$^2$'
+        elif(W.DataType()==Psi0) :
+            LaTeXDataDescription = LaTeXDataDescription + W.DataTypeLaTeXString() + r'/M$^3$'
     else :
         LaTeXDataDescription = LaTeXDataDescription + W.DataTypeLaTeXString()
     return LaTeXDataDescription
