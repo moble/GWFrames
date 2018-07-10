@@ -655,22 +655,30 @@ unsigned int GWFrames::Waveform::MaxNormIndex(const unsigned int SkipFraction) c
 // Return a descriptive string appropriate for a file name, like rhOverM.
 std::string GWFrames::Waveform::DescriptorString() const {
   std::string Descriptor = "";
-  if(RIsScaledOut()) Descriptor = "r";
+  if(RIsScaledOut()) {
+    if(DataType()==UnknownDataType or DataType()==h) Descriptor = "r";
+    else if(DataType()==hdot) Descriptor = "r";
+    else if(DataType()==Psi4) Descriptor = "r";
+    else if(DataType()==Psi3) Descriptor = "r2";
+    else if(DataType()==Psi2) Descriptor = "r3";
+    else if(DataType()==Psi1) Descriptor = "r4";
+    else if(DataType()==Psi0) Descriptor = "r5";
+  }
   if(MIsScaledOut()) {
     if(DataType()==UnknownDataType or DataType()==h)
       Descriptor = Descriptor + DataTypeString() + "OverM";
     else if(DataType()==hdot)
       Descriptor = Descriptor + DataTypeString(); // hdot is independent of M
     else if(DataType()==Psi4)
-      Descriptor = Descriptor + "M" + DataTypeString();
+      Descriptor = Descriptor + DataTypeString();
     else if(DataType()==Psi3)
-      Descriptor = Descriptor + "2" + DataTypeString();
+      Descriptor = Descriptor + DataTypeString();
     else if(DataType()==Psi2)
-      Descriptor = Descriptor + "3" + DataTypeString() + "OverM";
+      Descriptor = Descriptor + DataTypeString() + "OverM";
     else if(DataType()==Psi1)
-      Descriptor = Descriptor + "4" + DataTypeString() + "OverM2";
+      Descriptor = Descriptor + DataTypeString() + "OverM2";
     else if(DataType()==Psi0)
-      Descriptor = Descriptor + "5" + DataTypeString() + "OverM3";
+      Descriptor = Descriptor + DataTypeString() + "OverM3";
   } else {
     Descriptor = Descriptor + DataTypeString();
   }

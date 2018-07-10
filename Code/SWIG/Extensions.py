@@ -195,9 +195,9 @@ def GetLaTeXDataDescription(W) :
         elif(W.DataType()==Psi4) :
             LaTeXDataDescription = LaTeXDataDescription + r'M\,' + W.DataTypeLaTeXString()
         elif(W.DataType()==Psi1) :
-            LaTeXDataDescription = LaTeXDataDescription + W.DataTypeLaTeXString() + r'/M$^2$'
+            LaTeXDataDescription = LaTeXDataDescription + W.DataTypeLaTeXString() + r'/M^2'
         elif(W.DataType()==Psi0) :
-            LaTeXDataDescription = LaTeXDataDescription + W.DataTypeLaTeXString() + r'/M$^3$'
+            LaTeXDataDescription = LaTeXDataDescription + W.DataTypeLaTeXString() + r'/M^3'
     else :
         LaTeXDataDescription = LaTeXDataDescription + W.DataTypeLaTeXString()
     return LaTeXDataDescription

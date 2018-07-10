@@ -50,23 +50,6 @@ def ValidateSingleWaveform(h5file, filename, WaveformName, ExpectedNModes, Expec
     CompiledModeRegex = re_compile(ModeRegex)
     Valid = True
 
-    # Check identical time columns
-    it = 0
-    Ylm_mode_for_test = sorted(list(h5file[WaveformName]),reverse=True)[it]
-    while Ylm_mode_for_test[0:2] != 'Y_':
-        it += 1
-        Ylm_mode_for_test = sorted(list(h5file[WaveformName]),reverse=True)[it]
-        if it+2 > len(list(h5file[WaveformName])):
-            Valid = False
-            print("FAILED: No modes named 'Y_l*_m*.dat' in "+WaveformName+" in h5 file")
-            break
-    if Valid == True:
-        times = h5file[WaveformName + '/' + Ylm_mode_for_test][:, 0]
-        for mode in h5file[WaveformName]:
-            if mode[0:2] == 'Y_':
-                if not (times == h5file[WaveformName + '/' + mode][:, 0]).all():
-                    Valid = False
-                    print("FAILED: time column for "+mode+" in "+WaveformName+" does not match the others in "+filename+".")
     # Check ArealRadius
     if(not h5file[WaveformName+'/ArealRadius.dat'].shape==(ExpectedNTimes, 2)) :
         Valid = False
@@ -115,7 +98,7 @@ def ValidateGroupOfWaveforms(h5file, filename, WaveformNames, LModes) :
         # stderr.write("In '{0}', the following waveforms are not valid:\n\t{1}\n".format(filename, '\n\t'.join(FailedWaveforms)))
     return Valid
 
-def ReadFiniteRadiusWaveform(n, filename, WaveformName, ChMass, InitialAdmEnergy, YLMRegex, LModes, DataType, Ws) :
+def ReadFiniteRadiusWaveform(n, filename, WaveformName, ChMass, InitialAdmEnergy, YLMRegex, LModes, DataType, SpinWeight, Ws) :
     """
     This is just a worker function defined for ReadFiniteRadiusData,
     below, reading a single waveform from an h5 file of many
@@ -153,6 +136,7 @@ def ReadFiniteRadiusWaveform(n, filename, WaveformName, ChMass, InitialAdmEnergy
         # Ws[n].SetFrame is not done, because we assume the inertial frame
         Ws[n].SetFrameType(GWFrames.Inertial) # Assumption! (but this should be safe)
         Ws[n].SetDataType(DataType)
+        Ws[n].SetSpinWeight(SpinWeight)
         Ws[n].SetRIsScaledOut(True) # Assumption! (but it should be safe)
         Ws[n].SetMIsScaledOut(True) # We have made this true
         Ws[n].SetLM(LM)
@@ -257,7 +241,7 @@ def ReadFiniteRadiusData(ChMass=0.0, filename='rh_FiniteRadii_CodeUnits.h5', Coo
             DataType = GWFrames.UnknownDataType
             raise ValueError("The file '{0}' does not contain a recognizable description of the data type ('h', 'hdot', 'Psi4', 'Psi3', 'Psi2', 'Psi1', or 'Psi0').".format(filename))
         PrintedLine = ''
-        Ws = [GWFrames.Waveform().SetSpinWeight(SpinWeight) for i in range(NWaveforms)]
+        Ws = [GWFrames.Waveform() for i in range(NWaveforms)]
         Radii = [None]*NWaveforms
         InitialAdmEnergy = f[WaveformNames[0]+'/InitialAdmEnergy.dat'][0,1]
         for n in range(NWaveforms) :
@@ -273,7 +257,7 @@ def ReadFiniteRadiusData(ChMass=0.0, filename='rh_FiniteRadii_CodeUnits.h5', Coo
                 #print(WaveformNameString),
                 stdout.write(WaveformNameString); stdout.flush()
                 PrintedLine += WaveformNameString
-            Radii[n] = ReadFiniteRadiusWaveform(n, filename, WaveformNames[n], ChMass, InitialAdmEnergy, YLMRegex, LModes, DataType, Ws)
+            Radii[n] = ReadFiniteRadiusWaveform(n, filename, WaveformNames[n], ChMass, InitialAdmEnergy, YLMRegex, LModes, DataType, SpinWeight, Ws)
             Ws[n].AppendHistory(str("### # Python read from '{0}/{1}'.\n".format(filename,WaveformNames[n])))
     finally :
         f.close()
@@ -395,7 +379,6 @@ def Extrapolate(**kwargs) :
     """
 
     # Basic imports
-    import GWFrames
     from os import makedirs, remove
     from os.path import exists, basename, dirname
     from sys import stdout, stderr
