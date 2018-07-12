@@ -1364,8 +1364,7 @@ GWFrames::Waveform& GWFrames::Waveform::TransformModesToRotatedFrame(const std::
   // Loop through each mode and do the rotation
   {
     int mode=1;
-    const int lmin = lm[0][0];
-    for(int l=lmin; l<NModes; ++l) {
+    for(int l=std::abs(SpinWeight()); l<NModes; ++l) {
       if(NModes<mode) { break; }
 
       // Use a vector of mode indices, in case the modes are out of
