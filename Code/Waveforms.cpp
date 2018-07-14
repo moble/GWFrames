@@ -670,7 +670,7 @@ std::string GWFrames::Waveform::DescriptorString() const {
     else if(DataType()==hdot)
       Descriptor = Descriptor + DataTypeString(); // hdot is independent of M
     else if(DataType()==Psi4)
-      Descriptor = Descriptor + DataTypeString();
+      Descriptor = Descriptor + "M" + DataTypeString();
     else if(DataType()==Psi3)
       Descriptor = Descriptor + DataTypeString();
     else if(DataType()==Psi2)
