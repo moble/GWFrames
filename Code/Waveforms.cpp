@@ -1930,6 +1930,7 @@ GWFrames::Waveform GWFrames::Waveform::Interpolate(const std::vector<double>& Ne
   }
 
   Waveform C;
+  C.spinweight = this->spinweight;
   C.history << HistoryStr()
             << "### *this = this->Interpolate(NewTime," << AllowTimesOutsideCurrentDomain << ");" << std::endl;
   C.t = NewTime;
