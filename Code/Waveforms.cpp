@@ -251,7 +251,7 @@ GWFrames::Waveform::Waveform(const std::string& FileName, const std::string& Dat
   cerr << "Warning: Waveform constructor assumes (ell,m) modes are stored as (2,-2), (2,-1), ...\n";
   {
     unsigned int i_m = 0;
-    for(int ell=2; ell<10000; ++ell) { // Note ridiculous upper bound on ell to insure against infinite loops
+    for(int ell=std::abs(SpinWeight()); ell<10000; ++ell) { // Note ridiculous upper bound on ell to insure against infinite loops
       for(int m=-ell; m<=ell; ++m) {
         if(i_m>=NModes) { break; }
         lm[i_m][0] = ell;
@@ -655,7 +655,15 @@ unsigned int GWFrames::Waveform::MaxNormIndex(const unsigned int SkipFraction) c
 // Return a descriptive string appropriate for a file name, like rhOverM.
 std::string GWFrames::Waveform::DescriptorString() const {
   std::string Descriptor = "";
-  if(RIsScaledOut()) Descriptor = "r";
+  if(RIsScaledOut()) {
+    if(DataType()==UnknownDataType or DataType()==h) Descriptor = "r";
+    else if(DataType()==hdot) Descriptor = "r";
+    else if(DataType()==Psi4) Descriptor = "r";
+    else if(DataType()==Psi3) Descriptor = "r2";
+    else if(DataType()==Psi2) Descriptor = "r3";
+    else if(DataType()==Psi1) Descriptor = "r4";
+    else if(DataType()==Psi0) Descriptor = "r5";
+  }
   if(MIsScaledOut()) {
     if(DataType()==UnknownDataType or DataType()==h)
       Descriptor = Descriptor + DataTypeString() + "OverM";
@@ -663,6 +671,14 @@ std::string GWFrames::Waveform::DescriptorString() const {
       Descriptor = Descriptor + DataTypeString(); // hdot is independent of M
     else if(DataType()==Psi4)
       Descriptor = Descriptor + "M" + DataTypeString();
+    else if(DataType()==Psi3)
+      Descriptor = Descriptor + DataTypeString();
+    else if(DataType()==Psi2)
+      Descriptor = Descriptor + DataTypeString() + "OverM";
+    else if(DataType()==Psi1)
+      Descriptor = Descriptor + DataTypeString() + "OverM2";
+    else if(DataType()==Psi0)
+      Descriptor = Descriptor + DataTypeString() + "OverM3";
   } else {
     Descriptor = Descriptor + DataTypeString();
   }
@@ -862,7 +878,7 @@ std::vector<double> GWFrames::Waveform::NormalizedAntisymmetry(std::vector<int> 
   for(unsigned int i_t=0; i_t<ntimes; ++i_t) {
     diff = 0.;
     norm = 0.;
-    for(int ell=2; ell<=ellMax; ++ell) {
+    for(int ell=std::abs(SpinWeight()); ell<=ellMax; ++ell) {
       if(LModesForAsymmetry.size()==0 || GWFrames::xINy(ell,LModesForAsymmetry)) {
         for(int m=-ell; m<=ell; ++m) {
           const complex<double> h_ell_m = Data(FindModeIndexWithoutError(ell,m), i_t);
@@ -1775,7 +1791,7 @@ GWFrames::Waveform& GWFrames::Waveform::TransformToCoprecessingFrame(const std::
     // output of GSL.
     RoughInitialEllDirection = Quaternions::zHat;
   } else {
-    const Waveform Segment = SliceOfTimeIndicesWithEll2(0, NPointsForDeriv);
+    const Waveform Segment = SliceOfTimeIndices(0, NPointsForDeriv);
     RoughInitialEllDirection = Quaternions::Quaternion(Segment.AngularVelocityVector()[NPointsForDeriv/2]); // Using integer division
   }
   history << "this->TransformToCoprecessingFrame(" << StringForm(Lmodes) << ")\n#";
@@ -1914,6 +1930,7 @@ GWFrames::Waveform GWFrames::Waveform::Interpolate(const std::vector<double>& Ne
   }
 
   Waveform C;
+  C.spinweight = this->spinweight;
   C.history << HistoryStr()
             << "### *this = this->Interpolate(NewTime," << AllowTimesOutsideCurrentDomain << ");" << std::endl;
   C.t = NewTime;
@@ -2077,7 +2094,7 @@ std::vector<Quaternions::Quaternion> GWFrames::Waveform::GetAlignmentsOfDecompos
   // Get direction of angular-velocity vector at each time step, in this frame
   const vector<Quaternion> omegaHat
     = Quaternions::inverse(frame)
-    * Quaternions::normalized(Quaternions::QuaternionArray(this->SliceOfTimesWithEll2().AngularVelocityVectorRelativeToInertial())) * frame;
+    * Quaternions::normalized(Quaternions::QuaternionArray(this->AngularVelocityVectorRelativeToInertial())) * frame;
 
   const vector<vector<double> > V_h = this->LLDominantEigenvector(Lmodes);
 
@@ -2092,7 +2109,7 @@ std::vector<Quaternions::Quaternion> GWFrames::Waveform::GetAlignmentsOfDecompos
     const Quaternion R_V_hi = Quaternions::sqrtOfRotor(-V_hi*Quaternions::zHat);
 
     // Now rotate Instant so that its z axis is aligned with V_f
-    Waveform Instant = this->SliceOfTimeIndicesWithEll2(i_t);
+    Waveform Instant = this->SliceOfTimeIndices(i_t);
     Instant.RotateDecompositionBasis(R_V_hi);
 
     // Get the phase of the (2,+/-2) modes after rotation
@@ -2168,7 +2185,7 @@ Quaternions::Quaternion GWFrames::Waveform::GetAlignmentOfDecompositionFrameToMo
   int i_t_fid = Quaternions::huntRight(t, t_fid);
   unsigned int i1 = (i_t_fid-5<0 ? 0 : i_t_fid-5);
   unsigned int i2 = (i1+11>int(t.size()) ? t.size() : i1+11);
-  const Waveform Region = (this->SliceOfTimeIndicesWithEll2(i1,i2)).TransformToInertialFrame();
+  const Waveform Region = (this->SliceOfTimeIndices(i1,i2)).TransformToInertialFrame();
   Quaternion omegaHat = Quaternion(Region.AngularVelocityVector()[i_t_fid-i1]).normalized();
   // omegaHat contains the components of that vector relative to the
   // inertial frame.  To get its components in this Waveform's

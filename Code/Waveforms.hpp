@@ -31,9 +31,9 @@ namespace GWFrames {
 
   enum WaveformFrameType { UnknownFrameType, Inertial, Coprecessing, Coorbital, Corotating };
   static const std::string WaveformFrameNames[5] = { "UnknownFrameType", "Inertial", "Coprecessing", "Coorbital", "Corotating" };
-  enum WaveformDataType { UnknownDataType, h, hdot, Psi4 };
-  static const std::string WaveformDataNames[4] = { "UnknownDataType", "h", "hdot", "Psi4" };
-  static const std::string WaveformDataNamesLaTeX[4] = { "\\mathrm{unknown data type}", "h", "\\dot{h}", "\\Psi_4" };
+  enum WaveformDataType { UnknownDataType, h, hdot, Psi4, Psi3, Psi2, Psi1, Psi0 };
+  static const std::string WaveformDataNames[8] = { "UnknownDataType", "h", "hdot", "Psi4", "Psi3", "Psi2", "Psi1", "Psi0" };
+  static const std::string WaveformDataNamesLaTeX[8] = { "\\mathrm{unknown data type}", "h", "\\dot{h}", "\\Psi_4", "\\Psi_3", "\\Psi_2", "\\Psi_1", "\\Psi_0" };
   const int WeightError = 1000;
 
   /// Object storing data and other information for a single waveform

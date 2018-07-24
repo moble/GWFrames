@@ -49,6 +49,7 @@ def ValidateSingleWaveform(h5file, filename, WaveformName, ExpectedNModes, Expec
     from re import compile as re_compile
     CompiledModeRegex = re_compile(ModeRegex)
     Valid = True
+
     # Check ArealRadius
     if(not h5file[WaveformName+'/ArealRadius.dat'].shape==(ExpectedNTimes, 2)) :
         Valid = False
@@ -97,7 +98,7 @@ def ValidateGroupOfWaveforms(h5file, filename, WaveformNames, LModes) :
         # stderr.write("In '{0}', the following waveforms are not valid:\n\t{1}\n".format(filename, '\n\t'.join(FailedWaveforms)))
     return Valid
 
-def ReadFiniteRadiusWaveform(n, filename, WaveformName, ChMass, InitialAdmEnergy, YLMRegex, LModes, DataType, Ws) :
+def ReadFiniteRadiusWaveform(n, filename, WaveformName, ChMass, InitialAdmEnergy, YLMRegex, LModes, DataType, SpinWeight, Ws) :
     """
     This is just a worker function defined for ReadFiniteRadiusData,
     below, reading a single waveform from an h5 file of many
@@ -135,19 +136,35 @@ def ReadFiniteRadiusWaveform(n, filename, WaveformName, ChMass, InitialAdmEnergy
         # Ws[n].SetFrame is not done, because we assume the inertial frame
         Ws[n].SetFrameType(GWFrames.Inertial) # Assumption! (but this should be safe)
         Ws[n].SetDataType(DataType)
+        Ws[n].SetSpinWeight(SpinWeight)
         Ws[n].SetRIsScaledOut(True) # Assumption! (but it should be safe)
         Ws[n].SetMIsScaledOut(True) # We have made this true
         Ws[n].SetLM(LM)
         Data = empty((NModes, NTimes), dtype='complex')
+
         if(DataType == GWFrames.h) :
             UnitScaleFactor = 1.0 / ChMass
+            RadiusRatio = Radii / CoordRadius
         elif(DataType == GWFrames.hdot) :
             UnitScaleFactor = 1.0
+            RadiusRatio = Radii / CoordRadius
         elif(DataType == GWFrames.Psi4) :
             UnitScaleFactor = ChMass
+            RadiusRatio = Radii / CoordRadius
+        elif(DataType == GWFrames.Psi3) :
+            UnitScaleFactor = 1.0
+            RadiusRatio = (Radii / CoordRadius)**2
+        elif(DataType == GWFrames.Psi2) :
+            UnitScaleFactor = 1.0 / ChMass
+            RadiusRatio = (Radii / CoordRadius)**3
+        elif(DataType == GWFrames.Psi1) :
+            UnitScaleFactor = 1.0 / ChMass**2
+            RadiusRatio = (Radii / CoordRadius)**4
+        elif(DataType == GWFrames.Psi0) :
+            UnitScaleFactor = 1.0 / ChMass**3
+            RadiusRatio = (Radii / CoordRadius)**5
         else :
             raise ValueError('DataType "{0}" is unknown.'.format(DataType))
-        RadiusRatio = Radii / CoordRadius
         for m,DataSet in enumerate(YLMdata) :
             modedata = array(W[DataSet])
             Data[m,:] = (modedata[Indices,1] + 1j*modedata[Indices,2]) * RadiusRatio * UnitScaleFactor
@@ -157,7 +174,7 @@ def ReadFiniteRadiusWaveform(n, filename, WaveformName, ChMass, InitialAdmEnergy
     return Radii/ChMass
 
 
-def ReadFiniteRadiusData(ChMass=0.0, filename='rh_FiniteRadii_CodeUnits.h5', CoordRadii=[], LModes=range(2,100)) :
+def ReadFiniteRadiusData(ChMass=0.0, filename='rh_FiniteRadii_CodeUnits.h5', CoordRadii=[], LModes=range(2,100), EnforceQualityAssurance=True) :
     """
     Read data at various radii, and offset by tortoise coordinate.
 
@@ -191,23 +208,42 @@ def ReadFiniteRadiusData(ChMass=0.0, filename='rh_FiniteRadii_CodeUnits.h5', Coo
         NWaveforms = len(WaveformNames)
         # Check input data
         if(not ValidateGroupOfWaveforms(f, filename, WaveformNames, LModes)) :
-            raise ValueError("Bad input waveforms in {0}.".format(filename))
+            if EnforceQualityAssurance:
+                raise ValueError("Bad input waveforms in {0}.".format(filename))
         # print("{0} passed the data-integrity tests.".format(filename))
-        stdout.write("{0} passed the data-integrity tests.\n".format(filename)); stdout.flush()
-        Ws = [GWFrames.Waveform() for i in range(NWaveforms)]
-        Radii = [None]*NWaveforms
-        InitialAdmEnergy = f[WaveformNames[0]+'/InitialAdmEnergy.dat'][0,1]
+        if EnforceQualityAssurance:
+            stdout.write("{0} passed the data-integrity tests.\n".format(filename)); stdout.flush()
+        else:
+            stdout.write("Not enforcing data-integrity tests. Continuing extrapolation.\n".format(filename)); stdout.flush()
         DataType = basename(filename).partition('_')[0]
         if('hdot' in DataType.lower()) :
             DataType = GWFrames.hdot
+            SpinWeight = -2;
         elif('h' in DataType.lower()) :
             DataType = GWFrames.h
+            SpinWeight = -2;
         elif('psi4' in DataType.lower()) :
             DataType = GWFrames.Psi4
+            SpinWeight = -2;
+        elif('psi3' in DataType.lower()) :
+            DataType = GWFrames.Psi3
+            SpinWeight = -1;
+        elif('psi2' in DataType.lower()) :
+            DataType = GWFrames.Psi2
+            SpinWeight = 0;
+        elif('psi1' in DataType.lower()) :
+            DataType = GWFrames.Psi1
+            SpinWeight = 1;
+        elif('psi0' in DataType.lower()) :
+            DataType = GWFrames.Psi0
+            SpinWeight = 2;
         else :
             DataType = GWFrames.UnknownDataType
-            raise ValueError("The file '{0}' does not contain a recognizable description of the data type ('h', 'hdot', or 'Psi4').".format(filename))
+            raise ValueError("The file '{0}' does not contain a recognizable description of the data type ('h', 'hdot', 'Psi4', 'Psi3', 'Psi2', 'Psi1', or 'Psi0').".format(filename))
         PrintedLine = ''
+        Ws = [GWFrames.Waveform() for i in range(NWaveforms)]
+        Radii = [None]*NWaveforms
+        InitialAdmEnergy = f[WaveformNames[0]+'/InitialAdmEnergy.dat'][0,1]
         for n in range(NWaveforms) :
             if(n==NWaveforms-1) :
                 WaveformNameString = WaveformNames[n] + '\n'
@@ -221,7 +257,7 @@ def ReadFiniteRadiusData(ChMass=0.0, filename='rh_FiniteRadii_CodeUnits.h5', Coo
                 #print(WaveformNameString),
                 stdout.write(WaveformNameString); stdout.flush()
                 PrintedLine += WaveformNameString
-            Radii[n] = ReadFiniteRadiusWaveform(n, filename, WaveformNames[n], ChMass, InitialAdmEnergy, YLMRegex, LModes, DataType, Ws)
+            Radii[n] = ReadFiniteRadiusWaveform(n, filename, WaveformNames[n], ChMass, InitialAdmEnergy, YLMRegex, LModes, DataType, SpinWeight, Ws)
             Ws[n].AppendHistory(str("### # Python read from '{0}/{1}'.\n".format(filename,WaveformNames[n])))
     finally :
         f.close()
@@ -370,6 +406,7 @@ def Extrapolate(**kwargs) :
     EarliestTime = kwargs.pop('EarliestTime', -3.0e300)
     LatestTime = kwargs.pop('LatestTime', 3.0e300)
     AlignmentTime = kwargs.pop('AlignmentTime', None)
+    EnforceQualityAssurance = kwargs.pop('EnforceQualityAssurance', True)
     if(len(kwargs)>0) :
         raise ValueError("Unknown arguments to `Extrapolate`: kwargs={0}".format(kwargs))
 
@@ -400,7 +437,7 @@ def Extrapolate(**kwargs) :
 
     # Read in the Waveforms
     print("Reading Waveforms from {0}...".format(DataFile)); stdout.flush()
-    Ws,Radii,CoordRadii = ReadFiniteRadiusData(ChMass=ChMass, filename=DataFile, CoordRadii=CoordRadii, LModes=LModes)
+    Ws,Radii,CoordRadii = ReadFiniteRadiusData(ChMass=ChMass, filename=DataFile, CoordRadii=CoordRadii, LModes=LModes, EnforceQualityAssurance=EnforceQualityAssurance)
 
     Radii_shape = (len(Radii),len(Radii[0]))
 
@@ -738,6 +775,14 @@ def FindPossibleExtrapolationsToRun(TopLevelInputDir) :
                     SubdirectoriesAndDataFiles.append([step[0].replace(TopLevelInputDir+'/',''), 'rh_FiniteRadii_CodeUnits.h5'])
                 if('rPsi4_FiniteRadii_CodeUnits.h5' in step[2]) :
                     SubdirectoriesAndDataFiles.append([step[0].replace(TopLevelInputDir+'/',''), 'rPsi4_FiniteRadii_CodeUnits.h5'])
+                if('r2Psi3_FiniteRadii_CodeUnits.h5' in step[2]) :
+                    SubdirectoriesAndDataFiles.append([step[0].replace(TopLevelInputDir+'/',''), 'r2Psi3_FiniteRadii_CodeUnits.h5'])
+                if('r3Psi2_FiniteRadii_CodeUnits.h5' in step[2]) :
+                    SubdirectoriesAndDataFiles.append([step[0].replace(TopLevelInputDir+'/',''), 'r3Psi2_FiniteRadii_CodeUnits.h5'])
+                if('r4Psi1_FiniteRadii_CodeUnits.h5' in step[2]) :
+                    SubdirectoriesAndDataFiles.append([step[0].replace(TopLevelInputDir+'/',''), 'r4Psi1_FiniteRadii_CodeUnits.h5'])
+                if('r5Psi0_FiniteRadii_CodeUnits.h5' in step[2]) :
+                    SubdirectoriesAndDataFiles.append([step[0].replace(TopLevelInputDir+'/',''), 'r5Psi0_FiniteRadii_CodeUnits.h5'])
     return SubdirectoriesAndDataFiles
 
 def RunExtrapolation(TopLevelInputDir, TopLevelOutputDir, Subdirectory, DataFile, Template) :

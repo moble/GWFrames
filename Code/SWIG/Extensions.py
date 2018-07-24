@@ -183,17 +183,21 @@ Waveform.GetFileNamePrefix = GetFileNamePrefix
 PNWaveform.GetFileNamePrefix = GetFileNamePrefix
 
 def GetLaTeXDataDescription(W) :
-    from GWFrames import UnknownDataType, h, hdot, Psi4
+    from GWFrames import UnknownDataType, h, hdot, Psi4, Psi3, Psi2, Psi1, Psi0
     LaTeXDataDescription = ''
     if(W.RIsScaledOut()) :
         LaTeXDataDescription = r'r\,'
     if(W.MIsScaledOut()) :
-        if(W.DataType()==UnknownDataType or W.DataType()==h) :
+        if(W.DataType()==UnknownDataType or W.DataType()==h or W.DataType()==Psi2) :
             LaTeXDataDescription = LaTeXDataDescription + W.DataTypeLaTeXString() + r'/M'
-        elif(W.DataType()==hdot) :
+        elif(W.DataType()==hdot or W.DataType()==Psi3) :
             LaTeXDataDescription = LaTeXDataDescription + W.DataTypeLaTeXString() # hdot is independent of M
         elif(W.DataType()==Psi4) :
             LaTeXDataDescription = LaTeXDataDescription + r'M\,' + W.DataTypeLaTeXString()
+        elif(W.DataType()==Psi1) :
+            LaTeXDataDescription = LaTeXDataDescription + W.DataTypeLaTeXString() + r'/M^2'
+        elif(W.DataType()==Psi0) :
+            LaTeXDataDescription = LaTeXDataDescription + W.DataTypeLaTeXString() + r'/M^3'
     else :
         LaTeXDataDescription = LaTeXDataDescription + W.DataTypeLaTeXString()
     return LaTeXDataDescription
@@ -435,6 +439,14 @@ def ReadFromNRAR(FileName) :
             W.SetFrameType(1)
             W.SetRIsScaledOut(True)
             W.SetMIsScaledOut(True)
+            if('psi0' in FileName.lower()) :
+                W.SetDataType(7)
+            if('psi1' in FileName.lower()) :
+                W.SetDataType(6)
+            if('psi2' in FileName.lower()) :
+                W.SetDataType(5)
+            if('psi3' in FileName.lower()) :
+                W.SetDataType(4)
             if('psi4' in FileName.lower()) :
                 W.SetDataType(3)
             elif('hdot' in FileName.lower()) :
