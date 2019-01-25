@@ -43,6 +43,7 @@ namespace GWFrames {
     int spinweight;
     int boostweight;
     std::stringstream history;
+    std::vector<std::pair<std::string,std::string> > versionHist;
     std::vector<double> t;
     std::vector<Quaternions::Quaternion> frame;
     WaveformFrameType frameType;
@@ -81,6 +82,7 @@ namespace GWFrames {
     inline Waveform& SetBoostWeight(const int NewBoostWeight) { boostweight=NewBoostWeight; return *this; }
     inline Waveform& AppendHistory(const std::string& Hist) { history << Hist; return *this; }
     inline Waveform& SetHistory(const std::string& Hist) { history.str(Hist); history.seekp(0, std::ios_base::end); return *this; }
+    inline Waveform& SetVersionHist(const std::vector<std::pair<std::string,std::string> >& VerHist) { versionHist = VerHist; return *this; }
     inline Waveform& SetT(const std::vector<double>& a) { t = a; return *this; }
     inline Waveform& SetTime(const std::vector<double>& a) { t = a; return *this; }
     inline Waveform& SetFrame(const std::vector<Quaternions::Quaternion>& a) { frame = a; return *this; }
@@ -101,6 +103,7 @@ namespace GWFrames {
     inline int BoostWeight() const { return boostweight; }
     inline std::string HistoryStr() const { return history.str(); }
     inline std::stringstream& HistoryStream() { return history; }
+    inline std::vector<std::pair<std::string,std::string> > VersionHist() const { return versionHist; }
     inline int FrameType() const { return frameType; }
     inline int DataType() const { return dataType; }
     inline std::string FrameTypeString() const { return WaveformFrameNames[frameType]; }

@@ -60,6 +60,8 @@
 //// Make sure std::complex numbers are dealt with appropriately
 %include <std_complex.i>
 
+%include <std_pair.i>
+
 
 /////////////////////////////////////////////////////////////////////
 //// The doxygen-generated documentation is added with this line ////
