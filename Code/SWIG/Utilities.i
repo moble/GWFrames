@@ -12,6 +12,8 @@
 %include "../Utilities.hpp"
 namespace std {
   %template(_vectorM) vector<GWFrames::Matrix>;
+  %template() pair<string,string>;
+  %template() vector<pair<string,string> >;
 };
 %extend GWFrames::Matrix {
   // Print the Matrix nicely at the prompt

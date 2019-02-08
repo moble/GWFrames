@@ -274,7 +274,7 @@ def OutputToH5(W, FileName, FileWriteMode='w') :
     'rhOverM_Corotating_' or 'rPsi4_Aligned_'.
 
     """
-    from h5py import File
+    from h5py import File, special_dtype
     from GWFrames import UnknownDataType, h, hdot, Psi4
     # Add descriptive prefix to FileName
     FileName = __AddFileNamePrefix(W, FileName)
@@ -289,6 +289,8 @@ def OutputToH5(W, FileName, FileWriteMode='w') :
         F.attrs['OutputFormatVersion'] = 'GWFrames_v2'
         F.create_dataset("History", data = W.HistoryStr() + 'OutputToH5(W, {0})\n'.format(FileName))
         F.create_dataset("Time", data=W.T().tolist(), compression="gzip", shuffle=True)
+        if(len(W.VersionHist())>0) :
+            F.create_dataset("VersionHist", (1,2), data = W.VersionHist(), dtype=special_dtype(vlen=bytes))
         if(len(W.Frame())>0) :
             F.create_dataset("Frame", data=[[r[0], r[1], r[2], r[3]] for r in W.Frame()])
         else :

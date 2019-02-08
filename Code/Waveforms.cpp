@@ -90,7 +90,7 @@ std::string StringForm(const std::vector<int>& Lmodes) {
 
 /// Default constructor for an empty object
 GWFrames::Waveform::Waveform() :
-  spinweight(-2), boostweight(-1), history(""), t(0),frame(0), frameType(GWFrames::UnknownFrameType),
+  spinweight(-2), boostweight(-1), history(""), versionHist(), t(0), frame(0), frameType(GWFrames::UnknownFrameType),
   dataType(GWFrames::UnknownDataType), rIsScaledOut(false), mIsScaledOut(false), lm(), data()
 {
   {
@@ -117,8 +117,9 @@ GWFrames::Waveform::Waveform() :
 
 /// Copy constructor
 GWFrames::Waveform::Waveform(const GWFrames::Waveform& a) :
-  spinweight(a.spinweight), boostweight(a.boostweight), history(a.history.str()), t(a.t), frame(a.frame), frameType(a.frameType),
-  dataType(a.dataType), rIsScaledOut(a.rIsScaledOut), mIsScaledOut(a.mIsScaledOut), lm(a.lm), data(a.data)
+  spinweight(a.spinweight), boostweight(a.boostweight), history(a.history.str()), versionHist(a.versionHist),
+  t(a.t), frame(a.frame), frameType(a.frameType), dataType(a.dataType), rIsScaledOut(a.rIsScaledOut),
+  mIsScaledOut(a.mIsScaledOut), lm(a.lm), data(a.data)
 {
   /// Simply copies all fields in the input object to the constructed
   /// object, including history
@@ -127,7 +128,7 @@ GWFrames::Waveform::Waveform(const GWFrames::Waveform& a) :
 
 /// Constructor from data file
 GWFrames::Waveform::Waveform(const std::string& FileName, const std::string& DataFormat) :
-  spinweight(-2), boostweight(-1), history(""), t(0), frame(0), frameType(GWFrames::UnknownFrameType),
+  spinweight(-2), boostweight(-1), history(""), versionHist(), t(0), frame(0), frameType(GWFrames::UnknownFrameType),
   dataType(GWFrames::UnknownDataType), rIsScaledOut(false), mIsScaledOut(false), lm(), data()
 {
   ///
@@ -269,6 +270,7 @@ GWFrames::Waveform& GWFrames::Waveform::operator=(const GWFrames::Waveform& a) {
   history.str(a.history.str());
   history.clear();
   history.seekp(0, ios_base::end);
+  versionHist = a.versionHist;
   t = a.t;
   frame = a.frame;
   frameType = a.frameType;
@@ -288,6 +290,7 @@ GWFrames::Waveform GWFrames::Waveform::CopyWithoutData() const {
   that.history.str((*this).history.str());
   that.history.clear();
   that.history.seekp(0, ios_base::end);
+  that.versionHist = (*this).versionHist;
   that.frameType = (*this).frameType;
   that.dataType = (*this).dataType;
   that.rIsScaledOut = (*this).rIsScaledOut;
@@ -532,6 +535,7 @@ void GWFrames::Waveform::swap(GWFrames::Waveform& b) {
   { const string historyb=b.history.str(); b.history.str(history.str()); history.str(historyb); }
   history.seekp(0, ios_base::end);
   b.history.seekp(0, ios_base::end);
+  versionHist.swap(b.versionHist);
   t.swap(b.t);
   frame.swap(b.frame);
   { const GWFrames::WaveformFrameType bType=b.frameType; b.frameType=frameType; frameType=bType; }
@@ -3068,6 +3072,7 @@ GWFrames::Waveform GWFrames::Waveform::Hybridize(const GWFrames::Waveform& B, co
             << "#### A.history.str():\n" << A.history.str()
             << "#### B.history.str():\n" << B.history.str()
             << "#### End of old histories from `Hybridize`" << std::endl;
+  C.versionHist = A.versionHist;
   C.t = GWFrames::Union(A.t, B.t, tMinStep);
   // We'll assume that A.lm==B.lm, though we'll account for disordering below
   C.lm = A.lm;
@@ -3343,6 +3348,7 @@ GWFrames::Waveform GWFrames::Waveform::Translate(const std::vector<std::vector<d
   const Waveform& A = *this;
   Waveform B = A.CopyWithoutData();
   B.history << "*this = this->.Translate(...);"<< std::endl;
+  B.versionHist = A.versionHist;
   B.frame = std::vector<Quaternions::Quaternion>(0);
   B.frameType = GWFrames::Inertial;
   B.lm = A.lm;

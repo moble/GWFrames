@@ -197,6 +197,10 @@ def ReadFiniteRadiusData(ChMass=0.0, filename='rh_FiniteRadii_CodeUnits.h5', Coo
     try :
         # Get list of waveforms we'll be using
         WaveformNames = list(f)
+        try :
+            WaveformNames.remove('VersionHist.ver')
+        except ValueError:
+            pass
         if(not CoordRadii) :
             # If the list of Radii is empty, figure out what they are
             CoordRadii = [m.group('r') for Name in WaveformNames for m in [re_compile(r"""R(?P<r>.*?)\.dir""").search(Name)] if m]
@@ -384,6 +388,7 @@ def Extrapolate(**kwargs) :
     from sys import stdout, stderr
     from textwrap import dedent
     from numpy import sqrt, abs, fmod, pi, transpose, array
+    from h5py import File
     from scipy.interpolate import splev, splrep
     from GWFrames import Inertial, Corotating, Waveform
 
@@ -540,7 +545,14 @@ def Extrapolate(**kwargs) :
     #     print("Yep"); stdout.flush()
     # print([i for i in range(1)]); stdout.flush()
     # ExtrapolatedWaveforms = [ExtrapolatedWaveformsObject.GetWaveform(i) for i in range(ExtrapolatedWaveformsObject.size())]
-    ExtrapolatedWaveforms = _Extrapolate(Ws, Radii, ExtrapolationOrders, Omegas)
+
+    # Get version history from source file
+    try:
+      VersionHist = File(DataFile,'r')['VersionHist.ver']
+    except KeyError:
+      VersionHist = None
+
+    ExtrapolatedWaveforms = _Extrapolate(Ws, Radii, ExtrapolationOrders, Omegas, VersionHist)
 
     NExtrapolations = len(ExtrapolationOrders)
     for i,ExtrapolationOrder in enumerate(ExtrapolationOrders) :
@@ -833,7 +845,7 @@ def RunExtrapolation(TopLevelInputDir, TopLevelOutputDir, Subdirectory, DataFile
     return 0
 
 
-def _Extrapolate(FiniteRadiusWaveforms, Radii, ExtrapolationOrders, Omegas=None):
+def _Extrapolate(FiniteRadiusWaveforms, Radii, ExtrapolationOrders, Omegas=None, VersionHist=None):
     import numpy
     import GWFrames
 
@@ -910,6 +922,8 @@ def _Extrapolate(FiniteRadiusWaveforms, Radii, ExtrapolationOrders, Omegas=None)
             ExtrapolatedWaveforms[i_N].SetFrame(FiniteRadiusWaveforms[NFiniteRadii-1].Frame())
             ExtrapolatedWaveforms[i_N].SetLM(FiniteRadiusWaveforms[NFiniteRadii-1].LM())
             ExtrapolatedWaveforms[i_N].ResizeData(NModes, NTimes)
+            if VersionHist:
+                ExtrapolatedWaveforms[i_N].SetVersionHist(VersionHist)
 
     if(MaxN<0):
         return ExtrapolatedWaveforms
