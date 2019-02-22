@@ -1,4 +1,4 @@
-| NOTE: This module is no longer *actively* maintained.  Much of the functionality has been moved to [the `scri` package](https://github.com/moble/scri).  Pull requests are welcome, and I'll generally reply to issues.  But because of the age of this code and its dependencies (especially SWIG), I may not be able to help very much if you run into problems.  —Mike |
+| NOTE: This module is no longer *actively* maintained.  Much of the functionality has been moved to [`scri`](https://github.com/moble/scri).  Pull requests are welcome, and I'll generally reply to issues.  But because of the age of this code and its dependencies (especially SWIG), I may not be able to help very much if you run into problems.  —Mike |
 | --- |
 
 
@@ -57,6 +57,15 @@ python -c 'import GWFrames; print("That worked!")'
 ```
 This gives you a separate `GWFrames` environment with working code, and
 without polluting other parts of your more modern python installation.
+Every time you want to use `GWFrames` in a new shell, just run
+
+    conda activate GWFrames
+
+You can install more packages (like matplotlib, ipython, jupyter, etc.)
+in this environment.  Or if you want to stop using this environment and
+go back to your default environment, just run
+
+    conda deactivate
 
 
 Build requirements
