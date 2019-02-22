@@ -1,9 +1,4 @@
-| NOTE: This module is no longer *actively* maintained.  Much of the
-functionality has been moved to
-[the `scri` package](https://github.com/moble/scri).  Pull requests
-are welcome, and I'll generally reply to issues.  But because of the
-age of this code and its dependencies (especially SWIG), I may not
-be able to help very much if you run into problems.  —Mike |
+| NOTE: This module is no longer *actively* maintained.  Much of the functionality has been moved to [the `scri` package](https://github.com/moble/scri).  Pull requests are welcome, and I'll generally reply to issues.  But because of the age of this code and its dependencies (especially SWIG), I may not be able to help very much if you run into problems.  —Mike |
 | --- |
 
 
