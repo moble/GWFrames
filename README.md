@@ -1,3 +1,12 @@
+| NOTE: This module is no longer *actively* maintained.  Much of the
+functionality has been moved to
+[the `scri` package](https://github.com/moble/scri).  Pull requests
+are welcome, and I'll generally reply to issues.  But because of the
+age of this code and its dependencies (especially SWIG), I may not
+be able to help very much if you run into problems.  —Mike |
+| --- |
+
+
 GWFrames
 ========
 Manipulate gravitational waveforms—changing frames, and so on.
@@ -23,6 +32,38 @@ individual waveforms, but there is plenty of room for improvement.  In
 particular, rotations may be painfully slow for large data sets.
 
 
+Quick Start
+===========
+The easiest way to get GWFrames running is to
+[install anaconda](https://www.anaconda.com/distribution/)
+and run the following commands
+```bash
+# Update conda itself first
+conda update -y -n base -c defaults conda
+
+# Create a new conda env just for GWFrames
+# You may want to add "matplotlib ipython jupyter" to the end of the next line
+conda create -y -n GWFrames python=2 swig==3.0.10 numpy gsl hdf5 fftw h5py
+conda activate GWFrames
+
+# Get the code
+git clone https://github.com/moble/GWFrames.git
+cd GWFrames
+git submodule init
+git submodule update
+
+# Compile and install the code into this conda env
+cd Code
+python setup.py install
+
+# Test that it works
+cd ~
+python -c 'import GWFrames; print("That worked!")'
+```
+This gives you a separate `GWFrames` environment with working code, and
+without polluting other parts of your more modern python installation.
+
+
 Build requirements
 ==================
 To build just the C++ code:
@@ -30,7 +71,7 @@ To build just the C++ code:
 * [GNU Scientific Library](http://www.gnu.org/software/gsl/), built as a shared library
 
 To use the optional—but highly recommended—Python interface:
-* [SWIG](http://www.swig.org/) v3.0 or greater
+* [SWIG](http://www.swig.org/) v3.0.10
 * [HDF5](http://www.hdfgroup.org/HDF5/) v1.8.10 or greater, built as a shared library with development headers (libhdf5-dev or similar)
 * [FFTW](http://www.fftw.org/) v3.2 or greater, built as a shared library
 
@@ -38,7 +79,7 @@ And, of course, python and a few of its goodies, for which I cannot
 recommend [anaconda](http://continuum.io/downloads) highly enough --
 it makes installation and maintenance of the python software stack
 vastly easier.
-* [Python](http://www.python.org/getit/) v2.7.4 or greater (untested on `python3`+), with development headers (python-dev or similar)
+* [Python](http://www.python.org/getit/) v2.7.4 or greater (but less than v3), with development headers (python-dev or similar)
 * [NumPy](http://www.numpy.org/) v1.7 or greater (`conda install numpy`)
 * [Matplotlib](http://matplotlib.org/) v1.2 or greater (`conda install matplotlib`)
 * [h5py](http://code.google.com/p/h5py/) v2.1 or greater (`conda install h5py`)
@@ -100,7 +141,8 @@ helped by porting some of my older code from
 [Triton](https://github.com/moble/Triton) to perform noise-weighted
 overlap calculations, and with numerous bug reports and helpful
 suggestions.  Serguei Ossokine also helped substantially by
-cross-checking the post-Newtonian formulas and results.
+cross-checking the post-Newtonian formulas and results.  Dante Iozzo
+has done his best to keep things working as this code enters its dotage.
 
 Other contributions are entirely welcome.  The preferred method is via
 github's excellent interface.  If you have a bug report, just go to
