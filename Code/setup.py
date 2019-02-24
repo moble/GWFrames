@@ -47,14 +47,14 @@ else:
     print("\nBuilding spinsfast first")
     cmd = 'cd spinsfast && {0} python/setup.py build --build-temp build/temp install --install-lib lib/'.format(executable)
     print(cmd)
-    check_call(cmd, shell=True)
+    check_call(cmd, shell=True, env=os.environ)
     print("Finished building spinsfast")
 
     ## Build Quaternions and SphericalFunctions
     print("\nInstalling SphericalFunctions")
     cmd = ' '.join(['cd SphericalFunctions && ', executable]+argv)
     print(cmd)
-    check_call(cmd, shell=True)
+    check_call(cmd, shell=True, env=os.environ)
     print("Finished installing SphericalFunctions\n")
 
 ## If PRD won't let me keep a subdirectory, make one
@@ -124,6 +124,12 @@ if isdir('/opt/local/include'):
     IncDirs += ['/opt/local/include']
 if isdir('/opt/local/lib'):
     LibDirs += ['/opt/local/lib']
+
+# If /opt/conda directories exist, use them
+if isdir('/opt/conda/include'):
+    IncDirs += ['/opt/conda/include']
+if isdir('/opt/conda/lib'):
+    LibDirs += ['/opt/conda/lib']
 
 ## Remove a compiler flag that doesn't belong there for C++
 import distutils.sysconfig as ds
