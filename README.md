@@ -29,7 +29,7 @@ particular, rotations may be painfully slow for large data sets.
 
 Quick Start
 ===========
-The easiest way to get GWFrames running is to
+The best way to get GWFrames running is to
 [install anaconda](https://www.anaconda.com/distribution/)
 and run the following commands
 ```bash
@@ -61,11 +61,52 @@ Every time you want to use `GWFrames` in a new shell, just run
 
     conda activate GWFrames
 
-You can install more packages (like matplotlib, ipython, jupyter, etc.)
-in this environment.  Or if you want to stop using this environment and
-go back to your default environment, just run
+and python/ipython will automatically know where to find this module.
+You can install more packages (like matplotlib, ipython, jupyter,
+etc.)  in this environment.  Or if you want to stop using this
+environment and go back to your default environment, just run
 
     conda deactivate
+
+If the command above fails, you may have an old version of conda with
+screwed up compilers---even after updating.  The surest way to solve
+that is just to reinstall with the current version of conda.
+
+
+Docker
+======
+
+While conda is the scientific python community's prescribed way of
+running all things python, the community may have moved on by the time
+you try to run this code, or you may just not want to use a sensible
+way of running python.  In that case, a good alternative to compiling
+everything yourself (described below) is to use docker.
+
+You can download and run this image using the following commands:
+
+    docker pull moble/gwframes
+    docker run -i -t moble/gwframes bash
+
+You'll probably want to attach some local directory to the container
+as a "volume", by adding such a flag to the command line:
+
+    docker run -i -t moble/gwframes --volume=/path/to/data:/data bash
+
+This uses the directory found on your local machine in
+`/path/to/data`, and makes it available in the docker container as
+`/data`.  Note that this allows the directory on your local machine to
+be both read from and written to, so that your output will survive
+even after you exit the container.
+
+A convenient way to use this code is to start a Jupyter Notebook
+server and interact with it via your browser:
+
+    docker run -i -t -p 8888:8888 moble/gwframes --volume=/path/to/data:/data \
+    bash -c "/opt/conda/bin/jupyter notebook --notebook-dir=/data --ip='*' --port=8888 --no-browser"
+
+You can then view the Jupyter Notebook by opening
+`http://localhost:8888` in your browser.
+
 
 
 Build requirements
@@ -125,7 +166,7 @@ objects, with various methods defined for each.  An IPython notebook
 in the `Docs` directory contains extensive examples, following the
 outline of the paper.  To use it, run
 
-    ipython notebook Docs/AngVelOfGravRadFromPrecessingBinaries_CorotatingFrame.ipynb --pylab
+    ipython notebook Docs/AngVelOfGravRadFromPrecessingBinaries_CorotatingFrame.ipynb
 
 Alternatively, this code may be used directly through its C++
 interface.  A simple example is provided in the `C++Example`

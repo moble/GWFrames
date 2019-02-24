@@ -1,6 +1,6 @@
 FROM continuumio/miniconda2
 
-# Install gcc
+# Install gcc and g++
 RUN apt-get update --fix-missing && \
     apt-get install -y --reinstall build-essential && \
     apt-get clean
