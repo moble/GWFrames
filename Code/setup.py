@@ -125,6 +125,12 @@ if isdir('/opt/local/include'):
 if isdir('/opt/local/lib'):
     LibDirs += ['/opt/local/lib']
 
+# If /opt/conda directories exist, use them
+if isdir('/opt/conda/include'):
+    IncDirs += ['/opt/conda/include']
+if isdir('/opt/conda/lib'):
+    LibDirs += ['/opt/conda/lib']
+
 ## Remove a compiler flag that doesn't belong there for C++
 import distutils.sysconfig as ds
 cfs=ds.get_config_vars()
