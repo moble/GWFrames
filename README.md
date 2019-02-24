@@ -51,9 +51,9 @@ git submodule update
 cd Code
 python setup.py install
 
-# Test that it works
+# Test that it works by constructing an equal-mass aligned-spin PN waveform
 cd ~
-python -c 'import GWFrames; print("That worked!")'
+python -c 'import GWFrames; W = GWFrames.PNWaveform("TaylorT4", 0.0, [0., 0., 0.9], [0.0, 0.0, 0.9], 0.01); print("That worked!")'
 ```
 This gives you a separate `GWFrames` environment with working code, and
 without polluting other parts of your more modern python installation.
