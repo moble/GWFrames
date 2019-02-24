@@ -16,4 +16,4 @@ RUN git clone https://github.com/moble/GWFrames.git && \
     git submodule init && \
     git submodule update && \
     cd Code && \
-    LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/ /opt/conda/bin/python setup.py install
+    CPATH=/opt/conda/include/ LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/:/opt/conda/lib/ /opt/conda/bin/python setup.py install
