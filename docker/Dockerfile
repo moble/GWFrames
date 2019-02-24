@@ -2,8 +2,7 @@ FROM continuumio/miniconda2
 
 # Install gcc
 RUN apt-get update --fix-missing && \
-    apt-get install -y gcc && \
-    apt-get install --reinstall build-essential && \
+    apt-get install -y --reinstall build-essential && \
     apt-get clean
 
 # Get conda itself set up with our requirements
