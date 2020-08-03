@@ -9,6 +9,3 @@ dependencies:
   - python=2.7
   - swig=3.0.10
   - h5py>=2.1
-  - ipython
-  - jupyter
-  - matplotlib
