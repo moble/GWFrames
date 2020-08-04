@@ -845,8 +845,8 @@ void SliceModes::MoreschiIteration(GWFrames::Modes& OneOverK_ip1, GWFrames::Mode
 }
 
 // Explicit instantiations
-template class SliceOfScri<DataGrid>;
-template class SliceOfScri<Modes>;
+template class GWFrames::SliceOfScri<DataGrid>;
+template class GWFrames::SliceOfScri<Modes>;
 
 
 //////////
