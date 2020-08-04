@@ -33,44 +33,46 @@ The best way to get GWFrames running is to
 [install anaconda](https://www.anaconda.com/distribution/)
 and run the following commands
 ```bash
-# Update conda itself first
-conda update -y -n base -c defaults conda
-
 # Create a new conda env just for GWFrames
 # You may want to add "matplotlib ipython jupyter" to the end of the next line
 conda create -y -n GWFrames python=2 swig==3.0.10 numpy gsl hdf5 fftw h5py
 conda activate GWFrames
 
 # Get the code
-git clone https://github.com/moble/GWFrames.git
-cd GWFrames
-git submodule init
-git submodule update
+git clone --recursive https://github.com/moble/GWFrames.git
 
 # Compile and install the code into this conda env
-cd Code
+cd GWFrames/Code
 python setup.py install
-
+```
+This gives you a separate `GWFrames` environment with working code, and
+without polluting other parts of your more modern python installation.
+After those commands have finished, you can check that that worked with
+```bash
 # Test that it works by constructing an equal-mass aligned-spin PN waveform
 cd ~
 python -c 'import GWFrames; W = GWFrames.PNWaveform("TaylorT4", 0.0, [0., 0., 0.9], [0.0, 0.0, 0.9], 0.01); print("That worked!")'
 ```
-This gives you a separate `GWFrames` environment with working code, and
-without polluting other parts of your more modern python installation.
-Every time you want to use `GWFrames` in a new shell, just run
+
+In the future, every time you want to use `GWFrames` in a new shell,
+just run
 
     conda activate GWFrames
 
 and python/ipython will automatically know where to find this module.
-You can install more packages (like matplotlib, ipython, jupyter,
-etc.)  in this environment.  Or if you want to stop using this
-environment and go back to your default environment, just run
+You can install more packages (like matplotlib, ipython, jupyter, etc.)
+in this environment.  Or if you want to stop using this environment and
+go back to your default environment, just run
 
     conda deactivate
 
-If the command above fails, you may have an old version of conda with
-screwed up compilers---even after updating.  The surest way to solve
-that is just to reinstall with the current version of conda.
+If any of the above fails, you may have an old version of conda with
+screwed up compilers.  It maybe sufficient to just run
+
+    conda update -y -n base -c defaults conda
+
+Otherwise, the surest way to solve that is just to reinstall with the
+current version of conda.
 
 
 Docker
