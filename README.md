@@ -33,7 +33,7 @@ The best way to get GWFrames running is to use anaconda.  The first step is to
 [install anaconda](https://www.anaconda.com/distribution/).  On Linux and Mac,
 the next step should be as easy as running
 ```bash
-conda create -c conda-forge -y -n GWFrames gwframes
+conda create -c conda-forge -y -n GWFrames gwframes ipython jupyter  # these last two are optional
 conda activate GWFrames
 ```
 On Windows (or if that doesn't work), you'll need to compile GWFrames yourself,
