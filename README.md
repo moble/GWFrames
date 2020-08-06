@@ -29,9 +29,15 @@ particular, rotations may be painfully slow for large data sets.
 
 Quick Start
 ===========
-The best way to get GWFrames running is to
-[install anaconda](https://www.anaconda.com/distribution/)
-and run the following commands
+The best way to get GWFrames running is to use anaconda.  The first step is to
+[install anaconda](https://www.anaconda.com/distribution/).  On Linux and Mac,
+the next step should be as easy as running
+```bash
+conda create -c conda-forge -y -n GWFrames gwframes
+conda activate GWFrames
+```
+On Windows (or if that doesn't work), you'll need to compile GWFrames yourself,
+which should just involve the following commands:
 ```bash
 # Create a new conda env just for GWFrames
 # You may want to add "matplotlib ipython jupyter" to the end of the next line
