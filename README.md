@@ -1,4 +1,4 @@
-| NOTE: This module is no longer *actively* maintained.  Much of the functionality has been moved to [`scri`](https://github.com/moble/scri).  Pull requests are welcome, and I'll generally reply to issues.  But because of the age of this code and its dependencies (especially SWIG), I may not be able to help very much if you run into problems.  —Mike |
+| NOTE: This module is no longer maintained.  Much of the functionality has been moved to [`scri`](https://github.com/moble/scri) or to [`sxs`](https://github.com/sxs-collaboration/sxs).  I'll generally reply to issues, but because of the age of this code and its dependencies (especially SWIG), no further updates to the code itself will be made.  Also, so much of python's infrastructure has dropped support for python 2 that even if other packages get updates, this package will likely be unable to interact with those updated versions.  —Mike |
 | --- |
 
 
