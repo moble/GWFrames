@@ -33,16 +33,21 @@ The best way to get GWFrames running is to use anaconda.  The first step is to
 [install anaconda](https://www.anaconda.com/distribution/).  On Linux and Mac,
 the next step should be as easy as running
 ```bash
-conda create -c conda-forge -y -n GWFrames gwframes ipython jupyter  # these last two are optional
+conda create -c conda-forge -y -n GWFrames gwframes jupyter  # this last one is optional
 conda activate GWFrames
 ```
-On Windows (or if that doesn't work), you'll need to compile GWFrames yourself,
-which should just involve the following commands:
+
+For most use cases, that should be enough.  On Windows (or if that doesn't work),
+you'll need to compile GWFrames yourself, which is actually easiest again with
+conda, to get the build requirements.
 ```bash
 # Create a new conda env just for GWFrames
-# You may want to add "matplotlib ipython jupyter" to the end of the next line
+# You may want to add "matplotlib jupyter" to the end of the next line
 conda create -y -n GWFrames python=2 swig==3.0.10 numpy gsl hdf5 fftw h5py
 conda activate GWFrames
+
+# On macOS, you may also need these extras:
+#conda install -y clang_osx-64 clangxx_osx-64 gfortran_osx-64
 
 # Get the code
 git clone --recursive https://github.com/moble/GWFrames.git
@@ -51,9 +56,10 @@ git clone --recursive https://github.com/moble/GWFrames.git
 cd GWFrames/Code
 python setup.py install
 ```
-This gives you a separate `GWFrames` environment with working code, and
-without polluting other parts of your more modern python installation.
-After those commands have finished, you can check that that worked with
+
+In either case, the commands above give you a separate `GWFrames` environment
+with working code, and without polluting other parts of your more modern python
+installation.  After those commands have finished, you can check that that worked with
 ```bash
 # Test that it works by constructing an equal-mass aligned-spin PN waveform
 cd ~
@@ -115,10 +121,20 @@ server and interact with it via your browser:
 You can then view the Jupyter Notebook by opening
 `http://localhost:8888` in your browser.
 
+It is easy to recompile the code in docker.  To do so, you'll probably want to edit
+the code, which will require `apt-get install emacs` (or `nano` or `vim` or whatever).
+Then, you'll need to tell the compiler where `GSL_HOME` is.  In this case, it's
+`/opt/conda`, so you can compile the code in `GWFrames/Code` by running
+
+    GSL_HOME=/opt/conda python setup.py install
 
 
 Build requirements
 ==================
+
+As mentioned [above](#quick-start), installing the build requirements is easiest with conda.
+Otherwise, you're on your own with all of the following:
+
 To build just the C++ code:
 * C++ compiler
 * [GNU Scientific Library](http://www.gnu.org/software/gsl/), built as a shared library
