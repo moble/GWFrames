@@ -43,7 +43,7 @@ conda, to get the build requirements.
 ```bash
 # Create a new conda env just for GWFrames
 # You may want to add "matplotlib jupyter" to the end of the next line
-conda create -y -n GWFrames python=2 swig==3.0.10 numpy gsl hdf5 fftw h5py
+conda create -c conda-forge -y -n GWFrames python=2 swig==3.0.10 numpy gsl hdf5 fftw h5py
 conda activate GWFrames
 
 # On macOS, you may also need these extras:
