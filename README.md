@@ -33,21 +33,23 @@ The best way to get GWFrames running is to use anaconda.  The first step is to
 [install anaconda](https://www.anaconda.com/distribution/).  On Linux and Mac,
 the next step should be as easy as running
 ```bash
-conda create -c conda-forge -y -n GWFrames gwframes jupyter  # this last one is optional
+conda create -y -n GWFrames
 conda activate GWFrames
+# conda config --env --set subdir osx-64  # If using an ARM Mac, uncomment this line
+conda install -c conda-forge -y gwframes ipython jupyter  # these last two are optional
 ```
 
 For most use cases, that should be enough.  On Windows (or if that doesn't work),
 you'll need to compile GWFrames yourself, which is actually easiest again with
-conda, to get the build requirements.
+conda, to get the build requirements.  Instead of the last line of the
+instructions above, run the following
 ```bash
 # Create a new conda env just for GWFrames
 # You may want to add "matplotlib jupyter" to the end of the next line
-conda create -c conda-forge -y -n GWFrames python=2 swig==3.0.10 numpy gsl hdf5 fftw h5py
-conda activate GWFrames
+conda install python=2 swig==3.0.10 numpy gsl hdf5 fftw h5py
 
-# On macOS, you may also need these extras:
-#conda install -y clang_osx-64 clangxx_osx-64 gfortran_osx-64
+## If using a Mac, you may need uncomment the following line
+# conda install -y clang_osx-64 clangxx_osx-64 gfortran_osx-64
 
 # Get the code
 git clone --recursive https://github.com/moble/GWFrames.git
