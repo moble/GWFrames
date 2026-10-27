@@ -1,0 +1,71 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  uv:
+    name: uv / ${{ matrix.os }} / Python ${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, ubuntu-24.04-arm, macos-latest]
+        python-version: ["3.11", "3.14"]
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: recursive
+
+      - name: Install GSL and FFTW (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libgsl-dev libfftw3-dev
+
+      - name: Install GSL and FFTW (macOS)
+        if: runner.os == 'macOS'
+        run: brew install gsl fftw
+
+      - uses: astral-sh/setup-uv@v10.3.0
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Build and install
+        run: uv sync --no-editable
+
+      - name: Run tests
+        run: uv run --no-sync pytest
+
+  mamba:
+    name: mamba / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    defaults:
+      run:
+        shell: bash -el {0}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: recursive
+
+      - uses: mamba-org/setup-micromamba@v3.2.1
+        with:
+          environment-name: gwframes
+          create-args: >-
+            python=3.13 cxx-compiler cmake ninja pkg-config
+            gsl fftw numpy scipy h5py pybind11 scikit-build-core pytest
+
+      - name: Build and install
+        run: python -m pip install --no-deps --no-build-isolation -v .
+
+      - name: Run tests
+        run: python -m pytest

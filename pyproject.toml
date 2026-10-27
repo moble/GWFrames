@@ -34,7 +34,7 @@ Issues = "https://github.com/moble/GWFrames/issues"
 Paper = "https://arxiv.org/abs/1302.2919"
 
 [dependency-groups]
-dev = ["pytest>=8", "matplotlib>=3.7"]
+dev = ["pytest>=8"]
 
 [tool.scikit-build]
 minimum-version = "build-system.requires"
@@ -51,7 +51,6 @@ sdist.exclude = [
   "extern/PostNewtonian/Mathematica",
   "extern/PostNewtonian/PNTerms",
   "extern/PostNewtonian/Waveforms",
-  "extern/SpacetimeAlgebra/CodeGenerators",
   "extern/SpacetimeAlgebra/CythonExample",
   "extern/SphericalFunctions/Notes",
   "extern/SphericalFunctions/Quaternions",
@@ -59,8 +58,23 @@ sdist.exclude = [
   "extern/spinsfast/build",
   "extern/spinsfast/lib",
   "extern/spinsfast/obj",
+  "tools",
 ]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = ["--import-mode=importlib"]
+
+[tool.cibuildwheel]
+# Free-threaded builds are skipped because the extension relies on the GIL.
+skip = ["cp3??t-*", "*-musllinux_*"]
+build-verbosity = 1
+before-all = "bash {project}/tools/build-dependencies.sh"
+test-requires = ["pytest"]
+test-command = "pytest {project}/tests"
+
+[tool.cibuildwheel.linux]
+environment = { DEPS_PREFIX = "/opt/gwframes-deps", CMAKE_PREFIX_PATH = "/opt/gwframes-deps", PKG_CONFIG_PATH = "/opt/gwframes-deps/lib/pkgconfig" }
+
+[tool.cibuildwheel.macos]
+environment = { MACOSX_DEPLOYMENT_TARGET = "11.0", DEPS_PREFIX = "/tmp/gwframes-deps", CMAKE_PREFIX_PATH = "/tmp/gwframes-deps", PKG_CONFIG_PATH = "/tmp/gwframes-deps/lib/pkgconfig" }
