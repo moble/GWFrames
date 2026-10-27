@@ -47,18 +47,20 @@ inline bool IsStringLike(py::handle src) {
 template <typename T>
 py::array_t<T, py::array::c_style | py::array::forcecast> AsArray(py::handle src, bool convert) {
   using Array = py::array_t<T, py::array::c_style | py::array::forcecast>;
+  // A default-constructed array_t is an empty array, not a null handle.
+  const auto null = [] { return py::reinterpret_steal<Array>(py::handle()); };
   if (!src || IsStringLike(src)) {
-    return Array();
+    return null();
   }
   const bool is_array = py::isinstance<py::array>(src);
   if (!convert && !py::isinstance<py::array_t<T>>(src) && !py::isinstance<py::list>(src)
       && !py::isinstance<py::tuple>(src)) {
-    return Array();
+    return null();
   }
   if (is_array) {
     const char kind = py::reinterpret_borrow<py::array>(src).dtype().kind();
     if (kind == 'O' || kind == 'U' || kind == 'S' || (kind == 'c' && !is_complex<T>::value)) {
-      return Array();
+      return null();
     }
   }
   return Array::ensure(src);
