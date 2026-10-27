@@ -16,6 +16,7 @@
 #ifndef GWFRAMES_BINDINGS_CASTERS_HPP
 #define GWFRAMES_BINDINGS_CASTERS_HPP
 
+#include <algorithm>
 #include <complex>
 #include <type_traits>
 #include <vector>
