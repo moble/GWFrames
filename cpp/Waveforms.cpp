@@ -3079,9 +3079,8 @@ GWFrames::Waveform GWFrames::Waveform::Hybridize(const GWFrames::Waveform& B, co
   // Make sure the time stops at the end of B's time (in case A extended further)
   int i_t=C.t.size()-1;
   while(C.T(i_t)>B.t.back() && i_t>0) { --i_t; }
-  C.t.erase(C.t.begin()+i_t, C.t.end());
+  C.t.erase(C.t.begin()+i_t+1, C.t.end());
   // Reserve space for everything
-  C.frame.resize(C.NTimes());
   C.data.resize(C.lm.size(), C.t.size());
   // Find the indices of the transition points
   unsigned int J01=0, J12=C.NTimes()-1;
@@ -3089,21 +3088,30 @@ GWFrames::Waveform GWFrames::Waveform::Hybridize(const GWFrames::Waveform& B, co
   while(C.T(J12)>t2 && J12>0) { J12--; }
   const double T01 = C.T(J01);
   const double TransitionLength = C.T(J12)-T01;
-  // Find the frames interpolated to the appropriate times
-  vector<Quaternion> Aframe = Quaternions::Squad(A.frame, A.t, vector<double>(&(C.t)[0], &(C.t)[J12]));
-  vector<Quaternion> Bframe = Quaternions::Squad(B.frame, B.t, vector<double>(&(C.t)[J01], &(C.t)[C.NTimes()-1]));
-  // Assign the frame data from earliest part
-  for(unsigned int j=0; j<J01; ++j) {
-    C.frame[j] = Aframe[j];
-  }
-  // Assign the frame data from the transition
-  for(unsigned int j=J01; j<J12; ++j) {
-    const double Transition = TransitionFunction_Smooth((C.T(j)-T01)/TransitionLength);
-    C.frame[j] = Quaternions::Slerp(Transition, Aframe[j], Bframe[j-J01]);
-  }
-  // Assign the frame data from the latest part
-  for(unsigned int j=J12; j<C.NTimes(); ++j) {
-    C.frame[j] = Bframe[j-J01];
+  // Find the frames interpolated to the appropriate times.  An empty frame
+  // is the identity, and a frame with a single rotor is constant.  If both
+  // frames are empty, so is the hybrid's.
+  if(A.frame.size()>0 || B.frame.size()>0) {
+    const auto FrameAt = [](const Waveform& W, const vector<double>& times) {
+      if(W.frame.size()>1) { return Quaternions::Squad(W.frame, W.t, times); }
+      return vector<Quaternion>(times.size(), (W.frame.size()==1 ? W.frame[0] : Quaternions::One));
+    };
+    const vector<Quaternion> Aframe = FrameAt(A, vector<double>(C.t.begin(), C.t.begin()+J12));
+    const vector<Quaternion> Bframe = FrameAt(B, vector<double>(C.t.begin()+J01, C.t.end()));
+    C.frame.resize(C.NTimes());
+    // Assign the frame data from earliest part
+    for(unsigned int j=0; j<J01; ++j) {
+      C.frame[j] = Aframe[j];
+    }
+    // Assign the frame data from the transition
+    for(unsigned int j=J01; j<J12; ++j) {
+      const double Transition = TransitionFunction_Smooth((C.T(j)-T01)/TransitionLength);
+      C.frame[j] = Quaternions::Slerp(Transition, Aframe[j], Bframe[j-J01]);
+    }
+    // Assign the frame data from the latest part
+    for(unsigned int j=J12; j<C.NTimes(); ++j) {
+      C.frame[j] = Bframe[j-J01];
+    }
   }
   // Construct the GSL interpolators for the data
   gsl_interp_accel* accReA = gsl_interp_accel_alloc();
