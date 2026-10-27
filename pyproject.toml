@@ -1,0 +1,66 @@
+[build-system]
+requires = ["scikit-build-core>=0.11", "pybind11>=2.13"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "GWFrames"
+version = "2.0.0"
+description = "Manipulate gravitational waveforms — changing frames, and so on"
+readme = "README.md"
+authors = [{ name = "Michael Boyle", email = "mob22@cornell.edu" }]
+license = "MIT AND GPL-3.0-or-later"
+license-files = ["LICENSE", "extern/spinsfast/COPYING"]
+requires-python = ">=3.11"
+dependencies = [
+  "numpy>=1.24",
+  "scipy>=1.10",
+  "h5py>=3.8",
+]
+classifiers = [
+  "Programming Language :: C++",
+  "Programming Language :: Python :: 3",
+  "Operating System :: POSIX :: Linux",
+  "Operating System :: MacOS",
+  "Topic :: Scientific/Engineering :: Astronomy",
+  "Topic :: Scientific/Engineering :: Physics",
+]
+
+[project.optional-dependencies]
+plot = ["matplotlib>=3.7"]
+
+[project.urls]
+Homepage = "https://github.com/moble/GWFrames"
+Issues = "https://github.com/moble/GWFrames/issues"
+Paper = "https://arxiv.org/abs/1302.2919"
+
+[dependency-groups]
+dev = ["pytest>=8", "matplotlib>=3.7"]
+
+[tool.scikit-build]
+minimum-version = "build-system.requires"
+build-dir = "build/{wheel_tag}"
+wheel.packages = ["src/GWFrames"]
+sdist.exclude = [
+  ".github",
+  "Docs",
+  "Notes",
+  "scripts",
+  "**/*.ipynb",
+  "**/*_wrap.cpp",
+  "extern/PostNewtonian/Latex",
+  "extern/PostNewtonian/Mathematica",
+  "extern/PostNewtonian/PNTerms",
+  "extern/PostNewtonian/Waveforms",
+  "extern/SpacetimeAlgebra/CodeGenerators",
+  "extern/SpacetimeAlgebra/CythonExample",
+  "extern/SphericalFunctions/Notes",
+  "extern/SphericalFunctions/Quaternions",
+  "extern/spinsfast/bin",
+  "extern/spinsfast/build",
+  "extern/spinsfast/lib",
+  "extern/spinsfast/obj",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["--import-mode=importlib"]
