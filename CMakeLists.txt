@@ -84,3 +84,16 @@ if(NOT GWFRAMES_CODE_REVISION)
   set(GWFRAMES_CODE_REVISION "unknown")
 endif()
 target_compile_definitions(gwframes PRIVATE "CodeRevision=\"${GWFRAMES_CODE_REVISION}\"")
+
+# The Python extension module, installed inside the `GWFrames` package
+find_package(Python 3.11 REQUIRED COMPONENTS Interpreter Development.Module)
+find_package(pybind11 CONFIG REQUIRED)
+pybind11_add_module(_GWFrames
+  cpp/bindings/module.cpp
+  cpp/bindings/quaternions.cpp
+  cpp/bindings/utilities.cpp
+  cpp/bindings/waveforms.cpp
+  cpp/bindings/scri.cpp
+)
+target_link_libraries(_GWFrames PRIVATE gwframes)
+install(TARGETS _GWFrames LIBRARY DESTINATION GWFrames)
