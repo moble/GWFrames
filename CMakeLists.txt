@@ -47,7 +47,7 @@ add_library(gwframes STATIC
   extern/SphericalFunctions/Combinatorics.cpp
   extern/SphericalFunctions/WignerDMatrices.cpp
   extern/SphericalFunctions/SWSHs.cpp
-  extern/SpacetimeAlgebra/SpacetimeAlgebra.cpp
+  extern/SpacetimeAlgebra/CodeGenerators/SpacetimeAlgebra.cpp
   cpp/Utilities.cpp
   cpp/Waveforms.cpp
   cpp/PNWaveforms.cpp
@@ -62,7 +62,7 @@ target_include_directories(gwframes PUBLIC
   extern
   extern/Quaternions
   extern/SphericalFunctions
-  extern/SpacetimeAlgebra
+  extern/SpacetimeAlgebra/CodeGenerators
 )
 target_compile_definitions(gwframes PUBLIC USE_GSL)
 target_link_libraries(gwframes PUBLIC spinsfast GSL::gsl FFTW3::fftw3)
