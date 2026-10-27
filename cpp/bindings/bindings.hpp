@@ -1,4 +1,4 @@
-// Copyright (c) 2014, Michael Boyle
+// Copyright (c) 2026, Michael Boyle
 // See LICENSE file for details
 
 #ifndef GWFRAMES_BINDINGS_HPP
