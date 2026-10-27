@@ -38,7 +38,6 @@ dev = ["pytest>=8"]
 
 [tool.scikit-build]
 minimum-version = "build-system.requires"
-build-dir = "build/{wheel_tag}"
 wheel.packages = ["src/GWFrames"]
 sdist.exclude = [
   ".github",
