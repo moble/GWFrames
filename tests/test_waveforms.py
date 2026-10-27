@@ -94,6 +94,7 @@ def test_pickle_and_copy(inertial):
 
 @pytest.mark.parametrize("writer, reader", [("OutputToH5", "ReadFromH5"), ("OutputToNRAR", "ReadFromNRAR")])
 def test_h5_round_trip(tmp_path, pn, writer, reader):
+    pytest.importorskip("h5py")
     W = GWFrames.Waveform(pn).KeepOnlyEll2()
     getattr(W, writer)(str(tmp_path / "W.h5"))
     W2 = getattr(GWFrames, reader)(str(tmp_path / (W.GetFileNamePrefix() + "W.h5")))
