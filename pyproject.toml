@@ -66,7 +66,9 @@ addopts = ["--import-mode=importlib"]
 
 [tool.cibuildwheel]
 # Free-threaded builds are skipped because the extension relies on the GIL.
-skip = ["cp3??t-*", "*-musllinux_*"]
+# CPython 3.15 is skipped until h5py publishes wheels for it; without them,
+# installing GWFrames would try (and fail) to build h5py from source.
+skip = ["cp3??t-*", "*-musllinux_*", "cp315-*"]
 build-verbosity = 1
 before-all = "bash {project}/tools/build-dependencies.sh"
 test-requires = ["pytest"]
