@@ -14,7 +14,9 @@ requires-python = ">=3.11"
 dependencies = [
   "numpy>=1.24",
   "scipy>=1.10",
-  "h5py>=3.8",
+  # PyPI has no h5py wheels for Python 3.15, and may never have them; there,
+  # h5py must come from elsewhere (such as conda-forge) for the HDF5 functions.
+  "h5py>=3.8; python_version < '3.15'",
 ]
 classifiers = [
   "Programming Language :: C++",
@@ -66,9 +68,7 @@ addopts = ["--import-mode=importlib"]
 
 [tool.cibuildwheel]
 # Free-threaded builds are skipped because the extension relies on the GIL.
-# CPython 3.15 is skipped until h5py publishes wheels for it; without them,
-# installing GWFrames would try (and fail) to build h5py from source.
-skip = ["cp3??t-*", "*-musllinux_*", "cp315-*"]
+skip = ["cp3??t-*", "*-musllinux_*"]
 build-verbosity = 1
 before-all = "bash {project}/tools/build-dependencies.sh"
 test-requires = ["pytest"]

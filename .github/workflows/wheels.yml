@@ -1,23 +1,54 @@
 name: Wheels
 
-# Wheels are built on pull requests and pushes to main, to make sure that they
-# still build, and are published to PyPI when a GitHub release is published.
+# Wheels and an sdist are built and tested on every pull request and push to
+# main.  After a push to main, if they all succeed, the version is bumped, and
+# the new version is tagged, released on GitHub, and published to PyPI.
+#
+# The size of the bump is chosen from the pushed commit messages by
+# .github/scripts/bump_version.py: #major, #minor, or (the default) #patch,
+# optionally with #dev for a development release.  Commits whose head commit
+# message contains "[skip ci]" run no workflows at all, and "[no release]"
+# builds and tests without releasing.
 
 on:
   push:
     branches: [main]
   pull_request:
-  release:
-    types: [published]
   workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  # Never cancel a run on main, which may be partway through a release
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  version:
+    name: Choose version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.bump.outputs.version }}
+      prerelease: ${{ steps.bump.outputs.prerelease }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Choose the new version
+        id: bump
+        env:
+          # Only pushes are bumped; other events build the current version.
+          COMMIT_MESSAGES: ${{ github.event_name == 'push' && toJSON(github.event.commits.*.message) || '' }}
+        run: |
+          if [[ "${{ github.event_name }}" == "push" ]]; then
+            python3 .github/scripts/bump_version.py
+          else
+            version=$(sed -n 's/^version = "\(.*\)"$/\1/p' pyproject.toml)
+            echo "version=${version}" >> "$GITHUB_OUTPUT"
+            echo "prerelease=false" >> "$GITHUB_OUTPUT"
+            echo "${version}"
+          fi
+
   wheels:
     name: Wheels / ${{ matrix.os }}
+    needs: version
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -29,6 +60,9 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Set the version
+        run: python3 .github/scripts/bump_version.py --set "${{ needs.version.outputs.version }}"
+
       - uses: pypa/cibuildwheel@v4.3.4
 
       - uses: actions/upload-artifact@v7
@@ -38,11 +72,15 @@ jobs:
 
   sdist:
     name: Source distribution
+    needs: version
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
         with:
           submodules: recursive
+
+      - name: Set the version
+        run: python3 .github/scripts/bump_version.py --set "${{ needs.version.outputs.version }}"
 
       - uses: astral-sh/setup-uv@v10.3.2
 
@@ -54,20 +92,50 @@ jobs:
           name: sdist
           path: dist/*.tar.gz
 
-  publish:
-    name: Publish to PyPI
-    needs: [wheels, sdist]
-    if: github.event_name == 'release' && github.event.action == 'published'
+  release:
+    name: Release and publish to PyPI
+    needs: [version, wheels, sdist]
+    if: >-
+      github.event_name == 'push'
+      && github.ref == 'refs/heads/main'
+      && !contains(github.event.head_commit.message, '[skip ci]')
+      && !contains(github.event.head_commit.message, '[no release]')
     runs-on: ubuntu-latest
     environment:
       name: pypi
       url: https://pypi.org/p/GWFrames
     permissions:
-      id-token: write  # Required for trusted publishing
+      contents: write  # To push the version bump and tag, and create the release
+      id-token: write  # For trusted publishing to PyPI
+    env:
+      VERSION: ${{ needs.version.outputs.version }}
     steps:
+      - uses: actions/checkout@v7
+
+      # Pushes made with the workflow's token do not start other workflows,
+      # and "[skip ci]" makes doubly sure that this commit does not.  If main
+      # has moved on since this run started, the push fails and nothing is
+      # released.
+      - name: Commit, tag, and push the version bump
+        run: |
+          python3 .github/scripts/bump_version.py --set "${VERSION}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "Bump version to v${VERSION} [skip ci]"
+          git tag -a "v${VERSION}" -m "Version ${VERSION}"
+          git push origin "HEAD:${{ github.ref_name }}" "v${VERSION}"
+
       - uses: actions/download-artifact@v8
         with:
           path: dist
           merge-multiple: true
+
+      - name: Create the GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "v${VERSION}" dist/* --repo "${{ github.repository }}" \
+            --title "v${VERSION}" --generate-notes \
+            ${{ needs.version.outputs.prerelease == 'true' && '--prerelease' || '' }}
 
       - uses: pypa/gh-action-pypi-publish@v1.14.3

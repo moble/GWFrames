@@ -7,6 +7,9 @@ updates:
     groups:
       actions:
         patterns: ["*"]
+    # Updates to the CI alone do not need a new release of GWFrames
+    commit-message:
+      prefix: "[no release]"
 
   - package-ecosystem: gitsubmodule
     directory: /
