@@ -36,7 +36,7 @@ import matplotlib as mpl
 mpl.use('Agg')
 import matplotlib.pyplot as plt
 import GWFrames
-import Quaternions
+from GWFrames import Quaternions
 
 # Read in the data files
 print("Reading waveforms from data files...")

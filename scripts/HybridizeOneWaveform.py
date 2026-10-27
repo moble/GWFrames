@@ -31,7 +31,7 @@ except :
 
 import GWFrames
 import GWFrames.plot
-import Quaternions
+from GWFrames import Quaternions
 
 def Hybridize(PathToSystem, Waveform='rhOverM_Asymptotic_GeometricUnits.h5/Extrapolated_N2.dir',
               t1=200.0, t2=-sys.float_info.max, InitialOmega_orb=0.0, DirectAlignmentEvaluations=0, Approximant='TaylorT1',

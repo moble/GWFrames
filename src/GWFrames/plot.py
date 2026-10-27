@@ -4,6 +4,12 @@ as methods with Waveform objects.
 
 """
 
+
+def _ModeLabel(LM):
+    """Return a label like '(2, -2)', even when LM holds numpy integers"""
+    return str(tuple(int(x) for x in LM))
+
+
 def plotWaveform(this, WaveformPart='Abs', Modes=(), t_fid=None, *pyplot_args, **pyplot_kwargs) :
     """
     This function should be called as a method of the Waveform class,
@@ -50,12 +56,12 @@ def plotWaveform(this, WaveformPart='Abs', Modes=(), t_fid=None, *pyplot_args, *
             i_fid = int(array(range(this.NTimes()))[this.T()>t_fid][0])
             if (Mode is None) :
                 Arg = this.ArgUnwrapped()
-                x = numpy.modf(Arg[:,i_fid]/(2*pi))
+                x = modf(Arg[:,i_fid]/(2*pi))
                 x[1][x[0]<0.0] -= 1.0
                 return (Arg.transpose() - x[1]*2*pi).transpose()
             else :
                 Arg = this.ArgUnwrapped(Mode)
-                w,x = numpy.modf(Arg[i_fid]/(2*pi))
+                w,x = modf(Arg[i_fid]/(2*pi))
                 if (w<0.0) : x -= 1.0
                 return Arg - x*2*pi
         else :
@@ -116,32 +122,32 @@ def plotWaveform(this, WaveformPart='Abs', Modes=(), t_fid=None, *pyplot_args, *
     ## This does the actual work of plotting, depending on what Modes are needed
     if (type(Modes)==int) : # The requested mode is plotted
         Lines = styledplot(this.T(), AbsOrNot(quantity(Modes)), *pyplot_args, **pyplot_kwargs)
-        Labels = [str(tuple(this.LM(Modes)))]
+        Labels = [_ModeLabel(this.LM(Modes))]
     elif (len(Modes)==0) : # All modes are plotted
         Lines = styledplot(this.T(), AbsOrNot(quantity()).transpose(), *pyplot_args, **pyplot_kwargs)
         if ((this.NModes()==1) and ('label' in pyplot_kwargs)) :
             Labels = [pyplot_kwargs['label']]
         else :
-            Labels = [str(tuple(this.LM(mode))) for mode in range(this.NModes())]
+            Labels = [_ModeLabel(this.LM(mode)) for mode in range(this.NModes())]
     elif ( (len(Modes)==2) and (type(Modes[0])==int and type(Modes[1])==int) ) :
         ModeIndex = this.FindModeIndex(Modes[0], Modes[1])
         Lines = styledplot(this.T(), transpose(AbsOrNot(quantity(ModeIndex))), *pyplot_args, **pyplot_kwargs)
         if ('label' in pyplot_kwargs) :
             Labels = [pyplot_kwargs['label']]
         else :
-            Labels = [str(tuple(this.LM(ModeIndex)))]
+            Labels = [_ModeLabel(this.LM(ModeIndex))]
     elif ( (len(Modes)==1) and (type(Modes[0])==list) and (type(Modes[0][0])==int and type(Modes[0][1])==int) ) :
         ModeIndex = this.FindModeIndex(Modes[0][0], Modes[0][1])
         Lines = styledplot(this.T(), transpose(AbsOrNot(quantity(ModeIndex))), *pyplot_args, **pyplot_kwargs)
         if ('label' in pyplot_kwargs) :
             Labels = [pyplot_kwargs['label']]
         else :
-            Labels = [str(tuple(this.LM(ModeIndex)))]
+            Labels = [_ModeLabel(this.LM(ModeIndex))]
     else :
         Modes = array(Modes, dtype=int)
         for i in range(Modes.shape[0]) :
             ModeIndex = this.FindModeIndex(int(Modes[i][0]), int(Modes[i][1]))
-            Labels.append(str(tuple(Modes[i])))
+            Labels.append(_ModeLabel(Modes[i]))
             Lines.append(styledplot(this.T(), AbsOrNot(quantity(ModeIndex)).transpose(), *pyplot_args, **pyplot_kwargs))
 
     xlabel(XLabel)

@@ -105,7 +105,7 @@ def ReadFiniteRadiusWaveform(n, filename, WaveformName, ChMass, InitialAdmEnergy
     waveforms.  You probably don't need to call this directly.
 
     """
-    from scipy.integrate import cumtrapz as integrate
+    from scipy.integrate import cumulative_trapezoid as integrate
     from numpy import setdiff1d, empty, delete, sqrt, log, array
     from h5py import File
     import GWFrames
@@ -614,8 +614,8 @@ def Extrapolate(**kwargs) :
                 AbsDiff = abs(AbsA-AbsB)/AbsA
                 ArgDiff = (splev(Diff.T(), splrep(ExtrapolatedWaveforms[i].T(), ExtrapolatedWaveforms[i].ArgUnwrapped(ExtrapolatedWaveforms[i].FindModeIndex(2,2)), s=0), der=0)
                            - splev(Diff.T(), splrep(ExtrapolatedWaveforms[i].T(), ExtrapolatedWaveforms[i-1].ArgUnwrapped(ExtrapolatedWaveforms[i-1].FindModeIndex(2,2)), s=0), der=0))
-                if(abs(ArgDiff[len(ArgDiff)/3])>1.9*pi) :
-                    ArgDiff -= 2*pi*round(ArgDiff[len(ArgDiff)/3]/(2*pi))
+                if(abs(ArgDiff[len(ArgDiff)//3])>1.9*pi) :
+                    ArgDiff -= 2*pi*round(ArgDiff[len(ArgDiff)//3]/(2*pi))
                 plt.figure(0)
                 plt.semilogy(Diff.T(), AbsDiff, label=r'$(N={0}) - (N={1})$'.format(ExtrapolationOrder, ExtrapolationOrders[i-1]))
                 plt.figure(1)
