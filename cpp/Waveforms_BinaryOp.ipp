@@ -98,8 +98,9 @@ GWFrames::Waveform GWFrames::Waveform::BinaryOp(const GWFrames::Waveform& B) con
   // up to ell = lMaxInA+lMaxInB, so the grid must resolve that band
   // limit for the transform back to be free of aliasing, as in
   // `Modes::operator*`.  (A quotient is not band-limited, so it is
-  // only approximated on this grid.)
-  const int lMaxGrid = lMaxInA + lMaxInB;
+  // only approximated on this grid.)  The grid is never smaller than
+  // 3x3, because spinsfast cannot handle a single point.
+  const int lMaxGrid = std::max(lMaxInA + lMaxInB, 1);
   int N_phi = 2*lMaxGrid + 1;
   int N_theta = 2*lMaxGrid + 1;
 

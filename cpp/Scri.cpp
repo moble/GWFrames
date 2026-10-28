@@ -152,8 +152,15 @@ DataGrid::DataGrid(const int Spin, const int N_theta, const int N_phi, const std
   }
 }
 
+// The smallest equi-angular grid that resolves modes up to ell=L.  It is
+// never smaller than 3x3, because spinsfast cannot handle a single point,
+// and the grid spacing in theta is pi/(n_theta-1).
+static int MinimalGridSize(const int L) {
+  return std::max(2*L+1, 3);
+}
+
 DataGrid::DataGrid(Modes M, const int N_theta, const int N_phi)
-  : s(M.Spin()), n_theta(std::max(N_theta, 2*M.EllMax()+1)), n_phi(std::max(N_phi, 2*M.EllMax()+1)), data(n_phi*n_theta, zero)
+  : s(M.Spin()), n_theta(std::max(N_theta, MinimalGridSize(M.EllMax()))), n_phi(std::max(N_phi, MinimalGridSize(M.EllMax()))), data(n_phi*n_theta, zero)
 {
   spinsfast_salm2map(reinterpret_cast<fftw_complex*>(&M[0]),
                      reinterpret_cast<fftw_complex*>(&data[0]),
@@ -161,7 +168,7 @@ DataGrid::DataGrid(Modes M, const int N_theta, const int N_phi)
 }
 
 DataGrid::DataGrid(const Modes& M, const GWFrames::ThreeVector& v, const int N_theta, const int N_phi)
-  : s(M.Spin()), n_theta(std::max(N_theta, 2*M.EllMax()+1)), n_phi(std::max(N_phi, 2*M.EllMax()+1)), data(n_phi*n_theta)
+  : s(M.Spin()), n_theta(std::max(N_theta, MinimalGridSize(M.EllMax()))), n_phi(std::max(N_phi, MinimalGridSize(M.EllMax()))), data(n_phi*n_theta)
 {
   const double dtheta = M_PI/double(n_theta-1); // theta should return to M_PI
   const double dphi = 2*M_PI/double(n_phi); // phi should not return to 2*M_PI
