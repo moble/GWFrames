@@ -3257,7 +3257,12 @@ LModesForAsymmetry : array_like of int, optional
 Returns
 -------
 numpy.ndarray of float
-    The normalized antisymmetry at each time step.)doc"},
+    The normalized antisymmetry at each time step.
+
+Notes
+-----
+Any mode missing from the data, such as the :math:`(\ell, -m)` partner of a
+mode that is present, is treated as zero.)doc"},
     {"Waveform::DipoleMoment", R"doc(Return the dipole moment of the magnitude of the waveform at each time.
 
 The dipole moment is

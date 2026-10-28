@@ -851,14 +851,14 @@ unsigned int GWFrames::Waveform::FindModeIndexWithoutError(const int l, const in
   /// If the requested mode is not present, the returned index is 1
   /// beyond the end of the mode vector.
   const unsigned int i_expected = l*(l+1) + m - SpinWeight()*SpinWeight();
-  if(lm[i_expected][0]==l && lm[i_expected][1]==m) { return i_expected; }
+  if (lm.size() > i_expected) {
+    if(lm[i_expected][0]==l && lm[i_expected][1]==m) { return i_expected; }
+  }
   // ORIENTATION!!! following loop
-  unsigned int i=0;
-  for(; i<NModes(); ++i) {
+  for(unsigned int i=0; i<NModes(); ++i) {
     if(lm[i][0]==l && lm[i][1]==m) { return i; }
   }
-  ++i;
-  return i;
+  return NModes()+1;
 }
 
 /// Return the normalized asymmetry as a function of time
@@ -877,6 +877,11 @@ std::vector<double> GWFrames::Waveform::NormalizedAntisymmetry(std::vector<int> 
   /// input, only modes with ell values in that argument will be used
   /// to calculate the asymmetry.  All modes will always be used to
   /// calculate the normalization.
+  ///
+  /// Any mode missing from the data (for example, the \f$(\ell,-m)\f$
+  /// partner of a mode that is present) is treated as zero.
+
+  const unsigned int nmodes = NModes();
 
   const unsigned int ntimes = NTimes();
   const int ellMax = EllMax();
@@ -888,8 +893,10 @@ std::vector<double> GWFrames::Waveform::NormalizedAntisymmetry(std::vector<int> 
     for(int ell=std::abs(SpinWeight()); ell<=ellMax; ++ell) {
       if(LModesForAsymmetry.size()==0 || GWFrames::xINy(ell,LModesForAsymmetry)) {
         for(int m=-ell; m<=ell; ++m) {
-          const complex<double> h_ell_m = Data(FindModeIndexWithoutError(ell,m), i_t);
-          const complex<double> hbar_ell_mm = std::conj(Data(FindModeIndexWithoutError(ell,-m), i_t));
+          const unsigned int i_ell_m = FindModeIndexWithoutError(ell,m);
+          const unsigned int i_ell_mm = FindModeIndexWithoutError(ell,-m);
+          const complex<double> h_ell_m = (i_ell_m<nmodes ? Data(i_ell_m, i_t) : complex<double>(0.));
+          const complex<double> hbar_ell_mm = (i_ell_mm<nmodes ? std::conj(Data(i_ell_mm, i_t)) : complex<double>(0.));
           if(((ell+m)%2)==0) {
             diff += std::norm(h_ell_m - hbar_ell_mm);
           } else {
@@ -899,7 +906,8 @@ std::vector<double> GWFrames::Waveform::NormalizedAntisymmetry(std::vector<int> 
         }
       } else{
         for(int m=-ell; m<=ell; ++m) {
-          const complex<double> h_ell_m = Data(FindModeIndexWithoutError(ell,m), i_t);
+          const unsigned int i_ell_m = FindModeIndexWithoutError(ell,m);
+          const complex<double> h_ell_m = (i_ell_m<nmodes ? Data(i_ell_m, i_t) : complex<double>(0.));
           norm += std::norm(h_ell_m);
         }
       }

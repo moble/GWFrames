@@ -114,7 +114,7 @@ GWFrames::Waveform GWFrames::Waveform::BinaryOp(const GWFrames::Waveform& B) con
       for(int l=lMinA; l<=lMax; ++l) {
         for(int m=-l; m<=l; ++m) {
           const unsigned int iA = A.FindModeIndexWithoutError(l, m);
-          almA[i] = A.Data(iA, i_t);
+          almA[i] = (iA<A.NModes() ? A.Data(iA, i_t) : zero);
           ++i;
         }
       }
@@ -131,7 +131,7 @@ GWFrames::Waveform GWFrames::Waveform::BinaryOp(const GWFrames::Waveform& B) con
       for(int l=lMinB; l<=lMax; ++l) {
         for(int m=-l; m<=l; ++m) {
           const unsigned int iB = B.FindModeIndexWithoutError(l, m);
-          almB[i] = B.Data(iB, i_t);
+          almB[i] = (iB<B.NModes() ? B.Data(iB, i_t) : zero);
           ++i;
         }
       }
