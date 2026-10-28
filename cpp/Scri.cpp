@@ -682,12 +682,16 @@ std::complex<double> Modes::EvaluateAtPoint(const double vartheta, const double 
   /// \param vartheta Polar angle of detector
   /// \param varphi Azimuthal angle of detector
   ///
+  /// Modes with \f$\ell < |s|\f$ are skipped, because they vanish
+  /// identically for a spin-weighted function.
+  ///
 
   complex<double> d(0.0, 0.0);
   SphericalFunctions::SWSH Y(s);
   Y.SetAngles(vartheta, varphi);
-  int i=0;
-  for(int ell=0; ell<=ellMax; ++ell) {
+  const int ellMin = std::abs(s);
+  int i=ellMin*ellMin;
+  for(int ell=ellMin; ell<=ellMax; ++ell) {
     for(int m=-ell; m<=ell; ++m) {
       d += data[i]*Y(ell,m);
       ++i;
@@ -707,10 +711,14 @@ std::complex<double> Modes::EvaluateAtPoint(const Quaternions::Quaternion& R) co
   /// feature is used to greatly simplify the process of constructing
   /// a `DataGrid` object from a `Modes` object with a boost.
   ///
+  /// Modes with \f$\ell < |s|\f$ are skipped, because they vanish
+  /// identically for a spin-weighted function.
+  ///
 
   complex<double> d(0.0, 0.0);
   SphericalFunctions::SWSH Y(s, R);
-  for(int i_m=0, ell=0; ell<=ellMax; ++ell) {
+  const int ellMin = std::abs(s);
+  for(int i_m=ellMin*ellMin, ell=ellMin; ell<=ellMax; ++ell) {
     for(int m=-ell; m<=ell; ++m, ++i_m) {
       d += data[i_m]*Y(ell,m);
     }

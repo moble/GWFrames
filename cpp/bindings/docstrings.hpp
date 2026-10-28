@@ -2116,6 +2116,9 @@ The point may be given either by its polar and azimuthal angles or by a rotor
 rotors are possible, however; they are used to construct a `DataGrid` from a
 `Modes` object with a boost.
 
+The modes with :math:`\ell < |s|` are skipped, because the spin-weighted
+spherical harmonics vanish identically there.
+
 Parameters
 ----------
 vartheta : float
