@@ -462,10 +462,18 @@ GWFrames::Modes& GWFrames::Modes::operator=(const Modes& B) {
 }
 
 Modes Modes::bar() const {
+  /// Return the modes of the complex-conjugate function.  Since
+  /// \f${}_{s}\bar{Y}_{\ell,m} = (-1)^{s+m}\, {}_{-s}Y_{\ell,-m}\f$,
+  /// the conjugate of a spin-weight \f$s\f$ function \f$f\f$ has spin
+  /// weight \f$-s\f$ and modes
+  /// \f$\bar{f}_{\ell,m} = (-1)^{s+m}\, \overline{f_{\ell,-m}}\f$.
   const Modes& A=*this;
   Modes B(A);
-  for(unsigned int i=0; i<data.size(); ++i) {
-    B.data[i] = std::conj(A.data[i]);
+  for(int i_m=0, ell=0; N_lm(ell)<=int(data.size()); ++ell) {
+    for(int m=-ell; m<=ell; ++m, ++i_m) {
+      const int i_mm = ell*ell + ell - m; // index of (ell, -m)
+      B.data[i_m] = ((s+m)%2==0 ? 1.0 : -1.0) * std::conj(A.data[i_mm]);
+    }
   }
   B.s = -A.s;
   return B;

@@ -2006,15 +2006,24 @@ Returns
 -------
 Modes
     The new modes.)doc"},
-    {"Modes::bar", R"doc(Return the complex conjugates of these modes, with the spin weight negated.
+    {"Modes::bar", R"doc(Return the modes of the complex conjugate of the function.
 
-Each mode coefficient is replaced by its complex conjugate, without any
-reordering of the modes.
+If these modes represent a function :math:`f` of spin weight :math:`s`, the
+result represents :math:`\bar{f}`, which has spin weight :math:`-s`.
 
 Returns
 -------
 Modes
-    The new modes.)doc"},
+    The new modes, with spin weight :math:`-s`.
+
+Notes
+-----
+Because :math:`{}_{s}\bar{Y}_{\ell,m} = (-1)^{s+m}\, {}_{-s}Y_{\ell,-m}`,
+the modes of the conjugate are
+
+.. math::
+
+    \bar{f}_{\ell,m} = (-1)^{s+m}\, \overline{f_{\ell,-m}}.)doc"},
     {"Modes::edth", R"doc(Apply the spin-raising operator :math:`\eth` to these data.
 
 This is the operator defined by Geroch, Held, and Penrose (1973).  It raises

@@ -108,4 +108,11 @@ def test_scri_modes(ref):
     M.SetEllMax(4)
     assert_close(M.edth().Data(), ref["Modes_edth"])
     assert_close(M.edthbar().Data(), ref["Modes_edthbar"])
-    assert_close(M.bar().Data(), ref["Modes_bar"])
+    # The SWIG build's `bar` only conjugated each coefficient, which is not the
+    # conjugate function.  The corrected result is (-1)^(s+m) times the recorded
+    # coefficient at (ell, -m), with s=-2 the spin weight of the input.
+    expected_bar = np.array(ref["Modes_bar"])
+    for ell in range(M.EllMax() + 1):
+        for m in range(-ell, ell + 1):
+            expected_bar[ell * ell + ell + m] = (-1) ** (m - 2) * ref["Modes_bar"][ell * ell + ell - m]
+    assert_close(M.bar().Data(), expected_bar)
