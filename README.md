@@ -10,11 +10,17 @@
 
 [![Tests](https://github.com/moble/GWFrames/actions/workflows/tests.yml/badge.svg)](https://github.com/moble/GWFrames/actions/workflows/tests.yml)
 [![Wheels](https://github.com/moble/GWFrames/actions/workflows/wheels.yml/badge.svg)](https://github.com/moble/GWFrames/actions/workflows/wheels.yml)
+[![Documentation](https://github.com/moble/GWFrames/actions/workflows/docs.yml/badge.svg)](https://moble.github.io/GWFrames/)
+[![PyPI](https://img.shields.io/pypi/v/GWFrames)](https://pypi.org/project/GWFrames/)
 
 GWFrames
 ========
 
 Manipulate gravitational waveforms — changing frames, and so on.
+
+**Documentation is at <https://moble.github.io/GWFrames/>**, including
+a tutorial that follows the paper described below and a reference for
+every class and function.
 
 The code in this project extends code written for the paper "[Angular
 velocity of gravitational radiation from precessing binaries and the
@@ -39,6 +45,8 @@ particular, rotations may be painfully slow for large data sets.
 
 Installation
 ============
+
+<!-- installation-start -->
 
 GWFrames requires Python 3.11 or newer, on Linux or macOS.  Binary
 wheels for Linux and macOS (x86_64 and arm64) are published on PyPI.
@@ -135,19 +143,24 @@ Checking the installation
 python -c 'import GWFrames; W = GWFrames.PNWaveform("TaylorT4", 0.0, [0., 0., 0.9], [0.0, 0.0, 0.9], 0.01); print("That worked!")'
 ```
 
+<!-- installation-end -->
 
 Usage
 =====
 
 The primary objects are `Waveform` and `PNWaveform`, with various
 methods defined for each; quaternions and functions of arrays of
-quaternions are in `GWFrames.Quaternions`.  Detailed documentation of
-most functions may be found through Python's `help` function, as in
-`help(GWFrames.Waveform)`.  A Jupyter notebook in the `Docs` directory
-contains extensive examples, following the outline of the paper.
+quaternions are in `GWFrames.Quaternions`.  The
+[tutorial](https://moble.github.io/GWFrames/tutorial.html) works
+through examples following the outline of the paper, and the [API
+reference](https://moble.github.io/GWFrames/api/index.html) documents
+every class and function.  The same documentation is available
+through Python's `help` function, as in `help(GWFrames.Waveform)`.
 
 Changes from the SWIG-based versions
 ------------------------------------
+
+<!-- changes-start -->
 
 Version 2 replaces the SWIG bindings with
 [pybind11](https://pybind11.readthedocs.io/), and the old `setup.py`
@@ -168,6 +181,8 @@ objects compared equal exactly when they were *not* equal, and that
 `Hybridize` read past the end of an array and could not handle
 waveforms in an inertial frame.
 
+<!-- changes-end -->
+
 
 Development
 ===========
@@ -181,6 +196,23 @@ cd GWFrames
 uv sync --no-editable
 uv run --no-sync pytest
 ```
+
+To build the documentation as well, include the `docs` dependency
+group, and run Sphinx:
+
+```bash
+uv sync --no-editable --group docs
+uv run --no-sync sphinx-build -W --keep-going -b html docs docs/_build/html
+```
+
+The documentation is built and deployed to GitHub Pages by the `Docs`
+workflow whenever `main` changes.  The API reference is generated from
+the docstrings of the compiled module, which are in
+`cpp/bindings/docstrings.hpp`, written in the
+[NumPy style](https://numpydoc.readthedocs.io/en/latest/format.html).
+The tutorial, `docs/tutorial.md`, is a
+[MyST](https://myst-nb.readthedocs.io/) notebook, executed on every
+build.
 
 The C++ code is in `cpp/`, the pybind11 bindings in `cpp/bindings/`,
 and the Python package in `src/GWFrames/`.  The submodules
