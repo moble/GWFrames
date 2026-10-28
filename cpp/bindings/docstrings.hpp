@@ -2277,26 +2277,6 @@ Returns
 -------
 SliceOfScriGrid
     The transformed data on the boosted grid.)doc"},
-    {"SliceModes::MoreschiIteration", R"doc(Find the next iteration of the BMS transformation by Moreschi's algorithm.
-
-This method is meant for a slice that has already been transformed by the BMS
-transformation given by :math:`K_i` and :math:`\delta_i`, and is meant to
-compute :math:`K_{i+1}` and :math:`\delta_{i+1}` from the data on the slice,
-storing them in the arguments.
-
-Parameters
-----------
-OneOverK_ip1 : Modes
-    Receives the inverse conformal factor for the next step.
-delta_ip1 : Modes
-    Receives the supertranslation for the next step.
-
-Warnings
---------
-This method is not finished.  It sets ``OneOverK_ip1`` to the :math:`\ell \leq
-1` modes of the supermomentum divided by the mass, leaves ``delta_ip1``
-unchanged, and then always raises an error.  `SuperMomenta.MoreschiIteration`
-is a working implementation.)doc"},
     {"Scri", R"doc(The asymptotic geometry of null infinity, as a sequence of slices.
 
 A `Scri` object contains the data needed to express the asymptotic geometry

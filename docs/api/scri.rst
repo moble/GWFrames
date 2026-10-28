@@ -56,7 +56,6 @@ Slices of null infinity
 .. automethod:: SliceModes.FourMomentum
 .. automethod:: SliceModes.SuperMomentum
 .. automethod:: SliceModes.BMSTransformationOnSlice
-.. automethod:: SliceModes.MoreschiIteration
 
 .. autoclass:: Scri
 

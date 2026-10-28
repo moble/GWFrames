@@ -865,34 +865,6 @@ GWFrames::SliceGrid SliceModes::BMSTransformationOnSlice(const double u, const T
   return Grids;
 }
 
-/// Find the next iteration of the BMS transformation via Moreschi's algorithm
-void SliceModes::MoreschiIteration(GWFrames::Modes& OneOverK_ip1, GWFrames::Modes& delta_ip1) const {
-  /// \param OneOverK_ip1 Inverse conformal factor for the next step
-  /// \param delta_ip1 Supertranslation for the next step
-  ///
-  /// This member function applies to a `SliceModes` object that has
-  /// already been transformed by the BMS transformation represented
-  /// by \f$K_i\f$ and \f$\delta_i\f$.  This then takes the data on
-  /// that slice and computes the values of \f$K_{i+1}\f$ and
-  /// \f$\delta_{i+1}\f$, returning them by reference.
-
-  const Modes Psi = SuperMomentum();
-  const double M = Mass();
-
-  // 1/K is just Psi/M in the first two ell values
-  OneOverK_ip1 = Modes(4);
-  OneOverK_ip1.SetEllMax(1);
-  OneOverK_ip1[0] = Psi[0]/M;
-  OneOverK_ip1[1] = Psi[1]/M;
-  OneOverK_ip1[2] = Psi[2]/M;
-  OneOverK_ip1[3] = Psi[3]/M;
-
-  //
-
-  throw(GWFrames_NotYetImplemented);
-  return;
-}
-
 // Explicit instantiations
 template class GWFrames::SliceOfScri<DataGrid>;
 template class GWFrames::SliceOfScri<Modes>;

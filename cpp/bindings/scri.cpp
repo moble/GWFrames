@@ -164,9 +164,7 @@ void BindScri(py::module_& m) {
       .def("FourMomentum", &SliceModes::FourMomentum, Doc("SliceModes::FourMomentum"))
       .def("SuperMomentum", &SliceModes::SuperMomentum, Doc("SliceModes::SuperMomentum"))
       .def("BMSTransformationOnSlice", &SliceModes::BMSTransformationOnSlice, py::arg("u"), py::arg("v"),
-           py::arg("delta"), Doc("SliceModes::BMSTransformationOnSlice"))
-      .def("MoreschiIteration", &SliceModes::MoreschiIteration, py::arg("OneOverK_ip1"), py::arg("delta_ip1"),
-           Doc("SliceModes::MoreschiIteration"));
+           py::arg("delta"), Doc("SliceModes::BMSTransformationOnSlice"));
 
   py::class_<Scri>(m, "Scri", Doc("Scri"))
       .def(py::init<const Waveform&, const Waveform&, const Waveform&, const Waveform&, const Waveform&,

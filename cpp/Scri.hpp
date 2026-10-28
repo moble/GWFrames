@@ -159,8 +159,6 @@ namespace GWFrames {
     Modes SuperMomentum() const;
     // Transformations
     SliceGrid BMSTransformationOnSlice(const double u, const GWFrames::ThreeVector& v, const GWFrames::Modes& delta) const;
-    // Moreschi algorithm
-    void MoreschiIteration(GWFrames::Modes& OneOverK_ip1, GWFrames::Modes& delta_ip1) const;
   }; // class SliceModes
 
 
