@@ -104,13 +104,13 @@ GWFrames::Waveform GWFrames::Waveform::BinaryOp(const GWFrames::Waveform& B) con
     { // Set the a_lm coefficients of A
       unsigned int i=0;
       for(int l=0; l<lMinA; ++l) {
-        for(int m=-l; m<=-l; ++m) {
+        for(int m=-l; m<=l; ++m) {
           almA[i] = zero;
           ++i;
         }
       }
       for(int l=lMinA; l<=lMax; ++l) {
-        for(int m=-l; m<=-l; ++m) {
+        for(int m=-l; m<=l; ++m) {
           const unsigned int iA = A.FindModeIndexWithoutError(l, m);
           almA[i] = A.Data(iA, i_t);
           ++i;
@@ -121,13 +121,13 @@ GWFrames::Waveform GWFrames::Waveform::BinaryOp(const GWFrames::Waveform& B) con
     { // Set the a_lm coefficients of B
       unsigned int i=0;
       for(int l=0; l<lMinB; ++l) {
-        for(int m=-l; m<=-l; ++m) {
+        for(int m=-l; m<=l; ++m) {
           almB[i] = zero;
           ++i;
         }
       }
       for(int l=lMinB; l<=lMax; ++l) {
-        for(int m=-l; m<=-l; ++m) {
+        for(int m=-l; m<=l; ++m) {
           const unsigned int iB = B.FindModeIndexWithoutError(l, m);
           almB[i] = B.Data(iB, i_t);
           ++i;
