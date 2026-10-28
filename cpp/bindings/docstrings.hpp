@@ -2002,10 +2002,20 @@ numpy.ndarray of complex
     {"Modes::pow", R"doc(Raise the function represented by these modes to an integer power.
 
 The power is taken point by point on a `DataGrid` with
-``2 * EllMax() * p + 1`` points in each direction, and the result has
-:math:`\ell_{\max}` equal to ``EllMax() * p``.  The spin weight of the result
-is ``p`` times that of these data, just as the spin weight of a product is
-the sum of the spin weights of its factors.
+``2 * EllMax() * abs(p) + 1`` points in each direction (but at least
+``2 * EllMax() + 1``), and the result is transformed back to modes.  The spin
+weight of the result is ``p`` times that of these data, just as the spin
+weight of a product is the sum of the spin weights of its factors.
+
+For ``p >= 0``, the power of a function band-limited at
+:math:`\ell_{\max}` is band-limited at :math:`p\, \ell_{\max}`, so the
+result is exact to roundoff and has :math:`\ell_{\max}` equal to
+``EllMax() * p`` (or ``EllMax()`` when ``p == 0``).  A negative power is not
+band-limited, so the result can only approximate it: it is computed on the
+same grid as the power ``abs(p)``, which reduces aliasing from the modes above
+:math:`\ell_{\max}`, and it is truncated at :math:`\ell_{\max}` equal to
+``EllMax()``.  The function must not vanish anywhere on the grid when ``p`` is
+negative.
 
 Parameters
 ----------

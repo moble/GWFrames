@@ -97,7 +97,7 @@ namespace GWFrames {
     inline std::complex<double>& operator[](const unsigned int i) { return data[i]; }
     inline std::vector<std::complex<double> > Data() const { return data; }
   public: // Operations
-    Modes pow(const int p) const { return Modes(DataGrid(*this, 2*EllMax()*p+1, 2*EllMax()*p+1).pow(p)); }
+    Modes pow(const int p) const;
     Modes bar() const;
     Modes operator*(const Modes& M) const;
     Modes operator/(const Modes& M) const;

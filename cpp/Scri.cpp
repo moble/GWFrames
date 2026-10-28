@@ -469,6 +469,24 @@ GWFrames::Modes& GWFrames::Modes::operator=(const Modes& B) {
   return *this;
 }
 
+Modes Modes::pow(const int p) const {
+  /// For \f$p \geq 0\f$, the \f$p\f$-th power of a function
+  /// band-limited at \f$\ell_{\max}\f$ is band-limited at
+  /// \f$p\, \ell_{\max}\f$, so a grid with \f$2 p\, \ell_{\max} + 1\f$
+  /// points in each direction represents it exactly.  A negative
+  /// power is not band-limited, so it is evaluated on the grid that
+  /// would be used for \f$|p|\f$ (as in division, which uses the grid
+  /// of the corresponding product), and the result is truncated at
+  /// the original \f$\ell_{\max}\f$.
+  const int N = 2*EllMax()*std::abs(p)+1; // DataGrid enlarges this to at least 2*EllMax()+1
+  Modes A(DataGrid(*this, N, N).pow(p));
+  if(p<0) {
+    A.ellMax = ellMax;
+    A.data.resize(N_lm(ellMax));
+  }
+  return A;
+}
+
 Modes Modes::bar() const {
   /// Return the modes of the complex-conjugate function.  Since
   /// \f${}_{s}\bar{Y}_{\ell,m} = (-1)^{s+m}\, {}_{-s}Y_{\ell,-m}\f$,
