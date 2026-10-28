@@ -4,7 +4,7 @@ build-backend = "scikit_build_core.build"
 
 [project]
 name = "GWFrames"
-version = "2.0.0"
+version = "2.0.1"
 description = "Manipulate gravitational waveforms — changing frames, and so on"
 readme = "README.md"
 authors = [{ name = "Michael Boyle", email = "mob22@cornell.edu" }]
