@@ -322,6 +322,7 @@ DataGrid DataGrid::pow(const int p) const {
   for(int i=0; i<N; ++i) {
     c[i] = std::pow(c[i], p);
   }
+  c.s = p*s;
   return c;
 }
 

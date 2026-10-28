@@ -1839,7 +1839,8 @@ numpy.ndarray of complex
     The values, in the order described in `DataGrid`.)doc"},
     {"DataGrid::pow", R"doc(Raise the value at each point of this grid to an integer power.
 
-The spin weight of the result is the same as that of this grid.
+The spin weight of the result is ``p`` times that of this grid, just as the
+spin weight of a product is the sum of the spin weights of its factors.
 
 Parameters
 ----------
@@ -1995,7 +1996,8 @@ numpy.ndarray of complex
 The power is taken point by point on a `DataGrid` with
 ``2 * EllMax() * p + 1`` points in each direction, and the result has
 :math:`\ell_{\max}` equal to ``EllMax() * p``.  The spin weight of the result
-is the same as that of these data.
+is ``p`` times that of these data, just as the spin weight of a product is
+the sum of the spin weights of its factors.
 
 Parameters
 ----------
