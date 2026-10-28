@@ -915,10 +915,10 @@ std::vector<double> GWFrames::DominantPrincipalValue(std::vector<Matrix>& M) {
   gsl_eigen_symmv_workspace * w = gsl_eigen_symmv_alloc (3);
   for(unsigned int i=0; i<M.size(); ++i) {
     gsl_eigen_symmv(M[i].gslobj(), eval, evec, w); // Do the work
-    gsl_eigen_symmv_free(w);
     gsl_eigen_symmv_sort(eval, evec, GSL_EIGEN_SORT_VAL_DESC); // Sort by eigenvalue magnitude
     Result[i] = gsl_vector_get(eval, 0);
   }
+  gsl_eigen_symmv_free(w);
   gsl_vector_free(eval);
   gsl_matrix_free(evec);
   return Result;
