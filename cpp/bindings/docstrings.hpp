@@ -3323,9 +3323,12 @@ Waveform
     {"Waveform::XParitySymmetricPart", R"doc(Return the part of the waveform that is symmetric under x parity.
 
 This is :math:`(f + P_x f)/2`, where :math:`P_x f` is the image of the waveform
-under x parity, as returned by `Waveform.XParityInvolution`.  The same
-combination is applied to the frame rotors, which therefore are generally not
-unit quaternions.  This waveform is not changed.
+under x parity, as returned by `Waveform.XParityInvolution`.  The modes are
+combined index by index, and the result keeps the frame rotors of this
+waveform, just as a sum of waveforms keeps the frame of its first operand.
+Unless every frame rotor is a rotation about the x axis, the reflection is
+therefore that of the x axis of the waveform's own frame, not of the inertial
+x axis.  This waveform is not changed.
 
 Returns
 -------
@@ -3334,9 +3337,12 @@ Waveform
     {"Waveform::XParityAntisymmetricPart", R"doc(Return the part of the waveform that is antisymmetric under x parity.
 
 This is :math:`(f - P_x f)/2`, where :math:`P_x f` is the image of the waveform
-under x parity, as returned by `Waveform.XParityInvolution`.  The same
-combination is applied to the frame rotors, which therefore are generally not
-unit quaternions.  This waveform is not changed.
+under x parity, as returned by `Waveform.XParityInvolution`.  The modes are
+combined index by index, and the result keeps the frame rotors of this
+waveform, just as a sum of waveforms keeps the frame of its first operand.
+Unless every frame rotor is a rotation about the x axis, the reflection is
+therefore that of the x axis of the waveform's own frame, not of the inertial
+x axis.  This waveform is not changed.
 
 Returns
 -------
@@ -3392,9 +3398,12 @@ Waveform
     {"Waveform::YParitySymmetricPart", R"doc(Return the part of the waveform that is symmetric under y parity.
 
 This is :math:`(f + P_y f)/2`, where :math:`P_y f` is the image of the waveform
-under y parity, as returned by `Waveform.YParityInvolution`.  The same
-combination is applied to the frame rotors, which therefore are generally not
-unit quaternions.  This waveform is not changed.
+under y parity, as returned by `Waveform.YParityInvolution`.  The modes are
+combined index by index, and the result keeps the frame rotors of this
+waveform, just as a sum of waveforms keeps the frame of its first operand.
+Unless every frame rotor is a rotation about the y axis, the reflection is
+therefore that of the y axis of the waveform's own frame, not of the inertial
+y axis.  This waveform is not changed.
 
 Returns
 -------
@@ -3403,9 +3412,12 @@ Waveform
     {"Waveform::YParityAntisymmetricPart", R"doc(Return the part of the waveform that is antisymmetric under y parity.
 
 This is :math:`(f - P_y f)/2`, where :math:`P_y f` is the image of the waveform
-under y parity, as returned by `Waveform.YParityInvolution`.  The same
-combination is applied to the frame rotors, which therefore are generally not
-unit quaternions.  This waveform is not changed.
+under y parity, as returned by `Waveform.YParityInvolution`.  The modes are
+combined index by index, and the result keeps the frame rotors of this
+waveform, just as a sum of waveforms keeps the frame of its first operand.
+Unless every frame rotor is a rotation about the y axis, the reflection is
+therefore that of the y axis of the waveform's own frame, not of the inertial
+y axis.  This waveform is not changed.
 
 Returns
 -------
@@ -3460,9 +3472,12 @@ Waveform
     {"Waveform::ZParitySymmetricPart", R"doc(Return the part of the waveform that is symmetric under z parity.
 
 This is :math:`(f + P_z f)/2`, where :math:`P_z f` is the image of the waveform
-under z parity, as returned by `Waveform.ZParityInvolution`.  The same
-combination is applied to the frame rotors, which therefore are generally not
-unit quaternions.  This waveform is not changed.
+under z parity, as returned by `Waveform.ZParityInvolution`.  The modes are
+combined index by index, and the result keeps the frame rotors of this
+waveform, just as a sum of waveforms keeps the frame of its first operand.
+Unless every frame rotor is a rotation about the z axis, the reflection is
+therefore that of the z axis of the waveform's own frame, not of the inertial
+z axis.  This waveform is not changed.
 
 Returns
 -------
@@ -3471,9 +3486,12 @@ Waveform
     {"Waveform::ZParityAntisymmetricPart", R"doc(Return the part of the waveform that is antisymmetric under z parity.
 
 This is :math:`(f - P_z f)/2`, where :math:`P_z f` is the image of the waveform
-under z parity, as returned by `Waveform.ZParityInvolution`.  The same
-combination is applied to the frame rotors, which therefore are generally not
-unit quaternions.  This waveform is not changed.
+under z parity, as returned by `Waveform.ZParityInvolution`.  The modes are
+combined index by index, and the result keeps the frame rotors of this
+waveform, just as a sum of waveforms keeps the frame of its first operand.
+Unless every frame rotor is a rotation about the z axis, the reflection is
+therefore that of the z axis of the waveform's own frame, not of the inertial
+z axis.  This waveform is not changed.
 
 Returns
 -------
@@ -3531,9 +3549,9 @@ Waveform
     {"Waveform::ParitySymmetricPart", R"doc(Return the part of the waveform that is symmetric under parity.
 
 This is :math:`(f + P f)/2`, where :math:`P f` is the image of the waveform
-under parity, as returned by `Waveform.ParityInvolution`.  The same combination
-is applied to the frame rotors, which are therefore unchanged.  This waveform
-is not changed.
+under parity, as returned by `Waveform.ParityInvolution`.  The modes are
+combined index by index, and the result keeps the frame rotors of this
+waveform, which parity leaves unchanged.  This waveform is not changed.
 
 Returns
 -------
@@ -3542,9 +3560,9 @@ Waveform
     {"Waveform::ParityAntisymmetricPart", R"doc(Return the part of the waveform that is antisymmetric under parity.
 
 This is :math:`(f - P f)/2`, where :math:`P f` is the image of the waveform
-under parity, as returned by `Waveform.ParityInvolution`.  The same combination
-is applied to the frame rotors, which are therefore all zero.  This waveform is
-not changed.
+under parity, as returned by `Waveform.ParityInvolution`.  The modes are
+combined index by index, and the result keeps the frame rotors of this
+waveform, which parity leaves unchanged.  This waveform is not changed.
 
 Returns
 -------

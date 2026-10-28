@@ -1052,10 +1052,10 @@ GWFrames::Waveform GWFrames::Waveform::InvolutionSymmetricPart(WaveformInvolutio
   const int ellMax = A.EllMax();
   const unsigned int nTimes = A.NTimes();
   B.t = A.t;
-  B.frame.resize(A.frame.size());
-  for(unsigned int i=0; i<A.frame.size(); ++i) {
-    B.frame[i] = 0.5 * ( A.frame[i] +  QInvol(A.frame[i]) );
-  }
+  // The modes are combined index by index, as in `operator+`, so the result
+  // keeps the frame of this Waveform, just as a sum keeps the frame of its
+  // first operand.  (Combining the rotors themselves would not give a rotor.)
+  B.frame = A.frame;
   B.lm = A.lm;
   B.data.resize(A.NModes(), A.NTimes());
   for(int ell=std::abs(SpinWeight()); ell<=ellMax; ++ell) {
@@ -1077,10 +1077,10 @@ GWFrames::Waveform GWFrames::Waveform::InvolutionAntisymmetricPart(WaveformInvol
   const int ellMax = A.EllMax();
   const unsigned int nTimes = A.NTimes();
   B.t = A.t;
-  B.frame.resize(A.frame.size());
-  for(unsigned int i=0; i<A.frame.size(); ++i) {
-    B.frame[i] = 0.5 * ( A.frame[i] -  QInvol(A.frame[i]) );
-  }
+  // The modes are combined index by index, as in `operator+`, so the result
+  // keeps the frame of this Waveform, just as a sum keeps the frame of its
+  // first operand.  (Combining the rotors themselves would not give a rotor.)
+  B.frame = A.frame;
   B.lm = A.lm;
   B.data.resize(A.NModes(), A.NTimes());
   for(int ell=std::abs(SpinWeight()); ell<=ellMax; ++ell) {
