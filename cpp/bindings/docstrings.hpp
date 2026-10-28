@@ -1331,8 +1331,9 @@ A `Matrix` may be constructed in any of these ways:
     A copy of the matrix ``M``.
 ``Matrix(DataIn)``
     A matrix with the elements of ``DataIn``, a sequence of rows, each of which
-    is a sequence of floats.  The number of columns is the length of the first
-    row, and the matrix is empty if ``DataIn`` or its first row is empty.)doc"},
+    is a sequence of floats.  All rows must have the same length, or
+    `ValueError` is raised.  The matrix is empty if ``DataIn`` or its rows are
+    empty.)doc"},
     {"Matrix::set", R"doc(Set one element of this matrix.
 
 Parameters

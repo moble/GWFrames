@@ -807,6 +807,13 @@ Matrix& Matrix::operator=(const Matrix& rhs) {
 }
 
 Matrix& Matrix::operator=(const std::vector<std::vector<double> >& DataIn) {
+  for(unsigned int r=1; r<DataIn.size(); ++r) {
+    if(DataIn[r].size() != DataIn[0].size()) {
+      cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": DataIn[0].size()=" << DataIn[0].size()
+           << "; DataIn[" << r << "].size()=" << DataIn[r].size() << endl;
+      throw(GWFrames_VectorSizeMismatch);
+    }
+  }
   clear();
   m = MatrixAlloc(DataIn.size(), (DataIn.size()==0 ? 0 : DataIn[0].size()));
   for(unsigned int r=0; r<nrows(); ++r) {
