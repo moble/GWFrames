@@ -2618,7 +2618,8 @@ Waveform
 
 The real and imaginary parts of each mode are interpolated with cubic splines,
 and frame data with one rotor for each time step are interpolated with
-`Quaternions.Squad`.  Times outside the current time domain raise an error.
+`Quaternions.Squad`.  Times outside the current time domain raise an error.  A
+single line recording this call is appended to the history.
 
 Parameters
 ----------

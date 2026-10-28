@@ -2055,8 +2055,7 @@ GWFrames::Waveform& GWFrames::Waveform::InterpolateInPlace(const std::vector<dou
     throw(GWFrames_EmptyIntersection);
   }
 
-  history << HistoryStr()
-          << "*this = this->Interpolate(NewTime);" << std::endl;
+  history << "this->InterpolateInPlace(NewTime);" << std::endl;
   const vector<double> OldTime(t);
   if(frame.size()==1) { // Assume we have just a constant non-trivial frame
     frame = frame;
