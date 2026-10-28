@@ -115,7 +115,7 @@ namespace GWFrames {
     inline bool RIsScaledOut() const { return rIsScaledOut; }
     inline bool MIsScaledOut() const { return mIsScaledOut; }
     inline double T(const unsigned int TimeIndex) const { return t[TimeIndex]; }
-    inline Quaternions::Quaternion Frame(const unsigned int TimeIndex) const { return (frame.size()>1 ? frame[TimeIndex] : frame[0]); }
+    inline Quaternions::Quaternion Frame(const unsigned int TimeIndex) const { return (frame.size()>1 ? frame[TimeIndex] : (frame.size()==1 ? frame[0] : Quaternions::One)); }
     inline double Re(const unsigned int Mode, const unsigned int TimeIndex) const { return std::real(data[Mode][TimeIndex]); }
     inline double Im(const unsigned int Mode, const unsigned int TimeIndex) const { return std::imag(data[Mode][TimeIndex]); }
     inline double Abs(const unsigned int Mode, const unsigned int TimeIndex) const { return std::abs(data[Mode][TimeIndex]); }

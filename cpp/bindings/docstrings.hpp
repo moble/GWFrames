@@ -3001,7 +3001,8 @@ float or numpy.ndarray of float
 
 The frame data consist of no rotors, of a single rotor for a constant frame, or
 of one rotor for each time step.  When ``TimeIndex`` is given for a constant
-frame, that single rotor is returned; there must be at least one rotor.
+frame, that single rotor is returned; when it is given and there are no rotors,
+the frame is the identity, and the identity rotor is returned.
 
 Parameters
 ----------
