@@ -2512,8 +2512,9 @@ Waveform
     {"Waveform::SliceOfTimeIndicesWithoutModes", R"doc(Return a copy of the waveform restricted to time indices, without mode data.
 
 The copy contains the times and frame data at the time steps with indices from
-``i_t_a`` up to, but not including, ``i_t_b``, but no modes.  Only frame data
-with one rotor for each time step are copied; a constant frame is dropped.
+``i_t_a`` up to, but not including, ``i_t_b``, but no modes.  Frame data with
+one rotor for each time step are sliced along with the times, and a constant
+frame (a single rotor) is copied unchanged.
 
 Parameters
 ----------
@@ -2566,8 +2567,9 @@ Waveform
 
 The copy contains the times and frame data, but no modes.  It begins at the
 last time step at or before ``t_a`` (or at the first time step, if there is
-none) and ends at the last time step at or before ``t_b``.  Only frame data
-with one rotor for each time step are copied; a constant frame is dropped.
+none) and ends at the last time step at or before ``t_b``.  Frame data with one
+rotor for each time step are sliced along with the times, and a constant frame
+(a single rotor) is copied unchanged.
 
 Parameters
 ----------

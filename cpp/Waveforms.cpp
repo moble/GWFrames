@@ -416,12 +416,27 @@ GWFrames::Waveform GWFrames::Waveform::SliceOfTimeIndicesWithoutModes(const unsi
   if(i_t_b==0) {
     i_t_b = i_t_a+1;
   }
+  if(i_t_a>i_t_b) {
+    INFOTOCERR << ": Requesting impossible slice"
+               << "\ni_t_a=" << i_t_a << "  >  i_t_b=" << i_t_b << std::endl;
+    throw(GWFrames_EmptyIntersection);
+  }
+  if(i_t_b>NTimes()) {
+    INFOTOCERR << ": Requesting impossible slice"
+               << "\ni_t_b=" << i_t_b << "  >  NTimes()=" << NTimes() << std::endl;
+    throw(GWFrames_IndexOutOfBounds);
+  }
   Slice.lm = vector<vector<int> >(0, vector<int>(2));
   const unsigned int ntimes = i_t_b-i_t_a;
   const unsigned int nmodes = 0;
   Slice.data.resize(nmodes, ntimes);
   if(frame.size() == NTimes()) {
     Slice.frame = vector<Quaternion>(frame.begin()+i_t_a, frame.begin()+i_t_b);
+  } else if(frame.size()==1) {
+    Slice.frame = frame;
+  } else if(frame.size()!=0) {
+    INFOTOCERR << " I don't understand what to do with frame data of length " << frame.size() << " in a Waveform with " << NTimes() << " times." << std::endl;
+    throw(GWFrames_VectorSizeMismatch);
   }
   Slice.t = vector<double>(t.begin()+i_t_a, t.begin()+i_t_b);
   return Slice;
