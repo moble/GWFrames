@@ -1,7 +1,9 @@
-// Docstrings for the Python bindings, converted once from the
-// Doxygen-generated SWIG files `Docs/GWFrames_Doc.i` and
-// `Quaternions/docs/Quaternions_Doc.i`.  Keys omit the leading
-// `GWFrames::` or `Quaternions::` namespace.
+// Docstrings for the Python bindings, in the NumPy style that Sphinx renders
+// on the documentation website and that `help()` shows in a terminal.  Each
+// key is the C++ name of the bound function, without the leading `GWFrames::`
+// or `Quaternions::` namespace, or the Python class name for a class.  The
+// `Doc` function in `bindings.hpp` looks them up; for overloaded functions,
+// the docstring belongs on the last overload bound.
 
 #ifndef GWFRAMES_BINDINGS_DOCSTRINGS_HPP
 #define GWFRAMES_BINDINGS_DOCSTRINGS_HPP
@@ -13,5992 +15,4790 @@ namespace GWFramesBindings {
 
 inline const std::unordered_map<std::string, const char*>& Docstrings() {
   static const std::unordered_map<std::string, const char*> docstrings = {
-    {"AdvLIGO_NSNSOptimal", R"doc(Parameters
-----------
-  const vector<double>& F
-  const bool Invert = false
-  const double NoiseFloor = 0.0
+    {"Quaternion", R"doc(A quaternion, used mainly to represent rotations.
 
-Returns
--------
-  vector<double>)doc"},
-    {"AdvLIGO_ZeroDet_HighP", R"doc(Parameters
-----------
-  const vector<double>& F
-  const bool Invert = false
-  const double NoiseFloor = 0.0
+A quaternion is stored as its four components ``[w, x, y, z]``, where ``w`` is
+the scalar part and ``(x, y, z)`` is the vector part.  The components are
+read and written by index, from ``Q[0]`` (the scalar part) to ``Q[3]``, and
+negative indices count from the end, as for a list; ``len(Q)`` is 4.
+Quaternions may be copied, deep-copied, and pickled.
 
-Returns
--------
-  vector<double>)doc"},
-    {"AdvLIGO_ZeroDet_LowP", R"doc(Parameters
-----------
-  const vector<double>& F
-  const bool Invert = false
-  const double NoiseFloor = 0.0
+The arithmetic operators ``+``, ``-``, ``*``, and ``/`` act between two
+quaternions, and between a quaternion and a float, which is treated as a
+quaternion with only a scalar part.  The product ``*`` is the quaternion
+product, and ``P / Q`` is ``P * Q.inverse()``.  The power ``Q ** t`` is
+`Quaternions.Quaternion.pow`.  The comparisons ``==`` and ``!=`` compare all
+four components exactly.
 
-Returns
--------
-  vector<double>)doc"},
-    {"AlignWaveforms", R"doc(Do everything necessary to align two waveform objects.
-======================================================
-  Parameters
-  ----------
-    Waveform& A
-    Waveform& B
-    const double t_1
-      Beginning of alignment interval
-    const double t_2
-      End of alignment interval
-    unsigned int InitialEvaluations = 0
-      Number of evaluations for dumb initial optimization
-    vector<double> nHat_A = vector<double>(0)
-      Approximate nHat vector at (t_1+t_2)/2. [optional]
-    const bool Debug = false
+A unit quaternion (a rotor) ``R`` represents the rotation that takes a vector
+``v``, written as a quaternion with zero scalar part, to
+``R * v * R.inverse()``.  A sequence of three or four floats is accepted
+wherever a `Quaternion` is expected, and is converted as in the constructor
+``Quaternion(q)`` below.  The module also defines the constants
+``Quaternions.Zero``, ``Quaternions.One``, ``Quaternions.xHat``,
+``Quaternions.yHat``, and ``Quaternions.zHat``.
 
-  Returns
-  -------
-    void
+A `Quaternion` may be constructed in any of these ways:
 
-  Description
-  -----------
-    This function aligns the frame to the waveform modes for both input
-    Waveform objects at time t_mid = (t_1+t_2)/2. It also optimizes the
-    alignment of W_B by adjusting its time and overall attitudes to align with
-    W_A as well as possible. While doing so, it re-adjusts the frame alignment
-    to the modes for W_B to account for the changing meaning of t_mid.
+``Quaternion()``
+    The zero quaternion.
+``Quaternion(Q)``
+    A copy of the quaternion ``Q``.
+``Quaternion(vartheta, varphi)``
+    The rotor :math:`e^{\varphi \hat{z}/2}\, e^{\vartheta \hat{y}/2}`, which
+    rotates the z axis onto the point with polar angle ``vartheta`` and
+    azimuthal angle ``varphi``.
+``Quaternion(alpha, beta, gamma)``
+    The rotor :math:`e^{\alpha \hat{z}/2}\, e^{\beta \hat{y}/2}\,
+    e^{\gamma \hat{z}/2}` for the Euler angles ``alpha``, ``beta``, and
+    ``gamma`` in the z-y-z convention: a rotation by ``gamma`` about the z
+    axis, followed by a rotation by ``beta`` about the fixed y axis, and
+    finally a rotation by ``alpha`` about the fixed z axis.
+``Quaternion(w, x, y, z)``
+    The quaternion with the given components.
+``Quaternion(q)``
+    The quaternion with components taken from the sequence ``q`` of floats.
+    Four elements are the components ``[w, x, y, z]``; three elements are the
+    vector part ``[x, y, z]`` of a quaternion with zero scalar part.  Any
+    other length raises an error.
+``Quaternion(angle, axis)``
+    The rotor :math:`\cos(\theta/2) + \sin(\theta/2)\, \hat{n}` for a rotation
+    through ``angle`` :math:`\theta` about the three-vector ``axis``
+    :math:`\hat{n}`, which is assumed to be normalized.)doc"},
+    {"Quaternion::pow", R"doc(Return this quaternion raised to a real or quaternion power.
 
-    Note that t_1 and t_2 refer to fixed times with respect to the time axis of
-    W_A.
-
-    The input waveforms are transformed to their co-rotating frames if they are
-    in the inertial frame. Otherwise, they must already be in the co-rotating
-    frame. (E.g., the co-orbital frame is an error.)
-
-    The nHat quantity is just the approximate direction for that vector
-    (pointing from black hole A to black hole B) in the systems, used to set
-    the direction of the x axis for the rotating frame. Only the value at t_mid
-    for W_A is needed.
-
-    The alignment algorithm assumes that the waveforms are already reasonably
-    well aligned in time. In particular, the final value of t_mid+deltat for
-    W_B must lie somewhere in the interval (t_1, t_2) at least, and after the
-    time shift, W_B must have data over all of that interval.
-
-    As long as this last condition is satisfied, and the waveforms are even
-    remotely well sampled, and assuming the code's logic does not fail due to
-    otherwise weird or unexpected inputs, I (Mike Boyle) do hereby guarantee
-    that this algorithm will find the optimal alignment in both time and
-    attitude. Or your money back.)doc"},
-    {"ApproximateMeanRotor", R"doc('Mean' rotor, minimizing 'distance' between R(t) and R_mean
-===========================================================
-  Parameters
-  ----------
-    const vector<Quaternion>& R
-      Vector of rotors to be averaged.
-
-  Returns
-  -------
-    Quaternion
-
-  Description
-  -----------
-    The true mean of a rotor function of time can only be calculated by an
-    optimization algorithm because the metric is too complicated to solve
-    analytically. Instead, this algorithm uses a simple approximation that is
-    true in the limit of R(t) being constant. In particular, the ideal mean
-    would be calculated using the angle between R(t) and R_mean; this function
-    minimizes the squared sin of half that angle. Another way of thinking of
-    this is that this function isn't approximate; it just uses a different
-    metric, which is approximately equal to what we would like to use.
-
-    This algorithm calculates the averaging formula found in 'Means
-and
-    averaging in the group of rotations'
-    http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.16.5040.
-
-
-'Mean' rotor, approximately minimizing integrated 'distance' between R(t) and R_mean
-====================================================================================
-  Parameters
-  ----------
-    const vector<Quaternion>& R
-      Vector of rotors to be averaged.
-    const vector<double>& t
-      Vector of corresponding time steps.
-    const double t1 = -1e300
-      Optional early bound of time to average over
-    const double t2 = 1e300
-      Optional late bound of time to average over
-
-  Returns
-  -------
-    Quaternion
-
-  Description
-  -----------
-    The true mean of a rotor function of time can only be calculated by an
-    optimization algorithm because the metric is too complicated to solve
-    analytically. Instead, this algorithm uses a simple approximation that is
-    true in the limit of R(t) being constant. In particular, the ideal mean
-    would be calculated using the angle between R(t) and R_mean; this function
-    minimizes the squared sin of half that angle. Another way of thinking of
-    this is that this function isn't approximate; it just uses a different
-    metric, which is approximately equal to what we would like to use.
-
-    This algorithm calculates the continuous limit of the averaging formula
-    found in 'Means and averaging in the group of rotations'
-    http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.16.5040.)doc"},
-    {"ApproximateOptimalAlignment", R"doc(Time and rotor offsets such that Rdelta*Rb(t+deltat) is as close to Ra(t) as possible.
-======================================================================================
-  Parameters
-  ----------
-    const double t1
-      Early bound of time to average over
-    const double t2
-      Late bound of time to average over
-    const vector<Quaternion>& Ra
-      Vector of fixed rotors.
-    const vector<double>& ta
-      Vector of corresponding time steps.
-    const vector<Quaternion>& Rb
-      Vector of rotors to be aligned to Ra.
-    const vector<double>& tb
-      Vector of corresponding time steps.
-    double& deltat
-      Output optimal time offset
-    Quaternions::Quaternion& R_delta
-      Output optimal rotor
-
-  Returns
-  -------
-    void
-
-  Description
-  -----------
-    This routine actively optimizes over the time offset of Rb and
-    approximately optimizes over the rotational degrees of freedom in Rb such
-    that Rdelta*Rb(t+deltat) is as close to Ra(t) as possible. The rotational
-    optimization for any given time offset is performed analytically by the
-    routine ApproximateOptimalAlignmentRotor.
-
-    The times t1 and t2 are measured relative to ta, and all are left fixed; Rb
-    and tb are shifted to achieve alignment.)doc"},
-    {"ApproximateOptimalAlignmentRotor", R"doc(Approximate Rdelta such that Rdelta*Rb is as nearly equal to Ra as possible.
-============================================================================
-  Parameters
-  ----------
-    const vector<Quaternion>& Ra
-      Vector of fixed rotors.
-    const vector<Quaternion>& Rb
-      Vector of rotors to be aligned to Ra.
-    const vector<double>& t
-      Vector of corresponding time steps.
-    const double t1 = -1e300
-      Optional early bound of time to average over
-    const double t2 = 1e300
-      Optional late bound of time to average over
-
-  Returns
-  -------
-    Quaternion
-
-  Description
-  -----------
-    This routine essentially just returns the MeanRotor of the difference
-    between Ra and Rb. The result is an Rdelta which can be applied to Rb, by
-    multiplication on the left, to give a new time-series for Rb that is
-    approximately as close to Ra as possible.)doc"},
-    {"BinomialCoefficientFunctor", R"doc(class GWFrames::BinomialCoefficientFunctor
-==========================================
-  Storage for pre-calculated binomial values.
-
-  The object is a functor for the binomial coefficients. E.g.,
-  BinomialCoefficientFunctor Binom;
-const double Binom_4_2 = Binom(4,2);
-
-  Note that values up to Binom(2*ellMax_GWFrames, ...) are calculated, where
-  ellMax_GWFrames is set in Utilities.hpp. Requests for greater values are
-  answered with an exception.)doc"},
-    {"Boost", R"doc(Parameters
-----------
-  ThreeVector v
-  ThreeVector n
-
-Returns
--------
-  Quaternions::Quaternion)doc"},
-    {"BoostRotor", R"doc(Return a rotor taking the given vector into its boosted version.
-================================================================
-  Parameters
-  ----------
-    vector<double> ThreeVelocity
-      Three-vector velocity of the new frame WRT this frame
-    vector<double> ThreeVectorToBeBoosted
-      Three-vector direction to be boosted by the rotor
-
-  Returns
-  -------
-    Quaternion
-
-  Description
-  -----------
-    This function returns a rotor $R_b$ that takes the input vector $\hat{w}$
-    (which will be normalized)  considered as a direction on the future null
-    sphere  into its boosted version. Note that this rotor is a function of
-    both the vector being boosted and the boost itself.)doc"},
-    {"ComplexI", R"doc(Parameters
-----------
-  0. 0
-  1. 0
-
-Returns
--------
-  const complex<double>)doc"},
-    {"Component", R"doc(Parameters
-----------
-  const vector<Quaternions::Quaternion>& Q
-  const unsigned int i
-
-Returns
--------
-  vector<double>)doc"},
-    {"Component0", R"doc(Parameters
-----------
-  const vector<Quaternions::Quaternion>& Q
-
-Returns
--------
-  vector<double>)doc"},
-    {"Component1", R"doc(Parameters
-----------
-  const vector<Quaternions::Quaternion>& Q
-
-Returns
--------
-  vector<double>)doc"},
-    {"Component2", R"doc(Parameters
-----------
-  const vector<Quaternions::Quaternion>& Q
-
-Returns
--------
-  vector<double>)doc"},
-    {"Component3", R"doc(Parameters
-----------
-  const vector<Quaternions::Quaternion>& Q
-
-Returns
--------
-  vector<double>)doc"},
-    {"ConformalFactorGrid", R"doc(Construct a grid with the conformal factor at each point.
-=========================================================
-  Parameters
-  ----------
-    const ThreeVector& v
-    const int n_theta
-    const int n_phi
-
-  Returns
-  -------
-    DataGrid)doc"},
-    {"DataGrid", R"doc(class GWFrames::DataGrid
-========================
-  Member variables
-  ----------------
-    int s
-
-            This object holds complex spin-weighted data on the sphere in an
-      equi-angular representation. That is, given integers n_theta and n_phi,
-      the data are recorded on a 'rectangular' grid with n_theta*n_phi points,
-      including n_phi points at each of the poles. The purpose of these objects
-      is primarily to serve as a computational tool for pointwise
-      multiplication. Otherwise, Modes is expected to be the preferable
-      representation.    int n_theta
-    int n_phi
-    vector<complex<double>> data)doc"},
-    {"DataGrid::Data", R"doc(Parameters
-----------
-  (none)
-
-Returns
--------
-  vector<complex<double>>)doc"},
-    {"DataGrid::DataGrid", R"doc(  Parameters
-  ----------
-    const int Spin
-    const int N_theta
-    const int N_phi
-    const vector<complex<double>>& D
-
-  Returns
-  -------
-    DataGrid
-
-
-
-
-  Parameters
-  ----------
-    Modes M
-    const int N_theta = 0
-    const int N_phi = 0
-
-  Returns
-  -------
-    DataGrid
-
-
-
-
-  Parameters
-  ----------
-    const Modes& M
-    const ThreeVector& v
-    const int N_theta = 0
-    const int N_phi = 0
-
-  Returns
-  -------
-    DataGrid
-
-
-Constructor on boosted grid by means of functor.
-================================================
-  Parameters
-  ----------
-    const int Spin
-      Integer spin weight
-    const int N_theta
-      Number of points in output grid in theta
-    const int N_phi
-      Number of points in output grid in phi
-    const ThreeVector& v
-      Three-vector velocity of boosted frame relative to current frame
-    const ScriFunctor& f
-      Functor operating on a Quaternion object
-
-  Returns
-  -------
-    DataGrid
-
-  Description
-  -----------
-    The functor takes a Quaternion argument, which describes the location and
-    alignment of the point to be evaluated. In particular, the rotor takes the
-    $\hat{z}$ vector into the point at which the field is to be measured, and
-    takes $\hat{x} + i \hat{y}$ into the $m$ vector (within normalization)
-    needed for spin-weighted fields.
+The power is computed as ``exp(log(self) * t)`` or ``exp(log(self) * Q)``,
+with the logarithm of `Quaternions.Quaternion.log`; it therefore raises an
+error when this quaternion is a negative real number.  The same operation is
+written ``self ** t`` or ``self ** Q``.  `Quaternions.pow` applies it to
+arrays.
 
 Parameters
 ----------
-  const int size = 0
+t : float
+    The real exponent, in the form ``pow(t)``.
+Q : Quaternion
+    The quaternion exponent, in the form ``pow(Q)``.  It multiplies the
+    logarithm from the right.
 
 Returns
 -------
-  DataGrid
+Quaternion
+    The power.)doc"},
+    {"Quaternion::cross", R"doc(Return the cross product of the vector parts of two quaternions.
 
-
-
-
-Parameters
-----------
-  const DataGrid& A
-
-Returns
--------
-  DataGrid)doc"},
-    {"DataGrid::N_phi", R"doc(Parameters
-----------
-  (none)
-
-Returns
--------
-  int)doc"},
-    {"DataGrid::N_theta", R"doc(Parameters
-----------
-  (none)
-
-Returns
--------
-  int)doc"},
-    {"DataGrid::SetNPhi", R"doc(Parameters
-----------
-  const int N_phi
-
-Returns
--------
-  DataGrid&)doc"},
-    {"DataGrid::SetNTheta", R"doc(Parameters
-----------
-  const int N_theta
-
-Returns
--------
-  DataGrid&)doc"},
-    {"DataGrid::SetSpin", R"doc(Parameters
-----------
-  const int ess
-
-Returns
--------
-  DataGrid&)doc"},
-    {"DataGrid::Spin", R"doc(Parameters
-----------
-  (none)
-
-Returns
--------
-  int)doc"},
-    {"DataGrid::operator*", R"doc(Parameters
-----------
-  const DataGrid& 
-
-Returns
--------
-  DataGrid)doc"},
-    {"DataGrid::operator+", R"doc(Parameters
-----------
-  const DataGrid& 
-
-Returns
--------
-  DataGrid)doc"},
-    {"DataGrid::operator-", R"doc(Parameters
-----------
-  const DataGrid& 
-
-Returns
--------
-  DataGrid)doc"},
-    {"DataGrid::operator/", R"doc(Parameters
-----------
-  const DataGrid& 
-
-Returns
--------
-  DataGrid)doc"},
-    {"DataGrid::operator[]", R"doc(Parameters
-----------
-  const unsigned int i
-
-Returns
--------
-  const complex<double>&
-
-
-
+The scalar parts are ignored, and the result is a quaternion with zero scalar
+part whose vector part is the cross product of the vector part of this
+quaternion with that of ``Q``.
 
 Parameters
 ----------
-  const unsigned int i
+Q : Quaternion
+    The second factor.
 
 Returns
 -------
-  complex<double>&)doc"},
-    {"DataGrid::pow", R"doc(Parameters
-----------
-  const int p
+Quaternion
+    The cross product, as a quaternion with zero scalar part.)doc"},
+    {"Quaternion::commutator", R"doc(Return the commutator of this quaternion with another.
 
-Returns
--------
-  DataGrid)doc"},
-    {"DataGrid::size", R"doc(Parameters
-----------
-  (none)
-
-Returns
--------
-  unsigned int)doc"},
-    {"DifferentiateRotorByLogarithm", R"doc(Calculate the derivative of a rotor by the logarithm formula.
-=============================================================
-  Parameters
-  ----------
-    const vector<Quaternion>& RIn
-    const vector<double>& tIn
-
-  Returns
-  -------
-    vector<Quaternion>
-
-  Description
-  -----------
-    This is a much more complicated way of evaluating the derivative of a
-    quaternion function of time, as compared to finite differencing by
-    'QuaternionDerivative'. However, there may be accuracy advantages when the
-    logarithm is smooth, and  at the least  this can serve as a good test of
-    the correctness of the logarithm formula.)doc"},
-    {"FactorialFunctor", R"doc(class GWFrames::FactorialFunctor
-================================
-  Storage for pre-calculated factorials.
-
-  Rather than re-calculating factorial values each time they are needed, we
-  simply cache the values, which are pre-calculated when this object is
-  constructed. They may then be accessed by querying this object as a functor.
-  E.g., FactorialFunctor Factorial;
-const double Fac17 = Factorial(17);
-
-  Note that only values up to Factorial(171) are calculated, because that is
-  the largest value that can be stored as an int in standard C++.)doc"},
-    {"FrameAngularVelocity", R"doc(Parameters
-----------
-  const vector<Quaternion>& f
-  const vector<double>& t
-
-Returns
--------
-  vector<Quaternion>)doc"},
-    {"FrameFromAngularVelocity", R"doc(Find the frame with the given angular velocity data.
-====================================================
-  Parameters
-  ----------
-    const vector<Quaternion>& Omega
-      Vector of Quaternions.
-    const vector<double>& T
-      Vector of corresponding times.
-
-  Returns
-  -------
-    vector<Quaternions::Quaternion>
-
-  Description
-  -----------
-    Note that each element of Omega should be a pure-vector Quaternion,
-    corresponding to the angular-velocity vector at the instant of time.
-
-    This function is not as accurate as might be hoped, because the time step
-    of the input data is not adjustable, so you can't do anything like
-    'adaptive' integration. If you have a function that returns Omega given
-    time, you should use the other version of this (overloaded) function that
-    uses such a function. Alternatively, if you are doing an integration as
-    part of a larger system, you can use the code for the other version of this
-    function as a guide on how to do so.
-
-    FrameFromAngularVelocity(std::vector<double> (* Omega)(const double t),
-    const double t0, const double t1, std::vector<Quaternion>& Qs,
-    std::vector<double>& Ts)
-
-
-Find the frame with the given angular velocity function.
-========================================================
-  Parameters
-  ----------
-    vector<double>(*)(const double t) Omega
-      Function pointer returning angular velocity
-    const double t0
-      Initial time
-    const double t1
-      Final time
-    vector<Quaternion>& Qs
-      Output frame rotors
-    vector<double>& Ts
-      Output time steps
-
-  Returns
-  -------
-    void
-
-  Description
-  -----------
-    This function takes a function pointer Omega (which returns a 3-vector,
-    given the time) and integrates to find the frame with that angular velocity.
-
-    This function may not be very useful in general, because the angular
-    velocity may not be known as a function of time. However, there are
-    situations where the angular velocity is known at an instant of time, given
-    other information. The code for this function should serve as a useful
-    guide when implementing such integrations.
-
-    In particular, the key piece in this integration is to reset the value of
-    the quaternion logarithm (denoted below as r) between integration steps
-    when the magnitude of r is too large. It gets reset to a value that is
-    identical in terms of the resulting rotation, but has a smaller magnitude,
-    so that the final result doesn't wander too much. This is equivalent to
-    changing branches of a complex logarithm.
-
-    There are two important things to note about this resetting procedure.
-    First, the time stepper may want to take a very small step immediately
-    after the reset, and should not be cause for alarm. Below, this is dealt
-    with by also restting nSteps, and making sure that we take at least 10 more
-    steps after that to let the time stepper adjust its step sizes accordingly.
-
-    Second, the resulting rotor (which is the exponential of the logarithm)
-    will flip signs when the logarithm is reset. This will have no effect on
-    the physical frame deduced from the rotor, but could be bad news for
-    interpolations. So we simply 'unflip' the signs when returning.)doc"},
-    {"FrameFromAngularVelocity_2D", R"doc(Find the frame with the given angular velocity function.
-========================================================
-  Parameters
-  ----------
-    vector<double>(*)(const double t) Omega
-      Function pointer returning angular velocity
-    const double t0
-      Initial time
-    const double t1
-      Final time
-    vector<Quaternion>& Qs
-      Output frame rotors
-    vector<double>& Ts
-      Output time steps
-
-  Returns
-  -------
-    void
-
-  Description
-  -----------
-    This function takes a function pointer Omega (which returns a 3-vector,
-    given the time) and integrates to find the frame with that angular velocity.
-
-    This function may not be very useful in general, because the angular
-    velocity may not be known as a function of time. However, there are
-    situations where the angular velocity is known at an instant of time, given
-    other information. The code for this function should serve as a useful
-    guide when implementing such integrations.
-
-    In particular, the key piece in this integration is to reset the value of
-    the quaternion logarithm (denoted below as r) between integration steps
-    when the magnitude of r is too large. It gets reset to a value that is
-    identical in terms of the resulting rotation, but has a smaller magnitude,
-    so that the final result doesn't wander too much. This is equivalent to
-    changing branches of a complex logarithm.
-
-    There are two important things to note about this resetting procedure.
-    First, the time stepper may want to take a very small step immediately
-    after the reset, and should not be cause for alarm. Below, this is dealt
-    with by also restting nSteps, and making sure that we take at least 10 more
-    steps after that to let the time stepper adjust its step sizes accordingly.
-
-    Second, the resulting rotor (which is the exponential of the logarithm)
-    will flip signs when the logarithm is reset. This will have no effect on
-    the physical frame deduced from the rotor, but could be bad news for
-    interpolations. So we simply 'unflip' the signs when returning.
+The commutator is ``self * Q - Q * self``, which equals twice
+`Quaternions.Quaternion.cross` and has zero scalar part.
 
 Parameters
 ----------
-  const vector<Quaternion>& Omega
-    Vector of Quaternions.
-  const vector<double>& T
-    Vector of corresponding times.
+Q : Quaternion
+    The second quaternion.
 
 Returns
 -------
-  vector<Quaternion>
+Quaternion
+    The commutator.)doc"},
+    {"Quaternion::dot", R"doc(Return the dot product of the vector parts of two quaternions.
 
-Description
------------
-  Note that each element of Omega should be a pure-vector Quaternion,
-  corresponding to the angular-velocity vector at the instant of time.)doc"},
-    {"FrameFromAngularVelocity_2D_Integrand", R"doc(Time-derivative of 2-D quaternion logarithm for vector with given angular velocity.
-===================================================================================
-  Parameters
-  ----------
-    const double r_x
-    const double r_y
-    vector<double> Omega
-    double& rdot_x
-    double& rdot_y
-
-  Returns
-  -------
-    void)doc"},
-    {"FrameFromAngularVelocity_Integrand", R"doc(Time-derivative of the quaternion logarithm for frame with given angular velocity.
-==================================================================================
-  Parameters
-  ----------
-    const vector<double>& r
-      Quaternion logarithm corresponding to the current frame
-    const vector<double>& Omega
-      Quaternion vector giving instantaneous orbital velocity of frame
-
-  Returns
-  -------
-    vector<double>
-
-  Description
-  -----------
-    This function returns the time-derivative of the quaternion logarithm of
-    the frame with angular velocity Omega. This can be integrated to give the
-    quaternion logarithm of the frame, which can then be exponentiated to give
-    the frame rotor.)doc"},
-    {"FrameFromPrescribedRotation", R"doc(Construct minimal-rotation frame from Z basis vector of that frame.
-===================================================================
-  Parameters
-  ----------
-    const vector<Quaternion>& omega
-      Vector of Quaternions
-    const vector<double>& T
-      Vector of corresponding times
-    const unsigned int NIterations = 5
-      Number of refinements [default: 5]
-
-  Returns
-  -------
-    vector<Quaternion>
-
-  Description
-  -----------
-    The input vector of Quaternions represent the angular-velocity vector
-    (omega) of the frame at each instant of time. The returned vector of rotors
-    will rotate the stationary frame's (x,y,z) vectors into the new frame's
-    (X,Y,Z) vectors, where Z is parallel to omega, and the X and Y vectors are
-    deduced by enforcing the condition that the instantaneous rotation of the
-    frame about Z is |omega|. Note that this leaves an unfixed initial rotation
-    in the XY plane.)doc"},
-    {"FrameFromXY", R"doc(Construct frame given the X and Y basis vectors of that frame.
-==============================================================
-  Parameters
-  ----------
-    const vector<Quaternion>& X
-      Vector of Quaternions
-    const vector<Quaternion>& Y
-      Vector of Quaternions
-
-  Returns
-  -------
-    vector<Quaternion>
-
-  Description
-  -----------
-    The input parameters are Quaternions, assumed to be pure unit vectors,
-    representing the X and Y basis vectors of the frame at each instant of
-    time. The returned vector of rotors will rotate the stationary frame's
-    (x,y,z) vectors into the new frame's (X,Y,Z) vectors.)doc"},
-    {"FrameFromZ", R"doc(Construct minimal-rotation frame from Z basis vector of that frame.
-===================================================================
-  Parameters
-  ----------
-    const vector<Quaternion>& Z
-      Vector of Quaternions
-    const vector<double>& T
-      Vector of corresponding times
-    const unsigned int NIterations = 5
-      Number of refinements [default: 5]
-
-  Returns
-  -------
-    vector<Quaternion>
-
-  Description
-  -----------
-    The input vector of Quaternions, assumed to be pure unit vectors, represent
-    the Z basis vectors of the frame at each instant of time. The returned
-    vector of rotors will rotate the stationary frame's (x,y,z) vectors into
-    the new frame's (X,Y,Z) vectors. The X and Y vectors are deduced by
-    imposing the minimal-rotation condition. Note that this leaves an unfixed
-    initial rotation about z.)doc"},
-    {"GWFrames", R"doc(namespace GWFrames
-==================
-  Collection of objects and functions for manipulating gravitational waves.)doc"},
-    {"ImaginaryI", R"doc(Parameters
-----------
-  0. 0
-  1. 0
-
-Returns
--------
-  const complex<double>)doc"},
-    {"IniLIGO_Approx", R"doc(Parameters
-----------
-  const vector<double>& F
-  const bool Invert = false
-  const double NoiseFloor = 0.0
-
-Returns
--------
-  vector<double>)doc"},
-    {"Interpolator::Interpolator", R"doc(Parameters
-----------
-  const vector<double>& x
-  const vector<double>& y
-  int m
-
-Returns
--------
-  Interpolator)doc"},
-    {"Interpolator::hunt", R"doc(Parameters
-----------
-  const double x
-
-Returns
--------
-  int)doc"},
-    {"Interpolator::locate", R"doc(Parameters
-----------
-  const double x
-
-Returns
--------
-  int)doc"},
-    {"InverseConformalFactorBoostedGrid", R"doc(Construct a boosted grid with the conformal factor at each point.
-=================================================================
-  Parameters
-  ----------
-    const ThreeVector& v
-    const int n_theta
-    const int n_phi
-
-  Returns
-  -------
-    DataGrid)doc"},
-    {"InverseConformalFactorFunctor", R"doc(class InverseConformalFactorFunctor
-===================================
-  Member variables
-  ----------------
-    double gamma
-    Quaternion v)doc"},
-    {"InverseConformalFactorFunctor::InverseConformalFactorFunctor", R"doc(Parameters
-----------
-  const ThreeVector& vi
-
-Returns
--------
-  InverseConformalFactorFunctor)doc"},
-    {"InverseConformalFactorFunctor::operator()", R"doc(Parameters
-----------
-  const Quaternions::Quaternion& R
-
-Returns
--------
-  double)doc"},
-    {"InverseConformalFactorGrid", R"doc(Construct a grid with the conformal factor at each point.
-=========================================================
-  Parameters
-  ----------
-    const ThreeVector& v
-    const int n_theta
-    const int n_phi
-
-  Returns
-  -------
-    DataGrid)doc"},
-    {"LadderOperatorFactorFunctor", R"doc(class GWFrames::LadderOperatorFactorFunctor
-===========================================
-  Storage for pre-calculated values of the ladder operator factor.
-
-  The object is a functor for the coefficients of the standard angular-momentum
-  ladder operator. E.g., LadderOperatorFactorFunctor LadderCoeff;
-const double
-  Ladder_4_3 = LadderCoeff(4,3);
-
-  Note that values up to LadderCoeff(ellMax_GWFrames, ...) are calculated,
-  where ellMax_GWFrames is set in Utilities.hpp. Requests for greater values
-  are answered with an exception.)doc"},
-    {"MeanRotor", R"doc(Mean rotor, minimizing integrated distance between R(t_i) and R_mean.
-=====================================================================
-  Parameters
-  ----------
-    const vector<Quaternion>& R
-      Vector of rotors to be averaged.
-
-  Returns
-  -------
-    Quaternion
-
-  Description
-  -----------
-    This algorithm minimizes the integrated distance between the input data's
-    R(t) and R_mean by varying R_mean and finding the minimum using the
-    Nedler-Mead simplex algorithm(2) of GSL. This is the correct generalization
-    of the similar ApproximateMeanRotor function, and is essentially described
-    in my paper http://arxiv.org/abs/1302.2919/.
-
-
-Mean rotor, minimizing integrated distance between R(t) and R_mean.
-===================================================================
-  Parameters
-  ----------
-    const vector<Quaternion>& R
-      Vector of rotors to be averaged.
-    const vector<double>& t
-      Vector of corresponding time steps.
-    double t1 = -1e300
-      Optional early bound of time to average over
-    double t2 = 1e300
-      Optional late bound of time to average over
-
-  Returns
-  -------
-    Quaternion
-
-  Description
-  -----------
-    This algorithm minimizes the integrated distance between the input data's
-    R(t) and R_mean by varying R_mean and finding the minimum using the
-    Nedler-Mead simplex algorithm(2) of GSL. This is the correct generalization
-    of the similar ApproximateMeanRotor function, and is essentially described
-    in my paper http://arxiv.org/abs/1302.2919/.)doc"},
-    {"MinimalRotation", R"doc(Minimal-rotation version of the input frame.
-============================================
-  Parameters
-  ----------
-    const vector<Quaternion>& R
-      Vector of rotors.
-    const vector<double>& T
-      Vector of corresponding time steps.
-    const unsigned int NIterations = 5
-      Number of refinements [default: 5]
-
-  Returns
-  -------
-    vector<Quaternion>
-
-  Description
-  -----------
-    This function returns a copy of the input R, which takes the z axis to the
-    same point as R, but adjusts the rotation about that new point by imposing
-    the minimal-rotation condition.)doc"},
-    {"Modes", R"doc(class GWFrames::Modes
-=====================
-  Member variables
-  ----------------
-    int s
-
-            This object holds complex spin-weighted data on the sphere in a
-      spin-weighted spherical-harmonic mode representation. All modes are
-      present, even for $\ell<|s|$. The modes are also assumed to be stored in
-      order, as $(\ell,m) = (0,0), (1,-1), (1,0), (1,1), (2,-2), \ldots$.    int ellMax
-    vector<complex<double>> data)doc"},
-    {"Modes::Data", R"doc(Parameters
-----------
-  (none)
-
-Returns
--------
-  vector<complex<double>>)doc"},
-    {"Modes::EllMax", R"doc(Parameters
-----------
-  (none)
-
-Returns
--------
-  int)doc"},
-    {"Modes::EvaluateAtPoint", R"doc(Evaluate Waveform at a particular sky location.
-===============================================
-  Parameters
-  ----------
-    const double vartheta
-      Polar angle of detector
-    const double varphi
-      Azimuthal angle of detector
-
-  Returns
-  -------
-    complex<double>
-
-
-Evaluate Waveform at a particular sky location.
-===============================================
-  Parameters
-  ----------
-    const Quaternions::Quaternion& R
-      Quaternion giving point by rotation of $\hat{z}$
-
-  Returns
-  -------
-    complex<double>
-
-  Description
-  -----------
-    Note that the argument R might typically be thought of as the rotor taking
-    the unit $z$ vector into a point $(\vartheta, \varphi)$. However, more
-    general arguments are possible; this feature is used to greatly simplify
-    the process of constructing a DataGrid object from a Modes object with a
-    boost.)doc"},
-    {"Modes::Modes", R"doc(Parameters
-----------
-  const int spin
-  const vector<complex<double>>& Data
-
-Returns
--------
-  Modes
-
-
-
+The scalar parts are ignored, so this is
+``self[1]*Q[1] + self[2]*Q[2] + self[3]*Q[3]``.
 
 Parameters
 ----------
-  DataGrid D
-  const int L = -1
+Q : Quaternion
+    The second factor.
 
 Returns
 -------
-  Modes
+float
+    The dot product of the vector parts.)doc"},
+    {"Quaternion::abs", R"doc(Return the magnitude of this quaternion.
+
+The magnitude is the square root of the sum of the squares of all four
+components; see also `Quaternions.Quaternion.normsquared`.
+
+Returns
+-------
+float
+    The magnitude.)doc"},
+    {"Quaternion::log", R"doc(Return the natural logarithm of this quaternion.
+
+For a quaternion with magnitude :math:`|Q|`, vector part :math:`\vec{v}`, and
+scalar part :math:`w`, the logarithm has scalar part :math:`\ln |Q|` and
+vector part :math:`\operatorname{atan2}(|\vec{v}|, w)\, \vec{v}/|\vec{v}|`.
+For a rotor :math:`e^{\theta \hat{n}/2}` with :math:`0 \le \theta \le 2\pi`,
+it is therefore :math:`\theta \hat{n}/2`.
+
+The logarithm of a negative real number has infinitely many values, so this
+function raises an error for one; `Quaternions.Quaternion.logRotor` returns a
+value instead.
+
+Returns
+-------
+Quaternion
+    The logarithm.)doc"},
+    {"Quaternion::logRotor", R"doc(Return the natural logarithm, choosing a value for negative real numbers.
+
+This is the same as `Quaternions.Quaternion.log`, except for negative real
+numbers, for which the logarithm has infinitely many values.  Instead of
+raising an error, this function prints a warning and returns
+:math:`\ln|w| + \pi \hat{x}`; for the rotor -1, which represents the identity
+rotation, that is :math:`\pi \hat{x}`.
+
+Returns
+-------
+Quaternion
+    The logarithm.)doc"},
+    {"Quaternion::exp", R"doc(Return the exponential of this quaternion.
+
+For scalar part :math:`w` and vector part :math:`\vec{v}`, the exponential is
+:math:`e^{w} \left[\cos|\vec{v}| + \sin|\vec{v}|\,
+\vec{v}/|\vec{v}|\right]`.  In particular, the exponential of
+:math:`\theta \hat{n}/2` is the rotor for a rotation through :math:`\theta`
+about :math:`\hat{n}`.
+
+Returns
+-------
+Quaternion
+    The exponential.)doc"},
+    {"Quaternion::sqrt", R"doc(Return the principal square root of this quaternion.
+
+The result is ``(self/abs(self) + 1) * sqrt(abs(self) / (2 + 2*w/abs(self)))``,
+where ``w`` is the scalar part.  It is undefined (NaN) for a negative real
+number.  For a unit quaternion, `Quaternions.Quaternion.sqrtOfRotor` gives
+the same result more cheaply, and handles the rotor -1.
+
+Returns
+-------
+Quaternion
+    The square root.)doc"},
+    {"Quaternion::angle", R"doc(Return the full angle of the rotation that this rotor represents.
+
+The result is ``2 * abs(self.logRotor())``.  For a unit quaternion
+:math:`e^{\theta \hat{n}/2}` this is the full rotation angle :math:`\theta`,
+not half of it, and lies between 0 and :math:`2\pi`; a rotor and its negative
+give angles that add to :math:`2\pi`.  For a quaternion that is not
+normalized, the logarithm of its magnitude also contributes.
+
+Returns
+-------
+float
+    The rotation angle.)doc"},
+    {"Quaternion::inverse", R"doc(Return the multiplicative inverse of this quaternion.
+
+The inverse is the conjugate divided by `Quaternions.Quaternion.normsquared`;
+for a unit quaternion, it equals the conjugate.
+
+Returns
+-------
+Quaternion
+    The inverse.)doc"},
+    {"Quaternion::conjugate", R"doc(Return the conjugate of this quaternion.
+
+The conjugate has the same scalar part and the negated vector part.
+
+Returns
+-------
+Quaternion
+    The conjugate.)doc"},
+    {"Quaternion::normalized", R"doc(Return this quaternion divided by its magnitude.
+
+Returns
+-------
+Quaternion
+    The unit quaternion in the same direction.)doc"},
+    {"Quaternion::normsquared", R"doc(Return the squared magnitude of this quaternion.
+
+This is the sum of the squares of all four components.
+
+Returns
+-------
+float
+    The squared magnitude.)doc"},
+    {"Quaternion::sqrtOfRotor", R"doc(Return the square root of this quaternion, assuming that it is a rotor.
+
+The result is ``(1 + self) / sqrt(2 + 2*w)``, where ``w`` is the scalar part,
+which is the principal square root only when this quaternion has unit
+magnitude.  If ``w`` is within 1e-14 of -1, the result is ``xHat``, one of
+the infinitely many square roots of -1.
+
+Returns
+-------
+Quaternion
+    The square root.)doc"},
+    {"Quaternion::vec", R"doc(Return the vector part of this quaternion.
+
+Returns
+-------
+numpy.ndarray of float, shape (3,)
+    The components ``[x, y, z]``.)doc"},
+    {"Quaternion::XParityConjugateSpinor", R"doc(Return the image of this rotor under the reflection that reverses the x axis.
+
+Reflecting the space through the y-z plane takes the rotation through an angle
+about the axis :math:`(n_x, n_y, n_z)` to the rotation through the same angle
+about :math:`(n_x, -n_y, -n_z)`, because a rotation axis is a pseudovector.
+The result is therefore ``Quaternion(w, x, -y, -z)``.
+
+Returns
+-------
+Quaternion
+    The reflected rotor.)doc"},
+    {"Quaternion::YParityConjugateSpinor", R"doc(Return the image of this rotor under the reflection that reverses the y axis.
+
+Reflecting the space through the x-z plane takes the rotation through an angle
+about the axis :math:`(n_x, n_y, n_z)` to the rotation through the same angle
+about :math:`(-n_x, n_y, -n_z)`, because a rotation axis is a pseudovector.
+The result is therefore ``Quaternion(w, -x, y, -z)``.
+
+Returns
+-------
+Quaternion
+    The reflected rotor.)doc"},
+    {"Quaternion::ZParityConjugateSpinor", R"doc(Return the image of this rotor under the reflection that reverses the z axis.
+
+Reflecting the space through the x-y plane takes the rotation through an angle
+about the axis :math:`(n_x, n_y, n_z)` to the rotation through the same angle
+about :math:`(-n_x, -n_y, n_z)`, because a rotation axis is a pseudovector.
+The result is therefore ``Quaternion(w, -x, -y, z)``.
+
+Returns
+-------
+Quaternion
+    The reflected rotor.)doc"},
+    {"Quaternion::ParityConjugateSpinor", R"doc(Return the image of this rotor under the parity transformation.
+
+The parity transformation reverses all three axes.  A rotation axis is a
+pseudovector, which parity leaves unchanged, so the result is a copy of this
+quaternion.
+
+Returns
+-------
+Quaternion
+    A copy of this rotor.)doc"},
+    {"Quaternion::IntrinsicDistance", R"doc(Return the intrinsic (geodesic) distance between this rotor and another.
+
+The distance is ``2 * abs((self * Q.inverse()).logRotor())``, which for unit
+quaternions is the angle of the rotation that takes ``Q`` to this rotor, as
+given by `Quaternions.Quaternion.angle`.  It lies between 0 and
+:math:`2\pi`.
 
 Parameters
 ----------
-  const int size = 0
+Q : Quaternion
+    The other rotor.
 
 Returns
 -------
-  Modes
+float
+    The intrinsic distance.)doc"},
+    {"Quaternion::ChordalDistance", R"doc(Return the chordal distance between this quaternion and another.
 
-
-
-
-Parameters
-----------
-  const Modes& A
-
-Returns
--------
-  Modes)doc"},
-    {"Modes::SetEllMax", R"doc(Parameters
-----------
-  const int ell
-
-Returns
--------
-  Modes&)doc"},
-    {"Modes::SetSpin", R"doc(Parameters
-----------
-  const int ess
-
-Returns
--------
-  Modes&)doc"},
-    {"Modes::Spin", R"doc(Parameters
-----------
-  (none)
-
-Returns
--------
-  int)doc"},
-    {"Modes::bar", R"doc(Parameters
-----------
-  (none)
-
-Returns
--------
-  Modes)doc"},
-    {"Modes::edth", R"doc(Parameters
-----------
-  (none)
-
-Returns
--------
-  Modes
-
-Description
------------
-  This operator is the one defined by Geroch et al. (1973). It raises the
-  spin weight of any field on the sphere by 1, while leaving the boost weight
-  unchanged.
-
-  This operator is very similar to the basic Newman-Penrose edth operator,
-  except that it preserves boost weights. Its effect in this implementation
-  is identical (up to a factor of $\sqrt{2}$) to the NP edth. There is an
-  additional term in the definition of the GHP operator, but its value is
-  zero. (It transforms nontrivially, though.) In this context, we have
-  NPEdth() = sqrt(2)*GHPEdth().
-
-  The complex shear $\sigma$ has spin weight +2 and boost weight +1. The
-  radial coordinate $r$ has boost weight -1, and the derivative with respect
-  to time $d/du$ has boost weight -1. The asymptotic metric shear $r\, h$
-  has spin weight -2 and boost weight -1. In particular, it seems that $r\,
-  h = r^2\, \bar{\sigma}$.
-
-  The Newman-Penrose scalars $\Psi_i$ have spin weight and boost weight
-  equal to $2-i$. (E.g., $\Psi_4$ has $s = b = -2$.) However, when these are
-  multiplied by the appropriate factors of $r$ to find the leading-order
-  terms, they acquire boost weights. In particular, we need to multiply
-  $\Psi_i$ by $r^{5-i}$ to get nonzero values at scri, which adds $i-5$ to
-  the boost weight, so that the asymptotic NP scalars all have boost weight
-  -3.)doc"},
-    {"Modes::edth2edthbar2", R"doc(The operator edth^2 bar{edth}^2.
-================================
-  Parameters
-  ----------
-    (none)
-
-  Returns
-  -------
-    Modes)doc"},
-    {"Modes::edthbar", R"doc(Parameters
-----------
-  (none)
-
-Returns
--------
-  Modes
-
-Description
------------
-  This operator is the one defined by Geroch et al. (1973). It lowers the
-  spin weight of any field on the sphere by 1, while leaving the boost weight
-  unchanged.
-
-  This operator is very similar to the basic Newman-Penrose edth operator,
-  except that it preserves boost weights. Its effect in this implementation
-  is identical (up to a factor of $\sqrt{2}$) to the NP edth. There is an
-  additional term in the definition of the GHP operator, but its value is
-  zero. (It transforms nontrivially, though.) In this context, we have
-  NPEdthBar() = sqrt(2)*GHPEdthBar().
-
-  The complex shear $\sigma$ has spin weight +2 and boost weight +1. The
-  radial coordinate $r$ has boost weight -1, and the derivative with respect
-  to time $d/du$ has boost weight -1. The asymptotic metric shear $r\, h$
-  has spin weight -2 and boost weight -1. In particular, it seems that $r\,
-  h = r^2\, \bar{\sigma}$.
-
-  The Newman-Penrose scalars $\Psi_i$ have spin weight and boost weight
-  equal to $2-i$. (E.g., $\Psi_4$ has $s = b = -2$.) However, when these are
-  multiplied by the appropriate factors of $r$ to find the leading-order
-  terms, they acquire boost weights. In particular, we need to multiply
-  $\Psi_i$ by $r^{5-i}$ to get nonzero values at scri, which adds $i-5$ to
-  the boost weight, so that the asymptotic NP scalars all have boost weight
-  -3.)doc"},
-    {"Modes::operator*", R"doc(Parameters
-----------
-  const Modes& M
-
-Returns
--------
-  Modes)doc"},
-    {"Modes::operator+", R"doc(Parameters
-----------
-  const Modes& M
-
-Returns
--------
-  Modes)doc"},
-    {"Modes::operator-", R"doc(Parameters
-----------
-  const Modes& M
-
-Returns
--------
-  Modes)doc"},
-    {"Modes::operator/", R"doc(Parameters
-----------
-  const Modes& M
-
-Returns
--------
-  Modes)doc"},
-    {"Modes::operator=", R"doc(Parameters
-----------
-  const Modes& B
-
-Returns
--------
-  Modes&)doc"},
-    {"Modes::operator[]", R"doc(Parameters
-----------
-  const unsigned int i
-
-Returns
--------
-  complex<double>
-
-
-
+The distance is the magnitude of the difference, ``abs(self - Q)``.
 
 Parameters
 ----------
-  const unsigned int i
+Q : Quaternion
+    The other quaternion.
 
 Returns
 -------
-  complex<double>&)doc"},
-    {"Modes::pow", R"doc(Parameters
-----------
-  const int p
+float
+    The chordal distance.)doc"},
+    {"Quaternion::str", R"doc(Return the four components separated by spaces.
+
+The components appear in the order ``w x y z``, with six significant digits.
 
 Returns
 -------
-  Modes)doc"},
-    {"Modes::size", R"doc(Parameters
-----------
-  (none)
+str
+    The components.)doc"},
+    {"pow", R"doc(Raise quaternions to real or quaternion powers.
 
-Returns
--------
-  unsigned int)doc"},
-    {"OptimalAlignment", R"doc(Time and rotor offsets such that Rdelta*Rb(t+deltat) is as close to Ra(t) as possible.
-======================================================================================
-  Parameters
-  ----------
-    const double t1
-      Initial bound of alignment range
-    const double t2
-      Final bound of alignment range
-    const vector<Quaternion>& Ra
-      Vector of fixed rotors.
-    const vector<double>& ta
-      Vector of corresponding time steps.
-    const vector<Quaternion>& Rb
-      Vector of rotors to be aligned to Ra.
-    const vector<double>& tb
-      Vector of corresponding time steps.
-    double& deltat
-      Output optimal time offset
-    Quaternions::Quaternion& R_delta
-      Output optimal rotor
-
-  Returns
-  -------
-    void
-
-  Description
-  -----------
-    This routine actively optimizes the time offset and all three rotational
-    degrees of freedom for Rb, so that Rdelta*Rb(t+deltat) is as close to Ra(t)
-    as possible over the range (t1, t2). The error measure is just the usual
-    angle(UnflipRotors(RDelta(Ra,Rb))) integrated over (t1,t2).
-
-    The times t1 and t2 are measured relative to ta, and all are left fixed; Rb
-    and tb are shifted to achieve alignment.)doc"},
-    {"PNWaveform", R"doc(class GWFrames::PNWaveform
-==========================
-  Object for calculating a post-Newtonian Waveform with (optional) precession.
-
-  Fundamental object creating precessing PN waveform.
-
-  This object is a subclass of the GWFrames::Waveform object. In addition to
-  the data stored in a Waveform, this stores the two spins chi1 and chi2; the
-  orbital angular-velocity vectors Omega_orb, Omega_prec, and Omega_tot; the PN
-  angular momentum; and the orbital phase Phi_orb. Various methods also exist
-  for retrieving the vectors, their magnitudes, and their normalized versions.
-
-  history
-
-  String recording history of data
-
-  t
-
-  Vector of time indices
-
-  frame
-
-  Vector of quaternions. This represents the rotation applied to the physical
-  system to go from the standard inertial frame to the frame in which the
-  Waveform is decomposed. If this vector has length 0, the frame is assumed to
-  be constant, and the standard frame. If this vector has length 1, the frame
-  is assumed to be constant, but given by that value. Otherwise, this vector is
-  assumed to have length NTimes(), corresponding to the frame at each moment.
-
-  lm
-
-  Vector of vectors of int's, giving (ell,m) data
-
-  data
-
-  Vector of complex numbers representing h or Psi4.
-
-  chi1
-
-  Vector of vectors of doubles representing the spin of BH 1.
-
-  chi2
-
-  Vector of vectors of doubles representing the spin of BH 2.
-
-  Omega_orb
-
-  Vector of vectors of doubles representing the orbital angular-velocity vector.
-
-  Omega_prec
-
-  Vector of vectors of doubles representing the precessional angular-velocity
-  vector.
-
-  Omega_tot
-
-  Vector of vectors of doubles representing the total angular-velocity vector.
-
-  L
-
-  Vector of vectors of doubles representing the angular-momentum vector.
-
-  Phi_orb
-
-  Vector of doubles representing the orbital phase.
-
-  Member variables
-  ----------------
-    vector<vector<double>> mchi1
-    vector<vector<double>> mchi2
-    vector<vector<double>> mOmega_orb
-    vector<vector<double>> mOmega_prec
-    vector<vector<double>> mL
-    vector<double> mPhi_orb)doc"},
-    {"PNWaveform::L", R"doc(Parameters
-----------
-  const unsigned int iTime
-
-Returns
--------
-  const vector<double>&
-
-
-
+Each power is computed as ``exp(log(Q) * x)`` or ``exp(log(Q) * P)``, as in
+`Quaternions.Quaternion.pow`, so it raises an error when a base is a negative
+real number.  Either argument may be a single value or an array.  A single
+value is combined with every element of an array, and two arrays, which must
+have the same length, are combined element by element.
 
 Parameters
 ----------
-  (none)
+Q : Quaternion or array_like of Quaternion
+    The base or bases.
+x : float or array_like of float
+    The real exponent or exponents.  Pass either ``x`` or ``P``.
+P : Quaternion or array_like of Quaternion
+    The quaternion exponent or exponents, which multiply the logarithm from
+    the right.
 
 Returns
 -------
-  const vector<vector<double>>&)doc"},
-    {"PNWaveform::LHat", R"doc(Parameters
-----------
-  const unsigned int iTime
+Quaternion or numpy.ndarray of Quaternion
+    The power, or an array of powers if either argument is an array.)doc"},
+    {"cross", R"doc(Return the cross product of the vector parts of two quaternions.
 
-Returns
--------
-  vector<double>
-
-
-
-
-Parameters
-----------
-  (none)
-
-Returns
--------
-  vector<vector<double>>)doc"},
-    {"PNWaveform::LMag", R"doc(  Parameters
-  ----------
-    const unsigned int iTime
-
-  Returns
-  -------
-    double
-
-
-Vector of magnitudes of angular momentum L at each instant of time.
-===================================================================
-  Parameters
-  ----------
-    (none)
-
-  Returns
-  -------
-    vector<double>)doc"},
-    {"PNWaveform::OmegaHat_orb", R"doc(Parameters
-----------
-  const unsigned int iTime
-
-Returns
--------
-  vector<double>
-
-
-
+The scalar parts are ignored, and the result has zero scalar part; see
+`Quaternions.Quaternion.cross`.
 
 Parameters
 ----------
-  (none)
+Q : Quaternion
+    The first factor.
+P : Quaternion
+    The second factor.
 
 Returns
 -------
-  vector<vector<double>>)doc"},
-    {"PNWaveform::OmegaHat_prec", R"doc(Parameters
-----------
-  const unsigned int iTime
+Quaternion
+    The cross product, as a quaternion with zero scalar part.)doc"},
+    {"commutator", R"doc(Return the commutator of two quaternions.
 
-Returns
--------
-  vector<double>
-
-
-
+The commutator is ``Q * P - P * Q``, which equals twice `Quaternions.cross`.
 
 Parameters
 ----------
-  (none)
+Q : Quaternion
+    The first quaternion.
+P : Quaternion
+    The second quaternion.
 
 Returns
 -------
-  vector<vector<double>>)doc"},
-    {"PNWaveform::OmegaHat_tot", R"doc(Parameters
-----------
-  const unsigned int iTime
+Quaternion
+    The commutator.)doc"},
+    {"dot", R"doc(Return the dot product of the vector parts of two quaternions.
 
-Returns
--------
-  vector<double>
-
-
-
+The scalar parts are ignored; see `Quaternions.Quaternion.dot`.
 
 Parameters
 ----------
-  (none)
+Q : Quaternion
+    The first factor.
+P : Quaternion
+    The second factor.
 
 Returns
 -------
-  vector<vector<double>>)doc"},
-    {"PNWaveform::Omega_orb", R"doc(Parameters
-----------
-  const unsigned int iTime
+float
+    The dot product of the vector parts.)doc"},
+    {"abs", R"doc(Return the magnitude of a quaternion or of each quaternion in an array.
 
-Returns
--------
-  const vector<double>&
-
-
-
+See `Quaternions.Quaternion.abs`.
 
 Parameters
 ----------
-  (none)
+Q : Quaternion or array_like of Quaternion
+    The quaternion or quaternions.
 
 Returns
 -------
-  const vector<vector<double>>&)doc"},
-    {"PNWaveform::Omega_orbMag", R"doc(  Parameters
-  ----------
-    const unsigned int iTime
+float or numpy.ndarray of float
+    The magnitude or magnitudes.)doc"},
+    {"log", R"doc(Return the natural logarithm of a quaternion or of each in an array.
 
-  Returns
-  -------
-    double
-
-
-Vector of magnitudes of Omega_orb at each instant of time.
-==========================================================
-  Parameters
-  ----------
-    (none)
-
-  Returns
-  -------
-    vector<double>)doc"},
-    {"PNWaveform::Omega_prec", R"doc(Parameters
-----------
-  const unsigned int iTime
-
-Returns
--------
-  const vector<double>&
-
-
-
+See `Quaternions.Quaternion.log`; an error is raised for a negative real
+number, for which `Quaternions.logRotor` returns a value instead.
 
 Parameters
 ----------
-  (none)
+Q : Quaternion or array_like of Quaternion
+    The quaternion or quaternions.
 
 Returns
 -------
-  const vector<vector<double>>&)doc"},
-    {"PNWaveform::Omega_precMag", R"doc(  Parameters
-  ----------
-    const unsigned int iTime
+Quaternion or numpy.ndarray of Quaternion
+    The logarithm or logarithms.)doc"},
+    {"logRotor", R"doc(Return the logarithm of quaternions, choosing a value for negative reals.
 
-  Returns
-  -------
-    double
-
-
-Vector of magnitudes of Omega_prec at each instant of time.
-===========================================================
-  Parameters
-  ----------
-    (none)
-
-  Returns
-  -------
-    vector<double>)doc"},
-    {"PNWaveform::Omega_tot", R"doc(Total angular velocity of PN binary at an instant of time.
-==========================================================
-  Parameters
-  ----------
-    const unsigned int iTime
-
-  Returns
-  -------
-    vector<double>
-
-
-Total angular velocity of PN binary at each instant of time.
-============================================================
-  Parameters
-  ----------
-    (none)
-
-  Returns
-  -------
-    vector<vector<double>>)doc"},
-    {"PNWaveform::Omega_totMag", R"doc(  Parameters
-  ----------
-    const unsigned int iTime
-
-  Returns
-  -------
-    double
-
-
-Vector of magnitudes of Omega_tot at each instant of time.
-==========================================================
-  Parameters
-  ----------
-    (none)
-
-  Returns
-  -------
-    vector<double>)doc"},
-    {"PNWaveform::PNWaveform", R"doc(Default constructor for an empty object.
-========================================
-  Parameters
-  ----------
-    (none)
-
-  Returns
-  -------
-    PNWaveform
-
-
-Copy constructor.
-=================
-  Parameters
-  ----------
-    const PNWaveform& W
-
-  Returns
-  -------
-    PNWaveform
-
-  Description
-  -----------
-    Simply copies all fields in the input object to the constructed object,
-    including history
-
-
-Constructor of PN waveform from parameters.
-===========================================
-  Parameters
-  ----------
-    const string& Approximant
-    const double delta
-    const vector<double>& chi1_i
-    const vector<double>& chi2_i
-    const double Omega_orb_i
-    double Omega_orb_0 = -1.0
-    const Quaternions::Quaternion& R_frame_i = Quaternions::Quaternion(1, 0, 0, 0)
-    const unsigned int MinStepsPerOrbit = 32
-    const double PNWaveformModeOrder = 3.5
-    const double PNOrbitalEvolutionOrder = 4.0
-
-  Returns
-  -------
-    PNWaveform
-
-  Description
-  -----------
-    See GWFrames/Code/SWIG/Extensions.py for the docstring for this object)doc"},
-    {"PNWaveform::Phi_orb", R"doc(Parameters
-----------
-  const unsigned int iTime
-
-Returns
--------
-  double
-
-
-
+This is the same as `Quaternions.log`, except that a negative real number
+gives :math:`\ln|w| + \pi \hat{x}`, with a warning, instead of an error; see
+`Quaternions.Quaternion.logRotor`.
 
 Parameters
 ----------
-  (none)
+Q : Quaternion or array_like of Quaternion
+    The quaternion or quaternions.
 
 Returns
 -------
-  const vector<double>&)doc"},
-    {"PNWaveform::chi1", R"doc(Parameters
-----------
-  const unsigned int iTime
+Quaternion or numpy.ndarray of Quaternion
+    The logarithm or logarithms.)doc"},
+    {"exp", R"doc(Return the exponential of a quaternion or of each quaternion in an array.
 
-Returns
--------
-  const vector<double>&
-
-
-
+See `Quaternions.Quaternion.exp`.
 
 Parameters
 ----------
-  (none)
+Q : Quaternion or array_like of Quaternion
+    The quaternion or quaternions.
 
 Returns
 -------
-  const vector<vector<double>>&)doc"},
-    {"PNWaveform::chi1Mag", R"doc(Parameters
-----------
-  const unsigned int iTime
+Quaternion or numpy.ndarray of Quaternion
+    The exponential or exponentials.)doc"},
+    {"sqrt", R"doc(Return the principal square root of a quaternion or of each in an array.
 
-Returns
--------
-  double)doc"},
-    {"PNWaveform::chi2", R"doc(Parameters
-----------
-  const unsigned int iTime
-
-Returns
--------
-  const vector<double>&
-
-
-
+See `Quaternions.Quaternion.sqrt`.  For unit quaternions,
+`Quaternions.sqrtOfRotor` gives the same result more cheaply.
 
 Parameters
 ----------
-  (none)
+Q : Quaternion or array_like of Quaternion
+    The quaternion or quaternions.
 
 Returns
 -------
-  const vector<vector<double>>&)doc"},
-    {"PNWaveform::chi2Mag", R"doc(Parameters
-----------
-  const unsigned int iTime
+Quaternion or numpy.ndarray of Quaternion
+    The square root or square roots.)doc"},
+    {"angle", R"doc(Return the full rotation angle of a rotor or of each rotor in an array.
 
-Returns
--------
-  double)doc"},
-    {"PNWaveform::chiHat1", R"doc(Parameters
-----------
-  const unsigned int iTime
-
-Returns
--------
-  vector<double>
-
-
-
+The angle is ``2 * abs(logRotor(Q))``, which for a unit quaternion
+:math:`e^{\theta \hat{n}/2}` is the full rotation angle :math:`\theta`, not
+half of it, between 0 and :math:`2\pi`; see `Quaternions.Quaternion.angle`.
 
 Parameters
 ----------
-  (none)
+Q : Quaternion or array_like of Quaternion
+    The rotor or rotors.
 
 Returns
 -------
-  vector<vector<double>>)doc"},
-    {"PNWaveform::chiHat2", R"doc(Parameters
-----------
-  const unsigned int iTime
+float or numpy.ndarray of float
+    The rotation angle or angles.)doc"},
+    {"inverse", R"doc(Return the inverse of a quaternion or of each quaternion in an array.
 
-Returns
--------
-  vector<double>
-
-
-
+See `Quaternions.Quaternion.inverse`.
 
 Parameters
 ----------
-  (none)
+Q : Quaternion or array_like of Quaternion
+    The quaternion or quaternions.
 
 Returns
 -------
-  vector<vector<double>>)doc"},
-    {"PNWaveform::~PNWaveform", R"doc(Parameters
-----------
-  (none)
+Quaternion or numpy.ndarray of Quaternion
+    The inverse or inverses.)doc"},
+    {"conjugate", R"doc(Return the conjugate of a quaternion or of each quaternion in an array.
 
-Returns
--------
-  ~PNWaveform)doc"},
-    {"PolynomialInterpolator::rawinterp", R"doc(Parameters
-----------
-  int jl
-  double x
-
-Returns
--------
-  double)doc"},
-    {"PrescribedRotation", R"doc(Input frame with prescribed rate of rotation about Z axis.
-==========================================================
-  Parameters
-  ----------
-    const vector<double>& RotationRateAboutZ
-      Vector of rotation rates about the new frame's Z axis.
-    const vector<Quaternion>& R
-      Vector of rotors.
-    const vector<double>& T
-      Vector of corresponding time steps.
-    const unsigned int NIterations = 5
-      Number of refinements [default: 5]
-
-  Returns
-  -------
-    vector<Quaternion>
-
-  Description
-  -----------
-    This function returns a copy of the input R, which takes the z axis to the
-    same point as R, but adjusts the rotation about that new point by imposing
-    the minimal-rotation condition, and then including an additional rotation
-    about the new Z axis to agree with the given rotation rate.)doc"},
-    {"Quaternion", R"doc(class Quaternions::Quaternion
-=============================
-  Object representing an individual quaternion.
-
-  Member variables
-  ----------------
-    double w
-    double x
-    double y
-    double z)doc"},
-    {"Quaternion::Quaternion", R"doc(Empty constructor  initialized to 0s.
-=====================================
-  Parameters
-  ----------
-    (none)
-
-  Returns
-  -------
-    Quaternion
-
-
-Copy constructor.
-=================
-  Parameters
-  ----------
-    const Quaternion& Q
-
-  Returns
-  -------
-    Quaternion
-
-
-Constructor from spherical coordinates.
-=======================================
-  Parameters
-  ----------
-    const double vartheta
-      Float representing the polar angle
-    const double varphi
-      Float representing the azimuthal angle
-
-  Returns
-  -------
-    Quaternion
-
-  Description
-  -----------
-    The unit Quaternion constructed in this way rotates the z axis onto the
-    point given by the coordinates (vartheta, varphi).
-
-
-Constructor from Euler angles.
-==============================
-  Parameters
-  ----------
-    const double alpha
-      First Euler angle
-    const double beta
-      Second Euler angle
-    const double gamma
-      Third Euler angle
-
-  Returns
-  -------
-    Quaternion
-
-  Description
-  -----------
-    The unit Quaternion constructed in this way corresponds to a rotation by
-    the given Euler angles. The convention used here is the z-y-z convention.
-    That is, the rotations occur about the fixed axes: first a rotation by
-    gamma about the z axis, then a rotation by beta about the y axis, and
-    finally a rotation by alpha about the z axis.
-
-
-Constructor by components.
-==========================
-  Parameters
-  ----------
-    const double w0
-      Scalar component of Quaternion
-    const double x0
-      First vector component of Quaternion
-    const double y0
-      Second vector component of Quaternion
-    const double z0
-      Third vector component of Quaternion
-
-  Returns
-  -------
-    Quaternion
-
-
-Constructor from vector.
-========================
-  Parameters
-  ----------
-    const vector<double>& q
-      Vector containing three or four components
-
-  Returns
-  -------
-    Quaternion
-
-  Description
-  -----------
-    If the input vector has three components, they are assumed to represent the
-    vector components of the Quaternion, and the scalar component is set to
-    zero. If the input vector has four components, they are assumed to
-    represent the four components of the Quaternion, with the 0 component being
-    the scalar part.
-
-
-Constructor from axis-angle.
-============================
-  Parameters
-  ----------
-    const double angle
-      Single number giving the rotation angle
-    const vector<double>& axis
-      Three-component vector (assumed to be normalized) giving the axis
-
-  Returns
-  -------
-    Quaternion
-
-  Description
-  -----------
-    This constructs a rotor (assuming 'axis' is normalized) corresponding to
-    rotation about the given axis through the given angle.)doc"},
-    {"Quaternion::abs", R"doc(Parameters
-----------
-  (none)
-
-Returns
--------
-  double)doc"},
-    {"Quaternion::angle", R"doc(Parameters
-----------
-  (none)
-
-Returns
--------
-  double)doc"},
-    {"Quaternion::commutator", R"doc(Parameters
-----------
-  const Quaternion& Q
-
-Returns
--------
-  Quaternion)doc"},
-    {"Quaternion::conjugate", R"doc(Parameters
-----------
-  (none)
-
-Returns
--------
-  Quaternion)doc"},
-    {"Quaternion::cross", R"doc(Parameters
-----------
-  const Quaternion& Q
-
-Returns
--------
-  Quaternion)doc"},
-    {"Quaternion::dot", R"doc(Parameters
-----------
-  const Quaternion& Q
-
-Returns
--------
-  double)doc"},
-    {"Quaternion::exp", R"doc(Return exponent of Quaternion.
-==============================
-  Parameters
-  ----------
-    (none)
-
-  Returns
-  -------
-    Quaternion)doc"},
-    {"Quaternion::inverse", R"doc(Parameters
-----------
-  (none)
-
-Returns
--------
-  Quaternion)doc"},
-    {"Quaternion::log", R"doc(Return logarithm of Quaternion.
-===============================
-  Parameters
-  ----------
-    (none)
-
-  Returns
-  -------
-    Quaternion)doc"},
-    {"Quaternion::logRotor", R"doc(Return logarithm of a rotor.
-============================
-  Parameters
-  ----------
-    (none)
-
-  Returns
-  -------
-    Quaternion
-
-  Description
-  -----------
-    This function is just like the standard log function, except that a
-    negative scalar does not raise an exception; instead, the scalar pi is
-    returned.)doc"},
-    {"Quaternion::normalized", R"doc(Parameters
-----------
-  (none)
-
-Returns
--------
-  Quaternion)doc"},
-    {"Quaternion::normsquared", R"doc(Parameters
-----------
-  (none)
-
-Returns
--------
-  double)doc"},
-    {"Quaternion::operator!=", R"doc(Parameters
-----------
-  const Quaternion& Q
-
-Returns
--------
-  bool)doc"},
-    {"Quaternion::operator*", R"doc(  Parameters
-  ----------
-    const double t
-
-  Returns
-  -------
-    Quaternion
-
-
-Quaternion multiplication.
-==========================
-  Parameters
-  ----------
-    const Quaternion& Q
-
-  Returns
-  -------
-    Quaternion)doc"},
-    {"Quaternion::operator+", R"doc(Parameters
-----------
-  const double t
-
-Returns
--------
-  Quaternion
-
-
-
+The conjugate has the same scalar part and the negated vector part.
 
 Parameters
 ----------
-  const Quaternion& Q
+Q : Quaternion or array_like of Quaternion
+    The quaternion or quaternions.
 
 Returns
 -------
-  Quaternion)doc"},
-    {"Quaternion::operator+=", R"doc(Parameters
-----------
-  const Quaternion& Q
-
-Returns
--------
-  Quaternion&)doc"},
-    {"Quaternion::operator-", R"doc(Parameters
-----------
-  (none)
-
-Returns
--------
-  Quaternion
-
-
-
+Quaternion or numpy.ndarray of Quaternion
+    The conjugate or conjugates.)doc"},
+    {"normalized", R"doc(Return a quaternion, or each quaternion in an array, divided by its magnitude.
 
 Parameters
 ----------
-  const double t
+Q : Quaternion or array_like of Quaternion
+    The quaternion or quaternions.
 
 Returns
 -------
-  Quaternion
+Quaternion or numpy.ndarray of Quaternion
+    The unit quaternion or quaternions.)doc"},
+    {"normsquared", R"doc(Return the squared magnitude of a quaternion or of each in an array.
 
-
-
+The squared magnitude is the sum of the squares of all four components.
 
 Parameters
 ----------
-  const Quaternion& Q
+Q : Quaternion or array_like of Quaternion
+    The quaternion or quaternions.
 
 Returns
 -------
-  Quaternion)doc"},
-    {"Quaternion::operator/", R"doc(Parameters
-----------
-  const double t
+float or numpy.ndarray of float
+    The squared magnitude or magnitudes.)doc"},
+    {"sqrtOfRotor", R"doc(Return the square root of a rotor or of each rotor in an array.
 
-Returns
--------
-  Quaternion
-
-
-
+The result is the principal square root only for unit quaternions; see
+`Quaternions.Quaternion.sqrtOfRotor`.
 
 Parameters
 ----------
-  const Quaternion& Q
+Q : Quaternion or array_like of Quaternion
+    The rotor or rotors.
 
 Returns
 -------
-  Quaternion)doc"},
-    {"Quaternion::operator=", R"doc(Parameters
-----------
-  const Quaternion& Q
-
-Returns
--------
-  Quaternion&)doc"},
-    {"Quaternion::operator==", R"doc(Parameters
-----------
-  const Quaternion& Q
-
-Returns
--------
-  bool)doc"},
-    {"Quaternion::operator[]", R"doc(Get component of Quaternion.
-============================
-  Parameters
-  ----------
-    const unsigned int i
-
-  Returns
-  -------
-    double
-
-  Description
-  -----------
-    The 0 component is the scalar part, and the 13 components are the vector
-    components.
-
-
-Get reference to component of Quaternion.
-=========================================
-  Parameters
-  ----------
-    const unsigned int i
-
-  Returns
-  -------
-    double&
-
-  Description
-  -----------
-    Note: This is unavailable from python.)doc"},
-    {"Quaternion::pow", R"doc(Parameters
-----------
-  const double t
-
-Returns
--------
-  Quaternion
-
-
-
+Quaternion or numpy.ndarray of Quaternion
+    The square root or square roots.)doc"},
+    {"vec", R"doc(Return the vector part of a quaternion or of each quaternion in an array.
 
 Parameters
 ----------
-  const Quaternion& Q
+Q : Quaternion or array_like of Quaternion
+    The quaternion or quaternions.
 
 Returns
 -------
-  Quaternion)doc"},
-    {"Quaternion::sqrt", R"doc(Parameters
-----------
-  (none)
+numpy.ndarray of float, shape (3,) or (N, 3)
+    The components ``[x, y, z]``, with one row per quaternion if ``Q`` is an
+    array of ``N`` quaternions.)doc"},
+    {"XParityConjugateSpinor", R"doc(Return the image of a rotor under the reflection that reverses the x axis.
 
-Returns
--------
-  Quaternion)doc"},
-    {"Quaternion::sqrtOfRotor", R"doc(Parameters
-----------
-  (none)
-
-Returns
--------
-  Quaternion)doc"},
-    {"Quaternion::vec", R"doc(Parameters
-----------
-  (none)
-
-Returns
--------
-  vector<double>)doc"},
-    {"QuaternionArray", R"doc(Parameters
-----------
-  const vector<double>& vartheta
-  const vector<double>& varphi
-
-Returns
--------
-  vector<Quaternion>
-
-
-
+The result is ``Quaternion(w, x, -y, -z)``; see
+`Quaternions.Quaternion.XParityConjugateSpinor`.
 
 Parameters
 ----------
-  const vector<double>& alpha
-  const vector<double>& beta
-  const vector<double>& gamma
+Q : Quaternion
+    The rotor.
 
 Returns
 -------
-  vector<Quaternion>
+Quaternion
+    The reflected rotor.)doc"},
+    {"YParityConjugateSpinor", R"doc(Return the image of a rotor under the reflection that reverses the y axis.
 
-
-
+The result is ``Quaternion(w, -x, y, -z)``; see
+`Quaternions.Quaternion.YParityConjugateSpinor`.
 
 Parameters
 ----------
-  const vector<double>& w0
-  const vector<double>& x0
-  const vector<double>& y0
-  const vector<double>& z0
+Q : Quaternion
+    The rotor.
 
 Returns
 -------
-  vector<Quaternion>
+Quaternion
+    The reflected rotor.)doc"},
+    {"ZParityConjugateSpinor", R"doc(Return the image of a rotor under the reflection that reverses the z axis.
 
-
-
+The result is ``Quaternion(w, -x, -y, z)``; see
+`Quaternions.Quaternion.ZParityConjugateSpinor`.
 
 Parameters
 ----------
-  const vector<vector<double>>& q
+Q : Quaternion
+    The rotor.
 
 Returns
 -------
-  vector<Quaternion>
+Quaternion
+    The reflected rotor.)doc"},
+    {"ParityConjugateSpinor", R"doc(Return the image of a rotor under the parity transformation.
 
-
-
+Parity leaves a rotation axis unchanged, so the result is a copy of ``Q``; see
+`Quaternions.Quaternion.ParityConjugateSpinor`.
 
 Parameters
 ----------
-  const vector<double>& angle
-  const vector<vector<double>>& axis
+Q : Quaternion
+    The rotor.
 
 Returns
 -------
-  vector<Quaternion>)doc"},
-    {"QuaternionDerivative", R"doc(Five-point finite-differencing of vector of Quaternions.
-========================================================
-  Parameters
-  ----------
-    const vector<Quaternion>& f
-      Vector of Quaternions.
-    const vector<double>& t
-      Vector of corresponding time steps.
+Quaternion
+    A copy of the rotor.)doc"},
+    {"IntrinsicDistance", R"doc(Return the intrinsic (geodesic) distance between two rotors.
 
-  Returns
-  -------
-    vector<Quaternion>
-
-  Description
-  -----------
-    The formula for this finite difference comes from Eq. (A 5b) of 'Derivative
-    formulas and errors for non-uniformly spaced points' by M. K. Bowen and
-    Ronald Smith. As explained in their Eqs. (B 9b) and (B 10b), this is a
-    fourth-order formula.
-
-    If there are fewer than five points, the function reverts to simpler
-    formulas. If there are fewer than two points, or there are different
-    numbers of points in the two input vectors, an exception is thrown.
-
-    Sundqvist and Veronis, Tellus XXII (1970), 1)doc"},
-    {"Quaternions", R"doc(namespace Quaternions
-=====================)doc"},
-    {"RDelta", R"doc(Difference between frame rotors R1*R2.inverse()
-===============================================
-  Parameters
-  ----------
-    const vector<Quaternion>& R1
-      Vector of rotors
-    const vector<Quaternion>& R2
-      Vector of rotors
-    const int IndexOfFiducialTime = -1
-      Integer index of time at which difference is set to zero [default: -1]
-
-  Returns
-  -------
-    vector<Quaternion>
-
-  Description
-  -----------
-    If the optional IndexOfFiducialTime is given, the returned quantity is
-    R1*Offset*R2.inverse(), where Offset is R1[I].inverse()*R2[I], thus
-    ensuring that RDelta[I]=1.)doc"},
-    {"SQR", R"doc(Parameters
-----------
-  const double a
-
-Returns
--------
-  double)doc"},
-    {"SWSH", R"doc(class GWFrames::SWSH
-====================
-  Calculate SWSHs directly from Wigner D matrices.
-
-  This object calculates values of SWSHs directly from the Wigner D matrices,
-  in terms of rotors, with the conventions described in
-  http://arxiv.org/abs/0709.0093. Here, the value at some point (theta, phi) is
-  given by evaluating this object for a rotor that takes the north pole (0,0,1)
-  into the point (theta, phi).)doc"},
-    {"ScalarIntegral", R"doc(Integrate scalar function by simple trapezoidal rule.
-=====================================================
-  Parameters
-  ----------
-    const vector<double>& fdot
-      Vector of scalars.
-    const vector<double>& t
-      Vector of corresponding time steps.
-
-  Returns
-  -------
-    vector<double>)doc"},
-    {"Scri", R"doc(class GWFrames::Scri
-====================
-  Member variables
-  ----------------
-    vector<double> t
-
-            A Scri object contains all the information needed to express the
-      asymptotic geometry of null infinity, and symmetry transformations
-      thereof. This geometry is encoded in the NewmanPenrose curvature scalars
-      $\psi_0, \ldots, \psi_4$ and the complex shear $\sigma$ of outgoing
-      null rays (strain in gravitational-wave detectors). The general symmetry
-      transformation is an element of the BondiMetznerSachs (BMS) group, which
-      transforms the data contained by Scri among itself.    vector<SliceModes> slices)doc"},
-    {"Scri::BMSTransformation", R"doc(Apply a (constant) BMS transformation to data on null infinity.
-===============================================================
-  Parameters
-  ----------
-    const double& u0
-      Initial time slice to transform
-    const ThreeVector& v
-      Three-vector of the boost relative to the current frame
-    const Modes& delta
-      Spherical-harmonic modes of the supertranslation
-
-  Returns
-  -------
-    SliceModes
-
-  Description
-  -----------
-    A general BMS transformation is expressed as a conformal transformation of
-    the sphere (which encompasses rotations and boosts) and a supertranslation
-    (which affects only the time coordinate on null infinity). Here, the
-    conformal transformation of the sphere is assumed to be a simple boost,
-    described by the velocity vector v. (The other freedom in the conformal
-    group is a simple rotation, which we assume is zero.) The supertranslation
-    is decomposed into (scalar) spherical harmonics. The input data is assumed
-    to satisfy conditions on the nonzero data such that the values everywhere
-    on the sphere are real.
-
-    The work to be done by this function includes (1) evaluating the data on
-    the appropriate equi-angular grid of the final frame, while simultaneously
-    transforming the data at each point by the appropriate spin factor, boost
-    factor, and mixing; (2) interpolating those data to the appropriate values
-    of retarded time of the final frame; and (3) transforming back to spectral
-    space to store the data in their usual representation.
-
-    The relation between the new and old time coordinates is $u' =
-    K(u-\delta)$, where $K$ is the conformal factor (which is a function of
-    angle). So we need to interpolate at each point to the original time
-    coordinate $u = u'/K + \delta$, which again depends on angle. That is, we
-    have to interpolate to a different time for each grid point. In this case,
-    we arbitrarily set $u' = 0$, because any other choice can be absorbed into
-    a time- and space-translation. This does not matter, of course, because
-    that choice is not stored in any way.)doc"},
-    {"Scri::NTimes", R"doc(Parameters
-----------
-  (none)
-
-Returns
--------
-  int)doc"},
-    {"Scri::Scri", R"doc(Parameters
-----------
-  const Scri& S
-
-Returns
--------
-  Scri
+The distance is ``2 * abs(logRotor(R_A * R_B.inverse()))``, which for unit
+quaternions is the angle of the rotation that takes ``R_B`` to ``R_A``.  It
+lies between 0 and :math:`2\pi`.
 
 Parameters
 ----------
-  const Waveform& psi0
-  const Waveform& psi1
-  const Waveform& psi2
-  const Waveform& psi3
-  const Waveform& psi4
-  const Waveform& sigma
+R_A : Quaternion
+    The first rotor.
+R_B : Quaternion
+    The second rotor.
 
 Returns
 -------
-  Scri)doc"},
-    {"Scri::T", R"doc(Parameters
-----------
-  (none)
+float
+    The intrinsic distance.)doc"},
+    {"ChordalDistance", R"doc(Return the chordal distance between two quaternions.
 
-Returns
--------
-  const vector<double>)doc"},
-    {"Scri::operator[]", R"doc(Parameters
-----------
-  const unsigned int i
-
-Returns
--------
-  const SliceModes
-
-
-
+The distance is the magnitude of the difference, ``abs(R_A - R_B)``.
 
 Parameters
 ----------
-  const unsigned int i
+R_A : Quaternion
+    The first quaternion.
+R_B : Quaternion
+    The second quaternion.
 
 Returns
 -------
-  SliceModes&)doc"},
-    {"ScriFunctor", R"doc(class GWFrames::ScriFunctor
-===========================)doc"},
-    {"ScriFunctor::operator()", R"doc(Parameters
+float
+    The chordal distance.)doc"},
+    {"Slerp", R"doc(Interpolate spherically and linearly between two rotors.
+
+The result is ``pow(Qb / Qa, tau) * Qa``, which moves from ``Qa`` at
+``tau = 0`` to ``Qb`` at ``tau = 1`` along a geodesic.  Values of ``tau``
+outside that interval extrapolate along the same geodesic.
+
+Parameters
 ----------
-  const Quaternions::Quaternion& 
+tau : float
+    The interpolation parameter.
+Qa : Quaternion
+    The rotor at ``tau = 0``.
+Qb : Quaternion
+    The rotor at ``tau = 1``.
 
 Returns
 -------
-  double)doc"},
-    {"Slerp", R"doc(Parameters
+Quaternion
+    The interpolated rotor.)doc"},
+    {"QuaternionArray", R"doc(Construct an array of quaternions from arrays of numbers.
+
+The forms of this function match the constructors of `Quaternions.Quaternion`,
+applied element by element:
+
+``QuaternionArray(vartheta, varphi)``
+    Rotors that rotate the z axis onto the points with polar angles
+    ``vartheta`` and azimuthal angles ``varphi``.
+``QuaternionArray(alpha, beta, gamma)``
+    Rotors for the z-y-z Euler angles ``alpha``, ``beta``, and ``gamma``.
+``QuaternionArray(w, x, y, z)``
+    Quaternions with the given components.
+``QuaternionArray(q)``
+    Quaternions whose components are the rows of ``q``; each row has three
+    elements (the vector part) or four (all components).
+``QuaternionArray(angle, axis)``
+    Rotors for rotations through each ``angle`` about the corresponding row of
+    ``axis``, which is assumed to be normalized.
+
+The length of the result is that of the first argument, and the other
+arguments must be at least as long.
+
+Parameters
 ----------
-  const double tau
-  const Quaternion& Qa
-  const Quaternion& Qb
+vartheta, varphi : array_like of float
+    Polar and azimuthal angles.
+alpha, beta, gamma : array_like of float
+    Euler angles.
+w, x, y, z : array_like of float
+    Components.
+q : array_like of float, shape (N, 3) or (N, 4)
+    Components, one quaternion per row.
+angle : array_like of float
+    Rotation angles.
+axis : array_like of float, shape (N, 3)
+    Unit rotation axes, one per row.
 
 Returns
 -------
-  Quaternion)doc"},
-    {"SliceModes", R"doc(class GWFrames::SliceModes
-==========================)doc"},
-    {"SliceModes::BMSTransformationOnSlice", R"doc(Execute a BMS transformation except for the supertranslation of points.
-=======================================================================
-  Parameters
-  ----------
-    const double u
-    const ThreeVector& v
-    const Modes& delta
+numpy.ndarray of Quaternion
+    The quaternions.)doc"},
+    {"Component", R"doc(Return one component of each quaternion in an array.
 
-  Returns
-  -------
-    SliceGrid
+Parameters
+----------
+Q : array_like of Quaternion
+    The quaternions.
+i : int
+    Index of the component: 0 for the scalar part, and 1, 2, or 3 for the x,
+    y, or z component of the vector part.  Any other value raises an error.
 
-  Description
-  -----------
-    A full BMS transformation is only possible using information from multiple
-    slices due to the supertranslation moving points 'between slices'. This
-    function simply transforms the data within the slice by accounting for the
-    change of grid at each point, and the change of grid points themselves. The
-    returned object is a DataGrid object, each point of which can then be used
-    to interpolate to the supertranslated time.)doc"},
-    {"SliceModes::EllMax", R"doc(Find largest ell value in the data on this slice.
-=================================================
-  Parameters
-  ----------
-    (none)
+Returns
+-------
+numpy.ndarray of float
+    The ``i``-th component of each quaternion.)doc"},
+    {"Component0", R"doc(Return the scalar component of each quaternion in an array.
 
-  Returns
-  -------
-    int)doc"},
-    {"SliceModes::FourMomentum", R"doc(Calculate the four-momentum of the system from the supermomentum.
-=================================================================
-  Parameters
-  ----------
-    (none)
+This is ``Component(Q, 0)``.
 
-  Returns
-  -------
-    FourVector
+Parameters
+----------
+Q : array_like of Quaternion
+    The quaternions.
 
-  Description
-  -----------
-    The (Bondi) four-momentum is given by the ell=0 and ell=1 modes of the
-    supermomentum.)doc"},
+Returns
+-------
+numpy.ndarray of float
+    The scalar component of each quaternion.)doc"},
+    {"Component1", R"doc(Return the x component of each quaternion in an array.
+
+This is ``Component(Q, 1)``.
+
+Parameters
+----------
+Q : array_like of Quaternion
+    The quaternions.
+
+Returns
+-------
+numpy.ndarray of float
+    The x component of each quaternion.)doc"},
+    {"Component2", R"doc(Return the y component of each quaternion in an array.
+
+This is ``Component(Q, 2)``.
+
+Parameters
+----------
+Q : array_like of Quaternion
+    The quaternions.
+
+Returns
+-------
+numpy.ndarray of float
+    The y component of each quaternion.)doc"},
+    {"Component3", R"doc(Return the z component of each quaternion in an array.
+
+This is ``Component(Q, 3)``.
+
+Parameters
+----------
+Q : array_like of Quaternion
+    The quaternions.
+
+Returns
+-------
+numpy.ndarray of float
+    The z component of each quaternion.)doc"},
+    {"IndefiniteIntegral", R"doc(Integrate a quaternion function of time, returning the integral at each time.
+
+Each component is integrated separately by the trapezoidal rule, starting from
+zero at the first time.
+
+Parameters
+----------
+RIn : array_like of Quaternion
+    Values of the function.
+tIn : array_like of float
+    The corresponding times, of the same length as ``RIn``.
+
+Returns
+-------
+numpy.ndarray of Quaternion
+    The integral from ``tIn[0]`` to each time in ``tIn``.)doc"},
+    {"DefiniteIntegral", R"doc(Integrate a quaternion function of time over all of the given times.
+
+Each component is integrated separately by the trapezoidal rule.  The result
+equals the last element of `Quaternions.IndefiniteIntegral`.
+
+Parameters
+----------
+RIn : array_like of Quaternion
+    Values of the function.
+tIn : array_like of float
+    The corresponding times, of the same length as ``RIn``.
+
+Returns
+-------
+Quaternion
+    The integral from ``tIn[0]`` to ``tIn[-1]``.)doc"},
+    {"DifferentiateRotorByLogarithm", R"doc(Differentiate a rotor function of time by way of its logarithm.
+
+The logarithm of each rotor is computed with `Quaternions.logRotor` and
+differentiated with `Quaternions.QuaternionDerivative`, and the derivative of
+the rotor is then found from the analytic formula for the derivative of the
+exponential.  This is more complicated than differentiating the rotors
+directly with `Quaternions.QuaternionDerivative`, but it may be more accurate
+when the logarithm is smooth, and it serves as a test of the logarithm
+formula.
+
+Parameters
+----------
+RIn : array_like of Quaternion
+    The rotors.
+tIn : array_like of float
+    The corresponding times.
+
+Returns
+-------
+numpy.ndarray of Quaternion
+    The time derivative of the rotors.)doc"},
+    {"QuaternionDerivative", R"doc(Differentiate a quaternion function of time by finite differences.
+
+The derivative is computed with the five-point formula of Eq. (A 5b) of
+Bowen and Smith, "Derivative formulas and errors for non-uniformly spaced
+points", which is fourth-order accurate, as they explain in Eqs. (B 9b) and
+(B 10b).  The times need not be uniformly spaced.  With three or four points,
+the derivative uses three-point formulas, at interior points from Sundqvist
+and Veronis, Tellus XXII (1970), 1; with two points, it is the slope between
+them.  Fewer than two points, or arrays of different lengths, raise an error.
+
+Parameters
+----------
+f : array_like of Quaternion
+    Values of the function.
+t : array_like of float
+    The corresponding times.
+
+Returns
+-------
+numpy.ndarray of Quaternion
+    The time derivative at each time.)doc"},
+    {"MinimalRotation", R"doc(Return the minimal-rotation version of a frame.
+
+The returned rotors take the z axis to the same direction as the rotors
+``R`` do, but the rotation about that direction is adjusted to impose the
+minimal-rotation condition: the angular velocity of the frame has no
+component along its rotated z axis.  The adjustment is computed by
+integrating the unwanted rotation rate over time and removing it, and the
+process is repeated ``NIterations`` times to refine the result.
+
+Parameters
+----------
+R : array_like of Quaternion
+    The rotors of the input frame.
+T : array_like of float
+    The corresponding times.
+NIterations : int, default 5
+    Number of refinements.
+
+Returns
+-------
+numpy.ndarray of Quaternion
+    The rotors of the minimal-rotation frame.)doc"},
+    {"PrescribedRotation", R"doc(Return a frame with the same z axis as the input and a prescribed spin rate.
+
+The returned rotors take the z axis to the same direction as the rotors
+``R`` do, but the rotation about that direction is adjusted, as in
+`Quaternions.MinimalRotation`, so that the frame rotates about its rotated z
+axis at the rate given by ``RotationRateAboutZ``.  The process is repeated
+``NIterations`` times to refine the result, and progress messages are
+printed to standard output.
+
+Parameters
+----------
+RotationRateAboutZ : array_like of float
+    Rate of rotation of the new frame about its rotated z axis at each time.
+R : array_like of Quaternion
+    The rotors of the input frame.
+T : array_like of float
+    The corresponding times.
+NIterations : int, default 5
+    Number of refinements.
+
+Returns
+-------
+numpy.ndarray of Quaternion
+    The rotors of the new frame.)doc"},
+    {"FrameFromXY", R"doc(Construct the frame with the given X and Y basis vectors.
+
+At each time, the returned rotor rotates the fixed basis vectors
+:math:`(\hat{x}, \hat{y}, \hat{z})` onto the frame's basis vectors
+:math:`(\hat{X}, \hat{Y}, \hat{Z})`.
+
+Parameters
+----------
+X : array_like of Quaternion
+    The X basis vector at each time, as a unit quaternion with zero scalar
+    part.
+Y : array_like of Quaternion
+    The Y basis vector at each time, in the same form.
+
+Returns
+-------
+numpy.ndarray of Quaternion
+    The rotors of the frame.)doc"},
+    {"FrameFromZ", R"doc(Construct the minimal-rotation frame with the given Z basis vector.
+
+At each time, the returned rotor rotates the fixed basis vectors
+:math:`(\hat{x}, \hat{y}, \hat{z})` onto the frame's basis vectors
+:math:`(\hat{X}, \hat{Y}, \hat{Z})`.  The X and Y basis vectors are determined
+by the minimal-rotation condition of `Quaternions.MinimalRotation`, which
+leaves the initial rotation about the Z axis arbitrary.
+
+Parameters
+----------
+Z : array_like of Quaternion
+    The Z basis vector at each time, as a unit quaternion with zero scalar
+    part.
+T : array_like of float
+    The corresponding times.
+NIterations : int, default 5
+    Number of refinements in `Quaternions.MinimalRotation`.
+
+Returns
+-------
+numpy.ndarray of Quaternion
+    The rotors of the frame.)doc"},
+    {"FrameFromPrescribedRotation", R"doc(Construct the frame whose Z axis and spin rate follow an angular velocity.
+
+At each time, the returned rotor rotates the fixed basis vectors
+:math:`(\hat{x}, \hat{y}, \hat{z})` onto the frame's basis vectors
+:math:`(\hat{X}, \hat{Y}, \hat{Z})`.  The Z basis vector is parallel to
+``omega``, and the X and Y basis vectors are determined, with
+`Quaternions.PrescribedRotation`, by the condition that the frame rotates
+about its Z axis at the rate ``abs(omega)``.  This leaves the initial
+rotation in the X-Y plane arbitrary.  Progress messages are printed to
+standard output.
+
+Parameters
+----------
+omega : array_like of Quaternion
+    The angular-velocity vector at each time, as a quaternion with zero
+    scalar part.
+T : array_like of float
+    The corresponding times.
+NIterations : int, default 5
+    Number of refinements in `Quaternions.PrescribedRotation`.
+
+Returns
+-------
+numpy.ndarray of Quaternion
+    The rotors of the frame.)doc"},
+    {"FrameFromAngularVelocity", R"doc(Find the frame with the given angular velocity.
+
+The frame starts as the identity at ``T[0]``.  The logarithm of its rotor is
+integrated in time, using `Quaternions.FrameFromAngularVelocity_Integrand`
+with ``Omega`` interpolated by cubic splines, and the result is exponentiated
+and passed through `Quaternions.UnflipRotors`.  The logarithm is replaced by
+an equivalent one of smaller magnitude whenever its magnitude exceeds
+:math:`\pi/2`, much as a complex logarithm changes branch.
+
+The accuracy is limited, because the integration cannot adapt its steps to
+anything finer than the interpolated data.
+
+Parameters
+----------
+Omega : array_like of Quaternion
+    The angular-velocity vector at each time, as a quaternion with zero
+    scalar part.
+T : array_like of float
+    The corresponding times.
+
+Returns
+-------
+numpy.ndarray of Quaternion
+    The rotors of the frame at the times ``T``.)doc"},
+    {"FrameFromAngularVelocity_2D", R"doc(Find a frame from an angular velocity, keeping its logarithm in the x-y plane.
+
+This is like `Quaternions.FrameFromAngularVelocity`, except that the
+logarithm of each rotor is constrained to have no z component.  The time
+derivative of the logarithm is given by
+`Quaternions.FrameFromAngularVelocity_2D_Integrand`, which adjusts the
+angular velocity to maintain that constraint.  The frame starts as the
+identity at ``T[0]``.
+
+Parameters
+----------
+Omega : array_like of Quaternion
+    The angular-velocity vector at each time, as a quaternion with zero
+    scalar part.
+T : array_like of float
+    The corresponding times.
+
+Returns
+-------
+numpy.ndarray of Quaternion
+    The rotors of the frame at the times ``T``.)doc"},
+    {"FrameFromAngularVelocity_Integrand", R"doc(Return the time derivative of the logarithm of a rotating frame's rotor.
+
+If the frame's rotor is :math:`R = e^{\mathfrak{r}}`, with angular velocity
+:math:`\vec{\Omega}` defined by :math:`\dot{R} = \vec{\Omega} R/2`, this
+function returns :math:`\dot{\mathfrak{r}}`.  Integrating it gives the
+logarithm of the frame, which can then be exponentiated to give the rotor.
+
+Parameters
+----------
+r : array_like of float, shape (3,)
+    The vector part of the logarithm of the current rotor.
+Omega : array_like of float, shape (3,)
+    The instantaneous angular-velocity vector of the frame.
+
+Returns
+-------
+numpy.ndarray of float, shape (3,)
+    The time derivative of ``r``.)doc"},
+    {"UnflipRotors", R"doc(Remove sign flips from a time series of rotors.
+
+A rotor and its negative represent the same rotation, so the sign of a rotor
+is often arbitrary, and discontinuous flips in that sign cause problems for
+rotor-valued functions of time.  This function negates each rotor whose
+distance from the previous output rotor exceeds ``discont``, so that
+successive rotors are within ``discont`` of each other.
+
+Parameters
+----------
+R : array_like of Quaternion
+    The rotors.
+discont : float, default 1.4142135623730951
+    The largest acceptable chordal distance between successive rotors; the
+    default is :math:`\sqrt{2}`.
+
+Returns
+-------
+numpy.ndarray of Quaternion
+    The rotors, with signs made continuous.)doc"},
+    {"RDelta", R"doc(Return the rotors ``R1 * R2.inverse()`` relating two frames.
+
+If ``IndexOfFiducialTime`` is not negative, the result is instead
+``R1 * Offset * R2.inverse()``, where ``Offset`` is
+``R1[I].inverse() * R2[I]`` for ``I = IndexOfFiducialTime``, which ensures
+that the result is 1 at that index.
+
+Parameters
+----------
+R1 : array_like of Quaternion
+    The first rotors.
+R2 : array_like of Quaternion
+    The second rotors, of the same length as ``R1``.
+IndexOfFiducialTime : int, default -1
+    Index of the time at which the difference is set to the identity, or a
+    negative number for no offset.
+
+Returns
+-------
+numpy.ndarray of Quaternion
+    The difference rotors.)doc"},
+    {"Squad", R"doc(Interpolate a time series of rotors with Squad.
+
+Squad is a version of cubic-spline interpolation designed for unit
+quaternions, which gives more accurate, smoother, and more physical rotations
+than other forms of interpolation.  The input rotors are assumed to have unit
+magnitude, and the output rotors are passed through `Quaternions.UnflipRotors`.
+Times in ``tOut`` outside the range of ``tIn`` raise an error.
+
+Parameters
+----------
+RIn : array_like of Quaternion
+    The rotors.
+tIn : array_like of float
+    The corresponding times.
+tOut : array_like of float
+    The times to which the rotors are interpolated.
+
+Returns
+-------
+numpy.ndarray of Quaternion
+    The interpolated rotors.)doc"},
+    {"FrameAngularVelocity", R"doc(Return the angular velocity of a frame given by rotors.
+
+The angular velocity is :math:`2 \dot{R} \bar{R}`, with the derivative
+computed by `Quaternions.QuaternionDerivative`.  For unit rotors, each result
+has zero scalar part, and its vector part is the angular-velocity vector in
+the fixed frame.
+
+Parameters
+----------
+f : array_like of Quaternion
+    The rotors of the frame.
+t : array_like of float
+    The corresponding times.
+
+Returns
+-------
+numpy.ndarray of Quaternion
+    The angular velocity at each time.)doc"},
+    {"BoostRotor", R"doc(Return a rotor taking a direction to its boosted version.
+
+This function returns a rotor :math:`R_b` that takes the input direction
+:math:`\hat{w}`, considered as a direction on the future null sphere, to the
+direction that it has after the boost.  The rotor therefore depends on both
+the boost and the direction.  It is the identity when the velocity is
+negligible or parallel to the direction.
+
+Parameters
+----------
+ThreeVelocity : array_like of float, shape (3,)
+    Velocity of the new frame relative to the current frame, in units where
+    the speed of light is 1.
+ThreeVectorToBeBoosted : array_like of float, shape (3,)
+    The direction :math:`\hat{w}` to be boosted, which is normalized first.
+    A zero vector raises an error.
+
+Returns
+-------
+Quaternion
+    The rotor :math:`R_b`.)doc"},
+    {"ApproximateMeanRotor", R"doc(Return an approximate mean of a set of rotors.
+
+The mean is the normalized sum of the rotors ``R`` or, if the times ``t`` are
+given, the normalized trapezoidal integral of ``R`` over the times from ``t1``
+to ``t2``.  This minimizes the sum, or integral, of the squared chordal
+distance to the mean, rather than of the squared intrinsic distance that
+`Quaternions.MeanRotor` minimizes.  The two agree in the limit that the rotors
+are all equal, and this function requires no numerical optimization.  The
+rotors should be continuous in sign, as `Quaternions.UnflipRotors` makes them.
+
+Parameters
+----------
+R : array_like of Quaternion
+    The rotors to be averaged.
+t : array_like of float, optional
+    The corresponding times.  If omitted, the rotors are weighted equally.
+t1 : float, default -1e300
+    Earliest time included in the average.
+t2 : float, default 1e300
+    Latest time included in the average.
+
+Returns
+-------
+Quaternion
+    The mean rotor.
+
+References
+----------
+The discrete formula is from Moakher, "Means and averaging in the group of
+rotations", SIAM J. Matrix Anal. Appl. 24, 1 (2002); the version with times
+is its continuous limit.)doc"},
+    {"ApproximateOptimalAlignmentRotor", R"doc(Return the rotor ``R_delta`` for which ``R_delta * Rb`` best matches ``Ra``.
+
+The result is the `Quaternions.ApproximateMeanRotor` of
+``RDelta(Ra, Rb)``, averaged over the times from ``t1`` to ``t2``.
+Multiplying ``Rb`` on the left by it gives a new time series that is
+approximately as close to ``Ra`` as possible.
+
+Parameters
+----------
+Ra : array_like of Quaternion
+    The fixed rotors.
+Rb : array_like of Quaternion
+    The rotors to be aligned to ``Ra``.
+t : array_like of float
+    The times of both ``Ra`` and ``Rb``.
+t1 : float, default -1e300
+    Earliest time included in the average.
+t2 : float, default 1e300
+    Latest time included in the average.
+
+Returns
+-------
+Quaternion
+    The rotor ``R_delta``.)doc"},
+    {"ApproximateOptimalAlignment", R"doc(Find a time shift and rotor that approximately align two rotor time series.
+
+The time offset ``deltat`` is optimized numerically, and for each trial offset
+the rotor ``R_delta`` is found analytically by
+`Quaternions.ApproximateOptimalAlignmentRotor`.  Together they make
+``R_delta * Rb``, with its times shifted to ``tb + deltat``, as close as
+possible to ``Ra`` over the interval from ``t1`` to ``t2``, as measured by the
+integral of the squared intrinsic distance.  The times ``t1`` and ``t2`` are
+fixed with respect to ``ta``, and must lie within the ranges of both ``ta``
+and ``tb``.  `Quaternions.OptimalAlignment` refines the result.
+
+Parameters
+----------
+t1 : float
+    Beginning of the alignment interval.
+t2 : float
+    End of the alignment interval.
+Ra : array_like of Quaternion
+    The fixed rotors.
+ta : array_like of float
+    The times of ``Ra``.
+Rb : array_like of Quaternion
+    The rotors to be aligned to ``Ra``.
+tb : array_like of float
+    The times of ``Rb``.
+
+Returns
+-------
+deltat : float
+    The optimal time offset.
+R_delta : Quaternion
+    The optimal rotor.)doc"},
+    {"OptimalAlignment", R"doc(Find the time shift and rotor that best align two rotor time series.
+
+Starting from the result of `Quaternions.ApproximateOptimalAlignment`, the
+time offset ``deltat`` and all three rotational degrees of freedom of the
+rotor ``R_delta`` are optimized together, with the Nelder-Mead simplex
+algorithm of GSL.  The quantity minimized is the integral, over the interval
+from ``t1`` to ``t2``, of the squared intrinsic distance between ``Ra`` and
+``R_delta * Rb``, with the times of ``Rb`` shifted to ``tb + deltat``.  The
+times ``t1`` and ``t2`` are fixed with respect to ``ta``, and must lie within
+the ranges of both ``ta`` and ``tb``.
+
+Parameters
+----------
+t1 : float
+    Beginning of the alignment interval.
+t2 : float
+    End of the alignment interval.
+Ra : array_like of Quaternion
+    The fixed rotors.
+ta : array_like of float
+    The times of ``Ra``.
+Rb : array_like of Quaternion
+    The rotors to be aligned to ``Ra``.
+tb : array_like of float
+    The times of ``Rb``.
+
+Returns
+-------
+deltat : float
+    The optimal time offset.
+R_delta : Quaternion
+    The optimal rotor.)doc"},
+    {"MeanRotor", R"doc(Return the mean of a set of rotors.
+
+The mean minimizes the sum of the squared intrinsic distances between the
+rotors ``R`` and the mean or, if the times ``t`` are given, the integral of
+the squared intrinsic distance over the times from ``t1`` to ``t2``.  The
+minimum is found with the Nelder-Mead simplex algorithm of GSL, starting from
+`Quaternions.ApproximateMeanRotor`.  This mean is described in
+<https://arxiv.org/abs/1302.2919>.
+
+Parameters
+----------
+R : array_like of Quaternion
+    The rotors to be averaged.
+t : array_like of float, optional
+    The corresponding times.  If omitted, the rotors are weighted equally.
+t1 : float, default -1e300
+    Earliest time included in the average; the default means ``t[0]``.
+t2 : float, default 1e300
+    Latest time included in the average; the default means ``t[-1]``.
+
+Returns
+-------
+Quaternion
+    The mean rotor.)doc"},
+    {"hunt", R"doc(Return the largest index ``j`` with ``x[j] <= x_i`` in a sorted array.
+
+The search starts from the guess ``i`` and expands outward, as in the
+Numerical Recipes routine of the same name, so it is fast when the guess is
+close.  If ``x_i`` is less than ``x[0]``, the result is 0, and if ``x_i`` is at
+least ``x[-1]``, the result is ``len(x) - 1``.  An empty array raises an
+error.
+
+Parameters
+----------
+x : array_like of float
+    The sorted array.
+x_i : float
+    The value to locate.
+i : int, default 0
+    Initial guess for the index.
+
+Returns
+-------
+int
+    The index.)doc"},
+    {"huntRight", R"doc(Return one more than the index found by `Quaternions.hunt`.
+
+For ``x[0] <= x_i < x[-1]``, this is the smallest index ``j`` with
+``x[j] > x_i``.  If ``x_i`` is less than ``x[0]``, the result is 1, and if
+``x_i`` is at least ``x[-1]``, the result is ``len(x)``.
+
+Parameters
+----------
+x : array_like of float
+    The sorted array.
+x_i : float
+    The value to locate.
+i : int, default 0
+    Initial guess for the index.
+
+Returns
+-------
+int
+    The index.)doc"},
+    {"Matrix", R"doc(Real matrix stored in a GSL matrix.
+
+This class is a thin wrapper around a GSL matrix of floats.  It is used as the
+input to the eigen-system helpers, such as `DominantPrincipalAxis` and
+`Eigensystem`, most of which require a symmetric :math:`3\times3` matrix.  It
+is rarely needed directly.  The element in row ``row`` and column ``col`` is
+returned by ``M(row, col)``, and the method `Matrix.numpy` returns a copy of
+all the elements as a numpy array.  The difference ``M1 - M2`` of two matrices
+of the same shape is taken element by element, and the product ``M * b`` with
+a sequence ``b`` of ``M.ncols()`` floats is the matrix-vector product, returned
+as a numpy array.
+
+A `Matrix` may be constructed in any of these ways:
+
+``Matrix()``
+    A matrix without storage, which must be given a size with `Matrix.resize`
+    before it is used.
+``Matrix(rows, cols)``
+    A matrix of zeros with ``rows`` rows and ``cols`` columns.
+``Matrix(rows, cols, a)``
+    A matrix with ``rows`` rows and ``cols`` columns, each of whose elements is
+    the float ``a``.
+``Matrix(M)``
+    A copy of the matrix ``M``.
+``Matrix(DataIn)``
+    A matrix with the elements of ``DataIn``, a sequence of rows, each of which
+    is a sequence of floats.  The number of columns is the length of the first
+    row.)doc"},
+    {"Matrix::set", R"doc(Set one element of this matrix.
+
+Parameters
+----------
+row : int
+    Index of the row.
+col : int
+    Index of the column.
+value : float
+    New value of the element.
+
+Returns
+-------
+Matrix
+    This object, modified in place.)doc"},
+    {"Matrix::nrows", R"doc(Return the number of rows of this matrix.
+
+Returns
+-------
+int
+    The number of rows.)doc"},
+    {"Matrix::ncols", R"doc(Return the number of columns of this matrix.
+
+Returns
+-------
+int
+    The number of columns.)doc"},
+    {"Matrix::resize", R"doc(Change the shape of this matrix, discarding its contents.
+
+The previous elements are not preserved; every element of the resized matrix
+is set to ``value``.
+
+Parameters
+----------
+newNRows : int
+    New number of rows.
+newNCols : int
+    New number of columns.
+value : float, default 0.0
+    Value given to every element.)doc"},
+    {"Matrix::clear", R"doc(Release the storage of this matrix.
+
+Warnings
+--------
+The current implementation frees the underlying GSL matrix without marking it
+as freed, so the object must not be used after this call, and its eventual
+destruction frees the storage a second time.)doc"},
+    {"Unwrap", R"doc(Unwrap a phase so that it is (roughly) continuous.
+
+Multiples of :math:`2\pi` are added to the elements of ``In`` so that the
+difference between successive elements of the result lies between
+:math:`-\pi` and :math:`\pi`.  This is the algorithm of MATLAB's ``unwrap``.
+
+Parameters
+----------
+In : array_like of float
+    The phase, in radians.
+
+Returns
+-------
+numpy.ndarray of float
+    The unwrapped phase, with the same length as ``In``.)doc"},
+    {"ScalarIntegral", R"doc(Integrate a scalar function of time by the trapezoidal rule.
+
+The integral is cumulative: element ``i`` of the result is the integral from
+``t[0]`` to ``t[i]``, so that the first element is zero.
+
+Parameters
+----------
+fdot : array_like of float
+    Values of the integrand.
+t : array_like of float
+    Times corresponding to the elements of ``fdot``; the two must have the
+    same length.
+
+Returns
+-------
+numpy.ndarray of float
+    The integral at each time.
+
+See Also
+--------
+CumulativeScalarIntegral : The integral over the whole time span.)doc"},
+    {"CumulativeScalarIntegral", R"doc(Integrate a scalar function over its whole time span by the trapezoidal rule.
+
+Despite the name, only the total is returned: the result is the integral from
+``t[0]`` to ``t[-1]``, which is the last element of the result of
+`ScalarIntegral`.
+
+Parameters
+----------
+fdot : array_like of float
+    Values of the integrand.
+t : array_like of float
+    Times corresponding to the elements of ``fdot``; the two must have the
+    same length.
+
+Returns
+-------
+float
+    The integral over the whole time span.)doc"},
+    {"ScalarDerivative", R"doc(Differentiate a real function of time by finite differences.
+
+The times need not be uniformly spaced.  When there are at least five points,
+the fourth-order five-point formula of Eq. (A 5b) of Bowen and Smith,
+"Derivative formulas and errors for non-uniformly spaced points", is used.
+With three or four points a three-point formula is used, and with two points
+the derivative is the slope of the line through them.  Fewer than two points
+raise an error.
+
+Parameters
+----------
+f : array_like of float
+    Values of the function.
+t : array_like of float
+    Times corresponding to the elements of ``f``; the two must have the same
+    length.
+
+Returns
+-------
+numpy.ndarray of float
+    The derivative at each time.)doc"},
+    {"ComplexDerivative", R"doc(Differentiate a complex function of time by finite differences.
+
+This is the complex counterpart of `ScalarDerivative`, and uses the same
+formulas.
+
+Parameters
+----------
+f : array_like of complex
+    Values of the function.
+t : array_like of float
+    Times corresponding to the elements of ``f``; the two must have the same
+    length.
+
+Returns
+-------
+numpy.ndarray of complex
+    The derivative at each time.)doc"},
+    {"VectorIntegral", R"doc(Integrate a vector function of time by the trapezoidal rule.
+
+Each component is integrated separately, as in `ScalarIntegral`.  The integral
+is cumulative: row ``i`` of the result is the integral from ``t[0]`` to
+``t[i]``, so that the first row is zero.
+
+Parameters
+----------
+fdot : array_like of float, shape (N, M)
+    Values of the integrand, with time along the first axis.
+t : array_like of float, shape (N,)
+    Times corresponding to the rows of ``fdot``.
+
+Returns
+-------
+numpy.ndarray of float, shape (N, M)
+    The integral at each time.)doc"},
+    {"CumulativeVectorIntegral", R"doc(Integrate a vector function over its whole time span by the trapezoidal rule.
+
+Despite the name, only the total is returned: the result is the integral from
+``t[0]`` to ``t[-1]``, which is the last row of the result of
+`VectorIntegral`.
+
+Parameters
+----------
+fdot : array_like of float, shape (N, M)
+    Values of the integrand, with time along the first axis.
+t : array_like of float, shape (N,)
+    Times corresponding to the rows of ``fdot``.
+
+Returns
+-------
+numpy.ndarray of float, shape (M,)
+    The integral over the whole time span.)doc"},
+    {"Intersection", R"doc(Return a time series covering the intersection of two time series.
+
+The result starts at the latest of ``t1[0]``, ``t2[0]``, and ``MinTime``, and
+ends no later than the earliest of ``t1[-1]``, ``t2[-1]``, and ``MaxTime``.
+The step from each time to the next is the smaller of the local steps of
+``t1`` and ``t2`` at that time, or ``MinStep`` if that is larger.  Both inputs
+are assumed to be strictly increasing.  An error is raised if either input is
+empty or the intersection is empty.
+
+Parameters
+----------
+t1 : array_like of float
+    The first time series.
+t2 : array_like of float
+    The second time series.
+MinStep : float, default 0.005
+    Smallest time step in the result.
+MinTime : float, default -1e300
+    Earliest time allowed in the result.
+MaxTime : float, default 1e300
+    Latest time allowed in the result.
+
+Returns
+-------
+numpy.ndarray of float
+    The new time series.
+
+See Also
+--------
+Union)doc"},
+    {"Union", R"doc(Return a time series covering the union of two time series.
+
+The result runs from the earlier of ``t1[0]`` and ``t2[0]`` to the later of
+``t1[-1]`` and ``t2[-1]``.  Where only one input covers a time, the step from
+that time to the next is the local step of that input; where both do, it is
+the smaller of the two local steps.  In either case the step is never smaller
+than ``MinStep``.  Both inputs are assumed to be strictly increasing.  If one
+input is empty, the other is returned; if the two do not overlap, an error is
+raised.
+
+Parameters
+----------
+t1 : array_like of float
+    The first time series.
+t2 : array_like of float
+    The second time series.
+MinStep : float, default 0.005
+    Smallest time step in the result.
+
+Returns
+-------
+numpy.ndarray of float
+    The new time series.
+
+See Also
+--------
+Intersection)doc"},
+    {"DominantPrincipalValue", R"doc(Return the largest eigenvalue of each of a sequence of symmetric matrices.
+
+Each matrix must be a symmetric :math:`3\times3` `Matrix`; only the shape of
+the first is checked.  The eigenvalues are computed with GSL from the
+diagonal and lower triangle of each matrix.
+
+Parameters
+----------
+M : list of Matrix
+    The matrices.
+
+Returns
+-------
+numpy.ndarray of float
+    The largest eigenvalue of each matrix.)doc"},
+    {"SubordinatePrincipalValue", R"doc(Return the smallest eigenvalue of each of a sequence of symmetric matrices.
+
+Each matrix must be a symmetric :math:`3\times3` `Matrix`; only the shape of
+the first is checked.  The eigenvalues are computed with GSL from the
+diagonal and lower triangle of each matrix.
+
+Parameters
+----------
+M : list of Matrix
+    The matrices.
+
+Returns
+-------
+numpy.ndarray of float
+    The smallest eigenvalue of each matrix.)doc"},
+    {"DominantPrincipalAxis", R"doc(Return the eigenvector of a symmetric matrix with the largest eigenvalue.
+
+Parameters
+----------
+M : Matrix
+    A symmetric :math:`3\times3` matrix.  It is modified; see the notes.
+
+Returns
+-------
+numpy.ndarray of float, shape (3,)
+    The normalized eigenvector belonging to the largest eigenvalue.
+
+Notes
+-----
+The eigen-system is computed by GSL's ``gsl_eigen_symmv``, which uses only the
+diagonal and lower triangle of ``M`` and overwrites them.  Pass a copy if the
+matrix will be needed afterward.)doc"},
+    {"SubordinatePrincipalAxis", R"doc(Return the eigenvector of a symmetric matrix with the smallest eigenvalue.
+
+Parameters
+----------
+M : Matrix
+    A symmetric :math:`3\times3` matrix.  It is modified; see the notes.
+
+Returns
+-------
+numpy.ndarray of float, shape (3,)
+    The normalized eigenvector belonging to the smallest eigenvalue.
+
+Notes
+-----
+The eigen-system is computed by GSL's ``gsl_eigen_symmv``, which uses only the
+diagonal and lower triangle of ``M`` and overwrites them.  Pass a copy if the
+matrix will be needed afterward.)doc"},
+    {"Eigenvalues", R"doc(Return the eigenvalues of a symmetric matrix in decreasing order.
+
+Parameters
+----------
+M : Matrix
+    A symmetric :math:`3\times3` matrix.  It is modified; see the notes.
+
+Returns
+-------
+numpy.ndarray of float, shape (3,)
+    The eigenvalues, from largest to smallest.
+
+Notes
+-----
+The eigen-system is computed by GSL's ``gsl_eigen_symmv``, which uses only the
+diagonal and lower triangle of ``M`` and overwrites them.  Pass a copy if the
+matrix will be needed afterward.)doc"},
+    {"Eigenvectors", R"doc(Return the eigenvectors of a symmetric matrix.
+
+The eigenvectors are normalized and ordered by decreasing eigenvalue, and are
+returned one after another in a flat array: elements ``3*j`` through
+``3*j+2`` are the eigenvector with the ``j``-th largest eigenvalue.
+
+Parameters
+----------
+M : Matrix
+    A symmetric :math:`3\times3` matrix.  It is modified; see the notes.
+
+Returns
+-------
+numpy.ndarray of float, shape (9,)
+    The three eigenvectors, concatenated.
+
+Notes
+-----
+The eigen-system is computed by GSL's ``gsl_eigen_symmv``, which uses only the
+diagonal and lower triangle of ``M`` and overwrites them.  Pass a copy if the
+matrix will be needed afterward.)doc"},
+    {"Eigensystem", R"doc(Return the eigenvectors and eigenvalues of a symmetric matrix.
+
+The eigenpairs are ordered by decreasing eigenvalue, and are returned one after
+another in a flat array: elements ``4*j`` through ``4*j+2`` are the normalized
+eigenvector with the ``j``-th largest eigenvalue, and element ``4*j+3`` is that
+eigenvalue.
+
+Parameters
+----------
+M : Matrix
+    A symmetric :math:`3\times3` matrix.  It is modified; see the notes.
+
+Returns
+-------
+numpy.ndarray of float, shape (12,)
+    The three eigenpairs, concatenated.
+
+Notes
+-----
+The eigen-system is computed by GSL's ``gsl_eigen_symmv``, which uses only the
+diagonal and lower triangle of ``M`` and overwrites them.  Pass a copy if the
+matrix will be needed afterward.)doc"},
+    {"Determinant", R"doc(Return the determinant of a :math:`3\times3` matrix.
+
+Parameters
+----------
+M : Matrix
+    A :math:`3\times3` matrix; any other shape raises an error.
+
+Returns
+-------
+float
+    The determinant.)doc"},
+    {"ScriFunctor", R"doc(Base class for real-valued functions of a rotor, used to fill a `DataGrid`.
+
+To define such a function, subclass `ScriFunctor` in Python and give the
+subclass a ``__call__(self, R)`` method that takes a `Quaternion` and returns a
+float.  (A subclass that defines ``__init__`` must call
+``super().__init__()``.)  An instance is then passed as ``f`` to
+``DataGrid(Spin, N_theta, N_phi, v, f)``, which calls it once for each point of
+a boosted grid.  The rotor ``R`` takes :math:`\hat{z}` into the point at which
+the function is to be evaluated, and takes :math:`\hat{x} + i \hat{y}` into
+the vector :math:`m` (up to normalization) needed for spin-weighted fields.
+The ``__call__`` method of the base class returns zero.
+
+A `ScriFunctor` is constructed as ``ScriFunctor()``, with no arguments.)doc"},
+    {"Boost", R"doc(Return a rotor taking a direction into its boosted version.
+
+The returned rotor :math:`R_b` takes the unit vector :math:`\hat{n}` (the
+normalized ``n``), regarded as a point on the future null sphere, into its
+image under a boost with velocity ``v``.  The rotor therefore depends on both
+the direction and the boost.  It is a rotation about the axis
+:math:`\hat{v} \times \hat{n}` that changes the angle :math:`\Theta` between
+:math:`\hat{v}` and :math:`\hat{n}` into
+:math:`\Theta' = 2 \arctan\left(e^{\alpha} \tan(\Theta/2)\right)`, where
+:math:`\alpha` is the rapidity of the boost.  The identity is returned when
+``v`` is negligibly small or ``n`` is parallel to ``v``.
+
+Parameters
+----------
+v : array_like of float, shape (3,)
+    Three-velocity of the new frame relative to the current frame, in units
+    where :math:`c = 1`.
+n : array_like of float, shape (3,)
+    Direction to be boosted.  It is normalized, and must not be zero.
+
+Returns
+-------
+Quaternion
+    The rotor :math:`R_b`.)doc"},
+    {"DataGrid", R"doc(Complex spin-weighted data on an equiangular grid on the sphere.
+
+Given integers ``N_theta`` and ``N_phi``, the data are recorded on a
+"rectangular" grid of ``N_theta * N_phi`` points.  The polar angle runs from 0
+to :math:`\pi` inclusive in ``N_theta`` equal steps, so that there are
+``N_phi`` points at each pole, and the azimuthal angle runs from 0 to
+:math:`2\pi` exclusive in ``N_phi`` equal steps.  The point with polar index
+``i_theta`` and azimuthal index ``i_phi`` is element
+``i_theta * N_phi + i_phi``.  These objects are mainly a computational tool
+for pointwise multiplication; otherwise `Modes` is the preferable
+representation.
+
+The arithmetic operators ``+``, ``-``, ``*``, and ``/`` act point by point on
+two grids of the same dimensions; a product adds the spin weights, and a
+quotient subtracts them.  A float ``a`` may also appear on the left, as in
+``a * D``, ``a / D``, ``a + D``, and ``a - D``, each of which acts on every
+point of ``D``.
+
+A `DataGrid` may be constructed in any of these ways:
+
+``DataGrid(size=0)``
+    A grid of ``size`` zeros with spin weight 0, whose dimensions are both set
+    to the integer part of the square root of ``size``.
+``DataGrid(A)``
+    A copy of the grid ``A``.
+``DataGrid(Spin, N_theta, N_phi, D)``
+    A grid with spin weight ``Spin``, dimensions ``N_theta`` and ``N_phi``,
+    and the complex values ``D``, whose length must be ``N_theta * N_phi``.
+``DataGrid(M, N_theta=0, N_phi=0)``
+    The values on the grid of the function whose spin-weighted
+    spherical-harmonic modes are the `Modes` object ``M``.  Each dimension is
+    at least ``2 * M.EllMax() + 1``.
+``DataGrid(M, v, N_theta=0, N_phi=0)``
+    The values of ``M`` on the grid of a frame boosted by the three-velocity
+    ``v``.  Each point of the grid is mapped by the rotor from `Boost` before
+    ``M`` is evaluated there with `Modes.EvaluateAtPoint`.  Each dimension is
+    at least ``2 * M.EllMax() + 1``.
+``DataGrid(Spin, N_theta, N_phi, v, f)``
+    The values of the `ScriFunctor` ``f`` on the grid of a frame boosted by the
+    three-velocity ``v``, with spin weight ``Spin`` and dimensions ``N_theta``
+    and ``N_phi``.)doc"},
+    {"DataGrid::SetSpin", R"doc(Set the spin weight of these data, without changing the values.
+
+Parameters
+----------
+ess : int
+    The new spin weight.
+
+Returns
+-------
+DataGrid
+    This object, modified in place.)doc"},
+    {"DataGrid::SetNTheta", R"doc(Set the number of polar points, without changing the values.
+
+Parameters
+----------
+N_theta : int
+    The new number of points.
+
+Returns
+-------
+DataGrid
+    This object, modified in place.)doc"},
+    {"DataGrid::SetNPhi", R"doc(Set the number of azimuthal points, without changing the values.
+
+Parameters
+----------
+N_phi : int
+    The new number of points.
+
+Returns
+-------
+DataGrid
+    This object, modified in place.)doc"},
+    {"DataGrid::size", R"doc(Return the number of values stored in this grid.
+
+Returns
+-------
+int
+    The number of values, which is also given by ``len``.)doc"},
+    {"DataGrid::Spin", R"doc(Return the spin weight of these data.
+
+Returns
+-------
+int
+    The spin weight.)doc"},
+    {"DataGrid::N_theta", R"doc(Return the number of points in the polar direction.
+
+Returns
+-------
+int
+    The number of points.)doc"},
+    {"DataGrid::N_phi", R"doc(Return the number of points in the azimuthal direction.
+
+Returns
+-------
+int
+    The number of points.)doc"},
+    {"DataGrid::Data", R"doc(Return a copy of the values on this grid.
+
+Returns
+-------
+numpy.ndarray of complex
+    The values, in the order described in `DataGrid`.)doc"},
+    {"DataGrid::pow", R"doc(Raise the value at each point of this grid to an integer power.
+
+The spin weight of the result is the same as that of this grid.
+
+Parameters
+----------
+p : int
+    The exponent.
+
+Returns
+-------
+DataGrid
+    The new grid.)doc"},
+    {"ConformalFactorGrid", R"doc(Construct a grid with the conformal factor of a boost at each point.
+
+The conformal factor is :math:`K = 1 / \left[\gamma (1 - \vec{v} \cdot
+\hat{n})\right]`, where :math:`\hat{n}` is the direction of the grid point and
+:math:`\gamma` is the Lorentz factor of ``v``.  The grid has spin weight 0.
+
+Parameters
+----------
+v : array_like of float, shape (3,)
+    Three-velocity of the boost.
+n_theta : int
+    Number of points in the polar direction.
+n_phi : int
+    Number of points in the azimuthal direction.
+
+Returns
+-------
+DataGrid
+    The conformal factor on the grid.)doc"},
+    {"InverseConformalFactorGrid", R"doc(Construct a grid with the inverse conformal factor of a boost at each point.
+
+The inverse conformal factor is :math:`1/K = \gamma (1 - \vec{v} \cdot
+\hat{n})`, where :math:`\hat{n}` is the direction of the grid point and
+:math:`\gamma` is the Lorentz factor of ``v``.  The grid has spin weight 0.
+
+Parameters
+----------
+v : array_like of float, shape (3,)
+    Three-velocity of the boost.
+n_theta : int
+    Number of points in the polar direction.
+n_phi : int
+    Number of points in the azimuthal direction.
+
+Returns
+-------
+DataGrid
+    The inverse conformal factor on the grid.
+
+See Also
+--------
+InverseConformalFactorBoostedGrid, ConformalFactorGrid)doc"},
+    {"InverseConformalFactorBoostedGrid", R"doc(Construct a boosted grid with the inverse conformal factor at each point.
+
+This is the same function as in `InverseConformalFactorGrid`,
+:math:`1/K = \gamma (1 - \vec{v} \cdot \hat{n})`, but evaluated on the grid
+of the frame boosted by ``v``, as in ``DataGrid(Spin, N_theta, N_phi, v, f)``:
+each grid point is first mapped by the rotor from `Boost`.  The grid has spin
+weight 0.
+
+Parameters
+----------
+v : array_like of float, shape (3,)
+    Three-velocity of the boost.
+n_theta : int
+    Number of points in the polar direction.
+n_phi : int
+    Number of points in the azimuthal direction.
+
+Returns
+-------
+DataGrid
+    The inverse conformal factor on the boosted grid.)doc"},
+    {"Modes", R"doc(Complex spin-weighted data on the sphere, as spherical-harmonic modes.
+
+The data are the coefficients of the spin-weighted spherical harmonics
+:math:`{}_{s}Y_{\ell m}` for every :math:`\ell` from 0 to `Modes.EllMax`,
+even for :math:`\ell < |s|`, where they vanish.  They are stored in the order
+:math:`(\ell, m) = (0, 0), (1, -1), (1, 0), (1, 1), (2, -2), \ldots`, so that
+the mode :math:`(\ell, m)` is element :math:`\ell^2 + \ell + m`.
+
+The arithmetic operators ``+``, ``-``, ``*``, and ``/`` act on two `Modes`
+objects.  Sums and differences require equal spin weights, and treat the
+missing higher modes of the shorter operand as zero.  Products and quotients
+are computed point by point on a `DataGrid` large enough to resolve the
+result, which is then truncated to the larger of the two values of
+:math:`\ell_{\max}`; a product adds the spin weights, and a quotient subtracts
+them.
+
+A `Modes` object may be constructed in any of these ways:
+
+``Modes(size=0)``
+    ``size`` zero modes, with spin weight 0 and `Modes.EllMax` 0 (whatever
+    the value of ``size``).
+``Modes(A)``
+    A copy of the `Modes` object ``A``.
+``Modes(spin, Data)``
+    The complex modes ``Data`` with spin weight ``spin``.  The length of
+    ``Data`` must be :math:`(\ell_{\max}+1)^2` for some :math:`\ell_{\max}`.
+``Modes(D, L=-1)``
+    The modes of the `DataGrid` ``D``, computed with spinsfast.  The value of
+    :math:`\ell_{\max}` is the larger of ``L`` and the largest value the grid
+    resolves, which is the smaller of ``(D.N_theta() - 1) // 2`` and
+    ``(D.N_phi() - 1) // 2``.)doc"},
+    {"Modes::SetSpin", R"doc(Set the spin weight of these data, without changing the modes.
+
+Parameters
+----------
+ess : int
+    The new spin weight.
+
+Returns
+-------
+Modes
+    This object, modified in place.)doc"},
+    {"Modes::SetEllMax", R"doc(Set the largest ell value of these data, without changing the modes.
+
+Parameters
+----------
+ell : int
+    The new value of :math:`\ell_{\max}`.
+
+Returns
+-------
+Modes
+    This object, modified in place.)doc"},
+    {"Modes::size", R"doc(Return the number of modes stored.
+
+Returns
+-------
+int
+    The number of modes, which is also given by ``len``.)doc"},
+    {"Modes::Spin", R"doc(Return the spin weight of these data.
+
+Returns
+-------
+int
+    The spin weight.)doc"},
+    {"Modes::EllMax", R"doc(Return the largest ell value of these data.
+
+Returns
+-------
+int
+    The value of :math:`\ell_{\max}`.)doc"},
+    {"Modes::Data", R"doc(Return a copy of the modes.
+
+Returns
+-------
+numpy.ndarray of complex
+    The modes, in the order described in `Modes`.)doc"},
+    {"Modes::pow", R"doc(Raise the function represented by these modes to an integer power.
+
+The power is taken point by point on a `DataGrid` with
+``2 * EllMax() * p + 1`` points in each direction, and the result has
+:math:`\ell_{\max}` equal to ``EllMax() * p``.  The spin weight of the result
+is the same as that of these data.
+
+Parameters
+----------
+p : int
+    The exponent.
+
+Returns
+-------
+Modes
+    The new modes.)doc"},
+    {"Modes::bar", R"doc(Return the complex conjugates of these modes, with the spin weight negated.
+
+Each mode coefficient is replaced by its complex conjugate, without any
+reordering of the modes.
+
+Returns
+-------
+Modes
+    The new modes.)doc"},
+    {"Modes::edth", R"doc(Apply the spin-raising operator :math:`\eth` to these data.
+
+This is the operator defined by Geroch, Held, and Penrose (1973).  It raises
+the spin weight by 1, and leaves the boost weight unchanged.  Each mode with
+:math:`\ell \geq |s+1|` is multiplied by
+:math:`\sqrt{(\ell-s)(\ell+s+1)/2}`, and the others are set to zero.
+
+Returns
+-------
+Modes
+    The new modes, with spin weight :math:`s+1`.
+
+See Also
+--------
+Modes.edthbar
+
+Notes
+-----
+In this context the operator differs from the Newman--Penrose :math:`\eth`
+only by normalization: the Newman--Penrose operator is :math:`\sqrt{2}` times
+this one.
+
+References
+----------
+R. Geroch, A. Held, and R. Penrose, "A space-time calculus based on pairs of
+null directions", J. Math. Phys. 14, 874 (1973).)doc"},
+    {"Modes::edthbar", R"doc(Apply the spin-lowering operator :math:`\bar{\eth}` to these data.
+
+This is the operator defined by Geroch, Held, and Penrose (1973).  It lowers
+the spin weight by 1, and leaves the boost weight unchanged.  Each mode with
+:math:`\ell \geq |s-1|` is multiplied by
+:math:`-\sqrt{(\ell+s)(\ell-s+1)/2}`, and the others are set to zero.
+
+Returns
+-------
+Modes
+    The new modes, with spin weight :math:`s-1`.
+
+See Also
+--------
+Modes.edth
+
+Notes
+-----
+In this context the operator differs from the Newman--Penrose
+:math:`\bar{\eth}` only by normalization: the Newman--Penrose operator is
+:math:`\sqrt{2}` times this one.
+
+References
+----------
+R. Geroch, A. Held, and R. Penrose, "A space-time calculus based on pairs of
+null directions", J. Math. Phys. 14, 874 (1973).)doc"},
+    {"Modes::edth2edthbar2", R"doc(Apply the operator :math:`\eth^2 \bar{\eth}^2` to these data.
+
+Each mode is multiplied by :math:`(\ell-1)\ell(\ell+1)(\ell+2)`, whatever the
+spin weight, which is unchanged.  For data of spin weight 0, this is
+:math:`\eth^2 \bar{\eth}^2` with the Newman--Penrose normalization, or four
+times the result of applying `Modes.edthbar` twice and then `Modes.edth`
+twice.
+
+Returns
+-------
+Modes
+    The new modes.)doc"},
+    {"Modes::EvaluateAtPoint", R"doc(Evaluate the function represented by these modes at a point on the sphere.
+
+The point may be given either by its polar and azimuthal angles or by a rotor
+``R``.  The rotor might typically be thought of as the rotation taking
+:math:`\hat{z}` into the point :math:`(\vartheta, \varphi)`.  More general
+rotors are possible, however; they are used to construct a `DataGrid` from a
+`Modes` object with a boost.
+
+Parameters
+----------
+vartheta : float
+    Polar angle of the point.
+varphi : float
+    Azimuthal angle of the point.
+R : Quaternion
+    Rotor taking :math:`\hat{z}` into the point.
+
+Returns
+-------
+complex
+    The value of the function at the point.)doc"},
+    {"vFromOneOverK", R"doc(Derive the three-velocity of a boost from its inverse conformal factor.
+
+Only the :math:`\ell = 0` and :math:`\ell = 1` modes of ``OneOverK`` are used.
+
+Parameters
+----------
+OneOverK : Modes
+    Modes of the inverse conformal factor :math:`1/K`.
+
+Returns
+-------
+numpy.ndarray of float, shape (3,)
+    The three-velocity.)doc"},
+    {"SliceOfScriGrid", R"doc(The data on one slice of null infinity, each as a `DataGrid`.
+
+A slice is the set of points of null infinity at one value of the retarded
+time.  The data needed to describe its geometry are the Newman--Penrose
+curvature scalars :math:`\psi_0, \ldots, \psi_4`, the complex shear
+:math:`\sigma` of outgoing null rays, and its time derivative
+:math:`\dot{\sigma}`.  Besides being available as attributes, these seven
+grids may be accessed by index, in that order, so that ``S[0]`` is ``psi0``
+and ``S[6]`` is ``sigmadot``; ``len(S)`` is always 7.  Indexing and attribute
+access both return the stored grid, not a copy.  Objects of this class are
+returned by `SliceModes.BMSTransformationOnSlice`.
+
+A `SliceOfScriGrid` may be constructed in either of these ways:
+
+``SliceOfScriGrid(size=0)``
+    Seven grids constructed as ``DataGrid(size)``, with the spin weights 2,
+    1, 0, -1, -2, 2, and 2 of the quantities above.
+``SliceOfScriGrid(S)``
+    A copy of the slice ``S``.
+
+Attributes
+----------
+psi0, psi1, psi2, psi3, psi4 : DataGrid
+    The Newman--Penrose curvature scalars.
+sigma : DataGrid
+    The complex shear.
+sigmadot : DataGrid
+    The time derivative of the complex shear.)doc"},
+    {"SliceOfScriModes", R"doc(The data on one slice of null infinity, each as a `Modes` object.
+
+A slice is the set of points of null infinity at one value of the retarded
+time.  The data needed to describe its geometry are the Newman--Penrose
+curvature scalars :math:`\psi_0, \ldots, \psi_4`, the complex shear
+:math:`\sigma` of outgoing null rays, and its time derivative
+:math:`\dot{\sigma}`.  Besides being available as attributes, these seven
+`Modes` objects may be accessed by index, in that order, so that ``S[0]`` is
+``psi0`` and ``S[6]`` is ``sigmadot``; ``len(S)`` is always 7.  Indexing and
+attribute access both return the stored object, not a copy.  This is the base
+class of `SliceModes`, which is usually the class to use.
+
+A `SliceOfScriModes` may be constructed in either of these ways:
+
+``SliceOfScriModes(size=0)``
+    Seven objects constructed as ``Modes(size)``, with the spin weights 2, 1,
+    0, -1, -2, 2, and 2 of the quantities above.
+``SliceOfScriModes(S)``
+    A copy of the slice ``S``.
+
+Attributes
+----------
+psi0, psi1, psi2, psi3, psi4 : Modes
+    The Newman--Penrose curvature scalars.
+sigma : Modes
+    The complex shear.
+sigmadot : Modes
+    The time derivative of the complex shear.)doc"},
+    {"SliceModes", R"doc(The data on one slice of null infinity, as modes, with derived quantities.
+
+This subclass of `SliceOfScriModes` adds methods for the supermomentum, the
+Bondi four-momentum, and the mass on the slice, and for transforming the data
+on the slice under the Bondi--Metzner--Sachs (BMS) group.
+
+A `SliceModes` object may be constructed in either of these ways:
+
+``SliceModes(ellMax=0)``
+    Seven `Modes` objects of zeros, each with :math:`\ell_{\max}` equal to
+    ``ellMax`` and with the spin weights 2, 1, 0, -1, -2, 2, and 2 of
+    :math:`\psi_0, \ldots, \psi_4`, :math:`\sigma`, and :math:`\dot{\sigma}`.
+``SliceModes(S)``
+    A copy of the slice ``S``.)doc"},
+    {"SliceModes::EllMax", R"doc(Return the largest ell value of the data on this slice.
+
+Returns
+-------
+int
+    The largest value of `Modes.EllMax` among the seven quantities.)doc"},
     {"SliceModes::Mass", R"doc(Calculate the mass of the system from the four-momentum.
-========================================================
-  Parameters
-  ----------
-    (none)
 
-  Returns
-  -------
-    double)doc"},
-    {"SliceModes::MoreschiIteration", R"doc(Find the next iteration of the BMS transformation via Moreschi's algorithm.
-===========================================================================
-  Parameters
-  ----------
-    Modes& OneOverK_ip1
-      Inverse conformal factor for the next step
-    Modes& delta_ip1
-      Supertranslation for the next step
-
-  Returns
-  -------
-    void
-
-  Description
-  -----------
-    This member function applies to a SliceModes object that has already been
-    transformed by the BMS transformation represented by $K_i$ and $\delta_i$.
-    This then takes the data on that slice and computes the values of $K_{i+1}$
-    and $\delta_{i+1}$, returning them by reference.)doc"},
-    {"SliceModes::SliceModes", R"doc(Parameters
-----------
-  const SliceModes& S
-
-Returns
--------
-  SliceModes
-
-Constructor from ellMax.
-========================
-  Parameters
-  ----------
-    const int ellMax = 0
-
-  Returns
-  -------
-    SliceModes)doc"},
-    {"SliceModes::SuperMomentum", R"doc(Find the Moreschi supermomentum.
-================================
-  Parameters
-  ----------
-    (none)
-
-  Returns
-  -------
-    Modes
-
-  Description
-  -----------
-    $\psi = \psi_2 + \sigma \dot{\bar{\sigma}} + \eth^2 \bar{\sigma}$)doc"},
-    {"SliceOfScri", R"doc(class GWFrames::SliceOfScri
-===========================
-  Member variables
-  ----------------
-    D psi0
-
-            This class holds all the necessary objects needed to understand the
-      geometry of a given slice of null infinity.    D psi1
-    D psi2
-    D psi3
-    D psi4
-    D sigma
-    D sigmadot)doc"},
-    {"SliceOfScri::SliceOfScri", R"doc(Empty constructor with reserved storage.
-========================================
-  Parameters
-  ----------
-    const int size = 0
-
-  Returns
-  -------
-    SliceOfScri)doc"},
-    {"SliceOfScri<D>::SliceOfScri", R"doc(Parameters
-----------
-  const SliceOfScri& S
-
-Returns
--------
-  SliceOfScri)doc"},
-    {"SliceOfScri<D>::operator[]", R"doc(Parameters
-----------
-  const unsigned int i
-
-Returns
--------
-  const D&
-
-
-
-
-Parameters
-----------
-  const unsigned int i
-
-Returns
--------
-  D&)doc"},
-    {"SplineIntegrator::CumulativeIntegral", R"doc(Parameters
-----------
-  (none)
-
-Returns
--------
-  double)doc"},
-    {"SplineIntegrator::operator()", R"doc(Parameters
-----------
-  const vector<double>& x
-
-Returns
--------
-  vector<double>
-
-
-
-
-Parameters
-----------
-  const double x
-
-Returns
--------
-  double
-
-
-
-
-Parameters
-----------
-  (none)
-
-Returns
--------
-  vector<double>)doc"},
-    {"SplineInterpolator::rawinterp", R"doc(Parameters
-----------
-  int jl
-  double xv
-
-Returns
--------
-  double)doc"},
-    {"SplineInterpolator::sety2", R"doc(Parameters
-----------
-  const vector<double>& xv
-  const vector<double>& yv
-  double yp1
-  double ypn
-
-Returns
--------
-  void)doc"},
-    {"Squad", R"doc(Squad interpolation of Quaternion time series.
-==============================================
-  Parameters
-  ----------
-    const vector<Quaternion>& RIn
-      Vector of rotors
-    const vector<double>& tIn
-      Vector of corresponding times
-    const vector<double>& tOut
-      Vector of times to which RIn will be interpolated
-
-  Returns
-  -------
-    vector<Quaternion>
-
-  Description
-  -----------
-    This function implements a version of cubic-spline interpolation designed
-    for unit quaternions, which delivers more accurate, smooth, and physical
-    rotations than other forms of interpolation.)doc"},
-    {"StringForm", R"doc(Parameters
-----------
-  const vector<int>& Lmodes
-
-Returns
--------
-  string)doc"},
-    {"SuperMomenta", R"doc(class GWFrames::SuperMomenta
-============================
-  Member variables
-  ----------------
-    vector<double> t
-    vector<Modes> Psi)doc"},
-    {"SuperMomenta::BMSTransform", R"doc(Return value of Psi on u'=const slice centered at delta[0].
-===========================================================
-  Parameters
-  ----------
-    const Modes& OneOverK
-    const Modes& delta
-
-  Returns
-  -------
-    Modes)doc"},
-    {"SuperMomenta::MoreschiIteration", R"doc(Transform to given slice with given BMS transformation, and return next step in Moreschi algorithm.
-===================================================================================================
-  Parameters
-  ----------
-    Modes& OneOverK
-      Inverse conformal factor (input/output)
-    Modes& delta
-      Supertranslation (input/output)
-
-  Returns
-  -------
-    void
-
-  Description
-  -----------
-    This function first transforms Psi to a u'=constant slice centered at the
-    value delta[0] with the given BMS transformation. It then replaces the
-    values of that BMS transformation with the next step in the Moreschi
-    algorithm.)doc"},
-    {"SuperMomenta::NTimes", R"doc(Parameters
-----------
-  (none)
-
-Returns
--------
-  int)doc"},
-    {"SuperMomenta::SuperMomenta", R"doc(Parameters
-----------
-  const unsigned int size
-
-Returns
--------
-  SuperMomenta
-
-
-
-
-Parameters
-----------
-  const SuperMomenta& S
-
-Returns
--------
-  SuperMomenta
-
-
-
-
-Parameters
-----------
-  const vector<double>& T
-  const vector<Modes>& psi
-
-Returns
--------
-  SuperMomenta
-
-
-
-
-Parameters
-----------
-  const Scri& scri
-
-Returns
--------
-  SuperMomenta)doc"},
-    {"SuperMomenta::T", R"doc(Parameters
-----------
-  (none)
-
-Returns
--------
-  const vector<double>)doc"},
-    {"SuperMomenta::operator[]", R"doc(Parameters
-----------
-  const unsigned int i
-
-Returns
--------
-  const Modes
-
-
-
-
-Parameters
-----------
-  const unsigned int i
-
-Returns
--------
-  Modes&)doc"},
-    {"TransitionFunction_Smooth", R"doc(Local utility function.
-=======================
-  Parameters
-  ----------
-    const double x
-
-  Returns
-  -------
-    double
-
-  Description
-  -----------
-    This smoothly transitions from 0.0 for x<=0.0 to 1.0 for x>=1.0. The
-    function is just the usual transition function based on the familiar smooth
-    but non-analytic function.)doc"},
-    {"UnflipRotors", R"doc(Remove sign-ambiguity of rotors.
-================================
-  Parameters
-  ----------
-    const vector<Quaternion>& R
-      Vector of rotors
-    const double discont = 1.4142135623730951
-      Acceptable discontinuity [default: sqrt(2)]
-
-  Returns
-  -------
-    vector<Quaternion>
-
-  Description
-  -----------
-    Because of the two-sided nature of quaternion rotations, the sign of a
-    rotor may be undetermined in many cases. Discontinuous flips in that sign
-    for rotor-valued functions of time can cause significant problems. This
-    function removes those flips by ensuring that the output rotors at
-    successive instants are within 'discont' of each other.)doc"},
-    {"VectorStringForm", R"doc(Parameters
-----------
-  const vector<double>& V
-
-Returns
--------
-  string)doc"},
-    {"Waveform", R"doc(class GWFrames::Waveform
-========================
-  Object storing data and other information for a single waveform.
-
-  Fundamental object encapsulating waveform data, such as time, (l,m)
-  information, and complex data.
-
-  This object provides the main user interface for this collection of code. The
-  various methods for this class are intended to provide all manipulations that
-  might be necessary in the course of waveform analysis.
-
-  history
-
-  String recording history of data
-
-  t
-
-  Vector of time indices
-
-  frame
-
-  Vector of unit quaternions (rotors). This rotation, applied to the standard
-  basis (x,y,z) results in the basis (X,Y,Z), with respect to which the
-  waveform is decomposed. If this vector has length 0, the frame is assumed to
-  be constant. If this vector has length 1, the frame is assumed to be
-  constant, but given by that value. Otherwise, this vector is assumed to have
-  length NTimes(), corresponding to the frame at each moment.
-
-  FrameType
-
-  Enum type defined as {UnknownFrameType, Inertial, Aligned, Coorbital,
-  Corotating}. This is used to check that appropriate operations are performed,
-  when such operations are sensitive to the frame.
-
-  DataType
-
-  Enum type defined as {UnknownDataType, h, hdot, Psi4}. This is used to check
-  that appropriate operations are performed, when such operations are sensitive
-  to the data type (finding the flux, for example).
-
-  RScaledOut
-
-  Boolean stating whether or not radial dependence has been scaled out of the
-  data. If true, the data represents r*h or r*Psi4, for example.
-
-  MScaledOut
-
-  Boolean stating whether or not the mass dependence has been scaled out of the
-  data. If true, the data represents h/M or M*Psi4, for example, and the time
-  represents t/M.
-
-  lm
-
-  Vector of vectors of int's, giving (ell,m) data
-
-  data
-
-  Vector of complex numbers representing h or Psi4. Note that this data is
-  stored as real and imaginary parts. In the corotating frame, this is probably
-  optimal, as decomposing into modulus and phase is no longer useful, and can
-  actually lead to discontinuities in m=0 modes.
-
-  Member variables
-  ----------------
-    int spinweight
-    int boostweight
-    stringstream history
-    vector<double> t
-    vector<Quaternions::Quaternion> frame
-    WaveformFrameType frameType
-    WaveformDataType dataType
-    bool rIsScaledOut
-    bool mIsScaledOut
-    vector<vector<int>> lm
-    MatrixC data
-
-  Non-public member functions
-  ---------------------------
-    complex<double> XParityConjugate
-    complex<double> YParityConjugate
-    complex<double> ZParityConjugate
-    complex<double> ParityConjugate
-    complex<double> ConjugateAntipodalEvaluation
-    vector<double> InvolutionViolationSquared
-    Waveform Involution
-    Waveform InvolutionSymmetricPart
-    Waveform InvolutionAntisymmetricPart
-    Waveform& TransformModesToRotatedFrame
-      Rotate modes of the Waveform object.)doc"},
-    {"Waveform::Abs", R"doc(  Parameters
-  ----------
-    const unsigned int Mode
-    const unsigned int TimeIndex
-
-  Returns
-  -------
-    double
-
-
-Return vector of absolute value of a given mode as function of time.
-====================================================================
-  Parameters
-  ----------
-    const unsigned int Mode
-
-  Returns
-  -------
-    vector<double>
-
-
-Return vector of vector of absolute value of all modes as function of time.
-===========================================================================
-  Parameters
-  ----------
-    (none)
-
-  Returns
-  -------
-    vector<vector<double>>)doc"},
-    {"Waveform::AlignDecompositionFrameToModes", R"doc(Fix the attitude of the corotating frame.
-=========================================
-  Parameters
-  ----------
-    const double t_fid
-      Fiducial time at which the alignment should happen
-    const Quaternions::Quaternion& nHat_t_fid = Quaternions::xHat
-      The approximate direction of nHat at t_fid
-    const vector<int>& Lmodes = vector<int>(0)
-      Lmodes to use in computing $<LL>$
-
-  Returns
-  -------
-    Waveform&
-
-  Description
-  -----------
-    The corotating frame is only defined up to some constant rotor R_eps; if
-    R_corot is corotating, then so is R_corot*R_eps. This function uses that
-    freedom to ensure that the frame is aligned with the Waveform modes at the
-    fiducial time. In particular, it ensures that the Z axis of the frame in
-    which the decomposition is done is along the dominant eigenvector of $<LL>$
-    (suggested by O'Shaughnessy et al.), and the phase of the (2,2) mode is
-    zero.
-
-    If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
-    or [2,3,4], for example, restricts the range of the sum.)doc"},
-    {"Waveform::AngularVelocityVector", R"doc(Calculate the angular velocity of the Waveform.
-===============================================
-  Parameters
-  ----------
-    const vector<int>& Lmodes = vector<int>(0)
-      L modes to evaluate
-
-  Returns
-  -------
-    vector<vector<double>>
-
-  Description
-  -----------
-    This returns the angular velocity of the Waveform, as defined in Sec. II of
-    'Angular velocity of gravitational radiation and the corotating frame'. The
-    vector is given in the (possibly rotating) mode frame (X,Y,Z), rather than
-    the inertial frame (x,y,z).
-
-    If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
-    or [2,3,4], for example, restricts the range of the sum.)doc"},
-    {"Waveform::AngularVelocityVectorRelativeToInertial", R"doc(Calculate the angular velocity of the Waveform.
-===============================================
-  Parameters
-  ----------
-    const vector<int>& Lmodes = vector<int>(0)
-      L modes to evaluate
-
-  Returns
-  -------
-    vector<vector<double>>
-
-  Description
-  -----------
-    This returns the angular velocity of the Waveform, as defined in Sec. II of
-    'Angular velocity of gravitational radiation and the corotating frame'. The
-    vector is given in the inertial frame (x,y,z), rather than the (possibly
-    rotating) mode frame (X,Y,Z), which is unlike most other methods for
-    Waveform.
-
-    If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
-    or [2,3,4], for example, restricts the range of the sum.)doc"},
-    {"Waveform::AppendHistory", R"doc(Parameters
-----------
-  const string& Hist
-
-Returns
--------
-  Waveform&)doc"},
-    {"Waveform::Arg", R"doc(  Parameters
-  ----------
-    const unsigned int Mode
-    const unsigned int TimeIndex
-
-  Returns
-  -------
-    double
-
-
-Return vector of arg of a given mode as function of time.
-=========================================================
-  Parameters
-  ----------
-    const unsigned int Mode
-
-  Returns
-  -------
-    vector<double>
-
-  Description
-  -----------
-    Note that this quantity is not 'unwrapped'. That is, the arg is between -pi
-    and +pi. To get a smooth, continuous phase in python, use numpy.unwrap.
-
-
-Return vector of vector of arg of all modes as function of time.
-================================================================
-  Parameters
-  ----------
-    (none)
-
-  Returns
-  -------
-    vector<vector<double>>)doc"},
-    {"Waveform::ArgUnwrapped", R"doc(  Parameters
-  ----------
-    const unsigned int Mode
-
-  Returns
-  -------
-    vector<double>
-
-
-Return vector of vector of arg of all modes as function of time.
-================================================================
-  Parameters
-  ----------
-    (none)
-
-  Returns
-  -------
-    vector<vector<double>>)doc"},
-    {"Waveform::BinaryOp", R"doc(Pointwise multiply this object by another Waveform object.
-==========================================================
-  Parameters
-  ----------
-    typename Op 
-    const Waveform& B
-
-  Returns
-  -------
-    typename Op
-
-Parameters
-----------
-  typename Op 
-  const Waveform& b
-
-Returns
--------
-  typename Op)doc"},
-    {"Waveform::BoostHFaked", R"doc(Apply a boost to Psi4 data.
-===========================
-  Parameters
-  ----------
-    const vector<vector<double>>& v
-
-  Returns
-  -------
-    Waveform&
-
-  Description
-  -----------
-    This function does three things. First, it evaluates the Waveform on what
-    will become an equi-angular grid after transformation by the boost. Second,
-    at each point of that grid, it takes the appropriate combinations of the
-    present value of h and its conjugate to give the value of h as observed in
-    the boosted frame. Finally, it transforms back to Fourier space using that
-    new equi-angular grid.
-
-    The input three-velocities are assumed to give the velocities of the
-    boosted frame relative to the present frame.
-
-    Note that this function simply uses the correct transformation of Psi_4,
-    then multiplies by the appropriate power of gamma (-2) at each point. This,
-    of course, assumes that $\ddot{h} = \Psi_4$ in both frames. That need not
-    be the case, which is why 'Faked' is in the name of this function.)doc"},
-    {"Waveform::BoostPsi4", R"doc(Apply a boost to Psi4 data.
-===========================
-  Parameters
-  ----------
-    const vector<vector<double>>& v
-
-  Returns
-  -------
-    Waveform&
-
-  Description
-  -----------
-    This function does three things. First, it evaluates the Waveform on what
-    will become an equi-angular grid after transformation by the boost. Second,
-    at each point of that grid, it takes the appropriate combinations of the
-    present value of Psi_4 and its conjugate to give the value of Psi_4 as
-    observed in the boosted frame. Finally, it transforms back to Fourier space
-    using that new equi-angular grid.
-
-    The input three-velocities are assumed to give the velocities of the
-    boosted frame relative to the present frame.)doc"},
-    {"Waveform::BoostWeight", R"doc(Parameters
-----------
-  (none)
-
-Returns
--------
-  int)doc"},
-    {"Waveform::Compare", R"doc(Return a Waveform with differences between the two inputs.
-==========================================================
-  Parameters
-  ----------
-    const Waveform& B
-    const double MinTimeStep = 0.005
-    const double MinTime = -3.0e300
-
-  Returns
-  -------
-    Waveform
-
-  Description
-  -----------
-    This function simply subtracts the data in this Waveform from the data in
-    Waveform A, and finds the rotation needed to take this frame into frame A.
-    Note that the waveform data are stored as complex numbers, rather than as
-    modulus and phase.)doc"},
-    {"Waveform::ConjugateAntipodalAntisymmetricPart", R"doc(Parameters
-----------
-  (none)
-
-Returns
--------
-  Waveform)doc"},
-    {"Waveform::ConjugateAntipodalEvaluation", R"doc(Parameters
-----------
-  (none)
-
-Returns
--------
-  Waveform)doc"},
-    {"Waveform::ConjugateAntipodalSymmetricPart", R"doc(Parameters
-----------
-  (none)
-
-Returns
--------
-  Waveform)doc"},
-    {"Waveform::CopyWithoutData", R"doc(Copy the Waveform, except for the data (t, frame, lm, data)
-===========================================================
-  Parameters
-  ----------
-    (none)
-
-  Returns
-  -------
-    Waveform)doc"},
-    {"Waveform::CorotatingFrame", R"doc(Frame in which the rotation is minimal.
-=======================================
-  Parameters
-  ----------
-    const vector<int>& Lmodes = vector<int>(0)
-      L modes to evaluate
-
-  Returns
-  -------
-    vector<Quaternions::Quaternion>
-
-  Description
-  -----------
-    This function combines the steps required to obtain the corotating frame.
-    The result is given relative to the (possibly rotating) mode frame (X,Y,Z),
-    rather than the inertial frame (x,y,z).
-
-    If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
-    or [2,3,4], for example, restricts the range of the sum.)doc"},
-    {"Waveform::Data", R"doc(  Parameters
-  ----------
-    const unsigned int Mode
-    const unsigned int TimeIndex
-
-  Returns
-  -------
-    complex<double>
-
-
-Return vector of complex data of a given mode as function of time.
-==================================================================
-  Parameters
-  ----------
-    const unsigned int Mode
-
-  Returns
-  -------
-    vector<complex<double>>
-
-
-Return vector of vector of complex data of all modes as function of time.
-=========================================================================
-  Parameters
-  ----------
-    (none)
-
-  Returns
-  -------
-    vector<vector<complex<double>>>)doc"},
-    {"Waveform::DataDot", R"doc(Return time derivative of data.
-===============================
-  Parameters
-  ----------
-    const unsigned int Mode
-
-  Returns
-  -------
-    vector<complex<double>>)doc"},
-    {"Waveform::DataType", R"doc(Parameters
-----------
-  (none)
-
-Returns
--------
-  int)doc"},
-    {"Waveform::DataTypeLaTeXString", R"doc(Parameters
-----------
-  (none)
-
-Returns
--------
-  string)doc"},
-    {"Waveform::DataTypeString", R"doc(Parameters
-----------
-  (none)
-
-Returns
--------
-  string)doc"},
-    {"Waveform::DescriptorString", R"doc(Parameters
-----------
-  (none)
-
-Returns
--------
-  string)doc"},
-    {"Waveform::Differentiate", R"doc(Differentiate the waveform as a function of time.
-=================================================
-  Parameters
-  ----------
-    (none)
-
-  Returns
-  -------
-    Waveform&)doc"},
-    {"Waveform::DipoleMoment", R"doc(Evaluate the dipole moment of the waveform.
-===========================================
-  Parameters
-  ----------
-    int ellMax = 0
-      Maximum ell mode to include [default: all]
-
-  Returns
-  -------
-    vector<vector<double>>
-
-  Description
-  -----------
-    This function evaluates the dipole moment of the waveform's magnitude,
-    defined as $\vec{d} = \int \hat{n} \lvert f \rvert^2 d\Omega$. Up to
-    a geometric factor, this function applied to $\dot{h}$ is the rate of
-    emission of momentum in gravitational waves.)doc"},
-    {"Waveform::DropEllModes", R"doc(Remove data relating to the given ell modes.
-============================================
-  Parameters
-  ----------
-    const vector<unsigned int>& EllModesToDrop
-
-  Returns
-  -------
-    Waveform&)doc"},
-    {"Waveform::DropTimesOutside", R"doc(Remove all data relating to times outside of the given range.
-=============================================================
-  Parameters
-  ----------
-    const double ta
-    const double tb
-
-  Returns
-  -------
-    Waveform&)doc"},
-    {"Waveform::EllMax", R"doc(Return greatest ell value present in the data.
-==============================================
-  Parameters
-  ----------
-    (none)
-
-  Returns
-  -------
-    int)doc"},
-    {"Waveform::EvaluateAtPoint", R"doc(Evaluate Waveform at a particular sky location.
-===============================================
-  Parameters
-  ----------
-    const double vartheta
-      Polar angle of detector
-    const double varphi
-      Azimuthal angle of detector
-
-  Returns
-  -------
-    vector<complex<double>>
-
-  Description
-  -----------
-    Note that the input angle parameters are measured relative to the binary's
-    coordinate system. In particular, this will make no sense if the frame type
-    is something other than inertial, and will fail if the FrameType is neither
-    UnknownFrameType nor Inertial.
-
-
-Evaluate Waveform at a particular sky location and an instant of time.
-======================================================================
-  Parameters
-  ----------
-    const double vartheta
-      Polar angle of detector
-    const double varphi
-      Azimuthal angle of detector
-    const unsigned int i_t
-      Index of time at which to evaluate
-
-  Returns
-  -------
-    complex<double>
-
-  Description
-  -----------
-    Note that the input angle parameters are measured relative to the binary's
-    coordinate system. In particular, this will make no sense if the frame type
-    is something other than inertial, and will fail if the FrameType is neither
-    UnknownFrameType nor Inertial.)doc"},
-    {"Waveform::FindModeIndex", R"doc(Find index of mode with given (l,m) data.
-=========================================
-  Parameters
-  ----------
-    const int L
-    const int M
-
-  Returns
-  -------
-    unsigned int)doc"},
-    {"Waveform::FindModeIndexWithoutError", R"doc(Find index of mode with given (l,m) data without the chance of throwing an exception.
-=====================================================================================
-  Parameters
-  ----------
-    const int L
-    const int M
-
-  Returns
-  -------
-    unsigned int
-
-  Description
-  -----------
-    If the requested mode is not present, the returned index is 1 beyond the
-    end of the mode vector.)doc"},
-    {"Waveform::Frame", R"doc(Parameters
-----------
-  const unsigned int TimeIndex
-
-Returns
--------
-  Quaternions::Quaternion
-
-
-
-
-Parameters
-----------
-  (none)
-
-Returns
--------
-  const vector<Quaternions::Quaternion>&)doc"},
-    {"Waveform::FrameType", R"doc(Parameters
-----------
-  (none)
-
-Returns
--------
-  int)doc"},
-    {"Waveform::FrameTypeString", R"doc(Parameters
-----------
-  (none)
-
-Returns
--------
-  string)doc"},
-    {"Waveform::GetAlignmentOfDecompositionFrameToModes", R"doc(Find the appropriate rotation to fix the attitude of the corotating frame.
-==========================================================================
-  Parameters
-  ----------
-    const double t_fid
-      Fiducial time at which the alignment should happen
-    const Quaternions::Quaternion& nHat_t_fid = Quaternions::xHat
-      The approximate direction of nHat at t_fid
-    const vector<int>& Lmodes = vector<int>(0)
-      Lmodes to use in computing $<LL>$
-
-  Returns
-  -------
-    Quaternions::Quaternion
-
-  Description
-  -----------
-    This function simply finds the rotation necessary to align the corotating
-    frame to the waveform at the fiducial time, rather than applying it. This
-    is called by AlignDecompositionFrameToModes and probably does not need to
-    be called directly; see that function's documentation for more details.
-
-    AlignDecompositionFrameToModes)doc"},
-    {"Waveform::GetAlignmentsOfDecompositionFrameToModes", R"doc(Find the appropriate rotations to fix the attitude of the corotating frame.
-===========================================================================
-  Parameters
-  ----------
-    const vector<int>& Lmodes = vector<int>(0)
-      Lmodes to use in computing $<LL>$
-
-  Returns
-  -------
-    vector<Quaternions::Quaternion>
-
-  Description
-  -----------
-    This function finds the appropriate pre-multiplied rotation
-    $R_{\varepsilon}$ so that the decomposition frame is aligned to the
-    waveform. This particular version finds the appropriate $R_{\varepsilon}$
-    at each time in the input Waveform. This is useful in cases where we need
-    to try many such alignments, because the setup for interpolation is very
-    slow.
-
-    Note that this function has no option to choose the direction of X based on
-    some nHat vector, as other similar functions have. That issue is assumed to
-    be handled elsewhere.)doc"},
-    {"Waveform::HistoryStr", R"doc(Parameters
-----------
-  (none)
-
 Returns
 -------
-  string)doc"},
-    {"Waveform::HistoryStream", R"doc(Parameters
-----------
-  (none)
+float
+    The mass :math:`\sqrt{p_0^2 - p_1^2 - p_2^2 - p_3^2}`, where :math:`p` is
+    the result of `SliceModes.FourMomentum`.)doc"},
+    {"SliceModes::FourMomentum", R"doc(Calculate the Bondi four-momentum of the system from the supermomentum.
+
+The four-momentum is given by the :math:`\ell = 0` and :math:`\ell = 1` modes
+of the result of `SliceModes.SuperMomentum`.
 
 Returns
 -------
-  stringstream&)doc"},
-    {"Waveform::Hybridize", R"doc(Hybridize this Waveform with another.
-=====================================
-  Parameters
-  ----------
-    const Waveform& B
-      Second Waveform to hybridize with
-    const double t1
-      Beginning of time over which to transition
-    const double t2
-      End of time over which to transition
-    const double tMinStep = 0.005
-      Lower limit on time step appearing in the output
-
-  Returns
-  -------
-    Waveform
-
-  Description
-  -----------
-    This function simply takes two Waveforms and blends them together. In
-    particular, it does not align the Waveforms; that is assumed to have been
-    done already.
-
-    The transition function is a $C^\infty$ function, meaning that the output
-    data has exactly this Waveform's data before t1, exactly Waveform B's data
-    after t2, and a smooth blend in between.
-
-    Note that this function does NOT operate in place; a new Waveform object is
-    constructed and returned.)doc"},
-    {"Waveform::Im", R"doc(  Parameters
-  ----------
-    const unsigned int Mode
-    const unsigned int TimeIndex
-
-  Returns
-  -------
-    double
-
-
-Return vector of imaginary parts of a given mode as function of time.
-=====================================================================
-  Parameters
-  ----------
-    const unsigned int Mode
-
-  Returns
-  -------
-    vector<double>
-
-
-Return vector of vector of imaginary parts of all modes as function of time.
-============================================================================
-  Parameters
-  ----------
-    (none)
-
-  Returns
-  -------
-    vector<vector<double>>)doc"},
-    {"Waveform::Interpolate", R"doc(Interpolate the Waveform to a new set of time instants.
-=======================================================
-  Parameters
-  ----------
-    const vector<double>& NewTime
-      New vector of times to which this interpolates
-    const bool AllowTimesOutsideCurrentDomain = false
-      [Default: false]
-
-  Returns
-  -------
-    Waveform
+numpy.ndarray of float, shape (4,)
+    The four-momentum, with the time component first.)doc"},
+    {"SliceModes::SuperMomentum", R"doc(Calculate the Moreschi supermomentum on this slice.
 
-  Description
-  -----------
-    If AllowTimesOutsideCurrentDomain is true, the values of all modes will be
-    set to 0.0 for times outside the current set of time data. If false, and
-    such times are requested, an error will be thrown.)doc"},
-    {"Waveform::InterpolateInPlace", R"doc(Interpolate the Waveform to a new set of time instants.
-=======================================================
-  Parameters
-  ----------
-    const vector<double>& NewTime
+The supermomentum is
 
-  Returns
-  -------
-    Waveform&)doc"},
-    {"Waveform::InterpolateToPoint", R"doc(Evaluate Waveform at a particular sky location and an instant of time.
-======================================================================
-  Parameters
-  ----------
-    const double vartheta
-      Polar angle of detector
-    const double varphi
-      Azimuthal angle of detector
-    const double t_i
-      New time to interpolate to
+.. math::
 
-  Returns
-  -------
-    complex<double>
+    \Psi = \psi_2 + \sigma \dot{\bar{\sigma}} + \eth^2 \bar{\sigma},
 
-  Description
-  -----------
-    Note that the input angle parameters are measured relative to the binary's
-    coordinate system. In particular, this will make no sense if the frame type
-    is something other than inertial, and will fail if the FrameType is neither
-    UnknownFrameType nor Inertial.)doc"},
-    {"Waveform::KeepOnlyEll2", R"doc(Remove data relating to all but the ell=2 modes.
-================================================
-  Parameters
-  ----------
-    (none)
+where :math:`\eth` is the operator of `Modes.edth`.
 
-  Returns
-  -------
-    Waveform&)doc"},
-    {"Waveform::KeepOnlyEllModes", R"doc(Remove data relating to all but the given ell modes.
-====================================================
-  Parameters
-  ----------
-    const vector<unsigned int>& EllModesToKeep
-
-  Returns
-  -------
-    Waveform&)doc"},
-    {"Waveform::LLDominantEigenvector", R"doc(Calculate the principal axis of the LL matrix, as prescribed by O'Shaughnessy et al.
-====================================================================================
-  Parameters
-  ----------
-    const vector<int>& Lmodes = vector<int>(0)
-      L modes to evaluate (optional)
-    const Quaternions::Quaternion& RoughInitialEllDirection = Quaternions::zHat
-      Vague guess about the preferred initial (optional)
-
-  Returns
-  -------
-    vector<vector<double>>
-
-  Description
-  -----------
-    If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
-    or [2,3,4], for example, restricts the range of the sum.
-
-    Ell is the direction of the angular velocity for a PN system, so some rough
-    guess about that direction allows us to choose the direction of the
-    eigenvectors output by this function to be more parallel than anti-parallel
-    to that direction. The default is to simply choose the z axis, since this
-    is most often the correct choice anyway.
-
-    The vector is given in the (possibly rotating) mode frame (X,Y,Z), rather
-    than the inertial frame (x,y,z).)doc"},
-    {"Waveform::LLMatrix", R"doc(Calculate the $<LL>$ quantity defined in the paper.
-===================================================
-  Parameters
-  ----------
-    vector<int> Lmodes = vector<int>(0)
-      L modes to evaluate
-
-  Returns
-  -------
-    vector<Matrix>
-
-  Description
-  -----------
-    If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
-    or [2,3,4], for example, restricts the range of the sum. The matrix is
-    given in the (possibly rotating) mode frame (X,Y,Z), rather than the
-    inertial frame (x,y,z).
-
-    $<LL>^{ab} = \sum_{\ell,m,m'} [\bar{f}^{\ell,m'} <\ell,m' | L_a L_b |
-    \ell,m> f^{\ell,m} ]$)doc"},
-    {"Waveform::LM", R"doc(Parameters
-----------
-  const unsigned int Mode
-
 Returns
 -------
-  const vector<int>&
-
-
+Modes
+    The supermomentum.)doc"},
+    {"SliceModes::BMSTransformationOnSlice", R"doc(Apply a BMS transformation within this slice, without moving points in time.
 
+A full BMS transformation needs data from several slices, because the
+supertranslation moves points between slices.  This method only transforms
+the data within the slice: it evaluates them on the grid of the frame boosted
+by ``v``, with the factors of the conformal factor, the mixing of the
+curvature scalars caused by the change of tetrad, and the shift of
+:math:`\sigma` by :math:`\eth^2 \delta`.  Each point of the resulting grids
+can then be interpolated in time to the supertranslated slice, as
+`Scri.BMSTransformation` does.  The grids have ``2 * EllMax() + 1`` points in
+each direction.
 
 Parameters
 ----------
-  (none)
+u : float
+    Retarded time of this slice.
+v : array_like of float, shape (3,)
+    Three-velocity of the boost relative to the current frame.
+delta : Modes
+    Spherical-harmonic modes of the supertranslation.
 
 Returns
 -------
-  const vector<vector<int>>&)doc"},
-    {"Waveform::LdtVector", R"doc(Calculate the $<L \partial_t>$ quantity defined in the paper.
-==============================================================
-  Parameters
-  ----------
-    vector<int> Lmodes = vector<int>(0)
-      L modes to evaluate
+SliceOfScriGrid
+    The transformed data on the boosted grid.)doc"},
+    {"SliceModes::MoreschiIteration", R"doc(Find the next iteration of the BMS transformation by Moreschi's algorithm.
 
-  Returns
-  -------
-    vector<vector<double>>
+This method is meant for a slice that has already been transformed by the BMS
+transformation given by :math:`K_i` and :math:`\delta_i`, and is meant to
+compute :math:`K_{i+1}` and :math:`\delta_{i+1}` from the data on the slice,
+storing them in the arguments.
 
-  Description
-  -----------
-    If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
-    or [2,3,4], for example, restricts the range of the sum. The vector is
-    given with respect to the (possibly rotating) mode frame (X,Y,Z), rather
-    than the inertial frame (x,y,z).
-
-    $<L \partial_t>^a = \sum_{\ell,m,m'} \Im [ \bar{f}^{\ell,m'}
-    <\ell,m' | L_a | \ell,m> \dot{f}^{\ell,m} ]$)doc"},
-    {"Waveform::MIsScaledOut", R"doc(Parameters
+Parameters
 ----------
-  (none)
-
-Returns
--------
-  bool)doc"},
-    {"Waveform::MaxNormIndex", R"doc(Return the data index corresponding to the time of the largest norm.
-====================================================================
-  Parameters
-  ----------
-    const unsigned int SkipFraction = 4
-      Integer fraction of data to skip before looking
-
-  Returns
-  -------
-    unsigned int
+OneOverK_ip1 : Modes
+    Receives the inverse conformal factor for the next step.
+delta_ip1 : Modes
+    Receives the supertranslation for the next step.
 
-  Description
-  -----------
-    The default value of SkipFraction is 4, meaning that we start looking for
-    the maximum after 1/4th of the data, so as to cut out junk radiation. Note
-    that this is integer division, so an argument of NTimes()+1 will look
-    through all of the data.
+Warnings
+--------
+This method is not finished.  It sets ``OneOverK_ip1`` to the :math:`\ell \leq
+1` modes of the supermomentum divided by the mass, leaves ``delta_ip1``
+unchanged, and then always raises an error.  `SuperMomenta.MoreschiIteration`
+is a working implementation.)doc"},
+    {"Scri", R"doc(The asymptotic geometry of null infinity, as a sequence of slices.
 
-    Norm()
+A `Scri` object contains the data needed to express the asymptotic geometry
+of null infinity and its symmetry transformations.  This geometry is encoded
+in the Newman--Penrose curvature scalars :math:`\psi_0, \ldots, \psi_4` and
+the complex shear :math:`\sigma` of outgoing null rays (the strain in
+gravitational-wave detectors).  The general symmetry transformation is an
+element of the Bondi--Metzner--Sachs (BMS) group, which transforms these data
+among themselves.
 
-    MaxNormTime())doc"},
-    {"Waveform::MaxNormTime", R"doc(Parameters
-----------
-  const unsigned int SkipFraction = 4
+The data are stored as one `SliceModes` object at each time.  ``len(S)`` is
+the number of times, and ``S[i]`` is a copy of the slice at time index ``i``,
+which may be replaced by assigning to ``S[i]``.
 
-Returns
--------
-  double)doc"},
-    {"Waveform::MinimalParityViolation", R"doc(Measure the relative magnitude of the violation of parity in the z direction.
-=============================================================================
-  Parameters
-  ----------
-    (none)
+A `Scri` object may be constructed in either of these ways:
 
-  Returns
-  -------
-    vector<double>
+``Scri(psi0, psi1, psi2, psi3, psi4, sigma)``
+    The data in six `Waveform` objects, which must have the same number of
+    times and the same value of `Waveform.EllMax`, and must contain every
+    mode :math:`(\ell, m)` up to that value, including :math:`\ell = 0` and
+    :math:`\ell = 1`.  The times are taken from ``psi0``, and
+    :math:`\dot{\sigma}` is computed by differentiating ``sigma`` in time.
+``Scri(S)``
+    A copy of the `Scri` object ``S``.)doc"},
+    {"Scri::BMSTransformation", R"doc(Apply a constant BMS transformation to the data on null infinity.
 
-  Description
-  -----------
-    This function measures the violation of invariance under z-parity
-    (reflection across the x-y plane). Nonprecessing systems in a suitable
-    frame should have zero violation. Precessing systems in any frame and
-    nonprecessing systems in the wrong frame will show violations. The quantity
-    is normalized by the overall norm of the data at each instant, and the
-    square-root of that ratio is taken.
+A general BMS transformation is a conformal transformation of the sphere
+(which encompasses rotations and boosts) together with a supertranslation
+(which affects only the time coordinate on null infinity).  Here the conformal
+transformation is assumed to be a pure boost with velocity ``v``; the rotation
+is taken to be zero.  The supertranslation is given by its (scalar)
+spherical-harmonic modes, which are assumed to describe a real function on the
+sphere.
 
-    This is performed iteratively at each time step, as the system is rotated,
-    and the parity violation is minimized.)doc"},
-    {"Waveform::NModes", R"doc(Parameters
-----------
-  (none)
+The new and old time coordinates are related by :math:`u' = K(u - \delta)`,
+where the conformal factor :math:`K` depends on the angle.  The slice
+returned is the one on which :math:`u' = 0`, since any other choice can be
+absorbed into a translation in time and space.  The data at each grid point
+are therefore interpolated, with cubic splines in time, to the original time
+:math:`u = u_0 + \delta`, which differs from point to point.  The data are
+first evaluated on the grid of the final frame by
+`SliceModes.BMSTransformationOnSlice`, and are finally transformed back into
+modes.  An error is raised if these times are not all within the time span of
+the data.
 
-Returns
--------
-  unsigned int)doc"},
-    {"Waveform::NTimes", R"doc(Parameters
+Parameters
 ----------
-  (none)
+u0 : float
+    Time of the slice to be transformed, to which the supertranslation is
+    added.
+v : array_like of float, shape (3,)
+    Three-velocity of the boost relative to the current frame.
+delta : Modes
+    Spherical-harmonic modes of the supertranslation.
 
 Returns
 -------
-  unsigned int)doc"},
-    {"Waveform::Norm", R"doc(Return the norm (sum of squares of modes) of the waveform.
-==========================================================
-  Parameters
-  ----------
-    const bool TakeSquareRoot = false
-      If true, the square root is taken at each instant before returning
-
-  Returns
-  -------
-    vector<double>
-
-  Description
-  -----------
-    This returns the norm of the waveform, defined as the sum of the complex
-    norms of the modes. Note that we are calling this norm in analogy with the
-    c++ std::complex norm, which is the square of the absolute value. However,
-    there is also an option to take the square root of the data at each time
-    step, which would be the usual L2 norm of the waveform.
-
-    MaxNormIndex
-
-    MaxNormTime)doc"},
-    {"Waveform::NormalizedAntisymmetry", R"doc(Return the normalized asymmetry as a function of time.
-======================================================
-  Parameters
-  ----------
-    vector<int> LModesForAsymmetry = vector<int>(0)
-      $\ell$ modes to use when calculating numerator
-
-  Returns
-  -------
-    vector<double>
-
-  Description
-  -----------
-    This function just returns the value of the normalized asymmetry $a$
-    defined by Boyle et al. (2014), which is the difference between the field
-    at a point and its conjugate at the antipodal point, the amplitude squared
-    and integrated over the sphere. The normalization is just the Norm of the
-    waveformits overall power at each instant.
-
-    By default, all ell modes in the data are used for both the asymmetry and
-    the normalization factor. If an argument is input, only modes with ell
-    values in that argument will be used to calculate the asymmetry. All modes
-    will always be used to calculate the normalization.)doc"},
-    {"Waveform::Output", R"doc(Output Waveform object to data file.
-====================================
-  Parameters
-  ----------
-    const string& FileName
-    const unsigned int precision = 14
+SliceModes
+    The transformed data on the new slice.)doc"},
+    {"Scri::NTimes", R"doc(Return the number of time steps.
 
-  Returns
-  -------
-    const Waveform&)doc"},
-    {"Waveform::ParityAntisymmetricPart", R"doc(Parameters
-----------
-  (none)
-
 Returns
 -------
-  Waveform)doc"},
-    {"Waveform::ParityInvolution", R"doc(Parameters
-----------
-  (none)
+int
+    The number of slices, which is also given by ``len``.)doc"},
+    {"Scri::T", R"doc(Return the times of the slices.
 
 Returns
 -------
-  Waveform)doc"},
-    {"Waveform::ParitySymmetricPart", R"doc(Parameters
-----------
-  (none)
+numpy.ndarray of float
+    The times.)doc"},
+    {"SuperMomenta", R"doc(The supermomentum of a system as a function of time.
 
-Returns
--------
-  Waveform)doc"},
-    {"Waveform::ParityViolationNormalized", R"doc(Parameters
-----------
-  vector<int> Lmodes = vector<int>(0)
+A `SuperMomenta` object stores a `Modes` object for the supermomentum at each
+of a sequence of times, as computed by `SliceModes.SuperMomentum`, and is used
+to find a BMS frame by Moreschi's algorithm.  ``len(S)`` is the number of
+times, and ``S[i]`` is a copy of the supermomentum at time index ``i``, which
+may be replaced by assigning to ``S[i]``.
 
-Returns
--------
-  vector<double>)doc"},
-    {"Waveform::ParityViolationSquared", R"doc(Parameters
-----------
-  vector<int> Lmodes = vector<int>(0)
+A `SuperMomenta` object may be constructed in any of these ways:
+
+``SuperMomenta(size)``
+    ``size`` times, all zero, with empty `Modes` objects.
+``SuperMomenta(S)``
+    A copy of the `SuperMomenta` object ``S``.
+``SuperMomenta(T, psi)``
+    The times ``T``, a sequence of floats, and the supermomenta ``psi``, a
+    sequence of `Modes` objects.
+``SuperMomenta(scri)``
+    The times of the `Scri` object ``scri``, and the supermomentum of each of
+    its slices.)doc"},
+    {"SuperMomenta::NTimes", R"doc(Return the number of time steps.
+
+Returns
+-------
+int
+    The number of times, which is also given by ``len``.)doc"},
+    {"SuperMomenta::T", R"doc(Return the times at which the supermomentum is stored.
+
+Returns
+-------
+numpy.ndarray of float
+    The times.)doc"},
+    {"SuperMomenta::BMSTransform", R"doc(Return the supermomentum on a constant-time slice of a BMS-transformed frame.
+
+The boost of the transformation is found from ``OneOverK`` by
+`vFromOneOverK`.  At each time, the quantity
+:math:`(\Psi - \eth^2 \bar{\eth}^2 \delta)/K^3` is evaluated on the grid of
+the boosted frame, and the values at each grid point are interpolated, with
+cubic splines in time, to the time :math:`u = \delta` at that point.  This is
+the slice :math:`u' = 0` of the new frame, which is centered on the
+:math:`\ell = 0` mode of ``delta``.  An error is raised if these times are not
+all within the time span of the data.
 
-Returns
--------
-  vector<double>)doc"},
-    {"Waveform::RIsScaledOut", R"doc(Parameters
+Parameters
 ----------
-  (none)
+OneOverK : Modes
+    Modes of the inverse conformal factor :math:`1/K` of the boost.
+delta : Modes
+    Spherical-harmonic modes of the supertranslation.
 
 Returns
 -------
-  bool)doc"},
-    {"Waveform::Re", R"doc(  Parameters
-  ----------
-    const unsigned int Mode
-    const unsigned int TimeIndex
-
-  Returns
-  -------
-    double
-
-
-Return vector of real parts of a given mode as function of time.
-================================================================
-  Parameters
-  ----------
-    const unsigned int Mode
+Modes
+    The transformed supermomentum.)doc"},
+    {"SuperMomenta::MoreschiIteration", R"doc(Take one step of Moreschi's algorithm, updating a BMS transformation in place.
 
-  Returns
-  -------
-    vector<double>
+The supermomentum :math:`\Psi` is first transformed by
+`SuperMomenta.BMSTransform` with the given ``OneOverK`` and ``delta``, and the
+mass :math:`M` is computed from the four-momentum given by its
+:math:`\ell \leq 1` modes.  The arguments are then replaced by the next step
+of the algorithm.  Each mode of ``delta`` with :math:`\ell \geq 2` becomes
+:math:`4/[(\ell-1)\ell(\ell+1)(\ell+2)]` times the corresponding mode of
+:math:`\Psi + M K^3`; its :math:`\ell = 0` and :math:`\ell = 1` modes are
+unchanged.  The :math:`\ell = 0` mode of ``OneOverK`` becomes
+:math:`\Psi_{00} / M`, and its :math:`\ell = 1` modes become
+:math:`-\Psi_{1m} / (3M)`, with the sign reversed so that the boost found is
+removed by the next step rather than reported.
 
-
-Return vector of vector of real parts of all modes as function of time.
-=======================================================================
-  Parameters
-  ----------
-    (none)
-
-  Returns
-  -------
-    vector<vector<double>>)doc"},
-    {"Waveform::ResizeData", R"doc(Parameters
+Parameters
 ----------
-  const unsigned int NModes
-  const unsigned int NTimes
-
-Returns
--------
-  Waveform&)doc"},
-    {"Waveform::RotateDecompositionBasis", R"doc(Rotate the basis in which this Waveform is measured by a constant rotor.
-========================================================================
-  Parameters
-  ----------
-    const Quaternions::Quaternion& R_frame
-
-  Returns
-  -------
-    Waveform&
-
+OneOverK : Modes
+    Inverse conformal factor, with at least the :math:`\ell \leq 1` modes; it
+    is replaced by the next step.
+delta : Modes
+    Supertranslation; it is replaced by the next step.)doc"},
+    {"Waveform", R"doc(A gravitational waveform, decomposed into spin-weighted spherical harmonics.
 
-Rotate the basis in which this Waveform is measured.
-====================================================
-  Parameters
-  ----------
-    const vector<Quaternions::Quaternion>& R_frame
-      Vector of Quaternions by which to rotate
+A `Waveform` stores the complex mode data of a single waveform as functions of
+time, together with the :math:`(\ell, m)` values of the modes and the frame
+with respect to which the modes are decomposed.  It also records the spin
+weight and boost weight of the data, the frame type and data type, whether the
+radius and the mass have been scaled out of the data, and a history of the
+operations applied to the object.  Its methods provide the manipulations needed
+in waveform analysis: slicing and interpolation in time; rotations and
+transformations to the coprecessing, corotating, and inertial frames;
+alignment, comparison, and hybridization; and evaluation on the sphere.
 
-  Returns
-  -------
-    Waveform&
+The frame data are unit quaternions (rotors).  The rotor at each time takes the
+standard basis :math:`(x, y, z)` into the basis :math:`(X, Y, Z)` with respect
+to which the modes are decomposed.  If there are no frame data, the modes are
+decomposed with respect to the standard basis; if there is a single rotor, the
+frame is constant; otherwise there is one rotor for each time step.
 
-  Description
-  -----------
-    This rotates the coordinate basis, leaving the physical system in place.
+Two waveforms with the same times and in the same frame may be added or
+subtracted with ``+`` and ``-``, which act mode by mode, or multiplied or
+divided with ``*`` and ``/``, which act pointwise on the sphere.  A waveform
+may also be multiplied or divided by a float.
 
-    The Waveform's frame data records the rotors needed to rotate the standard
-    (x,y,z) basis into the (X,Y,Z) basis with respect to which the Waveform
-    modes are decomposed. If this is not the first rotation of the frame, we
-    need to be careful about how we record the total rotation. Here, we are
-    just composing rotations, so we need to store R_frame times the original
-    frame data.
+A `Waveform` may be constructed in any of these ways:
 
-    Note that this function does not change the frameType; this is left to the
-    calling function.)doc"},
-    {"Waveform::RotatePhysicalSystem", R"doc(Rotate the physical content of the Waveform by a constant rotor.
-================================================================
-  Parameters
-  ----------
-    const Quaternions::Quaternion& R_phys
+``Waveform()``
+    An empty waveform.
+``Waveform(W)``
+    A copy of the waveform ``W``, including its history.
+``Waveform(FileName, DataFormat)``
+    The data in the text file ``FileName``.  Lines at the beginning of the
+    file that start with ``#`` or ``%`` are stored in the history.  Each
+    remaining line holds a time, followed by two columns for each mode: the
+    real and imaginary parts if ``DataFormat`` contains ``"ReIm"``, or the
+    magnitude and argument if it contains ``"MagArg"`` (ignoring case).  The
+    modes are assumed to be ordered as :math:`(2, -2), (2, -1), \ldots,
+    (2, 2), (3, -3), \ldots`; if they are not, the :math:`(\ell, m)` data
+    must be corrected with `Waveform.SetLM`.
+``Waveform(T, LM, Data)``
+    A waveform with the times ``T``, an array of floats; the mode labels
+    ``LM``, an array of integers with shape (NModes, 2), each row of which
+    holds :math:`\ell` and :math:`m`; and the complex mode data ``Data``,
+    with shape (NModes, NTimes).
 
-  Returns
-  -------
-    Waveform&
+Every constructor except the copy constructor sets the spin weight to -2 and
+the boost weight to -1, and leaves the frame type and the data type unknown.)doc"},
+    {"Waveform::CopyWithoutData", R"doc(Return a copy of this waveform without its times, frame, modes, or data.
 
-
-Rotate the physical content of the Waveform.
-============================================
-  Parameters
-  ----------
-    vector<Quaternions::Quaternion> R_phys
-      Vector of Quaternions by which to rotate
-
-  Returns
-  -------
-    Waveform&
-
-  Description
-  -----------
-    This rotates the physical system, leaving the coordinates in place.
-
-    The Waveform's frame data records the rotors needed to rotate the standard
-    (x,y,z) basis into the (X,Y,Z) basis with respect to which the Waveform
-    modes are decomposed. If this is not the first rotation of the frame, we
-    need to be careful about how we record the total rotation. Here, we are
-    rotating the physical system, while leaving fixed the basis with respect to
-    which the modes are decomposed. Therefore, the new frame must be the
-    original frame data times $\bar{R}_{phys}$.
-
-    Note that this function does not change the frameType; that is left to the
-    calling function.)doc"},
-    {"Waveform::SetBoostWeight", R"doc(Parameters
-----------
-  const int NewBoostWeight
-
-Returns
--------
-  Waveform&)doc"},
-    {"Waveform::SetData", R"doc(Parameters
-----------
-  const vector<vector<complex<double>>>& a
+The copy has the spin weight, boost weight, history, version history, frame
+type, data type, and scaling flags of this waveform, but its times, frame data,
+:math:`(\ell, m)` data, and mode data are empty.
 
 Returns
 -------
-  Waveform&
-
-
+Waveform
+    The copy.)doc"},
+    {"Waveform::SliceOfTimeIndices", R"doc(Return a copy of the waveform restricted to a range of time indices.
 
+The copy contains the time steps with indices from ``i_t_a`` up to, but not
+including, ``i_t_b``.
 
 Parameters
-----------
-  const unsigned int i_Mode
-  const unsigned int i_Time
-  const complex<double>& a
-
-Returns
--------
-  Waveform&)doc"},
-    {"Waveform::SetDataType", R"doc(Parameters
-----------
-  const WaveformDataType Type
-
-Returns
--------
-  Waveform&)doc"},
-    {"Waveform::SetFrame", R"doc(Parameters
-----------
-  const vector<Quaternions::Quaternion>& a
-
-Returns
--------
-  Waveform&)doc"},
-    {"Waveform::SetFrameType", R"doc(Parameters
 ----------
-  const WaveformFrameType Type
+i_t_a : int
+    Index of the first time step to include.
+i_t_b : int, default 0
+    Index one past the last time step to include.  If it is 0, only the time
+    step ``i_t_a`` is included.
 
 Returns
 -------
-  Waveform&)doc"},
-    {"Waveform::SetHistory", R"doc(Parameters
-----------
-  const string& Hist
-
-Returns
--------
-  Waveform&)doc"},
-    {"Waveform::SetLM", R"doc(Parameters
-----------
-  const vector<vector<int>>& a
-
-Returns
--------
-  Waveform&)doc"},
-    {"Waveform::SetMIsScaledOut", R"doc(Parameters
-----------
-  const bool Scaled
-
-Returns
--------
-  Waveform&)doc"},
-    {"Waveform::SetRIsScaledOut", R"doc(Parameters
-----------
-  const bool Scaled
-
-Returns
--------
-  Waveform&)doc"},
-    {"Waveform::SetSpinWeight", R"doc(Parameters
-----------
-  const int NewSpinWeight
+Waveform
+    The slice of the waveform.)doc"},
+    {"Waveform::SliceOfTimeIndicesWithEll2", R"doc(Return a copy of the waveform restricted to time indices and :math:`\ell = 2`.
 
-Returns
--------
-  Waveform&)doc"},
-    {"Waveform::SetT", R"doc(Parameters
-----------
-  const vector<double>& a
+The copy contains only the five modes with :math:`\ell = 2`, ordered by
+:math:`m`, at the time steps with indices from ``i_t_a`` up to, but not
+including, ``i_t_b``.
 
-Returns
--------
-  Waveform&)doc"},
-    {"Waveform::SetTime", R"doc(Parameters
+Parameters
 ----------
-  const vector<double>& a
+i_t_a : int
+    Index of the first time step to include.
+i_t_b : int, default 0
+    Index one past the last time step to include.  If it is 0, only the time
+    step ``i_t_a`` is included.
 
 Returns
 -------
-  Waveform&)doc"},
-    {"Waveform::SliceOfTimeIndices", R"doc(Copy the Waveform between indices i_t_a and i_t_b.
-==================================================
-  Parameters
-  ----------
-    const unsigned int i_t_a
-      Index of initial time
-    unsigned int t_b = 0
-
-  Returns
-  -------
-    Waveform
+Waveform
+    The slice of the waveform.)doc"},
+    {"Waveform::SliceOfTimeIndicesWithoutModes", R"doc(Return a copy of the waveform restricted to time indices, without mode data.
 
-  Description
-  -----------
-    i_t_a and i_t_b should hold the indices pointing to the first time in t
-    after t_a, and the first time in t after t_b (or one-past-the-end of t if
-    necessary))doc"},
-    {"Waveform::SliceOfTimeIndicesWithEll2", R"doc(Copy of the Waveform between indices i_t_a and i_t_b, only ell=2 modes.
-=======================================================================
-  Parameters
-  ----------
-    const unsigned int i_t_a
-    unsigned int i_t_b = 0
-
-  Returns
-  -------
-    Waveform
-
-  Description
-  -----------
-    i_t_a and i_t_b should hold the indices pointing to the first time in t
-    after t_a, and the first time in t after t_b (or one-past-the-end of t if
-    necessary))doc"},
-    {"Waveform::SliceOfTimeIndicesWithoutModes", R"doc(Copy of the Waveform between indices i_t_a and i_t_b without mode data.
-=======================================================================
-  Parameters
-  ----------
-    const unsigned int i_t_a
-    unsigned int i_t_b = 0
-
-  Returns
-  -------
-    Waveform
-
-  Description
-  -----------
-    i_t_a and i_t_b should hold the indices pointing to the first time in t
-    after t_a, and the first time in t after t_b (or one-past-the-end of t if
-    necessary))doc"},
-    {"Waveform::SliceOfTimes", R"doc(Copy the Waveform between t_a and t_b.
-======================================
-  Parameters
-  ----------
-    const double t_a = -1e300
-    const double t_b = 1e300
-
-  Returns
-  -------
-    Waveform)doc"},
-    {"Waveform::SliceOfTimesWithEll2", R"doc(Copy of the Waveform between t_a and t_b, only ell=2 modes.
-===========================================================
-  Parameters
-  ----------
-    const double t_a = -1e300
-    const double t_b = 1e300
-
-  Returns
-  -------
-    Waveform)doc"},
-    {"Waveform::SliceOfTimesWithoutModes", R"doc(Copy of the Waveform between t_a and t_b without mode data.
-===========================================================
-  Parameters
-  ----------
-    const double t_a = -1e300
-    const double t_b = 1e300
-
-  Returns
-  -------
-    Waveform)doc"},
-    {"Waveform::SpinWeight", R"doc(Parameters
-----------
-  (none)
+The copy contains the times and frame data at the time steps with indices from
+``i_t_a`` up to, but not including, ``i_t_b``, but no modes.  Only frame data
+with one rotor for each time step are copied; a constant frame is dropped.
 
-Returns
--------
-  int)doc"},
-    {"Waveform::T", R"doc(Parameters
+Parameters
 ----------
-  const unsigned int TimeIndex
+i_t_a : int
+    Index of the first time step to include.
+i_t_b : int, default 0
+    Index one past the last time step to include.  If it is 0, only the time
+    step ``i_t_a`` is included.
 
 Returns
 -------
-  double
-
+Waveform
+    The slice of the waveform.)doc"},
+    {"Waveform::SliceOfTimes", R"doc(Return a copy of the waveform restricted to an interval of time.
 
+The copy begins at the last time step at or before ``t_a`` (or at the first
+time step, if there is none) and ends at the last time step at or before
+``t_b``.  With the default arguments, the whole waveform is copied.
 
-
 Parameters
 ----------
-  (none)
+t_a : float, default -1e300
+    Beginning of the interval.
+t_b : float, default 1e300
+    End of the interval.
 
 Returns
 -------
-  const vector<double>&)doc"},
-    {"Waveform::TransformToAngularVelocityFrame", R"doc(Transform Waveform to frame aligned with angular-velocity vector.
-=================================================================
-  Parameters
-  ----------
-    const vector<int>& Lmodes = vector<int>(0)
-      L modes to evaluate
-
-  Returns
-  -------
-    Waveform&
-
-  Description
-  -----------
-    This function combines the steps required to obtain the Waveform in the
-    frame aligned with the angular-velocity vector. Note that this frame is not
-    the corotating frame; this frame has its z axis aligned with the
-    angular-velocity vector.
-
-    If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
-    or [2,3,4], for example, restricts the range of the sum.)doc"},
-    {"Waveform::TransformToCoprecessingFrame", R"doc(Transform Waveform to co-precessing frame.
-==========================================
-  Parameters
-  ----------
-    const vector<int>& Lmodes = vector<int>(0)
-      L modes to evaluate
-
-  Returns
-  -------
-    Waveform&
-
-  Description
-  -----------
-    This function combines the steps required to obtain the Waveform in a frame
-    with its z axis aligned with the vector V_h defined by O'Shaughnessy et al.
-    [2011], and its alignment about the z axis satisfying the minimal-rotation
-    condition, as given by Boyle, Owen, Pfeiffer [2011].
-
-    If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
-    or [2,3,4], for example, restricts the range of the sum.)doc"},
-    {"Waveform::TransformToCorotatingFrame", R"doc(Transform Waveform to corotating frame.
-=======================================
-  Parameters
-  ----------
-    const vector<int>& Lmodes = vector<int>(0)
-      L modes to evaluate
-
-  Returns
-  -------
-    Waveform&
-
-  Description
-  -----------
-    This function combines the steps required to obtain the Waveform in the
-    corotating frame. Note that this leaves an integration constant unset. To
-    set it, the modes should be rotated so that they are aligned with the frame
-    using AlignModesToFrame.
-
-    If Lmodes is empty (default), all L modes are used. Setting Lmodes to [2]
-    or [2,3,4], for example, restricts the range of the sum.)doc"},
-    {"Waveform::TransformToInertialFrame", R"doc(Transform Waveform to an inertial frame.
-========================================
-  Parameters
-  ----------
-    (none)
-
-  Returns
-  -------
-    Waveform&
-
-  Description
-  -----------
-    This function uses the stored frame information to transform from whatever
-    rotating frame the waveform is currently in, to a stationary, inertial
-    frame. This is the usual frame of scri^+, and is the frame in which GW
-    observations should be made.)doc"},
-    {"Waveform::Translate", R"doc(Translate the waveform data by some series of spatial translations.
-===================================================================
-  Parameters
-  ----------
-    const vector<vector<double>>& deltax
+Waveform
+    The slice of the waveform.)doc"},
+    {"Waveform::SliceOfTimesWithEll2", R"doc(Return a copy of the waveform restricted to a time span and :math:`\ell = 2`.
 
-  Returns
-  -------
-    Waveform)doc"},
-    {"Waveform::Waveform", R"doc(Default constructor for an empty object.
-========================================
-  Parameters
-  ----------
-    (none)
+The copy contains only the five modes with :math:`\ell = 2`, ordered by
+:math:`m`.  It begins at the last time step at or before ``t_a`` (or at the
+first time step, if there is none) and ends at the last time step at or before
+``t_b``.
 
-  Returns
-  -------
-    Waveform
-
-
-Copy constructor.
-=================
-  Parameters
-  ----------
-    const Waveform& W
-
-  Returns
-  -------
-    Waveform
-
-  Description
-  -----------
-    Simply copies all fields in the input object to the constructed object,
-    including history
-
-
-Constructor from data file.
-===========================
-  Parameters
-  ----------
-    const string& FileName
-      Relative path to data file
-    const string& DataFormat
-      Either 'ReIm' or 'MagArg'
-
-  Returns
-  -------
-    Waveform
-
-  Description
-  -----------
-    NOTE: This function assumes that the data are stored as (ell,m) modes,
-    starting with (2,-2), incrementing m, then incrementing ell and starting
-    again at m=-ell. If this is not how the modes are stored, the 'lm' data of
-    this object needs to be reset or bad things will happen when trying to find
-    the angular-momentum vector or rotate the waveform.
-
-
-Explicit constructor from data.
-===============================
-  Parameters
-  ----------
-    const vector<double>& T
-    const vector<vector<int>>& LM
-    const vector<vector<complex<double>>>& Data
-
-  Returns
-  -------
-    Waveform
-
-  Description
-  -----------
-    Arguments are T, LM, Data, which consist of the explicit data.)doc"},
-    {"Waveform::XParityAntisymmetricPart", R"doc(Parameters
-----------
-  (none)
-
-Returns
--------
-  Waveform)doc"},
-    {"Waveform::XParityInvolution", R"doc(Parameters
+Parameters
 ----------
-  (none)
+t_a : float, default -1e300
+    Beginning of the interval.
+t_b : float, default 1e300
+    End of the interval.
 
 Returns
 -------
-  Waveform)doc"},
-    {"Waveform::XParitySymmetricPart", R"doc(Parameters
-----------
-  (none)
+Waveform
+    The slice of the waveform.)doc"},
+    {"Waveform::SliceOfTimesWithoutModes", R"doc(Return a copy of the waveform restricted to a time interval, without modes.
 
-Returns
--------
-  Waveform)doc"},
-    {"Waveform::XParityViolationNormalized", R"doc(Parameters
-----------
-  vector<int> Lmodes = vector<int>(0)
+The copy contains the times and frame data, but no modes.  It begins at the
+last time step at or before ``t_a`` (or at the first time step, if there is
+none) and ends at the last time step at or before ``t_b``.  Only frame data
+with one rotor for each time step are copied; a constant frame is dropped.
 
-Returns
--------
-  vector<double>)doc"},
-    {"Waveform::XParityViolationSquared", R"doc(Parameters
+Parameters
 ----------
-  vector<int> Lmodes = vector<int>(0)
+t_a : float, default -1e300
+    Beginning of the interval.
+t_b : float, default 1e300
+    End of the interval.
 
 Returns
 -------
-  vector<double>)doc"},
-    {"Waveform::YParityAntisymmetricPart", R"doc(Parameters
-----------
-  (none)
+Waveform
+    The slice of the waveform.)doc"},
+    {"Waveform::Interpolate", R"doc(Interpolate the waveform to a new set of times.
 
-Returns
--------
-  Waveform)doc"},
-    {"Waveform::YParityInvolution", R"doc(Parameters
-----------
-  (none)
+The real and imaginary parts of each mode are interpolated with cubic splines,
+and frame data with one rotor for each time step are interpolated with
+`Quaternions.Squad`.  This waveform is not changed.
 
-Returns
--------
-  Waveform)doc"},
-    {"Waveform::YParitySymmetricPart", R"doc(Parameters
+Parameters
 ----------
-  (none)
+NewTime : array_like of float
+    New times to which the data are interpolated.
+AllowTimesOutsideCurrentDomain : bool, default False
+    If true, the modes are set to zero at times outside the current time
+    domain, and the frame is held at its value at the nearer end of that
+    domain; if false, such times raise an error.
 
 Returns
 -------
-  Waveform)doc"},
-    {"Waveform::YParityViolationNormalized", R"doc(Parameters
-----------
-  vector<int> Lmodes = vector<int>(0)
+Waveform
+    The interpolated waveform.)doc"},
+    {"Waveform::InterpolateInPlace", R"doc(Interpolate the waveform to a new set of times, in place.
 
-Returns
--------
-  vector<double>)doc"},
-    {"Waveform::YParityViolationSquared", R"doc(Parameters
-----------
-  vector<int> Lmodes = vector<int>(0)
+The real and imaginary parts of each mode are interpolated with cubic splines,
+and frame data with one rotor for each time step are interpolated with
+`Quaternions.Squad`.  Times outside the current time domain raise an error.
 
-Returns
--------
-  vector<double>)doc"},
-    {"Waveform::ZParityAntisymmetricPart", R"doc(Parameters
+Parameters
 ----------
-  (none)
+NewTime : array_like of float
+    New times to which the data are interpolated.
 
 Returns
 -------
-  Waveform)doc"},
-    {"Waveform::ZParityInvolution", R"doc(Parameters
-----------
-  (none)
+Waveform
+    This object, modified in place.)doc"},
+    {"Waveform::DropTimesOutside", R"doc(Remove the data at times outside an interval, in place.
 
-Returns
--------
-  Waveform)doc"},
-    {"Waveform::ZParitySymmetricPart", R"doc(Parameters
-----------
-  (none)
+The time steps that remain are those with ``ta < t <= tb``, except that the
+first time step is always removed, even when ``ta`` precedes it.
 
-Returns
--------
-  Waveform)doc"},
-    {"Waveform::ZParityViolationNormalized", R"doc(Parameters
+Parameters
 ----------
-  vector<int> Lmodes = vector<int>(0)
+ta : float
+    Beginning of the interval.
+tb : float
+    End of the interval.
 
 Returns
 -------
-  vector<double>)doc"},
-    {"Waveform::ZParityViolationSquared", R"doc(Parameters
-----------
-  vector<int> Lmodes = vector<int>(0)
+Waveform
+    This object, modified in place.)doc"},
+    {"Waveform::DropEllModes", R"doc(Remove the modes with the given values of :math:`\ell`, in place.
 
-Returns
--------
-  vector<double>)doc"},
-    {"Waveform::operator()", R"doc(Parameters
+Parameters
 ----------
-  const unsigned int Mode
+EllModesToDrop : array_like of int
+    Values of :math:`\ell` whose modes are removed.
 
 Returns
 -------
-  const complex<double> *
+Waveform
+    This object, modified in place.)doc"},
+    {"Waveform::KeepOnlyEllModes", R"doc(Remove all modes except those with the given values of :math:`\ell`, in place.
 
 Parameters
 ----------
-  const unsigned int Mode
-  const unsigned int TimeIndex
+EllModesToKeep : array_like of int
+    Values of :math:`\ell` whose modes are kept.
 
 Returns
 -------
-  complex<double>)doc"},
-    {"Waveform::operator*", R"doc(Parameters
-----------
-  const Waveform& B
+Waveform
+    This object, modified in place.)doc"},
+    {"Waveform::KeepOnlyEll2", R"doc(Remove all modes except those with :math:`\ell = 2`, in place.
 
 Returns
 -------
-  Waveform
-
-
+Waveform
+    This object, modified in place.)doc"},
+    {"Waveform::SetSpinWeight", R"doc(Set the spin weight of the data.
 
+Only the recorded spin weight changes; the data are not altered.
 
 Parameters
-----------
-  const double b
-
-Returns
--------
-  Waveform)doc"},
-    {"Waveform::operator+", R"doc(Parameters
-----------
-  const Waveform& B
-
-Returns
--------
-  Waveform)doc"},
-    {"Waveform::operator-", R"doc(Parameters
-----------
-  const Waveform& B
-
-Returns
--------
-  Waveform)doc"},
-    {"Waveform::operator/", R"doc(Parameters
 ----------
-  const Waveform& B
+NewSpinWeight : int
+    The new spin weight.
 
 Returns
 -------
-  Waveform
+Waveform
+    This object, modified in place.)doc"},
+    {"Waveform::SetBoostWeight", R"doc(Set the boost weight of the data.
 
+Only the recorded boost weight changes; the data are not altered.
 
-
-
 Parameters
 ----------
-  const double b
+NewBoostWeight : int
+    The new boost weight.
 
 Returns
 -------
-  Waveform)doc"},
-    {"Waveform::operator=", R"doc(Assignment operator.
-====================
-  Parameters
-  ----------
-    const Waveform& 
+Waveform
+    This object, modified in place.)doc"},
+    {"Waveform::AppendHistory", R"doc(Append text to the history of the waveform.
 
-  Returns
-  -------
-    Waveform&)doc"},
-    {"Waveform::swap", R"doc(Efficiently swap data between two Waveform objects.
-===================================================
-  Parameters
-  ----------
-    Waveform& b
+The text is appended exactly as given; no newline is added.
 
-  Returns
-  -------
-    void
-
-  Description
-  -----------
-    This function uses the std::vector method 'swap' which simply swaps
-    pointers to data, for efficiency.)doc"},
-    {"Waveform::~Waveform", R"doc(Parameters
+Parameters
 ----------
-  (none)
+Hist : str
+    Text to append.
 
 Returns
 -------
-  ~Waveform)doc"},
-    {"WaveformAtAPointFT", R"doc(class GWFrames::WaveformAtAPointFT
-==================================
-  The WaveformAtAPointFT class is a derived class, constructed from waveforms
-  evaluated at a point, using the given complex detector response (F+ + i*Fx) 
-  or more particularly, its amplitude and phase.
-
-  Member variables
-  ----------------
-    double mDt
-    double mVartheta
-    double mVarphi
-    vector<double> mRealF
-    vector<double> mImagF
-    vector<double> mFreqs
-    bool mNormalized)doc"},
-    {"WaveformAtAPointFT::F", R"doc(Returns the physical frequencies in Hz.
-=======================================
-  Parameters
-  ----------
-    (none)
-
-  Returns
-  -------
-    const vector<double>&
-
-
+Waveform
+    This object, modified in place.)doc"},
+    {"Waveform::SetHistory", R"doc(Replace the history of the waveform.
 
-
-  Parameters
-  ----------
-    const unsigned int f
-
-  Returns
-  -------
-    const double&)doc"},
-    {"WaveformAtAPointFT::Im", R"doc(Parameters
+Parameters
 ----------
-  (none)
+Hist : str
+    The new history.
 
 Returns
 -------
-  const vector<double>&
-
+Waveform
+    This object, modified in place.)doc"},
+    {"Waveform::SetVersionHist", R"doc(Set the version history of the waveform.
 
-
-
 Parameters
 ----------
-  const unsigned int f
+VerHist : list of tuple of str
+    The new version history, as a list of pairs of strings, in the form
+    returned by `Waveform.VersionHist`.
 
 Returns
 -------
-  const double&)doc"},
-    {"WaveformAtAPointFT::InnerProduct", R"doc(Parameters
-----------
-  const WaveformAtAPointFT& B
-  const vector<double>& InversePSD
+Waveform
+    This object, modified in place.)doc"},
+    {"Waveform::SetT", R"doc(Set the times of the waveform.
 
-Returns
--------
-  double)doc"},
-    {"WaveformAtAPointFT::InversePSD", R"doc(Parameters
-----------
-  const string& Detector = 'AdvLIGO_ZeroDet_HighP'
+The mode data and frame data are not changed, so the number of times should
+normally equal `Waveform.NTimes`.  This method is identical to
+`Waveform.SetTime`.
 
-Returns
--------
-  vector<double>)doc"},
-    {"WaveformAtAPointFT::IsNormalized", R"doc(Parameters
+Parameters
 ----------
-  (none)
+a : array_like of float
+    The new times.
 
 Returns
 -------
-  bool)doc"},
-    {"WaveformAtAPointFT::Match", R"doc(Compute the match between two WaveformAtAPointFT.
-=================================================
-  Parameters
-  ----------
-    const WaveformAtAPointFT& B
-    const vector<double>& InversePSD
-
-  Returns
-  -------
-    double
-
-
-Compute the match between two WaveformAtAPointFT.
-=================================================
-  Parameters
-  ----------
-    const WaveformAtAPointFT& B
-    const string& Detector = 'AdvLIGO_ZeroDet_HighP'
+Waveform
+    This object, modified in place.)doc"},
+    {"Waveform::SetTime", R"doc(Set the times of the waveform.
 
-  Returns
-  -------
-    double
-
-
-Compute the match between two WaveformAtAPointFT.
-=================================================
-  Parameters
-  ----------
-    const WaveformAtAPointFT& B
-      WaveformAtAPointFT to compute match with
-    const vector<double>& InversePSD
-      Spectrum used to weight contributions by frequencies to match
-    double& timeOffset
-      Time offset used between the waveforms
-    double& phaseOffset
-      Phase offset used between the waveforms
-    double& match
-      Match between the two waveforms
-
-  Returns
-  -------
-    void
-
-  Description
-  -----------
-    The return from ifft is just the bare FFT sum, so we multiply by df to get
-    the continuum-analog FT. This is correct because the input data (re,im) are
-    the continuum-analog data, rather than just the return from the bare FFT
-    sum. See, e.g., Eq. (A.33) [rather than Eq. (A.35)] of
-    http://etd.caltech.edu/etd/available/etd-01122009-143851/
-
-
-Compute the match between two WaveformAtAPointFT.
-=================================================
-  Parameters
-  ----------
-    const WaveformAtAPointFT& B
-    double& timeOffset
-    double& phaseOffset
-    double& match
-    const string& Detector = 'AdvLIGO_ZeroDet_HighP'
-
-  Returns
-  -------
-    void)doc"},
-    {"WaveformAtAPointFT::NFreq", R"doc(Parameters
-----------
-  (none)
+The mode data and frame data are not changed, so the number of times should
+normally equal `Waveform.NTimes`.  This method is identical to
+`Waveform.SetT`.
 
-Returns
--------
-  unsigned int)doc"},
-    {"WaveformAtAPointFT::Normalize", R"doc(Parameters
+Parameters
 ----------
-  const vector<double>& InversePSD
+a : array_like of float
+    The new times.
 
 Returns
 -------
-  WaveformAtAPointFT&
-
+Waveform
+    This object, modified in place.)doc"},
+    {"Waveform::SetFrame", R"doc(Set the frame data of the waveform.
 
+The mode data are not changed; to rotate them along with the frame, use
+`Waveform.RotateDecompositionBasis` instead.
 
-
 Parameters
-----------
-  const string& Detector = 'AdvLIGO_ZeroDet_HighP'
-
-Returns
--------
-  WaveformAtAPointFT&)doc"},
-    {"WaveformAtAPointFT::Re", R"doc(Parameters
 ----------
-  (none)
+a : array_like of Quaternion
+    Rotors taking the standard basis into the basis with respect to which the
+    modes are decomposed: none, a single rotor for a constant frame, or one
+    rotor for each time step.
 
 Returns
 -------
-  const vector<double>&
-
+Waveform
+    This object, modified in place.)doc"},
+    {"Waveform::SetFrameType", R"doc(Set the frame type of the waveform.
 
+Only the recorded frame type changes; the data are not altered.
 
-
 Parameters
-----------
-  const unsigned int f
-
-Returns
--------
-  const double&)doc"},
-    {"WaveformAtAPointFT::SNR", R"doc(Parameters
 ----------
-  const vector<double>& InversePSD
-    Noise spectrum
+Type : int
+    One of the module constants ``GWFrames.UnknownFrameType``,
+    ``GWFrames.Inertial``, ``GWFrames.Coprecessing``, ``GWFrames.Coorbital``,
+    and ``GWFrames.Corotating``.
 
 Returns
 -------
-  double
-
-
+Waveform
+    This object, modified in place.)doc"},
+    {"Waveform::SetDataType", R"doc(Set the data type of the waveform.
 
+Only the recorded data type changes; the data are not altered.
 
 Parameters
 ----------
-  const string& Detector = 'AdvLIGO_ZeroDet_HighP'
-    Noise spectrum from this detector
+Type : int
+    One of the module constants ``GWFrames.UnknownDataType``, ``GWFrames.h``,
+    ``GWFrames.hdot``, ``GWFrames.Psi4``, ``GWFrames.Psi3``,
+    ``GWFrames.Psi2``, ``GWFrames.Psi1``, and ``GWFrames.Psi0``.
 
 Returns
 -------
-  double)doc"},
-    {"WaveformAtAPointFT::WaveformAtAPointFT", R"doc(Parameters
-----------
-  const Waveform& W
-  const double Dt
-  const double Vartheta
-  const double Varphi
-  const double TotalMass
-  const unsigned int WindowNCycles = 1
-  const double DetectorResponseAmp = 1.0
-  const double DetectorResponsePhase = 0.0
+Waveform
+    This object, modified in place.)doc"},
+    {"Waveform::SetRIsScaledOut", R"doc(Record whether the radial dependence has been scaled out of the data.
 
-Returns
--------
-  WaveformAtAPointFT)doc"},
-    {"WaveformAtAPointFT::ZeroAbove", R"doc(Parameters
-----------
-  const double Frequency
+When it has, the data represent quantities such as :math:`r h` or
+:math:`r \Psi_4`.  Only the recorded flag changes; the data are not altered.
 
-Returns
--------
-  WaveformAtAPointFT&)doc"},
-    {"WaveformUtilities", R"doc(namespace WaveformUtilities
-===========================)doc"},
-    {"WaveformUtilities::Interpolate", R"doc(Parameters
+Parameters
 ----------
-  const vector<double>& X1
-  const vector<double>& Y1
-  const vector<double>& X2
-  vector<double>& Y2
+Scaled : bool
+    True if the radial dependence has been scaled out.
 
 Returns
 -------
-  void
-
+Waveform
+    This object, modified in place.)doc"},
+    {"Waveform::SetMIsScaledOut", R"doc(Record whether the mass dependence has been scaled out of the data.
 
+When it has, the data represent quantities such as :math:`h/M` or
+:math:`M \Psi_4`, and the times represent :math:`t/M`.  Only the recorded flag
+changes; the data are not altered.
 
-
 Parameters
 ----------
-  const vector<double>& X1
-  const vector<double>& Y1
-  const vector<double>& X2
-  vector<double>& Y2
-  const double ExtrapVal
+Scaled : bool
+    True if the mass dependence has been scaled out.
 
 Returns
 -------
-  void
-
+Waveform
+    This object, modified in place.)doc"},
+    {"Waveform::SetLM", R"doc(Set the :math:`(\ell, m)` values of the modes.
 
+The mode data are not changed, so the number of rows should normally equal
+`Waveform.NModes`.
 
-
 Parameters
 ----------
-  const vector<double>& X1
-  const vector<double>& Y1
-  const double& X2
+a : array_like of int, shape (N, 2)
+    The new :math:`(\ell, m)` values, one row for each mode.
 
 Returns
 -------
-  double
+Waveform
+    This object, modified in place.)doc"},
+    {"Waveform::SetData", R"doc(Set the mode data of the waveform, either entirely or at one point.
+
+The times and the :math:`(\ell, m)` data are not changed.  When a single value
+is set, the indices are not checked, so they must lie within the current shape
+of the data.
 
 Parameters
 ----------
-  const vector<double>& X1
-  const vector<double>& Y1
-  const vector<double>& X2
+i_Mode : int, optional
+    Index of the mode to set.  It must be given together with ``i_Time``.
+i_Time : int, optional
+    Index of the time step to set.
+a : array_like of complex or complex
+    If ``i_Mode`` and ``i_Time`` are omitted, the complete mode data, with
+    shape (NModes, NTimes), which replace the current data.  Otherwise, the
+    single value to store for that mode and time step.
 
 Returns
 -------
-  vector<double>
+Waveform
+    This object, modified in place.)doc"},
+    {"Waveform::ResizeData", R"doc(Change the shape of the array of mode data.
 
+If the shape changes, the existing data are discarded and replaced by zeros.
+The times and the :math:`(\ell, m)` data are not changed.
 
-
-
 Parameters
 ----------
-  const vector<double>& X1
-  const vector<double>& Y1
-  const vector<double>& X2
-  const double ExtrapVal
+NModes : int
+    The new number of modes.
+NTimes : int
+    The new number of time steps.
 
 Returns
 -------
-  vector<double>)doc"},
-    {"WaveformUtilities::Interpolator", R"doc(class WaveformUtilities::Interpolator
-=====================================
-  Member variables
-  ----------------
-    int n
-    int mm
-    int jsav
-    int cor
-    int dj
-    const vector<double>& xx
-    const vector<double>& yy)doc"},
-    {"WaveformUtilities::Interpolator::interp", R"doc(Parameters
+Waveform
+    This object, modified in place.)doc"},
+    {"Waveform::swap", R"doc(Exchange the entire contents of this waveform with those of another.
+
+All of the data, including the histories, are exchanged without being copied.
+
+Parameters
 ----------
-  double x
+b : Waveform
+    The other waveform.)doc"},
+    {"Waveform::NTimes", R"doc(Return the number of time steps.
 
 Returns
 -------
-  double)doc"},
-    {"WaveformUtilities::Interpolator::rawinterp", R"doc(Parameters
-----------
-  int jlo
-  double x
+int
+    The number of time steps.)doc"},
+    {"Waveform::NModes", R"doc(Return the number of modes.
 
 Returns
 -------
-  double)doc"},
-    {"WaveformUtilities::InverseNoiseCurve", R"doc(Parameters
-----------
-  const vector<double>& F
-  const string& Detector = 'AdvLIGO_ZeroDet_HighP'
-  const double NoiseFloor = 0.0
+int
+    The number of modes.)doc"},
+    {"Waveform::SpinWeight", R"doc(Return the spin weight of the data.
 
 Returns
 -------
-  vector<double>)doc"},
-    {"WaveformUtilities::NoiseCurve", R"doc(Parameters
-----------
-  const vector<double>& F
-  const string& Detector = 'AdvLIGO_ZeroDet_HighP'
-  const bool Invert = false
-  const double NoiseFloor = 0.0
+int
+    The spin weight.)doc"},
+    {"Waveform::BoostWeight", R"doc(Return the boost weight of the data.
 
 Returns
 -------
-  vector<double>
+int
+    The boost weight.)doc"},
+    {"Waveform::HistoryStr", R"doc(Return the history of the waveform.
 
-Description
------------
-  These functions return various noise curves as described e.g., in
-  LIGO-T0900288-v3, and fit by Collin Capano. Noise curves implemented thus
-  far are: IniLIGO_Approx  The Initial LIGO design goal AdvLIGO_ZeroDet_HighP
-   LIGO-T0900288-v3 AdvLIGO_ZeroDet_LowP  LIGO-T0900288-v3
-  AdvLIGO_NSNSOptimal  Collin Capano's fit for the NS-NS optimized noise curve)doc"},
-    {"WaveformUtilities::PolynomialInterpolator", R"doc(class WaveformUtilities::PolynomialInterpolator
-===============================================
-  Member variables
-  ----------------
-    double dy)doc"},
-    {"WaveformUtilities::PolynomialInterpolator::PolynomialInterpolator", R"doc(Parameters
-----------
-  const vector<double>& xv
-  const vector<double>& yv
-  int m
+The history records the operations applied to the waveform since it was
+created.
 
 Returns
 -------
-  PolynomialInterpolator)doc"},
-    {"WaveformUtilities::SplineCumulativeIntegral", R"doc(Parameters
-----------
-  const vector<double>& X1
-  const vector<double>& Y1
+str
+    The history.)doc"},
+    {"Waveform::VersionHist", R"doc(Return the version history of the waveform.
 
 Returns
 -------
-  double)doc"},
-    {"WaveformUtilities::SplineIntegral", R"doc(Parameters
-----------
-  const vector<double>& X1
-  const vector<double>& Y1
+list of tuple of str
+    The version history, as a list of pairs of strings.)doc"},
+    {"Waveform::FrameType", R"doc(Return the frame type of the waveform.
 
 Returns
 -------
-  vector<double>
-
+int
+    One of the module constants ``GWFrames.UnknownFrameType``,
+    ``GWFrames.Inertial``, ``GWFrames.Coprecessing``, ``GWFrames.Coorbital``,
+    and ``GWFrames.Corotating``.)doc"},
+    {"Waveform::DataType", R"doc(Return the data type of the waveform.
 
+Returns
+-------
+int
+    One of the module constants ``GWFrames.UnknownDataType``, ``GWFrames.h``,
+    ``GWFrames.hdot``, ``GWFrames.Psi4``, ``GWFrames.Psi3``,
+    ``GWFrames.Psi2``, ``GWFrames.Psi1``, and ``GWFrames.Psi0``.)doc"},
+    {"Waveform::FrameTypeString", R"doc(Return the name of the frame type of the waveform.
 
+Returns
+-------
+str
+    The name of the frame type, such as ``"Inertial"`` or ``"Corotating"``.)doc"},
+    {"Waveform::DataTypeString", R"doc(Return the name of the data type of the waveform.
 
-Parameters
-----------
-  const vector<double>& X1
-  const vector<double>& Y1
-  const vector<double>& X2
+Returns
+-------
+str
+    The name of the data type, such as ``"h"`` or ``"Psi4"``.)doc"},
+    {"Waveform::DataTypeLaTeXString", R"doc(Return a LaTeX expression for the data type of the waveform.
 
 Returns
 -------
-  vector<double>)doc"},
-    {"WaveformUtilities::SplineIntegrator", R"doc(class WaveformUtilities::SplineIntegrator
-=========================================
-  Member variables
-  ----------------
-    vector<double> IntegrationConstants
-    vector<double> IntegrationCoefficients1
-    vector<double> IntegrationCoefficients2
-    vector<double> IntegrationCoefficients3
-    vector<double> IntegrationCoefficients4
+str
+    The LaTeX expression, such as ``"\dot{h}"`` or ``"\Psi_4"``.)doc"},
+    {"Waveform::DescriptorString", R"doc(Return a short description of the data, suitable for a file name.
 
-  Non-public member functions
-  ---------------------------
-    void SetUpIntegrationCoefficients
-    void SetUpIntegrationConstants)doc"},
-    {"WaveformUtilities::SplineIntegrator::SplineIntegrator", R"doc(Parameters
-----------
-  const vector<double>& xv
-  const vector<double>& yv
-  double yp1 = 1.e99
-  double ypn = 1.e99
+The description combines the name of the data type with the factors of radius
+and mass that have been scaled out of the data, as recorded by
+`Waveform.RIsScaledOut` and `Waveform.MIsScaledOut`; examples are
+``"rhOverM"``, ``"rMPsi4"``, and ``"rhdot"``.
 
 Returns
 -------
-  SplineIntegrator)doc"},
-    {"WaveformUtilities::SplineInterpolator", R"doc(class WaveformUtilities::SplineInterpolator
-===========================================
-  Member variables
-  ----------------
-    vector<double> y2)doc"},
-    {"WaveformUtilities::SplineInterpolator::SplineInterpolator", R"doc(Parameters
-----------
-  const vector<double>& xv
-  const vector<double>& yv
-  double yp1 = 1.e99
-  double ypn = 1.e99
+str
+    The description.)doc"},
+    {"Waveform::RIsScaledOut", R"doc(Return whether the radial dependence has been scaled out of the data.
 
 Returns
 -------
-  SplineInterpolator)doc"},
-    {"WaveformUtilities::TimeToFrequency", R"doc(This function creates a frequency vector in (0 -> positives -> negatives -> 0) order.
-=====================================================================================
-  Parameters
-  ----------
-    const vector<double>& Time
+bool
+    True if the data represent quantities such as :math:`r h` or
+    :math:`r \Psi_4`.)doc"},
+    {"Waveform::MIsScaledOut", R"doc(Return whether the mass dependence has been scaled out of the data.
 
-  Returns
-  -------
-    vector<double>)doc"},
-    {"WaveformUtilities::TimeToPositiveFrequencies", R"doc(This function returns the positive half of the frequencies, so returned size is 1/2 input size + 1.
-===================================================================================================
-  Parameters
-  ----------
-    const vector<double>& Time
-
-  Returns
-  -------
-    vector<double>)doc"},
-    {"WaveformUtilities::WrapVecDoub", R"doc(class WaveformUtilities::WrapVecDoub
-====================================
-  This helper class is useful for untangling NR's fft routines.
+Returns
+-------
+bool
+    True if the data represent quantities such as :math:`h/M` or
+    :math:`M \Psi_4`, and the times represent :math:`t/M`.)doc"},
+    {"Waveform::T", R"doc(Return the times of the waveform, or the time at one time step.
 
-  Member variables
-  ----------------
-    vector<double> vvec
-    vector<double>& v
-    int n
-    int mask)doc"},
-    {"WaveformUtilities::WrapVecDoub::WrapVecDoub", R"doc(Parameters
+Parameters
 ----------
-  const int nn
+TimeIndex : int, optional
+    Index of the time step.  If omitted, all of the times are returned.
 
 Returns
 -------
-  WrapVecDoub
-
-
+float or numpy.ndarray of float
+    The time at ``TimeIndex``, or the array of all times.)doc"},
+    {"Waveform::Frame", R"doc(Return the frame data of the waveform, or the frame at one time step.
 
+The frame data consist of no rotors, of a single rotor for a constant frame, or
+of one rotor for each time step.  When ``TimeIndex`` is given for a constant
+frame, that single rotor is returned; there must be at least one rotor.
 
 Parameters
 ----------
-  vector<double>& vec
+TimeIndex : int, optional
+    Index of the time step.  If omitted, all of the frame data are returned.
 
 Returns
 -------
-  WrapVecDoub)doc"},
-    {"WaveformUtilities::WrapVecDoub::imag", R"doc(Parameters
+Quaternion or numpy.ndarray of Quaternion
+    The rotor at ``TimeIndex``, or the array of all frame data.)doc"},
+    {"Waveform::LM", R"doc(Return the :math:`(\ell, m)` values of the modes, or of one mode.
+
+Parameters
 ----------
-  int i
+Mode : int, optional
+    Index of the mode.  If omitted, the values for all modes are returned.
 
 Returns
 -------
-  double&)doc"},
-    {"WaveformUtilities::WrapVecDoub::operator[]", R"doc(Parameters
+numpy.ndarray of int, shape (2,) or (N, 2)
+    The values :math:`(\ell, m)` of the mode ``Mode``, or one row of such
+    values for each mode.)doc"},
+    {"Waveform::Re", R"doc(Return the real parts of the mode data.
+
+Parameters
 ----------
-  int i
+Mode : int, optional
+    Index of the mode.  If omitted, the data for all modes are returned.
+TimeIndex : int, optional
+    Index of the time step.  If omitted, the data at all times are returned.
+    It may be given only together with ``Mode``.
 
 Returns
 -------
-  complex<double>&)doc"},
-    {"WaveformUtilities::WrapVecDoub::real", R"doc(Parameters
+float or numpy.ndarray of float
+    The real part of the data of one mode at one time step; or, if
+    ``TimeIndex`` is omitted, the real parts for that mode at every time; or,
+    if both are omitted, an array of shape (NModes, NTimes).)doc"},
+    {"Waveform::Im", R"doc(Return the imaginary parts of the mode data.
+
+Parameters
 ----------
-  int i
+Mode : int, optional
+    Index of the mode.  If omitted, the data for all modes are returned.
+TimeIndex : int, optional
+    Index of the time step.  If omitted, the data at all times are returned.
+    It may be given only together with ``Mode``.
 
 Returns
 -------
-  double&)doc"},
-    {"WaveformUtilities::WrapVecDoub::validate", R"doc(Parameters
+float or numpy.ndarray of float
+    The imaginary part of the data of one mode at one time step; or, if
+    ``TimeIndex`` is omitted, the imaginary parts for that mode at every time;
+    or, if both are omitted, an array of shape (NModes, NTimes).)doc"},
+    {"Waveform::Abs", R"doc(Return the absolute values of the mode data.
+
+Parameters
 ----------
-  (none)
+Mode : int, optional
+    Index of the mode.  If omitted, the data for all modes are returned.
+TimeIndex : int, optional
+    Index of the time step.  If omitted, the data at all times are returned.
+    It may be given only together with ``Mode``.
 
 Returns
 -------
-  void)doc"},
-    {"WaveformUtilities::convlv", R"doc(Parameters
+float or numpy.ndarray of float
+    The absolute value of the data of one mode at one time step; or, if
+    ``TimeIndex`` is omitted, the absolute values for that mode at every
+    time; or, if both are omitted, an array of shape (NModes, NTimes).)doc"},
+    {"Waveform::Arg", R"doc(Return the arguments (phases) of the mode data.
+
+The arguments are not unwrapped; they lie between :math:`-\pi` and
+:math:`\pi`.  For a continuous phase, use `Waveform.ArgUnwrapped`.
+
+Parameters
 ----------
-  const vector<double>& data
-  const vector<double>& respns
-  const int isign
+Mode : int, optional
+    Index of the mode.  If omitted, the data for all modes are returned.
+TimeIndex : int, optional
+    Index of the time step.  If omitted, the data at all times are returned.
+    It may be given only together with ``Mode``.
 
 Returns
 -------
-  vector<double>)doc"},
-    {"WaveformUtilities::dft", R"doc(Parameters
+float or numpy.ndarray of float
+    The argument of the data of one mode at one time step; or, if
+    ``TimeIndex`` is omitted, the arguments for that mode at every time; or,
+    if both are omitted, an array of shape (NModes, NTimes).)doc"},
+    {"Waveform::ArgUnwrapped", R"doc(Return the unwrapped arguments (phases) of the mode data.
+
+Multiples of :math:`2\pi` are added to the arguments of each mode to remove
+the jumps between :math:`-\pi` and :math:`\pi`, so that the phase is
+continuous in time.
+
+Parameters
 ----------
-  vector<double>& data
+Mode : int, optional
+    Index of the mode.  If omitted, the data for all modes are returned.
 
 Returns
 -------
-  void
+numpy.ndarray of float
+    The unwrapped arguments for the mode ``Mode`` at every time, or, if
+    ``Mode`` is omitted, an array of shape (NModes, NTimes).)doc"},
+    {"Waveform::Data", R"doc(Return the complex mode data.
 
-Description
------------
-  The following call the Numerical Recipes fft routines (from fourier.h) Note
-  that the returned quantities represent the bare fft sum, with no
-  normalization constants)doc"},
-    {"WaveformUtilities::idft", R"doc(Parameters
+Parameters
 ----------
-  vector<double>& data
+Mode : int, optional
+    Index of the mode.  If omitted, the data for all modes are returned.
+TimeIndex : int, optional
+    Index of the time step.  If omitted, the data at all times are returned.
+    It may be given only together with ``Mode``.
 
 Returns
 -------
-  void)doc"},
-    {"WaveformUtilities::realdft", R"doc(Parameters
-----------
-  vector<double>& data
+complex or numpy.ndarray of complex
+    The data of one mode at one time step; or, if ``TimeIndex`` is omitted,
+    the data for that mode at every time; or, if both are omitted, an array of
+    shape (NModes, NTimes).)doc"},
+    {"Waveform::EllMax", R"doc(Return the largest value of :math:`\ell` present in the data.
 
 Returns
 -------
-  void)doc"},
-    {"WignerCoefficientFunctor", R"doc(class GWFrames::WignerCoefficientFunctor
-========================================
-  Storage for pre-calculated values of coefficients used in calculating Wigner
-  D matrices.
+int
+    The largest value of :math:`\ell`.)doc"},
+    {"Waveform::FindModeIndex", R"doc(Return the index of the mode with the given :math:`(\ell, m)` values.
 
-  The object is a functor for certain coefficients needed when computing the
-  Wigner D matrices. E.g., WignerCoefficientFunctor WignerCoeff;
-const double
-  Coeff_4_3_m2 = WignerCoeff(4,3,-2);
+If no such mode is present, an `IndexError` is raised.
 
-  Note that values up to WignerCoeff(ellMax_GWFrames, ...) are calculated,
-  where ellMax_GWFrames is set in Utilities.hpp. Requests for greater values
-  are answered with an exception.)doc"},
-    {"WignerD", R"doc(class GWFrames::WignerD
-=======================
-  Calculate values of Wigner's D matrices.
-
-  This object is a functor for calculating the values of Wigner's D matrices
-  for many values of (ell,m',m), given some rotation. E.g., WignerD D(R);
-const
-  double D_5_2_m4 = D(5,2,-4);
-const double D_5_2_m3 = D(5,2,-3);
-
-  The idea is that the rotation can be set to some rotor R, appropriate for
-  some instant in time (possibly using the SetRotation member function), which
-  caches certain values that need to be re-computed for any R. Work at that
-  instant of time will usually require computing many values, making this an
-  efficient method of doing so.)doc"},
-    {"abs", R"doc(Parameters
+Parameters
 ----------
-  const Quaternion& Q
+L : int
+    The value of :math:`\ell`.
+M : int
+    The value of :math:`m`.
 
 Returns
 -------
-  double
-
+int
+    The index of the mode.)doc"},
+    {"Waveform::FindModeIndexWithoutError", R"doc(Return the index of the mode with given :math:`(\ell, m)`, without raising.
 
+Unlike `Waveform.FindModeIndex`, this method raises no error when the mode is
+missing; instead, it returns ``NModes() + 1``, which is not a valid index.
 
-
 Parameters
 ----------
-  const vector<Quaternion>& Q
+L : int
+    The value of :math:`\ell`.
+M : int
+    The value of :math:`m`.
 
 Returns
 -------
-  vector<double>)doc"},
-    {"angle", R"doc(Parameters
+int
+    The index of the mode, or ``NModes() + 1`` if it is not present.)doc"},
+    {"Waveform::DataDot", R"doc(Return the time derivative of the data of one mode.
+
+The derivative is computed with a fourth-order finite-difference formula for
+nonuniformly spaced times.  Only the mode data are differentiated; the time
+dependence of a rotating frame is not taken into account.
+
+Parameters
 ----------
-  const Quaternion& Q
+Mode : int
+    Index of the mode.
 
 Returns
 -------
-  double
+numpy.ndarray of complex
+    The derivative at each time step.)doc"},
+    {"Waveform::Differentiate", R"doc(Differentiate the waveform with respect to time, in place.
 
+Each mode is differentiated as in `Waveform.DataDot`.  The waveform must be in
+the inertial frame; for any other frame type, a `NotImplementedError` is
+raised.  The boost weight is reduced by one, and the data type changes from
+``h`` to ``hdot``, or from ``hdot`` to ``Psi4``; any other data type becomes
+``UnknownDataType``.
 
+Returns
+-------
+Waveform
+    This object, modified in place.)doc"},
+    {"Waveform::Norm", R"doc(Return the norm of the waveform at each time.
 
+The norm is the sum over all modes of the squared magnitudes of the data,
+:math:`\sum_{\ell,m} \lvert f^{\ell,m} \rvert^2`; it is called a norm in
+analogy with ``std::norm`` for complex numbers in C++, which is the square of
+the absolute value.  Optionally, the square root is taken, giving the usual
+:math:`L^2` norm of the waveform.
 
 Parameters
 ----------
-  const vector<Quaternion>& Q
+TakeSquareRoot : bool, default False
+    If true, the square root is taken at each time.
 
 Returns
 -------
-  vector<double>)doc"},
-    {"commutator", R"doc(Parameters
-----------
-  const Quaternion& Q
-  const Quaternion& P
+numpy.ndarray of float
+    The norm at each time step.)doc"},
+    {"Waveform::MaxNormIndex", R"doc(Return the index of the time step at which the norm is largest.
 
-Returns
--------
-  Quaternion)doc"},
-    {"complexi", R"doc(Parameters
+The search for the maximum of `Waveform.Norm` begins at the time step with
+index ``NTimes() // SkipFraction``, so that junk radiation near the beginning
+of the data is skipped.  With ``SkipFraction = NTimes() + 1``, all of the data
+are searched.
+
+Parameters
 ----------
-  0. 0
-  1. 0
+SkipFraction : int, default 4
+    Inverse of the fraction of the data to skip before searching.
 
 Returns
 -------
-  const complex<double>)doc"},
-    {"conjugate", R"doc(Parameters
+int
+    The index of the time step with the largest norm.)doc"},
+    {"Waveform::MaxNormTime", R"doc(Return the time at which the norm is largest.
+
+This is the time at the index returned by `Waveform.MaxNormIndex`, whose
+documentation describes ``SkipFraction``.
+
+Parameters
 ----------
-  const Quaternion& Q
+SkipFraction : int, default 4
+    Inverse of the fraction of the data to skip before searching.
 
 Returns
 -------
-  Quaternion
+float
+    The time with the largest norm.)doc"},
+    {"Waveform::NormalizedAntisymmetry", R"doc(Return the normalized antisymmetry of the waveform at each time.
 
+This is the quantity :math:`a` defined by Boyle et al. (2014): the difference
+between the field at a point and the complex conjugate of the field at the
+antipodal point, squared and integrated over the sphere, normalized by the
+`Waveform.Norm` of the waveform (its total power at each instant), and with the
+square root taken.  In terms of the modes,
 
+.. math::
 
+   a = \sqrt{\frac{\sum_{\ell,m} \lvert f^{\ell,m} - (-1)^{\ell+m}
+   \bar{f}^{\ell,-m} \rvert^2}{4 \sum_{\ell,m} \lvert f^{\ell,m} \rvert^2}}.
 
 Parameters
 ----------
-  const vector<Quaternion>& Q
+LModesForAsymmetry : array_like of int, optional
+    Values of :math:`\ell` to include in the numerator.  If empty or omitted,
+    all :math:`\ell` values are used.  All modes are always used in the
+    denominator.
 
 Returns
 -------
-  vector<Quaternion>)doc"},
-    {"cross", R"doc(Parameters
+numpy.ndarray of float
+    The normalized antisymmetry at each time step.)doc"},
+    {"Waveform::DipoleMoment", R"doc(Return the dipole moment of the magnitude of the waveform at each time.
+
+The dipole moment is
+:math:`\vec{d} = \int \hat{n} \lvert f \rvert^2 \, d\Omega`.  Up to a
+geometric factor, the dipole moment of :math:`\dot{h}` is the rate at which
+momentum is emitted in gravitational waves.
+
+Parameters
 ----------
-  const Quaternion& Q
-  const Quaternion& P
+ellMax : int, default 0
+    Largest value of :math:`\ell` to include.  If it is 0, all modes up to
+    `Waveform.EllMax` are used.
 
 Returns
 -------
-  Quaternion)doc"},
-    {"dot", R"doc(Parameters
-----------
-  const Quaternion& Q
-  const Quaternion& P
+numpy.ndarray of float, shape (N, 3)
+    The dipole moment, one row for each time step.)doc"},
+    {"Waveform::MinimalParityViolation", R"doc(Return the z-parity violation at each time, minimized over orientations.
+
+At each time step, the decomposition basis is rotated so as to minimize the
+violation of invariance under z parity (reflection across the x-y plane), as
+measured by `Waveform.ZParityViolationNormalized`, and the minimum value is
+returned.  The minimization is started from three different orientations, and
+the smallest result is used.  Nonprecessing systems in a suitable frame should
+have zero violation; precessing systems in any frame, and nonprecessing systems
+in the wrong frame, show violations.
+
+This method is slow, and it prints its progress to standard error.
 
 Returns
 -------
-  double)doc"},
-    {"dotproduct", R"doc(Parameters
-----------
-  const double * a
-  const double * b
+numpy.ndarray of float
+    The minimal normalized violation at each time step.)doc"},
+    {"Waveform::XParityInvolution", R"doc(Return the image of the waveform under x parity.
+
+The x-parity operation reflects the x axis, :math:`x \to -x`, and takes the
+complex conjugate.  In terms of the modes, it maps :math:`f^{\ell,m}` to
+:math:`(-1)^m \bar{f}^{\ell,m}`.  The frame rotors are transformed with
+`Quaternions.XParityConjugateSpinor`.  Every mode up to `Waveform.EllMax` must
+be present.  This waveform is not changed.
 
 Returns
 -------
-  double)doc"},
-    {"ellmax", R"doc(Parameters
-----------
-  const int maxindex
+Waveform
+    The transformed waveform.)doc"},
+    {"Waveform::XParitySymmetricPart", R"doc(Return the part of the waveform that is symmetric under x parity.
+
+This is :math:`(f + P_x f)/2`, where :math:`P_x f` is the image of the waveform
+under x parity, as returned by `Waveform.XParityInvolution`.  The same
+combination is applied to the frame rotors, which therefore are generally not
+unit quaternions.  This waveform is not changed.
 
 Returns
 -------
-  int)doc"},
-    {"exp", R"doc(Parameters
-----------
-  const Quaternion& Q
+Waveform
+    The symmetric part.)doc"},
+    {"Waveform::XParityAntisymmetricPart", R"doc(Return the part of the waveform that is antisymmetric under x parity.
+
+This is :math:`(f - P_x f)/2`, where :math:`P_x f` is the image of the waveform
+under x parity, as returned by `Waveform.XParityInvolution`.  The same
+combination is applied to the frame rotors, which therefore are generally not
+unit quaternions.  This waveform is not changed.
 
 Returns
 -------
-  Quaternion
+Waveform
+    The antisymmetric part.)doc"},
+    {"Waveform::XParityViolationSquared", R"doc(Return the squared violation of x-parity symmetry at each time.
 
+This is the sum over modes of the squared magnitude of the antisymmetric part
+(see `Waveform.XParityAntisymmetricPart`),
 
+.. math::
 
+   \sum_{\ell,m} \frac{1}{4} \lvert f^{\ell,m} - (-1)^m \bar{f}^{\ell,m}
+   \rvert^2.
 
 Parameters
 ----------
-  const vector<Quaternion>& Q
+Lmodes : array_like of int, optional
+    Values of :math:`\ell` to include in the sum.  If empty or omitted, all
+    :math:`\ell` values are used.
 
 Returns
 -------
-  vector<Quaternion>)doc"},
-    {"hunt", R"doc(Find the largest index i with x[i]<=x_i.
-========================================
-  Parameters
-  ----------
-    const vector<double>& x
-    const double x_i
-    unsigned int i = 0
+numpy.ndarray of float
+    The squared violation at each time step.)doc"},
+    {"Waveform::XParityViolationNormalized", R"doc(Return the normalized violation of x-parity symmetry at each time.
 
-  Returns
-  -------
-    unsigned int
+This is the square root of the ratio of `Waveform.XParityViolationSquared` to
+`Waveform.Norm`.  The norm always includes all modes.
 
-  Description
-  -----------
-    Based on the Numerical Recipes routine of the same name)doc"},
-    {"inverse", R"doc(Parameters
+Parameters
 ----------
-  const Quaternion& Q
+Lmodes : array_like of int, optional
+    Values of :math:`\ell` to include in the violation.  If empty or omitted,
+    all :math:`\ell` values are used.
 
 Returns
 -------
-  Quaternion
-
+numpy.ndarray of float
+    The normalized violation at each time step.)doc"},
+    {"Waveform::YParityInvolution", R"doc(Return the image of the waveform under y parity.
 
+The y-parity operation reflects the y axis, :math:`y \to -y`, and takes the
+complex conjugate.  In terms of the modes, it maps :math:`f^{\ell,m}` to
+:math:`\bar{f}^{\ell,m}`.  The frame rotors are transformed with
+`Quaternions.YParityConjugateSpinor`.  Every mode up to `Waveform.EllMax` must
+be present.  This waveform is not changed.
 
+Returns
+-------
+Waveform
+    The transformed waveform.)doc"},
+    {"Waveform::YParitySymmetricPart", R"doc(Return the part of the waveform that is symmetric under y parity.
 
-Parameters
-----------
-  const vector<Quaternion>& Q
+This is :math:`(f + P_y f)/2`, where :math:`P_y f` is the image of the waveform
+under y parity, as returned by `Waveform.YParityInvolution`.  The same
+combination is applied to the frame rotors, which therefore are generally not
+unit quaternions.  This waveform is not changed.
 
 Returns
 -------
-  vector<Quaternion>)doc"},
-    {"log", R"doc(Parameters
-----------
-  const Quaternion& Q
+Waveform
+    The symmetric part.)doc"},
+    {"Waveform::YParityAntisymmetricPart", R"doc(Return the part of the waveform that is antisymmetric under y parity.
+
+This is :math:`(f - P_y f)/2`, where :math:`P_y f` is the image of the waveform
+under y parity, as returned by `Waveform.YParityInvolution`.  The same
+combination is applied to the frame rotors, which therefore are generally not
+unit quaternions.  This waveform is not changed.
 
 Returns
 -------
-  Quaternion
+Waveform
+    The antisymmetric part.)doc"},
+    {"Waveform::YParityViolationSquared", R"doc(Return the squared violation of y-parity symmetry at each time.
 
+This is the sum over modes of the squared magnitude of the antisymmetric part
+(see `Waveform.YParityAntisymmetricPart`),
 
+.. math::
 
+   \sum_{\ell,m} \frac{1}{4} \lvert f^{\ell,m} - \bar{f}^{\ell,m} \rvert^2.
 
 Parameters
 ----------
-  const vector<Quaternion>& Q
+Lmodes : array_like of int, optional
+    Values of :math:`\ell` to include in the sum.  If empty or omitted, all
+    :math:`\ell` values are used.
 
 Returns
 -------
-  vector<Quaternion>)doc"},
-    {"logRotor", R"doc(Parameters
+numpy.ndarray of float
+    The squared violation at each time step.)doc"},
+    {"Waveform::YParityViolationNormalized", R"doc(Return the normalized violation of y-parity symmetry at each time.
+
+This is the square root of the ratio of `Waveform.YParityViolationSquared` to
+`Waveform.Norm`.  The norm always includes all modes.
+
+Parameters
 ----------
-  const Quaternion& Q
+Lmodes : array_like of int, optional
+    Values of :math:`\ell` to include in the violation.  If empty or omitted,
+    all :math:`\ell` values are used.
 
 Returns
 -------
-  Quaternion
-
-
-
+numpy.ndarray of float
+    The normalized violation at each time step.)doc"},
+    {"Waveform::ZParityInvolution", R"doc(Return the image of the waveform under z parity.
 
-Parameters
-----------
-  const vector<Quaternion>& Q
+The z-parity operation reflects the z axis, :math:`z \to -z`, and takes the
+complex conjugate.  In terms of the modes, it maps :math:`f^{\ell,m}` to
+:math:`(-1)^\ell \bar{f}^{\ell,-m}`.  The frame rotors are transformed with
+`Quaternions.ZParityConjugateSpinor`.  Every mode up to `Waveform.EllMax` must
+be present.  This waveform is not changed.
 
 Returns
 -------
-  vector<Quaternion>)doc"},
-    {"myGSLErrorHandler", R"doc(Parameters
-----------
-  const char * reason
-  const char * file
-  int line
-  int gsl_errno
+Waveform
+    The transformed waveform.)doc"},
+    {"Waveform::ZParitySymmetricPart", R"doc(Return the part of the waveform that is symmetric under z parity.
+
+This is :math:`(f + P_z f)/2`, where :math:`P_z f` is the image of the waveform
+under z parity, as returned by `Waveform.ZParityInvolution`.  The same
+combination is applied to the frame rotors, which therefore are generally not
+unit quaternions.  This waveform is not changed.
 
 Returns
 -------
-  void)doc"},
-    {"normalized", R"doc(Parameters
-----------
-  const Quaternion& Q
+Waveform
+    The symmetric part.)doc"},
+    {"Waveform::ZParityAntisymmetricPart", R"doc(Return the part of the waveform that is antisymmetric under z parity.
+
+This is :math:`(f - P_z f)/2`, where :math:`P_z f` is the image of the waveform
+under z parity, as returned by `Waveform.ZParityInvolution`.  The same
+combination is applied to the frame rotors, which therefore are generally not
+unit quaternions.  This waveform is not changed.
 
 Returns
 -------
-  Quaternion
+Waveform
+    The antisymmetric part.)doc"},
+    {"Waveform::ZParityViolationSquared", R"doc(Return the squared violation of z-parity symmetry at each time.
 
+This is the sum over modes of the squared magnitude of the antisymmetric part
+(see `Waveform.ZParityAntisymmetricPart`),
 
+.. math::
 
+   \sum_{\ell,m} \frac{1}{4} \lvert f^{\ell,m} - (-1)^\ell \bar{f}^{\ell,-m}
+   \rvert^2.
 
 Parameters
 ----------
-  const vector<Quaternion>& Q
+Lmodes : array_like of int, optional
+    Values of :math:`\ell` to include in the sum.  If empty or omitted, all
+    :math:`\ell` values are used.
 
 Returns
 -------
-  vector<Quaternion>)doc"},
-    {"normsquared", R"doc(Parameters
+numpy.ndarray of float
+    The squared violation at each time step.)doc"},
+    {"Waveform::ZParityViolationNormalized", R"doc(Return the normalized violation of z-parity symmetry at each time.
+
+This is the square root of the ratio of `Waveform.ZParityViolationSquared` to
+`Waveform.Norm`.  The norm always includes all modes.
+
+Parameters
 ----------
-  const Quaternion& Q
+Lmodes : array_like of int, optional
+    Values of :math:`\ell` to include in the violation.  If empty or omitted,
+    all :math:`\ell` values are used.
 
 Returns
 -------
-  double
-
+numpy.ndarray of float
+    The normalized violation at each time step.)doc"},
+    {"Waveform::ParityInvolution", R"doc(Return the image of the waveform under parity.
 
+The parity operation inverts all three axes, :math:`\vec{x} \to -\vec{x}`, and
+takes the complex conjugate.  In terms of the modes, it maps
+:math:`f^{\ell,m}` to :math:`(-1)^{\ell+m} \bar{f}^{\ell,-m}`.  The frame
+rotors are transformed with `Quaternions.ParityConjugateSpinor`, which leaves
+them unchanged.  Every mode up to `Waveform.EllMax` must be present.  This
+waveform is not changed.  The result is the same as that of
+`Waveform.ConjugateAntipodalEvaluation`.
 
+Returns
+-------
+Waveform
+    The transformed waveform.)doc"},
+    {"Waveform::ParitySymmetricPart", R"doc(Return the part of the waveform that is symmetric under parity.
 
-Parameters
-----------
-  const vector<Quaternion>& Q
+This is :math:`(f + P f)/2`, where :math:`P f` is the image of the waveform
+under parity, as returned by `Waveform.ParityInvolution`.  The same combination
+is applied to the frame rotors, which are therefore unchanged.  This waveform
+is not changed.
 
 Returns
 -------
-  vector<double>)doc"},
-    {"operator*", R"doc(Parameters
-----------
-  const double& a
-  const DataGrid& b
+Waveform
+    The symmetric part.)doc"},
+    {"Waveform::ParityAntisymmetricPart", R"doc(Return the part of the waveform that is antisymmetric under parity.
+
+This is :math:`(f - P f)/2`, where :math:`P f` is the image of the waveform
+under parity, as returned by `Waveform.ParityInvolution`.  The same combination
+is applied to the frame rotors, which are therefore all zero.  This waveform is
+not changed.
 
 Returns
 -------
-  DataGrid
+Waveform
+    The antisymmetric part.)doc"},
+    {"Waveform::ParityViolationSquared", R"doc(Return the squared violation of parity symmetry at each time.
 
+This is the sum over modes of the squared magnitude of the antisymmetric part
+(see `Waveform.ParityAntisymmetricPart`),
 
+.. math::
 
+   \sum_{\ell,m} \frac{1}{4} \lvert f^{\ell,m} - (-1)^{\ell+m}
+   \bar{f}^{\ell,-m} \rvert^2.
 
 Parameters
 ----------
-  const double b
-  const Waveform& A
+Lmodes : array_like of int, optional
+    Values of :math:`\ell` to include in the sum.  If empty or omitted, all
+    :math:`\ell` values are used.
 
 Returns
 -------
-  Waveform
+numpy.ndarray of float
+    The squared violation at each time step.)doc"},
+    {"Waveform::ParityViolationNormalized", R"doc(Return the normalized violation of parity symmetry at each time.
 
+This is the square root of the ratio of `Waveform.ParityViolationSquared` to
+`Waveform.Norm`.  The norm always includes all modes.
+
 Parameters
 ----------
-  const double a
-  const Quaternion& Q
+Lmodes : array_like of int, optional
+    Values of :math:`\ell` to include in the violation.  If empty or omitted,
+    all :math:`\ell` values are used.
 
 Returns
 -------
-  Quaternion
-
+numpy.ndarray of float
+    The normalized violation at each time step.)doc"},
+    {"Waveform::ConjugateAntipodalEvaluation", R"doc(Return the complex conjugate of the waveform at the antipodal point.
 
+The result is the field :math:`\bar{f}(-\hat{n})`.  In terms of the modes, it
+maps :math:`f^{\ell,m}` to :math:`(-1)^{\ell+m} \bar{f}^{\ell,-m}`.  This is
+the same as `Waveform.ParityInvolution`.  This waveform is not changed.
 
+Returns
+-------
+Waveform
+    The transformed waveform.)doc"},
+    {"Waveform::ConjugateAntipodalSymmetricPart", R"doc(Return the conjugate-antipodal symmetric part of the waveform.
 
-Parameters
-----------
-  const double a
-  const vector<Quaternion>& Q
+This is :math:`[f(\hat{n}) + \bar{f}(-\hat{n})]/2`, where
+:math:`\bar{f}(-\hat{n})` is returned by
+`Waveform.ConjugateAntipodalEvaluation`.  This is the same as
+`Waveform.ParitySymmetricPart`.  This waveform is not changed.
 
 Returns
 -------
-  vector<Quaternion>
+Waveform
+    The symmetric part.)doc"},
+    {"Waveform::ConjugateAntipodalAntisymmetricPart", R"doc(Return the conjugate-antipodal antisymmetric part of the waveform.
 
+This is :math:`[f(\hat{n}) - \bar{f}(-\hat{n})]/2`, where
+:math:`\bar{f}(-\hat{n})` is returned by
+`Waveform.ConjugateAntipodalEvaluation`.  This is the same as
+`Waveform.ParityAntisymmetricPart`.  This waveform is not changed.
 
+Returns
+-------
+Waveform
+    The antisymmetric part.)doc"},
+    {"Waveform::RotatePhysicalSystem", R"doc(Rotate the physical content of the waveform, in place.
 
+The physical system is rotated by ``R_phys``, while the basis with respect to
+which the modes are decomposed is left in place.  The modes are transformed
+accordingly, and the frame data are multiplied on the right by
+:math:`\bar{R}_{\mathrm{phys}}`, so that the frame data record the total
+rotation.  The frame type is not changed.
 
 Parameters
 ----------
-  const vector<double>& a
-  const Quaternion& Q
+R_phys : Quaternion or array_like of Quaternion
+    Rotor by which to rotate the system, or one rotor for each time step.
 
 Returns
 -------
-  vector<Quaternion>
+Waveform
+    This object, modified in place.)doc"},
+    {"Waveform::RotateDecompositionBasis", R"doc(Rotate the basis in which the modes are decomposed, in place.
 
+The basis is rotated by ``R_frame``, while the physical system is left in
+place.  The modes are transformed accordingly, and the frame data are
+multiplied on the right by ``R_frame``, so that they record the total rotation
+of the basis.  The frame type is not changed.
 
-
-
 Parameters
 ----------
-  const vector<double>& a
-  const vector<Quaternion>& Q
+R_frame : Quaternion or array_like of Quaternion
+    Rotor by which to rotate the basis, or one rotor for each time step.  If
+    an empty array is given, nothing is done.
 
 Returns
 -------
-  vector<Quaternion>
+Waveform
+    This object, modified in place.)doc"},
+    {"Waveform::LdtVector", R"doc(Return the vector :math:`\langle L \partial_t \rangle` at each time.
 
+This quantity, defined in "Angular velocity of gravitational radiation from
+precessing binaries and the corotating frame"
+(https://arxiv.org/abs/1302.2919), is
 
+.. math::
 
+   \langle L \partial_t \rangle^a = \sum_{\ell,m,m'} \Im \left[
+   \bar{f}^{\ell,m'} \langle \ell,m' | L_a | \ell,m \rangle \dot{f}^{\ell,m}
+   \right].
 
+The vector is given with respect to the (possibly rotating) mode frame
+:math:`(X, Y, Z)`, rather than the inertial frame :math:`(x, y, z)`.
+
 Parameters
 ----------
-  const Quaternion& a
-  const vector<Quaternion>& Q
+Lmodes : array_like of int, optional
+    Values of :math:`\ell` to include in the sum.  If empty or omitted, all
+    :math:`\ell` values are used.
 
 Returns
 -------
-  vector<Quaternion>
+numpy.ndarray of float, shape (N, 3)
+    The vector, one row for each time step.)doc"},
+    {"Waveform::LLMatrix", R"doc(Return the matrix :math:`\langle LL \rangle` at each time.
+
+This quantity, defined in "Angular velocity of gravitational radiation from
+precessing binaries and the corotating frame"
+(https://arxiv.org/abs/1302.2919), is
 
+.. math::
 
+   \langle LL \rangle^{ab} = \sum_{\ell,m,m'} \bar{f}^{\ell,m'}
+   \langle \ell,m' | L_a L_b | \ell,m \rangle f^{\ell,m}.
 
+The matrix is given with respect to the (possibly rotating) mode frame
+:math:`(X, Y, Z)`, rather than the inertial frame :math:`(x, y, z)`.
 
 Parameters
 ----------
-  const vector<Quaternion>& Q
-  const Quaternion& a
+Lmodes : array_like of int, optional
+    Values of :math:`\ell` to include in the sum.  If empty or omitted, all
+    :math:`\ell` values are used.
 
 Returns
 -------
-  vector<Quaternion>
+list of Matrix
+    The 3-by-3 matrix at each time step.)doc"},
+    {"Waveform::LLDominantEigenvector", R"doc(Return the dominant eigenvector of :math:`\langle LL \rangle` at each time.
 
+This is the principal axis of `Waveform.LLMatrix`, as prescribed by
+O'Shaughnessy et al. (2011).  The eigenvectors are normalized, and their signs
+are chosen so that they vary continuously in time, with the first one more
+nearly parallel than antiparallel to ``RoughInitialEllDirection``.  For a
+post-Newtonian system, the orbital angular-velocity direction is a good guess
+for that direction; the default, the z axis, is usually correct.
 
+The vectors are given with respect to the (possibly rotating) mode frame
+:math:`(X, Y, Z)`, rather than the inertial frame :math:`(x, y, z)`.
 
-
 Parameters
 ----------
-  const vector<Quaternion>& Q
-  const double a
+Lmodes : array_like of int, optional
+    Values of :math:`\ell` to include in the sum.  If empty or omitted, all
+    :math:`\ell` values are used.
+RoughInitialEllDirection : Quaternion, default Quaternions.zHat
+    Rough guess at the direction of the eigenvector at the first time step.
 
 Returns
 -------
-  vector<Quaternion>
-
+numpy.ndarray of float, shape (N, 3)
+    The unit eigenvector, one row for each time step.)doc"},
+    {"Waveform::AngularVelocityVector", R"doc(Return the angular velocity of the waveform at each time.
 
+This is the angular velocity defined in Sec. II of "Angular velocity of
+gravitational radiation from precessing binaries and the corotating frame"
+(https://arxiv.org/abs/1302.2919), found by solving
+:math:`\langle LL \rangle \vec{\omega} = -\langle L \partial_t \rangle` at
+each time step (see `Waveform.LLMatrix` and `Waveform.LdtVector`).  The vector
+is given with respect to the (possibly rotating) mode frame :math:`(X, Y, Z)`,
+rather than the inertial frame :math:`(x, y, z)`; for the latter, use
+`Waveform.AngularVelocityVectorRelativeToInertial`.
 
-
 Parameters
 ----------
-  const Quaternion& Q
-  const vector<double>& a
+Lmodes : array_like of int, optional
+    Values of :math:`\ell` to include in the sums.  If empty or omitted, all
+    :math:`\ell` values are used.
 
 Returns
 -------
-  vector<Quaternion>
-
+numpy.ndarray of float, shape (N, 3)
+    The angular velocity, one row for each time step.)doc"},
+    {"Waveform::AngularVelocityVectorRelativeToInertial", R"doc(Return the angular velocity of the waveform relative to the inertial frame.
 
+This is the angular velocity defined in Sec. II of "Angular velocity of
+gravitational radiation from precessing binaries and the corotating frame"
+(https://arxiv.org/abs/1302.2919).  Unlike most methods of `Waveform`, this one
+gives the vector with respect to the inertial frame :math:`(x, y, z)`, rather
+than the (possibly rotating) mode frame :math:`(X, Y, Z)`: the result of
+`Waveform.AngularVelocityVector` is rotated by the frame, and the angular
+velocity of a time-dependent frame is added.
 
-
 Parameters
 ----------
-  const vector<Quaternion>& Q
-  const vector<double>& a
+Lmodes : array_like of int, optional
+    Values of :math:`\ell` to include in the sums.  If empty or omitted, all
+    :math:`\ell` values are used.
 
 Returns
 -------
-  vector<Quaternion>
-
+numpy.ndarray of float, shape (N, 3)
+    The angular velocity, one row for each time step.)doc"},
+    {"Waveform::CorotatingFrame", R"doc(Return the corotating frame of the waveform.
 
+The corotating frame is the frame whose angular velocity is the angular
+velocity of the waveform, as returned by `Waveform.AngularVelocityVector`; it
+is found with `Quaternions.FrameFromAngularVelocity`.  The rotors are given
+relative to the (possibly rotating) mode frame :math:`(X, Y, Z)`, rather than
+the inertial frame :math:`(x, y, z)`.
 
-
 Parameters
 ----------
-  const vector<Quaternion>& P
-  const vector<Quaternion>& Q
+Lmodes : array_like of int, optional
+    Values of :math:`\ell` to include in the sums.  If empty or omitted, all
+    :math:`\ell` values are used.
 
 Returns
 -------
-  vector<Quaternion>)doc"},
-    {"operator+", R"doc(Parameters
-----------
-  const double& a
-  const DataGrid& b
+numpy.ndarray of Quaternion
+    The rotor of the corotating frame at each time step.)doc"},
+    {"Waveform::TransformToCoprecessingFrame", R"doc(Transform the waveform to the coprecessing frame, in place.
 
-Returns
--------
-  DataGrid
+In the coprecessing frame, the z axis is aligned with the dominant eigenvector
+of :math:`\langle LL \rangle` (the vector :math:`V_h` of O'Shaughnessy et al.
+2011; see `Waveform.LLDominantEigenvector`), and the rotation about the z axis
+satisfies the minimal-rotation condition of Boyle, Owen, and Pfeiffer (2011).
+The frame type is set to ``Coprecessing``.
 
 Parameters
 ----------
-  const double a
-  const Quaternion& Q
+Lmodes : array_like of int, optional
+    Values of :math:`\ell` to include in the sum.  If empty or omitted, all
+    :math:`\ell` values are used.
 
 Returns
 -------
-  Quaternion
-
-
+Waveform
+    This object, modified in place.)doc"},
+    {"Waveform::TransformToAngularVelocityFrame", R"doc(Transform the waveform to the frame aligned with its angular velocity.
 
+In this frame, the z axis is aligned with the angular-velocity vector of
+`Waveform.AngularVelocityVector`, and the rotation about the z axis satisfies
+the minimal-rotation condition.  Note that this is not the corotating frame.
+The frame type is set to ``Coprecessing``.  The transformation is done in
+place.
 
 Parameters
 ----------
-  const double a
-  const vector<Quaternion>& Q
+Lmodes : array_like of int, optional
+    Values of :math:`\ell` to include in the sums.  If empty or omitted, all
+    :math:`\ell` values are used.
 
 Returns
 -------
-  vector<Quaternion>
+Waveform
+    This object, modified in place.)doc"},
+    {"Waveform::TransformToCorotatingFrame", R"doc(Transform the waveform to the corotating frame, in place.
 
+The decomposition basis is rotated by the rotors of `Waveform.CorotatingFrame`,
+and the frame type is set to ``Corotating``.  This leaves a constant of
+integration unset; it may be fixed by aligning the frame to the modes, for
+example with `Waveform.AlignDecompositionFrameToModes`.
 
-
-
 Parameters
 ----------
-  const vector<double>& a
-  const Quaternion& Q
+Lmodes : array_like of int, optional
+    Values of :math:`\ell` to include in the sums.  If empty or omitted, all
+    :math:`\ell` values are used.
 
 Returns
 -------
-  vector<Quaternion>
+Waveform
+    This object, modified in place.)doc"},
+    {"Waveform::TransformToInertialFrame", R"doc(Transform the waveform to the inertial frame, in place.
+
+The stored frame data are used to transform from whatever rotating frame the
+waveform is in to a stationary, inertial frame.  This is the usual frame at
+future null infinity, in which gravitational-wave observations are made.  After
+the transformation, the frame data are empty and the frame type is
+``Inertial``.
+
+If the frame type is already ``Inertial`` or is ``UnknownFrameType``, or if
+there are no frame data, a warning is printed and nothing is done.  Otherwise,
+there must be one rotor for each time step.
 
+Returns
+-------
+Waveform
+    This object, modified in place.)doc"},
+    {"Waveform::GetAlignmentsOfDecompositionFrameToModes", R"doc(Return the rotors aligning the decomposition frame to the modes at each time.
 
+At each time step, this finds the rotor :math:`R_{\varepsilon}` by which the
+decomposition basis would be rotated to align it with the waveform, as in
+`Waveform.AlignDecompositionFrameToModes`.  Computing the rotors at every time
+step at once is useful when many such alignments must be tried, because
+interpolation is slow.  Unlike similar methods, this one does not use an
+approximate direction of :math:`\hat{n}` to choose the direction of the X axis.
 
+The waveform must be in the coprecessing, coorbital, or corotating frame, with
+one frame rotor for each time step.
 
 Parameters
 ----------
-  const vector<double>& a
-  const vector<Quaternion>& Q
+Lmodes : array_like of int, optional
+    Values of :math:`\ell` to use in computing :math:`\langle LL \rangle`.  If
+    empty or omitted, all :math:`\ell` values are used.
 
 Returns
 -------
-  vector<Quaternion>
-
-
+numpy.ndarray of Quaternion
+    The rotor :math:`R_{\varepsilon}` at each time step.)doc"},
+    {"Waveform::GetAlignmentOfDecompositionFrameToModes", R"doc(Return the rotor aligning the decomposition frame to the modes at one time.
 
+This finds the rotor :math:`R_{\varepsilon}` that
+`Waveform.AlignDecompositionFrameToModes` applies, without applying it; see
+that method for details.  The waveform must be in the coprecessing, coorbital,
+or corotating frame, and ``t_fid`` must lie within its times.
 
 Parameters
 ----------
-  const Quaternion& a
-  const vector<Quaternion>& Q
+t_fid : float
+    Fiducial time at which the alignment is done.
+nHat_t_fid : Quaternion, default Quaternions.xHat
+    Approximate direction of :math:`\hat{n}` (the vector from one black hole
+    to the other) at ``t_fid``, which sets the direction of the X axis.
+Lmodes : array_like of int, optional
+    Values of :math:`\ell` to use in computing :math:`\langle LL \rangle`.  If
+    empty or omitted, all :math:`\ell` values are used.
 
 Returns
 -------
-  vector<Quaternion>
+Quaternion
+    The rotor :math:`R_{\varepsilon}`.)doc"},
+    {"Waveform::AlignDecompositionFrameToModes", R"doc(Fix the orientation of the corotating frame by aligning it to the modes.
 
+The corotating frame is defined only up to a constant rotor
+:math:`R_{\varepsilon}`: if :math:`R_{\mathrm{corot}}` is corotating, then so
+is :math:`R_{\mathrm{corot}} R_{\varepsilon}`.  This method uses that freedom
+to align the frame with the modes at the fiducial time ``t_fid``.  The Z axis
+of the decomposition basis is placed along the dominant eigenvector of
+:math:`\langle LL \rangle` (as suggested by O'Shaughnessy et al.), with its
+sign chosen to be closer to the angular velocity than not; the rotation about
+that axis is fixed by the phases of the :math:`(2, \pm 2)` modes; and the
+remaining choice of sign of the X axis is made so that X lies closer to
+``nHat_t_fid`` than not.  The decomposition basis is then rotated by
+:math:`R_{\varepsilon}`.
 
+The waveform must be in the coprecessing, coorbital, or corotating frame, and
+``t_fid`` must lie within its times.
 
-
 Parameters
 ----------
-  const vector<Quaternion>& Q
-  const Quaternion& a
+t_fid : float
+    Fiducial time at which the alignment is done.
+nHat_t_fid : Quaternion, default Quaternions.xHat
+    Approximate direction of :math:`\hat{n}` (the vector from one black hole
+    to the other) at ``t_fid``.
+Lmodes : array_like of int, optional
+    Values of :math:`\ell` to use in computing :math:`\langle LL \rangle`.  If
+    empty or omitted, all :math:`\ell` values are used.
 
 Returns
 -------
-  vector<Quaternion>
-
+Waveform
+    This object, modified in place.)doc"},
+    {"Waveform::Compare", R"doc(Return the difference between another waveform and this one.
 
+The mode data of the result are the data of ``B`` minus the data of this
+waveform, both interpolated with cubic splines to the times common to the two
+(as found by `Intersection`).  The frame of the result is the rotation taking
+the frame of this waveform into the frame of ``B``.  The data are compared as
+complex numbers, rather than as moduli and phases.  A warning is printed if the
+two waveforms have different frame types.
 
-
 Parameters
 ----------
-  const vector<Quaternion>& Q
-  const double a
+B : Waveform
+    The waveform to compare with this one.
+MinTimeStep : float, default 0.005
+    Intended lower limit on the time step of the result.  It is currently
+    ignored; the default of `Intersection`, 0.005, is always used.
+MinTime : float, default -3.0e300
+    Intended earliest time of the result.  It is currently ignored.
 
 Returns
 -------
-  vector<Quaternion>
-
+Waveform
+    The difference.)doc"},
+    {"Waveform::Hybridize", R"doc(Return a hybrid of this waveform and another.
 
+The result has exactly the data of this waveform before ``t1`` and exactly the
+data of ``B`` after ``t2``, with a smooth (:math:`C^\infty`) blend between the
+two in the interval from ``t1`` to ``t2``; the frame data are blended in the
+same way.  The waveforms are not aligned first; that must already have been
+done (for example, with `AlignWaveforms`).  Both waveforms must have data
+throughout the transition interval.  This waveform is not changed.
 
-
 Parameters
 ----------
-  const Quaternion& Q
-  const vector<double>& a
+B : Waveform
+    The waveform with which to hybridize this one.
+t1 : float
+    Beginning of the transition interval.
+t2 : float
+    End of the transition interval.
+tMinStep : float, default 0.005
+    Lower limit on the time step of the result.
 
 Returns
 -------
-  vector<Quaternion>
-
+Waveform
+    The hybrid waveform.)doc"},
+    {"Waveform::EvaluateAtPoint", R"doc(Evaluate the waveform at a point on the sphere.
 
+The mode data are summed with the spin-weighted spherical harmonics at the
+given point, taking the frame data into account, so that the angles are
+measured with respect to the inertial frame.  A warning is printed if the
+frame type is ``UnknownFrameType``.
 
-
 Parameters
 ----------
-  const vector<Quaternion>& Q
-  const vector<double>& a
+vartheta : float
+    Polar angle of the point.
+varphi : float
+    Azimuthal angle of the point.
+i_0 : int, default 0
+    Index of the first time step at which to evaluate.
+i_1 : int, default -1
+    Index one past the last time step at which to evaluate.  If it is -1,
+    the waveform is evaluated through the last time step.
 
 Returns
 -------
-  vector<Quaternion>
-
+numpy.ndarray of complex
+    The value of the waveform at each time step from ``i_0`` up to, but not
+    including, ``i_1``.)doc"},
+    {"Waveform::InterpolateToPoint", R"doc(Evaluate the waveform at a point on the sphere and an instant of time.
 
+The waveform is evaluated at the point, as in `Waveform.EvaluateAtPoint`, at
+the four time steps nearest ``t_i``, and the result is interpolated in time
+with a cubic spline.  The waveform must have at least four time steps, and
+``t_i`` must lie within its times.
 
-
 Parameters
 ----------
-  const vector<Quaternion>& P
-  const vector<Quaternion>& Q
+vartheta : float
+    Polar angle of the point.
+varphi : float
+    Azimuthal angle of the point.
+t_i : float
+    Time at which to evaluate.
 
 Returns
 -------
-  vector<Quaternion>
-
+complex
+    The value of the waveform.)doc"},
+    {"Waveform::Translate", R"doc(Return the waveform translated in space by a time-dependent displacement.
 
+At each time :math:`t` and direction :math:`\hat{n}`, the field of the result
+is the field of this waveform at the time :math:`t - \hat{n} \cdot \delta
+\vec{x}(t)`.  The result is decomposed into modes again, and it contains only
+the times at which data are available in every direction.  The displacement is
+given relative to the inertial frame.  This waveform may be in any frame, and
+need not be transformed first; the result is always in the inertial frame,
+without frame data.  This waveform is not changed.
 
+This method is slow, because it interpolates the waveform to many points at
+each time step.
 
 Parameters
 ----------
-  const vector<double>& a
-  const double b
+deltax : array_like of float, shape (N, 3)
+    The displacement at each time step.
 
 Returns
 -------
-  vector<double>)doc"},
-    {"operator-", R"doc(Parameters
-----------
-  const double& a
-  const DataGrid& b
+Waveform
+    The translated waveform.)doc"},
+    {"Waveform::BoostPsi4", R"doc(Apply a boost to :math:`\Psi_4` data, in place.
 
-Returns
--------
-  DataGrid
+This method does three things at each time step.  First, it evaluates the
+waveform on what will become an equiangular grid after transformation by the
+boost.  Second, at each point of that grid, it combines the present value of
+:math:`\Psi_4` and its conjugate to give the value of :math:`\Psi_4` observed
+in the boosted frame.  Finally, it decomposes the result into modes using the
+new equiangular grid.  Time steps with negligible velocity are left unchanged.
 
 Parameters
 ----------
-  const double a
-  const Quaternion& Q
+v : array_like of float, shape (N, 3)
+    The three-velocity of the boosted frame relative to the present frame, at
+    each time step.
 
 Returns
 -------
-  Quaternion
-
+Waveform
+    This object, modified in place.)doc"},
+    {"Waveform::BoostHFaked", R"doc(Apply an approximate boost to :math:`h` data, in place.
 
+This method does three things at each time step.  First, it evaluates the
+waveform on what will become an equiangular grid after transformation by the
+boost.  Second, at each point of that grid, it combines the present value of
+:math:`h` and its conjugate to give the value of :math:`h` observed in the
+boosted frame.  Finally, it decomposes the result into modes using the new
+equiangular grid.  Time steps with negligible velocity are left unchanged.
 
+The transformation is that of :math:`\Psi_4`, multiplied at each point by the
+appropriate power (-2) of the Lorentz factor.  This assumes that
+:math:`\ddot{h} = \Psi_4` in both frames, which need not be true; hence
+"Faked" in the name of this method, which prints a warning to that effect.
 
 Parameters
 ----------
-  const double a
-  const vector<Quaternion>& Q
+v : array_like of float, shape (N, 3)
+    The three-velocity of the boosted frame relative to the present frame, at
+    each time step.
 
 Returns
 -------
-  vector<Quaternion>
-
-
+Waveform
+    This object, modified in place.)doc"},
+    {"Waveform::Output", R"doc(Write the waveform to a text file.
 
+The file begins with the history of the waveform and a header naming the
+columns.  Each following line holds a time, followed by the real and imaginary
+parts of each mode.  Such a file can be read by the constructor
+``Waveform(FileName, "ReIm")`` if its modes are in the order that the
+constructor assumes.
 
 Parameters
 ----------
-  const vector<double>& a
-  const Quaternion& Q
+FileName : str
+    Path of the file to write.
+precision : int, default 14
+    Number of significant digits written.
 
 Returns
 -------
-  vector<Quaternion>
+Waveform
+    This object, unchanged.)doc"},
+    {"AlignWaveforms", R"doc(Align two waveforms in time and orientation, in place.
 
+If either waveform is in the inertial frame, it is first transformed to its
+corotating frame; otherwise, it must already be in the corotating frame (the
+coorbital frame, for example, raises an error).  The frame of each waveform is
+then aligned to its modes at the time ``t_mid = (t_1 + t_2) / 2``, as in
+`Waveform.AlignDecompositionFrameToModes`.  Finally, ``B`` is shifted in time
+and rotated by a constant rotor so that it matches ``A`` as closely as possible
+over the interval from ``t_1`` to ``t_2``; during this optimization, the
+alignment of the frame of ``B`` to its modes is adjusted to account for the
+changing meaning of ``t_mid``.
 
+The times ``t_1`` and ``t_2`` refer to the time axis of ``A``.  The algorithm
+assumes that the waveforms are already reasonably well aligned in time.  In
+particular, the final value of ``t_mid + deltat`` for ``B`` must lie somewhere
+in the interval from ``t_1`` to ``t_2``, and after the time shift, ``B`` must
+have data over all of that interval.
 
+As long as this last condition is satisfied, and the waveforms are even
+remotely well sampled, and assuming the code's logic does not fail due to
+otherwise weird or unexpected inputs, I (Mike Boyle) do hereby guarantee that
+this algorithm will find the optimal alignment in both time and attitude.  Or
+your money back.
 
 Parameters
 ----------
-  const vector<double>& a
-  const vector<Quaternion>& Q
+A : Waveform
+    The fixed waveform.  Its frame is aligned to its modes, but it is not
+    shifted in time.
+B : Waveform
+    The adjusted waveform.  Its frame is aligned to its modes, and it is
+    shifted in time and rotated.
+t_1 : float
+    Beginning of the alignment interval.
+t_2 : float
+    End of the alignment interval.
+InitialEvaluations : int, default 0
+    Number of time offsets at which the objective function is evaluated in
+    the initial, coarse optimization.  If it is 0, or is not smaller than the
+    number of available time steps of ``B``, every one of those time steps is
+    used.
+nHat_A : array_like of float, shape (3,), optional
+    Approximate direction of :math:`\hat{n}` (the vector from black hole A to
+    black hole B) in ``A`` at ``t_mid``, which sets the direction of the x axis
+    of the rotating frame.  If empty or omitted, the x axis is used.
+Debug : bool, default False
+    If true, intermediate values of the objective function are written to
+    the files ``XiIntegral.dat`` and ``UpsilonIntegral.dat`` in the current
+    directory.)doc"},
+    {"PNWaveform", R"doc(Post-Newtonian waveform of a precessing binary black hole.
 
-Returns
--------
-  vector<Quaternion>
+A `PNWaveform` is a `Waveform` computed by evolving the orbital dynamics and
+spins of a quasicircular binary in post-Newtonian (PN) theory, and then
+evaluating the PN expressions for the modes of :math:`h`.  In addition to the
+data of a `Waveform`, it stores at each time step the two spin vectors
+``chi1`` and ``chi2``, the orbital angular velocity ``Omega_orb``, the
+precessional angular velocity ``Omega_prec``, the orbital angular momentum
+``L``, and the orbital phase ``Phi_orb``, which are returned by the methods of
+the same names.  All of these vectors are expressed in the inertial basis.
+Methods also return their magnitudes (`PNWaveform.Omega_orbMag`, and so on)
+and their directions (`PNWaveform.OmegaHat_orb`, and so on).
 
+A `PNWaveform` may be constructed in any of these ways:
 
+``PNWaveform()``
+    An empty waveform.
+``PNWaveform(W)``
+    A copy of the `PNWaveform` ``W``, including its history.
+``PNWaveform(Approximant, delta, chi1_i, chi2_i, Omega_orb_i, ...)``
+    The PN waveform of a binary with the given parameters, which are described
+    below.  The optional parameters ``Omega_orb_0``, ``R_frame_i``,
+    ``MinStepsPerOrbit``, ``PNWaveformModeOrder``, and
+    ``PNOrbitalEvolutionOrder`` follow, in that order.
 
+The PN system is defined with respect to an inertial basis
+:math:`(\hat{x}, \hat{y}, \hat{z})`, in which the spin vectors are given.  A
+second basis :math:`(\hat{X}, \hat{Y}, \hat{Z})` is obtained by rotating the
+inertial basis by ``R_frame_i``.  At the initial time, black hole 1 lies on
+the positive :math:`X` axis, black hole 2 lies on the negative :math:`X` axis,
+and the orbital angular velocity points along the positive :math:`Z` axis
+with magnitude ``Omega_orb_i``.  The orbital evolution is integrated forward
+in time from there until the PN equations stop making progress near merger
+(when the PN parameter :math:`v` reaches 1, stops increasing, or requires
+very small time steps), and, if ``Omega_orb_0`` is smaller than
+``Omega_orb_i``, also backward in time until the orbital frequency falls to
+``Omega_orb_0``.  The time :math:`t = 0` corresponds to the moment at which
+the orbital frequency is ``Omega_orb_i``.  The time steps are chosen by the
+adaptive integrator, so they are not uniform.
 
-Parameters
-----------
-  const Quaternion& a
-  const vector<Quaternion>& Q
+The parameters of the third constructor are these:
 
-Returns
--------
-  vector<Quaternion>
+``Approximant`` : str
+    The PN approximant used to evolve the orbital frequency: ``"TaylorT1"``,
+    ``"TaylorT4"``, or ``"TaylorT5"``.  Any other value raises an error.
+``delta`` : float
+    The normalized mass difference :math:`(M_1 - M_2) / (M_1 + M_2)`, which
+    lies between -1 and 1 and is 0 for equal masses.  The total mass
+    :math:`M_1 + M_2` is 1, so that all quantities are in units of the total
+    mass.
+``chi1_i``, ``chi2_i`` : array_like of float, shape (3,)
+    The initial dimensionless spin vectors :math:`\vec{S}_1 / M_1^2` and
+    :math:`\vec{S}_2 / M_2^2` of the two black holes, with components in the
+    inertial basis.
+``Omega_orb_i`` : float
+    The orbital angular frequency at :math:`t = 0`, in units of :math:`1/M`.
+``Omega_orb_0`` : float, default -1.0
+    The orbital angular frequency at which the waveform begins.  If it is
+    smaller than ``Omega_orb_i``, the system is also evolved backward in time
+    to that frequency.  A value that is not positive (the default), or that
+    is not smaller than ``Omega_orb_i``, makes the waveform begin at
+    ``Omega_orb_i``.
+``R_frame_i`` : Quaternion, default Quaternion(1, 0, 0, 0)
+    The rotor taking the inertial basis to the initial basis of the binary,
+    as described above.  The default places the binary in the standard
+    position, with its orbital angular velocity along :math:`\hat{z}`.
+``MinStepsPerOrbit`` : int, default 32
+    The minimum number of time steps per orbit.  The step size of the
+    integrator is limited to a fraction of the instantaneous orbital period,
+    so that at least this many steps are taken in each orbit.
+``PNWaveformModeOrder`` : float, default 3.5
+    The PN order at which the waveform modes are computed, a multiple of 0.5
+    from 0 to 3.5.
+``PNOrbitalEvolutionOrder`` : float, default 4.0
+    The PN order at which the orbital evolution is computed, a multiple of 0.5
+    from 0 to 6.0.
 
+Both PN orders are rounded down to a multiple of 0.5, and an order outside
+the stated range raises an error.
 
+The waveform has modes with :math:`2 \leq \ell \leq 8` and all values of
+:math:`m`.  Its data type is :math:`h`, with the radius and the total mass
+scaled out.  The modes are computed in the co-orbital frame, whose rotor at
+each time is stored as the waveform's `Waveform.Frame`, so the waveform
+initially has frame type ``Coorbital``; this frame is nearly, but not quite,
+corotating.  To obtain the waveform in an inertial frame, apply
+`Waveform.TransformToInertialFrame`; to obtain it in the corotating frame,
+apply `Waveform.TransformToInertialFrame` and then
+`Waveform.TransformToCorotatingFrame`.
 
+Examples
+--------
+>>> import GWFrames
+>>> W = GWFrames.PNWaveform("TaylorT4", 0.0, [0.0, 0.0, 0.9],
+...                          [0.0, 0.0, 0.9], 0.01))doc"},
+    {"PNWaveform::chi1", R"doc(Return the spin vector of black hole 1.
 
+The dimensionless spin vector :math:`\vec{S}_1 / M_1^2` is given in the
+inertial basis.
+
 Parameters
 ----------
-  const vector<Quaternion>& Q
-  const Quaternion& a
+iTime : int, optional
+    Index of the time step.  If omitted, the vectors at all times are
+    returned.
 
 Returns
 -------
-  vector<Quaternion>
-
+numpy.ndarray of float, shape (3,) or (N, 3)
+    The spin vector at the given time step, or at each of the ``N`` time
+    steps.)doc"},
+    {"PNWaveform::chi2", R"doc(Return the spin vector of black hole 2.
 
+The dimensionless spin vector :math:`\vec{S}_2 / M_2^2` is given in the
+inertial basis.
 
-
 Parameters
 ----------
-  const vector<Quaternion>& Q
-  const double a
+iTime : int, optional
+    Index of the time step.  If omitted, the vectors at all times are
+    returned.
 
 Returns
 -------
-  vector<Quaternion>
-
+numpy.ndarray of float, shape (3,) or (N, 3)
+    The spin vector at the given time step, or at each of the ``N`` time
+    steps.)doc"},
+    {"PNWaveform::Omega_orb", R"doc(Return the orbital angular-velocity vector.
 
+The orbital angular velocity is :math:`v^3 \hat{\ell}`, where :math:`v` is the
+PN parameter and :math:`\hat{\ell}` is the direction normal to the orbital
+plane.  It is given in the inertial basis, in units of :math:`1/M`.
 
-
 Parameters
 ----------
-  const Quaternion& Q
-  const vector<double>& a
+iTime : int, optional
+    Index of the time step.  If omitted, the vectors at all times are
+    returned.
 
 Returns
 -------
-  vector<Quaternion>
-
+numpy.ndarray of float, shape (3,) or (N, 3)
+    The orbital angular velocity at the given time step, or at each of the
+    ``N`` time steps.)doc"},
+    {"PNWaveform::Omega_prec", R"doc(Return the precessional angular-velocity vector.
 
+The precessional angular velocity is the angular velocity of the co-orbital
+frame minus the orbital angular velocity, so that it describes the motion of
+the orbital plane.  It is given in the inertial basis, in units of
+:math:`1/M`.
 
-
 Parameters
 ----------
-  const vector<Quaternion>& Q
-  const vector<double>& a
+iTime : int, optional
+    Index of the time step.  If omitted, the vectors at all times are
+    returned.
 
 Returns
 -------
-  vector<Quaternion>
-
+numpy.ndarray of float, shape (3,) or (N, 3)
+    The precessional angular velocity at the given time step, or at each of
+    the ``N`` time steps.)doc"},
+    {"PNWaveform::Omega_tot", R"doc(Return the total angular-velocity vector of the binary.
 
+The total angular velocity is the sum of `PNWaveform.Omega_orb` and
+`PNWaveform.Omega_prec`, which is the angular velocity of the co-orbital
+frame.  It is given in the inertial basis, in units of :math:`1/M`.
 
-
 Parameters
 ----------
-  const vector<Quaternion>& P
-  const vector<Quaternion>& Q
+iTime : int, optional
+    Index of the time step.  If omitted, the vectors at all times are
+    returned.
 
 Returns
 -------
-  vector<Quaternion>)doc"},
-    {"operator/", R"doc(Parameters
+numpy.ndarray of float, shape (3,) or (N, 3)
+    The total angular velocity at the given time step, or at each of the
+    ``N`` time steps.)doc"},
+    {"PNWaveform::L", R"doc(Return the orbital angular-momentum vector.
+
+The orbital angular momentum is computed from its PN expression, at the PN
+order of the orbital evolution, and is given in the inertial basis in units
+of :math:`M^2`.  Its leading term is :math:`M^2 \nu \hat{\ell} / v`, where
+:math:`\nu` is the symmetric mass ratio; the spin-orbit terms make it
+deviate slightly from the direction :math:`\hat{\ell}` of the orbital
+angular velocity.
+
+Parameters
 ----------
-  const double& a
-  const DataGrid& b
+iTime : int, optional
+    Index of the time step.  If omitted, the vectors at all times are
+    returned.
 
 Returns
 -------
-  DataGrid
+numpy.ndarray of float, shape (3,) or (N, 3)
+    The orbital angular momentum at the given time step, or at each of the
+    ``N`` time steps.)doc"},
+    {"PNWaveform::Omega_orbMag", R"doc(Return the magnitude of the orbital angular velocity.
 
 Parameters
 ----------
-  const double a
-  const Quaternion& Q
+iTime : int, optional
+    Index of the time step.  If omitted, the magnitudes at all times are
+    returned.
 
 Returns
 -------
-  Quaternion
-
-
+float or numpy.ndarray of float, shape (N,)
+    The magnitude of `PNWaveform.Omega_orb` at the given time step, or at
+    each of the ``N`` time steps.)doc"},
+    {"PNWaveform::Omega_precMag", R"doc(Return the magnitude of the precessional angular velocity.
 
-
 Parameters
 ----------
-  const double a
-  const vector<Quaternion>& Q
+iTime : int, optional
+    Index of the time step.  If omitted, the magnitudes at all times are
+    returned.
 
 Returns
 -------
-  vector<Quaternion>
-
-
-
+float or numpy.ndarray of float, shape (N,)
+    The magnitude of `PNWaveform.Omega_prec` at the given time step, or at
+    each of the ``N`` time steps.)doc"},
+    {"PNWaveform::Omega_totMag", R"doc(Return the magnitude of the total angular velocity.
 
 Parameters
 ----------
-  const vector<double>& a
-  const Quaternion& Q
+iTime : int, optional
+    Index of the time step.  If omitted, the magnitudes at all times are
+    returned.
 
 Returns
 -------
-  vector<Quaternion>
+float or numpy.ndarray of float, shape (N,)
+    The magnitude of `PNWaveform.Omega_tot` at the given time step, or at
+    each of the ``N`` time steps.)doc"},
+    {"PNWaveform::LMag", R"doc(Return the magnitude of the orbital angular momentum.
 
-
-
-
 Parameters
 ----------
-  const vector<double>& a
-  const vector<Quaternion>& Q
+iTime : int, optional
+    Index of the time step.  If omitted, the magnitudes at all times are
+    returned.
 
 Returns
 -------
-  vector<Quaternion>
-
+float or numpy.ndarray of float, shape (N,)
+    The magnitude of `PNWaveform.L` at the given time step, or at each of the
+    ``N`` time steps.)doc"},
+    {"PNWaveform::chiHat1", R"doc(Return the direction of the spin of black hole 1.
 
+The result is `PNWaveform.chi1` divided by its magnitude, so it is undefined
+(NaN) when the spin is zero.
 
-
 Parameters
 ----------
-  const Quaternion& a
-  const vector<Quaternion>& Q
+iTime : int, optional
+    Index of the time step.  If omitted, the directions at all times are
+    returned.
 
 Returns
 -------
-  vector<Quaternion>
-
+numpy.ndarray of float, shape (3,) or (N, 3)
+    The unit vector at the given time step, or at each of the ``N`` time
+    steps.)doc"},
+    {"PNWaveform::chiHat2", R"doc(Return the direction of the spin of black hole 2.
 
+The result is `PNWaveform.chi2` divided by its magnitude, so it is undefined
+(NaN) when the spin is zero.
 
-
 Parameters
 ----------
-  const vector<Quaternion>& Q
-  const Quaternion& a
+iTime : int, optional
+    Index of the time step.  If omitted, the directions at all times are
+    returned.
 
 Returns
 -------
-  vector<Quaternion>
-
+numpy.ndarray of float, shape (3,) or (N, 3)
+    The unit vector at the given time step, or at each of the ``N`` time
+    steps.)doc"},
+    {"PNWaveform::OmegaHat_orb", R"doc(Return the direction of the orbital angular velocity.
 
-
-
 Parameters
 ----------
-  const vector<Quaternion>& Q
-  const double a
+iTime : int, optional
+    Index of the time step.  If omitted, the directions at all times are
+    returned.
 
 Returns
 -------
-  vector<Quaternion>
-
-
+numpy.ndarray of float, shape (3,) or (N, 3)
+    The unit vector along `PNWaveform.Omega_orb` at the given time step, or
+    at each of the ``N`` time steps.)doc"},
+    {"PNWaveform::OmegaHat_prec", R"doc(Return the direction of the precessional angular velocity.
 
+The result is undefined (NaN) wherever the precessional angular velocity is
+zero, as it is for a nonprecessing system.
 
 Parameters
 ----------
-  const Quaternion& Q
-  const vector<double>& a
+iTime : int, optional
+    Index of the time step.  If omitted, the directions at all times are
+    returned.
 
 Returns
 -------
-  vector<Quaternion>
+numpy.ndarray of float, shape (3,) or (N, 3)
+    The unit vector along `PNWaveform.Omega_prec` at the given time step, or
+    at each of the ``N`` time steps.)doc"},
+    {"PNWaveform::OmegaHat_tot", R"doc(Return the direction of the total angular velocity.
 
-
-
-
 Parameters
 ----------
-  const vector<Quaternion>& Q
-  const vector<double>& a
+iTime : int, optional
+    Index of the time step.  If omitted, the directions at all times are
+    returned.
 
 Returns
 -------
-  vector<Quaternion>
+numpy.ndarray of float, shape (3,) or (N, 3)
+    The unit vector along `PNWaveform.Omega_tot` at the given time step, or
+    at each of the ``N`` time steps.)doc"},
+    {"PNWaveform::LHat", R"doc(Return the direction of the orbital angular momentum.
 
+Parameters
+----------
+iTime : int, optional
+    Index of the time step.  If omitted, the directions at all times are
+    returned.
 
+Returns
+-------
+numpy.ndarray of float, shape (3,) or (N, 3)
+    The unit vector along `PNWaveform.L` at the given time step, or at each
+    of the ``N`` time steps.)doc"},
+    {"PNWaveform::Phi_orb", R"doc(Return the orbital phase.
 
+The orbital phase is the integral of the orbital angular frequency, and is
+zero at :math:`t = 0`, where the orbital frequency is ``Omega_orb_i``.
 
 Parameters
 ----------
-  const vector<Quaternion>& P
-  const vector<Quaternion>& Q
+iTime : int, optional
+    Index of the time step.  If omitted, the phases at all times are
+    returned.
 
 Returns
 -------
-  vector<Quaternion>)doc"},
-    {"operator<<", R"doc(Print the quaternion nicely to stream.
-======================================
-  Parameters
-  ----------
-    ostream& out
-    const Quaternions::Quaternion& q
+float or numpy.ndarray of float, shape (N,)
+    The orbital phase at the given time step, or at each of the ``N`` time
+    steps.)doc"},
+    {"PNWaveform::chi1Mag", R"doc(Return the magnitude of the spin of black hole 1.
 
-  Returns
-  -------
-    ostream&)doc"},
-    {"pow", R"doc(Parameters
+Parameters
 ----------
-  const Quaternion& Q
-  const double x
+iTime : int
+    Index of the time step.
 
 Returns
 -------
-  Quaternion
+float
+    The magnitude of `PNWaveform.chi1` at the given time step.)doc"},
+    {"PNWaveform::chi2Mag", R"doc(Return the magnitude of the spin of black hole 2.
 
-
-
-
 Parameters
 ----------
-  const Quaternion& Q
-  const Quaternion& P
+iTime : int
+    Index of the time step.
 
 Returns
 -------
-  Quaternion
+float
+    The magnitude of `PNWaveform.chi2` at the given time step.)doc"},
+    {"WaveformAtAPointFT", R"doc(Fourier transform of a waveform measured by a detector at one point.
 
+A `WaveformAtAPointFT` stores the Fourier transform of the real signal that a
+detector would measure from a `Waveform` evaluated in one direction on the
+sphere, in physical units.  It is used to compute signal-to-noise ratios,
+inner products, and matches weighted by a detector's noise curve.
 
+A `WaveformAtAPointFT` is constructed as
 
+``WaveformAtAPointFT(W, Dt, Vartheta, Varphi, TotalMass, ...)``
+    The Fourier transform of the waveform ``W`` at the point
+    (``Vartheta``, ``Varphi``), computed as described below.  The optional
+    parameters ``WindowNCycles``, ``DetectorResponseAmp``,
+    ``DetectorResponsePhase``, and ``ExtraZeroPadPowers`` follow, in that
+    order.
 
-Parameters
-----------
-  const vector<Quaternion>& Q
-  const double x
+The construction takes these steps:
 
-Returns
--------
-  vector<Quaternion>
+1. ``W`` is interpolated to times beginning with its first time and spaced
+   uniformly by ``Dt``.  The number of samples is a power of 2, large enough
+   to cover the duration of ``W``, and is multiplied further by
+   :math:`2^{\mathtt{ExtraZeroPadPowers}}`; samples after the end of ``W``
+   are zero.
+2. The waveform is evaluated at the point (``Vartheta``, ``Varphi``) with
+   `Waveform.EvaluateAtPoint`, giving a complex time series :math:`h(t)`.
+3. The detector response :math:`F = F_+ + i F_\times`, given by its amplitude
+   ``DetectorResponseAmp`` and phase ``DetectorResponsePhase``, is applied,
+   and the real part :math:`\mathrm{Re}(F h)` is kept as the signal.
+4. The signal is set to zero before its first zero crossing and is tapered
+   smoothly to its full amplitude over the following ``WindowNCycles``
+   cycles.
+5. The times are converted to seconds using ``TotalMass``, and the signal is
+   Fourier transformed.
 
+The transform is normalized as an approximation to the continuous Fourier
+transform (the discrete sum is multiplied by the time step in seconds), and
+only the nonnegative frequencies are stored, from zero up to the Nyquist
+frequency.  The values at the Nyquist frequency and the imaginary part at
+zero frequency are set to zero.  No rescaling of the amplitude, by distance
+or otherwise, is applied.
 
+Parameters
+----------
+W : Waveform
+    The waveform, whose times are in units of the total mass.
+Dt : float
+    The uniform time step, in units of the total mass, to which ``W`` is
+    interpolated.
+Vartheta : float
+    The polar angle of the point at which the waveform is evaluated.
+Varphi : float
+    The azimuthal angle of the point at which the waveform is evaluated.
+TotalMass : float
+    The total mass of the system in solar masses, which sets the conversion
+    of time to seconds.
+WindowNCycles : int, default 1
+    The number of cycles of the signal over which it is tapered at the start.
+DetectorResponseAmp : float, default 1.0
+    The amplitude of the complex detector response :math:`F_+ + i F_\times`.
+DetectorResponsePhase : float, default 0.0
+    The phase of the complex detector response :math:`F_+ + i F_\times`.
+ExtraZeroPadPowers : int, default 0
+    The number of additional factors of 2 by which the data are padded with
+    zeros before the transform.)doc"},
+    {"WaveformAtAPointFT::F", R"doc(Return the frequencies of the Fourier transform, in hertz.
 
+The frequencies are nonnegative and uniformly spaced, starting at zero.
 
 Parameters
 ----------
-  const vector<Quaternion>& Q
-  const Quaternion& P
+f : int, optional
+    Index of the frequency.  If omitted, all frequencies are returned.
 
 Returns
 -------
-  vector<Quaternion>
-
-
-
+float or numpy.ndarray of float
+    The frequency with the given index, or all frequencies.)doc"},
+    {"WaveformAtAPointFT::NFreq", R"doc(Return the number of frequencies stored.
 
-Parameters
-----------
-  const Quaternion& Q
-  const vector<double>& x
+Returns
+-------
+int
+    The number of frequencies.)doc"},
+    {"WaveformAtAPointFT::IsNormalized", R"doc(Return whether the transform has been normalized.
 
 Returns
 -------
-  vector<Quaternion>
+bool
+    True if `WaveformAtAPointFT.Normalize` has been applied to this
+    object.)doc"},
+    {"WaveformAtAPointFT::Dt", R"doc(Return the time step used before the Fourier transform.
 
+Returns
+-------
+float
+    The uniform time step, in units of the total mass, to which the waveform
+    was interpolated.)doc"},
+    {"WaveformAtAPointFT::Vartheta", R"doc(Return the polar angle of the point at which the waveform was evaluated.
 
+Returns
+-------
+float
+    The polar angle.)doc"},
+    {"WaveformAtAPointFT::Varphi", R"doc(Return the azimuthal angle of the point at which the waveform was evaluated.
 
+Returns
+-------
+float
+    The azimuthal angle.)doc"},
+    {"WaveformAtAPointFT::Re", R"doc(Return the real part of the Fourier transform.
 
 Parameters
 ----------
-  const Quaternion& Q
-  const vector<Quaternion>& P
+f : int, optional
+    Index of the frequency.  If omitted, the values at all frequencies are
+    returned.
 
 Returns
 -------
-  vector<Quaternion>
-
-
+float or numpy.ndarray of float
+    The real part at the frequency with the given index, or at each of the
+    frequencies `WaveformAtAPointFT.F`.)doc"},
+    {"WaveformAtAPointFT::Im", R"doc(Return the imaginary part of the Fourier transform.
 
-
 Parameters
 ----------
-  const vector<Quaternion>& Q
-  const vector<double>& x
+f : int, optional
+    Index of the frequency.  If omitted, the values at all frequencies are
+    returned.
 
 Returns
 -------
-  vector<Quaternion>
-
+float or numpy.ndarray of float
+    The imaginary part at the frequency with the given index, or at each of
+    the frequencies `WaveformAtAPointFT.F`.)doc"},
+    {"WaveformAtAPointFT::InversePSD", R"doc(Return the inverse noise power spectral density of a detector.
 
+The inverse PSD :math:`1/S_n(f)` is evaluated at each of the frequencies
+`WaveformAtAPointFT.F`, and may be passed as the ``InversePSD`` argument of
+`WaveformAtAPointFT.SNR`, `WaveformAtAPointFT.InnerProduct`,
+`WaveformAtAPointFT.Match`, and `WaveformAtAPointFT.Normalize`.  It is zero
+(or negligibly small) outside the sensitive band of the detector.
 
-
 Parameters
 ----------
-  const vector<Quaternion>& Q
-  const vector<Quaternion>& P
+Detector : str, default "AdvLIGO_ZeroDet_HighP"
+    The name of the noise curve, which must be one of these:
 
-Returns
--------
-  vector<Quaternion>)doc"},
-    {"sqrt", R"doc(Parameters
-----------
-  const Quaternion& Q
+    * ``"AdvLIGO_ZeroDet_HighP"``: Advanced LIGO, zero detuning and high
+      power, from LIGO-T0900288-v3, between 10 Hz and 16384 Hz.
+    * ``"AdvLIGO_ZeroDet_LowP"``: Advanced LIGO, zero detuning and low power,
+      from LIGO-T0900288-v3, between 10 Hz and 16384 Hz.
+    * ``"AdvLIGO_NSNSOptimal"``: a fit to the Advanced LIGO noise curve
+      optimized for neutron-star binaries, between 10 Hz and 8192 Hz.
+    * ``"IniLIGO_Approx"``: an approximation to the design goal of initial
+      LIGO, between 40 Hz and 8192 Hz.
+    * ``"Flat"``: a PSD equal to 1 at every frequency.
 
+    Any other name raises an error.
+
 Returns
 -------
-  Quaternion
+numpy.ndarray of float
+    The inverse PSD at each frequency.)doc"},
+    {"WaveformAtAPointFT::SNR", R"doc(Compute the signal-to-noise ratio of the waveform.
+
+The signal-to-noise ratio is
 
+.. math::
 
+   \rho = \sqrt{4\, \Delta f \sum_k \frac{|\tilde{h}(f_k)|^2}{S_n(f_k)}},
 
+where the sum runs over the stored frequencies :math:`f_k` and
+:math:`\Delta f` is their spacing.
 
 Parameters
 ----------
-  const vector<Quaternion>& Q
+InversePSD : array_like of float, optional
+    The inverse noise PSD at each of the frequencies `WaveformAtAPointFT.F`,
+    as returned by `WaveformAtAPointFT.InversePSD`.  If it is given,
+    ``Detector`` may not be.
+Detector : str, default "AdvLIGO_ZeroDet_HighP"
+    The name of the noise curve to use when ``InversePSD`` is not given; see
+    `WaveformAtAPointFT.InversePSD` for the accepted names.
 
 Returns
 -------
-  vector<Quaternion>)doc"},
-    {"sqrtOfRotor", R"doc(Parameters
-----------
-  const Quaternion& Q
+float
+    The signal-to-noise ratio.)doc"},
+    {"WaveformAtAPointFT::InnerProduct", R"doc(Compute the noise-weighted inner product with another waveform.
 
-Returns
--------
-  Quaternion
+The inner product is
 
+.. math::
 
+   (A|B) = 4\, \Delta f \sum_k
+   \frac{\mathrm{Re}[\tilde{A}(f_k) \tilde{B}^*(f_k)]}{S_n(f_k)},
 
+where :math:`A` is this waveform, the sum runs over the stored frequencies
+:math:`f_k`, and :math:`\Delta f` is their spacing.  No maximization over
+time or phase offsets is done; for that, use `WaveformAtAPointFT.Match`.
 
 Parameters
-----------
-  const vector<Quaternion>& Q
-
-Returns
--------
-  vector<Quaternion>)doc"},
-    {"std", R"doc(namespace std
-=============
-  STL namespace.)doc"},
-    {"tolower", R"doc(Parameters
 ----------
-  const string& A
+B : WaveformAtAPointFT
+    The other waveform, which must have the same number of frequencies.
+InversePSD : array_like of float
+    The inverse noise PSD at each of the frequencies `WaveformAtAPointFT.F`,
+    as returned by `WaveformAtAPointFT.InversePSD`.
 
 Returns
 -------
-  string)doc"},
-    {"vFromOneOverK", R"doc(Derive three-velocity from the inverse conformal metric.
-========================================================
-  Parameters
-  ----------
-    const Modes& OneOverK
+float
+    The inner product.)doc"},
+    {"WaveformAtAPointFT::Match", R"doc(Compute the match between this waveform and another.
 
-  Returns
-  -------
-    ThreeVector)doc"},
-    {"vec", R"doc(Parameters
-----------
-  const Quaternion& Q
+The complex noise-weighted overlap of the two waveforms is computed as a
+function of the time offset between them by an inverse Fourier transform,
+and its magnitude is maximized over that offset; maximizing the magnitude
+also maximizes over the phase offset.  The match is
 
-Returns
--------
-  vector<double>
+.. math::
 
+   4\, \Delta f \max_t \left| \sum_k
+   \frac{\tilde{A}(f_k) \tilde{B}^*(f_k)}{S_n(f_k)}
+   e^{2\pi i f_k t} \right|.
 
+This is the conventional match, between 0 and 1, only if both waveforms have
+been normalized with `WaveformAtAPointFT.Normalize`; otherwise, a warning is
+printed and the unnormalized overlap is returned.  The two waveforms must have
+the same number of frequencies and the same frequency spacing, or an error is
+raised.
 
+The method may be called as ``Match(B, InversePSD)`` or ``Match(B,
+Detector)``, which return only the match, or as ``Match(B, InversePSD,
+timeOffset, phaseOffset, match)`` or ``Match(B, timeOffset, phaseOffset,
+match, Detector)``, which return the tuple ``(timeOffset, phaseOffset,
+match)``.  In the latter forms, the input values of ``timeOffset``,
+``phaseOffset``, and ``match`` are ignored; they serve only to select the
+form that returns the offsets.
 
 Parameters
 ----------
-  const vector<Quaternions::Quaternion>& Q
+B : WaveformAtAPointFT
+    The waveform with which to compute the match.
+InversePSD : array_like of float, optional
+    The inverse noise PSD at each of the frequencies `WaveformAtAPointFT.F`,
+    as returned by `WaveformAtAPointFT.InversePSD`.  If it is given,
+    ``Detector`` may not be.
+timeOffset : float, optional
+    Ignored; see above.
+phaseOffset : float, optional
+    Ignored; see above.
+match : float, optional
+    Ignored; see above.
+Detector : str, default "AdvLIGO_ZeroDet_HighP"
+    The name of the noise curve to use when ``InversePSD`` is not given; see
+    `WaveformAtAPointFT.InversePSD` for the accepted names.
 
 Returns
 -------
-  vector<vector<double>>)doc"},
-    {"virtualWaveformUtilities::Interpolator::~Interpolator", R"doc(Parameters
-----------
-  (none)
+timeOffset : float
+    The time offset between the waveforms, in seconds, at which the overlap
+    is maximized.  It is returned only in the tuple forms.
+phaseOffset : float
+    Half the phase of the complex overlap at that time offset.  It is
+    returned only in the tuple forms.
+match : float
+    The match between the two waveforms.)doc"},
+    {"WaveformAtAPointFT::Normalize", R"doc(Normalize the waveform to unit signal-to-noise ratio.
 
-Returns
--------
-  ~Interpolator)doc"},
-    {"zHat", R"doc(Parameters
+The Fourier transform is divided by the signal-to-noise ratio computed by
+`WaveformAtAPointFT.SNR` with the given noise curve.  If the waveform has
+already been normalized, it is left unchanged, even if a different noise
+curve is given.
+
+Parameters
 ----------
-  0 
-  0 
-  0 
-  1 
+InversePSD : array_like of float, optional
+    The inverse noise PSD at each of the frequencies `WaveformAtAPointFT.F`,
+    as returned by `WaveformAtAPointFT.InversePSD`.  If it is given,
+    ``Detector`` may not be.
+Detector : str, default "AdvLIGO_ZeroDet_HighP"
+    The name of the noise curve to use when ``InversePSD`` is not given; see
+    `WaveformAtAPointFT.InversePSD` for the accepted names.
 
 Returns
 -------
-  const Quaternion)doc"},
-    {"zero", R"doc(Parameters
+WaveformAtAPointFT
+    This object, modified in place.)doc"},
+    {"WaveformAtAPointFT::ZeroAbove", R"doc(Set the Fourier transform to zero above a frequency.
+
+Parameters
 ----------
-  0. 0
-  0. 0
+Frequency : float
+    The frequency, in hertz, above which the data are set to zero.
 
 Returns
 -------
-  const complex<double>)doc"},
+WaveformAtAPointFT
+    This object, modified in place.)doc"},
   };
   return docstrings;
 }
