@@ -762,48 +762,55 @@ std::vector<double> GWFrames::Union(const std::vector<double>& t1, const std::ve
 }
 
 
+// An empty Matrix (with zero rows or zero columns) has no GSL storage, and is
+// represented by m==NULL, because GSL refuses to allocate an empty matrix.
+static gsl_matrix* MatrixAlloc(const unsigned int rows, const unsigned int cols) {
+  if(rows==0 || cols==0) { return NULL; }
+  return gsl_matrix_alloc(rows, cols);
+}
+
+static gsl_matrix* MatrixCalloc(const unsigned int rows, const unsigned int cols) {
+  if(rows==0 || cols==0) { return NULL; }
+  return gsl_matrix_calloc(rows, cols);
+}
+
 Matrix::Matrix()
   : m(NULL)
 { }
 
 Matrix::Matrix(unsigned int rows, unsigned int cols)
-  : m(gsl_matrix_calloc(rows, cols))
+  : m(MatrixCalloc(rows, cols))
 { }
 
 Matrix::Matrix(unsigned int rows, unsigned int cols, const double a)
-  : m(gsl_matrix_alloc(rows, cols))
+  : m(MatrixAlloc(rows, cols))
 {
-  gsl_matrix_set_all(m, a);
+  if(m) { gsl_matrix_set_all(m, a); }
 }
 
 Matrix::Matrix(const Matrix& rhs)
-  : m(gsl_matrix_alloc(rhs.nrows(), rhs.ncols()))
+  : m(MatrixAlloc(rhs.nrows(), rhs.ncols()))
 {
-  gsl_matrix_memcpy(m, rhs.m);
+  if(m) { gsl_matrix_memcpy(m, rhs.m); }
 }
 
 Matrix::Matrix(const std::vector<std::vector<double> >& DataIn)
-  : m(gsl_matrix_alloc(DataIn.size(), (DataIn.size()==0 ? 0 : DataIn[0].size())))
+  : m(NULL)
 {
-  for(unsigned int r=0; r<m->size1; ++r) {
-    for(unsigned int c=0; c<m->size2; ++c) {
-      gsl_matrix_set(m, r, c, DataIn[r][c]);
-    }
-  }
+  this->operator=(DataIn);
 }
 
 Matrix& Matrix::operator=(const Matrix& rhs) {
-  if(m) { gsl_matrix_free(m); }
-  m = gsl_matrix_alloc(rhs.nrows(), rhs.ncols());
-  gsl_matrix_memcpy(m, rhs.m);
+  Matrix tmp(rhs);
+  swap(tmp);
   return *this;
 }
 
 Matrix& Matrix::operator=(const std::vector<std::vector<double> >& DataIn) {
-  if(m) { gsl_matrix_free(m); }
-  m = gsl_matrix_alloc(DataIn.size(), (DataIn.size()==0 ? 0 : DataIn[0].size()));
-  for(unsigned int r=0; r<m->size1; ++r) {
-    for(unsigned int c=0; c<m->size2; ++c) {
+  clear();
+  m = MatrixAlloc(DataIn.size(), (DataIn.size()==0 ? 0 : DataIn[0].size()));
+  for(unsigned int r=0; r<nrows(); ++r) {
+    for(unsigned int c=0; c<ncols(); ++c) {
       gsl_matrix_set(m, r, c, DataIn[r][c]);
     }
   }
@@ -828,12 +835,12 @@ Matrix Matrix::operator-(const Matrix& rhs) {
 
 // / \@cond
 void Matrix::resize(unsigned int newNRows, unsigned int newNCols, const double a) {
-  if(m) { gsl_matrix_free(m); }
+  clear();
   if(a!=0.0) {
-    m = gsl_matrix_alloc(newNRows, newNCols);
-    gsl_matrix_set_all(m, a);
+    m = MatrixAlloc(newNRows, newNCols);
+    if(m) { gsl_matrix_set_all(m, a); }
   } else {
-    m = gsl_matrix_calloc(newNRows, newNCols);
+    m = MatrixCalloc(newNRows, newNCols);
   }
   return;
 }
@@ -841,6 +848,7 @@ void Matrix::resize(unsigned int newNRows, unsigned int newNCols, const double a
 
 void Matrix::clear() {
   if(m) { gsl_matrix_free(m); }
+  m = NULL;
   return;
 }
 

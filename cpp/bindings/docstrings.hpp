@@ -1314,11 +1314,14 @@ of the same shape is taken element by element, and the product ``M * b`` with
 a sequence ``b`` of ``M.ncols()`` floats is the matrix-vector product, returned
 as a numpy array.
 
+A matrix with zero rows or zero columns is empty: it has no storage, and it
+reports zero rows and zero columns.  An empty matrix may be copied, printed,
+converted to a numpy array of shape ``(0, 0)``, resized, and cleared.
+
 A `Matrix` may be constructed in any of these ways:
 
 ``Matrix()``
-    A matrix without storage, which must be given a size with `Matrix.resize`
-    before it is used.
+    An empty matrix, which may be given a size with `Matrix.resize`.
 ``Matrix(rows, cols)``
     A matrix of zeros with ``rows`` rows and ``cols`` columns.
 ``Matrix(rows, cols, a)``
@@ -1329,7 +1332,7 @@ A `Matrix` may be constructed in any of these ways:
 ``Matrix(DataIn)``
     A matrix with the elements of ``DataIn``, a sequence of rows, each of which
     is a sequence of floats.  The number of columns is the length of the first
-    row.)doc"},
+    row, and the matrix is empty if ``DataIn`` or its first row is empty.)doc"},
     {"Matrix::set", R"doc(Set one element of this matrix.
 
 Parameters
@@ -1360,7 +1363,8 @@ int
     {"Matrix::resize", R"doc(Change the shape of this matrix, discarding its contents.
 
 The previous elements are not preserved; every element of the resized matrix
-is set to ``value``.
+is set to ``value``.  If either new dimension is zero, the matrix becomes
+empty.
 
 Parameters
 ----------
@@ -1370,13 +1374,10 @@ newNCols : int
     New number of columns.
 value : float, default 0.0
     Value given to every element.)doc"},
-    {"Matrix::clear", R"doc(Release the storage of this matrix.
+    {"Matrix::clear", R"doc(Release the storage of this matrix, leaving it empty.
 
-Warnings
---------
-The current implementation frees the underlying GSL matrix without marking it
-as freed, so the object must not be used after this call, and its eventual
-destruction frees the storage a second time.)doc"},
+Afterward the matrix has zero rows and zero columns, and it may be given a new
+size with `Matrix.resize`.  Clearing an empty matrix does nothing.)doc"},
     {"Unwrap", R"doc(Unwrap a phase so that it is (roughly) continuous.
 
 Multiples of :math:`2\pi` are added to the elements of ``In`` so that the
