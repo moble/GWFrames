@@ -89,6 +89,16 @@ Waveform.__reduce__ = _Waveform__reduce__
 
 
 def GetFileNamePrefix(W):
+    """Return a prefix for file names describing the data type and frame type.
+
+    The prefix is like ``"rhOverM_Corotating_"`` or ``"rMPsi4_Inertial_"``, and
+    is prepended to file names by `Waveform.OutputToH5` and
+    `Waveform.OutputToNRAR`.
+
+    Returns
+    -------
+    str
+    """
     return W.DescriptorString() + "_" + W.FrameTypeString() + "_"
 
 
@@ -96,6 +106,15 @@ Waveform.GetFileNamePrefix = GetFileNamePrefix
 
 
 def GetLaTeXDataDescription(W):
+    r"""Return a LaTeX description of the data, for labeling plots.
+
+    The description includes the factors of :math:`r` and :math:`M` that have
+    been scaled out of the data, as in ``r\,h/M`` or ``r\,M\,\psi_4``.
+
+    Returns
+    -------
+    str
+    """
     LaTeXDataDescription = ""
     if W.RIsScaledOut():
         LaTeXDataDescription = r"r\,"
@@ -136,13 +155,22 @@ def _AsStr(value):
 
 
 def OutputToNRAR(W, FileName, FileWriteMode="w"):
-    """
-    Output the Waveform in NRAR format.
+    """Write the Waveform to an HDF5 file in the NRAR format.
 
-    Note that the FileName is prepended with some descriptive
-    information involving the data type and the frame type, such as
-    'rhOverM_Corotating_' or 'rMPsi4_Aligned_'.
+    The NRAR format stores each mode as a dataset of time, real part, and
+    imaginary part, but does not store the frame or the other information
+    that `OutputToH5` writes.  The data can be read back with `ReadFromNRAR`.
 
+    Parameters
+    ----------
+    FileName : str
+        Name of the file to write.  The descriptive prefix returned by
+        `Waveform.GetFileNamePrefix`, such as ``"rhOverM_Corotating_"``, is
+        prepended to the base name of the file.  If the name continues after
+        ``".h5"``, as in ``"Data.h5/Group"``, the data are written to that
+        group within the file.
+    FileWriteMode : str, default "w"
+        Mode in which the file is opened by `h5py.File`.
     """
     import numpy as np
     from h5py import File
@@ -180,16 +208,20 @@ Waveform.OutputToNRAR = OutputToNRAR
 
 
 def OutputToH5(W, FileName, FileWriteMode="w"):
-    """
-    Output the Waveform with all necessary information, in GWFrames format.
+    """Write the Waveform to an HDF5 file in the GWFrames format.
 
-    This function outputs the Waveform object with *all* data, in a
-    format that is not compatible with NRAR.  See also `OutputToNRAR`.
+    This format stores *all* of the information in the Waveform, including its
+    history, frame, and types, and can be read back with `ReadFromH5`.  It is
+    not compatible with the NRAR format written by `OutputToNRAR`.
 
-    Note that the FileName is prepended with some descriptive
-    information involving the data type and the frame type, such as
-    'rhOverM_Corotating_' or 'rPsi4_Aligned_'.
-
+    Parameters
+    ----------
+    FileName : str
+        Name of the file to write.  The descriptive prefix returned by
+        `Waveform.GetFileNamePrefix`, such as ``"rhOverM_Corotating_"``, is
+        prepended to the base name of the file.
+    FileWriteMode : str, default "w"
+        Mode in which the file is opened by `h5py.File`.
     """
     import numpy as np
     from h5py import File, string_dtype
@@ -225,8 +257,18 @@ Waveform.OutputToH5 = OutputToH5
 
 
 def ReadFromH5(FileName):
-    """
-    Read data from an H5 file, as output by GWFrames.
+    """Read a Waveform from an HDF5 file in the GWFrames format.
+
+    The file should have been written by `Waveform.OutputToH5`.
+
+    Parameters
+    ----------
+    FileName : str
+        Name of the file to read.
+
+    Returns
+    -------
+    Waveform
     """
     import numpy as np
     from h5py import File
@@ -271,8 +313,24 @@ def ReadFromH5(FileName):
 
 
 def MonotonicIndices(T, MinTimeStep=1.0e-5):
-    """
-    Given an array of times, return the indices that make the array strictly monotonic.
+    """Return the indices that make an array of times strictly increasing.
+
+    Whenever a time is not greater than the previous one by more than
+    ``MinTimeStep``, the earlier times that are not less than it (to within
+    ``MinTimeStep``) are dropped.  This happens, for example, when a
+    simulation is restarted from an earlier time.
+
+    Parameters
+    ----------
+    T : array_like of float
+        The times.
+    MinTimeStep : float, default 1e-5
+        The smallest allowed increase between successive times.
+
+    Returns
+    -------
+    numpy.ndarray of int
+        Indices into ``T`` of the times to keep.
     """
     import numpy as np
 
@@ -293,8 +351,23 @@ def MonotonicIndices(T, MinTimeStep=1.0e-5):
 
 
 def ReadFromNRAR(FileName):
-    """
-    Read data from an H5 file in NRAR format.
+    """Read a Waveform from an HDF5 file in the NRAR format.
+
+    If the file does not record the frame type, data type, and scaling of the
+    data, defaults are assumed (an inertial frame, with :math:`r` and
+    :math:`M` scaled out), and the data type is guessed from the file name.
+    The times are made strictly increasing with `MonotonicIndices`.
+
+    Parameters
+    ----------
+    FileName : str
+        Name of the file to read.  If the name continues after ``".h5"``, as
+        in ``"Data.h5/Group"``, the data are read from that group within the
+        file.
+
+    Returns
+    -------
+    Waveform
     """
     import re
 
