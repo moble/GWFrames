@@ -106,9 +106,13 @@ struct NumpyVectorVectorCaster {
       if (array.ndim() == 2) {
         const auto rows = array.shape(0);
         const auto cols = array.shape(1);
+        // The array is C-contiguous, so row `i` starts `i * cols` elements in.
+        // Indexing with `array.data(i, 0)` would raise an IndexError when
+        // `cols` is zero, which is why the offset is computed explicitly.
+        const T* data = array.data();
         value.assign(rows, std::vector<T>(cols));
         for (py::ssize_t i = 0; i < rows; ++i) {
-          std::copy(array.data(i, 0), array.data(i, 0) + cols, value[i].begin());
+          std::copy(data + i * cols, data + (i + 1) * cols, value[i].begin());
         }
         return true;
       }
@@ -150,8 +154,11 @@ struct NumpyVectorVectorCaster {
       return list.release();
     }
     py::array_t<T> array({static_cast<py::ssize_t>(src.size()), static_cast<py::ssize_t>(cols)});
+    // As in `load`, the offset of each row is computed explicitly, so that
+    // rows of length zero do not raise an IndexError.
+    T* data = array.mutable_data();
     for (std::size_t i = 0; i < src.size(); ++i) {
-      std::copy(src[i].begin(), src[i].end(), array.mutable_data(i, 0));
+      std::copy(src[i].begin(), src[i].end(), data + i * cols);
     }
     return array.release();
   }
