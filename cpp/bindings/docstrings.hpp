@@ -2618,8 +2618,10 @@ Waveform
     This object, modified in place.)doc"},
     {"Waveform::DropTimesOutside", R"doc(Remove the data at times outside an interval, in place.
 
-The time steps that remain are those with ``ta < t <= tb``, except that the
-first time step is always removed, even when ``ta`` precedes it.
+The time steps that remain are those with ``ta <= t <= tb``.  If ``tb`` is
+less than ``ta``, or no time step lies in the interval, all time steps are
+removed.  A frame with one rotor per time step is trimmed along with the times,
+while a constant frame (one rotor, or none) is left unchanged.
 
 Parameters
 ----------

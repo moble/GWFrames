@@ -437,8 +437,11 @@ GWFrames::Waveform GWFrames::Waveform::SliceOfTimesWithoutModes(const double t_a
 /// Remove all data relating to times outside of the given range
 GWFrames::Waveform& GWFrames::Waveform::DropTimesOutside(const double t_a, const double t_b) {
   history << "this->DropTimesOutside(" << t_a << ", " << t_b << ");" << std::endl;
-  const unsigned int i_t_a = Quaternions::huntRight(t, t_a);
-  const unsigned int i_t_b = Quaternions::huntRight(t, t_b, i_t_a);
+  // Keep exactly the times with t_a <= t <= t_b.  The index i_t_a is
+  // the first time not before t_a, and i_t_b is one past the last
+  // time not after t_b (but never less than i_t_a).
+  const unsigned int i_t_a = std::lower_bound(t.begin(), t.end(), t_a) - t.begin();
+  const unsigned int i_t_b = std::max(i_t_a, static_cast<unsigned int>(std::upper_bound(t.begin(), t.end(), t_b) - t.begin()));
   vector<vector<complex<double> > > newdata(NModes(), vector<complex<double> >(t.size()));
   for(unsigned int mode=0; mode<NModes(); ++mode) {
     vector<complex<double> > ModeData = Data(mode);
