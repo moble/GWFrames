@@ -2445,12 +2445,12 @@ divided with ``*`` and ``/``, which act pointwise on the sphere.  The spin
 weight of a product is the sum of the spin weights of the factors, and that of
 a quotient is their difference.  The result has every mode from
 :math:`\ell = |s|`, where :math:`s` is its spin weight, up to the smaller of
-the largest :math:`\ell` values of the two inputs; modes of the inputs above
-that :math:`\ell` are ignored.  The pointwise values are computed on a grid
-that resolves only those modes, so the result is exact only when the product
-or quotient of the truncated inputs has no higher modes; otherwise the higher
-modes are aliased into the result.  A waveform may also be multiplied or
-divided by a float.
+the largest :math:`\ell` values of the two inputs.  Every mode of both inputs
+is used, and the pointwise values are computed on a grid that resolves modes
+up to the sum of those largest :math:`\ell` values, so the modes of a product
+are exact, and any higher modes of the product are simply omitted.  A quotient
+is generally not band-limited, so its modes are only approximate.  A waveform
+may also be multiplied or divided by a float.
 
 A `Waveform` may be constructed in any of these ways:
 

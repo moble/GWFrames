@@ -3,7 +3,9 @@
 These operators transform both waveforms to values on a grid on the sphere,
 combine them pointwise, and transform back.  They once loaded only the
 m = -ell coefficient of each ell into the transform, and they gave a quotient
-the sum of the spin weights instead of their difference.
+the sum of the spin weights instead of their difference.  The modes of a
+product must be exact, even when the product has higher modes than are
+returned.
 """
 
 import numpy as np
@@ -88,6 +90,29 @@ def test_product_is_truncated_to_the_smaller_ell_max():
     assert C.SpinWeight() == -1
     np.testing.assert_array_equal(C.LM(), expected_LM(-1, 3))
     np.testing.assert_allclose(values(C), values(A) * values(B), rtol=0, atol=1e-12)
+
+
+def test_truncated_product_is_exact():
+    # Every mode of each factor holds data, so the product has modes up to
+    # ell = 8, beyond the ell = 3 returned.  The returned modes must equal
+    # those of the whole product, which is found by padding the factors with
+    # zero modes up to ell = 8.
+    rng = np.random.default_rng(161718)
+    A = waveform(rng, -2, 5)
+    B = waveform(rng, 1, 3)
+    C = A * B
+    np.testing.assert_array_equal(C.LM(), expected_LM(-1, 3))
+    APadded = GWFrames.Waveform(T, expected_LM(-2, 8),
+                                np.vstack([A.Data(), np.zeros((len(expected_LM(-2, 8)) - A.NModes(), len(T)))]))
+    APadded.SetSpinWeight(-2)
+    APadded.SetFrameType(GWFrames.Inertial)
+    BPadded = GWFrames.Waveform(T, expected_LM(1, 8),
+                                np.vstack([B.Data(), np.zeros((len(expected_LM(1, 8)) - B.NModes(), len(T)))]))
+    BPadded.SetSpinWeight(1)
+    BPadded.SetFrameType(GWFrames.Inertial)
+    Full = APadded * BPadded
+    np.testing.assert_allclose(values(Full), values(A) * values(B), rtol=0, atol=1e-11)
+    np.testing.assert_allclose(C.Data(), Full.Data()[:C.NModes()], rtol=0, atol=1e-11)
 
 
 def test_quotient_of_waveform_by_itself():

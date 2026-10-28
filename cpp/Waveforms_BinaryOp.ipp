@@ -69,6 +69,17 @@ GWFrames::Waveform GWFrames::Waveform::BinaryOp(const GWFrames::Waveform& B) con
   }
   int Nlm = N_lm(lMax);
 
+  // Every mode of each input goes into the transform, so find the
+  // largest ell of each input
+  int lMaxInA = lMinA;
+  for(unsigned int i=0; i<A.NModes(); ++i) {
+    if(A.lm[i][0]>lMaxInA) { lMaxInA = A.lm[i][0]; }
+  }
+  int lMaxInB = lMinB;
+  for(unsigned int i=0; i<B.NModes(); ++i) {
+    if(B.lm[i][0]>lMaxInB) { lMaxInB = B.lm[i][0]; }
+  }
+
   // Set the output lm data
   C.lm = std::vector<std::vector<int> >(lMax*(2+lMax)-lMin*lMin+1, std::vector<int>(2,0));
   {
@@ -83,17 +94,20 @@ GWFrames::Waveform GWFrames::Waveform::BinaryOp(const GWFrames::Waveform& B) con
   }
 
   // These numbers determine the equi-angular grid on which we will do
-  // the pointwise multiplication.  For best accuracy, have N_phi>
-  // 2*lMax and N_theta > 2*lMax; but for speed, don't make them much
-  // greater.
-  int N_phi = 2*lMax + 1;
-  int N_theta = 2*lMax + 1;
+  // the pointwise multiplication.  The product of the inputs has modes
+  // up to ell = lMaxInA+lMaxInB, so the grid must resolve that band
+  // limit for the transform back to be free of aliasing, as in
+  // `Modes::operator*`.  (A quotient is not band-limited, so it is
+  // only approximated on this grid.)
+  const int lMaxGrid = lMaxInA + lMaxInB;
+  int N_phi = 2*lMaxGrid + 1;
+  int N_theta = 2*lMaxGrid + 1;
 
   // These will be work arrays
   // const std::complex<double> I(0.0,1.0);
   const std::complex<double> zero(0.0,0.0);
-  std::vector<std::complex<double> > almA(Nlm);
-  std::vector<std::complex<double> > almB(Nlm);
+  std::vector<std::complex<double> > almA(N_lm(lMaxInA));
+  std::vector<std::complex<double> > almB(N_lm(lMaxInB));
   std::vector<std::complex<double> > almC(Nlm);
 
   // Now, loop through each time step doing the work
@@ -111,7 +125,7 @@ GWFrames::Waveform GWFrames::Waveform::BinaryOp(const GWFrames::Waveform& B) con
           ++i;
         }
       }
-      for(int l=lMinA; l<=lMax; ++l) {
+      for(int l=lMinA; l<=lMaxInA; ++l) {
         for(int m=-l; m<=l; ++m) {
           const unsigned int iA = A.FindModeIndexWithoutError(l, m);
           almA[i] = (iA<A.NModes() ? A.Data(iA, i_t) : zero);
@@ -128,7 +142,7 @@ GWFrames::Waveform GWFrames::Waveform::BinaryOp(const GWFrames::Waveform& B) con
           ++i;
         }
       }
-      for(int l=lMinB; l<=lMax; ++l) {
+      for(int l=lMinB; l<=lMaxInB; ++l) {
         for(int m=-l; m<=l; ++m) {
           const unsigned int iB = B.FindModeIndexWithoutError(l, m);
           almB[i] = (iB<B.NModes() ? B.Data(iB, i_t) : zero);
@@ -140,10 +154,10 @@ GWFrames::Waveform GWFrames::Waveform::BinaryOp(const GWFrames::Waveform& B) con
     { // Transform each and multiply pointwise
       spinsfast_salm2map(reinterpret_cast<fftw_complex*>(&almA[0]),
                          reinterpret_cast<fftw_complex*>(&fA[0]),
-                         A.SpinWeight(), N_theta, N_phi, lMax);
+                         A.SpinWeight(), N_theta, N_phi, lMaxInA);
       spinsfast_salm2map(reinterpret_cast<fftw_complex*>(&almB[0]),
                          reinterpret_cast<fftw_complex*>(&fB[0]),
-                         B.SpinWeight(), N_theta, N_phi, lMax);
+                         B.SpinWeight(), N_theta, N_phi, lMaxInB);
       for(int i=0; i<N_phi*N_theta; ++i) {
         fC[i] = Op()(fA[i], fB[i]);
       }
