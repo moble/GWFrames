@@ -1898,8 +1898,11 @@ GWFrames::Waveform GWFrames::Waveform::Interpolate(const std::vector<double>& Ne
   ///
   /// If `AllowTimesOutsideCurrentDomain` is true, the values of all
   /// modes will be set to 0.0 for times outside the current set of
-  /// time data.  If false, and such times are requested, an error
-  /// will be thrown.
+  /// time data, and a time-dependent frame will be held constant at
+  /// its value at the nearer end of the current time domain (frame[0]
+  /// before it, and frame.back() after it).  If false, and such times
+  /// are requested, an error will be thrown.  In either case,
+  /// `NewTime` is assumed to be in increasing order.
   ///
   if(NewTime.size()==0) {
     INFOTOCERR << ": Asking for empty Waveform." << std::endl;
@@ -1910,12 +1913,12 @@ GWFrames::Waveform GWFrames::Waveform::Interpolate(const std::vector<double>& Ne
   vector<double> NewTimesInsideCurrentDomain;
   if(AllowTimesOutsideCurrentDomain) {
     // Set the indices in the dumbest way possible
-    while(NewTime[i0]<t[0]) { ++i0; }
-    while(NewTime[i1]>t.back() && i1>0) { --i1; }
-    ++i1;
+    while(i0<i2 && NewTime[i0]<t[0]) { ++i0; }
+    i1 = i2;
+    while(i1>i0 && NewTime[i1-1]>t.back()) { --i1; }
     // Now, i0 is the first index in NewTime for which a current time
     // exists, and i1 is 1 beyond the last index in NewTime for which
-    // a current time exists.
+    // a current time exists.  If no such index exists, i0==i1.
     NewTimesInsideCurrentDomain.resize(i1-i0);
     std::copy(NewTime.begin()+i0, NewTime.begin()+i1, NewTimesInsideCurrentDomain.begin());
   } else {
@@ -1935,6 +1938,8 @@ GWFrames::Waveform GWFrames::Waveform::Interpolate(const std::vector<double>& Ne
 
   Waveform C;
   C.spinweight = this->spinweight;
+  C.boostweight = this->boostweight;
+  C.versionHist = this->versionHist;
   C.history << HistoryStr()
             << "### *this = this->Interpolate(NewTime," << AllowTimesOutsideCurrentDomain << ");" << std::endl;
   C.t = NewTime;
@@ -1942,16 +1947,20 @@ GWFrames::Waveform GWFrames::Waveform::Interpolate(const std::vector<double>& Ne
     C.frame = frame;
   } else if(frame.size()>1) { // Assume we have frame data for each time step
     if(AllowTimesOutsideCurrentDomain) {
+      // Outside the current domain, the frame is held at its value at
+      // the nearer end of that domain
       C.frame.resize(NewTime.size());
-      const std::vector<Quaternion> NewFrame = Squad(frame, t, NewTimesInsideCurrentDomain);
       for(unsigned int i=0; i<i0; ++i) {
-        C.frame[i] = NewFrame[0];
+        C.frame[i] = frame[0];
       }
-      for(unsigned int i=i0; i<i1; ++i) {
-        C.frame[i] = NewFrame[i-i0];
+      if(i1>i0) {
+        const std::vector<Quaternion> NewFrame = Squad(frame, t, NewTimesInsideCurrentDomain);
+        for(unsigned int i=i0; i<i1; ++i) {
+          C.frame[i] = NewFrame[i-i0];
+        }
       }
       for(unsigned int i=i1; i<i2; ++i) {
-        C.frame[i] = NewFrame.back();
+        C.frame[i] = frame.back();
       }
     } else {
       C.frame = Squad(frame, t, NewTime);
@@ -1982,8 +1991,8 @@ GWFrames::Waveform GWFrames::Waveform::Interpolate(const std::vector<double>& Ne
         C.data[i_m][i_t] = complex<double>( 0., 0. );
       }
       for(unsigned int i_t=i0; i_t<i1; ++i_t) {
-        C.data[i_m][i_t] = complex<double>( gsl_spline_eval(splineRe, NewTimesInsideCurrentDomain[i_t], accRe),
-                                            gsl_spline_eval(splineIm, NewTimesInsideCurrentDomain[i_t], accIm) );
+        C.data[i_m][i_t] = complex<double>( gsl_spline_eval(splineRe, NewTimesInsideCurrentDomain[i_t-i0], accRe),
+                                            gsl_spline_eval(splineIm, NewTimesInsideCurrentDomain[i_t-i0], accIm) );
       }
       for(unsigned int i_t=i1; i_t<i2; ++i_t) {
         C.data[i_m][i_t] = complex<double>( 0., 0. );

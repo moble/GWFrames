@@ -2584,16 +2584,18 @@ Waveform
 
 The real and imaginary parts of each mode are interpolated with cubic splines,
 and frame data with one rotor for each time step are interpolated with
-`Quaternions.Squad`.  This waveform is not changed.
+`Quaternions.Squad`.  All other properties, including the spin weight, boost
+weight, and version history, are copied.  This waveform is not changed.
 
 Parameters
 ----------
 NewTime : array_like of float
-    New times to which the data are interpolated.
+    New times to which the data are interpolated, in increasing order.
 AllowTimesOutsideCurrentDomain : bool, default False
     If true, the modes are set to zero at times outside the current time
-    domain, and the frame is held at its value at the nearer end of that
-    domain; if false, such times raise an error.
+    domain, and frame data with one rotor for each time step are held at the
+    rotor at the nearer end of that domain (the first rotor at earlier times,
+    and the last at later times); if false, such times raise an error.
 
 Returns
 -------
