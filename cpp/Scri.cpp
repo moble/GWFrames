@@ -341,10 +341,14 @@ DataGrid GWFrames::operator/(const double& a, const DataGrid& b) {
   for(int i=0; i<N; ++i) {
     c[i] = a/c[i];
   }
+  c.SetSpin(-b.Spin());
   return c;
 }
 
 DataGrid GWFrames::operator+(const double& a, const DataGrid& b) {
+  /// A constant has spin weight 0, so this is meaningful only when
+  /// `b` has spin weight 0 (or `a` is 0).  The spin weight is not
+  /// checked, and the result has the spin weight of `b`.
   DataGrid c(b);
   const int N = b.N_theta()*b.N_phi();
   for(int i=0; i<N; ++i) {
@@ -354,6 +358,9 @@ DataGrid GWFrames::operator+(const double& a, const DataGrid& b) {
 }
 
 DataGrid GWFrames::operator-(const double& a, const DataGrid& b) {
+  /// A constant has spin weight 0, so this is meaningful only when
+  /// `b` has spin weight 0 (or `a` is 0).  The spin weight is not
+  /// checked, and the result has the spin weight of `b`.
   DataGrid c(b);
   const int N = b.N_theta()*b.N_phi();
   for(int i=0; i<N; ++i) {
