@@ -919,7 +919,7 @@ def RunExtrapolation(TopLevelInputDir, TopLevelOutputDir, Subdirectory, DataFile
         makedirs(OutputDir)
 
     # If OutputDir/.started_r...h5 doesn't exist, touch it; remove errors and finished reports
-    with file('{0}/.started_{1}'.format(OutputDir,DataFile), 'a') :
+    with open('{0}/.started_{1}'.format(OutputDir,DataFile), 'a') :
         utime('{0}/.started_{1}'.format(OutputDir,DataFile), None)
     if(exists('{0}/.error_{1}'.format(OutputDir,DataFile))) :
         remove('{0}/.error_{1}'.format(OutputDir,DataFile))
