@@ -2565,7 +2565,7 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
   // Also, we don't search more than (t2-t1)/2.0 to either left or
   // right.
   const double deltat_1 = std::max(W_B.T(1)-t_1, -(t_2-t_1)/2.);
-  const double deltat_2 = std::min(W_B.NTimes()-2-t_2, (t_2-t_1)/2.);
+  const double deltat_2 = std::min(W_B.T(W_B.NTimes()-2)-t_2, (t_2-t_1)/2.);
 
   // Align W_A forever, and align W_B initially as a first guess
   W_A.AlignDecompositionFrameToModes(t_mid, nHat_A);

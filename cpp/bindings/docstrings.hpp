@@ -4100,7 +4100,10 @@ The times ``t_1`` and ``t_2`` refer to the time axis of ``A``.  The algorithm
 assumes that the waveforms are already reasonably well aligned in time.  In
 particular, the final value of ``t_mid + deltat`` for ``B`` must lie somewhere
 in the interval from ``t_1`` to ``t_2``, and after the time shift, ``B`` must
-have data over all of that interval.
+have data over all of that interval.  The initial, coarse search considers
+time shifts of at most ``(t_2 - t_1) / 2`` in either direction, further
+limited so that the shifted interval stays at least one time step inside the
+data of ``B``.
 
 As long as this last condition is satisfied, and the waveforms are even
 remotely well sampled, and assuming the code's logic does not fail due to
