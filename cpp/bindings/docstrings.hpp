@@ -1748,17 +1748,17 @@ representation.
 
 The arithmetic operators ``+``, ``-``, ``*``, and ``/`` act point by point on
 two grids of the same dimensions; a product adds the spin weights, and a
-quotient subtracts them.  A sum or difference is meaningful only for two grids
-of equal spin weight, but unlike the sum of two `Modes` objects it does not
-check the spin weights; the result has the spin weight of the left operand.
+quotient subtracts them.  A sum or difference is defined only for two grids of
+equal spin weight, as for `Modes`, and raises `ValueError` otherwise.
 
-A float ``a`` may also appear on the left, as in ``a * D``, ``a / D``,
-``a + D``, and ``a - D``, each of which acts on every point of ``D``.  The
-product ``a * D`` has the spin weight :math:`s` of ``D``, and the quotient
-``a / D`` has spin weight :math:`-s`, as does ``D.pow(-1)``.  A sum or
+A float ``a`` may also appear on either side, as in ``a * D``, ``D * a``,
+``a / D``, ``D / a``, ``a + D``, ``D + a``, ``a - D``, and ``D - a``, each of
+which acts on every point of ``D``.  The products ``a * D`` and ``D * a`` and
+the quotient ``D / a`` have the spin weight :math:`s` of ``D``, and the
+quotient ``a / D`` has spin weight :math:`-s`, as does ``D.pow(-1)``.  A sum or
 difference with a nonzero number is meaningful only when :math:`s = 0`,
-because a constant has spin weight 0; the spin weight is not checked, and
-``a + D`` and ``a - D`` have the spin weight of ``D``.
+because a constant has spin weight 0; the spin weight is not checked, and the
+result has the spin weight of ``D``.
 
 A `DataGrid` may be constructed in any of these ways:
 

@@ -65,6 +65,10 @@ namespace GWFrames {
   DataGrid operator/(const double& a, const DataGrid& b);
   DataGrid operator+(const double& a, const DataGrid& b);
   DataGrid operator-(const double& a, const DataGrid& b);
+  DataGrid operator*(const DataGrid& b, const double& a);
+  DataGrid operator/(const DataGrid& b, const double& a);
+  DataGrid operator+(const DataGrid& b, const double& a);
+  DataGrid operator-(const DataGrid& b, const double& a);
   DataGrid ConformalFactorGrid(const GWFrames::ThreeVector& v, const int n_theta, const int n_phi);
   DataGrid InverseConformalFactorGrid(const GWFrames::ThreeVector& v, const int n_theta, const int n_phi);
   DataGrid InverseConformalFactorBoostedGrid(const GWFrames::ThreeVector& v, const int n_theta, const int n_phi);

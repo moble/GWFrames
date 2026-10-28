@@ -104,6 +104,10 @@ void BindScri(py::module_& m) {
       .def(double() / py::self, py::arg("other"))
       .def(double() + py::self, py::arg("other"))
       .def(double() - py::self, py::arg("other"))
+      .def(py::self * double(), py::arg("other"))
+      .def(py::self / double(), py::arg("other"))
+      .def(py::self + double(), py::arg("other"))
+      .def(py::self - double(), py::arg("other"))
       .def("pow", &DataGrid::pow, py::arg("p"), Doc("DataGrid::pow"));
   m.def("ConformalFactorGrid", &ConformalFactorGrid, py::arg("v"), py::arg("n_theta"), py::arg("n_phi"),
         Doc("ConformalFactorGrid"));

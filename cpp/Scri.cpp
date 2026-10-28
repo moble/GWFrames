@@ -270,6 +270,15 @@ DataGrid DataGrid::operator/(const DataGrid& A) const {
 DataGrid DataGrid::operator+(const DataGrid& A) const {
   const DataGrid& B=*this;
 
+  // Check that both grids have the same spin weight
+  if(A.s != B.s) {
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+              << "\nError: The second data set has spin A.s=" << A.s << ", which is not the same as this set's spin s=" << B.s << "."
+              << "\n       This addition is not defined.\n"
+              << std::endl;
+    throw(GWFrames_BadWaveformInformation);
+  }
+
   // Check that we have the same amounts of data
   if(A.n_theta != B.n_theta) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
@@ -297,6 +306,15 @@ DataGrid DataGrid::operator+(const DataGrid& A) const {
 
 DataGrid DataGrid::operator-(const DataGrid& A) const {
   const DataGrid& B=*this;
+
+  // Check that both grids have the same spin weight
+  if(A.s != B.s) {
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+              << "\nError: The second data set has spin A.s=" << A.s << ", which is not the same as this set's spin s=" << B.s << "."
+              << "\n       This subtraction is not defined.\n"
+              << std::endl;
+    throw(GWFrames_BadWaveformInformation);
+  }
 
   // Check that we have the same amounts of data
   if(A.n_theta != B.n_theta) {
@@ -374,6 +392,25 @@ DataGrid GWFrames::operator-(const double& a, const DataGrid& b) {
     c[i] = a-c[i];
   }
   return c;
+}
+
+DataGrid GWFrames::operator*(const DataGrid& b, const double& a) {
+  return a*b;
+}
+
+DataGrid GWFrames::operator/(const DataGrid& b, const double& a) {
+  /// Unlike `a/b`, this keeps the spin weight of `b`.
+  return (1.0/a)*b;
+}
+
+DataGrid GWFrames::operator+(const DataGrid& b, const double& a) {
+  /// As with `a+b`, the spin weight is not checked.
+  return a+b;
+}
+
+DataGrid GWFrames::operator-(const DataGrid& b, const double& a) {
+  /// As with `a-b`, the spin weight is not checked.
+  return (-a)+b;
 }
 
 
