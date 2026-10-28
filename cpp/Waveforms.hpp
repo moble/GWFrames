@@ -22,6 +22,8 @@ extern "C" {
 #include <cmath>
 #include <string>
 #include <sstream>
+#include <functional>
+#include <type_traits>
 
 #include "Quaternions.hpp"
 #include "Utilities.hpp"

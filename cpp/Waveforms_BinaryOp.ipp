@@ -1,4 +1,4 @@
-/// Pointwise multiply this object by another Waveform object
+/// Pointwise multiply or divide this object by another Waveform object
 template <typename Op>
 GWFrames::Waveform GWFrames::Waveform::BinaryOp(const GWFrames::Waveform& B) const {
   const Waveform& A = *this;
@@ -32,8 +32,10 @@ GWFrames::Waveform GWFrames::Waveform::BinaryOp(const GWFrames::Waveform& B) con
   // This will be the new object holding the multiplied data
   GWFrames::Waveform C;
 
-  // The new spin weight is the sum of the old ones
-  C.spinweight = A.spinweight + B.spinweight;
+  // The new spin weight is the sum of the old ones for a product, and
+  // their difference for a quotient
+  const bool IsQuotient = std::is_same<Op, std::divides<std::complex<double> > >::value;
+  C.spinweight = (IsQuotient ? A.spinweight - B.spinweight : A.spinweight + B.spinweight);
 
   // Store both old histories in C's
   C.history << "### *this = A*B\n"
