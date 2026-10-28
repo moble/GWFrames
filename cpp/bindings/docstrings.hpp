@@ -3923,10 +3923,10 @@ Parameters
 B : Waveform
     The waveform to compare with this one.
 MinTimeStep : float, default 0.005
-    Intended lower limit on the time step of the result.  It is currently
-    ignored; the default of `Intersection`, 0.005, is always used.
+    Lower limit on the time step of the result.
 MinTime : float, default -3.0e300
-    Intended earliest time of the result.  It is currently ignored.
+    Earliest time of the result.  The result begins at the earliest time
+    common to the two waveforms, or at ``MinTime``, whichever is later.
 
 Returns
 -------

@@ -2862,7 +2862,7 @@ GWFrames::Waveform GWFrames::Waveform::Compare(const GWFrames::Waveform& A, cons
             << "#### End of old histories from `Compare`" << std::endl;
 
   // The new time axis will be the intersection of the two old ones
-  C.t = GWFrames::Intersection(A.t, B.t);
+  C.t = GWFrames::Intersection(A.t, B.t, MinTimeStep, MinTime);
 
   // Copy the basics
   C.frameType = frameType;
