@@ -11,27 +11,40 @@ def _ModeLabel(LM):
 
 
 def plotWaveform(this, WaveformPart='Abs', Modes=(), t_fid=None, *pyplot_args, **pyplot_kwargs) :
-    """
-    This function should be called as a method of the Waveform class,
-    e.g., as
+    """Plot some part of the modes of a Waveform against time.
 
+    Importing `GWFrames.plot` attaches this function to `Waveform` and
+    `PNWaveform` as the method ``plot``, so that it is called as, for example,
+
+    >>> import GWFrames.plot
     >>> W.plot('Abs', Modes=[[2,2], [2,-2]], c='r')
 
-    where W is a Waveform object.  The first parameter should be a
-    string --- one of ['Abs', 'LogAbs', 'LogLogAbs', 'Arg',
-    'ArgUnwrapped', 'Re', Im'].  The second (optional) parameter is a
-    list (using square brackets), where each element is some [l,m].
-    Only modes included in this list will be plotted, unless the list
-    is empty (the default), in which case all modes are plotted.
+    which plots the magnitudes of the (2, 2) and (2, -2) modes of ``W`` in red.
 
-    All following arguments are passed to the usual pyplot.plot (or
-    semilogx, semilogy, or loglog) function; in the example above, the
-    "c='r'" argument is passed, making the line color red.  The only
-    exception to this rule is the "label" keyword, which is handled
-    internally when there is just one line.  Otherwise, the legend
-    labels are set automatically to contain the [l,m] mode (though the
-    legend is not shown by default).
+    Parameters
+    ----------
+    WaveformPart : str, default 'Abs'
+        The part of the data to plot: one of ``'Abs'``, ``'LogAbs'``,
+        ``'LogLogAbs'``, ``'Arg'``, ``'ArgUnwrapped'``, ``'Re'``, or ``'Im'``.
+        The ``Log`` forms use logarithmic axes.
+    Modes : int or sequence, optional
+        The modes to plot, given as a single mode index, as one ``[ell, m]``
+        pair, or as a sequence of such pairs.  If empty (the default), all
+        modes are plotted.
+    t_fid : float, optional
+        For ``'ArgUnwrapped'``, the phases are shifted by multiples of
+        :math:`2\\pi` so that they lie between 0 and :math:`2\\pi` at the
+        first time step after ``t_fid``.
+    *pyplot_args, **pyplot_kwargs
+        Passed on to `matplotlib.pyplot.plot` (or ``semilogy`` or
+        ``loglog``).  The legend label of each line is set to its
+        :math:`(\\ell, m)` automatically, unless a single line is plotted and a
+        ``label`` is given.
 
+    Returns
+    -------
+    list of matplotlib.lines.Line2D
+        The lines plotted.
     """
 
     from matplotlib.pyplot import plot, semilogx, semilogy, loglog, xlabel, ylabel, setp, isinteractive, ioff, ion, draw, show, gcf

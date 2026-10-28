@@ -65,6 +65,10 @@ namespace GWFrames {
   DataGrid operator/(const double& a, const DataGrid& b);
   DataGrid operator+(const double& a, const DataGrid& b);
   DataGrid operator-(const double& a, const DataGrid& b);
+  DataGrid operator*(const DataGrid& b, const double& a);
+  DataGrid operator/(const DataGrid& b, const double& a);
+  DataGrid operator+(const DataGrid& b, const double& a);
+  DataGrid operator-(const DataGrid& b, const double& a);
   DataGrid ConformalFactorGrid(const GWFrames::ThreeVector& v, const int n_theta, const int n_phi);
   DataGrid InverseConformalFactorGrid(const GWFrames::ThreeVector& v, const int n_theta, const int n_phi);
   DataGrid InverseConformalFactorBoostedGrid(const GWFrames::ThreeVector& v, const int n_theta, const int n_phi);
@@ -97,7 +101,7 @@ namespace GWFrames {
     inline std::complex<double>& operator[](const unsigned int i) { return data[i]; }
     inline std::vector<std::complex<double> > Data() const { return data; }
   public: // Operations
-    Modes pow(const int p) const { return Modes(DataGrid(*this, 2*EllMax()*p+1, 2*EllMax()*p+1).pow(p)); }
+    Modes pow(const int p) const;
     Modes bar() const;
     Modes operator*(const Modes& M) const;
     Modes operator/(const Modes& M) const;
@@ -159,8 +163,6 @@ namespace GWFrames {
     Modes SuperMomentum() const;
     // Transformations
     SliceGrid BMSTransformationOnSlice(const double u, const GWFrames::ThreeVector& v, const GWFrames::Modes& delta) const;
-    // Moreschi algorithm
-    void MoreschiIteration(GWFrames::Modes& OneOverK_ip1, GWFrames::Modes& delta_ip1) const;
   }; // class SliceModes
 
 

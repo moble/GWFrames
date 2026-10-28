@@ -17,26 +17,28 @@ void BindUtilities(py::module_& m) {
       .def(py::init<>())
       .def(py::init<unsigned int, unsigned int>(), py::arg("rows"), py::arg("cols"))
       .def(py::init<unsigned int, unsigned int, const double>(), py::arg("rows"), py::arg("cols"), py::arg("a"))
-      .def(py::init<const Matrix&>())
+      .def(py::init<const Matrix&>(), py::arg("M"))
       .def(py::init<const std::vector<DVec>&>(), py::arg("DataIn"))
       .def("__call__", [](const Matrix& M, unsigned int r, unsigned int c) {
         if (r >= M.nrows() || c >= M.ncols()) {
           throw py::index_error("Matrix index out of range");
         }
         return M(r, c);
-      })
+      }, py::arg("row"), py::arg("col"))
       .def("set", [](Matrix& M, unsigned int r, unsigned int c, double v) -> Matrix& {
         if (r >= M.nrows() || c >= M.ncols()) {
           throw py::index_error("Matrix index out of range");
         }
         return M.set(r, c, v);
-      }, py::return_value_policy::reference_internal)
-      .def("nrows", &Matrix::nrows)
-      .def("ncols", &Matrix::ncols)
-      .def("resize", &Matrix::resize, py::arg("newNRows"), py::arg("newNCols"), py::arg("value") = 0.0)
-      .def("clear", &Matrix::clear)
-      .def("__sub__", &Matrix::operator-)
-      .def("__mul__", &Matrix::operator*)
+      }, py::arg("row"), py::arg("col"), py::arg("value"), py::return_value_policy::reference_internal,
+         Doc("Matrix::set"))
+      .def("nrows", &Matrix::nrows, Doc("Matrix::nrows"))
+      .def("ncols", &Matrix::ncols, Doc("Matrix::ncols"))
+      .def("resize", &Matrix::resize, py::arg("newNRows"), py::arg("newNCols"), py::arg("value") = 0.0,
+           Doc("Matrix::resize"))
+      .def("clear", &Matrix::clear, Doc("Matrix::clear"))
+      .def("__sub__", &Matrix::operator-, py::arg("rhs"))
+      .def("__mul__", &Matrix::operator*, py::arg("b"))
       .def("numpy", [](const Matrix& M) {
         py::array_t<double> a({static_cast<py::ssize_t>(M.nrows()), static_cast<py::ssize_t>(M.ncols())});
         for (unsigned int r = 0; r < M.nrows(); ++r) {

@@ -152,8 +152,15 @@ DataGrid::DataGrid(const int Spin, const int N_theta, const int N_phi, const std
   }
 }
 
+// The smallest equi-angular grid that resolves modes up to ell=L.  It is
+// never smaller than 3x3, because spinsfast cannot handle a single point,
+// and the grid spacing in theta is pi/(n_theta-1).
+static int MinimalGridSize(const int L) {
+  return std::max(2*L+1, 3);
+}
+
 DataGrid::DataGrid(Modes M, const int N_theta, const int N_phi)
-  : s(M.Spin()), n_theta(std::max(N_theta, 2*M.EllMax()+1)), n_phi(std::max(N_phi, 2*M.EllMax()+1)), data(n_phi*n_theta, zero)
+  : s(M.Spin()), n_theta(std::max(N_theta, MinimalGridSize(M.EllMax()))), n_phi(std::max(N_phi, MinimalGridSize(M.EllMax()))), data(n_phi*n_theta, zero)
 {
   spinsfast_salm2map(reinterpret_cast<fftw_complex*>(&M[0]),
                      reinterpret_cast<fftw_complex*>(&data[0]),
@@ -161,7 +168,7 @@ DataGrid::DataGrid(Modes M, const int N_theta, const int N_phi)
 }
 
 DataGrid::DataGrid(const Modes& M, const GWFrames::ThreeVector& v, const int N_theta, const int N_phi)
-  : s(M.Spin()), n_theta(std::max(N_theta, 2*M.EllMax()+1)), n_phi(std::max(N_phi, 2*M.EllMax()+1)), data(n_phi*n_theta)
+  : s(M.Spin()), n_theta(std::max(N_theta, MinimalGridSize(M.EllMax()))), n_phi(std::max(N_phi, MinimalGridSize(M.EllMax()))), data(n_phi*n_theta)
 {
   const double dtheta = M_PI/double(n_theta-1); // theta should return to M_PI
   const double dphi = 2*M_PI/double(n_phi); // phi should not return to 2*M_PI
@@ -263,6 +270,15 @@ DataGrid DataGrid::operator/(const DataGrid& A) const {
 DataGrid DataGrid::operator+(const DataGrid& A) const {
   const DataGrid& B=*this;
 
+  // Check that both grids have the same spin weight
+  if(A.s != B.s) {
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+              << "\nError: The second data set has spin A.s=" << A.s << ", which is not the same as this set's spin s=" << B.s << "."
+              << "\n       This addition is not defined.\n"
+              << std::endl;
+    throw(GWFrames_BadWaveformInformation);
+  }
+
   // Check that we have the same amounts of data
   if(A.n_theta != B.n_theta) {
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
@@ -290,6 +306,15 @@ DataGrid DataGrid::operator+(const DataGrid& A) const {
 
 DataGrid DataGrid::operator-(const DataGrid& A) const {
   const DataGrid& B=*this;
+
+  // Check that both grids have the same spin weight
+  if(A.s != B.s) {
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__
+              << "\nError: The second data set has spin A.s=" << A.s << ", which is not the same as this set's spin s=" << B.s << "."
+              << "\n       This subtraction is not defined.\n"
+              << std::endl;
+    throw(GWFrames_BadWaveformInformation);
+  }
 
   // Check that we have the same amounts of data
   if(A.n_theta != B.n_theta) {
@@ -322,6 +347,7 @@ DataGrid DataGrid::pow(const int p) const {
   for(int i=0; i<N; ++i) {
     c[i] = std::pow(c[i], p);
   }
+  c.s = p*s;
   return c;
 }
 
@@ -340,10 +366,14 @@ DataGrid GWFrames::operator/(const double& a, const DataGrid& b) {
   for(int i=0; i<N; ++i) {
     c[i] = a/c[i];
   }
+  c.SetSpin(-b.Spin());
   return c;
 }
 
 DataGrid GWFrames::operator+(const double& a, const DataGrid& b) {
+  /// A constant has spin weight 0, so this is meaningful only when
+  /// `b` has spin weight 0 (or `a` is 0).  The spin weight is not
+  /// checked, and the result has the spin weight of `b`.
   DataGrid c(b);
   const int N = b.N_theta()*b.N_phi();
   for(int i=0; i<N; ++i) {
@@ -353,12 +383,34 @@ DataGrid GWFrames::operator+(const double& a, const DataGrid& b) {
 }
 
 DataGrid GWFrames::operator-(const double& a, const DataGrid& b) {
+  /// A constant has spin weight 0, so this is meaningful only when
+  /// `b` has spin weight 0 (or `a` is 0).  The spin weight is not
+  /// checked, and the result has the spin weight of `b`.
   DataGrid c(b);
   const int N = b.N_theta()*b.N_phi();
   for(int i=0; i<N; ++i) {
     c[i] = a-c[i];
   }
   return c;
+}
+
+DataGrid GWFrames::operator*(const DataGrid& b, const double& a) {
+  return a*b;
+}
+
+DataGrid GWFrames::operator/(const DataGrid& b, const double& a) {
+  /// Unlike `a/b`, this keeps the spin weight of `b`.
+  return (1.0/a)*b;
+}
+
+DataGrid GWFrames::operator+(const DataGrid& b, const double& a) {
+  /// As with `a+b`, the spin weight is not checked.
+  return a+b;
+}
+
+DataGrid GWFrames::operator-(const DataGrid& b, const double& a) {
+  /// As with `a-b`, the spin weight is not checked.
+  return (-a)+b;
 }
 
 
@@ -461,11 +513,37 @@ GWFrames::Modes& GWFrames::Modes::operator=(const Modes& B) {
   return *this;
 }
 
+Modes Modes::pow(const int p) const {
+  /// For \f$p \geq 0\f$, the \f$p\f$-th power of a function
+  /// band-limited at \f$\ell_{\max}\f$ is band-limited at
+  /// \f$p\, \ell_{\max}\f$, so a grid with \f$2 p\, \ell_{\max} + 1\f$
+  /// points in each direction represents it exactly.  A negative
+  /// power is not band-limited, so it is evaluated on the grid that
+  /// would be used for \f$|p|\f$ (as in division, which uses the grid
+  /// of the corresponding product), and the result is truncated at
+  /// the original \f$\ell_{\max}\f$.
+  const int N = 2*EllMax()*std::abs(p)+1; // DataGrid enlarges this to at least 2*EllMax()+1
+  Modes A(DataGrid(*this, N, N).pow(p));
+  if(p<0) {
+    A.ellMax = ellMax;
+    A.data.resize(N_lm(ellMax));
+  }
+  return A;
+}
+
 Modes Modes::bar() const {
+  /// Return the modes of the complex-conjugate function.  Since
+  /// \f${}_{s}\bar{Y}_{\ell,m} = (-1)^{s+m}\, {}_{-s}Y_{\ell,-m}\f$,
+  /// the conjugate of a spin-weight \f$s\f$ function \f$f\f$ has spin
+  /// weight \f$-s\f$ and modes
+  /// \f$\bar{f}_{\ell,m} = (-1)^{s+m}\, \overline{f_{\ell,-m}}\f$.
   const Modes& A=*this;
   Modes B(A);
-  for(unsigned int i=0; i<data.size(); ++i) {
-    B.data[i] = std::conj(A.data[i]);
+  for(int i_m=0, ell=0; N_lm(ell)<=int(data.size()); ++ell) {
+    for(int m=-ell; m<=ell; ++m, ++i_m) {
+      const int i_mm = ell*ell + ell - m; // index of (ell, -m)
+      B.data[i_m] = ((s+m)%2==0 ? 1.0 : -1.0) * std::conj(A.data[i_mm]);
+    }
   }
   B.s = -A.s;
   return B;
@@ -648,12 +726,16 @@ std::complex<double> Modes::EvaluateAtPoint(const double vartheta, const double 
   /// \param vartheta Polar angle of detector
   /// \param varphi Azimuthal angle of detector
   ///
+  /// Modes with \f$\ell < |s|\f$ are skipped, because they vanish
+  /// identically for a spin-weighted function.
+  ///
 
   complex<double> d(0.0, 0.0);
   SphericalFunctions::SWSH Y(s);
   Y.SetAngles(vartheta, varphi);
-  int i=0;
-  for(int ell=0; ell<=ellMax; ++ell) {
+  const int ellMin = std::abs(s);
+  int i=ellMin*ellMin;
+  for(int ell=ellMin; ell<=ellMax; ++ell) {
     for(int m=-ell; m<=ell; ++m) {
       d += data[i]*Y(ell,m);
       ++i;
@@ -673,10 +755,14 @@ std::complex<double> Modes::EvaluateAtPoint(const Quaternions::Quaternion& R) co
   /// feature is used to greatly simplify the process of constructing
   /// a `DataGrid` object from a `Modes` object with a boost.
   ///
+  /// Modes with \f$\ell < |s|\f$ are skipped, because they vanish
+  /// identically for a spin-weighted function.
+  ///
 
   complex<double> d(0.0, 0.0);
   SphericalFunctions::SWSH Y(s, R);
-  for(int i_m=0, ell=0; ell<=ellMax; ++ell) {
+  const int ellMin = std::abs(s);
+  for(int i_m=ellMin*ellMin, ell=ellMin; ell<=ellMax; ++ell) {
     for(int m=-ell; m<=ell; ++m, ++i_m) {
       d += data[i_m]*Y(ell,m);
     }
@@ -814,34 +900,6 @@ GWFrames::SliceGrid SliceModes::BMSTransformationOnSlice(const double u, const T
   Grids.sigmadot = sigmadot_g*(oneoverK_g.pow(2));
 
   return Grids;
-}
-
-/// Find the next iteration of the BMS transformation via Moreschi's algorithm
-void SliceModes::MoreschiIteration(GWFrames::Modes& OneOverK_ip1, GWFrames::Modes& delta_ip1) const {
-  /// \param OneOverK_ip1 Inverse conformal factor for the next step
-  /// \param delta_ip1 Supertranslation for the next step
-  ///
-  /// This member function applies to a `SliceModes` object that has
-  /// already been transformed by the BMS transformation represented
-  /// by \f$K_i\f$ and \f$\delta_i\f$.  This then takes the data on
-  /// that slice and computes the values of \f$K_{i+1}\f$ and
-  /// \f$\delta_{i+1}\f$, returning them by reference.
-
-  const Modes Psi = SuperMomentum();
-  const double M = Mass();
-
-  // 1/K is just Psi/M in the first two ell values
-  OneOverK_ip1 = Modes(4);
-  OneOverK_ip1.SetEllMax(1);
-  OneOverK_ip1[0] = Psi[0]/M;
-  OneOverK_ip1[1] = Psi[1]/M;
-  OneOverK_ip1[2] = Psi[2]/M;
-  OneOverK_ip1[3] = Psi[3]/M;
-
-  //
-
-  throw(GWFrames_NotYetImplemented);
-  return;
 }
 
 // Explicit instantiations

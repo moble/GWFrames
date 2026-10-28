@@ -16,6 +16,10 @@ __pycache__/
 .ipynb_checkpoints/
 uv.lock
 
+# Documentation build
+docs/_build/
+docs/jupyter_execute/
+
 # Editors and operating systems
 .DS_Store
 .vscode/

@@ -1,12 +1,34 @@
 # -*- coding: utf-8 -*-
+"""Extrapolate finite-radius waveforms from SpEC simulations to infinite radius.
+
+The main function is `Extrapolate`, which reads waveforms extracted at several
+finite radii from an HDF5 file in the format written by SpEC, extrapolates them
+to infinite radius at several polynomial orders, and writes the results along
+with convergence plots.  The remaining functions read and validate the input
+data, or manage batches of extrapolations run in many directories.
+
+The functions in this module that read HDF5 files need `h5py`.
+"""
 
 from __future__ import print_function
 
 ModeRegex = r"""Y_l(?P<L>[0-9]+)_m(?P<M>[-+0-9]+)\.dat"""
 
 def PickChMass(filename='Horizons.h5') :
-    """
-    Deduce the best Christodoulou mass by finding the statistical "mode" (after binning).
+    """Deduce the Christodoulou mass of a binary from its horizons file.
+
+    The total Christodoulou mass of the two horizons is binned over time, and
+    the most common value is returned.
+
+    Parameters
+    ----------
+    filename : str, default 'Horizons.h5'
+        The horizons file.  If this is a directory, ``'Horizons.h5'`` is
+        appended to it.
+
+    Returns
+    -------
+    float
     """
     from h5py import File
     from os.path import isdir
@@ -25,8 +47,10 @@ def PickChMass(filename='Horizons.h5') :
 
 
 def MonotonicIndices(T, MinTimeStep=1.e-3) :
-    """
-    Given an array of times, return the indices that make the array strictly monotonic.
+    """Return the indices that make an array of times strictly increasing.
+
+    This is the same as `GWFrames.MonotonicIndices`, with a different default
+    ``MinTimeStep``.
     """
     from numpy import delete
     Ind = range(len(T))
@@ -45,6 +69,17 @@ def MonotonicIndices(T, MinTimeStep=1.e-3) :
     return Ind
 
 def ValidateSingleWaveform(h5file, filename, WaveformName, ExpectedNModes, ExpectedNTimes, LModes) :
+    """Check the shapes of the datasets of one finite-radius waveform.
+
+    The areal radius, the average lapse, and each mode must have
+    ``ExpectedNTimes`` rows, and there must be ``ExpectedNModes`` modes with
+    :math:`\\ell` in ``LModes``.  Problems are printed.
+
+    Returns
+    -------
+    bool
+        True if the waveform passed all checks.
+    """
     #from sys import stderr
     from re import compile as re_compile
     CompiledModeRegex = re_compile(ModeRegex)
@@ -83,6 +118,17 @@ def ValidateSingleWaveform(h5file, filename, WaveformName, ExpectedNModes, Expec
     return Valid
 
 def ValidateGroupOfWaveforms(h5file, filename, WaveformNames, LModes) :
+    """Check that all of the finite-radius waveforms in a file are consistent.
+
+    Each waveform is checked with `ValidateSingleWaveform` against the number
+    of times and modes of the first one.  The names of any invalid waveforms
+    are printed.
+
+    Returns
+    -------
+    bool
+        True if every waveform passed all checks.
+    """
     from re import compile as re_compile
     ExpectedNTimes = h5file[WaveformNames[0]+'/ArealRadius.dat'].shape[0]
     ExpectedNModes = len([True for dataset in list(h5file[WaveformNames[0]]) for m in [re_compile(ModeRegex).search(dataset)] if m and int(m.group('L')) in LModes])
@@ -99,11 +145,10 @@ def ValidateGroupOfWaveforms(h5file, filename, WaveformNames, LModes) :
     return Valid
 
 def ReadFiniteRadiusWaveform(n, filename, WaveformName, ChMass, InitialAdmEnergy, YLMRegex, LModes, DataType, SpinWeight, Ws) :
-    """
-    This is just a worker function defined for ReadFiniteRadiusData,
-    below, reading a single waveform from an h5 file of many
-    waveforms.  You probably don't need to call this directly.
+    """Read a single finite-radius waveform for `ReadFiniteRadiusData`.
 
+    This worker function reads one waveform from an HDF5 file of many, and is
+    not usually called directly.
     """
     from scipy.integrate import cumulative_trapezoid as integrate
     from numpy import setdiff1d, empty, delete, sqrt, log, array
@@ -175,9 +220,34 @@ def ReadFiniteRadiusWaveform(n, filename, WaveformName, ChMass, InitialAdmEnergy
 
 
 def ReadFiniteRadiusData(ChMass=0.0, filename='rh_FiniteRadii_CodeUnits.h5', CoordRadii=[], LModes=range(2,100), EnforceQualityAssurance=True) :
-    """
-    Read data at various radii, and offset by tortoise coordinate.
+    """Read the waveforms extracted at several radii, as functions of retarded time.
 
+    The retarded time is computed with the tortoise coordinate of each radius.
+
+    Parameters
+    ----------
+    ChMass : float
+        The Christodoulou mass, in the units of the data, which are rescaled
+        so that this mass is 1.  It must be nonzero.
+    filename : str, default 'rh_FiniteRadii_CodeUnits.h5'
+        The HDF5 file of finite-radius data.
+    CoordRadii : list, optional
+        The radii to read, given as strings or as integer indices into the
+        list of waveforms in the file.  If empty (the default), all radii are
+        read.
+    LModes : sequence of int, default range(2, 100)
+        The values of :math:`\\ell` to read.
+    EnforceQualityAssurance : bool, default True
+        If true, raise an error if the data fail `ValidateGroupOfWaveforms`.
+
+    Returns
+    -------
+    Ws : list of Waveform
+        The waveforms, one for each radius.
+    Radii : list of numpy.ndarray
+        The areal radius of each extraction sphere as a function of time.
+    CoordRadii : list of str
+        The coordinate radii that were read.
     """
 
     if(ChMass==0.0) :
@@ -268,13 +338,22 @@ def ReadFiniteRadiusData(ChMass=0.0, filename='rh_FiniteRadii_CodeUnits.h5', Coo
     return Ws,Radii,CoordRadii
 
 def SetCommonTime(Ws, Radii, MinTimeStep=0.005, EarliestTime=-3e300, LatestTime=3e300):
-    """Interpolate Waveforms and radius data to a common set of times
+    """Interpolate waveforms and radius data to a common set of times.
 
-    This function replaces the old `SetCommonTime` function from
-    Waveforms.cpp, so that the Ws object seen here does not need to be
-    a GWFrames::Waveform object.  This simplifies much of the later
-    processing used in `Extrapolate` below.
+    The common times are the intersection of the times of all the waveforms,
+    found with `GWFrames.Intersection`.  The waveforms and radii in ``Ws`` and
+    ``Radii`` are replaced in place.
 
+    Parameters
+    ----------
+    Ws : list of Waveform
+        The waveforms.
+    Radii : list of array_like
+        The radius of each waveform as a function of its times.
+    MinTimeStep : float, default 0.005
+        The smallest allowed time step.
+    EarliestTime, LatestTime : float, default -3e300 and 3e300
+        Bounds on the common times.
     """
     from scipy import interpolate
     from GWFrames import Intersection
@@ -293,93 +372,77 @@ def SetCommonTime(Ws, Radii, MinTimeStep=0.005, EarliestTime=-3e300, LatestTime=
 
 
 def Extrapolate(**kwargs) :
-    """Perform extrapolations from finite-radius data
-    ==============================================
-      Parameters
-      ----------
-        InputDirectory           './'
-          Where to find the input data.  Can be relative or absolute.
+    """Extrapolate finite-radius data to infinite radius.
 
-        OutputDirectory          './'
-          This directory will be made if it does not exist.
+    All arguments are optional keywords.  The data are read with
+    `ReadFiniteRadiusData`, interpolated to common times, extrapolated in
+    powers of :math:`1/r` at each of the requested orders, transformed to the
+    output frame, and written to files, together with the differences between
+    successive orders and plots of their convergence.
 
-        DataFile                 'rh_FiniteRadii_CodeUnits.h5'
-          Input file holding the data from all the radii.
-
-        ChMass                   0.0
-          Christodoulou mass in the same units as the rest of the
-          data.  All the data will be rescaled into units such that
-          this is one.  If this is zero, the Christodoulou mass will
-          be extracted automatically from the horizons file below.
-
-        HorizonsFile             'Horizons.h5'
-          File name to read for horizon data (if ChMass is 0.0).
-
-        CoordRadii               []
-          List of strings containing the radii to use, or of (integer)
-          indices of the list of waveform names.  If this is a list of
-          indices, the order is just the order output by the command
-          `list(h5py.File(DataFile))` which *should* be the same as
-          `h5ls`.  If the list is empty, all radii that can be found
-          are used.
-
-        LModes                   range(2,100)
-          List of ell modes to extrapolate
-
-        ExtrapolationOrders      [-1, 2, 3, 4, 5, 6]
-          Negative numbers correspond to extracted data, counting down
-          from the outermost extraction radius (which is -1).
-
-        UseOmega                 False
-          Whether or not to extrapolate as a function of lambda/r =
-          1/(r*m*omega), where omega is the instantaneous angular
-          frequency of rotation.  If this is True, the extrapolation
-          will usually not converge for high N; if this is False, SVD
-          will generally cause the convergence to appear to fall to
-          roundoff, though the accuracy presumably is not so great.
-
-        OutputFrame              GWFrames.Inertial
-          Transform to this frame before comparison and output.
-
-        ExtrapolatedFiles        'Extrapolated_N{N}.h5'
-        DifferenceFiles          'ExtrapConvergence_N{N}-N{Nm1}.h5'
-          These are python-formatted output file names, where the
-          extrapolation order N is substituted for '{N}', and the
-          previous extrapolation order is substituted for '{Nm1}'.
-          The data-type inferred from the DataFile name is prepended.
-          If DifferenceFiles is empty, the corresponding file is not
-          output.
-
-        UseStupidNRARFormat      False
-          If True (and `ExtrapolatedFiles` does not end in '.dat'),
-          then the h5 output format will be that stupid, old
-          NRAR/NINJA format that doesn't convey enough information,
-          is slow, and uses 33% more space than it needs to.  But you
-          know, if you're into that kind of thing, whatever.  Who am
-          I to judge?
-
-        PlotFormat               'pdf'
-          The format of output plots.  This can be the empty string,
-          in which case no plotting is done.  Or, these can be any of
-          the formats supported by your installation of matplotlib.
-
-        MinTimeStep              0.005
-          The smallest allowed time step in the output data.
-
-        EarliestTime             -3.0e300
-          The earliest time in the output data.  For values less than
-          0, some of the data corresponds to times when only junk
-          radiation is present.
-
-        LatestTime               3.0e300
-          The latest time in the output data.
-
-        AlignmentTime            None
-          The time at which to align the Waveform with the dominant
-          eigenvector of <LL>.  If the input value is `None` or is
-          outside of the input data, it will be reset to the midpoint
-          of the waveform: (W_outer.T(0)+W_outer.T(-1))/2
-
+    Parameters
+    ----------
+    InputDirectory : str, default './'
+        Where to find the input data.  This can be relative or absolute.
+    OutputDirectory : str, default './'
+        Where to write the output.  This directory is made if it does not
+        exist.
+    DataFile : str, default 'rh_FiniteRadii_CodeUnits.h5'
+        The input file holding the data from all the radii.
+    ChMass : float, default 0.0
+        The Christodoulou mass in the units of the data, which are rescaled so
+        that this mass is 1.  If it is zero, the mass is found from
+        ``HorizonsFile`` with `PickChMass`.
+    HorizonsFile : str, default 'Horizons.h5'
+        The horizons file read when ``ChMass`` is zero.
+    CoordRadii : list, default []
+        The radii to use, given as strings or as integer indices into the
+        list of waveforms in ``DataFile``, in the order of
+        ``list(h5py.File(DataFile))``, which should be the order shown by
+        ``h5ls``.  If the list is empty, all radii that can be found are used.
+    LModes : sequence of int, default range(2, 100)
+        The values of :math:`\\ell` to extrapolate.
+    ExtrapolationOrders : list of int, default [-1, 2, 3, 4, 5, 6]
+        The orders of the extrapolating polynomials.  Negative numbers select
+        the extracted data instead, counting down from the outermost
+        extraction radius, which is -1.
+    UseOmega : bool, default False
+        Whether to extrapolate as a function of
+        :math:`\\lambda/r = 1/(r\\, m\\, \\omega)`, where :math:`\\omega` is the
+        instantaneous angular frequency of rotation.  If this is true, the
+        extrapolation will usually not converge for high orders; if it is
+        false, SVD will generally cause the convergence to appear to fall to
+        roundoff, though the accuracy is presumably not as good.
+    OutputFrame : int, default GWFrames.Inertial
+        The frame to which the data are transformed before comparison and
+        output.
+    ExtrapolatedFiles : str, default 'Extrapolated_N{N}.h5'
+        The names of the output files, in which the extrapolation order is
+        substituted for ``{N}``.  The data type inferred from the name of
+        ``DataFile`` is prepended.
+    DifferenceFiles : str, default 'ExtrapConvergence_N{N}-N{Nm1}.h5'
+        The names of the files of differences between successive orders, in
+        which the order is substituted for ``{N}`` and the previous order for
+        ``{Nm1}``.  If this is empty, these files are not written.
+    UseStupidNRARFormat : bool, default False
+        If true, and ``ExtrapolatedFiles`` does not end in ``'.dat'``, the
+        output is written in the old NRAR format, which does not convey
+        enough information, is slow, and uses 33% more space than it needs to.
+    PlotFormat : str, default 'pdf'
+        The format of the output plots, which may be any format supported by
+        matplotlib.  If this is empty, no plots are made.
+    MinTimeStep : float, default 0.005
+        The smallest allowed time step in the output data.
+    EarliestTime : float, default -3.0e300
+        The earliest time in the output data.  Some of the data at times less
+        than 0 correspond to times when only junk radiation is present.
+    LatestTime : float, default 3.0e300
+        The latest time in the output data.
+    AlignmentTime : float, optional
+        The time at which the waveform is aligned with the dominant
+        eigenvector of :math:`\\langle LL \\rangle`.  If it is ``None`` (the
+        default) or outside the data, the midpoint of the outermost waveform,
+        ``(W_outer.T(0) + W_outer.T(-1)) / 2``, is used.
     """
 
     # Basic imports
@@ -711,9 +774,20 @@ def _safe_format(s, **keys) :
 
 
 def UnstartedExtrapolations(TopLevelOutputDir, SubdirectoriesAndDataFiles) :
-    """
-    Find unstarted extrapolation directories
+    """Return the extrapolations in a batch that have not been started.
 
+    Parameters
+    ----------
+    TopLevelOutputDir : str
+        The directory under which the output of each extrapolation is written.
+    SubdirectoriesAndDataFiles : list of [str, str]
+        Pairs of subdirectory and data file, as returned by
+        `FindPossibleExtrapolationsToRun`.
+
+    Returns
+    -------
+    list of [str, str]
+        The pairs with no ``.started_*`` marker in their output directory.
     """
     from os.path import exists
     Unstarted = []
@@ -724,9 +798,14 @@ def UnstartedExtrapolations(TopLevelOutputDir, SubdirectoriesAndDataFiles) :
     return Unstarted
 
 def NewerDataThanExtrapolation(TopLevelInputDir, TopLevelOutputDir, SubdirectoriesAndDataFiles) :
-    """
-    Find newer data than extrapolation
+    """Return the finished extrapolations whose input data have since changed.
 
+    Returns
+    -------
+    list of [str, str]
+        The pairs of subdirectory and data file whose data file or
+        ``metadata.txt`` is newer than the ``.finished_*`` marker of the
+        extrapolation.
     """
     from os.path import exists, getmtime
     Newer = []
@@ -741,9 +820,13 @@ def NewerDataThanExtrapolation(TopLevelInputDir, TopLevelOutputDir, Subdirectori
     return Newer
 
 def StartedButUnfinishedExtrapolations(TopLevelOutputDir, SubdirectoriesAndDataFiles) :
-    """
-    Find directories with extrapolations that started but didn't finish.
+    """Return the extrapolations that started but neither finished nor failed.
 
+    Returns
+    -------
+    list of [str, str]
+        The pairs of subdirectory and data file with a ``.started_*`` marker
+        but neither a ``.finished_*`` nor an ``.error_*`` marker.
     """
     from os.path import exists
     Unfinished = []
@@ -756,9 +839,12 @@ def StartedButUnfinishedExtrapolations(TopLevelOutputDir, SubdirectoriesAndDataF
     return Unfinished
 
 def ErroredExtrapolations(TopLevelOutputDir, SubdirectoriesAndDataFiles) :
-    """
-    Find directories with errors
+    """Return the extrapolations that failed.
 
+    Returns
+    -------
+    list of [str, str]
+        The pairs of subdirectory and data file with an ``.error_*`` marker.
     """
     from os.path import exists
     Errored = []
@@ -769,9 +855,22 @@ def ErroredExtrapolations(TopLevelOutputDir, SubdirectoriesAndDataFiles) :
     return Errored
 
 def FindPossibleExtrapolationsToRun(TopLevelInputDir) :
-    """
-    Find all possible extrapolations
+    """Find all of the extrapolations that could be run under a directory.
 
+    Every subdirectory named like ``Lev*`` that contains a ``metadata.txt`` file
+    and one or more files of finite-radius data, such as
+    ``rh_FiniteRadii_CodeUnits.h5``, gives one extrapolation for each data
+    file.
+
+    Parameters
+    ----------
+    TopLevelInputDir : str
+        The directory to search.
+
+    Returns
+    -------
+    list of [str, str]
+        Pairs of subdirectory (relative to ``TopLevelInputDir``) and data file.
     """
     from os import walk
     from re import compile as re_compile
@@ -798,6 +897,18 @@ def FindPossibleExtrapolationsToRun(TopLevelInputDir) :
     return SubdirectoriesAndDataFiles
 
 def RunExtrapolation(TopLevelInputDir, TopLevelOutputDir, Subdirectory, DataFile, Template) :
+    """Run one extrapolation as a separate Python process.
+
+    The ``Template`` is written as a script into the output directory, with
+    ``{DataFile}`` and ``{Subdirectory}`` replaced, and run there.  Marker
+    files ``.started_*``, ``.finished_*``, and ``.error_*`` record the
+    progress, for use by functions like `UnstartedExtrapolations`.
+
+    Returns
+    -------
+    int
+        Zero on success, or the nonzero exit status of a failed script.
+    """
     from os import makedirs, chdir, getcwd, utime, remove
     from os.path import exists
     from subprocess import call
@@ -808,7 +919,7 @@ def RunExtrapolation(TopLevelInputDir, TopLevelOutputDir, Subdirectory, DataFile
         makedirs(OutputDir)
 
     # If OutputDir/.started_r...h5 doesn't exist, touch it; remove errors and finished reports
-    with file('{0}/.started_{1}'.format(OutputDir,DataFile), 'a') :
+    with open('{0}/.started_{1}'.format(OutputDir,DataFile), 'a') :
         utime('{0}/.started_{1}'.format(OutputDir,DataFile), None)
     if(exists('{0}/.error_{1}'.format(OutputDir,DataFile))) :
         remove('{0}/.error_{1}'.format(OutputDir,DataFile))

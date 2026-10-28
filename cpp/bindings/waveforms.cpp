@@ -62,7 +62,7 @@ void BindWaveforms(py::module_& m) {
   const auto noL = IVec();
   py::class_<Waveform> W(m, "Waveform", Doc("Waveform"));
   W.def(py::init<>())
-      .def(py::init<const Waveform&>())
+      .def(py::init<const Waveform&>(), py::arg("W"))
       .def(py::init<const std::string&, const std::string&>(), py::arg("FileName"), py::arg("DataFormat"))
       .def(py::init<const DVec&, const std::vector<IVec>&, const std::vector<CVec>&>(), py::arg("T"),
            py::arg("LM"), py::arg("Data"))
@@ -98,78 +98,86 @@ void BindWaveforms(py::module_& m) {
       .def("KeepOnlyEllModes", ReturnSelf(&Waveform::KeepOnlyEllModes), py::arg("EllModesToKeep"),
            Doc("Waveform::KeepOnlyEllModes"))
       .def("KeepOnlyEll2", ReturnSelf(&Waveform::KeepOnlyEll2), Doc("Waveform::KeepOnlyEll2"))
-      .def("SetSpinWeight", ReturnSelf(&Waveform::SetSpinWeight), py::arg("NewSpinWeight"))
-      .def("SetBoostWeight", ReturnSelf(&Waveform::SetBoostWeight), py::arg("NewBoostWeight"))
-      .def("AppendHistory", ReturnSelf(&Waveform::AppendHistory), py::arg("Hist"))
-      .def("SetHistory", ReturnSelf(&Waveform::SetHistory), py::arg("Hist"))
-      .def("SetVersionHist", ReturnSelf(&Waveform::SetVersionHist), py::arg("VerHist"))
-      .def("SetT", ReturnSelf(&Waveform::SetT), py::arg("a"))
-      .def("SetTime", ReturnSelf(&Waveform::SetTime), py::arg("a"))
-      .def("SetFrame", ReturnSelf(&Waveform::SetFrame), py::arg("a"))
+      .def("SetSpinWeight", ReturnSelf(&Waveform::SetSpinWeight), py::arg("NewSpinWeight"),
+           Doc("Waveform::SetSpinWeight"))
+      .def("SetBoostWeight", ReturnSelf(&Waveform::SetBoostWeight), py::arg("NewBoostWeight"),
+           Doc("Waveform::SetBoostWeight"))
+      .def("AppendHistory", ReturnSelf(&Waveform::AppendHistory), py::arg("Hist"), Doc("Waveform::AppendHistory"))
+      .def("SetHistory", ReturnSelf(&Waveform::SetHistory), py::arg("Hist"), Doc("Waveform::SetHistory"))
+      .def("SetVersionHist", ReturnSelf(&Waveform::SetVersionHist), py::arg("VerHist"),
+           Doc("Waveform::SetVersionHist"))
+      .def("SetT", ReturnSelf(&Waveform::SetT), py::arg("a"), Doc("Waveform::SetT"))
+      .def("SetTime", ReturnSelf(&Waveform::SetTime), py::arg("a"), Doc("Waveform::SetTime"))
+      .def("SetFrame", ReturnSelf(&Waveform::SetFrame), py::arg("a"), Doc("Waveform::SetFrame"))
       .def("SetFrameType", [](py::object self, const int type) {
         self.cast<Waveform&>().SetFrameType(static_cast<GWFrames::WaveformFrameType>(type));
         return self;
-      }, py::arg("Type"))
+      }, py::arg("Type"), Doc("Waveform::SetFrameType"))
       .def("SetDataType", [](py::object self, const int type) {
         self.cast<Waveform&>().SetDataType(static_cast<GWFrames::WaveformDataType>(type));
         return self;
-      }, py::arg("Type"))
-      .def("SetRIsScaledOut", ReturnSelf(&Waveform::SetRIsScaledOut), py::arg("Scaled"))
-      .def("SetMIsScaledOut", ReturnSelf(&Waveform::SetMIsScaledOut), py::arg("Scaled"))
-      .def("SetLM", ReturnSelf(&Waveform::SetLM), py::arg("a"))
+      }, py::arg("Type"), Doc("Waveform::SetDataType"))
+      .def("SetRIsScaledOut", ReturnSelf(&Waveform::SetRIsScaledOut), py::arg("Scaled"),
+           Doc("Waveform::SetRIsScaledOut"))
+      .def("SetMIsScaledOut", ReturnSelf(&Waveform::SetMIsScaledOut), py::arg("Scaled"),
+           Doc("Waveform::SetMIsScaledOut"))
+      .def("SetLM", ReturnSelf(&Waveform::SetLM), py::arg("a"), Doc("Waveform::SetLM"))
       .def("SetData", ReturnSelf(py::overload_cast<const std::vector<CVec>&>(&Waveform::SetData)), py::arg("a"))
       .def("SetData",
            ReturnSelf(py::overload_cast<const unsigned int, const unsigned int, const std::complex<double>&>(
                &Waveform::SetData)),
-           py::arg("i_Mode"), py::arg("i_Time"), py::arg("a"))
-      .def("ResizeData", ReturnSelf(&Waveform::ResizeData), py::arg("NModes"), py::arg("NTimes"))
-      .def("swap", &Waveform::swap, py::arg("b"))
+           py::arg("i_Mode"), py::arg("i_Time"), py::arg("a"), Doc("Waveform::SetData"))
+      .def("ResizeData", ReturnSelf(&Waveform::ResizeData), py::arg("NModes"), py::arg("NTimes"),
+           Doc("Waveform::ResizeData"))
+      .def("swap", &Waveform::swap, py::arg("b"), Doc("Waveform::swap"))
 
       // Data access
-      .def("NTimes", &Waveform::NTimes)
-      .def("NModes", &Waveform::NModes)
-      .def("SpinWeight", &Waveform::SpinWeight)
-      .def("BoostWeight", &Waveform::BoostWeight)
-      .def("HistoryStr", &Waveform::HistoryStr)
-      .def("VersionHist", &Waveform::VersionHist)
-      .def("FrameType", &Waveform::FrameType)
-      .def("DataType", &Waveform::DataType)
-      .def("FrameTypeString", &Waveform::FrameTypeString)
-      .def("DataTypeString", &Waveform::DataTypeString)
-      .def("DataTypeLaTeXString", &Waveform::DataTypeLaTeXString)
+      .def("NTimes", &Waveform::NTimes, Doc("Waveform::NTimes"))
+      .def("NModes", &Waveform::NModes, Doc("Waveform::NModes"))
+      .def("SpinWeight", &Waveform::SpinWeight, Doc("Waveform::SpinWeight"))
+      .def("BoostWeight", &Waveform::BoostWeight, Doc("Waveform::BoostWeight"))
+      .def("HistoryStr", &Waveform::HistoryStr, Doc("Waveform::HistoryStr"))
+      .def("VersionHist", &Waveform::VersionHist, Doc("Waveform::VersionHist"))
+      .def("FrameType", &Waveform::FrameType, Doc("Waveform::FrameType"))
+      .def("DataType", &Waveform::DataType, Doc("Waveform::DataType"))
+      .def("FrameTypeString", &Waveform::FrameTypeString, Doc("Waveform::FrameTypeString"))
+      .def("DataTypeString", &Waveform::DataTypeString, Doc("Waveform::DataTypeString"))
+      .def("DataTypeLaTeXString", &Waveform::DataTypeLaTeXString, Doc("Waveform::DataTypeLaTeXString"))
       .def("DescriptorString", &Waveform::DescriptorString, Doc("Waveform::DescriptorString"))
-      .def("RIsScaledOut", &Waveform::RIsScaledOut)
-      .def("MIsScaledOut", &Waveform::MIsScaledOut)
+      .def("RIsScaledOut", &Waveform::RIsScaledOut, Doc("Waveform::RIsScaledOut"))
+      .def("MIsScaledOut", &Waveform::MIsScaledOut, Doc("Waveform::MIsScaledOut"))
       .def("T", py::overload_cast<>(&Waveform::T, py::const_))
-      .def("T", py::overload_cast<const unsigned int>(&Waveform::T, py::const_), py::arg("TimeIndex"))
+      .def("T", py::overload_cast<const unsigned int>(&Waveform::T, py::const_), py::arg("TimeIndex"),
+           Doc("Waveform::T"))
       .def("Frame", py::overload_cast<>(&Waveform::Frame, py::const_))
-      .def("Frame", py::overload_cast<const unsigned int>(&Waveform::Frame, py::const_), py::arg("TimeIndex"))
+      .def("Frame", py::overload_cast<const unsigned int>(&Waveform::Frame, py::const_), py::arg("TimeIndex"),
+           Doc("Waveform::Frame"))
       .def("LM", py::overload_cast<>(&Waveform::LM, py::const_))
-      .def("LM", py::overload_cast<const unsigned int>(&Waveform::LM, py::const_), py::arg("Mode"))
-      .def("Re", py::overload_cast<>(&Waveform::Re, py::const_), Doc("Waveform::Re"))
+      .def("LM", py::overload_cast<const unsigned int>(&Waveform::LM, py::const_), py::arg("Mode"),
+           Doc("Waveform::LM"))
+      .def("Re", py::overload_cast<>(&Waveform::Re, py::const_))
       .def("Re", py::overload_cast<const unsigned int>(&Waveform::Re, py::const_), py::arg("Mode"))
       .def("Re", py::overload_cast<const unsigned int, const unsigned int>(&Waveform::Re, py::const_),
-           py::arg("Mode"), py::arg("TimeIndex"))
-      .def("Im", py::overload_cast<>(&Waveform::Im, py::const_), Doc("Waveform::Im"))
+           py::arg("Mode"), py::arg("TimeIndex"), Doc("Waveform::Re"))
+      .def("Im", py::overload_cast<>(&Waveform::Im, py::const_))
       .def("Im", py::overload_cast<const unsigned int>(&Waveform::Im, py::const_), py::arg("Mode"))
       .def("Im", py::overload_cast<const unsigned int, const unsigned int>(&Waveform::Im, py::const_),
-           py::arg("Mode"), py::arg("TimeIndex"))
-      .def("Abs", py::overload_cast<>(&Waveform::Abs, py::const_), Doc("Waveform::Abs"))
+           py::arg("Mode"), py::arg("TimeIndex"), Doc("Waveform::Im"))
+      .def("Abs", py::overload_cast<>(&Waveform::Abs, py::const_))
       .def("Abs", py::overload_cast<const unsigned int>(&Waveform::Abs, py::const_), py::arg("Mode"))
       .def("Abs", py::overload_cast<const unsigned int, const unsigned int>(&Waveform::Abs, py::const_),
-           py::arg("Mode"), py::arg("TimeIndex"))
-      .def("Arg", py::overload_cast<>(&Waveform::Arg, py::const_), Doc("Waveform::Arg"))
+           py::arg("Mode"), py::arg("TimeIndex"), Doc("Waveform::Abs"))
+      .def("Arg", py::overload_cast<>(&Waveform::Arg, py::const_))
       .def("Arg", py::overload_cast<const unsigned int>(&Waveform::Arg, py::const_), py::arg("Mode"))
       .def("Arg", py::overload_cast<const unsigned int, const unsigned int>(&Waveform::Arg, py::const_),
-           py::arg("Mode"), py::arg("TimeIndex"))
-      .def("ArgUnwrapped", py::overload_cast<>(&Waveform::ArgUnwrapped, py::const_),
-           Doc("Waveform::ArgUnwrapped"))
+           py::arg("Mode"), py::arg("TimeIndex"), Doc("Waveform::Arg"))
+      .def("ArgUnwrapped", py::overload_cast<>(&Waveform::ArgUnwrapped, py::const_))
       .def("ArgUnwrapped", py::overload_cast<const unsigned int>(&Waveform::ArgUnwrapped, py::const_),
-           py::arg("Mode"))
-      .def("Data", py::overload_cast<>(&Waveform::Data, py::const_), Doc("Waveform::Data"))
+           py::arg("Mode"), Doc("Waveform::ArgUnwrapped"))
+      .def("Data", py::overload_cast<>(&Waveform::Data, py::const_))
       .def("Data", py::overload_cast<const unsigned int>(&Waveform::Data, py::const_), py::arg("Mode"))
       .def("Data", py::overload_cast<const unsigned int, const unsigned int>(&Waveform::Data, py::const_),
-           py::arg("Mode"), py::arg("TimeIndex"))
+           py::arg("Mode"), py::arg("TimeIndex"), Doc("Waveform::Data"))
 
       // Data characterization
       .def("EllMax", &Waveform::EllMax, Doc("Waveform::EllMax"))
@@ -187,38 +195,50 @@ void BindWaveforms(py::module_& m) {
            Doc("Waveform::NormalizedAntisymmetry"))
       .def("DipoleMoment", &Waveform::DipoleMoment, py::arg("ellMax") = 0, Doc("Waveform::DipoleMoment"))
       .def("MinimalParityViolation", &Waveform::MinimalParityViolation, Doc("Waveform::MinimalParityViolation"))
-      .def("XParityInvolution", &Waveform::XParityInvolution)
-      .def("XParitySymmetricPart", &Waveform::XParitySymmetricPart)
-      .def("XParityAntisymmetricPart", &Waveform::XParityAntisymmetricPart)
-      .def("XParityViolationSquared", &Waveform::XParityViolationSquared, py::arg("Lmodes") = noL)
-      .def("XParityViolationNormalized", &Waveform::XParityViolationNormalized, py::arg("Lmodes") = noL)
-      .def("YParityInvolution", &Waveform::YParityInvolution)
-      .def("YParitySymmetricPart", &Waveform::YParitySymmetricPart)
-      .def("YParityAntisymmetricPart", &Waveform::YParityAntisymmetricPart)
-      .def("YParityViolationSquared", &Waveform::YParityViolationSquared, py::arg("Lmodes") = noL)
-      .def("YParityViolationNormalized", &Waveform::YParityViolationNormalized, py::arg("Lmodes") = noL)
-      .def("ZParityInvolution", &Waveform::ZParityInvolution)
-      .def("ZParitySymmetricPart", &Waveform::ZParitySymmetricPart)
-      .def("ZParityAntisymmetricPart", &Waveform::ZParityAntisymmetricPart)
-      .def("ZParityViolationSquared", &Waveform::ZParityViolationSquared, py::arg("Lmodes") = noL)
-      .def("ZParityViolationNormalized", &Waveform::ZParityViolationNormalized, py::arg("Lmodes") = noL)
-      .def("ParityInvolution", &Waveform::ParityInvolution)
-      .def("ParitySymmetricPart", &Waveform::ParitySymmetricPart)
-      .def("ParityAntisymmetricPart", &Waveform::ParityAntisymmetricPart)
-      .def("ParityViolationSquared", &Waveform::ParityViolationSquared, py::arg("Lmodes") = noL)
-      .def("ParityViolationNormalized", &Waveform::ParityViolationNormalized, py::arg("Lmodes") = noL)
-      .def("ConjugateAntipodalEvaluation", py::overload_cast<>(&Waveform::ConjugateAntipodalEvaluation, py::const_))
-      .def("ConjugateAntipodalSymmetricPart", &Waveform::ConjugateAntipodalSymmetricPart)
-      .def("ConjugateAntipodalAntisymmetricPart", &Waveform::ConjugateAntipodalAntisymmetricPart)
+      .def("XParityInvolution", &Waveform::XParityInvolution, Doc("Waveform::XParityInvolution"))
+      .def("XParitySymmetricPart", &Waveform::XParitySymmetricPart, Doc("Waveform::XParitySymmetricPart"))
+      .def("XParityAntisymmetricPart", &Waveform::XParityAntisymmetricPart, Doc("Waveform::XParityAntisymmetricPart"))
+      .def("XParityViolationSquared", &Waveform::XParityViolationSquared, py::arg("Lmodes") = noL,
+           Doc("Waveform::XParityViolationSquared"))
+      .def("XParityViolationNormalized", &Waveform::XParityViolationNormalized, py::arg("Lmodes") = noL,
+           Doc("Waveform::XParityViolationNormalized"))
+      .def("YParityInvolution", &Waveform::YParityInvolution, Doc("Waveform::YParityInvolution"))
+      .def("YParitySymmetricPart", &Waveform::YParitySymmetricPart, Doc("Waveform::YParitySymmetricPart"))
+      .def("YParityAntisymmetricPart", &Waveform::YParityAntisymmetricPart, Doc("Waveform::YParityAntisymmetricPart"))
+      .def("YParityViolationSquared", &Waveform::YParityViolationSquared, py::arg("Lmodes") = noL,
+           Doc("Waveform::YParityViolationSquared"))
+      .def("YParityViolationNormalized", &Waveform::YParityViolationNormalized, py::arg("Lmodes") = noL,
+           Doc("Waveform::YParityViolationNormalized"))
+      .def("ZParityInvolution", &Waveform::ZParityInvolution, Doc("Waveform::ZParityInvolution"))
+      .def("ZParitySymmetricPart", &Waveform::ZParitySymmetricPart, Doc("Waveform::ZParitySymmetricPart"))
+      .def("ZParityAntisymmetricPart", &Waveform::ZParityAntisymmetricPart, Doc("Waveform::ZParityAntisymmetricPart"))
+      .def("ZParityViolationSquared", &Waveform::ZParityViolationSquared, py::arg("Lmodes") = noL,
+           Doc("Waveform::ZParityViolationSquared"))
+      .def("ZParityViolationNormalized", &Waveform::ZParityViolationNormalized, py::arg("Lmodes") = noL,
+           Doc("Waveform::ZParityViolationNormalized"))
+      .def("ParityInvolution", &Waveform::ParityInvolution, Doc("Waveform::ParityInvolution"))
+      .def("ParitySymmetricPart", &Waveform::ParitySymmetricPart, Doc("Waveform::ParitySymmetricPart"))
+      .def("ParityAntisymmetricPart", &Waveform::ParityAntisymmetricPart, Doc("Waveform::ParityAntisymmetricPart"))
+      .def("ParityViolationSquared", &Waveform::ParityViolationSquared, py::arg("Lmodes") = noL,
+           Doc("Waveform::ParityViolationSquared"))
+      .def("ParityViolationNormalized", &Waveform::ParityViolationNormalized, py::arg("Lmodes") = noL,
+           Doc("Waveform::ParityViolationNormalized"))
+      .def("ConjugateAntipodalEvaluation", py::overload_cast<>(&Waveform::ConjugateAntipodalEvaluation, py::const_),
+           Doc("Waveform::ConjugateAntipodalEvaluation"))
+      .def("ConjugateAntipodalSymmetricPart", &Waveform::ConjugateAntipodalSymmetricPart,
+           Doc("Waveform::ConjugateAntipodalSymmetricPart"))
+      .def("ConjugateAntipodalAntisymmetricPart", &Waveform::ConjugateAntipodalAntisymmetricPart,
+           Doc("Waveform::ConjugateAntipodalAntisymmetricPart"))
 
       // Rotations and frames
       .def("RotatePhysicalSystem", ReturnSelf(py::overload_cast<const Quaternion&>(&Waveform::RotatePhysicalSystem)),
+           py::arg("R_phys"))
+      .def("RotatePhysicalSystem", ReturnSelf(py::overload_cast<QVec>(&Waveform::RotatePhysicalSystem)),
            py::arg("R_phys"), Doc("Waveform::RotatePhysicalSystem"))
-      .def("RotatePhysicalSystem", ReturnSelf(py::overload_cast<QVec>(&Waveform::RotatePhysicalSystem)), py::arg("R_phys"))
-      .def("RotateDecompositionBasis", ReturnSelf(py::overload_cast<const Quaternion&>(&Waveform::RotateDecompositionBasis)),
-           py::arg("R_frame"), Doc("Waveform::RotateDecompositionBasis"))
+      .def("RotateDecompositionBasis",
+           ReturnSelf(py::overload_cast<const Quaternion&>(&Waveform::RotateDecompositionBasis)), py::arg("R_frame"))
       .def("RotateDecompositionBasis", ReturnSelf(py::overload_cast<const QVec&>(&Waveform::RotateDecompositionBasis)),
-           py::arg("R_frame"))
+           py::arg("R_frame"), Doc("Waveform::RotateDecompositionBasis"))
       .def("LdtVector", &Waveform::LdtVector, py::arg("Lmodes") = noL, Doc("Waveform::LdtVector"))
       .def("LLMatrix", &Waveform::LLMatrix, py::arg("Lmodes") = noL, Doc("Waveform::LLMatrix"))
       .def("LLDominantEigenvector", &Waveform::LLDominantEigenvector, py::arg("Lmodes") = noL,
@@ -228,9 +248,12 @@ void BindWaveforms(py::module_& m) {
       .def("AngularVelocityVectorRelativeToInertial", &Waveform::AngularVelocityVectorRelativeToInertial,
            py::arg("Lmodes") = noL, Doc("Waveform::AngularVelocityVectorRelativeToInertial"))
       .def("CorotatingFrame", &Waveform::CorotatingFrame, py::arg("Lmodes") = noL, Doc("Waveform::CorotatingFrame"))
-      .def("TransformToCoprecessingFrame", ReturnSelf(&Waveform::TransformToCoprecessingFrame), py::arg("Lmodes") = noL, Doc("Waveform::TransformToCoprecessingFrame"))
-      .def("TransformToAngularVelocityFrame", ReturnSelf(&Waveform::TransformToAngularVelocityFrame), py::arg("Lmodes") = noL, Doc("Waveform::TransformToAngularVelocityFrame"))
-      .def("TransformToCorotatingFrame", ReturnSelf(&Waveform::TransformToCorotatingFrame), py::arg("Lmodes") = noL, Doc("Waveform::TransformToCorotatingFrame"))
+      .def("TransformToCoprecessingFrame", ReturnSelf(&Waveform::TransformToCoprecessingFrame), py::arg("Lmodes") = noL,
+           Doc("Waveform::TransformToCoprecessingFrame"))
+      .def("TransformToAngularVelocityFrame", ReturnSelf(&Waveform::TransformToAngularVelocityFrame),
+           py::arg("Lmodes") = noL, Doc("Waveform::TransformToAngularVelocityFrame"))
+      .def("TransformToCorotatingFrame", ReturnSelf(&Waveform::TransformToCorotatingFrame), py::arg("Lmodes") = noL,
+           Doc("Waveform::TransformToCorotatingFrame"))
       .def("TransformToInertialFrame", ReturnSelf(&Waveform::TransformToInertialFrame),
            Doc("Waveform::TransformToInertialFrame"))
 
@@ -273,7 +296,7 @@ void BindWaveforms(py::module_& m) {
 
   py::class_<PNWaveform, Waveform>(m, "PNWaveform", Doc("PNWaveform"))
       .def(py::init<>())
-      .def(py::init<const PNWaveform&>())
+      .def(py::init<const PNWaveform&>(), py::arg("W"))
       .def(py::init<const std::string&, const double, const DVec&, const DVec&, const double, double,
                     const Quaternion&, const unsigned int, const double, const double>(),
            py::arg("Approximant"), py::arg("delta"), py::arg("chi1_i"), py::arg("chi2_i"), py::arg("Omega_orb_i"),
@@ -283,8 +306,9 @@ void BindWaveforms(py::module_& m) {
       .def("__copy__", [](const PNWaveform& w) { return PNWaveform(w); })
       .def("__deepcopy__", [](const PNWaveform& w, py::dict) { return PNWaveform(w); }, py::arg("memo"))
 #define GWFRAMES_PN_VECTOR(name)                                                                     \
-  .def(#name, py::overload_cast<>(&PNWaveform::name, py::const_), Doc("PNWaveform::" #name))         \
-      .def(#name, py::overload_cast<const unsigned int>(&PNWaveform::name, py::const_), py::arg("iTime"))
+  .def(#name, py::overload_cast<>(&PNWaveform::name, py::const_))                                    \
+      .def(#name, py::overload_cast<const unsigned int>(&PNWaveform::name, py::const_), py::arg("iTime"), \
+           Doc("PNWaveform::" #name))
       GWFRAMES_PN_VECTOR(chi1)
       GWFRAMES_PN_VECTOR(chi2)
       GWFRAMES_PN_VECTOR(Omega_orb)
@@ -303,8 +327,8 @@ void BindWaveforms(py::module_& m) {
       GWFRAMES_PN_VECTOR(LHat)
       GWFRAMES_PN_VECTOR(Phi_orb)
 #undef GWFRAMES_PN_VECTOR
-      .def("chi1Mag", &PNWaveform::chi1Mag, py::arg("iTime"))
-      .def("chi2Mag", &PNWaveform::chi2Mag, py::arg("iTime"));
+      .def("chi1Mag", &PNWaveform::chi1Mag, py::arg("iTime"), Doc("PNWaveform::chi1Mag"))
+      .def("chi2Mag", &PNWaveform::chi2Mag, py::arg("iTime"), Doc("PNWaveform::chi2Mag"));
 
   py::class_<WaveformAtAPointFT>(m, "WaveformAtAPointFT", Doc("WaveformAtAPointFT"))
       .def(py::init<const Waveform&, const double, const double, const double, const double, const unsigned int,
@@ -312,28 +336,30 @@ void BindWaveforms(py::module_& m) {
            py::arg("W"), py::arg("Dt"), py::arg("Vartheta"), py::arg("Varphi"), py::arg("TotalMass"),
            py::arg("WindowNCycles") = 1, py::arg("DetectorResponseAmp") = 1.0,
            py::arg("DetectorResponsePhase") = 0.0, py::arg("ExtraZeroPadPowers") = 0)
-      .def("F", py::overload_cast<>(&WaveformAtAPointFT::F, py::const_), Doc("WaveformAtAPointFT::F"))
-      .def("F", py::overload_cast<const unsigned int>(&WaveformAtAPointFT::F, py::const_), py::arg("f"))
-      .def("NFreq", &WaveformAtAPointFT::NFreq)
-      .def("IsNormalized", &WaveformAtAPointFT::IsNormalized)
-      .def("Dt", &WaveformAtAPointFT::Dt)
-      .def("Vartheta", &WaveformAtAPointFT::Vartheta)
-      .def("Varphi", &WaveformAtAPointFT::Varphi)
+      .def("F", py::overload_cast<>(&WaveformAtAPointFT::F, py::const_))
+      .def("F", py::overload_cast<const unsigned int>(&WaveformAtAPointFT::F, py::const_), py::arg("f"),
+           Doc("WaveformAtAPointFT::F"))
+      .def("NFreq", &WaveformAtAPointFT::NFreq, Doc("WaveformAtAPointFT::NFreq"))
+      .def("IsNormalized", &WaveformAtAPointFT::IsNormalized, Doc("WaveformAtAPointFT::IsNormalized"))
+      .def("Dt", &WaveformAtAPointFT::Dt, Doc("WaveformAtAPointFT::Dt"))
+      .def("Vartheta", &WaveformAtAPointFT::Vartheta, Doc("WaveformAtAPointFT::Vartheta"))
+      .def("Varphi", &WaveformAtAPointFT::Varphi, Doc("WaveformAtAPointFT::Varphi"))
       .def("Re", py::overload_cast<>(&WaveformAtAPointFT::Re, py::const_))
-      .def("Re", py::overload_cast<const unsigned int>(&WaveformAtAPointFT::Re, py::const_), py::arg("f"))
+      .def("Re", py::overload_cast<const unsigned int>(&WaveformAtAPointFT::Re, py::const_), py::arg("f"),
+           Doc("WaveformAtAPointFT::Re"))
       .def("Im", py::overload_cast<>(&WaveformAtAPointFT::Im, py::const_))
-      .def("Im", py::overload_cast<const unsigned int>(&WaveformAtAPointFT::Im, py::const_), py::arg("f"))
+      .def("Im", py::overload_cast<const unsigned int>(&WaveformAtAPointFT::Im, py::const_), py::arg("f"),
+           Doc("WaveformAtAPointFT::Im"))
       .def("InversePSD", &WaveformAtAPointFT::InversePSD, py::arg("Detector") = "AdvLIGO_ZeroDet_HighP",
            Doc("WaveformAtAPointFT::InversePSD"))
-      .def("SNR", py::overload_cast<const DVec&>(&WaveformAtAPointFT::SNR, py::const_), py::arg("InversePSD"),
-           Doc("WaveformAtAPointFT::SNR"))
+      .def("SNR", py::overload_cast<const DVec&>(&WaveformAtAPointFT::SNR, py::const_), py::arg("InversePSD"))
       .def("SNR", py::overload_cast<const std::string&>(&WaveformAtAPointFT::SNR, py::const_),
-           py::arg("Detector") = "AdvLIGO_ZeroDet_HighP")
+           py::arg("Detector") = "AdvLIGO_ZeroDet_HighP", Doc("WaveformAtAPointFT::SNR"))
       .def("InnerProduct", &WaveformAtAPointFT::InnerProduct, py::arg("B"), py::arg("InversePSD"),
            Doc("WaveformAtAPointFT::InnerProduct"))
       .def("Match",
            py::overload_cast<const WaveformAtAPointFT&, const DVec&>(&WaveformAtAPointFT::Match, py::const_),
-           py::arg("B"), py::arg("InversePSD"), Doc("WaveformAtAPointFT::Match"))
+           py::arg("B"), py::arg("InversePSD"))
       .def("Match",
            py::overload_cast<const WaveformAtAPointFT&, const std::string&>(&WaveformAtAPointFT::Match,
                                                                            py::const_),
@@ -352,10 +378,11 @@ void BindWaveforms(py::module_& m) {
              return py::make_tuple(timeOffset, phaseOffset, match);
            },
            py::arg("B"), py::arg("timeOffset"), py::arg("phaseOffset"), py::arg("match"),
-           py::arg("Detector") = "AdvLIGO_ZeroDet_HighP")
-      .def("Normalize", ReturnSelf(py::overload_cast<const DVec&>(&WaveformAtAPointFT::Normalize)), py::arg("InversePSD"), Doc("WaveformAtAPointFT::Normalize"))
+           py::arg("Detector") = "AdvLIGO_ZeroDet_HighP", Doc("WaveformAtAPointFT::Match"))
+      .def("Normalize", ReturnSelf(py::overload_cast<const DVec&>(&WaveformAtAPointFT::Normalize)),
+           py::arg("InversePSD"))
       .def("Normalize", ReturnSelf(py::overload_cast<const std::string&>(&WaveformAtAPointFT::Normalize)),
-           py::arg("Detector") = "AdvLIGO_ZeroDet_HighP")
+           py::arg("Detector") = "AdvLIGO_ZeroDet_HighP", Doc("WaveformAtAPointFT::Normalize"))
       .def("ZeroAbove", ReturnSelf(&WaveformAtAPointFT::ZeroAbove), py::arg("Frequency"),
            Doc("WaveformAtAPointFT::ZeroAbove"));
 }

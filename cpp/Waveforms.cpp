@@ -416,12 +416,27 @@ GWFrames::Waveform GWFrames::Waveform::SliceOfTimeIndicesWithoutModes(const unsi
   if(i_t_b==0) {
     i_t_b = i_t_a+1;
   }
+  if(i_t_a>i_t_b) {
+    INFOTOCERR << ": Requesting impossible slice"
+               << "\ni_t_a=" << i_t_a << "  >  i_t_b=" << i_t_b << std::endl;
+    throw(GWFrames_EmptyIntersection);
+  }
+  if(i_t_b>NTimes()) {
+    INFOTOCERR << ": Requesting impossible slice"
+               << "\ni_t_b=" << i_t_b << "  >  NTimes()=" << NTimes() << std::endl;
+    throw(GWFrames_IndexOutOfBounds);
+  }
   Slice.lm = vector<vector<int> >(0, vector<int>(2));
   const unsigned int ntimes = i_t_b-i_t_a;
   const unsigned int nmodes = 0;
   Slice.data.resize(nmodes, ntimes);
   if(frame.size() == NTimes()) {
     Slice.frame = vector<Quaternion>(frame.begin()+i_t_a, frame.begin()+i_t_b);
+  } else if(frame.size()==1) {
+    Slice.frame = frame;
+  } else if(frame.size()!=0) {
+    INFOTOCERR << " I don't understand what to do with frame data of length " << frame.size() << " in a Waveform with " << NTimes() << " times." << std::endl;
+    throw(GWFrames_VectorSizeMismatch);
   }
   Slice.t = vector<double>(t.begin()+i_t_a, t.begin()+i_t_b);
   return Slice;
@@ -437,8 +452,11 @@ GWFrames::Waveform GWFrames::Waveform::SliceOfTimesWithoutModes(const double t_a
 /// Remove all data relating to times outside of the given range
 GWFrames::Waveform& GWFrames::Waveform::DropTimesOutside(const double t_a, const double t_b) {
   history << "this->DropTimesOutside(" << t_a << ", " << t_b << ");" << std::endl;
-  const unsigned int i_t_a = Quaternions::huntRight(t, t_a);
-  const unsigned int i_t_b = Quaternions::huntRight(t, t_b, i_t_a);
+  // Keep exactly the times with t_a <= t <= t_b.  The index i_t_a is
+  // the first time not before t_a, and i_t_b is one past the last
+  // time not after t_b (but never less than i_t_a).
+  const unsigned int i_t_a = std::lower_bound(t.begin(), t.end(), t_a) - t.begin();
+  const unsigned int i_t_b = std::max(i_t_a, static_cast<unsigned int>(std::upper_bound(t.begin(), t.end(), t_b) - t.begin()));
   vector<vector<complex<double> > > newdata(NModes(), vector<complex<double> >(t.size()));
   for(unsigned int mode=0; mode<NModes(); ++mode) {
     vector<complex<double> > ModeData = Data(mode);
@@ -848,14 +866,14 @@ unsigned int GWFrames::Waveform::FindModeIndexWithoutError(const int l, const in
   /// If the requested mode is not present, the returned index is 1
   /// beyond the end of the mode vector.
   const unsigned int i_expected = l*(l+1) + m - SpinWeight()*SpinWeight();
-  if(lm[i_expected][0]==l && lm[i_expected][1]==m) { return i_expected; }
+  if (lm.size() > i_expected) {
+    if(lm[i_expected][0]==l && lm[i_expected][1]==m) { return i_expected; }
+  }
   // ORIENTATION!!! following loop
-  unsigned int i=0;
-  for(; i<NModes(); ++i) {
+  for(unsigned int i=0; i<NModes(); ++i) {
     if(lm[i][0]==l && lm[i][1]==m) { return i; }
   }
-  ++i;
-  return i;
+  return NModes()+1;
 }
 
 /// Return the normalized asymmetry as a function of time
@@ -874,6 +892,11 @@ std::vector<double> GWFrames::Waveform::NormalizedAntisymmetry(std::vector<int> 
   /// input, only modes with ell values in that argument will be used
   /// to calculate the asymmetry.  All modes will always be used to
   /// calculate the normalization.
+  ///
+  /// Any mode missing from the data (for example, the \f$(\ell,-m)\f$
+  /// partner of a mode that is present) is treated as zero.
+
+  const unsigned int nmodes = NModes();
 
   const unsigned int ntimes = NTimes();
   const int ellMax = EllMax();
@@ -885,8 +908,10 @@ std::vector<double> GWFrames::Waveform::NormalizedAntisymmetry(std::vector<int> 
     for(int ell=std::abs(SpinWeight()); ell<=ellMax; ++ell) {
       if(LModesForAsymmetry.size()==0 || GWFrames::xINy(ell,LModesForAsymmetry)) {
         for(int m=-ell; m<=ell; ++m) {
-          const complex<double> h_ell_m = Data(FindModeIndexWithoutError(ell,m), i_t);
-          const complex<double> hbar_ell_mm = std::conj(Data(FindModeIndexWithoutError(ell,-m), i_t));
+          const unsigned int i_ell_m = FindModeIndexWithoutError(ell,m);
+          const unsigned int i_ell_mm = FindModeIndexWithoutError(ell,-m);
+          const complex<double> h_ell_m = (i_ell_m<nmodes ? Data(i_ell_m, i_t) : complex<double>(0.));
+          const complex<double> hbar_ell_mm = (i_ell_mm<nmodes ? std::conj(Data(i_ell_mm, i_t)) : complex<double>(0.));
           if(((ell+m)%2)==0) {
             diff += std::norm(h_ell_m - hbar_ell_mm);
           } else {
@@ -896,7 +921,8 @@ std::vector<double> GWFrames::Waveform::NormalizedAntisymmetry(std::vector<int> 
         }
       } else{
         for(int m=-ell; m<=ell; ++m) {
-          const complex<double> h_ell_m = Data(FindModeIndexWithoutError(ell,m), i_t);
+          const unsigned int i_ell_m = FindModeIndexWithoutError(ell,m);
+          const complex<double> h_ell_m = (i_ell_m<nmodes ? Data(i_ell_m, i_t) : complex<double>(0.));
           norm += std::norm(h_ell_m);
         }
       }
@@ -1026,10 +1052,10 @@ GWFrames::Waveform GWFrames::Waveform::InvolutionSymmetricPart(WaveformInvolutio
   const int ellMax = A.EllMax();
   const unsigned int nTimes = A.NTimes();
   B.t = A.t;
-  B.frame.resize(A.frame.size());
-  for(unsigned int i=0; i<A.frame.size(); ++i) {
-    B.frame[i] = 0.5 * ( A.frame[i] +  QInvol(A.frame[i]) );
-  }
+  // The modes are combined index by index, as in `operator+`, so the result
+  // keeps the frame of this Waveform, just as a sum keeps the frame of its
+  // first operand.  (Combining the rotors themselves would not give a rotor.)
+  B.frame = A.frame;
   B.lm = A.lm;
   B.data.resize(A.NModes(), A.NTimes());
   for(int ell=std::abs(SpinWeight()); ell<=ellMax; ++ell) {
@@ -1051,10 +1077,10 @@ GWFrames::Waveform GWFrames::Waveform::InvolutionAntisymmetricPart(WaveformInvol
   const int ellMax = A.EllMax();
   const unsigned int nTimes = A.NTimes();
   B.t = A.t;
-  B.frame.resize(A.frame.size());
-  for(unsigned int i=0; i<A.frame.size(); ++i) {
-    B.frame[i] = 0.5 * ( A.frame[i] -  QInvol(A.frame[i]) );
-  }
+  // The modes are combined index by index, as in `operator+`, so the result
+  // keeps the frame of this Waveform, just as a sum keeps the frame of its
+  // first operand.  (Combining the rotors themselves would not give a rotor.)
+  B.frame = A.frame;
   B.lm = A.lm;
   B.data.resize(A.NModes(), A.NTimes());
   for(int ell=std::abs(SpinWeight()); ell<=ellMax; ++ell) {
@@ -1898,8 +1924,11 @@ GWFrames::Waveform GWFrames::Waveform::Interpolate(const std::vector<double>& Ne
   ///
   /// If `AllowTimesOutsideCurrentDomain` is true, the values of all
   /// modes will be set to 0.0 for times outside the current set of
-  /// time data.  If false, and such times are requested, an error
-  /// will be thrown.
+  /// time data, and a time-dependent frame will be held constant at
+  /// its value at the nearer end of the current time domain (frame[0]
+  /// before it, and frame.back() after it).  If false, and such times
+  /// are requested, an error will be thrown.  In either case,
+  /// `NewTime` is assumed to be in increasing order.
   ///
   if(NewTime.size()==0) {
     INFOTOCERR << ": Asking for empty Waveform." << std::endl;
@@ -1910,12 +1939,12 @@ GWFrames::Waveform GWFrames::Waveform::Interpolate(const std::vector<double>& Ne
   vector<double> NewTimesInsideCurrentDomain;
   if(AllowTimesOutsideCurrentDomain) {
     // Set the indices in the dumbest way possible
-    while(NewTime[i0]<t[0]) { ++i0; }
-    while(NewTime[i1]>t.back() && i1>0) { --i1; }
-    ++i1;
+    while(i0<i2 && NewTime[i0]<t[0]) { ++i0; }
+    i1 = i2;
+    while(i1>i0 && NewTime[i1-1]>t.back()) { --i1; }
     // Now, i0 is the first index in NewTime for which a current time
     // exists, and i1 is 1 beyond the last index in NewTime for which
-    // a current time exists.
+    // a current time exists.  If no such index exists, i0==i1.
     NewTimesInsideCurrentDomain.resize(i1-i0);
     std::copy(NewTime.begin()+i0, NewTime.begin()+i1, NewTimesInsideCurrentDomain.begin());
   } else {
@@ -1935,6 +1964,8 @@ GWFrames::Waveform GWFrames::Waveform::Interpolate(const std::vector<double>& Ne
 
   Waveform C;
   C.spinweight = this->spinweight;
+  C.boostweight = this->boostweight;
+  C.versionHist = this->versionHist;
   C.history << HistoryStr()
             << "### *this = this->Interpolate(NewTime," << AllowTimesOutsideCurrentDomain << ");" << std::endl;
   C.t = NewTime;
@@ -1942,16 +1973,20 @@ GWFrames::Waveform GWFrames::Waveform::Interpolate(const std::vector<double>& Ne
     C.frame = frame;
   } else if(frame.size()>1) { // Assume we have frame data for each time step
     if(AllowTimesOutsideCurrentDomain) {
+      // Outside the current domain, the frame is held at its value at
+      // the nearer end of that domain
       C.frame.resize(NewTime.size());
-      const std::vector<Quaternion> NewFrame = Squad(frame, t, NewTimesInsideCurrentDomain);
       for(unsigned int i=0; i<i0; ++i) {
-        C.frame[i] = NewFrame[0];
+        C.frame[i] = frame[0];
       }
-      for(unsigned int i=i0; i<i1; ++i) {
-        C.frame[i] = NewFrame[i-i0];
+      if(i1>i0) {
+        const std::vector<Quaternion> NewFrame = Squad(frame, t, NewTimesInsideCurrentDomain);
+        for(unsigned int i=i0; i<i1; ++i) {
+          C.frame[i] = NewFrame[i-i0];
+        }
       }
       for(unsigned int i=i1; i<i2; ++i) {
-        C.frame[i] = NewFrame.back();
+        C.frame[i] = frame.back();
       }
     } else {
       C.frame = Squad(frame, t, NewTime);
@@ -1982,8 +2017,8 @@ GWFrames::Waveform GWFrames::Waveform::Interpolate(const std::vector<double>& Ne
         C.data[i_m][i_t] = complex<double>( 0., 0. );
       }
       for(unsigned int i_t=i0; i_t<i1; ++i_t) {
-        C.data[i_m][i_t] = complex<double>( gsl_spline_eval(splineRe, NewTimesInsideCurrentDomain[i_t], accRe),
-                                            gsl_spline_eval(splineIm, NewTimesInsideCurrentDomain[i_t], accIm) );
+        C.data[i_m][i_t] = complex<double>( gsl_spline_eval(splineRe, NewTimesInsideCurrentDomain[i_t-i0], accRe),
+                                            gsl_spline_eval(splineIm, NewTimesInsideCurrentDomain[i_t-i0], accIm) );
       }
       for(unsigned int i_t=i1; i_t<i2; ++i_t) {
         C.data[i_m][i_t] = complex<double>( 0., 0. );
@@ -2020,8 +2055,7 @@ GWFrames::Waveform& GWFrames::Waveform::InterpolateInPlace(const std::vector<dou
     throw(GWFrames_EmptyIntersection);
   }
 
-  history << HistoryStr()
-          << "*this = this->Interpolate(NewTime);" << std::endl;
+  history << "this->InterpolateInPlace(NewTime);" << std::endl;
   const vector<double> OldTime(t);
   if(frame.size()==1) { // Assume we have just a constant non-trivial frame
     frame = frame;
@@ -2556,7 +2590,7 @@ void GWFrames::AlignWaveforms(GWFrames::Waveform& W_A, GWFrames::Waveform& W_B,
   // Also, we don't search more than (t2-t1)/2.0 to either left or
   // right.
   const double deltat_1 = std::max(W_B.T(1)-t_1, -(t_2-t_1)/2.);
-  const double deltat_2 = std::min(W_B.NTimes()-2-t_2, (t_2-t_1)/2.);
+  const double deltat_2 = std::min(W_B.T(W_B.NTimes()-2)-t_2, (t_2-t_1)/2.);
 
   // Align W_A forever, and align W_B initially as a first guess
   W_A.AlignDecompositionFrameToModes(t_mid, nHat_A);
@@ -2853,7 +2887,7 @@ GWFrames::Waveform GWFrames::Waveform::Compare(const GWFrames::Waveform& A, cons
             << "#### End of old histories from `Compare`" << std::endl;
 
   // The new time axis will be the intersection of the two old ones
-  C.t = GWFrames::Intersection(A.t, B.t);
+  C.t = GWFrames::Intersection(A.t, B.t, MinTimeStep, MinTime);
 
   // Copy the basics
   C.frameType = frameType;

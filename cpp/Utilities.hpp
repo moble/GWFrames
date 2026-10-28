@@ -67,8 +67,8 @@ namespace GWFrames {
     inline double operator()(const unsigned int row, const unsigned int col) const { return *gsl_matrix_ptr(m, row, col); }
     inline double& operator()(const unsigned int row, const unsigned int col) { return *gsl_matrix_ptr(m, row, col); }
     inline Matrix& set(const unsigned int r, const unsigned int c, const double v) { gsl_matrix_set(m, r, c, v); return *this; }
-    inline unsigned int nrows() const { return m->size1; }
-    inline unsigned int ncols() const { return m->size2; }
+    inline unsigned int nrows() const { return m ? m->size1 : 0; }
+    inline unsigned int ncols() const { return m ? m->size2 : 0; }
     // / \@cond
     void resize(unsigned int newNRows, unsigned int newNCols, const double=0.0);
     // / \@endcond
