@@ -22,7 +22,7 @@ jobs:
       - name: Install GSL and FFTW
         run: sudo apt-get update && sudo apt-get install -y libgsl-dev libfftw3-dev
 
-      - uses: astral-sh/setup-uv@v10.3.3
+      - uses: astral-sh/setup-uv@v10.4.0
         with:
           python-version: "3.14"
 

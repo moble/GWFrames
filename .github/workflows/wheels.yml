@@ -82,7 +82,7 @@ jobs:
       - name: Set the version
         run: python3 .github/scripts/bump_version.py --set "${{ needs.version.outputs.version }}"
 
-      - uses: astral-sh/setup-uv@v10.3.3
+      - uses: astral-sh/setup-uv@v10.4.0
 
       - name: Build sdist
         run: uv build --sdist
